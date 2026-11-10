@@ -1,5 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { calendarInstant, calendarRelativeTime, createCalendar } from './calendar.js';
+import {
+  calendarInstant,
+  calendarRelativeTime,
+  createCalendar,
+  formatDate,
+  formatPeriod,
+  formatRelative,
+  getJalaliMonthDays,
+  toGregorian,
+  toJalali,
+} from './calendar.js';
 
 it('formats the same immutable instant in the selected calendar and account zone', () => {
   const date = new Date('2026-01-01T01:00:00Z');
@@ -46,6 +56,32 @@ it('starts a Jalali month and crosses its year without using Gregorian month bou
   );
   expect(calendar.format(calendar.addDays(value, 1), 'yyyy/MM/dd')).toBe('۱۴۰۴/۰۱/۰۱');
   expect(calendar.format(calendar.addMonths(value, 1), 'yyyy/MM/dd')).toBe('۱۴۰۴/۰۱/۳۰');
+});
+
+it('round-trips the Jalali civil date at the Tehran midnight boundary', () => {
+  const date = toGregorian(1403, 12, 30);
+  expect(date.toISOString()).toBe('2025-03-19T20:30:00.000Z');
+  expect(toJalali(date)).toEqual({ year: 1403, month: 12, day: 30 });
+  expect(toJalali(new Date('2025-03-20T20:30:00.000Z'))).toEqual({ year: 1404, month: 1, day: 1 });
+  expect(() => toGregorian(1404, 12, 30)).toThrow(RangeError);
+  expect(() => toGregorian(1404, 13, 1)).toThrow(RangeError);
+  expect(() => toGregorian(1404, 1.5, 1)).toThrow(RangeError);
+});
+
+it('returns the exact month lengths in leap and common years', () => {
+  expect(getJalaliMonthDays(1403, 12)).toBe(30);
+  expect(getJalaliMonthDays(1404, 12)).toBe(29);
+  expect(getJalaliMonthDays(1404, 1)).toBe(31);
+  expect(getJalaliMonthDays(1404, 7)).toBe(30);
+});
+
+it('formats both civil boundaries and relative time in the selected locale', () => {
+  const start = toGregorian(1404, 1, 1);
+  const end = toGregorian(1404, 2, 1);
+  expect(formatDate(start, 'fa', 'yyyy/MM/dd')).toBe('۱۴۰۴/۰۱/۰۱');
+  expect(formatPeriod(start, end, 'fa')).toBe('۱۴۰۴/۰۱/۰۱ تا ۱۴۰۴/۰۲/۰۱');
+  expect(formatPeriod(start, end, 'en')).toBe('2025/03/21 to 2025/04/21');
+  expect(formatRelative(start, 'en', start)).toBe('Just now');
 });
 
 it.each(['2026-01-01', '2026-01-01T00:00:00', 'badZ', NaN, Infinity])(

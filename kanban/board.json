@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-09T23:54:13+00:00",
-  "source_commit": "4d694aa4e3752cd9247da25d6cab104cf11b3be2",
+  "updated": "2026-11-10T00:00:12+00:00",
+  "source_commit": "2f6c6ce063845580bbfadec56f1b6091e994945d",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -14464,12 +14464,10 @@
         "story": "01-platform-infrastructure.md#spec-c6754926b602"
       },
       "requirement": "- **T-06.02.02:** Create Jalali calendar date utilities\n  - **Notes:** Use `date-fns-jalali` or `jalaali-js` for Jalali ↔ Gregorian conversion without a heavy library. Functions: `toJalali(date: Date) → { year, month, day }`, `toGregorian(jy, jm, jd) → Date`, `formatDate(date, locale, format)`, `formatRelative(date, locale)`, `getJalaliMonthDays(year, month)` (handles 29-31 days and leap years). Period display: `formatPeriod(start, end, locale)` → \"۱۴۰۲/۰۱/۰۱ to ۱۴۰۲/۰۲/۰۱\".\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -14496,11 +14494,41 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "packages/i18n/src/calendar.ts",
+          "packages/i18n/src/calendar.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-calendar-utilities-and-exact-price-proof"
+        ],
+        "current_acceptance": {
+          "kind": "verified-calendar-package-and-source-matching-finance-tests",
+          "base_commit": "2f6c6ce063845580bbfadec56f1b6091e994945d",
+          "source_evidence": [
+            {
+              "path": "packages/i18n/package.json",
+              "sha256": "f4fcfd4b14c8499da78506d1a08c7da75612d9f6d354146af72cb1feefc93c7a"
+            },
+            {
+              "path": "packages/i18n/src/calendar.test.ts",
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
+            },
+            {
+              "path": "packages/i18n/src/calendar.ts",
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The compiled @barghsa/i18n/calendar entry point exposes toJalali, toGregorian, formatDate, formatRelative, getJalaliMonthDays and formatPeriod. The public imports were exercised from the consuming web workspace.",
+            "The date-fns-jalali adapters reuse the existing Tehran default and strict civil-date parser. Localized period labels show both endpoints. The 42-case calendar and number run passed, including the original configurable timezone and calendar assertions."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "01-platform-infrastructure.md#T-06.02.03",
@@ -15068,12 +15096,10 @@
         "story": "01-platform-infrastructure.md#spec-c6754926b602"
       },
       "requirement": "- **T-06.02.05:** Localize number/currency formatting\n  - **Notes:** IRR amounts displayed as `XX,XXX,XXX,XXX ریال` or `IRR XX,XXX`. Admin-configurable: use Persian numerals (۱۲۳٬۴۵۶٬۷۸۹) or Western digits (123,456,789). Use `Intl.NumberFormat` with `currency: 'IRR'` and locale `fa` or `en`. For Persian: set `useGrouping: true`. Percentages and decimals follow locale conventions.\n  - **Dependencies:** T-06.02.01\n  - **Complexity:** M\n  - **UI/UX:** All monetary values show the currency symbol/tail (ریال or IRR). Date picker switches between Jalali and Gregorian based on locale. Direction flips seamlessly without visual glitches.\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -15222,9 +15248,70 @@
           "apps/web/e2e/date-picker-component.spec.ts",
           "apps/web/e2e/form-accessibility.spec.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-calendar-utilities-and-exact-price-proof"
+        ],
+        "current_acceptance": {
+          "kind": "verified-calendar-package-and-source-matching-finance-tests",
+          "base_commit": "2f6c6ce063845580bbfadec56f1b6091e994945d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/public/branding-http.integration.test.ts",
+              "sha256": "5c8a8578f8a4e9819baa3b7b647a31d2871514171d8d3827cb20021436ba316f"
+            },
+            {
+              "path": "apps/web/e2e/direction-component.spec.ts",
+              "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+            },
+            {
+              "path": "apps/web/e2e/number-preferences.spec.ts",
+              "sha256": "8ce250a01a95056d1aa4c2cba2ddb36430d507439bbc15c00f46ada7d71a9b5f"
+            },
+            {
+              "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+              "sha256": "aad1930ca49184d346f77e102578e0ead1f7158ac8e46e96f2785b799ed6bf73"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+            },
+            {
+              "path": "apps/web/src/pages/InvoicesPage.tsx",
+              "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "packages/i18n/src/numbers.test.ts",
+              "sha256": "17bbea96a3da752c8f3f12dec3f119f76b7d0a79fc1c49b357de578cac7b77ef"
+            },
+            {
+              "path": "packages/i18n/src/numbers.ts",
+              "sha256": "42dbecfe63da4d21a29a55b81379a8c3f4bfa331d7c024e4cdc044f6d524f658"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.test.ts",
+              "sha256": "dcf84843131b62be1636e63080f316d0edaf41687192e30b81218c474f71ebb4"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The 27 exact local number cases passed. Intl.NumberFormat uses IRR with whole-rial precision, Persian and Western numeral options and locale-specific grouping, decimal and percentage display. Unsafe numeric values are refused.",
+            "All ten compiled bilingual number-preference cases passed across the five browser projects. Their scoped source matches. Published styles reach wallet and invoice values, and the editable admin limit retains an exact unformatted integer.",
+            "The 50 source-matching branding HTTP cases include draft and publication readback for the three admin number styles. The DatePicker selects Jalali or Gregorian from the locale and retains its 28 passing calendar controls. The existing compiled direction case passed live language switching without losing selection."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "01-platform-infrastructure.md#T-06.03.01",
@@ -482751,20 +482838,81 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.02 | Author unit tests for pricing engine: VAT calculation, discounts, rounding (half-up to IRR), electricity composition rules, Jalali period calculations | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-calendar-utilities-and-exact-price-proof"
+        ],
+        "current_acceptance": {
+          "kind": "verified-calendar-package-and-source-matching-finance-tests",
+          "base_commit": "2f6c6ce063845580bbfadec56f1b6091e994945d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
+              "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+              "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+              "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-calculation.ts",
+              "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+              "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+            },
+            {
+              "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+              "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+            },
+            {
+              "path": "apps/api/src/invoice/rounding.service.test.ts",
+              "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+            },
+            {
+              "path": "apps/api/src/invoice/rounding.service.ts",
+              "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.service.ts",
+              "sha256": "71bc80ab74c5bfdadc8ae728795c8a001d95fac0e8ee8ad527f8e0194811de58"
+            },
+            {
+              "path": "apps/api/src/invoice/vat-calculation.test.ts",
+              "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The six source-matching hosted calculation suites passed all 86 cases. They cover product and category VAT, exact half-up IRR rounding, net discounts before per-line VAT, simple and advanced electricity composition, mandatory green rules, and validated Jalali billing periods."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.09.02.03",
@@ -482881,20 +483029,53 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.07 | Author unit tests for Jalali calendar: month lengths, leap years, period boundaries, Gregorian conversion | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "changed_paths": [
+          "packages/i18n/src/calendar.ts",
+          "packages/i18n/src/calendar.test.ts"
+        ],
+        "batches": [
+          "release-0.6-calendar-utilities-and-exact-price-proof"
+        ],
+        "current_acceptance": {
+          "kind": "verified-calendar-package-and-source-matching-finance-tests",
+          "base_commit": "2f6c6ce063845580bbfadec56f1b6091e994945d",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-periods.test.ts",
+              "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-periods.ts",
+              "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+            },
+            {
+              "path": "packages/i18n/src/calendar.test.ts",
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
+            },
+            {
+              "path": "packages/i18n/src/calendar.ts",
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The current 15 calendar cases include exact Jalali and Gregorian conversion, strict invalid-date checks, 29-, 30- and 31-day months, leap and common Esfand, Tehran midnight, year rollover and local DST handling.",
+            "The seven source-matching hosted electricity-period cases independently verify the server-owned week and month boundaries and duration caps."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.09.03.01",
@@ -523805,7 +523986,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -523957,11 +524139,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -524052,7 +524234,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -524218,7 +524401,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524370,11 +524554,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -524465,7 +524649,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -524629,7 +524814,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -524781,11 +524967,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -524876,7 +525062,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -525040,7 +525227,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -525192,11 +525380,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -525287,7 +525475,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -557268,7 +557457,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557420,11 +557610,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -557515,7 +557705,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -557679,7 +557870,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557831,11 +558023,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -557926,7 +558118,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -558090,7 +558283,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558242,11 +558436,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -558337,7 +558531,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -558501,7 +558696,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -558653,11 +558849,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -558748,7 +558944,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -558917,7 +559114,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559069,11 +559267,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -559164,7 +559362,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -559334,7 +559533,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559486,11 +559686,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -559581,7 +559781,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -559745,7 +559946,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -559897,11 +560099,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -559992,7 +560194,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -560156,7 +560359,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560308,11 +560512,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -560403,7 +560607,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -560568,7 +560773,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -560720,11 +560926,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -560815,7 +561021,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -560981,7 +561188,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561133,11 +561341,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -561228,7 +561436,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -561392,7 +561601,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561544,11 +561754,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -561639,7 +561849,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -561804,7 +562015,8 @@
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-app-builds-and-asset-budgets",
           "release-0.6-browser-dynamic-evaluation-boundary",
-          "release-0.6-staff-activation-credential-transport"
+          "release-0.6-staff-activation-credential-transport",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -561956,11 +562168,11 @@
             },
             {
               "path": "packages/i18n/src/calendar.test.ts",
-              "sha256": "4b73ee6a8a27437204e7f9a890e3b98eff36f60132427eb616e859d1fa608e67"
+              "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/date-time.test.ts",
@@ -562051,7 +562263,8 @@
             "Bindings renewed by release-0.5-final-gates: 5302 web unit tests, 374 broad native passes plus 20 exact final browser rechecks, 72 populated layout cases, four terms stall cases, and all 97 unchanged numeric budgets. No financial commands or authority checks were removed.",
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
-            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed."
+            "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-language-calendar-journey",
           "limitations": [
@@ -750034,7 +750247,7 @@
             },
             {
               "path": "packages/i18n/src/calendar.ts",
-              "sha256": "76cb3618a1a6342fa1f604eeadb977588510d083fd997e788cdebcfa81c70bda"
+              "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
             },
             {
               "path": "packages/i18n/src/confirmation.ts",
@@ -750733,7 +750946,8 @@
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
-            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical."
+            "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
+            "The additive calendar package exports preserve the factory input and timezone behavior. All 42 current calendar and number cases and the built package import passed."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -750856,7 +751070,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-bulk-trusted-device-removal",
           "release-0.6-staff-activation-credential-transport",
-          "release-0.6-capability-and-assistant-maintenance"
+          "release-0.6-capability-and-assistant-maintenance",
+          "release-0.6-calendar-utilities-and-exact-price-proof"
         ]
       }
     },
@@ -847331,6 +847546,160 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-tester-injection",
       "source_scope_proof": "security-http-source-proof.json",
       "source_scope_proof_sha256": "9db8c0763ec75008074d267767dbaa4330b5f8382e29004c2206aa2df18dd24a"
+    },
+    "release-0.6-calendar-utilities-and-exact-price-proof": {
+      "batch": "release-0.6-calendar-utilities-and-exact-price-proof",
+      "base_commit": "2f6c6ce063845580bbfadec56f1b6091e994945d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.02.02",
+        "01-platform-infrastructure.md#T-06.02.05",
+        "06-security-testing-observability.md#T-06.09.02.02",
+        "06-security-testing-observability.md#T-06.09.02.07",
+        "07-ui-ux-design.md#T-07.03.02.01",
+        "07-ui-ux-design.md#T-07.03.02.02",
+        "07-ui-ux-design.md#T-07.03.02.03",
+        "07-ui-ux-design.md#T-07.03.02.04",
+        "07-ui-ux-design.md#T-07.09.01.01",
+        "07-ui-ux-design.md#T-07.09.01.02",
+        "07-ui-ux-design.md#T-07.09.01.03",
+        "07-ui-ux-design.md#T-07.09.01.04",
+        "07-ui-ux-design.md#T-07.09.01.05",
+        "07-ui-ux-design.md#T-07.09.02.01",
+        "07-ui-ux-design.md#T-07.09.02.02",
+        "07-ui-ux-design.md#T-07.09.02.03",
+        "07-ui-ux-design.md#T-07.09.02.04",
+        "07-ui-ux-design.md#T-07.09.02.05",
+        "07-ui-ux-design.md#T-07.09.02.06",
+        "07-ui-ux-design.md#T-07.09.02.07",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "packages/i18n/src/calendar.ts",
+        "packages/i18n/src/calendar.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
+          "sha256": "175b6a9a330ace894068180b6f94497ad2330cd3bc02baf624d04bb7aba871ef"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.service.ts",
+          "sha256": "213535b8948517d8aedfa9ef39d1bafe5f394c67113239516d632ebead30cb71"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.test.ts",
+          "sha256": "d96bfd49e931d8864e5aa4b97788e3cbb24b5421bccb58a671caac798cc96f4b"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-calculation.ts",
+          "sha256": "b2f9dd170881cb54baa9ee95d72ba60ce725525674946c48c5084a662c84a2f7"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-periods.test.ts",
+          "sha256": "7cc8284ace6c3d5165b1d1ac02904bd69ca826bdf5c75a4458b794495d74711a"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-periods.ts",
+          "sha256": "6e903f2fbc54be302c4f14f3718e1f7c0d56f9ec45a8fe6ea507d073e36ec1ee"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.test.ts",
+          "sha256": "ddc189200e49ff3a8f501620e0aee15a2a3e20190b7b9bced1bb257075510b9a"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.calculation.ts",
+          "sha256": "264966103aed84a19327d55d2e338e42c5c19aa9ae9105604634698972888324"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.test.ts",
+          "sha256": "53a49477be84f22626f3969d2fc903e376a1a6c0b1ae65db5b4e06f534e470fc"
+        },
+        {
+          "path": "apps/api/src/invoice/rounding.service.ts",
+          "sha256": "371261d6b9863a755b3fd8f9a2a5d3e983aae99e714f0cc651f102ed4f027199"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.service.ts",
+          "sha256": "71bc80ab74c5bfdadc8ae728795c8a001d95fac0e8ee8ad527f8e0194811de58"
+        },
+        {
+          "path": "apps/api/src/invoice/vat-calculation.test.ts",
+          "sha256": "0467cb14bbab705f2e4173154fa0bab242cf8098659cd039e43949f64cf5e405"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "5c8a8578f8a4e9819baa3b7b647a31d2871514171d8d3827cb20021436ba316f"
+        },
+        {
+          "path": "apps/web/e2e/direction-component.spec.ts",
+          "sha256": "0894c25e430cf620abcd7efd14f5b718eb0e3bf92c093f1be2a1c96feb12df88"
+        },
+        {
+          "path": "apps/web/e2e/number-preferences.spec.ts",
+          "sha256": "8ce250a01a95056d1aa4c2cba2ddb36430d507439bbc15c00f46ada7d71a9b5f"
+        },
+        {
+          "path": "apps/web/src/components/WalletTopUpLimitConfigPanel.tsx",
+          "sha256": "aad1930ca49184d346f77e102578e0ead1f7158ac8e46e96f2785b799ed6bf73"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.tsx",
+          "sha256": "3ceed241a39c1cee1fa6ce6cd63bc9144d85d1b0a49fcb1a81f90e1785e3b2c0"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "packages/i18n/package.json",
+          "sha256": "f4fcfd4b14c8499da78506d1a08c7da75612d9f6d354146af72cb1feefc93c7a"
+        },
+        {
+          "path": "packages/i18n/src/calendar.test.ts",
+          "sha256": "0febfdc63af54ae4a5b8584eac7e6ea2a2cc85ba3dbb0be52703a6a83c1d8f67"
+        },
+        {
+          "path": "packages/i18n/src/calendar.ts",
+          "sha256": "9d837cae1baedc6a07fd563f8d41b59dd61012b806f1723c8703c1450376006a"
+        },
+        {
+          "path": "packages/i18n/src/numbers.test.ts",
+          "sha256": "17bbea96a3da752c8f3f12dec3f119f76b7d0a79fc1c49b357de578cac7b77ef"
+        },
+        {
+          "path": "packages/i18n/src/numbers.ts",
+          "sha256": "42dbecfe63da4d21a29a55b81379a8c3f4bfa331d7c024e4cdc044f6d524f658"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.test.ts",
+          "sha256": "dcf84843131b62be1636e63080f316d0edaf41687192e30b81218c474f71ebb4"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The compiled @barghsa/i18n/calendar entry point exposes toJalali, toGregorian, formatDate, formatRelative, getJalaliMonthDays and formatPeriod. The public imports were exercised from the consuming web workspace.",
+        "The date-fns-jalali adapters reuse the existing Tehran default and strict civil-date parser. Localized period labels show both endpoints. The 42-case calendar and number run passed, including the original configurable timezone and calendar assertions.",
+        "The 27 exact local number cases passed. Intl.NumberFormat uses IRR with whole-rial precision, Persian and Western numeral options and locale-specific grouping, decimal and percentage display. Unsafe numeric values are refused.",
+        "All ten compiled bilingual number-preference cases passed across the five browser projects. Their scoped source matches. Published styles reach wallet and invoice values, and the editable admin limit retains an exact unformatted integer.",
+        "The 50 source-matching branding HTTP cases include draft and publication readback for the three admin number styles. The DatePicker selects Jalali or Gregorian from the locale and retains its 28 passing calendar controls. The existing compiled direction case passed live language switching without losing selection.",
+        "The six source-matching hosted calculation suites passed all 86 cases. They cover product and category VAT, exact half-up IRR rounding, net discounts before per-line VAT, simple and advanced electricity composition, mandatory green rules, and validated Jalali billing periods.",
+        "The current 15 calendar cases include exact Jalali and Gregorian conversion, strict invalid-date checks, 29-, 30- and 31-day months, leap and common Esfand, Tehran midnight, year rollover and local DST handling.",
+        "The seven source-matching hosted electricity-period cases independently verify the server-owned week and month boundaries and duration caps."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/calendar-and-pricing",
+      "source_scope_proof": "calendar-pricing-source-proof.json",
+      "source_scope_proof_sha256": "40623ddc85ec0e99eb4a9c7b77ddbdbb09ddb4bfe338f937e41d1681d85c4104"
     }
   },
   "historical_improvements": [

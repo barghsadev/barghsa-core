@@ -11,6 +11,7 @@ import {
   addDays as persianAddDays,
   addMonths as persianAddMonths,
   format as persianFormat,
+  getDaysInMonth as persianGetDaysInMonth,
   parse as persianParse,
   startOfMonth as persianStartOfMonth,
 } from 'date-fns-jalali';
@@ -18,6 +19,7 @@ import { faIR } from 'date-fns-jalali/locale/fa-IR';
 
 export type CalendarLocale = 'fa' | 'en';
 export type CalendarInstant = string | number | Date;
+const defaultTimezone = 'Asia/Tehran';
 
 /** Date-only strings and local timestamps cannot identify an instant. */
 export function calendarInstant(value: CalendarInstant): Date {
@@ -34,7 +36,7 @@ const latinDigits = (value: string) =>
   );
 
 /** Calendar operations are display/input adapters, never billing-period authority. */
-export function createCalendar(locale: CalendarLocale = 'fa', timezone = 'Asia/Tehran') {
+export function createCalendar(locale: CalendarLocale = 'fa', timezone = defaultTimezone) {
   // An invalid account zone must not silently become the host zone.
   new Intl.DateTimeFormat('en', { timeZone: timezone });
   const persian = locale === 'fa';
@@ -80,6 +82,49 @@ export function createCalendar(locale: CalendarLocale = 'fa', timezone = 'Asia/T
   };
 }
 
+/** Convert an instant to its Tehran civil date in the Jalali calendar. */
+export function toJalali(value: Date): { year: number; month: number; day: number } {
+  const [year, month, day] = latinDigits(createCalendar().format(value, 'yyyy/MM/dd'))
+    .split('/')
+    .map(Number);
+  return { year: year!, month: month!, day: day! };
+}
+
+/** Convert a valid Jalali civil date to the instant at the start of its Tehran day. */
+export function toGregorian(year: number, month: number, day: number): Date {
+  if (![year, month, day].every((value) => Number.isInteger(value) && value > 0))
+    throw new RangeError('Invalid Jalali date');
+  const input = `${String(year).padStart(4, '0')}/${String(month).padStart(2, '0')}/${String(day).padStart(2, '0')}`;
+  const date = createCalendar().parse(input, 'yyyy/MM/dd', 0);
+  if (!date) throw new RangeError('Invalid Jalali date');
+  return date;
+}
+
+export function getJalaliMonthDays(year: number, month: number): number {
+  const start = toGregorian(year, month, 1);
+  return persianGetDaysInMonth(new TZDate(start.getTime(), defaultTimezone));
+}
+
+export function formatDate(
+  value: CalendarInstant,
+  locale: CalendarLocale = 'fa',
+  pattern = 'P'
+): string {
+  return createCalendar(locale).format(value, pattern);
+}
+
+const periodSeparator = { fa: ' تا ', en: ' to ' };
+export function formatPeriod(
+  start: CalendarInstant,
+  end: CalendarInstant,
+  locale: CalendarLocale = 'fa'
+): string {
+  const calendar = createCalendar(locale);
+  return [calendar.format(start, 'yyyy/MM/dd'), calendar.format(end, 'yyyy/MM/dd')].join(
+    periodSeparator[locale]
+  );
+}
+
 const relativeMessages = {
   fa: { justNow: 'لحظاتی پیش', soon: 'لحظاتی دیگر' },
   en: { justNow: 'Just now', soon: 'In a few moments' },
@@ -105,3 +150,5 @@ export function calendarRelativeTime(
       return formatter.format(Math.round(seconds / duration), unit);
   return formatter.format(Math.round(seconds), 'second');
 }
+
+export { calendarRelativeTime as formatRelative };
