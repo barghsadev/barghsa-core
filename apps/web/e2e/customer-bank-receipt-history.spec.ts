@@ -140,13 +140,20 @@ for (const locale of ['en', 'fa'] as const)
       await cardButton.click();
       await expect(detail(older)).toBeVisible();
       expect(requests.length).toBe(count);
-      await page.setViewportSize({ width: 390, height: 844 });
+      // Keep the mobile project's real viewport. Resizing it can leave WebKit
+      // rendering to the original device height while laying out at the new height.
+      if (page.viewportSize()!.width > 390) await page.setViewportSize({ width: 390, height: 844 });
       await openHistoryFilters(page, locale);
       const input = page.getByRole('combobox', { name: copy('filter'), exact: true });
-      await input.fill('zzzzz');
+      const fillStatus = async (value: string) => {
+        await input.scrollIntoViewIfNeeded();
+        await expect(input).toBeInViewport();
+        await input.fill(value);
+      };
+      await fillStatus('zzzzz');
       await expect(page.getByText(copy('empty'), { exact: true })).toBeVisible();
       await openHistoryFilters(page, locale);
-      await input.fill(state('Rejected'));
+      await fillStatus(state('Rejected'));
       await input.press('ArrowDown');
       await input.press('Enter');
       await input.press('Escape');
@@ -155,7 +162,7 @@ for (const locale of ['en', 'fa'] as const)
       await expect(detail(older)).toHaveCount(0);
       expect(requests.at(-1)?.has('beforeId')).toBe(false);
       await openHistoryFilters(page, locale);
-      await input.fill(state('Submitted'));
+      await fillStatus(state('Submitted'));
       await page.getByRole('option', { name: state('Submitted'), exact: true }).click();
       await input.press('Escape');
       await applyHistoryFilters(page, locale);
@@ -190,7 +197,7 @@ for (const locale of ['en', 'fa'] as const)
         .click();
       await expect.poll(() => requests.at(-1)?.get('statuses')).toBe('Rejected');
       await openHistoryFilters(page, locale);
-      await input.fill(state('Rejected'));
+      await fillStatus(state('Rejected'));
       await page.getByRole('option', { name: state('Rejected'), exact: true }).click();
       await input.press('Escape');
       await applyHistoryFilters(page, locale);

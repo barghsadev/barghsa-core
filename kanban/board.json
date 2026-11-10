@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T13:49:40+00:00",
-  "source_commit": "e7d42b3fe77aeded8d2e2c9a9bcbcee9b1af2f7e",
+  "updated": "2026-11-10T14:00:42+00:00",
+  "source_commit": "c7e2154352880ac583eba73b33d76497326615be",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -154427,7 +154427,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154503,7 +154504,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -154698,7 +154699,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -155008,7 +155010,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -155104,7 +155107,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -155321,7 +155324,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -155633,7 +155637,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -155737,7 +155742,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -155950,7 +155955,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -156291,7 +156297,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -156395,7 +156402,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -156682,7 +156689,8 @@
             "Bindings renewed by release-0.5-final-acceptance: affected native customer/staff controls, final 24-case profile-switch suite, obsolete-receipt regression, unchanged gzip limits, additive translations and identical migration journal data. Financial and authority assertions remain.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -157044,7 +157052,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -157148,7 +157157,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -157361,7 +157370,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -157585,7 +157595,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -157661,7 +157672,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -157852,7 +157863,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -158076,7 +158088,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -158152,7 +158165,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -158343,7 +158356,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -158568,7 +158582,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -158644,7 +158659,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -158835,7 +158850,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -159061,7 +159077,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -159137,7 +159154,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -159328,7 +159345,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -159562,7 +159580,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -159638,7 +159657,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -159829,7 +159848,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -160055,7 +160075,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -160131,7 +160152,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -160322,7 +160343,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-exact-coverage: 16 affected units, 76 native confirmation and branding cases, 32 native contrast journeys and 97 unchanged bundle limits. Financial amounts, permissions, typed review and idempotency assertions were preserved.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/bank-receipts-financial-history",
           "limitations": [
@@ -503286,7 +503308,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Pass the full exact candidate nightly matrix with no unexpected, flaky or runner errors and verify its other scheduled gates. Exploratory run 42817801007 reproduced native Firefox axe content-process crashes. WebKit and Mobile Safari consultation and threshold regressions have source-bound targeted passes. Continue isolating Firefox and verify other residual failures against the final source."
+        "Pass the full exact candidate nightly matrix with no unexpected, flaky or runner errors and verify its other scheduled gates. Exploratory run 42817801007 reproduced native Firefox axe content-process crashes. WebKit and Mobile Safari consultation and threshold regressions have source-bound targeted passes. Continue isolating Firefox and verify other residual failures against the final source.",
+        "Mobile Safari receipt filters passed all localized theme variants after the viewport and status-entry fixture fixes. The next exact matrix still has to verify the hosted browser behavior."
       ],
       "owner": null,
       "depends_on": [],
@@ -503294,7 +503317,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-consultation-and-threshold-browser-recovery"
+          "release-0.6-consultation-and-threshold-browser-recovery",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": null
       }
@@ -689240,7 +689264,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -689364,7 +689389,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -689806,7 +689831,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "criterion_result": "Contract list columns and accepted-party/commercial-value snapshots, current and historical terms, schedules, selected-version timeline, amendment lineage, signed/version-bound documents and linked order/invoice/prerequisite status verified in current customer/staff compositions.",
           "limitations": [
@@ -690094,7 +690120,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -690218,7 +690245,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -690660,7 +690687,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "criterion_result": "Invoice list references/type/status/period/amount/due/paid columns and responsive views; original/replacement/adjustment detail chain, explanations, exact lines/VAT, paid/remaining, payment/receipt timelines, attachments and guarded payment options verified.",
           "limitations": [
@@ -690956,7 +690984,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -691080,7 +691109,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -691522,7 +691551,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "criterion_result": "Bank receipt tables/cards expose receipt/invoice reference, exact amount, bank, deposit date, state and open action. Customer and staff details retain matched invoice, safe attachment/preview, deposit metadata and verification timeline with audience-specific fields and current authorization.",
           "limitations": [
@@ -691802,7 +691832,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -691926,7 +691957,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -692368,7 +692399,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "criterion_result": "Electricity detail composition retains separate commercial/financial status, recorded period/quantities, green and pricing/gift snapshots, payment/refund outcomes, links/history. Added read-only current-version contract document prerequisites, publication waiting notice, AwaitingSignature contract link and one valid main landmark. Denied nested reads clear that section without withdrawing an authorized order.",
           "limitations": [
@@ -692647,7 +692679,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-receipt-filter-mobile-viewport"
         ],
         "current_acceptance": {
           "kind": "verified-service-detail-workspace-compositions",
@@ -692771,7 +692804,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -693213,7 +693246,8 @@
             "Renewed the shared package and affected admin/Terms controller bindings. The public wire parameters, existing limits and permission gates passed the scoped controller and compiled HTTP checks.",
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed affected shared exports and authentication input bindings. Current canonical destinations, legacy HTTP inputs, OTP ownership, browser privacy and published OpenAPI passed the scoped regressions.",
-            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks."
+            "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "criterion_result": "Solar postal detail composes current postal state, configured original-document checklist, recorded carrier/tracking and safe public HTTPS link, optional dated arrival estimate with explicit non-guarantee, customer-visible notes and separate immutable construction milestone tracker. Recovery, exact reviewed retry and lost authority verified.",
           "limitations": [
@@ -754539,7 +754573,7 @@
             },
             {
               "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
-              "sha256": "94d454c3dc3f30d35f624f6624bdcf8f4684f1dc520cee47eeb89321a06041dc"
+              "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
             },
             {
               "path": "apps/web/e2e/customer-financial-history-views.spec.ts",
@@ -756141,7 +756175,8 @@
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed auth request bindings after verifying the intended unknown-field rejection, existing supported request fields, CSRF ordering, credential and OTP state, and the auth-only OpenAPI delta.",
-            "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions."
+            "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
+            "Renewed the receipt browser fixture binding after eight exact production WebKit and Mobile Safari cases passed. The change affects fixture viewport and scroll only."
           ],
           "limitations": [
             "Complete the remaining effective contract/refund/invoice/receipt criteria after the existing owner decisions on engine/callback/credit-trigger/increase representations are dispositioned. Eleven scoped tasks remain partial; six have no current whole-task acceptance. Preserve the separate mathematical-policy, development reload and operational gates. Current35 boundary passes and94 matching accepted tasks do not certify those unresolved requirements."
@@ -757520,7 +757555,8 @@
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-sealed-document-stream-scan",
-          "release-0.6-video-upload-policy-ceiling"
+          "release-0.6-video-upload-policy-ceiling",
+          "release-0.6-receipt-filter-mobile-viewport"
         ]
       }
     },
@@ -884780,6 +884816,47 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/consultation-and-threshold-browser-recovery",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "199174e5985835104d851bd969061665ae59ea788ca80ce95b988eda68256852"
+    },
+    "release-0.6-receipt-filter-mobile-viewport": {
+      "batch": "release-0.6-receipt-filter-mobile-viewport",
+      "base_commit": "c7e2154352880ac583eba73b33d76497326615be",
+      "task_keys": [
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "release-readiness#R-02.01"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/customer-bank-receipt-history.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-bank-receipt-history.spec.ts",
+          "sha256": "3ee7fdfa451ec9d2d87ecd90d4e2f188f96967226660f550983cfdc08ac57160"
+        }
+      ],
+      "checks": [
+        "Hosted run 42817801007 mobile Safari shard 2 failed all four receipt cases. The trace shows a 390 by 664 native viewport resized to 390 by 844 and the Apply target at y=806. The captured page rendered to the original height. The local unchanged case reproduced the same pointer interception.",
+        "The test keeps the native mobile viewport and still narrows desktop projects to 390 pixels for drawer coverage. It scrolls the status field into view before typing, including after reopening the drawer, while retaining pointer and keyboard selection, exact query values and write counts, narrow layout and axe assertions. No application code changed.",
+        "Final production WebKit and Mobile Safari receipts passed all eight language and theme combinations without retries. Intermediate runs found a desktop artifact ENOSPC and additional mobile status entry attempts while the input was offscreen. The final receipt ran with writable artifacts and all status inputs visible."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/receipt-filter-mobile-viewport",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "7dd45398c8b68599c26e087d3d2579652393231fa23c6338cb2b64e586a7914c"
     }
   },
   "historical_improvements": [
