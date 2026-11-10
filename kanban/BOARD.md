@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1197 | Accepted with unchanged source bindings. |
-| verify | 105 | Existing work may be complete; inspect evidence before building. |
+| done | 1201 | Accepted with unchanged source bindings. |
+| verify | 101 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1056,12 +1056,12 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.02.03` | done | Earlier acceptance_verified | Create timezone-aware date/time display utilities |
 | `01-platform-infrastructure.md#T-06.02.04` | done | Earlier acceptance_verified | Create logic for RTL/LTR switching based on locale |
 | `01-platform-infrastructure.md#T-06.02.05` | done | Earlier acceptance_verified | Localize number/currency formatting |
-| `01-platform-infrastructure.md#T-06.03.01` | verify | Earlier deferred | Initialize `packages/ui` with shadcn/ui and Base UI |
-| `01-platform-infrastructure.md#T-06.03.02` | verify | Earlier acceptance_verified | Create themed component set with RTL support |
+| `01-platform-infrastructure.md#T-06.03.01` | done | Earlier deferred | Initialize `packages/ui` with shadcn/ui and Base UI |
+| `01-platform-infrastructure.md#T-06.03.02` | done | Earlier acceptance_verified | Create themed component set with RTL support |
 | `01-platform-infrastructure.md#T-06.03.03` | verify | Earlier acceptance_verified | Implement WCAG 2.2 AA accessibility in all shared components |
-| `01-platform-infrastructure.md#T-06.03.04` | verify | Earlier acceptance_verified | Create localized DatePicker component |
+| `01-platform-infrastructure.md#T-06.03.04` | done | Earlier acceptance_verified | Create localized DatePicker component |
 | `01-platform-infrastructure.md#T-06.03.05` | partial | Earlier partial | Implement theme system with admin overrides |
-| `01-platform-infrastructure.md#T-06.03.06` | verify | Earlier acceptance_verified | Create loading/empty/error state components |
+| `01-platform-infrastructure.md#T-06.03.06` | done | Earlier acceptance_verified | Create loading/empty/error state components |
 | `01-platform-infrastructure.md#T-06.04.01` | verify | Earlier deferred | Create privacy-safe analytics abstraction with consent gate and redaction |
 | `01-platform-infrastructure.md#T-07.01.01` | verify | Earlier deferred | Create `pnpm setup:dev` convenience script |
 | `01-platform-infrastructure.md#T-07.01.02` | verify | Earlier deferred | Configure dev-mode OTP bypass and console printing |

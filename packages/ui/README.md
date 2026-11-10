@@ -2,6 +2,8 @@
 
 Product imports use `@barghsa/ui`, `@barghsa/ui/form`, `@barghsa/ui/sonner` and `@barghsa/ui/direction-provider`. Import `@barghsa/ui/styles.css` once in the application. The package exports matching ESM/CommonJS declarations and keeps module boundaries for tree shaking. `pnpm --filter @barghsa/ui build` checks both formats and verifies that a Button-only browser bundle excludes Dialog, DatePicker and calendar libraries.
 
+The Base UI scaffold uses Tailwind 4 and imports `tw-animate-css` for shared animations. `src/styles.css` maps the light and dark CSS variables to semantic utilities and loads the shared font, radius, spacing and motion extensions from `tailwind.config.ts`. [shadcn Tailwind 4 migration](https://ui.shadcn.com/docs/tailwind-v4).
+
 ## Component catalogue
 
 Run `pnpm --filter @barghsa/ui stories` for the local Ladle catalogue on `127.0.0.1:61000`. Build it with `pnpm --filter @barghsa/ui stories:build`, then use `stories:preview` to inspect the static output. `stories:typecheck` checks examples and real component props with the same strict compiler settings.

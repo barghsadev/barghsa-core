@@ -16812,12 +16812,10 @@
         "story": "01-platform-infrastructure.md#spec-1f5db732e1c9"
       },
       "requirement": "- **T-06.03.01:** Initialize `packages/ui` with shadcn/ui and Base UI\n  - **Notes:** Package name: `@barghsa/ui`. Install Radix UI primitives or Base UI for: Dialog, Popover, DropdownMenu, Select, Tabs, Toast, Tooltip. Use `tailwindcss` with `tailwindcss-animate` for animations. Configure `tailwind.config.ts` with CSS variable-based theme tokens. Use `class-variance-authority` for variant management. Add `clsx`/`tailwind-merge` for class merging. Build with `tsup` for ESM + CJS.\n  - **Dependencies:** S-01.02\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -16846,8 +16844,91 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shared-ui-source-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-shared-ui-acceptance",
+          "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+          "checks": [
+            "The installed shadcn CLI reported base-nova, Base UI, the required primitive components, Tailwind 4 and the shared CSS entry. Dependencies, CVA/clsx/tailwind-merge composition, and tsup ESM/CJS entries were reviewed.",
+            "The shared README documents the upstream Tailwind 4 migration to tw-animate-css and the CSS-variable theme with Tailwind config extensions. Reused eight source-bound ESM/CJS, strict consumer prop and tree-shaking distribution checks."
+          ],
+          "source_evidence": [
+            {
+              "path": "packages/ui/README.md",
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
+            },
+            {
+              "path": "packages/ui/components.json",
+              "sha256": "50e6ad58e7f42af2f0bc1c40043f40df27d44f5d1d91b3c45f3dd8c01ee97ace"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+            },
+            {
+              "path": "packages/ui/scripts/distribution.check.mjs",
+              "sha256": "b7a874026c5ac85a5b354945afa556006f49c75f7664b0385cb0b7a1a81440d6"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dialog.tsx",
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+              "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+            },
+            {
+              "path": "packages/ui/src/components/ui/popover.tsx",
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+            },
+            {
+              "path": "packages/ui/src/components/ui/select.tsx",
+              "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/sonner.tsx",
+              "sha256": "35d2e8cc7030bd0c50842a9df59ae5aeab48d32d854267588e65788ec4573588"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tabs.tsx",
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tooltip.tsx",
+              "sha256": "54e08779c6516999d0c5f6a7a37005ebabe2f2e48e241f927c3033b247eff7fc"
+            },
+            {
+              "path": "packages/ui/src/index.ts",
+              "sha256": "0f01fd9407bd96e09d1485b1a3ad3473b324668019996cc7057cc3fbfc385f07"
+            },
+            {
+              "path": "packages/ui/src/lib/utils.ts",
+              "sha256": "9304a861c8673bee09e0f12de31773abbde503b02e59dfd74763ddec2e37cf05"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+            },
+            {
+              "path": "packages/ui/tailwind.config.ts",
+              "sha256": "fd374f1cdb0f3545f1a506cb2f814af2106b8593af63eb78add6ca607e723d43"
+            },
+            {
+              "path": "packages/ui/tsup.config.ts",
+              "sha256": "554b9e1fa06809085999433ad9959cc79e7e7aff29d66cb421c8f39df39a407c"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "reused_acceptance": [
+            "07-ui-ux-design.md#T-07.01.01.02",
+            "07-ui-ux-design.md#T-07.01.01.06"
+          ]
+        }
       }
     },
     {
@@ -16861,12 +16942,10 @@
         "story": "01-platform-infrastructure.md#spec-1f5db732e1c9"
       },
       "requirement": "- **T-06.03.02:** Create themed component set with RTL support\n  - **Notes:** Each component uses CSS logical properties (`padding-inline-start` instead of `padding-left`, `margin-inline-end` instead of `margin-right`, `border-inline-start` instead of `border-left`). Use Tailwind `rtl:`/`ltr:` modifiers for any property that can't use logical properties. Theme tokens in CSS variables: `--color-primary`, `--color-background`, `--color-text`, `--border-radius`, `--spacing-*`. Both light and dark variants defined.\n  - **Dependencies:** T-06.03.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17165,8 +17244,336 @@
           "apps/web/src/routes/_app/settings/profile.tsx",
           "packages/ui/src/styles.css"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shared-ui-source-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-shared-ui-acceptance",
+          "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+          "checks": [
+            "Reviewed logical spacing, alignment, the runtime DirectionProvider and flip handling for physical popup placements. Shared component source contains no physical directional margin, padding, border or text alignment utility requiring a locale exception.",
+            "Light and dark semantic variables cover colors, radius and spacing. Reused matching native catalogue, RTL placement, focus/keyboard and dark-mode receipts from the three accepted UI tasks. This is themed and directional behavior evidence."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+            },
+            {
+              "path": "apps/web/e2e/ui-controls.spec.ts",
+              "sha256": "268629d9c6465e9d9369fa11d23c59a36b19c79cbfcf14754b00c5df60ff5638"
+            },
+            {
+              "path": "packages/ui/README.md",
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
+            },
+            {
+              "path": "packages/ui/components.json",
+              "sha256": "50e6ad58e7f42af2f0bc1c40043f40df27d44f5d1d91b3c45f3dd8c01ee97ace"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/animated.tsx",
+              "sha256": "fe50f8889067863df2a795503820b53368176f820ca61ad42deb1a904b3bca02"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+              "sha256": "924dccb237bd2f3aaedd05bc9d7aead0798d4f0b5815d3d8cd96f4145648e115"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+              "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table.labels.ts",
+              "sha256": "23955ddb08e4046b697912f0588a28c27c7b40c3294374569cc53e32e517135e"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/data-table.tsx",
+              "sha256": "adfd706003f9852ea1dbeeb35db7212e72572b102ca8b29582ea20f5d70740b9"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-time-picker.tsx",
+              "sha256": "76c263fd5ae8a01cef7c10efc10296f48aeddae720b0c8a1f228162c4cdb2a55"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/month-picker.tsx",
+              "sha256": "5f9e1c49b1876dfbb74aae7ce7026c2bc0c9ae2c2cd54197b1b608ed3e82d987"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/multi-select.tsx",
+              "sha256": "af3e54ff5c38a9bd99a23051a6720068718268bb4eace20de5b0f4e60378c837"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/number-field.labels.ts",
+              "sha256": "239cfa89ac000fe1113daee36b20477974377bfb43d94671969c1f57ad47af67"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/number-field.tsx",
+              "sha256": "b00f1a31b5e3ab26c3631e95788363bbdb1b1772ad6d2e3f2b70f1e1c9ac4c41"
+            },
+            {
+              "path": "packages/ui/src/components/ui/accordion.tsx",
+              "sha256": "33ba16eda70a4d74c069ed182a09905a0be820b5143c4ca716b0285a2a4622c1"
+            },
+            {
+              "path": "packages/ui/src/components/ui/alert.tsx",
+              "sha256": "406a5f943e5d95186e19a8cbea49e25dd92b3d4f1dbc2f002c53b79c69fdbad3"
+            },
+            {
+              "path": "packages/ui/src/components/ui/avatar.tsx",
+              "sha256": "93d5bee557c6f8e579a82d0442d4fa1c9d321cccd531b370e9b31e8874de02a8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/badge.tsx",
+              "sha256": "f51a0274e43054dad7fdf51ad884bc0e209e45045f2721354712639fb120e119"
+            },
+            {
+              "path": "packages/ui/src/components/ui/breadcrumb.tsx",
+              "sha256": "8693d748c28d58c692057733d58f87af43eaebd6d8ee783364a3a236ccf0be80"
+            },
+            {
+              "path": "packages/ui/src/components/ui/button.tsx",
+              "sha256": "3a6179e69452f940847f263789a85587ea594c14df539fef910091240b010a84"
+            },
+            {
+              "path": "packages/ui/src/components/ui/calendar.tsx",
+              "sha256": "1343ad0379632800e43d73837a4ab22939ac9f7db56fb6fc23afe1b8bd2ac88a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/card.tsx",
+              "sha256": "9e75f68b7716b2e2e022fb42efc93ae81f55e5b86fca797b041963e02c48db8c"
+            },
+            {
+              "path": "packages/ui/src/components/ui/checkbox.tsx",
+              "sha256": "3d1fc35294dda85c2eed5f68f9aa0b4ae5943d64cc38b943f91f0c7a24bdbdc1"
+            },
+            {
+              "path": "packages/ui/src/components/ui/command.tsx",
+              "sha256": "c6f2e2356e4c6088bb2a91f62d28b01808e44f4c4bdea0ffdb77408e6df53d30"
+            },
+            {
+              "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+              "sha256": "7538bb3bfacfaced42c3990dc5efea65704f9a1a2cd3892a7d6deab1446f7724"
+            },
+            {
+              "path": "packages/ui/src/components/ui/confirmation-gate.tsx",
+              "sha256": "06aab9fda02d3b329a263c33c29be0b9250a82bc02b6a4e5abe4c9c9f6f4c5e8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/date-range-filter.tsx",
+              "sha256": "2cac0cd195f78a57cbefd517b6650f992e5568576d8f607765196922ffe2d315"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dependent-select.tsx",
+              "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dialog.tsx",
+              "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+              "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+            },
+            {
+              "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+              "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+            },
+            {
+              "path": "packages/ui/src/components/ui/empty.tsx",
+              "sha256": "86c06c1460cd178c25798fb4aee67a31060220040b0d166da21212fe90ed5a7b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/error-state.tsx",
+              "sha256": "6eb37c93527326baf4063cec22a1447ba7d38421d8a1047aff2f9fc98dd73502"
+            },
+            {
+              "path": "packages/ui/src/components/ui/field.tsx",
+              "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/filter-apply-context.tsx",
+              "sha256": "059196ac5122ec2b044c9c3b8e4390bd5fadea881c9b7c0758e6cba5dbb2c56a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/input-group.tsx",
+              "sha256": "cfa2fbd99ec046b83d8c4595c0461aa7e456a7f88b7b11cb9d19bc1f547fc3c8"
+            },
+            {
+              "path": "packages/ui/src/components/ui/input.tsx",
+              "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+            },
+            {
+              "path": "packages/ui/src/components/ui/job-progress.tsx",
+              "sha256": "ff49c5a88e9904fc1e11d73d72a7e1a235c4e444bb2d84e4aeee23354cbb1d03"
+            },
+            {
+              "path": "packages/ui/src/components/ui/label.tsx",
+              "sha256": "28441c197bc0df9ea8da0b7992952ad22bce260baa81f6f50e405e6ad03b56e5"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-filter-panel.tsx",
+              "sha256": "52623fb01b6aab1d2857296398de71dc3a4dc7af5d3e5dcd2b7bfcbc52ebd9ce"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-page.tsx",
+              "sha256": "d3a2094c539a88ee6dd41407123815baf4ab423b1bf4efe6e47d095082ff45c0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-sort-dropdown.tsx",
+              "sha256": "0f5d0e42111b6a6e9b816e9d0f49cc46d30d253e25b9aa4ca616dd412fddc2a7"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-toolbar.tsx",
+              "sha256": "ac5282b860b3d84897ef60f55791c5c2b683567ce545fbba0c690c8a51d0ea5c"
+            },
+            {
+              "path": "packages/ui/src/components/ui/list-view-toggle.tsx",
+              "sha256": "716399ed5cb53a04533a681c3faefdc6da564f7816dbd4e51bde009e7cbe437d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/multi-select-filter.tsx",
+              "sha256": "3e964e1f6b31b3c0a5da4646d4af95925a9d49e9ca1c028049064aa76a2af096"
+            },
+            {
+              "path": "packages/ui/src/components/ui/native-select.tsx",
+              "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/number-filter.tsx",
+              "sha256": "a4a8ccefd983f27680492674ef124e75d0b8a6302c3ec27b1b813e23fc3d3467"
+            },
+            {
+              "path": "packages/ui/src/components/ui/page-states.tsx",
+              "sha256": "f8c394cb82b8ee8ba9c723187b072e4370853270a1fa3778bfb77e023d3e4440"
+            },
+            {
+              "path": "packages/ui/src/components/ui/pagination.tsx",
+              "sha256": "13a65e2f4c75537567c34f1dd7e386346b05fc0b489d1c6e047c59783638f0a2"
+            },
+            {
+              "path": "packages/ui/src/components/ui/popover.tsx",
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+            },
+            {
+              "path": "packages/ui/src/components/ui/progress.tsx",
+              "sha256": "800d34439e000a174e1a37e01a9b11104da4f630b88f29bebb2f94396b68226b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/radio-group.tsx",
+              "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+            },
+            {
+              "path": "packages/ui/src/components/ui/responsive-layout.tsx",
+              "sha256": "598555556f63803afc4c6f8dc944dc48d87bbedee451ab78939c17befaae5b4f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/scroll-area.tsx",
+              "sha256": "4e817834049fe7e6738f8b23f228f3b15f99316a2fc628e6f4048a81417fdc0d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
+              "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
+            },
+            {
+              "path": "packages/ui/src/components/ui/select-filter.tsx",
+              "sha256": "b2ff97c12971e98f78fbe47900f081965b5ae26ce263b139b1adfbfd11fe45a0"
+            },
+            {
+              "path": "packages/ui/src/components/ui/select.tsx",
+              "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/separator.tsx",
+              "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/sheet.tsx",
+              "sha256": "c43c44934ef0e59efd663926c85bc4d1dfcea1b11059cbebf4c7417da6b66286"
+            },
+            {
+              "path": "packages/ui/src/components/ui/skeleton.tsx",
+              "sha256": "105a200e1e4f8dbc670467cbb7750e48ddc66b572f7b1f309b7de2bd18607c70"
+            },
+            {
+              "path": "packages/ui/src/components/ui/slider.tsx",
+              "sha256": "854e4b2651be65b4263c6227d32b52cb41794ac85306c3f6c88840a9eacd210b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/sonner.tsx",
+              "sha256": "35d2e8cc7030bd0c50842a9df59ae5aeab48d32d854267588e65788ec4573588"
+            },
+            {
+              "path": "packages/ui/src/components/ui/status-filter.tsx",
+              "sha256": "4ce50ec2a4423b455a45e3a8a8e4cc5019bd0d4e17fc4ec689b57dafa2da201f"
+            },
+            {
+              "path": "packages/ui/src/components/ui/switch.tsx",
+              "sha256": "37f49fc617930a954b2d5c2a208cec5f5d95acc052c8192d1840914e1e9be73d"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tabs.tsx",
+              "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+            },
+            {
+              "path": "packages/ui/src/components/ui/text-filter.tsx",
+              "sha256": "10561bc31c73e4cff97698a078e143852601c7bd3e9efd63a15dab3b16e68023"
+            },
+            {
+              "path": "packages/ui/src/components/ui/textarea.tsx",
+              "sha256": "4c49d74c884f22498aae7bd7df7f62e840963a15077bbb5dd4739edb51d9759a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/toast.tsx",
+              "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+            },
+            {
+              "path": "packages/ui/src/components/ui/tooltip.tsx",
+              "sha256": "54e08779c6516999d0c5f6a7a37005ebabe2f2e48e241f927c3033b247eff7fc"
+            },
+            {
+              "path": "packages/ui/src/components/ui/use-confirm.tsx",
+              "sha256": "06ebb16ee7b1447f3f4b8dcf643ba8f67f38218683bc04d7b5b8bc1af04e6d80"
+            },
+            {
+              "path": "packages/ui/src/components/ui/workflow.tsx",
+              "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+            },
+            {
+              "path": "packages/ui/src/direction-provider.ts",
+              "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+            },
+            {
+              "path": "packages/ui/tailwind.config.ts",
+              "sha256": "fd374f1cdb0f3545f1a506cb2f814af2106b8593af63eb78add6ca607e723d43"
+            },
+            {
+              "path": "packages/ui/tsup.config.ts",
+              "sha256": "554b9e1fa06809085999433ad9959cc79e7e7aff29d66cb421c8f39df39a407c"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "reused_acceptance": [
+            "07-ui-ux-design.md#T-07.01.01.07",
+            "07-ui-ux-design.md#T-07.03.01.04",
+            "07-ui-ux-design.md#T-07.06.01.04"
+          ]
+        }
       }
     },
     {
@@ -17499,12 +17906,10 @@
         "story": "01-platform-infrastructure.md#spec-1f5db732e1c9"
       },
       "requirement": "- **T-06.03.04:** Create localized DatePicker component\n  - **Notes:** Single and range date selection. When locale is `fa`, uses Jalali calendar; when `en`, uses Gregorian. Keyboard accessible: arrow keys navigate days, Enter selects, Escape closes. Props: `value`, `onChange`, `minDate`, `maxDate`, `locale`, `timezone`. Displays currently selected date in full format. For range/period selection, uses half-open `[start, end)` semantics in UI. Uses `datepicker-*` accessible patterns (dialog role, grid for days).\n  - **Dependencies:** T-06.02.02, T-06.03.02\n  - **Complexity:** L\n  - **UI/UX:** DatePicker switches calendar system when language changes. Displays Hijri month names in Persian, Western month names in English. Shows current Jalali year alongside Gregorian year in Persian mode. Responsive: full calendar on desktop, simplified month selector on mobile.",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17574,8 +17979,60 @@
           "apps/web/src/pages/AdminCataloguePage.tsx",
           "apps/web/src/pages/CrmProfileList.tsx"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shared-ui-source-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-shared-ui-acceptance",
+          "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+          "checks": [
+            "Single and range modes support Jalali and Gregorian full-date labels, caller timezone, inclusive day bounds, half-open ranges and the named popover grid. Reused source-bound native arrows/Tab/Enter/Escape, touch, timezone and focus restoration receipts.",
+            "The two focused calendar and page-state files passed 37 total unit cases in 2.41 seconds, including calendar day/time boundaries and invalid date handling."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/date-picker-component.spec.ts",
+              "sha256": "e93250b9218233eed8767770268dd4df611505b33016a590dff2775458440a6f"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/date-picker/index.html",
+              "sha256": "30ea7c1e3906b5b69357f04ae29ec939981c8ee4e30ca242dcdc482123149943"
+            },
+            {
+              "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+              "sha256": "19373ef19af24e4c1ffab6ffcda67a1a229a603068caed16ebe3d025c368f3cd"
+            },
+            {
+              "path": "packages/ui/package.json",
+              "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.test.ts",
+              "sha256": "dcf84843131b62be1636e63080f316d0edaf41687192e30b81218c474f71ebb4"
+            },
+            {
+              "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+              "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+            },
+            {
+              "path": "packages/ui/src/components/ui/calendar.tsx",
+              "sha256": "1343ad0379632800e43d73837a4ab22939ac9f7db56fb6fc23afe1b8bd2ac88a"
+            },
+            {
+              "path": "packages/ui/src/components/ui/popover.tsx",
+              "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+            }
+          ],
+          "reused_acceptance": [
+            "07-ui-ux-design.md#T-07.09.02.01",
+            "07-ui-ux-design.md#T-07.09.02.02",
+            "07-ui-ux-design.md#T-07.09.02.05"
+          ]
+        }
       }
     },
     {
@@ -17761,12 +18218,10 @@
         "story": "01-platform-infrastructure.md#spec-1f5db732e1c9"
       },
       "requirement": "- **T-06.03.06:** Create loading/empty/error state components\n  - **Notes:** `<Skeleton>` for content placeholders (matching card/table/input shapes with shimmer animation, disabled when reduced-motion). `<EmptyState icon title description action? />` for zero-data pages. `<ErrorBoundary>` catches rendering errors, displays \"Something went wrong\" with retry button and support contact. `<PageLoading>` full-page spinner/skeleton for route transitions.\n  - **Dependencies:** T-06.03.02\n  - **Complexity:** M\n  - **UI/UX:** Skeleton components match the exact dimensions of the content they replace. Loading never shows raw text \"Loading...\" except as ARIA label. Empty states are informative, not blank.\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18016,8 +18471,72 @@
           "packages/ui/src/components/ui/slider.tsx",
           "apps/web/src/components/ApplicationToaster.tsx"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-shared-ui-source-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-shared-ui-acceptance",
+          "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+          "checks": [
+            "The shared package exports shape skeletons with reduced-motion-safe shimmer, EmptyState with icon/text/optional action, ErrorBoundary with safe retry/support, and route-sized PageLoading with a status announcement. The web route entries use these shared states.",
+            "The two focused calendar and page-state files passed 37 total unit cases in 2.41 seconds. Reused matching native shimmer/reduced-motion, route fallback, retry and safe support receipts for the unchanged runtime."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/e2e/theme-components.spec.ts",
+              "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+            },
+            {
+              "path": "apps/web/e2e/ui-identity-loading.spec.ts",
+              "sha256": "e6bbe856eb87f8ef0c98ccc346844b815b91a20b67f44208ab799855892f45d4"
+            },
+            {
+              "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+              "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+            },
+            {
+              "path": "apps/web/src/components/RouteSkeleton.tsx",
+              "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+            },
+            {
+              "path": "apps/web/src/router.tsx",
+              "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+            },
+            {
+              "path": "packages/ui/src/components/ui/empty.tsx",
+              "sha256": "86c06c1460cd178c25798fb4aee67a31060220040b0d166da21212fe90ed5a7b"
+            },
+            {
+              "path": "packages/ui/src/components/ui/error-state.tsx",
+              "sha256": "6eb37c93527326baf4063cec22a1447ba7d38421d8a1047aff2f9fc98dd73502"
+            },
+            {
+              "path": "packages/ui/src/components/ui/page-states.tsx",
+              "sha256": "f8c394cb82b8ee8ba9c723187b072e4370853270a1fa3778bfb77e023d3e4440"
+            },
+            {
+              "path": "packages/ui/src/components/ui/skeleton.tsx",
+              "sha256": "105a200e1e4f8dbc670467cbb7750e48ddc66b572f7b1f309b7de2bd18607c70"
+            },
+            {
+              "path": "packages/ui/src/index.ts",
+              "sha256": "0f01fd9407bd96e09d1485b1a3ad3473b324668019996cc7057cc3fbfc385f07"
+            },
+            {
+              "path": "packages/ui/src/page-states.test.tsx",
+              "sha256": "7d9db8c3b85a6e29c2d33e6a72a6c11708a61a7afeb6a6887c9f49d325d997de"
+            },
+            {
+              "path": "packages/ui/src/styles.css",
+              "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+            }
+          ],
+          "reused_acceptance": [
+            "07-ui-ux-design.md#T-07.01.03.19",
+            "07-ui-ux-design.md#T-07.12.01.04",
+            "07-ui-ux-design.md#T-07.12.01.09"
+          ]
+        }
       }
     },
     {
@@ -523816,7 +524335,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -524472,6 +524991,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -524939,7 +525466,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -525580,7 +526107,17 @@
               "packages/ui/src/fonts/vazirmatn-arabic.woff2",
               "packages/ui/src/fonts/vazirmatn-latin.woff2"
             ]
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
+          ]
         },
         "acceptance_history": [
           {
@@ -525813,7 +526350,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -526454,7 +526991,17 @@
               "packages/ui/src/fonts/vazirmatn-arabic.woff2",
               "packages/ui/src/fonts/vazirmatn-latin.woff2"
             ]
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
+          ]
         },
         "acceptance_history": [
           {
@@ -526564,7 +527111,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -527220,6 +527767,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -527466,7 +528021,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -528107,7 +528662,17 @@
               "packages/ui/src/fonts/vazirmatn-arabic.woff2",
               "packages/ui/src/fonts/vazirmatn-latin.woff2"
             ]
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
+          ]
         },
         "acceptance_history": [
           {
@@ -528219,7 +528784,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -528875,6 +529440,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -529121,7 +529694,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -529762,7 +530335,17 @@
               "packages/ui/src/fonts/vazirmatn-arabic.woff2",
               "packages/ui/src/fonts/vazirmatn-latin.woff2"
             ]
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
+          ]
         },
         "acceptance_history": [
           {
@@ -529884,7 +530467,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -530525,7 +531108,17 @@
               "packages/ui/src/fonts/vazirmatn-arabic.woff2",
               "packages/ui/src/fonts/vazirmatn-latin.woff2"
             ]
-          }
+          },
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
+          ]
         },
         "acceptance_history": [
           {
@@ -530644,7 +531237,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -530842,6 +531435,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
           ]
         },
         "acceptance_history": [
@@ -530970,7 +531573,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -531312,6 +531915,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -531571,7 +532182,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -531913,6 +532524,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -532172,7 +532791,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -532514,6 +533133,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -532773,7 +533400,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -533115,6 +533742,14 @@
               ],
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-theme-direction/acceptance-proof.json",
               "scope": "Only changed appearance/branding and additive public-schema bindings renewed. Unchanged money, authority, profile, CSRF, receipt and version assertions retain earlier evidence; current targeted caller/contrast/publication checks supplement it. Prior task/release dispositions and independent live gates remain."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -534673,7 +535308,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -534874,6 +535509,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         },
@@ -537233,7 +537878,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -537514,6 +538159,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -537589,7 +538244,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -537870,6 +538525,16 @@
               "batch": "release-0.5-component-direction-matrix",
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -538560,7 +539225,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -538775,6 +539440,14 @@
                 "apps/web/e2e/account-menu.spec.ts"
               ],
               "scope": "Confirm actual protected document navigation, live 401 and redirect after logout. Retain the original authorization and account UI assertions with focused native passing evidence."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         },
@@ -539431,7 +540104,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -539867,6 +540540,16 @@
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
           ]
         },
         "acceptance_history": [
@@ -539995,7 +540678,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/components.json",
@@ -540200,6 +540883,16 @@
               "base_commit": "162440d5fa374ff84200ced8bc82b9f26e2337a7",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-component-direction-matrix/proof.json"
             }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
+            }
           ]
         },
         "acceptance_history": [
@@ -540272,7 +540965,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/scripts/distribution.check.mjs",
@@ -540450,6 +541143,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-list-tables/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only. The sole product change conditionally hides inactive drawer clear-all; all other panel bytes and all original component/browser assertions are exact.136 unit/component cases,8 UI distribution checks,88 distinct browser cases and all91 unchanged numerical budgets pass. Two missing read-only contract companion fixtures were supplied; current-authority withdrawal and money/scope guards stay unchanged. No domain/API/schema/worker code or task/release gates changed."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -541140,7 +541841,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -541787,6 +542488,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -542591,7 +543300,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -542886,6 +543595,14 @@
                 "apps/web/e2e/conversation-identity.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -543522,7 +544239,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -543817,6 +544534,14 @@
                 "apps/web/e2e/conversation-identity.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -544394,7 +545119,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -544689,6 +545414,14 @@
                 "apps/web/e2e/conversation-identity.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -545285,7 +546018,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545527,6 +546260,16 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -546174,7 +546917,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -546821,6 +547564,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-profile-workspace-navigation/acceptance-proof.json"
               ],
               "scope": "Scoped renewal only: current native/39UI/118i18n/100distinct browser checks, final14 navigation renewals, exact retained engines/guards/business sources, default-auth BrandMark proof,16 additive dictionary values and all original numerical budgets retained with explicit startup parents/compact bar and separately tested click-only gates. Layout/profile identity/rich switch changes preserve money, grants, current authority, captured target/confirmation and stale-response boundaries. Existing task/release status, unmet criteria, historical evidence and live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ],
           "presentation_renewals": [
@@ -559569,7 +560320,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -559764,6 +560515,14 @@
                 "apps/web/e2e/staff-dashboard-widgets.spec.ts"
               ],
               "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -559916,7 +560675,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -560111,6 +560870,14 @@
                 "apps/web/e2e/staff-dashboard-widgets.spec.ts"
               ],
               "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -560263,7 +561030,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -560458,6 +561225,14 @@
                 "apps/web/e2e/staff-dashboard-widgets.spec.ts"
               ],
               "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -560610,7 +561385,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -560805,6 +561580,14 @@
                 "apps/web/e2e/staff-dashboard-widgets.spec.ts"
               ],
               "scope": "Wait for committed browser URL state, assert an actual query rejection and audit stable rendered staff states. The previous flow, financial, authorization and accessibility assertions are retained."
+            },
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -561223,7 +562006,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "packages/ui/package.json",
@@ -561470,6 +562253,16 @@
               "batch": "release-0.5-conditional-heading-acceptance",
               "base_commit": "270eedb3bbf6fd2df6679e4a7a49b821290ecfe2",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-heading-acceptance/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -649108,7 +649901,7 @@
             },
             {
               "path": "packages/ui/README.md",
-              "sha256": "d4c655368205406993068d262c2533a71b88cdf494f33dd373e8236ad02e706c"
+              "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -649350,6 +650143,16 @@
               "batch": "release-0.5-review-preview-deadlines",
               "base_commit": "da098d1244ba0ec10ccdd0b199f87474757fb3fb",
               "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-review-preview-deadlines/proof.json"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-shared-ui-source-acceptance",
+              "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+              "paths": [
+                "packages/ui/README.md"
+              ],
+              "scope": "One explanatory paragraph documents the existing Tailwind 4 animation dependency and token entry points. Existing instructions and all runtime and test sources are preserved."
             }
           ]
         }
@@ -912927,6 +913730,410 @@
         {
           "file": "csp-webkit.log",
           "sha256": "e204421c359a85f9652d08770067d729ac5cc83759fb9b8e6b5734a58413d7ab"
+        }
+      ]
+    },
+    "release-0.6-shared-ui-source-acceptance": {
+      "batch": "release-0.6-shared-ui-source-acceptance",
+      "base_commit": "43211c4ef431bfc55efb24555f0af28da004f9d9",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.03.01",
+        "01-platform-infrastructure.md#T-06.03.02",
+        "01-platform-infrastructure.md#T-06.03.04",
+        "01-platform-infrastructure.md#T-06.03.06"
+      ],
+      "changed_paths": [
+        "packages/ui/README.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/date-picker-component.spec.ts",
+          "sha256": "e93250b9218233eed8767770268dd4df611505b33016a590dff2775458440a6f"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/index.html",
+          "sha256": "30ea7c1e3906b5b69357f04ae29ec939981c8ee4e30ca242dcdc482123149943"
+        },
+        {
+          "path": "apps/web/e2e/fixtures/date-picker/main.tsx",
+          "sha256": "19373ef19af24e4c1ffab6ffcda67a1a229a603068caed16ebe3d025c368f3cd"
+        },
+        {
+          "path": "apps/web/e2e/theme-components.spec.ts",
+          "sha256": "9194ddf096d056dc9180fcb2ce636d0176108e0a0128b8003c4eebecfb931487"
+        },
+        {
+          "path": "apps/web/e2e/ui-controls.spec.ts",
+          "sha256": "268629d9c6465e9d9369fa11d23c59a36b19c79cbfcf14754b00c5df60ff5638"
+        },
+        {
+          "path": "apps/web/e2e/ui-identity-loading.spec.ts",
+          "sha256": "e6bbe856eb87f8ef0c98ccc346844b815b91a20b67f44208ab799855892f45d4"
+        },
+        {
+          "path": "apps/web/src/components/RouteErrorBoundary.tsx",
+          "sha256": "78cafc7f50e701d1a465d5fffb8e44b73c4f16bf67d761c3ec3e173b58f55fab"
+        },
+        {
+          "path": "apps/web/src/components/RouteSkeleton.tsx",
+          "sha256": "c371e664a768721aaf5589f26e7951db525ece11f565c1b542d51b9374820638"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+        },
+        {
+          "path": "packages/ui/README.md",
+          "sha256": "b18dc5ef8d539ce42a3677c043cd7070a401c0fb5f20dba861969cd0e7448c12"
+        },
+        {
+          "path": "packages/ui/components.json",
+          "sha256": "50e6ad58e7f42af2f0bc1c40043f40df27d44f5d1d91b3c45f3dd8c01ee97ace"
+        },
+        {
+          "path": "packages/ui/package.json",
+          "sha256": "983d68c353e36a19275c5a6184c63f65ec551bb6ccec8f32d419edeeea84a1af"
+        },
+        {
+          "path": "packages/ui/scripts/distribution.check.mjs",
+          "sha256": "b7a874026c5ac85a5b354945afa556006f49c75f7664b0385cb0b7a1a81440d6"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/animated.tsx",
+          "sha256": "fe50f8889067863df2a795503820b53368176f820ca61ad42deb1a904b3bca02"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/combo-box.tsx",
+          "sha256": "924dccb237bd2f3aaedd05bc9d7aead0798d4f0b5815d3d8cd96f4145648e115"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table-cells.tsx",
+          "sha256": "2e265aa10126fc210a378ef37540844f3e57f2056f5e82fc9f555c09e84f465a"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.labels.ts",
+          "sha256": "23955ddb08e4046b697912f0588a28c27c7b40c3294374569cc53e32e517135e"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/data-table.tsx",
+          "sha256": "adfd706003f9852ea1dbeeb35db7212e72572b102ca8b29582ea20f5d70740b9"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.test.ts",
+          "sha256": "dcf84843131b62be1636e63080f316d0edaf41687192e30b81218c474f71ebb4"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-picker.tsx",
+          "sha256": "0f72d835c022da52e4e422e5b48166993f0410d8d4133ad16663edac2e5bef89"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/date-time-picker.tsx",
+          "sha256": "76c263fd5ae8a01cef7c10efc10296f48aeddae720b0c8a1f228162c4cdb2a55"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/month-picker.tsx",
+          "sha256": "5f9e1c49b1876dfbb74aae7ce7026c2bc0c9ae2c2cd54197b1b608ed3e82d987"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/multi-select.tsx",
+          "sha256": "af3e54ff5c38a9bd99a23051a6720068718268bb4eace20de5b0f4e60378c837"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/number-field.labels.ts",
+          "sha256": "239cfa89ac000fe1113daee36b20477974377bfb43d94671969c1f57ad47af67"
+        },
+        {
+          "path": "packages/ui/src/components/base-ui/number-field.tsx",
+          "sha256": "b00f1a31b5e3ab26c3631e95788363bbdb1b1772ad6d2e3f2b70f1e1c9ac4c41"
+        },
+        {
+          "path": "packages/ui/src/components/ui/accordion.tsx",
+          "sha256": "33ba16eda70a4d74c069ed182a09905a0be820b5143c4ca716b0285a2a4622c1"
+        },
+        {
+          "path": "packages/ui/src/components/ui/alert.tsx",
+          "sha256": "406a5f943e5d95186e19a8cbea49e25dd92b3d4f1dbc2f002c53b79c69fdbad3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/avatar.tsx",
+          "sha256": "93d5bee557c6f8e579a82d0442d4fa1c9d321cccd531b370e9b31e8874de02a8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/badge.tsx",
+          "sha256": "f51a0274e43054dad7fdf51ad884bc0e209e45045f2721354712639fb120e119"
+        },
+        {
+          "path": "packages/ui/src/components/ui/breadcrumb.tsx",
+          "sha256": "8693d748c28d58c692057733d58f87af43eaebd6d8ee783364a3a236ccf0be80"
+        },
+        {
+          "path": "packages/ui/src/components/ui/button.tsx",
+          "sha256": "3a6179e69452f940847f263789a85587ea594c14df539fef910091240b010a84"
+        },
+        {
+          "path": "packages/ui/src/components/ui/calendar.tsx",
+          "sha256": "1343ad0379632800e43d73837a4ab22939ac9f7db56fb6fc23afe1b8bd2ac88a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/card.tsx",
+          "sha256": "9e75f68b7716b2e2e022fb42efc93ae81f55e5b86fca797b041963e02c48db8c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/checkbox.tsx",
+          "sha256": "3d1fc35294dda85c2eed5f68f9aa0b4ae5943d64cc38b943f91f0c7a24bdbdc1"
+        },
+        {
+          "path": "packages/ui/src/components/ui/command.tsx",
+          "sha256": "c6f2e2356e4c6088bb2a91f62d28b01808e44f4c4bdea0ffdb77408e6df53d30"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirm-dialog.tsx",
+          "sha256": "7538bb3bfacfaced42c3990dc5efea65704f9a1a2cd3892a7d6deab1446f7724"
+        },
+        {
+          "path": "packages/ui/src/components/ui/confirmation-gate.tsx",
+          "sha256": "06aab9fda02d3b329a263c33c29be0b9250a82bc02b6a4e5abe4c9c9f6f4c5e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/date-range-filter.tsx",
+          "sha256": "2cac0cd195f78a57cbefd517b6650f992e5568576d8f607765196922ffe2d315"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dependent-select.tsx",
+          "sha256": "8b10f92cceed8e99e24c3700ebadde512fdf39f5142df2a2a8635eafbd3b35c8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dialog.tsx",
+          "sha256": "26a34c55f5efd3b6384dcffb7756e9b6b0a42104747b73d82ee9079925a37787"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dropdown-menu.tsx",
+          "sha256": "9787045b1eaa1c1b23648a3259e9b207f8038005e8cf3c5466bf1107d68d1c56"
+        },
+        {
+          "path": "packages/ui/src/components/ui/dynamic-field-array.tsx",
+          "sha256": "c134eab78ebaca93866fe77ffb4d75508eace6629635dee4d2060f2e6bfc9fbe"
+        },
+        {
+          "path": "packages/ui/src/components/ui/empty.tsx",
+          "sha256": "86c06c1460cd178c25798fb4aee67a31060220040b0d166da21212fe90ed5a7b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/error-state.tsx",
+          "sha256": "6eb37c93527326baf4063cec22a1447ba7d38421d8a1047aff2f9fc98dd73502"
+        },
+        {
+          "path": "packages/ui/src/components/ui/field.tsx",
+          "sha256": "6b73beb84d8612d2ad8fed13a804c2b113258f79a8ea1936627ab6fa9b5154e8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/filter-apply-context.tsx",
+          "sha256": "059196ac5122ec2b044c9c3b8e4390bd5fadea881c9b7c0758e6cba5dbb2c56a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input-group.tsx",
+          "sha256": "cfa2fbd99ec046b83d8c4595c0461aa7e456a7f88b7b11cb9d19bc1f547fc3c8"
+        },
+        {
+          "path": "packages/ui/src/components/ui/input.tsx",
+          "sha256": "5f4483d46179659fbe5add07dc7288e657c5b9eb7cc400c36d3938d53e98c211"
+        },
+        {
+          "path": "packages/ui/src/components/ui/job-progress.tsx",
+          "sha256": "ff49c5a88e9904fc1e11d73d72a7e1a235c4e444bb2d84e4aeee23354cbb1d03"
+        },
+        {
+          "path": "packages/ui/src/components/ui/label.tsx",
+          "sha256": "28441c197bc0df9ea8da0b7992952ad22bce260baa81f6f50e405e6ad03b56e5"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-filter-panel.tsx",
+          "sha256": "52623fb01b6aab1d2857296398de71dc3a4dc7af5d3e5dcd2b7bfcbc52ebd9ce"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-page.tsx",
+          "sha256": "d3a2094c539a88ee6dd41407123815baf4ab423b1bf4efe6e47d095082ff45c0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-sort-dropdown.tsx",
+          "sha256": "0f5d0e42111b6a6e9b816e9d0f49cc46d30d253e25b9aa4ca616dd412fddc2a7"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-toolbar.tsx",
+          "sha256": "ac5282b860b3d84897ef60f55791c5c2b683567ce545fbba0c690c8a51d0ea5c"
+        },
+        {
+          "path": "packages/ui/src/components/ui/list-view-toggle.tsx",
+          "sha256": "716399ed5cb53a04533a681c3faefdc6da564f7816dbd4e51bde009e7cbe437d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/multi-select-filter.tsx",
+          "sha256": "3e964e1f6b31b3c0a5da4646d4af95925a9d49e9ca1c028049064aa76a2af096"
+        },
+        {
+          "path": "packages/ui/src/components/ui/native-select.tsx",
+          "sha256": "9f77b4a8cab34acff6a9b4169d39d6ce1b98ac7ed01ea1ae62aaa95523efbfd0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/number-filter.tsx",
+          "sha256": "a4a8ccefd983f27680492674ef124e75d0b8a6302c3ec27b1b813e23fc3d3467"
+        },
+        {
+          "path": "packages/ui/src/components/ui/page-states.tsx",
+          "sha256": "f8c394cb82b8ee8ba9c723187b072e4370853270a1fa3778bfb77e023d3e4440"
+        },
+        {
+          "path": "packages/ui/src/components/ui/pagination.tsx",
+          "sha256": "13a65e2f4c75537567c34f1dd7e386346b05fc0b489d1c6e047c59783638f0a2"
+        },
+        {
+          "path": "packages/ui/src/components/ui/popover.tsx",
+          "sha256": "c9ea38eb9f7e5f9d6f69f036f306537c3cf08554307dc2f34f98243d42ca38b9"
+        },
+        {
+          "path": "packages/ui/src/components/ui/progress.tsx",
+          "sha256": "800d34439e000a174e1a37e01a9b11104da4f630b88f29bebb2f94396b68226b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/radio-group.tsx",
+          "sha256": "90c594481c3797b48b83e27ae8842743b4e21f64b371a17c1617064e274b1cc3"
+        },
+        {
+          "path": "packages/ui/src/components/ui/responsive-layout.tsx",
+          "sha256": "598555556f63803afc4c6f8dc944dc48d87bbedee451ab78939c17befaae5b4f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scroll-area.tsx",
+          "sha256": "4e817834049fe7e6738f8b23f228f3b15f99316a2fc628e6f4048a81417fdc0d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
+          "sha256": "190aab68e1033f216b8b96165d840033698308325e29afda7b4c5be562cded81"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select-filter.tsx",
+          "sha256": "b2ff97c12971e98f78fbe47900f081965b5ae26ce263b139b1adfbfd11fe45a0"
+        },
+        {
+          "path": "packages/ui/src/components/ui/select.tsx",
+          "sha256": "f4e5434b0e7c46c3a902545f07b9a0cb84f33378d945c3079683c584f14a129f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/separator.tsx",
+          "sha256": "4ad1667967f512cc945975f8a66247c8b0431e801954b3ce9425178abf72292b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sheet.tsx",
+          "sha256": "c43c44934ef0e59efd663926c85bc4d1dfcea1b11059cbebf4c7417da6b66286"
+        },
+        {
+          "path": "packages/ui/src/components/ui/skeleton.tsx",
+          "sha256": "105a200e1e4f8dbc670467cbb7750e48ddc66b572f7b1f309b7de2bd18607c70"
+        },
+        {
+          "path": "packages/ui/src/components/ui/slider.tsx",
+          "sha256": "854e4b2651be65b4263c6227d32b52cb41794ac85306c3f6c88840a9eacd210b"
+        },
+        {
+          "path": "packages/ui/src/components/ui/sonner.tsx",
+          "sha256": "35d2e8cc7030bd0c50842a9df59ae5aeab48d32d854267588e65788ec4573588"
+        },
+        {
+          "path": "packages/ui/src/components/ui/status-filter.tsx",
+          "sha256": "4ce50ec2a4423b455a45e3a8a8e4cc5019bd0d4e17fc4ec689b57dafa2da201f"
+        },
+        {
+          "path": "packages/ui/src/components/ui/switch.tsx",
+          "sha256": "37f49fc617930a954b2d5c2a208cec5f5d95acc052c8192d1840914e1e9be73d"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tabs.tsx",
+          "sha256": "047a78faecdf468ef5bf460a6c88b3d15087185a6d6259194d7e7d4b7ff63fa2"
+        },
+        {
+          "path": "packages/ui/src/components/ui/text-filter.tsx",
+          "sha256": "10561bc31c73e4cff97698a078e143852601c7bd3e9efd63a15dab3b16e68023"
+        },
+        {
+          "path": "packages/ui/src/components/ui/textarea.tsx",
+          "sha256": "4c49d74c884f22498aae7bd7df7f62e840963a15077bbb5dd4739edb51d9759a"
+        },
+        {
+          "path": "packages/ui/src/components/ui/toast.tsx",
+          "sha256": "3f81743af63793bb58daa299c4dc37695b3f85ac1def7dbaf4a8aae6f4a87219"
+        },
+        {
+          "path": "packages/ui/src/components/ui/tooltip.tsx",
+          "sha256": "54e08779c6516999d0c5f6a7a37005ebabe2f2e48e241f927c3033b247eff7fc"
+        },
+        {
+          "path": "packages/ui/src/components/ui/use-confirm.tsx",
+          "sha256": "06ebb16ee7b1447f3f4b8dcf643ba8f67f38218683bc04d7b5b8bc1af04e6d80"
+        },
+        {
+          "path": "packages/ui/src/components/ui/workflow.tsx",
+          "sha256": "43a167d64ef434fc6bf23ca017a545a7e0f8f83149daa68de834cf5a93f60ed9"
+        },
+        {
+          "path": "packages/ui/src/direction-provider.ts",
+          "sha256": "d85fb7cd269d6742ad572d8fde95328b21372580a4d1eb1e12b04354114aa768"
+        },
+        {
+          "path": "packages/ui/src/index.ts",
+          "sha256": "0f01fd9407bd96e09d1485b1a3ad3473b324668019996cc7057cc3fbfc385f07"
+        },
+        {
+          "path": "packages/ui/src/lib/utils.ts",
+          "sha256": "9304a861c8673bee09e0f12de31773abbde503b02e59dfd74763ddec2e37cf05"
+        },
+        {
+          "path": "packages/ui/src/page-states.test.tsx",
+          "sha256": "7d9db8c3b85a6e29c2d33e6a72a6c11708a61a7afeb6a6887c9f49d325d997de"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "packages/ui/tailwind.config.ts",
+          "sha256": "fd374f1cdb0f3545f1a506cb2f814af2106b8593af63eb78add6ca607e723d43"
+        },
+        {
+          "path": "packages/ui/tsup.config.ts",
+          "sha256": "554b9e1fa06809085999433ad9959cc79e7e7aff29d66cb421c8f39df39a407c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "fa605e45a59ffbdf7b145a5cbdcf0e95e413828229d4ca79d6da13d2e36d1dfe"
+        }
+      ],
+      "checks": [
+        "The installed shadcn CLI reported base-nova, Base UI, the required primitive components, Tailwind 4 and the shared CSS entry. Dependencies, CVA/clsx/tailwind-merge composition, and tsup ESM/CJS entries were reviewed.",
+        "The shared README documents the upstream Tailwind 4 migration to tw-animate-css and the CSS-variable theme with Tailwind config extensions. Reused eight source-bound ESM/CJS, strict consumer prop and tree-shaking distribution checks.",
+        "Reviewed logical spacing, alignment, the runtime DirectionProvider and flip handling for physical popup placements. Shared component source contains no physical directional margin, padding, border or text alignment utility requiring a locale exception.",
+        "Light and dark semantic variables cover colors, radius and spacing. Reused matching native catalogue, RTL placement, focus/keyboard and dark-mode receipts from the three accepted UI tasks. This is themed and directional behavior evidence.",
+        "Single and range modes support Jalali and Gregorian full-date labels, caller timezone, inclusive day bounds, half-open ranges and the named popover grid. Reused source-bound native arrows/Tab/Enter/Escape, touch, timezone and focus restoration receipts.",
+        "The two focused calendar and page-state files passed 37 total unit cases in 2.41 seconds, including calendar day/time boundaries and invalid date handling.",
+        "The shared package exports shape skeletons with reduced-motion-safe shimmer, EmptyState with icon/text/optional action, ErrorBoundary with safe retry/support, and route-sized PageLoading with a status announcement. The web route entries use these shared states.",
+        "The two focused calendar and page-state files passed 37 total unit cases in 2.41 seconds. Reused matching native shimmer/reduced-motion, route fallback, retry and safe support receipts for the unchanged runtime."
+      ],
+      "reused_acceptance": [
+        "07-ui-ux-design.md#T-07.01.01.02",
+        "07-ui-ux-design.md#T-07.01.01.06",
+        "07-ui-ux-design.md#T-07.01.01.07",
+        "07-ui-ux-design.md#T-07.03.01.04",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.09.02.01",
+        "07-ui-ux-design.md#T-07.09.02.02",
+        "07-ui-ux-design.md#T-07.09.02.05",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.09"
+      ],
+      "proof_logs": [
+        {
+          "file": "ui-date-and-page-states.log",
+          "sha256": "f3e76e3ed58b97b68695326394753ce163749df34ba43603b3449b17a03db43a"
         }
       ]
     }
