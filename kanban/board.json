@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:21:34+00:00",
-  "source_commit": "5646a5256e460a173713a7e15d77ed347e9de26a",
+  "updated": "2026-11-10T07:24:00+00:00",
+  "source_commit": "daafb08cf4cb10d6fed9ab4cf98b5e8ff63938df",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -497193,19 +497193,102 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.06 | Write reconciliation tests: deliberately inconsistent fixtures → mismatch alert → finance exception | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-reconciliation-failure-injection"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-reconciliation-recovery-tests",
+          "reviewed_sha": "daafb08cf4cb10d6fed9ab4cf98b5e8ff63938df",
+          "checks": [
+            "Source-matched native receipts on 42765289565 contain 88 passing cases across the targeted wallet, invoice, refund, provider, operations and finance queue suites. The overall hosted test job failed an unrelated consultation fixture, which is excluded.",
+            "Deliberately inconsistent posted/reserved balances and provider, invoice and refund provenance open scoped finance exceptions. Competing, repaired, repeated and unrelated rows preserve ledger balances and avoid duplicate or stale incidents. Finance reads, decisions and audit paths require current grants.",
+            "The PostgreSQL operations fixture checks the exact bigint threshold, current rather than historical wallet drift, both posted and reserved states, and private metric export. Promtool ran the byte-identical alert files in a disposable no-network container and confirmed one P1 per environment/database scope with recovery after correction. Test scratch was confined to a temporary filesystem.",
+            "This accepts the reconciliation testing requirement. Deployed alert delivery, external receiver and release-candidate receipts remain separate gates."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+              "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+            },
+            {
+              "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+              "sha256": "655aaed37dedf7197553b627ff7a1f2922f00081dfc9a7208112bc9cb5ace657"
+            },
+            {
+              "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
+              "sha256": "0720943c00109ea65dfdf4e95c59191812cbc8b1c018d0fa31c99a37ae05d9a7"
+            },
+            {
+              "path": "apps/worker/src/invoices/reconciliation-scanner.integration.test.ts",
+              "sha256": "9af278fd7c42a1d178fa82a0d4bd9c0ea41a3e1ff0e00f27b7de5e315a9a85b1"
+            },
+            {
+              "path": "apps/worker/src/invoices/reconciliation-scanner.ts",
+              "sha256": "ff2bbdbe7a04d190a450c4a7cd2575b1b996f56d9b0659c087163d2af1fddb45"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.integration.test.ts",
+              "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+            },
+            {
+              "path": "apps/worker/src/operations/alerts.ts",
+              "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+            },
+            {
+              "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
+              "sha256": "b77299f6bf91c5b8dd073079d3de669a57dd2b30853f2fc11e0d931bf91002eb"
+            },
+            {
+              "path": "apps/worker/src/refunds/reconciliation-scanner.ts",
+              "sha256": "39f8be1b712e7b2d643b4909342a7aec1cf99edbdc374edaca2981446b6ef993"
+            },
+            {
+              "path": "apps/worker/src/wallet/provider-reconciliation-scanner.integration.test.ts",
+              "sha256": "96ba22e59d24eadad4b0808088c43ebde9e597f7b3a86cdb9c61e3df96868d70"
+            },
+            {
+              "path": "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
+              "sha256": "1f6c5708cd0e1610246cae57b621f7c83218da917dc7c9ef3d18a782e606414f"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-metrics.ts",
+              "sha256": "06a932504c359abf67ba960c4b6e3d2ecd04d3924aea93948e9503de79754e3b"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
+              "sha256": "7c63417d465ac9f5ec9b7851235839362011eba700918b242bb6dd0e9756d1e6"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+              "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.test.yml",
+              "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+            },
+            {
+              "path": "packages/db/src/schema/reconciliation-exceptions.ts",
+              "sha256": "db3627dc58eb19ed40b41ceb9f0a1ca7770537828aa0d5acc20c548bc62dbed9"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-reconciliation.ts",
+              "sha256": "6e9b100dfa56f366f183fcab9b82ec50a7b12715a6792712ce9e3d56dd460712"
+            }
+          ]
+        }
       }
     },
     {
@@ -871855,6 +871938,97 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/accessibility-impact-and-manual-review",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "8575b9cf184e3a0500bf74a8bfc3064b2bb21065c907a86f8d8008b97a76fe62"
+    },
+    "release-0.6-reconciliation-failure-injection": {
+      "batch": "release-0.6-reconciliation-failure-injection",
+      "base_commit": "daafb08cf4cb10d6fed9ab4cf98b5e8ff63938df",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.04.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
+          "sha256": "f2f88a95ce1d73a6705e8bde491803361f16d702e03b43c04c24b0ea6f273dfe"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
+          "sha256": "655aaed37dedf7197553b627ff7a1f2922f00081dfc9a7208112bc9cb5ace657"
+        },
+        {
+          "path": "apps/api/src/admin/reconciliation-exceptions.service.ts",
+          "sha256": "0720943c00109ea65dfdf4e95c59191812cbc8b1c018d0fa31c99a37ae05d9a7"
+        },
+        {
+          "path": "apps/worker/src/invoices/reconciliation-scanner.integration.test.ts",
+          "sha256": "9af278fd7c42a1d178fa82a0d4bd9c0ea41a3e1ff0e00f27b7de5e315a9a85b1"
+        },
+        {
+          "path": "apps/worker/src/invoices/reconciliation-scanner.ts",
+          "sha256": "ff2bbdbe7a04d190a450c4a7cd2575b1b996f56d9b0659c087163d2af1fddb45"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "2173dc5ab7655d24aa874c1420e509df3584fbc7c35cc08ad1daf9265da42055"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "3c9bc00603fa7f1487e11c24b884fda89449e63f4224ccdddb2af590af4990cb"
+        },
+        {
+          "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
+          "sha256": "b77299f6bf91c5b8dd073079d3de669a57dd2b30853f2fc11e0d931bf91002eb"
+        },
+        {
+          "path": "apps/worker/src/refunds/reconciliation-scanner.ts",
+          "sha256": "39f8be1b712e7b2d643b4909342a7aec1cf99edbdc374edaca2981446b6ef993"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.integration.test.ts",
+          "sha256": "96ba22e59d24eadad4b0808088c43ebde9e597f7b3a86cdb9c61e3df96868d70"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
+          "sha256": "1f6c5708cd0e1610246cae57b621f7c83218da917dc7c9ef3d18a782e606414f"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-metrics.ts",
+          "sha256": "06a932504c359abf67ba960c4b6e3d2ecd04d3924aea93948e9503de79754e3b"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
+          "sha256": "7c63417d465ac9f5ec9b7851235839362011eba700918b242bb6dd0e9756d1e6"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
+          "sha256": "133e2089d7552b5ab49a1ae8de694e49022f782e4f6120607867428765b8e1fb"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "354c9d8ff8cf655f848c564a8726a7b0054c14d56b081e07c6e8868408cd3f99"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "b9fa17b35a18aa56bf837087f252fb5933c31d54afb2c2aa489f137eded682e0"
+        },
+        {
+          "path": "packages/db/src/schema/reconciliation-exceptions.ts",
+          "sha256": "db3627dc58eb19ed40b41ceb9f0a1ca7770537828aa0d5acc20c548bc62dbed9"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reconciliation.ts",
+          "sha256": "6e9b100dfa56f366f183fcab9b82ec50a7b12715a6792712ce9e3d56dd460712"
+        }
+      ],
+      "checks": [
+        "Source-matched native receipts on 42765289565 contain 88 passing cases across the targeted wallet, invoice, refund, provider, operations and finance queue suites. The overall hosted test job failed an unrelated consultation fixture, which is excluded.",
+        "Deliberately inconsistent posted/reserved balances and provider, invoice and refund provenance open scoped finance exceptions. Competing, repaired, repeated and unrelated rows preserve ledger balances and avoid duplicate or stale incidents. Finance reads, decisions and audit paths require current grants.",
+        "The PostgreSQL operations fixture checks the exact bigint threshold, current rather than historical wallet drift, both posted and reserved states, and private metric export. Promtool ran the byte-identical alert files in a disposable no-network container and confirmed one P1 per environment/database scope with recovery after correction. Test scratch was confined to a temporary filesystem.",
+        "This accepts the reconciliation testing requirement. Deployed alert delivery, external receiver and release-candidate receipts remain separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/reconciliation-failure-injection-acceptance",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "6d07bcf3d94482561007af16479a3ac0835c145ef05b62ae96e91f00b27adbc5"
     }
   },
   "historical_improvements": [
