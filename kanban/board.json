@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:10:34+00:00",
-  "source_commit": "fac8545f3e2bb8d0de411ad595ca0dedad195265",
+  "updated": "2026-11-10T03:13:30+00:00",
+  "source_commit": "59b67d1def804abc160966f4b8946881b517aec2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -110884,7 +110884,8 @@
           "release-0.6-nightly-real-admin-journeys",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -111112,7 +111113,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -111610,7 +111611,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -111838,7 +111840,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -114190,7 +114192,8 @@
           "release-0.6-browser-origin-security",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -114418,7 +114421,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -130597,7 +130600,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130729,7 +130733,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -131609,7 +131613,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131741,7 +131746,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -132621,7 +132626,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132753,7 +132759,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -133633,7 +133639,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133765,7 +133772,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -134645,7 +134652,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134777,7 +134785,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -135657,7 +135665,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135789,7 +135798,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -136755,7 +136764,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136899,7 +136909,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -137897,7 +137907,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138029,7 +138040,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -138995,7 +139006,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139139,7 +139151,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -140137,7 +140149,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140269,7 +140282,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -141144,7 +141157,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141256,7 +141270,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -141924,7 +141938,8 @@
           "release-0.6-outbox-worker-processing-metrics",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142048,7 +142063,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -142723,7 +142738,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142819,7 +142835,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -258227,7 +258243,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -258295,7 +258312,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -258580,7 +258597,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -258648,7 +258666,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -258933,7 +258951,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -259001,7 +259020,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -259287,7 +259306,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -259355,7 +259375,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -259641,7 +259661,8 @@
           "release-0.5-notification-recovery-journey",
           "release-0.5-coverage-remaining-branches",
           "release-0.5-route-census-closure",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-promotions-vat-with-owner-approved-representations-and-repaired-gaps",
@@ -259709,7 +259730,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/src/pages/AdminVatPage.tsx",
@@ -260035,7 +260056,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -260175,7 +260197,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -261182,7 +261204,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -261322,7 +261345,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -262325,7 +262348,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -262465,7 +262489,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -263467,7 +263491,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -263607,7 +263632,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -264610,7 +264635,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -264750,7 +264776,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -265753,7 +265779,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -265893,7 +265920,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -266901,7 +266928,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -267041,7 +267069,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -268047,7 +268075,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -268187,7 +268216,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -269191,7 +269220,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -269331,7 +269361,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -270338,7 +270368,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -270478,7 +270509,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -271487,7 +271518,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -271627,7 +271659,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -272631,7 +272663,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -272771,7 +272804,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -273774,7 +273807,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -273914,7 +273948,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -274918,7 +274952,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -275058,7 +275093,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -276062,7 +276097,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -276202,7 +276238,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -277207,7 +277243,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-existing-consultation-lifecycle-with-repaired-privacy-notification-and-route-gaps",
@@ -277347,7 +277384,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -541039,7 +541076,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541063,7 +541101,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
+              "sha256": "936b314a778bdef7bfe7b959fd7c7fef6cbe3fd60d3a0a887ff65576110de519"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -541888,7 +541926,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541912,7 +541951,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
+              "sha256": "936b314a778bdef7bfe7b959fd7c7fef6cbe3fd60d3a0a887ff65576110de519"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -543255,7 +543294,8 @@
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543279,7 +543319,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
+              "sha256": "936b314a778bdef7bfe7b959fd7c7fef6cbe3fd60d3a0a887ff65576110de519"
             },
             {
               "path": "apps/web/e2e/ai-admin-presentation.spec.ts",
@@ -592127,7 +592167,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592167,7 +592208,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
+              "sha256": "936b314a778bdef7bfe7b959fd7c7fef6cbe3fd60d3a0a887ff65576110de519"
             },
             {
               "path": "apps/web/e2e/ai-catalogue-tables.spec.ts",
@@ -729398,7 +729439,8 @@
           "release-0.5-critical-accessibility",
           "release-0.5-final-ui-evidence",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-route-budget-and-upgrade-fixture-repair"
+          "release-0.6-route-budget-and-upgrade-fixture-repair",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-admin-settings-adoption",
@@ -729406,7 +729448,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
-              "sha256": "5ab7ab4b46f953276c7ad660e2a935d706ebe002f6000ab570fd1699431f4eb9"
+              "sha256": "936b314a778bdef7bfe7b959fd7c7fef6cbe3fd60d3a0a887ff65576110de519"
             },
             {
               "path": "apps/web/src/components/AdminSettingsLayout.tsx",
@@ -731614,7 +731656,8 @@
           "release-0.5-final-ui-evidence",
           "release-0.5-route-census-closure",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "current_acceptance": {
           "kind": "verified-financial-admin-ui-journeys",
@@ -731638,7 +731681,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -738018,7 +738061,7 @@
             },
             {
               "path": "apps/web/e2e/invoice-due-period.spec.ts",
-              "sha256": "875a8ff69aaa8e9a1435ae4c4be2e327df560651c4eaaad48ab57682bb54e797"
+              "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -741753,7 +741796,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-browser-finance-command-recovery"
         ]
       }
     },
@@ -742529,7 +742573,7 @@
             },
             {
               "path": "apps/web/e2e/vat.spec.ts",
-              "sha256": "e9246900ff113d0b20e170d03b01e153c38c7dfb2d03a548aeeab4680bfdc17b"
+              "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
             },
             {
               "path": "apps/web/src/lib/consultation-fee-form-schemas.ts",
@@ -746417,7 +746461,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-finance-command-recovery"
         ]
       }
     },
@@ -758224,7 +758269,8 @@
         "The first failed-browser cohort now has targeted Chromium and mobile Safari evidence for Terms detail focus, address dialog and late city results, branding labels and tab navigation, verification mode and wallet limit recovery. Remaining failing cohorts and the complete candidate matrix still need disposition and a passing receipt.",
         "Protected preflight 42742923993 failed three OTP cases at 0d12a1df after strict validation rejected obsolete caller fields. Updated assertions prove the invalid requests cannot reach resend or consume the contact challenge, and the valid requests preserve route purpose and concurrent single use. The exact cumulative hosted preflight remains required.",
         "Eight targeted Chromium and mobile Safari cases verify address deletion recovery, focus and profile-scoped creation in English and Persian. The remaining production browser cohorts and final matrix still require a passing receipt.",
-        "The session revocation and trusted-device denial cohort passed, with all related device and location browser cases passing in both locales and browser projects. The full browser gate remains open."
+        "The session revocation and trusted-device denial cohort passed, with all related device and location browser cases passing in both locales and browser projects. The full browser gate remains open.",
+        "The contract-limit, invoice due-period and VAT recovery cohort passed all 28 targeted cases in Chromium and mobile Safari. The full production browser gate remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -758324,7 +758370,8 @@
           "release-0.6-browser-focus-and-recovery",
           "release-0.6-strict-otp-caller-preflight",
           "release-0.6-browser-address-commands",
-          "release-0.6-browser-session-authority"
+          "release-0.6-browser-session-authority",
+          "release-0.6-browser-finance-command-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859025,6 +859072,65 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-session-authority",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "fb0940f8a391fef8b3f0918b85119e93f94bd01a5c5315fc0fda03b7e40253b1"
+    },
+    "release-0.6-browser-finance-command-recovery": {
+      "batch": "release-0.6-browser-finance-command-recovery",
+      "base_commit": "59b67d1def804abc160966f4b8946881b517aec2",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/admin-settings.spec.ts",
+        "apps/web/e2e/invoice-due-period.spec.ts",
+        "apps/web/e2e/vat.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/admin-settings.spec.ts",
+          "sha256": "936b314a778bdef7bfe7b959fd7c7fef6cbe3fd60d3a0a887ff65576110de519"
+        },
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/invoice-due-period.spec.ts",
+          "sha256": "3c8d0c6c18a82229b5b2a45c8d9232ebe88f0ab7711d98c8a25e19b919b2442d"
+        },
+        {
+          "path": "apps/web/e2e/vat.spec.ts",
+          "sha256": "b804e16dd9cec702934f54e4637e49e6d6e3257ba5dc7cee2768dff6582ebd42"
+        },
+        {
+          "path": "apps/web/src/components/ServiceDuePeriodPanel.tsx",
+          "sha256": "8cebecfe4416da50be5fd36d51f87df7264a8003ed3631d388cdebd282667ce1"
+        },
+        {
+          "path": "apps/web/src/hooks/useCatalogueEditor.tsx",
+          "sha256": "3094accd09c58b57b7e9066d527a913fe0efbf672aea6281ee12feb2b7bb2d5c"
+        },
+        {
+          "path": "apps/web/src/pages/AdminContractLimitsPage.tsx",
+          "sha256": "2e450e2a961c755dea1538408f2a5661e6d61693ad5050e34214febfb198ea40"
+        },
+        {
+          "path": "apps/web/src/pages/AdminVatPage.tsx",
+          "sha256": "64783c14fd207a752cd57330c9c3c04a90e4282c8dd2397202d7a7a7503ab138"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Contract limit tests preserve the reviewed amount through a malformed receipt, require a fresh read, close the stale command, and require a fresh review before the second exact write. Navigation, focus, toast and contrast assertions remain.",
+        "Invoice due period tests require a read after a mismatched acknowledgement, hold the exact draft and earlier period ID, and then confirm the version conflict requires another read. Exact request and accessibility assertions remain.",
+        "Ending a VAT rate or override requires the localized destructive phrase. The tests assert the button is disabled before confirmation and preserve the exact mutation, history and accessibility assertions.",
+        "All 28 targeted cases passed in Chromium and mobile Safari on the existing production build. Affected ESLint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-finance-command-recovery",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "728e2727fa1c95c749af1531093aba7f4ab4b76b1fbb82e5bdae55335bacb0a3"
     }
   },
   "historical_improvements": [

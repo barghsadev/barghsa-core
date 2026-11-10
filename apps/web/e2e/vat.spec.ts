@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { tVat } from '@barghsa/i18n/vat';
 import { test, expect } from './coverage-fixture';
+import { approveRiskConfirmation } from './confirmation-fixture';
 test.use({ viewport: { width: 390, height: 844 } });
 for (const locale of ['en', 'fa'])
   test(`VAT editor retries captured percentage (${locale})`, async ({ page }) => {
@@ -275,11 +276,16 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByLabel(label('product'), { exact: true }).selectOption('product');
     await page.getByLabel(label('rate'), { exact: true }).selectOption('current');
     await page.getByRole('button', { name: label('save'), exact: true }).click();
-    const confirm = () =>
-      page
+    const confirm = async (destructive = false) => {
+      const button = page
         .getByRole('dialog')
-        .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true })
-        .click();
+        .getByRole('button', { name: locale === 'fa' ? 'تأیید' : 'Confirm', exact: true });
+      if (destructive) {
+        await expect(button).toBeDisabled();
+        await approveRiskConfirmation(page, locale === 'fa' ? 'fa' : 'en', 'destructive');
+      }
+      await button.click();
+    };
     await confirm();
     const table = page.getByRole('table', { name: label('overrides'), exact: true });
     await expect(table.getByRole('rowheader', { name: product })).toBeVisible();
@@ -300,7 +306,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('form')
       .getByRole('button', { name: label('end'), exact: true })
       .click();
-    await confirm();
+    await confirm(true);
     await expect(
       table.getByRole('cell', { name: label('status.expired'), exact: true })
     ).toHaveCount(2);
@@ -312,7 +318,7 @@ for (const locale of ['en', 'fa'] as const) {
       .getByRole('form')
       .getByRole('button', { name: label('end'), exact: true })
       .click();
-    await confirm();
+    await confirm(true);
     await expect(history.getByRole('row')).toHaveCount(4);
     await expect(
       history.getByRole('button', {

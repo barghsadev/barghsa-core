@@ -57,8 +57,12 @@ for (const locale of ['fa', 'en'] as const)
         effectiveUntil: null,
       }));
       const attempts: unknown[] = [];
+      let reads = 0;
       await page.route('**/api/admin/config/invoice-due-periods', (route) => {
-        if (route.request().method() === 'GET') return route.fulfill({ json: defaults });
+        if (route.request().method() === 'GET') {
+          reads++;
+          return route.fulfill({ json: defaults });
+        }
         expect(route.request().headers()['x-csrf-token']).toBe('period-csrf');
         const body = route.request().postDataJSON() as {
           serviceType: string;
@@ -159,14 +163,25 @@ for (const locale of ['fa', 'en'] as const)
         defaultDays: 15,
         expectedPeriodId: periodId,
       });
+      const reload = panel.getByRole('button', {
+        name: fa ? 'دریافت مجدد تنظیمات' : 'Reload settings',
+        exact: true,
+      });
+      await expect(save).toBeDisabled();
+      const readsBeforeReload = reads;
+      await reload.click();
+      await expect.poll(() => reads).toBe(readsBeforeReload + 1);
+      await expect(save).toBeEnabled();
+      await expect(days).toHaveValue('15');
+      expect(attempts).toHaveLength(3);
       await save.click();
       await expect(panel.getByRole('alert')).toHaveText(
         fa
           ? 'مدیر دیگری این تنظیم را تغییر داده است. پیش از ذخیره، تنظیمات را دوباره دریافت کنید.'
           : 'Another administrator changed this setting. Reload settings before saving.'
       );
-      await panel
-        .getByRole('button', { name: fa ? 'دریافت مجدد تنظیمات' : 'Reload settings' })
-        .click();
+      expect(attempts[3]).toEqual(attempts[2]);
+      await expect(save).toBeDisabled();
+      await reload.click();
       await expect(days).toHaveValue('14');
     });

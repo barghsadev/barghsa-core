@@ -111,8 +111,14 @@ for (const width of [390, 1440]) {
           await dialog
             .getByRole('button', { name: t('admin.contractLimits.refresh', locale), exact: true })
             .click();
-          await expect(confirm).toBeEnabled();
+          await expect(dialog).toHaveCount(0);
+          await expect(lead).toHaveValue('14');
+          await expect(lead).toBeEnabled();
           expect(writes).toHaveLength(1);
+          await page
+            .getByRole('button', { name: t('admin.contractLimits.save', locale), exact: true })
+            .click();
+          await expect(confirm).toBeEnabled();
           await confirm.click();
           await expect(dialog).toHaveCount(0);
           await expect(success).toHaveCount(1);
