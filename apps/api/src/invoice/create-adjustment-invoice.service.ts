@@ -509,7 +509,7 @@ export class CreateAdjustmentInvoiceService {
       ) {
         throw error;
       }
-      this.logger.error(`Create adjustment invoice failed: ${String(error)}`);
+      this.logger.error('Create adjustment invoice failed');
       throw error;
     } finally {
       if (!transaction) client.release();

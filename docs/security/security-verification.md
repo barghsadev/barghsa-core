@@ -99,6 +99,11 @@ and emits `authorization.denial.persistence_failed` with the same safe fields
 for operations to investigate. Check that event alongside the API and worker
 logs after a database incident.
 
+Automatic, manual, adjustment, and replacement invoice failures log a fixed
+operation message. Request logs retain their correlation ID. Database exception
+text can contain payment references or other private values, so use the
+correlation ID and authorized audit records when investigating a failure.
+
 ## Live candidate review
 
 - Exercise login, logout, account recovery, MFA step-up and context changes

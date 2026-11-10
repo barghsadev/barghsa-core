@@ -715,7 +715,7 @@ export class CancelAndReplaceInvoiceService {
       ) {
         throw error;
       }
-      this.logger.error(`Cancel-and-replace failed: ${String(error)}`);
+      this.logger.error('Cancel-and-replace failed');
       throw error;
     } finally {
       if (ownedTransaction) client.release();

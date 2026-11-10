@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:45:17+00:00",
-  "source_commit": "f9929d093d92a366189803599621754e2daa621d",
+  "updated": "2026-11-10T03:49:02+00:00",
+  "source_commit": "bf48f69f42e83998689f681968b4f6b33037c4ca",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -95184,7 +95184,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -95276,7 +95277,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
@@ -96603,7 +96604,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96695,7 +96697,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
@@ -103974,7 +103976,8 @@
           "release-0.6-confirmed-outbox-date-range-replay",
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -104066,7 +104069,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
@@ -119830,7 +119833,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -119866,7 +119870,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -119910,7 +119914,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -121111,7 +121115,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -121147,7 +121152,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -121191,7 +121196,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -122376,7 +122381,8 @@
           "release-0.5-verified-command-rejection",
           "release-0.5-invoice-response-feedback",
           "release-0.6-staff-activation-and-invoice-rollback-fixtures",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -122400,7 +122406,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -122444,7 +122450,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -122978,7 +122984,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -123014,7 +123021,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -123058,7 +123065,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -124258,7 +124265,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -124294,7 +124302,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -124338,7 +124346,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -125539,7 +125547,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -125575,7 +125584,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -125619,7 +125628,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -126819,7 +126828,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -126855,7 +126865,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -126899,7 +126909,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -128109,7 +128119,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -128145,15 +128156,15 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-              "sha256": "678190c2f2f24ed290a46212a97c06f6f5575a3f5a9a2f4a5750141b8c27e28c"
+              "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -128197,7 +128208,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -129397,7 +129408,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-core-and-origin-boundary-verification",
@@ -129433,7 +129445,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -129477,7 +129489,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -130680,7 +130692,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -130744,7 +130757,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -131694,7 +131707,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -131758,7 +131772,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -132708,7 +132722,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -132772,7 +132787,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -133722,7 +133737,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -133786,7 +133802,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -134736,7 +134752,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -134800,7 +134817,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -135750,7 +135767,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -135814,7 +135832,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -136850,7 +136868,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -136914,7 +136933,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -137994,7 +138013,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -138058,7 +138078,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -139094,7 +139114,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -139158,7 +139179,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -140238,7 +140259,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -140302,7 +140324,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -141247,7 +141269,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -141283,11 +141306,11 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-              "sha256": "678190c2f2f24ed290a46212a97c06f6f5575a3f5a9a2f4a5750141b8c27e28c"
+              "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -142029,7 +142052,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142069,7 +142093,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -142081,7 +142105,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
@@ -142830,7 +142854,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
-          "release-0.6-finance-browser-and-caller-verification"
+          "release-0.6-finance-browser-and-caller-verification",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -142866,7 +142891,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -194505,7 +194530,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -194549,7 +194575,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -195249,7 +195275,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -195293,7 +195320,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -195993,7 +196020,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -196037,7 +196065,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -196737,7 +196765,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -196781,7 +196810,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -197481,7 +197510,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -197525,7 +197555,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -353664,7 +353694,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -353716,7 +353747,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -354755,7 +354786,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -354799,7 +354831,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -355499,7 +355531,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -355543,7 +355576,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -356244,7 +356277,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-staff-electricity-price-scoped-verification",
@@ -356288,7 +356322,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -411886,7 +411920,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -412094,7 +412129,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -413247,7 +413282,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -413455,7 +413491,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -414609,7 +414645,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -414817,7 +414854,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -415970,7 +416007,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -416178,7 +416216,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -417331,7 +417369,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -417539,7 +417578,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -418693,7 +418732,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -418901,7 +418941,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -420056,7 +420096,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -420264,7 +420305,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -421416,7 +421457,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -421608,7 +421650,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -422741,7 +422783,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -422949,7 +422992,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -424101,7 +424144,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-postal-finalization-criteria-and-compatible-staff-routes",
@@ -424309,7 +424353,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/orders/orders.module.ts",
@@ -425458,7 +425502,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -425650,7 +425695,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -426777,7 +426822,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -426969,7 +427015,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -428096,7 +428142,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -428288,7 +428335,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -481549,7 +481596,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -481589,7 +481637,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -481674,7 +481722,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -481730,7 +481779,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -484623,7 +484672,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -484751,7 +484801,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -485044,7 +485094,8 @@
         "batches": [
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -485104,7 +485155,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -486920,7 +486971,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -486928,7 +486980,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "docs/threat-model.md",
@@ -487063,7 +487115,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -487071,7 +487124,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -487172,7 +487225,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -487180,7 +487234,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -487229,7 +487283,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -487245,7 +487300,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             }
           ],
           "checks": [
@@ -487298,7 +487353,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -487358,7 +487414,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -490153,7 +490209,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -490169,7 +490226,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             }
           ],
           "checks": [
@@ -490215,7 +490272,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-document-template-malware-gate"
+          "release-0.6-document-template-malware-gate",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -490223,7 +490281,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+              "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -491811,7 +491869,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts."
+        "Complete review of the remaining application, worker, database and ingress error sinks. Rehearse representative token, identity and payment inputs against configured production-equivalent sinks and verify their receipts.",
+        "Automatic, manual, adjustment and replacement invoice failure logs now use fixed operation text. The regression reproduces a leaked synthetic payment reference on the previous code, then verifies the exact safe message, rollback, no commit and the unchanged thrown error. Review of remaining sinks and production-equivalent receipt checks remains open."
       ],
       "owner": null,
       "depends_on": [],
@@ -491859,7 +491918,8 @@
           "release-0.6-versioned-config-cache-and-diagnostic-privacy",
           "release-0.6-signed-payment-callback-alert",
           "release-0.6-payment-idempotency-conflict-alert",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-invoice-error-log-redaction"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -738188,7 +738248,7 @@
             },
             {
               "path": "apps/api/src/invoice/auto-invoice.service.ts",
-              "sha256": "3d9f4bed6195c60782e0895c37d92daa751896a3225958b64373c69b6ccb6d2a"
+              "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -738232,7 +738292,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/invoice/rounding.service.test.ts",
@@ -738328,11 +738388,11 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-              "sha256": "678190c2f2f24ed290a46212a97c06f6f5575a3f5a9a2f4a5750141b8c27e28c"
+              "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/openapi.json",
@@ -738392,7 +738452,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
-              "sha256": "c7e50407c6b80d794a48c84db8974455b4fdce91ccfaafc66c5630e85b68556a"
+              "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -742199,7 +742259,8 @@
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-customer-draft-and-contract-history-browser",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-invoice-error-log-redaction"
         ]
       }
     },
@@ -743551,7 +743612,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "2a07cac391a198f5f7dbe267dfaecad5a05937bfac29141dbab966947fbeb4aa"
+              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -744267,7 +744328,7 @@
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.ts",
-              "sha256": "4e8313ca5a4f397ecd96990668b4ebf3bd7d26959ada75b98994852e2475df92"
+              "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
@@ -746866,7 +746927,8 @@
           "release-0.6-direct-upload-scan-gate",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-finance-browser-and-caller-verification",
-          "release-0.6-customer-draft-and-contract-history-browser"
+          "release-0.6-customer-draft-and-contract-history-browser",
+          "release-0.6-invoice-error-log-redaction"
         ]
       }
     },
@@ -859904,6 +859966,79 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-staff-inbox-final",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "805b0e1334c6cb02d8548c5a1820d358bc8a7b48acd46a1298d4f55ad3d691ed"
+    },
+    "release-0.6-invoice-error-log-redaction": {
+      "batch": "release-0.6-invoice-error-log-redaction",
+      "base_commit": "bf48f69f42e83998689f681968b4f6b33037c4ca",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/invoice/auto-invoice.service.ts",
+        "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+        "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+        "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+        "apps/api/src/invoice/manual-invoice.service.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/correlation-logger.test.ts",
+          "sha256": "30a92c68318ec0edbe94b1d685adf15e9b0c5561205dde97f75e776be85f7d91"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "d751f6cfb30907eb95ea9a281326a6ac51399e185f9957c38d70f18438e7d561"
+        },
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f0521f83368414076f6128aa3fbced34415a4757a8573bdeebb269ca8656e2d1"
+        },
+        {
+          "path": "apps/api/src/invoice/auto-invoice.service.ts",
+          "sha256": "5b7bd86ad756286b085ed83f76a2cec1624905a5a3d645af8759e9028d180f67"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-state-machine.service.test.ts",
+          "sha256": "346ddd012b068bbc325221f932c59579efa0c979cbe3862e687ff2304cd89af8"
+        },
+        {
+          "path": "apps/api/src/invoice/manual-invoice.service.ts",
+          "sha256": "6c9cdeaed7ada92ca7e6efe1051972223aeb983efe7d5a85041e8c60ccdae2b6"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "15e20a31c6e0f39ff8cbaed22650c8bb1bddf41466be08e8a16a893ae8926490"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reproduced the sensitive interpolation at the replacement invoice service logger using a synthetic database failure; inspected the same interpolation in automatic, manual and adjustment invoices.",
+        "The four mutation sinks now emit fixed operation text. Transaction rollback/release and existing HTTP error handling are unchanged. The prior concurrent request correlation tests passed alongside the invoice tests.",
+        "All 68 unit cases in the four invoice suites, invoice state machine and correlation logger passed. The local unit invocation reused the API test configuration with global HTTP compilation and database initialization removed for the six mock-only files. API TypeScript, affected lint, formatting and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/invoice-log-redaction",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "0cf8539320732f6633e35afe990b184c32ed5021cef5c4eaf01f1e8de1dc9deb"
     }
   },
   "historical_improvements": [

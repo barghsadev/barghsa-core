@@ -538,7 +538,7 @@ export class ManualInvoiceService {
       ) {
         throw error;
       }
-      this.logger.error(`Manual invoice creation failed: ${String(error)}`);
+      this.logger.error('Manual invoice creation failed');
       throw error;
     } finally {
       if (ownedTransaction) client.release();

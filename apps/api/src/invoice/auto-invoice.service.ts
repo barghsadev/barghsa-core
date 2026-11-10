@@ -424,7 +424,7 @@ export class AutoInvoiceService {
       ) {
         throw error;
       }
-      this.logger.error(`Auto invoice creation failed: ${String(error)}`);
+      this.logger.error('Auto invoice creation failed');
       throw error;
     } finally {
       if (ownsClient) client.release();

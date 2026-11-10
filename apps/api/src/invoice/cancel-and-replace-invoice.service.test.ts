@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { BadRequestException, ConflictException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Logger, NotFoundException } from '@nestjs/common';
 import {
   CancelAndReplaceInvoiceService,
   CANCEL_AND_REPLACE_ERRORS,
@@ -322,5 +322,22 @@ describe('CancelAndReplaceInvoiceService', () => {
     expect(calls).toContain('UPDATE');
     expect(calls).toContain('ROLLBACK');
     expect(calls).not.toContain('COMMIT');
+  });
+
+  it('keeps database error contents out of the invoice failure log', async () => {
+    const error = new Error('Invoice write failed for private-payment-reference');
+    mockQuery((sql) => {
+      if (sql.includes('paid_amount') && sql.includes('FOR UPDATE')) throw error;
+      return { rows: [] };
+    });
+    const log = vi.spyOn(Logger.prototype, 'error').mockImplementation(() => {});
+    try {
+      await expect(service.cancelAndReplaceInvoice(command())).rejects.toBe(error);
+      expect(log.mock.calls).toEqual([['Cancel-and-replace failed']]);
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(mockClient.query).not.toHaveBeenCalledWith('COMMIT');
+    } finally {
+      log.mockRestore();
+    }
   });
 });
