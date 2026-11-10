@@ -875,7 +875,7 @@ export const fa: I18nDictionary = {
   'invitation.banner.declined': 'دعوتنامه رد شد',
 };
 
-export const en: I18nDictionary = {
+export const englishMessages = {
   'invoices.activity.actor.customer': 'Customer',
   'invoices.activity.actor.staff': 'Staff',
   'invoices.activity.actor.unknown': 'Actor not recorded',
@@ -1752,7 +1752,8 @@ export const en: I18nDictionary = {
   'invitation.banner.declining': 'Declining…',
   'invitation.banner.accepted': 'Invitation accepted successfully',
   'invitation.banner.declined': 'Invitation declined',
-};
+} satisfies I18nDictionary;
+export const en: I18nDictionary = englishMessages;
 
 export function t(key: string, locale: Locale = 'fa'): string {
   return lookup(locale === 'fa' ? fa : en, key) ?? lookup(en, key) ?? key;

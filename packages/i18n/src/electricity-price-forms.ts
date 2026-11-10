@@ -22,7 +22,7 @@ export const fa: I18nDictionary = {
   'electricity.priceForm.preserved':
     'اگر فیلدی نیاز به اصلاح داشته باشد، سایر داده‌های شما حفظ می‌شود.',
 };
-export const en: I18nDictionary = {
+export const englishMessages = {
   'electricity.priceForm.contractInvalid': 'Enter a valid contract ID.',
   'electricity.priceForm.contractHelp':
     'Enter an electricity contract ID to view and review price adjustments.',
@@ -40,7 +40,8 @@ export const en: I18nDictionary = {
     'The result could not be confirmed. Retry the captured price action before changing it.',
   'electricity.priceForm.retryCaptured': 'Retry captured price action',
   'electricity.priceForm.preserved': 'Your other entries are kept if a field needs correction.',
-};
+} satisfies I18nDictionary;
+export const en: I18nDictionary = englishMessages;
 export function t(key: string, locale: Locale = 'fa'): string {
   return lookup(locale === 'fa' ? fa : en, key) ?? lookup(en, key) ?? workspaceText(key, locale);
 }

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T01:25:34+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T01:30:28+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1089 | Accepted with unchanged source bindings. |
-| verify | 236 | Existing work may be complete; inspect evidence before building. |
+| done | 1090 | Accepted with unchanged source bindings. |
+| verify | 235 | Existing work may be complete; inspect evidence before building. |
 | partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1051,7 +1051,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.01.03` | done | Earlier deferred | Create password validation with strength meter logic |
 | `01-platform-infrastructure.md#T-06.01.04` | done | Earlier acceptance_verified | Create stable error code enum with HTTP status mapping |
 | `01-platform-infrastructure.md#T-06.01.05` | done | Earlier deferred | Create pagination helper schemas |
-| `01-platform-infrastructure.md#T-06.02.01` | verify | Earlier deferred | Initialize `packages/i18n` with message dictionary structure |
+| `01-platform-infrastructure.md#T-06.02.01` | done | Earlier deferred | Initialize `packages/i18n` with message dictionary structure |
 | `01-platform-infrastructure.md#T-06.02.02` | done | Earlier deferred | Create Jalali calendar date utilities |
 | `01-platform-infrastructure.md#T-06.02.03` | done | Earlier acceptance_verified | Create timezone-aware date/time display utilities |
 | `01-platform-infrastructure.md#T-06.02.04` | done | Earlier acceptance_verified | Create logic for RTL/LTR switching based on locale |

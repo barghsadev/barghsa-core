@@ -1,4 +1,4 @@
-import { fa as termsFa, en as termsEn } from './terms.js';
+import { fa as termsFa, englishMessages as termsEn } from './terms.js';
 import { lookup } from './lookup.js';
 /** Authentication dictionaries are independent of the full application dictionary. */
 import type { I18nDictionary, Locale } from './index.js';
@@ -198,7 +198,7 @@ export const fa: I18nDictionary = {
   'auth.changeUsername.error.alreadyHasEmail': 'این حساب قبلاً یک ایمیل دارد',
   'auth.changeUsername.error.alreadyHasMobile': 'این حساب قبلاً یک شماره موبایل دارد',
 };
-export const en: I18nDictionary = {
+export const englishMessages = {
   'error.validation.unsupported_media_type': 'Unsupported request content type',
   'error.provider.unavailable': 'A required service is temporarily unavailable',
   'error.ai.model_circuit_open': 'AI model connection temporarily paused',
@@ -392,7 +392,8 @@ export const en: I18nDictionary = {
   'auth.changeUsername.error.noMobile': 'No mobile number registered for this account',
   'auth.changeUsername.error.alreadyHasEmail': 'This account already has an email',
   'auth.changeUsername.error.alreadyHasMobile': 'This account already has a mobile number',
-};
+} satisfies I18nDictionary;
+export const en: I18nDictionary = englishMessages;
 export function t(key: string, locale: Locale = 'fa'): string {
   return lookup(locale === 'fa' ? fa : en, key) ?? lookup(en, key) ?? key;
 }

@@ -1,5 +1,5 @@
-import { expect, it } from 'vitest';
-import { dictionaries, t } from './index.js';
+import { expect, expectTypeOf, it } from 'vitest';
+import { createI18n, dictionaries, t, type MessageKey } from './index.js';
 import { fa as adminFa, en as adminEn, t as adminText } from './admin-ui.js';
 import { fa as crmFa, en as crmEn, t as crmText } from './crm.js';
 const allDictionaries = {
@@ -14,6 +14,27 @@ import { tGift } from './gifts.js';
 import { tVat } from './vat.js';
 import { tWalletLimit } from './wallet-limit.js';
 import { tWalletReceipts } from './wallet-receipts.js';
+
+it('creates a typed Persian-by-default dictionary with English fallback', () => {
+  const key: MessageKey = 'auth.support.contactEmail';
+  expectTypeOf<'tos.page.lastUpdated'>().toExtend<MessageKey>();
+  expectTypeOf<'electricity.priceForm.contractInvalid'>().toExtend<MessageKey>();
+  expectTypeOf<'missing.translation'>().not.toExtend<MessageKey>();
+  const localized = createI18n();
+  expect(localized[key]).toBe(dictionaries.fa[key]);
+  expect(createI18n('en')[key]).toBe(dictionaries.en[key]);
+  expect(Object.isFrozen(localized)).toBe(true);
+  expect(Object.getPrototypeOf(localized)).toBeNull();
+
+  const original = dictionaries.fa[key]!;
+  try {
+    delete dictionaries.fa[key];
+    expect(createI18n('fa')[key]).toBe(dictionaries.en[key]);
+    expect(localized[key]).toBe(original);
+  } finally {
+    dictionaries.fa[key] = original;
+  }
+});
 
 it('keeps full Persian/English keys and interpolation placeholders consistent', () => {
   expect(Object.keys(allDictionaries.fa).sort()).toEqual(Object.keys(allDictionaries.en).sort());

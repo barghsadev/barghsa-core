@@ -2,6 +2,8 @@
 
 The Vite SPA retains its native `packages/i18n` namespace dictionaries and `useLocale` subscription. Both languages are bundled. A language change updates the current document and subscribed views without navigation, resource requests or replacing form values. The switcher shows EN/FA with a localized full accessible name.
 
+`createI18n(locale)` returns an immutable dictionary for the shared application and authentication messages. Its `MessageKey` type follows the English source keys, and missing Persian values fall back to English. Route-specific dictionaries stay with their existing domain modules so callers can import the translations their routes need.
+
 The language order is the short-lived entry navigation handoff, explicit local storage choice, preference cookie, supported `lang` URL hint, supported browser language, then Persian. Explicit choices outrank URL hints. The blocking head script establishes `lang` and `dir` before React; the client consumes the one-time handoff. The existing server nonce and CSP remain required. Storage or cookie failures preserve the live choice and other available fallbacks. Language selection leaves unrelated URL parameters intact.
 
 This restores browser detection required by ADR 004 and Epic 07. A September shell change had replaced that fallback with unconditional Persian. English-browser tests now first verify detection, explicitly choose Persian, and retain the previous persistence assertions. The ordinary Iranian-market test baseline remains Persian.

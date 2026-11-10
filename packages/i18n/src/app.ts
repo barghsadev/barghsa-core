@@ -1,5 +1,5 @@
-import { fa as priceFA, en as priceEN } from './electricity-price-forms.js';
-import { fa as workspaceFa, en as workspaceEn } from './workspace.js';
+import { fa as priceFA, englishMessages as priceEN } from './electricity-price-forms.js';
+import { fa as workspaceFa, englishMessages as workspaceEn } from './workspace.js';
 import { lookup } from './lookup.js';
 export interface I18nDictionary {
   [key: string]: string;
@@ -984,7 +984,7 @@ export const fa: I18nDictionary = {
 };
 
 /** English (en) dictionary for the Barghsa platform */
-export const en: I18nDictionary = {
+export const englishMessages = {
   ...workspaceEn,
   'electricity.rawDraft.title': 'Unsubmitted order drafts',
   'electricity.rawDraft.description':
@@ -1964,7 +1964,8 @@ export const en: I18nDictionary = {
   'notifications.payment.bank_receipt_rejected.title': 'Bank receipt rejected',
   'notifications.payment.bank_receipt_rejected.body':
     'Your bank receipt was rejected. Amount: {{amount_irr}} IRR. Reason: {{reason}}',
-};
+} satisfies I18nDictionary;
+export const en: I18nDictionary = englishMessages;
 
 /** Supported locale codes */
 export type Locale = 'fa' | 'en';
