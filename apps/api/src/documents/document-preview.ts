@@ -1,11 +1,11 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, ServiceUnavailableException, StreamableFile } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import sharp from 'sharp';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
 
-/** Cached PNG derivative of an immutable source; no signed URL is sent to inline viewers. */
+/** Cache a bounded PNG derivative of an immutable source for inline viewing. */
 export async function ensureDocumentPreview(
   storage: StorageProvider,
   documentId: string,
@@ -54,6 +54,27 @@ export async function readPreviewObject(
   const read = await readCappedBytes(object.body, maxBytes);
   if (read.truncated) throw new ConflictException('Document is too large to preview');
   return Buffer.from(read.bytes);
+}
+
+export async function streamReceiptPreview(
+  storage: StorageProvider | null,
+  cacheId: string,
+  source: { key: string | null; mime: string | null }
+): Promise<StreamableFile> {
+  if (storage && source.key && source.mime) {
+    try {
+      const key = await ensureDocumentPreview(storage, cacheId, source.key, source.mime);
+      const bytes = await readPreviewObject(storage, key, 5 * 1024 * 1024);
+      return new StreamableFile(bytes, {
+        type: 'image/png',
+        disposition: 'inline',
+        length: bytes.length,
+      });
+    } catch {
+      throw new ServiceUnavailableException('Receipt preview is unavailable');
+    }
+  }
+  throw new ServiceUnavailableException('Receipt preview is unavailable');
 }
 
 export function renderPdfFirstPage(bytes: Buffer): Promise<Buffer> {

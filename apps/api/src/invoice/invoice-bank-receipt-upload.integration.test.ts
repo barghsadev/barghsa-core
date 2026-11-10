@@ -321,7 +321,7 @@ describe('InvoiceBankReceiptUploadService — real PostgreSQL (T-04.3.01.02)', (
         csrfToken: CSRF_TOKEN,
       })
     ).toBe('https://storage.example.test/receipt.pdf');
-    expect(sign).toHaveBeenCalledWith(sealed, 300);
+    expect(sign).toHaveBeenCalledWith(sealed, 300, 'attachment');
   });
 
   it('rejects a zero amount before insert', async () => {

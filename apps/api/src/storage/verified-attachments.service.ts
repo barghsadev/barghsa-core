@@ -137,10 +137,15 @@ export class VerifiedAttachmentsService {
     purpose: AttachmentPurpose = 'ticket_attachment'
   ): Promise<string[]> {
     if (!this.storage) return [];
+    const inline = purpose === 'conversation_avatar' || purpose === 'branding_logo';
     return Promise.all(
       keys
         .filter((key) => key.startsWith(prefix(purpose)))
-        .map((key) => this.storage!.presignedGetUrl(key, 300))
+        .map((key) =>
+          inline
+            ? this.storage!.presignedGetUrl(key, 300)
+            : this.storage!.presignedGetUrl(key, 300, 'attachment')
+        )
     );
   }
 }

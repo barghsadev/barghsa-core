@@ -1133,7 +1133,7 @@ export default function AdminWalletReceiptsPage({ binding }: { binding?: ListQue
                   <StaffReceiptAttachmentPreview
                     key={selected.transactionId}
                     url={selected.attachmentUrl}
-                    attachmentKey={selected.attachmentKey}
+                    previewUrl={`/api/admin/wallet/bank-receipt-top-ups/${encodeURIComponent(selected.transactionId)}/attachment-preview`}
                     label={copy('attachmentAlt')}
                     openLabel={copy('openAttachment')}
                   />

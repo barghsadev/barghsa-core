@@ -1297,13 +1297,9 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
     }
   );
 
-  it.each([
-    { key: 'receipt.png', selector: 'img' },
-    { key: 'receipt.pdf', selector: 'iframe' },
-    { key: 'receipt.txt', selector: 'a[target=_blank]' },
-  ])(
-    'renders a receipt attachment using its safe $selector presentation',
-    async ({ key, selector }) => {
+  it.each(['receipt.png', 'receipt.pdf', 'receipt.txt'])(
+    'requests the private preview for %s without embedding the original',
+    async (key) => {
       const dto = receiptDto(TX_A, {
         attachmentKey: key,
         attachmentUrl: 'https://files.example.com/receipt',
@@ -1323,7 +1319,11 @@ describe('AdminWalletReceiptsPage (T-04.2.02.04)', () => {
         root.render(<QueryProvider>{<AdminWalletReceiptsPage />}</QueryProvider>)
       );
       await flush();
-      expect(container.querySelector(selector)).not.toBeNull();
+      expect(container.querySelector('img')?.getAttribute('src')).toBe(
+        `/api/admin/wallet/bank-receipt-top-ups/${TX_A}/attachment-preview`
+      );
+      expect(container.querySelector('iframe,object,embed')).toBeNull();
+      expect(container.querySelector('a[href="https://files.example.com/receipt"]')).not.toBeNull();
       expect(container.textContent).not.toContain('Invalid Date');
     }
   );

@@ -1,37 +1,29 @@
 import { useState } from 'react';
-import { isImageAttachment, isPdfAttachment } from '../lib/bank-receipt-confirmation.js';
 
 /** Signed attachment URLs remain usable when an inline preview cannot load. */
 export function StaffReceiptAttachmentPreview({
   url,
-  attachmentKey,
+  previewUrl,
   label,
   openLabel,
 }: {
   url: string;
-  attachmentKey?: string | null | undefined;
+  previewUrl: string;
   label: string;
   openLabel: string;
 }) {
-  const [failedImage, setFailedImage] = useState<string | null>(null);
+  const [failedImage, setFailedImage] = useState<{ previewUrl: string; url: string } | null>(null);
+  const previewFailed = failedImage?.previewUrl === previewUrl && failedImage.url === url;
   return (
     <div className="min-w-0 space-y-2">
-      {isImageAttachment(attachmentKey) && failedImage !== url ? (
+      {!previewFailed ? (
         <img
-          src={url}
+          src={previewUrl}
           alt={label}
           loading="lazy"
           referrerPolicy="no-referrer"
-          onError={() => setFailedImage(url)}
+          onError={() => setFailedImage({ previewUrl, url })}
           className="max-h-80 max-w-full rounded border border-border object-contain"
-        />
-      ) : isPdfAttachment(attachmentKey) ? (
-        <iframe
-          title={label}
-          src={url}
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          className="h-80 w-full rounded border border-border"
         />
       ) : null}
       <a

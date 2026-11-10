@@ -5,6 +5,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -39,6 +40,7 @@ import {
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { StepUpGuard, RequiresStepUp } from '../session/step-up.guard.js';
 import { CorrelationIdProvider } from '../common/correlation-id.middleware.js';
+import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import {
   InvoiceBankReceiptConfirmationService,
   type InvoiceBankReceiptAllocationPreviewDto,
@@ -245,7 +247,10 @@ export class InvoiceBankReceiptConfirmationController {
   @Get(':receiptId')
   @ApiOperation({ summary: 'Get an invoice bank receipt for staff review' })
   @ApiParam({ name: 'receiptId', format: 'uuid' })
-  @ApiResponse({ status: 200, description: 'Receipt details including a short-lived preview URL.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Receipt details including a short-lived download URL.',
+  })
   @ApiResponse({ status: 403, description: 'Finance permission required' })
   @ApiResponse({ status: 404, description: 'Receipt not found' })
   async get(
@@ -255,6 +260,32 @@ export class InvoiceBankReceiptConfirmationController {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
     return this.service.get(receiptId);
+  }
+
+  @Get(':receiptId/attachment-preview')
+  @Header('Cache-Control', 'private, no-store')
+  @Header('X-Content-Type-Options', 'nosniff')
+  @Header('Referrer-Policy', 'no-referrer')
+  @RateLimit({
+    namespace: 'admin:invoices:receipt-preview:user',
+    scope: 'user',
+    limit: 30,
+    windowMs: 60_000,
+  })
+  @ApiOperation({ summary: 'Preview a sealed invoice bank receipt for staff review' })
+  @ApiParam({ name: 'receiptId', format: 'uuid' })
+  @ApiResponse({
+    status: 200,
+    description: 'Bounded private PNG preview.',
+    content: { 'image/png': { schema: { type: 'string', format: 'binary' } } },
+  })
+  @ApiResponse({ status: 403, description: 'Finance permission required.' })
+  @ApiResponse({ status: 404, description: 'Bank receipt not found.' })
+  @ApiResponse({ status: 503, description: 'Preview cannot be generated.' })
+  async previewAttachment(@Req() req: AuthenticatedRequest, @Param('receiptId') receiptId: string) {
+    this.assertConfirmPermission(req);
+    assertUuid(receiptId);
+    return this.service.previewAttachment(receiptId);
   }
 
   @Post(':receiptId/confirm/review')

@@ -451,6 +451,7 @@ it('seals evidence bytes and returns authorized short-lived downloads for the fi
   expect(data.evidenceDownloadUrls).toHaveLength(1);
   const signed = new URL(data.evidenceDownloadUrls[0]!);
   expect(signed.searchParams.get('X-Amz-Expires')).toBe('300');
+  expect(signed.searchParams.get('response-content-disposition')).toBe('attachment');
   expect(await (await fetch(signed)).text()).toContain('Original evidence');
 });
 it('refuses another user’s evidence and refuses approval of legacy unsealed evidence', async () => {

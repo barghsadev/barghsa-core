@@ -72,6 +72,7 @@ import {
 } from '@barghsa/shared/finance';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
+import { streamReceiptPreview } from '../documents/document-preview.js';
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { isInvoiceState, type InvoiceState } from '../invoice/invoice-state.model.js';
@@ -277,6 +278,26 @@ export class BankReceiptConfirmationService {
       );
     }
     return this.toDto(row);
+  }
+
+  async previewAttachment(transactionId: string) {
+    const receipt = (
+      await getDbPool().query<{ key: string | null; mime: string | null }>(
+        `SELECT s.storage_key AS key, s.content_type AS mime
+         FROM wallet_transactions t
+         LEFT JOIN storage_records s ON s.storage_key=COALESCE(t.receipt_attachment_key,t.metadata#>>'{receipt,attachmentKey}')
+           AND s.status='immutable'
+         WHERE t.id=$1::uuid AND t.type='topup' AND t.metadata->>'channel'='bank_receipt'
+           AND NOT (t.metadata ? 'pendingTransactionId')`,
+        [transactionId]
+      )
+    ).rows[0];
+    if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+    return streamReceiptPreview(
+      this.storage,
+      `wallet-receipt-${transactionId.toLowerCase()}`,
+      receipt
+    );
   }
 
   async previewAllocation(
@@ -1286,7 +1307,11 @@ export class BankReceiptConfirmationService {
   ): Promise<string | null> {
     if (!attachmentKey || !this.storage) return null;
     try {
-      return await this.storage.presignedGetUrl(attachmentKey, ATTACHMENT_URL_TTL_SECONDS);
+      return await this.storage.presignedGetUrl(
+        attachmentKey,
+        ATTACHMENT_URL_TTL_SECONDS,
+        'attachment'
+      );
     } catch {
       this.logger.warn(
         `Could not sign attachment for bank receipt ${receiptId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`

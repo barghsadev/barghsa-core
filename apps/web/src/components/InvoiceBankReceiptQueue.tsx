@@ -564,7 +564,7 @@ function OwnedInvoiceBankReceiptQueue({
                 <StaffReceiptAttachmentPreview
                   key={detail.receiptId}
                   url={detail.attachmentUrl}
-                  attachmentKey={detail.attachmentKey}
+                  previewUrl={`/api/admin/invoices/bank-receipts/${encodeURIComponent(detail.receiptId)}/attachment-preview`}
                   label={word('attachment')}
                   openLabel={word('attachment')}
                 />

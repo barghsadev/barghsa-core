@@ -17036,7 +17036,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Receipt details including a short-lived preview URL."
+            "description": "Receipt details including a short-lived download URL."
           },
           "403": {
             "description": "Finance permission required"
@@ -17091,6 +17091,53 @@
           }
         ],
         "summary": "Preview invoice vs wallet split for an invoice bank receipt (staff)",
+        "tags": [
+          "Admin · Invoice bank receipts"
+        ]
+      }
+    },
+    "/api/admin/invoices/bank-receipts/{receiptId}/attachment-preview": {
+      "get": {
+        "operationId": "InvoiceBankReceiptConfirmationController_previewAttachment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "receiptId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Bounded private PNG preview."
+          },
+          "403": {
+            "description": "Finance permission required."
+          },
+          "404": {
+            "description": "Bank receipt not found."
+          },
+          "503": {
+            "description": "Preview cannot be generated."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview a sealed invoice bank receipt for staff review",
         "tags": [
           "Admin · Invoice bank receipts"
         ]
@@ -24962,7 +25009,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Receipt details including a short-lived preview URL."
+            "description": "Receipt details including a short-lived download URL."
           },
           "403": {
             "description": "Finance permission required"
@@ -25025,6 +25072,53 @@
           }
         ],
         "summary": "Preview invoice vs wallet split for a bank receipt (staff)",
+        "tags": [
+          "Admin · Wallet bank receipts"
+        ]
+      }
+    },
+    "/api/admin/wallet/bank-receipt-top-ups/{transactionId}/attachment-preview": {
+      "get": {
+        "operationId": "BankReceiptConfirmationController_previewAttachment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "transactionId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "image/png": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Bounded private PNG preview."
+          },
+          "403": {
+            "description": "Finance permission required."
+          },
+          "404": {
+            "description": "Bank receipt not found."
+          },
+          "503": {
+            "description": "Preview cannot be generated."
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Preview a sealed wallet bank receipt for staff review",
         "tags": [
           "Admin · Wallet bank receipts"
         ]

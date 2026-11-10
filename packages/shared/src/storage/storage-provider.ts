@@ -192,7 +192,7 @@ export interface StorageProvider {
    * The URL is time-limited: the client must complete the download before
    * `expiresIn` seconds.
    */
-  presignedGetUrl(key: string, expiresIn?: number): Promise<string>;
+  presignedGetUrl(key: string, expiresIn?: number, disposition?: 'attachment'): Promise<string>;
 
   /**
    * List objects whose key starts with the given prefix.

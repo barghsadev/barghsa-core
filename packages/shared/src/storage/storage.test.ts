@@ -264,6 +264,15 @@ describe('presignedGetUrl', () => {
     const url = await provider.presignedGetUrl('test.txt');
     expect(url).toContain('X-Amz-Signature');
     expect(url).toContain('test-bucket');
+    expect(new URL(url).searchParams.has('response-content-disposition')).toBe(false);
+  });
+
+  it('signs an explicit attachment disposition for original downloads', async () => {
+    const provider = new S3StorageProvider(makeConfig());
+    const url = new URL(await provider.presignedGetUrl('test.pdf', 300, 'attachment'));
+    expect(url.searchParams.get('response-content-disposition')).toBe('attachment');
+    expect(url.searchParams.get('X-Amz-Expires')).toBe('300');
+    expect(url.searchParams.get('X-Amz-Signature')).toMatch(/^[a-f0-9]{64}$/);
   });
 });
 

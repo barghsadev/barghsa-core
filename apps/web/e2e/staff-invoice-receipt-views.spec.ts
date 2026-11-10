@@ -39,7 +39,7 @@ for (const locale of ['en', 'fa'] as const)
       page,
     }, info) => {
       await crmShell(page, locale);
-      await page.route('**/mock/invoice-receipt.png?**', (r) =>
+      await page.route('**/api/admin/invoices/bank-receipts/*/attachment-preview', (r) =>
         r.fulfill({
           contentType: 'image/svg+xml',
           body: '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="240"><rect width="600" height="240" fill="#e8ece7"/><text x="40" y="100" fill="#203e35" font-size="32">Invoice receipt fixture</text></svg>',
@@ -239,6 +239,11 @@ for (const locale of ['en', 'fa'] as const)
       expect(await timeline.locator('img,script').count()).toBe(0);
       const image = detail.getByRole('img', { name: word('attachment'), exact: true });
       await expect(image).toBeVisible();
+      await expect(image).toHaveAttribute(
+        'src',
+        `/api/admin/invoices/bank-receipts/${receiptId}/attachment-preview`
+      );
+      await expect(detail.locator('iframe,object,embed')).toHaveCount(0);
       await expect
         .poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth))
         .toBe(600);

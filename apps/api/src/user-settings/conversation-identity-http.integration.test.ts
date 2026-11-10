@@ -165,6 +165,7 @@ for (const staff of [false, true]) {
     });
     const url = new URL(saved.avatarUrl);
     expect(url.searchParams.get('X-Amz-Expires')).toBe('300');
+    expect(url.searchParams.has('response-content-disposition')).toBe(false);
     objects.set(file.key, Buffer.from('overwritten source'));
     expect(Buffer.from(await (await fetch(url)).arrayBuffer())).toEqual(image);
     expect((await save(user, body)).status).toBe(200);

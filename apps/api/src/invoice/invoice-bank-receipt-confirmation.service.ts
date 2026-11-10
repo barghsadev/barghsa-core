@@ -61,6 +61,7 @@ import { readBankReceiptConfirmationReview } from '../wallet/bank-receipt-review
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
+import { streamReceiptPreview } from '../documents/document-preview.js';
 import { applyApprovalRequestResolutionOnClient } from '../admin/dual-approval-resolution.js';
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
@@ -395,6 +396,20 @@ export class InvoiceBankReceiptConfirmationService {
       ...(await this.toDto(row, { ...extra, ...dual })),
       statusHistory: histories.get(receiptId) ?? [],
     };
+  }
+
+  async previewAttachment(receiptId: string) {
+    const receipt = (
+      await getDbPool().query<{ key: string | null; mime: string | null }>(
+        `SELECT s.storage_key AS key, s.content_type AS mime
+         FROM bank_receipts r
+         LEFT JOIN storage_records s ON s.storage_key=r.attachment_key AND s.status='immutable'
+         WHERE r.id=$1::uuid`,
+        [receiptId]
+      )
+    ).rows[0];
+    if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+    return streamReceiptPreview(this.storage, `receipt-${receiptId.toLowerCase()}`, receipt);
   }
 
   private async financialReview(
@@ -1862,7 +1877,11 @@ export class InvoiceBankReceiptConfirmationService {
   ): Promise<string | null> {
     if (!attachmentKey || !this.storage) return null;
     try {
-      return await this.storage.presignedGetUrl(attachmentKey, ATTACHMENT_URL_TTL_SECONDS);
+      return await this.storage.presignedGetUrl(
+        attachmentKey,
+        ATTACHMENT_URL_TTL_SECONDS,
+        'attachment'
+      );
     } catch {
       this.logger.warn(
         `Could not sign attachment for invoice bank receipt ${receiptId} correlationId=${correlationIdStorage.getStore() ?? 'none'}`

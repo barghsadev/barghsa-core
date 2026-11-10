@@ -76,7 +76,7 @@ export class DocumentStorageService {
   }
 
   download(storageKey: string) {
-    return this.storage.presignedGetUrl(storageKey, 300);
+    return this.storage.presignedGetUrl(storageKey, 300, 'attachment');
   }
 
   async preview(documentId: string, storageKey: string, mime: string) {

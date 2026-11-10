@@ -668,13 +668,21 @@ export class S3StorageProvider implements IFileStorageProvider {
   // presignedGetUrl
   // -----------------------------------------------------------------------
 
-  async presignedGetUrl(key: string, expiresIn?: number): Promise<string> {
+  async presignedGetUrl(
+    key: string,
+    expiresIn?: number,
+    disposition?: 'attachment'
+  ): Promise<string> {
     const resolvedKey = this.resolveKey(key);
 
     try {
       return await getSignedUrl(
         this.client,
-        new GetObjectCommand({ Bucket: this.bucket, Key: resolvedKey }),
+        new GetObjectCommand({
+          Bucket: this.bucket,
+          Key: resolvedKey,
+          ResponseContentDisposition: disposition,
+        }),
         { expiresIn: signedUrlExpiry(expiresIn) }
       );
     } catch (err) {

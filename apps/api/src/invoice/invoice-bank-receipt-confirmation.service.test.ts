@@ -376,7 +376,11 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
 
     const [receipt] = await withStorage.listPending();
     expect(receipt).toMatchObject({ receiptId: RECEIPT_ID, attachmentUrl: null });
-    expect(storage.presignedGetUrl).toHaveBeenCalledWith(ATTACHMENT, expect.any(Number));
+    expect(storage.presignedGetUrl).toHaveBeenCalledWith(
+      ATTACHMENT,
+      expect.any(Number),
+      'attachment'
+    );
     expect(warn).toHaveBeenCalledWith(
       expect.stringContaining(`Could not sign attachment for invoice bank receipt ${RECEIPT_ID}`)
     );

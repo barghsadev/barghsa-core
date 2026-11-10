@@ -107,7 +107,7 @@ export class CustomerWalletReceiptController {
     return {
       url: await this.readEvidence(req, profileId, receiptId, async (storage, key) => {
         try {
-          return await storage.presignedGetUrl(key, 300);
+          return await storage.presignedGetUrl(key, 300, 'attachment');
         } catch {
           throw new ServiceUnavailableException('Receipt attachment is unavailable');
         }

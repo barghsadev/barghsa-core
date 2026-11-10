@@ -14,51 +14,33 @@ afterEach(async () => {
 });
 const props = {
   url: 'https://storage.example.test/signed?token=example',
+  previewUrl: '/api/admin/invoices/bank-receipts/receipt/attachment-preview',
   label: 'Receipt scan',
   openLabel: 'Open original',
 };
-it.each(['proof.PNG', 'proof.jpeg', 'proof.webp'])(
-  'previews signed images by attachment identity rather than URL suffix (%s)',
-  async (attachmentKey) => {
-    await act(async () =>
-      root.render(<StaffReceiptAttachmentPreview {...props} attachmentKey={attachmentKey} />)
-    );
-    expect(host.querySelector('img')?.getAttribute('src')).toBe(props.url);
-    expect(host.querySelector('img')?.getAttribute('alt')).toBe(props.label);
-    expect(host.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
-    expect(host.querySelector('iframe')).toBeNull();
-  }
-);
-it('keeps the original link after image failure and retries a newly signed URL', async () => {
-  await act(async () =>
-    root.render(<StaffReceiptAttachmentPreview {...props} attachmentKey="receipt.png" />)
-  );
-  await act(async () => host.querySelector('img')!.dispatchEvent(new Event('error')));
-  expect(host.querySelector('img')).toBeNull();
+it('shows only the raster preview inline and links the signed original separately', async () => {
+  await act(async () => root.render(<StaffReceiptAttachmentPreview {...props} />));
+  expect(host.querySelector('img')?.getAttribute('src')).toBe(props.previewUrl);
+  expect(host.querySelector('img')?.getAttribute('alt')).toBe(props.label);
+  expect(host.querySelector('img')?.getAttribute('referrerpolicy')).toBe('no-referrer');
+  expect(host.querySelector('a')?.getAttribute('rel')).toBe('noopener noreferrer');
   expect(host.querySelector('a')?.href).toBe(props.url);
-  const fresh = props.url + '&renewed=1';
+  expect(host.querySelector('iframe,object,embed')).toBeNull();
+});
+it('keeps the original link when the preview fails and shows a newly selected preview', async () => {
+  await act(async () => root.render(<StaffReceiptAttachmentPreview {...props} />));
+  await act(async () => host.querySelector('img')!.dispatchEvent(new Event('error')));
+  expect(host.querySelector('img,iframe,object,embed')).toBeNull();
+  expect(host.querySelector('a')?.href).toBe(props.url);
+  expect(host.querySelector('a')?.textContent).toBe(props.openLabel);
+  const renewed = props.url + '&renewed=1';
+  await act(async () => root.render(<StaffReceiptAttachmentPreview {...props} url={renewed} />));
+  expect(host.querySelector('img')?.getAttribute('src')).toBe(props.previewUrl);
+  expect(host.querySelector('a')?.href).toBe(renewed);
+  await act(async () => host.querySelector('img')!.dispatchEvent(new Event('error')));
+  const fresh = '/api/admin/invoices/bank-receipts/another/attachment-preview';
   await act(async () =>
-    root.render(
-      <StaffReceiptAttachmentPreview {...props} url={fresh} attachmentKey="receipt.png" />
-    )
+    root.render(<StaffReceiptAttachmentPreview {...props} previewUrl={fresh} />)
   );
   expect(host.querySelector('img')?.getAttribute('src')).toBe(fresh);
 });
-it('provides a named PDF frame and an independent original link', async () => {
-  await act(async () =>
-    root.render(<StaffReceiptAttachmentPreview {...props} attachmentKey="proof.PDF" />)
-  );
-  expect(host.querySelector('iframe')?.title).toBe(props.label);
-  expect(host.querySelector('iframe')?.getAttribute('src')).toBe(props.url);
-  expect(host.querySelector('a')?.href).toBe(props.url);
-});
-it.each([null, undefined, 'proof.html', 'proof.pdf.html'])(
-  'leaves unsupported or missing attachment types as links (%s)',
-  async (attachmentKey) => {
-    await act(async () =>
-      root.render(<StaffReceiptAttachmentPreview {...props} attachmentKey={attachmentKey} />)
-    );
-    expect(host.querySelector('img,iframe')).toBeNull();
-    expect(host.querySelector('a')?.textContent).toBe(props.openLabel);
-  }
-);

@@ -126,7 +126,10 @@ it('previews the selected invoice receipt using its API attachment key and retai
   );
   await render();
   await click('Review receipt');
-  expect(container.querySelector('img')?.getAttribute('src')).toBe(receipt.attachmentUrl);
+  expect(container.querySelector('img')?.getAttribute('src')).toBe(
+    `/api/admin/invoices/bank-receipts/${RECEIPT}/attachment-preview`
+  );
+  expect(container.querySelector('iframe,object,embed')).toBeNull();
   expect(container.querySelector('a')?.getAttribute('href')).toBe(receipt.attachmentUrl);
 });
 

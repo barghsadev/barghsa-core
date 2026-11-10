@@ -64,7 +64,7 @@ for (const locale of ['en', 'fa'] as const)
           },
         })
       );
-      await page.route('**/mock/bank-receipt.png?**', (r) =>
+      await page.route(`**${base}/*/attachment-preview`, (r) =>
         r.fulfill({
           contentType: 'image/svg+xml',
           body: '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="240"><rect width="600" height="240" fill="#e8ece7"/><text x="40" y="100" fill="#203e35" font-size="32">Bank receipt fixture</text></svg>',
@@ -180,6 +180,8 @@ for (const locale of ['en', 'fa'] as const)
       const image = panel.getByRole('img', { name: word('attachmentAlt'), exact: true });
       await image.scrollIntoViewIfNeeded();
       await expect(image).toBeVisible();
+      await expect(image).toHaveAttribute('src', `${base}/${receiptId}/attachment-preview`);
+      await expect(panel.locator('iframe,object,embed')).toHaveCount(0);
       await expect
         .poll(() => image.evaluate((element: HTMLImageElement) => element.naturalWidth))
         .toBe(600);

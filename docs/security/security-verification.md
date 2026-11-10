@@ -42,6 +42,17 @@ rtk proxy pnpm --filter @barghsa/api exec vitest run \
   src/wallet/online-topup-http.integration.test.ts
 ```
 
+## Original files and previews
+
+Document, template and receipt originals use 300-second private signed URLs
+with a signed attachment disposition. The original filename stays out of the
+URL. Document viewers and the staff invoice and wallet receipt queues display
+only bounded PNG derivatives of sealed files. The receipt preview requests
+require the current finance grant and return private, no-store responses.
+When the renderer cannot produce a PNG, the original remains available to
+authorized reviewers as a download. Branding and avatar URLs still serve the
+verified raster image assets selected for display.
+
 ## Authorization audit
 
 In the staff workspace, open **Settings → Security → Authorization audit**

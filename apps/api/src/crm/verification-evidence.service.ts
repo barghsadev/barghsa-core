@@ -122,7 +122,7 @@ export class VerificationEvidenceService {
     return Promise.all(
       keys
         .filter((key) => key.startsWith(SEALED_PREFIX))
-        .map((key) => this.storage!.presignedGetUrl(key, 300))
+        .map((key) => this.storage!.presignedGetUrl(key, 300, 'attachment'))
     );
   }
 }

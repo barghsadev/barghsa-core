@@ -4,6 +4,7 @@ import sharp from 'sharp';
 import PDFDocument from 'pdfkit';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { DocumentStorageService } from './document-storage.service.js';
+import { streamReceiptPreview } from './document-preview.js';
 import type { UploadService } from '../upload/upload.service.js';
 
 const pdfRendererAvailable = spawnSync('pdftoppm', ['-v'], { stdio: 'ignore' }).status === 0;
@@ -43,6 +44,7 @@ function fixture(source: Buffer) {
   } as unknown as StorageProvider;
   return {
     service: new DocumentStorageService({} as UploadService, provider),
+    provider,
     objects,
     writes: () => writes,
     expirations,
@@ -95,6 +97,31 @@ describe('sealed document previews', () => {
       const metadata = await sharp(image).metadata();
       expect(metadata.format).toBe('png');
       expect(Math.max(metadata.width!, metadata.height!)).toBeLessThanOrEqual(640);
+    },
+    15_000
+  );
+
+  it.skipIf(!pdfRendererAvailable)(
+    'streams a private receipt PDF preview as PNG without changing the original',
+    async () => {
+      const original = await pdf();
+      const { provider, objects } = fixture(original);
+      const file = await streamReceiptPreview(provider, 'receipt', {
+        key: 'sealed/source',
+        mime: 'application/pdf',
+      });
+      const parts: Buffer[] = [];
+      for await (const part of file.getStream()) parts.push(Buffer.from(part));
+      const png = Buffer.concat(parts);
+      expect(file.getHeaders()).toEqual({
+        type: 'image/png',
+        disposition: 'inline',
+        length: png.length,
+      });
+      const metadata = await sharp(png).metadata();
+      expect(metadata.format).toBe('png');
+      expect(Math.max(metadata.width!, metadata.height!)).toBeLessThanOrEqual(640);
+      expect(objects.get('sealed/source')).toEqual(original);
     },
     15_000
   );

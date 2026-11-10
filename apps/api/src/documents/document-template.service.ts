@@ -453,6 +453,9 @@ export class DocumentTemplateService {
       )
     ).rows[0];
     if (!row) throw new NotFoundException('Document template file not found');
-    return { url: await this.storage.presignedGetUrl(row.storage_key, 300), expiresIn: 300 };
+    return {
+      url: await this.storage.presignedGetUrl(row.storage_key, 300, 'attachment'),
+      expiresIn: 300,
+    };
   }
 }

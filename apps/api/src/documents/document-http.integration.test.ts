@@ -243,7 +243,9 @@ it('seals a required RTF document with the actual MIME, checksum and original do
   });
   const download = await send(`documents/${created.document.id}/download`, f.user);
   const receipt = (await download.json()) as { url: string };
-  expect(Buffer.from(await (await fetch(receipt.url)).arrayBuffer())).toEqual(bytes);
+  const original = await fetch(receipt.url);
+  expect(original.headers.get('content-disposition')).toBe('attachment');
+  expect(Buffer.from(await original.arrayBuffer())).toEqual(bytes);
   expect(
     (
       await http.pool.query(
@@ -2485,6 +2487,77 @@ it('serves private bank receipt previews with current profile authorization and 
   ).toBe(401);
   await http.pool.query("UPDATE invoices SET state='Draft' WHERE id=$1", [invoiceId]);
   expect((await preview(f.user, receiptIds[0]!)).status).toBe(404);
+});
+
+it('keeps staff receipt previews private and downloads both originals as attachments', async () => {
+  const f = await owner();
+  const finance = await login(undefined, 'role-finance');
+  const invoiceId = randomUUID();
+  const receiptId = randomUUID();
+  const transactionId = randomUUID();
+  const key = `sealed-receipts/${randomUUID()}`;
+  const bytes = pdfRendererAvailable
+    ? pdf
+    : await sharp({ create: { width: 1200, height: 800, channels: 3, background: '#123456' } })
+        .png()
+        .toBuffer();
+  const mime = pdfRendererAvailable ? 'application/pdf' : 'image/png';
+  await s3.send(
+    new PutObjectCommand({ Bucket: 'test-evidence', Key: key, Body: bytes, ContentType: mime })
+  );
+  await http.pool.query(
+    "INSERT INTO storage_records(storage_key,status,content_type) VALUES($1,'immutable',$2)",
+    [key, mime]
+  );
+  await http.pool.query(
+    "INSERT INTO invoices(id,profile_id,state,total_amount,issued_at,payable_from) VALUES($1,$2,'Unpaid',1000,NOW(),NOW())",
+    [invoiceId, f.profile]
+  );
+  await http.pool.query(
+    "INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key) VALUES($1,$2,$3,500,'2026-09-01','reference',$4)",
+    [receiptId, invoiceId, f.profile, key]
+  );
+  await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1)', [f.profile]);
+  await http.pool.query(
+    `INSERT INTO wallet_transactions(id,wallet_id,type,amount,state,idempotency_key,receipt_attachment_key,metadata)
+     VALUES($1::uuid,$2,'topup',100,'Pending',$1::text,$3,'{"channel":"bank_receipt"}'::jsonb)`,
+    [transactionId, f.profile, key]
+  );
+  const paths = [
+    `admin/invoices/bank-receipts/${receiptId}`,
+    `admin/wallet/bank-receipt-top-ups/${transactionId}`,
+  ];
+  for (const path of paths) {
+    const preview = `${path}/attachment-preview`;
+    expect((await fetch(`${http.base}/api/${preview}`)).status).toBe(401);
+    expect((await send(preview, f.user)).status).toBe(403);
+    expect((await send(preview, 'document-legal')).status).toBe(403);
+    const response = await send(preview, finance);
+    expect(response.status, await response.clone().text()).toBe(200);
+    expect(response.headers.get('content-type')).toContain('image/png');
+    expect(response.headers.get('cache-control')).toBe(
+      'private, no-cache, no-store, must-revalidate'
+    );
+    expect(response.headers.get('content-disposition')).toBe('inline');
+    expect(response.headers.get('x-content-type-options')).toBe('nosniff');
+    expect(response.headers.get('location')).toBeNull();
+    const png = Buffer.from(await response.arrayBuffer());
+    expect(png.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+    const image = await sharp(png).metadata();
+    expect(Math.max(image.width!, image.height!)).toBeLessThanOrEqual(640);
+    const detail = await send(path, finance);
+    expect(detail.status, await detail.clone().text()).toBe(200);
+    const { attachmentUrl } = (await detail.json()) as { attachmentUrl: string };
+    const download = await fetch(attachmentUrl);
+    expect(download.headers.get('content-disposition')).toBe('attachment');
+    expect(Buffer.from(await download.arrayBuffer())).toEqual(bytes);
+  }
+  await http.pool.query('DELETE FROM user_roles WHERE user_id=$1 AND role_id=$2', [
+    finance,
+    'role-finance',
+  ]);
+  for (const path of paths)
+    expect((await send(`${path}/attachment-preview`, finance)).status).toBe(403);
 });
 
 it('exposes effective file constraints in both authenticated contexts without granting upload authority', async () => {
