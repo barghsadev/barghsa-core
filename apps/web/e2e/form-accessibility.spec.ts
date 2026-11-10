@@ -1288,9 +1288,12 @@ for (const locale of ['en', 'fa']) {
       route.fulfill({ json: [] })
     );
     let writes = 0;
+    let reads = 0;
     await page.route('**/api/admin/config/delivery-window', (route) => {
-      if (route.request().method() === 'GET')
+      if (route.request().method() === 'GET') {
+        reads++;
         return route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } });
+      }
       writes++;
       return route.fulfill({ status: 503, json: { message: 'Unavailable' } });
     });
@@ -1323,7 +1326,21 @@ for (const locale of ['en', 'fa']) {
       .filter({ hasText: locale === 'fa' ? 'خطا در ذخیره' : 'Failed to save' });
     await expect(error).toBeVisible();
     await expect(windowForm.locator('#delivery-window-start')).toHaveValue('09:00');
-    await expect(windowForm.locator('button[type=submit]')).toBeEnabled();
+    const copy = (key: Parameters<typeof notificationFormText>[0]) =>
+      notificationFormText(key, locale === 'fa' ? 'fa' : 'en');
+    const windowPanel = page.locator('section[aria-labelledby="delivery-window-title"]');
+    const saveWindow = windowForm.locator('button[type=submit]');
+    const reset = windowPanel.getByRole('button', { name: copy('reset'), exact: true });
+    await expect(windowPanel.getByText(copy('uncertain'), { exact: true })).toBeVisible();
+    await expect(saveWindow).toBeDisabled();
+    await expect(reset).toBeDisabled();
+    expect(writes).toBe(1);
+    const readsBeforeRefresh = reads;
+    await windowPanel.getByRole('button', { name: copy('refresh'), exact: true }).click();
+    await expect.poll(() => reads).toBe(readsBeforeRefresh + 1);
+    await expect(saveWindow).toBeDisabled();
+    await reset.click();
+    await expect(saveWindow).toBeEnabled();
     expect(writes).toBe(1);
     await page
       .getByRole('button', { name: locale === 'fa' ? 'قالب جدید' : 'New Template', exact: true })
@@ -2850,7 +2867,7 @@ for (const locale of ['en', 'fa']) {
   });
 }
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`notification version history stays read-only and copies into a new draft (${locale})`, async ({
     page,
   }) => {
@@ -2870,8 +2887,12 @@ for (const locale of ['en', 'fa']) {
       publishedAt: '2026-09-01T00:00:00.000Z',
     }));
     const writes: unknown[] = [];
+    let reads = 0;
     await page.route('**/api/admin/notifications/templates*', async (route) => {
-      if (route.request().method() === 'GET') return route.fulfill({ json: versions });
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill({ json: versions });
+      }
       writes.push(route.request().postDataJSON());
       return route.fulfill({ status: 503, json: { message: 'Unavailable' } });
     });
@@ -2941,9 +2962,27 @@ for (const locale of ['en', 'fa']) {
           },
         ]);
         await expect(editor).toBeVisible();
+        await expect(editor.locator('button[type="submit"]')).toBeDisabled();
         await editor
           .getByRole('button', { name: locale === 'fa' ? 'انصراف' : 'Cancel', exact: true })
           .click();
+        const nextVersion = page
+          .locator(
+            'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2,h3)'
+          )
+          .filter({ hasText: versions[2]!.subject })
+          .getByRole('button', { name: locale === 'fa' ? 'مشاهده' : 'View', exact: true });
+        await expect(nextVersion).toBeDisabled();
+        const readsBeforeRefresh = reads;
+        await page
+          .getByRole('button', {
+            name: settingsText('admin.notifications.refresh', locale),
+            exact: true,
+          })
+          .click();
+        await expect.poll(() => reads).toBe(readsBeforeRefresh + 1);
+        await expect(nextVersion).toBeEnabled();
+        expect(writes).toHaveLength(1);
       }
     }
   });
@@ -3082,7 +3121,7 @@ for (const locale of ['en', 'fa']) {
   });
 }
 
-for (const locale of ['en', 'fa']) {
+for (const locale of ['en', 'fa'] as const) {
   test(`notification tests confirm the actual channel and reject unsaved or invalid results (${locale})`, async ({
     page,
   }) => {
@@ -3101,9 +3140,12 @@ for (const locale of ['en', 'fa']) {
       version: 1,
       publishedAt: null,
     }));
-    await page.route('**/api/admin/notifications/templates*', (route) =>
-      route.fulfill({ json: templates })
-    );
+    let reads = 0;
+    await page.route('**/api/admin/notifications/templates*', (route) => {
+      expect(route.request().method()).toBe('GET');
+      reads++;
+      return route.fulfill({ json: templates });
+    });
     await page.route('**/api/admin/config/delivery-window', (route) =>
       route.fulfill({ json: { timezone: 'Asia/Tehran', startHour: 9, endHour: 21 } })
     );
@@ -3123,6 +3165,14 @@ for (const locale of ['en', 'fa']) {
     const editor = page
       .locator('form')
       .filter({ has: page.locator('#notification-template-eventKey') });
+    const refresh = page.getByRole('button', {
+      name: settingsText('admin.notifications.refresh', locale),
+      exact: true,
+    });
+    const uncertain = page.getByText(
+      notificationFormText('testUnconfirmed', locale === 'fa' ? 'fa' : 'en'),
+      { exact: true }
+    );
     for (const template of templates) {
       await page
         .locator(
@@ -3172,8 +3222,14 @@ for (const locale of ['en', 'fa']) {
         const before = writes;
         await send.click();
         await expect.poll(() => writes).toBe(before + 1);
-        await expect(send).toBeEnabled();
+        await expect(uncertain).toBeVisible();
+        await expect(send).toBeDisabled();
         await expect(editor.getByText(message, { exact: true })).toHaveCount(0);
+        const readsBeforeRefresh = reads;
+        await refresh.click();
+        await expect.poll(() => reads).toBe(readsBeforeRefresh + 1);
+        await expect(send).toBeEnabled();
+        expect(writes).toBe(before + 1);
       }
       response = { ok: true, destination: template.channel, lastTestStatus: 'delivered' };
       await send.click();
