@@ -2720,50 +2720,76 @@ for (const locale of ['en', 'fa']) {
   test(`ordering uses the product API contract and retries unavailable products (${locale})`, async ({
     page,
   }) => {
-    await shell(page, locale);
-    await page.route('**/api/profiles/verification-status', (route) =>
-      route.fulfill({
-        json: { activeProfileId: 'profile-one', verificationRequired: false, isVerified: false },
-      })
-    );
-    await page.route('**/api/profiles/profile-one/addresses', (route) =>
+    await orderAddressShell(page, locale);
+    await page.route(`**/api/profiles/${orderAddressProfile}/addresses`, (route) =>
       route.fulfill({ json: { addresses: [] } })
     );
     await page.route('**/api/geography/provinces', (route) => route.fulfill({ json: [] }));
+    await page.route('**/api/electricity/periods/simple', (route) =>
+      route.fulfill({
+        json: {
+          periods: [
+            { key: 'next_week', start: '2030-01-06T00:00:00Z', end: '2030-01-13T00:00:00Z' },
+          ],
+        },
+      })
+    );
+    const thermal = {
+      id: '55555555-5555-4555-8555-555555555555',
+      systemKey: 'thermal',
+      status: 'active',
+      title: { en: 'Thermal supply', fa: 'برق حرارتی' },
+      description: null,
+      price: '9007199254740993',
+      limits: { minKwh: '0', maxKwh: '10000' },
+      orderable: true,
+      simpleOrderable: true,
+      simpleOrderBlockReasons: [],
+    };
     let reads = 0;
-    await page.route('**/api/products', (route) => {
+    await page.route('**/api/products/electricity', (route) => {
+      expect(route.request().method()).toBe('GET');
       reads++;
       if (reads === 1) return route.fulfill({ status: 503, json: {} });
-      if (reads === 2) return route.fulfill({ json: [{ id: 'broken', title: null }] });
+      if (reads === 2) return route.fulfill({ json: [{ ...thermal, title: null }] });
       return route.fulfill({
         json: [
+          thermal,
           {
-            id: 'hardware',
-            type: 'hardware',
-            status: 'active',
-            title: { en: 'Hardware', fa: 'سخت‌افزار' },
-            price: '100',
-          },
-          {
-            id: 'electricity',
-            type: 'electricity',
-            status: 'active',
+            ...thermal,
+            id: '66666666-6666-4666-8666-666666666666',
+            systemKey: 'green',
             title: { en: 'Green supply', fa: 'برق سبز' },
-            price: '9007199254740993',
+            price: '100',
+            simpleOrderable: false,
           },
           {
-            id: 'inactive',
-            type: 'electricity',
+            ...thermal,
+            id: '77777777-7777-4777-8777-777777777777',
+            systemKey: 'free_market',
             status: 'inactive',
-            title: { en: 'Inactive', fa: 'غیرفعال' },
+            title: { en: 'Inactive supply', fa: 'برق غیرفعال' },
             price: '200',
+            orderable: false,
+            simpleOrderable: false,
+          },
+          {
+            ...thermal,
+            id: null,
+            systemKey: 'energy_saving',
+            status: 'missing',
+            title: null,
+            price: null,
+            orderable: false,
+            simpleOrderable: false,
           },
         ],
       });
     });
-    await page.goto('/electricity/order');
+    await page.goto('/electricity/order?step=1');
+    const main = page.getByRole('main');
     for (let attempt = 0; attempt < 2; attempt++) {
-      const alert = page.getByRole('alert');
+      const alert = main.getByRole('alert');
       await expect(alert).toContainText(
         locale === 'fa' ? 'بارگذاری محصولات برق انجام نشد' : 'Could not load electricity products'
       );
@@ -2772,10 +2798,10 @@ for (const locale of ['en', 'fa']) {
         .getByRole('button', { name: locale === 'fa' ? 'تلاش دوباره' : 'Try again', exact: true })
         .click();
     }
-    await expect(page.getByRole('alert')).toHaveCount(0);
+    await expect(main.getByRole('alert')).toHaveCount(0);
     await expect(page.getByRole('radio')).toHaveCount(1);
     await expect(
-      page.getByRole('radio', { name: locale === 'fa' ? /برق سبز/ : /Green supply/ })
+      page.getByRole('radio', { name: locale === 'fa' ? /برق حرارتی/ : /Thermal supply/ })
     ).toBeChecked();
     await expect(
       page.getByText(
@@ -2788,8 +2814,11 @@ for (const locale of ['en', 'fa']) {
       )
     ).toBeVisible();
     await expect(
-      page.getByText(locale === 'fa' ? 'برق سبز' : 'Green supply', { exact: true })
-    ).toHaveCount(2);
+      main.getByText(locale === 'fa' ? 'برق سبز' : 'Green supply', { exact: true })
+    ).toHaveCount(0);
+    await expect(
+      main.getByText(locale === 'fa' ? 'برق غیرفعال' : 'Inactive supply', { exact: true })
+    ).toHaveCount(0);
     expect(reads).toBe(3);
   });
 }

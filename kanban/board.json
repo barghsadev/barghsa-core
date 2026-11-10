@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T03:26:51+00:00",
-  "source_commit": "1d55324764f498a60fddb58deda11aa3afaa7dcc",
+  "updated": "2026-11-10T03:30:06+00:00",
+  "source_commit": "e18526492a5403f1a218d8dd1baf9b2860c2d72e",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -27006,7 +27006,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27062,7 +27063,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/session-cookies.spec.ts",
@@ -27698,7 +27699,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27758,7 +27760,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/src/routes/_app/settings/security.tsx",
@@ -28462,7 +28464,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -28534,7 +28537,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -29380,7 +29383,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -29644,7 +29648,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/trusted-devices.spec.ts",
@@ -32893,7 +32897,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -32965,7 +32970,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -35070,7 +35075,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35122,7 +35128,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -35971,7 +35977,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -35991,7 +35998,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -36240,7 +36247,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -36264,7 +36272,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -37697,7 +37705,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37717,7 +37726,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -37941,7 +37950,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -37965,7 +37975,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -38544,7 +38554,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -38560,7 +38571,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/profile-settings-name.spec.ts",
@@ -39840,7 +39851,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -39864,7 +39876,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/notification-brand-preview.spec.ts",
@@ -40971,7 +40983,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-active-profile-address-crud",
@@ -40995,7 +41008,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -41806,7 +41819,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -41858,7 +41872,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -68615,7 +68629,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -68739,7 +68754,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69293,7 +69308,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -69417,7 +69433,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -69971,7 +69987,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70095,7 +70112,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -70648,7 +70665,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-admin-geography-and-versioned-terms",
@@ -70772,7 +70790,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -80911,7 +80929,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -80951,7 +80970,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81337,7 +81356,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81377,7 +81397,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -81785,7 +81805,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -81825,7 +81846,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -94644,7 +94665,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -94684,7 +94706,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/notification-forms.spec.ts",
@@ -294943,7 +294965,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -295015,7 +295038,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -295805,7 +295828,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -295877,7 +295901,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -296667,7 +296691,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -296739,7 +296764,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -297535,7 +297560,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -297607,7 +297633,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -298247,7 +298273,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -298319,7 +298346,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -299110,7 +299137,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -299182,7 +299210,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -299972,7 +300000,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -300044,7 +300073,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -300834,7 +300863,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -300906,7 +300936,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -301696,7 +301726,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -301768,7 +301799,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -302559,7 +302590,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -302631,7 +302663,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -303421,7 +303453,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -303493,7 +303526,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -304283,7 +304316,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -304355,7 +304389,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -305150,7 +305184,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -305222,7 +305257,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -305862,7 +305897,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -305934,7 +305970,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -306724,7 +306760,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -306796,7 +306833,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -307586,7 +307623,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -307658,7 +307696,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -308448,7 +308486,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -308520,7 +308559,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -309310,7 +309349,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -309382,7 +309422,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -310172,7 +310212,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -310244,7 +310285,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -311034,7 +311075,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -311106,7 +311148,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -311896,7 +311938,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -311968,7 +312011,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -312761,7 +312804,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -312833,7 +312877,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -313623,7 +313667,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -313695,7 +313740,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -314485,7 +314530,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -314557,7 +314603,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/electricity-payment-fixture.ts",
@@ -315341,7 +315387,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -315397,7 +315444,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -315998,7 +316045,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -316054,7 +316102,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -316655,7 +316703,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -316711,7 +316760,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -317312,7 +317361,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -317368,7 +317418,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -317969,7 +318019,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -318025,7 +318076,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -318627,7 +318678,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -318683,7 +318735,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -319285,7 +319337,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -319341,7 +319394,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -319942,7 +319995,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -319998,7 +320052,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -320599,7 +320653,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -320655,7 +320710,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -321256,7 +321311,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -321312,7 +321368,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -321914,7 +321970,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -321970,7 +322027,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -322571,7 +322628,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -322627,7 +322685,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -323228,7 +323286,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -323284,7 +323343,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -323885,7 +323944,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -323941,7 +324001,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -324547,7 +324607,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -324603,7 +324664,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -325204,7 +325265,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-existing-advanced-electricity-journey-with-source-bound-reuse",
@@ -325260,7 +325322,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -325894,7 +325956,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -325966,7 +326029,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -356830,7 +356893,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.2.0-closure",
@@ -356902,7 +356966,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/components/RecoveryContactForm.tsx",
@@ -367763,7 +367827,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -367799,7 +367864,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -369485,7 +369550,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -369522,7 +369588,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/src/routes/_app/settings/addresses.tsx",
@@ -529031,7 +529097,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529063,7 +529130,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -529448,7 +529515,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529480,7 +529548,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -529863,7 +529931,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -529895,7 +529964,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -530278,7 +530347,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530310,7 +530380,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -537569,7 +537639,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -537773,7 +537844,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -537793,7 +537864,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -539106,7 +539177,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -539162,7 +539234,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -539955,7 +540027,8 @@
           "release-0.5-remaining-contrast",
           "release-0.5-order-notice-placement",
           "release-0.5-conditional-control-contrast",
-          "release-0.6-preference-and-verification-browser"
+          "release-0.6-preference-and-verification-browser",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -539975,7 +540048,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/theme/main.tsx",
@@ -540580,7 +540653,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -540636,7 +540710,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -541127,7 +541201,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -541255,7 +541330,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -541979,7 +542054,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542107,7 +542183,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -542804,7 +542880,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -542860,7 +542937,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/form-fields-component.spec.ts",
@@ -543351,7 +543428,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543479,7 +543557,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/green-rules.spec.ts",
@@ -562880,7 +562958,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -562912,7 +562991,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -563295,7 +563374,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563327,7 +563407,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -563710,7 +563790,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -563742,7 +563823,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -564125,7 +564206,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564157,7 +564239,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -564545,7 +564627,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564577,7 +564660,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -564966,7 +565049,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -564998,7 +565082,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -565381,7 +565465,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565413,7 +565498,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -565796,7 +565881,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -565828,7 +565914,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -566212,7 +566298,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566244,7 +566331,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -566629,7 +566716,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -566661,7 +566749,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -567044,7 +567132,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567076,7 +567165,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -567460,7 +567549,8 @@
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-staff-activation-credential-transport",
           "release-0.6-calendar-utilities-and-exact-price-proof",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567492,7 +567582,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/fixtures/localisation/index.html",
@@ -567921,7 +568011,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -567949,7 +568040,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -569809,7 +569900,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -569837,7 +569929,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -571698,7 +571790,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -571726,7 +571819,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -573556,7 +573649,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -573584,7 +573678,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -575440,7 +575534,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -575468,7 +575563,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -577333,7 +577428,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -577361,7 +577457,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -579199,7 +579295,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -579227,7 +579324,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -581029,7 +581126,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -581057,7 +581155,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -582859,7 +582957,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -582887,7 +582986,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -584690,7 +584789,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -584718,7 +584818,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -586520,7 +586620,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -586548,7 +586649,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -592226,7 +592327,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -592506,7 +592608,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/email-customer-corrections.spec.ts",
@@ -592534,7 +592636,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/geography-native-forms.spec.ts",
@@ -622341,7 +622443,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -622369,7 +622472,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -624167,7 +624270,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -624195,7 +624299,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -625993,7 +626097,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -626021,7 +626126,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -627819,7 +627924,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -627847,7 +627953,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -629645,7 +629751,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -629673,7 +629780,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -631471,7 +631578,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -631499,7 +631607,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -633297,7 +633405,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -633325,7 +633434,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/security-settings-forms.spec.ts",
@@ -695502,7 +695611,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -695586,7 +695696,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -696185,7 +696295,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -696269,7 +696380,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -696867,7 +696978,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -696951,7 +697063,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -697551,7 +697663,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -697635,7 +697748,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -698235,7 +698348,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -698319,7 +698433,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -698916,7 +699030,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -699000,7 +699115,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -699597,7 +699712,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -699681,7 +699797,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -700279,7 +700395,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -700363,7 +700480,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -700960,7 +701077,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -701044,7 +701162,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -701642,7 +701760,8 @@
           "release-0.6-reusable-pagination-and-request-validation-tests",
           "release-0.6-shared-package-and-password-policy",
           "release-0.6-shared-username-normalization",
-          "release-0.6-typed-locale-dictionary"
+          "release-0.6-typed-locale-dictionary",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_acceptance": {
           "kind": "verified-four-service-wizard-and-draft-journeys",
@@ -701726,7 +701845,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -734415,7 +734534,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -735573,7 +735692,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -736503,7 +736623,7 @@
             },
             {
               "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
-              "sha256": "dd958e6c5a6cfea615acb239ef02ab34200ddf87c985e8c57ea20f94e4385eab"
+              "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -737649,7 +737769,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-typed-locale-dictionary",
-          "release-0.6-verify-submission-quota-and-current-replay-authority"
+          "release-0.6-verify-submission-quota-and-current-replay-authority",
+          "release-0.6-browser-electricity-review-reviewed"
         ]
       }
     },
@@ -747744,7 +747865,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -750494,7 +750615,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -751723,7 +751845,7 @@
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
-              "sha256": "b0ba1a98fd11a637b61607fe9a4541ce38d0b499589b1adbf167eb89ee82098a"
+              "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -754359,7 +754481,8 @@
           "release-0.6-browser-address-commands",
           "release-0.6-browser-session-authority",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -758334,7 +758457,8 @@
         "The session revocation and trusted-device denial cohort passed, with all related device and location browser cases passing in both locales and browser projects. The full browser gate remains open.",
         "The contract-limit, invoice due-period and VAT recovery cohort passed all 28 targeted cases in Chromium and mobile Safari. The full production browser gate remains open.",
         "Sixteen targeted preference recovery and verification contrast cases passed in both languages and browser projects. Remaining cohorts and the full release browser matrix still require their own receipts.",
-        "Twelve targeted notification editor, delivery-window, history and test receipt cases passed in English and Persian across Chromium and mobile Safari. Remaining cohorts and the exact production browser gate still require their own receipts."
+        "Twelve targeted notification editor, delivery-window, history and test receipt cases passed in English and Persian across Chromium and mobile Safari. Remaining cohorts and the exact production browser gate still require their own receipts.",
+        "The electricity catalogue and order confirmation cohort passed twelve cases across Chromium and mobile Safari. The remaining electricity draft, finance history and staff browser cases still require verification."
       ],
       "owner": null,
       "depends_on": [],
@@ -758437,7 +758561,8 @@
           "release-0.6-browser-session-authority",
           "release-0.6-browser-finance-command-recovery",
           "release-0.6-preference-and-verification-browser",
-          "release-0.6-browser-notification-recovery"
+          "release-0.6-browser-notification-recovery",
+          "release-0.6-browser-electricity-review-reviewed"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859293,6 +859418,60 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-notification-recovery",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "a81e994c318fbbb5f480bdc41d86568db137df3fa9e068028bf35f65ccbad72f"
+    },
+    "release-0.6-browser-electricity-review-reviewed": {
+      "batch": "release-0.6-browser-electricity-review-reviewed",
+      "base_commit": "e18526492a5403f1a218d8dd1baf9b2860c2d72e",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+        "apps/web/e2e/form-accessibility.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/confirmation-fixture.ts",
+          "sha256": "c7c829526bd67e72b3f3b3a3afad76175198ecdb362c7e60d3aee367efd23ba9"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "ba0ed8b3321748aaf5a58cece4ce3b9bfc7f40f06f3c5461003d87141e4cf06b"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "7956c6338cd1fc32aa6e4f09fcb952b7ebcd6ab686bfc93106d152ba6771bde8"
+        },
+        {
+          "path": "apps/web/src/components/StepReviewPage.tsx",
+          "sha256": "d195dacf84e39aaeeac54e4479dd6adfb8d4a282ccbb9cb40c738199dea2dc10"
+        },
+        {
+          "path": "apps/web/src/hooks/useRiskConfirmation.ts",
+          "sha256": "4c80aac980bd368019b3fec8fd19d7feefd44f1c97dd6b109d73224452f0b1d7"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The simple ordering browser test uses the current electricity catalogue endpoint and preserves the unavailable and malformed product retries. It verifies only the eligible thermal product is selected and the exact price above the safe integer range remains visible.",
+        "The advanced case waits for the rendered quote review and displayed address before acknowledging. Both modes require the financial acknowledgement and hold the original order body and idempotency key through timeout, malformed acknowledgement and successful retry.",
+        "All twelve affected cases passed in both languages in Chromium and mobile Safari. The first local attempt applied the advanced review locator to the simple page; the final test scopes that assertion to the advanced review and retains the common confirmation guard.",
+        "Affected ESLint, formatting and diff checks passed. No application code changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-electricity-review-reviewed",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "404cdf4192ffa0a0856a31a15b207b222b88e1d70d48c3df959e12ff03d7dd7f"
     }
   },
   "historical_improvements": [

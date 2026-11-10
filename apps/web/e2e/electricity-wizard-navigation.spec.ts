@@ -721,6 +721,14 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.goto(`${path(mode)}?step=5`);
       const submit = button(page, 'electricity.order.submit', locale);
+      if (mode === 'advanced') {
+        const review = page.getByRole('region', {
+          name: t('electricity.order.review', locale),
+          exact: true,
+        });
+        await expect(review.getByText(address.fullAddress, { exact: true })).toBeVisible();
+      }
+      await expect(submit).toBeDisabled();
       await approveRiskConfirmation(page, locale, 'financial');
       await expect(submit).toBeEnabled();
       await page.clock.install({ time: fixtureNow });
