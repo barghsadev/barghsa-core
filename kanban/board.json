@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T14:07:08+00:00",
-  "source_commit": "6d1e29ea565b1a45dcaf68dbaa800a07dbf4c6e2",
+  "updated": "2026-11-10T14:27:19+00:00",
+  "source_commit": "190ca2cabddaa48b280249cca6d3ace11e8f8307",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -486628,7 +486628,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-first-scheduled-browser-corrections",
-          "release-0.6-registration-and-onboarding-browser-journeys"
+          "release-0.6-registration-and-onboarding-browser-journeys",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -486660,7 +486661,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -486688,7 +486689,8 @@
             "The only fixed inline stylesheet hashes match Sonner 2.0.8 and Base UI 1.7.0. The required production-build check derives both hashes from the installed packages and checks the complete header. No global CSP provider or dependency was added. Comparing Node 24 inputs measured 499910 bytes before, 500211 with the rejected provider and 499.90 KB in the final build, below the existing 500 KB cap.",
             "Node 24 built both shells and the package wiring. Twenty-nine server cases passed. Nine native CSP browser cases and thirty affected production-build cases passed across Chromium, Firefox and WebKit. The latter exercised login, onboarding, toasts, confetti and wallet receipt scroll styling under enforcement. All 101 route and interaction bundle budgets passed without changing thresholds.",
             "The previous staging proxy checks and actual v0.5 response headers are retained. Live production-ingress TLS and HSTS and the report-only observation window remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ]
         }
       }
@@ -501334,7 +501336,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -501342,7 +501345,8 @@
           "checks": [
             "GitHub Protect main ruleset 26844024 is active and requires Verify monorepo integrity from GitHub Actions app 15368. The required job depends on application quality. Exact preflight 42772013847 quality job 129681776193 passed critical accessibility and advisory steps; job 129684033530 passed the required integrity check. This is the CI gate receipt, not acceptance of the still-running full affected test job.",
             "Critical Axe assertions remain byte-identical and fail on any violation in their tested scope. Advisory warnings and JSON now retain Axe impact, including unrated incomplete results. A current production-browser run passed four Chromium cases, producing six RTL/LTR advisory records with zero automated violations. Both staff notification triage views retain serious contrast items for manual measurement.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "source_evidence": [
             {
@@ -501379,7 +501383,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/e2e/workspace-media-routes.spec.ts",
@@ -503626,7 +503630,8 @@
       "remaining": [
         "Pass the full exact candidate nightly matrix with no unexpected, flaky or runner errors and verify its other scheduled gates. Exploratory run 42817801007 reproduced native Firefox axe content-process crashes. WebKit and Mobile Safari consultation and threshold regressions have source-bound targeted passes. Continue isolating Firefox and verify other residual failures against the final source.",
         "Mobile Safari receipt filters passed all localized theme variants after the viewport and status-entry fixture fixes. The next exact matrix still has to verify the hosted browser behavior.",
-        "Firefox revision 1575 resolves the targeted native axe crashes on macOS. Verify that runtime and all forty shards on hosted Linux against the exact candidate."
+        "Firefox revision 1575 resolves the targeted native axe crashes on macOS. Verify that runtime and all forty shards on hosted Linux against the exact candidate.",
+        "Four wallet receipt mobile Safari cases and four pinned Firefox cases passed after the viewport and pointer target correction. Recheck them and the unchanged saving payment flows in the next hosted matrix."
       ],
       "owner": null,
       "depends_on": [],
@@ -503636,7 +503641,8 @@
         "batches": [
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-receipt-filter-mobile-viewport",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": null
       }
@@ -529978,7 +529984,8 @@
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -530022,7 +530029,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -530466,7 +530473,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -549307,7 +549315,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549375,7 +549384,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -549561,7 +549570,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -549763,7 +549773,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549843,7 +549854,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/index.html",
@@ -549998,7 +550009,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -550225,7 +550237,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550305,7 +550318,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/index.html",
@@ -550460,7 +550473,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -550679,7 +550693,8 @@
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -550747,7 +550762,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -550933,7 +550948,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-route-fallback-and-announcement",
           "limitations": [
@@ -551169,7 +551185,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -551697,7 +551714,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -552637,7 +552654,8 @@
             "Renewed the shared package, password validation and affected auth browser bindings. Existing inputs and limits passed the scoped API, browser and contract checks, and the package subpaths retain strict ESM and CommonJS exports.",
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-conditional-form-closure/proof.json",
           "scope_dispositions": [
@@ -553776,7 +553794,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553856,7 +553875,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/index.html",
@@ -554011,7 +554030,8 @@
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-focus-and-contrast",
           "limitations": [
@@ -554816,7 +554836,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555064,7 +555085,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -555326,7 +555347,8 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -555695,7 +555717,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -555943,7 +555966,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -556205,7 +556228,8 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -557110,7 +557134,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -557358,7 +557383,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -557620,7 +557645,8 @@
             "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
             "Renewed the navigation source binding after restricting link destinations to registered router paths. All 15 focused checks passed and emitted AppShell JavaScript is identical.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-critical-accessibility",
           "limitations": [
@@ -557924,7 +557950,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-primary-mobile-paint-observation"
+          "release-0.6-primary-mobile-paint-observation",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -557935,7 +557962,8 @@
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "CI source/secret admission added without changing existing browser, provider, accessibility, test, or coverage behavior. The status matrix verifies fail-closed dependencies; earlier unchanged evidence is retained. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/supply-chain-source-and-secret-receipt.json",
             "Current isolated Linux candidates pass image scan wiring, readiness and affected native checks. The protected required check is strengthened to require each complete runtime scan. Final source, build and deployed image verification remain open.",
-            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged."
+            "Renewed the CI workflow binding after extracting its dependency report validator and reusing it for the nightly job. Other ordinary CI commands, coverage thresholds and assertions remain unchanged.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "source_evidence": [
             {
@@ -557964,7 +557992,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -606704,7 +606732,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607384,7 +607413,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -609506,7 +609535,8 @@
             "Renewed the assistant-display test binding only. The fixture now routes /api/maintenance separately, checks its exact manual fetch count, and retains the single assistant-availability request, unmount cancellation and old-account isolation assertions. All nine corrected display tests passed.",
             "Renewed the affected source bindings against the additive authorization audit batch. The audit scope is the only OpenAPI delta, migration 0284 adds one separate table, and the targeted compiled authorization, order, worker and dashboard suites preserve existing assertions. See the batch source proof for the exact diff and test receipts.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-team-member-recovery/proof.json",
           "limitations": [
@@ -630989,7 +631019,8 @@
           "release-0.6-contract-amendment-invoice-readback-browser-journey",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -631033,7 +631064,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/package.json",
@@ -631477,7 +631508,8 @@
             "The dialog deadline is enabled only for staff electricity quantity and price actions. Retained default dialog behavior was checked against representative saving and multipart callers. /Users/majid/.local/state/barghsa-manual-batches/release-0.5-electricity-staff-acknowledgement/proof.json",
             "Retained unaffected evidence: default web behavior and non-web services unchanged; exact built shell, web and isolated edge checks verify the header delta. /Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/web-csp-response-policy-receipt.json",
             "Both production Vite shells built; all 545 app and 30 auth assets remain byte-identical outside the added original font notices. Exact notice HTTP reads and all 29 static server tests passed.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-query-and-command-completion",
           "limitations": [
@@ -752485,7 +752517,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/src/components/WalletTransactionRecords.tsx",
@@ -752565,7 +752597,8 @@
             "Bindings renewed by release-0.5-final-ui-evidence: 159 affected unit tests, 48 native cases in Chromium and mobile Safari, 320 populated route width observations, web typecheck and all 97 budgets. Existing authorization, financial and route evidence retained.",
             "Bindings renewed by release-0.5-final-rehearsal: 112 affected native cases, exact changed web unit and static checks, 1,313 PostgreSQL 17 tests, and unchanged schema and route budgets. Existing authority, money, replay and receipt assertions remain.",
             "Bindings renewed by release-0.5-route-census-closure: 134 affected native cases, 125 targeted web units, strict critical browser checks, unchanged numeric budgets and current source hashes.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/customer-wallet-history-scope",
           "source_renewal": {
@@ -752739,7 +752772,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ]
       }
     },
@@ -772899,7 +772933,7 @@
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
-              "sha256": "62448c0cd98e5b09b7298886d352c544fc5c684f893c551f294b836c0b764886"
+              "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -774808,7 +774842,8 @@
             "Renewed localization bindings after a byte-identical dictionary comparison, all package cases and the affected API, browser and route budget checks.",
             "Renewed the scoped electricity submission bindings after proving current profile authority for receipt replay, immutable payment and contract state, and valid advanced and matching-line gift submissions.",
             "Renewed the changed source binding after the narrow consultation recovery alert and browser-fixture correction. The full localized consultation and threshold flows passed on desktop and mobile Chromium and WebKit, with 67 related units and all 102 production route budgets. The prior acceptance still supplies the unaffected business and security evidence.",
-            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+            "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
+            "Renewed the wallet receipt fixture binding with eight no-retry browser receipts across mobile Safari and Firefox 1575. All prior product assertions remain."
           ],
           "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-performance-evidence-acceptance/acceptance-proof.json",
           "scope_dispositions": [
@@ -774971,7 +775006,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-wallet-receipt-native-viewport"
         ]
       }
     },
@@ -886187,6 +886223,55 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/firefox-runtime-and-loading-motion",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "b616d810dc05e2265ef20b31a7cb17e7b44fdca33a69ab863036b43386ff796a"
+    },
+    "release-0.6-wallet-receipt-native-viewport": {
+      "batch": "release-0.6-wallet-receipt-native-viewport",
+      "base_commit": "190ca2cabddaa48b280249cca6d3ace11e8f8307",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "07-ui-ux-design.md#T-07.01.04.05",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.12.01.05",
+        "release-readiness#R-01.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/wallet-receipt-timeline.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
+          "sha256": "714a734590395505fac4227f6576730e3d22e0548c412005a10bc4435d9c257e"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        }
+      ],
+      "checks": [
+        "Hosted exploratory mobile Safari shard 8 (42817801007, job 129835256039) found an undefined wallet summary bounding box after fixture resizing. The passing theme/locale had already scrolled the card for a screenshot. The test preserves the original mobile viewport and scrolls the real target into view before measuring both dimensions against the unchanged 44-pixel floor.",
+        "All four mobile Safari and all four Firefox revision 1575 wallet cases passed without retries against the same production build. Receipt dates and scope, roles, touch and keyboard, cursor restoration, narrow layout, contrast and axe checks remain.",
+        "The two paid saving hardware and cancellation journeys from exploratory mobile Safari shard 7 passed locally on unchanged source with no retries in 6.0 and 6.3 seconds. Prior hosted traces reached the 30-second budget after normal pointer actions. The next exact matrix still needs to prove hosted behavior."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/wallet-receipt-native-viewport",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "eafb6632501fd14d62b93c258b5b93ca679a44b64f25ff1cff05e87cfeddc6ee"
     }
   },
   "historical_improvements": [

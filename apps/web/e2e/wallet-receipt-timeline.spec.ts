@@ -68,7 +68,8 @@ for (const locale of ['en', 'fa'] as const)
       `wallet receipt details preserve recorded dates, decisions and history scope (${locale}, dark=${darkMode})`,
       { tag: '@a11y-critical' },
       async ({ page }) => {
-        await page.setViewportSize({ width: 390, height: 844 });
+        if (page.viewportSize()!.width > 390)
+          await page.setViewportSize({ width: 390, height: 844 });
         await page.addInitScript(
           ({ locale, theme, themeKey }) => {
             localStorage.setItem('barghsa.locale', locale);
@@ -254,6 +255,8 @@ for (const locale of ['en', 'fa'] as const)
         const summary = details.locator(':scope > summary');
         await expect(summary).toBeVisible();
         if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
+          await summary.scrollIntoViewIfNeeded();
+          await expect(summary).toBeInViewport();
           const box = await summary.boundingBox();
           expect(box?.width).toBeGreaterThanOrEqual(44);
           expect(box?.height).toBeGreaterThanOrEqual(44);
