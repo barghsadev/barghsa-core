@@ -1517,18 +1517,25 @@ for (const locale of ['en', 'fa']) {
       sessionReads++;
       return route.fulfill({ json: sessions });
     });
-    await page.route('**/api/auth/sessions/revoke-all', (route) =>
-      route.fulfill({
+    let allAttempts = 0;
+    await page.route('**/api/auth/sessions/revoke-all', (route) => {
+      allAttempts++;
+      expect(route.request().postDataJSON()).toEqual({ password: 'wrong-password' });
+      return route.fulfill({
         status: 422,
         json: { error: { code: 'AUTH:LOGIN:INVALID_CREDENTIALS' } },
-      })
-    );
+      });
+    });
     const verifications: string[] = [];
     await page.route('**/api/auth/step-up', (route) => {
       expect(route.request().headers()['x-csrf-token']).toBe(currentCsrf);
       const password = route.request().postDataJSON().password;
       verifications.push(password);
-      if (password !== 'right-password') return route.fulfill({ status: 422, json: {} });
+      if (password !== 'right-password')
+        return route.fulfill({
+          status: 422,
+          json: { error: { code: 'AUTH:LOGIN:INVALID_CREDENTIALS' } },
+        });
       currentCsrf = `rotated-${verifications.length}`;
       sessions[0] = {
         ...sessions[0]!,
@@ -1537,7 +1544,10 @@ for (const locale of ['en', 'fa']) {
       };
       return cookieResponse(route, {
         headers: { 'set-cookie': `barghsa_csrf=${currentCsrf}; Path=/; SameSite=Strict` },
-        json: {},
+        json: {
+          message: 'Step-up authentication successful.',
+          stepUpVerifiedAt: sessions[0]!.createdAt,
+        },
       });
     });
     let attempts = 0;
@@ -1561,42 +1571,64 @@ for (const locale of ['en', 'fa']) {
     await allDialog
       .getByLabel(locale === 'fa' ? 'رمز عبور' : 'Password', { exact: true })
       .fill('wrong-password');
-    await allDialog.getByRole('button', { name: allName, exact: true }).click();
-    await expect(allDialog.getByRole('alert')).toContainText(
-      locale === 'fa' ? 'رمز عبور' : 'password'
+    const allSubmit = allDialog.getByRole('button', { name: allName, exact: true });
+    await expect(allSubmit).toBeDisabled();
+    expect(allAttempts).toBe(0);
+    await approveRiskConfirmation(page, locale === 'fa' ? 'fa' : 'en', 'destructive');
+    await allSubmit.click();
+    await expect(allDialog.getByRole('alert')).toHaveText(
+      securitySettingsText('invalidPassword', locale)
     );
+    expect(allAttempts).toBe(1);
     await page.keyboard.press('Escape');
     const name = locale === 'fa' ? 'قطع دسترسی' : 'Revoke';
     await page.getByRole('button', { name, exact: true }).click();
     const dialog = page.getByRole('dialog', { name, exact: true });
     const submit = dialog.getByRole('button', { name, exact: true });
+    await expect(submit).toBeDisabled();
+    await approveRiskConfirmation(page, locale === 'fa' ? 'fa' : 'en', 'destructive');
     await submit.click();
     const password = dialog.getByLabel(locale === 'fa' ? 'رمز عبور' : 'Password', { exact: true });
     await expect(password).toBeFocused();
-    await expect(submit).toBeDisabled();
+    await submit.click();
+    await expect(password).toHaveAttribute('aria-invalid', 'true');
+    expect(verifications).toEqual([]);
     await password.fill('wrong-password');
     await submit.click();
-    await expect(dialog.getByRole('alert')).toBeVisible();
-    await expect(password).toHaveValue('');
+    await expect(dialog.getByRole('alert')).toHaveText(
+      securitySettingsText('invalidPassword', locale)
+    );
+    await expect(password).toHaveAttribute('type', 'password');
+    await expect(password).toHaveValue('wrong-password');
     expect(attempts).toBe(1);
     expect(sessionReads).toBe(1);
     await password.fill('right-password');
     await submit.click();
-    await expect(dialog.getByRole('alert')).toContainText(
-      locale === 'fa' ? 'خطا در قطع دسترسی' : 'Failed to revoke'
-    );
-    await expect(password).toHaveValue('');
+    await expect(dialog.getByRole('alert')).toHaveText(securitySettingsText('uncertain', locale));
+    await expect(password).toBeDisabled();
+    await expect(submit).toBeDisabled();
     expect(attempts).toBe(2);
     await expect(page.locator('time[datetime="2026-09-02T12:00:00.000Z"]')).toBeVisible();
     expect(sessionReads).toBe(2);
-    await password.fill('right-password');
+    await dialog
+      .getByRole('button', { name: securitySettingsText('check', locale), exact: true })
+      .click();
+    await expect(dialog.getByRole('alert')).toHaveText(
+      securitySettingsText('stillPresent', locale)
+    );
+    expect(attempts).toBe(2);
+    expect(sessionReads).toBe(3);
+    await dialog
+      .getByRole('button', { name: securitySettingsText('restart', locale), exact: true })
+      .click();
+    await expect(password).toHaveValue('right-password');
     await submit.click();
     await expect(dialog).toHaveCount(0);
     await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0);
     expect(attempts).toBe(3);
     await expect(page.locator('time[datetime="2026-09-03T12:00:00.000Z"]')).toBeVisible();
     await expect(page.locator('time[datetime="2026-09-02T12:00:00.000Z"]')).toHaveCount(0);
-    expect(sessionReads).toBe(3);
+    expect(sessionReads).toBe(4);
     expect(verifications).toEqual(['wrong-password', 'right-password', 'right-password']);
   });
 }

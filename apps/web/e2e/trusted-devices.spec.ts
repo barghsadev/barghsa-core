@@ -2,6 +2,7 @@ import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { settingsProfileFixture, settingsProfileId } from './settings-profile-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { securitySettingsText as copy } from '@barghsa/i18n/security-settings-forms';
 
@@ -42,7 +43,7 @@ async function shell(page: Page, locale: string, darkMode: boolean) {
         operatingContext: 'customer',
         canSwitchContext: false,
         requiresTosAcceptance: false,
-        navigation: fullNavigation('customer', 'LEGAL'),
+        navigation: { ...fullNavigation('customer', 'LEGAL'), profileId: settingsProfileId },
       },
     })
   );
@@ -50,15 +51,14 @@ async function shell(page: Page, locale: string, darkMode: boolean) {
     route.fulfill({
       json: {
         profiles: [
-          {
-            id: 'profile-one',
+          settingsProfileFixture({
+            id: settingsProfileId,
             profileType: 'LEGAL',
             status: 'ACTIVE',
             title: 'Profile',
-            isDefault: true,
-          },
+          }),
         ],
-        activeProfileId: 'profile-one',
+        activeProfileId: settingsProfileId,
         hasDefault: true,
       },
     })
@@ -357,7 +357,7 @@ for (const locale of ['fa', 'en'])
         result = { status, json: {} };
         await refresh.click();
         await expect(region).toHaveCount(0);
-        await expect(page.getByRole('alert')).toContainText(copy('denied', locale as 'en' | 'fa'));
+        await expect(page.getByRole('alert')).toHaveText(copy('denied', locale as 'en' | 'fa'));
         result = { json: records };
         await page.reload();
         await expect(remove).toHaveCount(2);
