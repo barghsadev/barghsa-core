@@ -1,10 +1,13 @@
 import { fullNavigation } from './navigation-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
+import { fulfillDashboard } from './dashboard-fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { formatBrowserDate } from './browser-date';
 import { test, expect, type Page, type Route } from './coverage-fixture';
 import { confirmationText } from '@barghsa/i18n/confirmation';
+import { contractText } from '@barghsa/i18n/contracts';
+import { shellText } from '@barghsa/i18n/shell';
 import { t as teamText } from '@barghsa/i18n/team';
 import { t as workspaceText } from '@barghsa/i18n/workspace';
 import { teamCatalogue, teamInvitation } from '../src/test/team-catalogue-fixtures';
@@ -112,6 +115,186 @@ async function authorizeAction(page: Page, locale: 'en' | 'fa' = 'en') {
 }
 
 for (const locale of ['fa', 'en'] as const) {
+  test(`legal company invitation grants contract access and withholds wallet access (${locale})`, async ({
+    page,
+    baseURL,
+  }) => {
+    await shell(page, locale);
+    const fa = locale === 'fa';
+    const id = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+    const company = 'Example company';
+    const username = 'legal-agent@example.test';
+    const actor = 'company-owner';
+    let owner = true;
+    let accepted = false;
+    let selected = false;
+    const steps: string[] = [];
+    const setCsrf = (value: string) =>
+      page.context().addCookies([{ name: 'barghsa_csrf', value, url: baseURL! }]);
+    const post = (route: Route, csrf: string) => {
+      expect(route.request().method()).toBe('POST');
+      expect(route.request().headers()['x-csrf-token']).toBe(csrf);
+    };
+    await page.route('**/api/auth/user', (r) => {
+      const navigation = fullNavigation('customer', 'LEGAL');
+      return r.fulfill({
+        json: {
+          userId: owner ? actor : 'invited-legal-agent',
+          isStaff: false,
+          operatingContext: 'customer',
+          requiresTosAcceptance: false,
+          navigation: owner
+            ? { ...navigation, profileId }
+            : {
+                ...navigation,
+                profileId: selected ? profileId : null,
+                profileType: selected ? 'LEGAL' : null,
+                paths: selected ? ['/app', '/contracts', '/settings'] : ['/app', '/settings'],
+              },
+        },
+      });
+    });
+    await page.route('**/api/profiles', (r) =>
+      r.fulfill({
+        json: {
+          profiles:
+            owner || accepted
+              ? [{ id: profileId, profileType: 'LEGAL', title: company, status: 'ACTIVE' }]
+              : [],
+          activeProfileId: owner || selected ? profileId : null,
+          hasDefault: owner || selected,
+        },
+      })
+    );
+    await page.route('**/api/onboarding/drafts', (r) =>
+      r.fulfill({ json: { drafts: [], nextAfter: null } })
+    );
+    await page.route('**/api/onboarding/journeys/active', (r) =>
+      r.fulfill({ json: { journey: null } })
+    );
+    await page.route(`**/api/profiles/${profileId}/invitations`, (r) => {
+      post(r, 'owner-invitation-csrf');
+      expect(owner).toBe(true);
+      expect(steps).toEqual([]);
+      expect(r.request().postDataJSON()).toEqual({ username, role: 'Legal' });
+      steps.push('invited');
+      return r.fulfill({ status: 201, json: { id } });
+    });
+    await page.route('**/api/invitations/pending', (r) =>
+      r.fulfill({
+        json: {
+          invitations:
+            !owner && !accepted && steps.includes('invited')
+              ? [
+                  {
+                    id,
+                    profileId,
+                    profileName: company,
+                    role: 'Legal',
+                    invitedBy: actor,
+                    inviterName: 'Company owner',
+                    createdAt: '2026-11-10T10:00:00Z',
+                    expiresAt: null,
+                  },
+                ]
+              : [],
+        },
+      })
+    );
+    await page.route(`**/api/invitations/${id}/accept`, (r) => {
+      post(r, 'recipient-invitation-csrf');
+      expect(owner).toBe(false);
+      expect(steps).toEqual(['invited']);
+      expect(r.request().postDataJSON()).toEqual({
+        expectedProfileId: profileId,
+        expectedRole: 'Legal',
+      });
+      accepted = true;
+      steps.push('accepted');
+      return cookieResponse(r, {
+        headers: { 'set-cookie': 'barghsa_csrf=after-legal-invitation; Path=/; SameSite=Strict' },
+        json: { invitation: { id, profileId, role: 'Legal', status: 'Accepted' } },
+      });
+    });
+    await page.route(`**/api/profiles/switch/${profileId}`, (r) => {
+      post(r, 'after-legal-invitation');
+      expect(steps).toEqual(['invited', 'accepted']);
+      expect(r.request().postDataJSON()).toEqual({});
+      selected = true;
+      steps.push('selected');
+      return r.fulfill({ json: { activeProfileId: profileId } });
+    });
+    await page.route('**/api/dashboard{,/**}', (r) =>
+      fulfillDashboard(r, {
+        json: {
+          profile: { id: profileId, name: company },
+          access: { wallet: false, invoices: false, orders: false, contracts: true },
+        },
+      })
+    );
+    await page.route('**/api/contracts{,?*}', (r) => {
+      expect(accepted && selected && !owner).toBe(true);
+      expect(r.request().method()).toBe('GET');
+      steps.push('read-contracts');
+      return r.fulfill({ json: { contracts: [], nextBefore: null } });
+    });
+    await page.route(`**/api/wallet/${profileId}{,/**}`, (r) => {
+      expect(accepted && selected && !owner).toBe(true);
+      expect(r.request().method()).toBe('GET');
+      steps.push('denied-wallet');
+      return r.fulfill({ status: 403, json: { error: { code: 'AUTHZ:INSUFFICIENT_ROLE' } } });
+    });
+
+    await setCsrf('owner-invitation-csrf');
+    await page.goto('/settings/team');
+    await page
+      .getByRole('button', { name: fa ? 'دعوت عضو تیم' : 'Invite a team member', exact: true })
+      .click();
+    const dialog = page.getByRole('dialog');
+    await dialog.getByLabel(fa ? 'ایمیل یا شماره موبایل' : 'Email or mobile number').fill(username);
+    await dialog.locator('#invite-role').selectOption('Legal');
+    await expect(dialog.getByRole('status')).toContainText(company);
+    await dialog.getByRole('button', { name: fa ? 'ارسال دعوت‌نامه' : 'Send invitation' }).click();
+    await expect(dialog).toHaveCount(0);
+    expect(steps).toEqual(['invited']);
+
+    owner = false;
+    await setCsrf('recipient-invitation-csrf');
+    await page.goto('/onboarding');
+    const invitations = page.getByRole('region', {
+      name: fa ? 'دعوت‌نامه‌های شرکت' : 'Company invitations',
+    });
+    await expect(invitations).toContainText(company);
+    await expect(invitations).toContainText(fa ? 'حقوقی' : 'Legal');
+    await invitations.getByRole('button', { name: fa ? 'پذیرفتن' : 'Accept', exact: true }).click();
+    const open = invitations.getByRole('button', {
+      name: fa ? 'باز کردن پروفایل' : 'Open profile',
+      exact: true,
+    });
+    await expect(open).toBeVisible();
+    expect(steps).toEqual(['invited', 'accepted']);
+    await open.click();
+    await expect(page).toHaveURL(/\/app$/);
+    const nav = page.locator('#dashboard-navigation');
+    const contracts = nav.locator('a[href="/contracts"]');
+    await expect(contracts).toHaveCount(1);
+    for (const path of ['/wallet', '/invoices', '/settings/team']) {
+      await expect(nav.locator(`a[href="${path}"]`)).toHaveCount(0);
+    }
+    if (!(await contracts.isVisible()))
+      await page.getByRole('button', { name: shellText('menu', locale), exact: true }).click();
+    await contracts.click();
+    await expect(page).toHaveURL(/\/contracts$/);
+    await expect(page.getByText(contractText('empty', locale), { exact: true })).toBeVisible();
+
+    await page.goto('/wallet');
+    await expect(page.getByTestId('wallet-error')).toBeVisible();
+    for (const testId of ['wallet-balance', 'wallet-submit', 'wallet-receipt-form']) {
+      await expect(page.getByTestId(testId)).toHaveCount(0);
+    }
+    expect(steps).toEqual(['invited', 'accepted', 'selected', 'read-contracts', 'denied-wallet']);
+  });
+
   test(`dashboard invitations stay visible until a decision and sit above the header (${locale})`, async ({
     page,
   }) => {
