@@ -1,12 +1,15 @@
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
+import { createServer, type Server } from 'node:net';
 import { resolve } from 'node:path';
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import PDFDocument from 'pdfkit';
 import yazl from 'yazl';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { DOCX_MIME, PDF_MIME } from './document-template-extraction.js';
+import { DocumentTemplateService } from './document-template.service.js';
+import type { StorageProvider } from '@barghsa/shared/storage';
 
 const requireShared = createRequire(resolve(__dirname, '../../../../packages/shared/package.json'));
 const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as {
@@ -19,7 +22,36 @@ const { S3Client, CreateBucketCommand } = requireShared('@aws-sdk/client-s3') as
 let minio: StartedTestContainer;
 let s3: InstanceType<typeof S3Client>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
+let scanner: Server | undefined;
+let scannerVerdict: (bytes: Buffer) => string = () => 'stream: OK';
 const sessions: Record<string, Record<string, string>> = {};
+
+async function startScanner() {
+  const server = createServer((socket) => {
+    let message = Buffer.alloc(0);
+    socket.on('data', (chunk) => {
+      message = Buffer.concat([message, Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)]);
+      if (message.subarray(0, 10).toString() !== 'zINSTREAM\0') return;
+      const frames: Buffer[] = [];
+      for (let offset = 10; offset + 4 <= message.length;) {
+        const length = message.readUInt32BE(offset);
+        offset += 4;
+        if (offset + length > message.length) return;
+        if (length === 0) {
+          socket.end(`${scannerVerdict(Buffer.concat(frames))}\0`);
+          return;
+        }
+        frames.push(message.subarray(offset, offset + length));
+        offset += length;
+      }
+    });
+  });
+  scanner = server;
+  await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+  const endpoint = server.address();
+  if (!endpoint || typeof endpoint === 'string') throw new Error('Scanner fixture did not listen');
+  return endpoint.port;
+}
 
 beforeAll(async () => {
   minio = await new GenericContainer(
@@ -38,7 +70,13 @@ beforeAll(async () => {
     credentials: { accessKeyId: 'test-only-key', secretAccessKey: 'test-only-secret' },
   });
   await s3.send(new CreateBucketCommand({ Bucket: 'test-evidence' }));
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
+  vi.stubEnv('DOCUMENT_CLAMAV_PORT', String(await startScanner()));
+  vi.stubEnv('DOCUMENT_CLAMAV_HOST', '127.0.0.1');
+  try {
+    http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
+  } finally {
+    vi.unstubAllEnvs();
+  }
   await login('template-admin', true);
   await login('template-customer', false);
 }, 60_000);
@@ -47,7 +85,12 @@ afterAll(async () => {
     await http?.close();
   } finally {
     s3?.destroy();
-    await minio?.stop();
+    const server = scanner;
+    try {
+      if (server) await new Promise<void>((resolve) => server.close(() => resolve()));
+    } finally {
+      await minio?.stop();
+    }
   }
 }, 30_000);
 
@@ -287,4 +330,102 @@ it('versions PDF and DOCX files, extracts merged placeholders, and keeps histori
       'document_template_version_created',
     ].sort()
   );
+});
+
+it('screens new and retained template bytes before publishing a version', async () => {
+  const scanned: Buffer[] = [];
+  let verdict = 'stream: OK';
+  const cleanBytes = await docx('Signed by {{customerName}}.');
+  const flaggedBytes = await docx('Additional document for {{contractNumber}}.');
+  scannerVerdict = (bytes) => {
+    scanned.push(bytes);
+    return bytes.equals(flaggedBytes) ? 'stream: fixture-signature FOUND' : verdict;
+  };
+  try {
+    const created = await request('', 'template-admin', 'POST', {
+      title: 'Screened templates',
+      category: 'contract',
+    });
+    expect(created.status).toBe(201);
+    const { id } = (await created.json()) as { id: string };
+    const clean = { name: 'clean.docx', mime: DOCX_MIME, bytes: cleanBytes };
+    const flagged = { name: 'flagged.docx', mime: DOCX_MIME, bytes: flaggedBytes };
+    const version = (files: (typeof clean)[], retained: string[] = [], actor = 'template-admin') =>
+      request(`/${id}/versions`, actor, 'POST', versionForm(retained, files));
+    const stored = async () =>
+      (
+        await http.pool.query(
+          `SELECT status FROM storage_records WHERE storage_key LIKE $1 ORDER BY storage_key`,
+          [`document-templates/${id}/%`]
+        )
+      ).rows;
+    expect((await version([clean], [], 'template-customer')).status).toBe(403);
+    expect((await version([{ ...clean, bytes: Buffer.from('invalid') }])).status).toBe(400);
+    expect(scanned).toEqual([]);
+
+    const refused = await version([clean, flagged]);
+    expect(refused.status).toBe(400);
+    expect(await refused.text()).not.toContain('fixture-signature');
+    expect(scanned).toEqual([cleanBytes, flaggedBytes]);
+    expect(await stored()).toEqual([]);
+
+    const accepted = await version([clean]);
+    expect(accepted.status, await accepted.clone().text()).toBe(201);
+    const { versions } = (await accepted.json()) as {
+      versions: Array<{ files: { id: string }[] }>;
+    };
+    const [file] = versions[0]!.files;
+    expect(file).toBeDefined();
+    expect(await stored()).toEqual([{ status: 'immutable' }]);
+
+    verdict = 'stream: fixture-internal ERROR';
+    const unavailable = await version([], [file!.id]);
+    expect(unavailable.status).toBe(503);
+    expect(await unavailable.text()).not.toContain('fixture-internal');
+    expect(scanned).toEqual([cleanBytes, flaggedBytes, cleanBytes, cleanBytes]);
+
+    const unchanged = await request(`/${id}`, 'template-admin');
+    expect((await unchanged.json()) as { versions: unknown[] }).toMatchObject({ versions });
+    expect(await stored()).toEqual([{ status: 'immutable' }]);
+    const audit = await http.pool.query(
+      `SELECT event FROM audit_log WHERE metadata::jsonb->>'templateId'=$1
+        AND event='document_template_version_created'`,
+      [id]
+    );
+    expect(audit.rowCount).toBe(1);
+
+    verdict = 'stream: OK';
+    expect((await version([], [file!.id])).status).toBe(201);
+    expect(scanned).toEqual([cleanBytes, flaggedBytes, cleanBytes, cleanBytes, cleanBytes]);
+    expect(await stored()).toEqual([{ status: 'immutable' }]);
+  } finally {
+    scannerVerdict = () => 'stream: OK';
+  }
+});
+
+it('requires a configured scanner for production template ingestion', async () => {
+  const bytes = await docx('Signed by {{customerName}}.');
+  const storage = { putObject: vi.fn() };
+  const service = new DocumentTemplateService(storage as unknown as StorageProvider);
+  vi.stubEnv('NODE_ENV', 'production');
+  vi.stubEnv('DOCUMENT_CLAMAV_HOST', '');
+  try {
+    await expect(
+      service.createVersion(
+        randomUUID(),
+        {
+          changeSummary: '',
+          retainedFileIds: [],
+          files: [
+            { originalname: 'terms.docx', mimetype: DOCX_MIME, size: bytes.length, buffer: bytes },
+          ],
+        },
+        { userId: 'template-admin', sessionId: randomUUID(), csrfToken: randomUUID() },
+        ''
+      )
+    ).rejects.toMatchObject({ status: 503, message: 'Document scanning is unavailable' });
+    expect(storage.putObject).not.toHaveBeenCalled();
+  } finally {
+    vi.unstubAllEnvs();
+  }
 });

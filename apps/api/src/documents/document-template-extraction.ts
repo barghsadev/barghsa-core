@@ -22,6 +22,15 @@ export function templateMime(name: string, declared: string): TemplateMime {
   throw new BadRequestException('Only PDF and DOCX template files are accepted');
 }
 
+export function assertTemplateFileSignature(bytes: Buffer, mime: TemplateMime): void {
+  if (mime === PDF_MIME) {
+    if (!bytes.subarray(0, 5).equals(Buffer.from('%PDF-')))
+      throw new BadRequestException('Invalid PDF file');
+  } else if (!bytes.subarray(0, 4).equals(Buffer.from('504b0304', 'hex'))) {
+    throw new BadRequestException('Invalid DOCX file');
+  }
+}
+
 function occurrences(text: string): PlaceholderOccurrence[] {
   const normalized = text.replace(/\s+/g, ' ');
   const found: PlaceholderOccurrence[] = [];
@@ -49,8 +58,6 @@ function decodeXml(xml: string): string {
 }
 
 async function docxText(bytes: Buffer): Promise<string> {
-  if (!bytes.subarray(0, 4).equals(Buffer.from('504b0304', 'hex')))
-    throw new BadRequestException('Invalid DOCX file');
   const zip = await new Promise<yauzl.ZipFile>((resolve, reject) =>
     yauzl.fromBuffer(bytes, { lazyEntries: true, validateEntrySizes: true }, (error, file) =>
       error || !file ? reject(error ?? new Error('Invalid ZIP')) : resolve(file)
@@ -107,8 +114,6 @@ async function docxText(bytes: Buffer): Promise<string> {
 }
 
 async function pdfText(bytes: Buffer): Promise<string> {
-  if (!bytes.subarray(0, 5).equals(Buffer.from('%PDF-')))
-    throw new BadRequestException('Invalid PDF file');
   const loading = getDocument({
     data: new Uint8Array(bytes),
     useSystemFonts: false,
@@ -139,6 +144,7 @@ export async function extractTemplatePlaceholders(
   bytes: Buffer,
   mime: TemplateMime
 ): Promise<PlaceholderOccurrence[]> {
+  assertTemplateFileSignature(bytes, mime);
   try {
     const text = mime === PDF_MIME ? await pdfText(bytes) : await docxText(bytes);
     return occurrences(text);

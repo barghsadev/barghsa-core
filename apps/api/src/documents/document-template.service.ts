@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
-import type { StorageProvider } from '@barghsa/shared/storage';
+import { scanWithClamAv, type StorageProvider, type ScanVerdict } from '@barghsa/shared/storage';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
@@ -17,6 +17,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
 import {
+  assertTemplateFileSignature,
   extractTemplatePlaceholders,
   templateMime,
   type PlaceholderOccurrence,
@@ -65,6 +66,32 @@ export type TemplateUpload = {
   size: number;
   buffer: Buffer;
 };
+
+function templateScanner() {
+  const host = process.env['DOCUMENT_CLAMAV_HOST']?.trim();
+  const port = Number(process.env['DOCUMENT_CLAMAV_PORT'] ?? '3310');
+  let remainingMs = 15_000;
+  return async (bytes: Buffer, mime: TemplateMime): Promise<void> => {
+    assertTemplateFileSignature(bytes, mime);
+    if (!host) {
+      if (process.env['NODE_ENV'] === 'production')
+        throw new ServiceUnavailableException('Document scanning is unavailable');
+      return;
+    }
+
+    const started = performance.now();
+    let verdict: ScanVerdict;
+    try {
+      verdict = await scanWithClamAv(bytes, { host, port, timeoutMs: remainingMs });
+    } catch {
+      throw new ServiceUnavailableException('Document scanning is unavailable');
+    } finally {
+      remainingMs -= performance.now() - started;
+    }
+    if (verdict === 'infected')
+      throw new BadRequestException('Template file failed malware screening');
+  };
+}
 
 function fileDto(file: FileRow) {
   return {
@@ -244,7 +271,10 @@ export class DocumentTemplateService {
     return this.get(id);
   }
 
-  private async prepare(files: TemplateUpload[]): Promise<NewFile[]> {
+  private async prepare(
+    files: TemplateUpload[],
+    scan: ReturnType<typeof templateScanner>
+  ): Promise<NewFile[]> {
     if (files.length > 5 || files.reduce((total, file) => total + file.size, 0) > 30 * 1024 * 1024)
       throw new BadRequestException('Too many or oversized template files');
     const prepared: NewFile[] = [];
@@ -265,6 +295,7 @@ export class DocumentTemplateService {
       )
         throw new BadRequestException('Template file name is invalid');
       const mimeType = templateMime(originalName, file.mimetype);
+      await scan(file.buffer, mimeType);
       const placeholders = await extractTemplatePlaceholders(file.buffer, mimeType);
       prepared.push({
         originalName,
@@ -285,7 +316,8 @@ export class DocumentTemplateService {
   ) {
     const storage = this.storage;
     if (!storage) throw new ServiceUnavailableException('Object storage is unavailable');
-    const incoming = await this.prepare(input.files);
+    const scan = templateScanner();
+    const incoming = await this.prepare(input.files, scan);
     const versionId = uuidv7();
     await this.write(actor, async (client) => {
       const template = await client.query(
@@ -347,6 +379,7 @@ export class DocumentTemplateService {
           createHash('sha256').update(bytes).digest('hex') !== file.checksum
         )
           throw new ConflictException('Retained template file changed; reload and retry');
+        await scan(bytes, file.mime_type);
         file.placeholders = await extractTemplatePlaceholders(bytes, file.mime_type);
       }
       const placeholders = [

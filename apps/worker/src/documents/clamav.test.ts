@@ -1,7 +1,7 @@
 import { createServer, type Server, type Socket } from 'node:net';
 import { createHash } from 'node:crypto';
 import { afterEach, expect, it } from 'vitest';
-import { scanUploadWithClamAv, scanWithClamAv } from './clamav.js';
+import { scanUploadWithClamAv, scanWithClamAv } from '@barghsa/shared/storage';
 
 let server: Server | undefined;
 afterEach(async () => {

@@ -73,6 +73,13 @@ to obtain a verdict. Signed historical files remain available through their
 existing reads. Business documents scan their sealed source through the
 document queue.
 
+Staff template versioning checks the file signature and scans new multipart
+bytes before extraction and storage. Reusing a file in a new version also
+requires a clean verdict after verifying the retained checksum. A version
+shares a 15-second scan budget across its files. Production returns a
+retryable error when the scanner is unavailable or unconfigured, and a
+flagged file prevents publication of the version.
+
 ## Authorization audit
 
 In the staff workspace, open **Settings → Security → Authorization audit**

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T02:52:10+00:00",
-  "source_commit": "1e7193352fb3930470616e54ec31a9c307ff4c7c",
+  "updated": "2026-11-10T03:00:40+00:00",
+  "source_commit": "405bbcf29aa531d49eee71d60d750cb4558dcfd1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -73463,7 +73463,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -73955,7 +73956,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -183271,7 +183272,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -183427,15 +183429,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -184094,7 +184096,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -184250,15 +184253,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -184914,7 +184917,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185070,15 +185074,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -185733,7 +185737,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -185889,15 +185894,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -186554,7 +186559,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -186710,15 +186716,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -388827,7 +388833,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -388923,7 +388930,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -389805,7 +389812,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -389901,7 +389909,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -390782,7 +390790,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -390878,7 +390887,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -447823,7 +447832,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -447835,7 +447845,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "a15c536dc43f601add746c3c71366aebe9cccfb800818184ec0075a1dd287903"
+              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -448018,7 +448028,8 @@
           "release-0.5-form-and-document-accessibility",
           "release-0.5-dependency-gate-closure",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448030,7 +448041,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "a15c536dc43f601add746c3c71366aebe9cccfb800818184ec0075a1dd287903"
+              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -448762,7 +448773,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448782,7 +448794,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -448790,7 +448802,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
@@ -448798,7 +448810,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -449042,7 +449054,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449062,7 +449075,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -449070,7 +449083,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
@@ -449078,7 +449091,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -449324,7 +449337,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449344,7 +449358,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -449352,7 +449366,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
@@ -449360,7 +449374,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -449604,7 +449618,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449624,7 +449639,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -449632,7 +449647,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
@@ -449640,7 +449655,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -449885,7 +449900,8 @@
           "release-0.5-final-gates",
           "release-0.5-review-preview-deadlines",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-upload-abuse-review"
+          "release-0.6-upload-abuse-review",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -449905,7 +449921,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -449913,7 +449929,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.test.ts",
@@ -449921,7 +449937,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
@@ -450178,7 +450194,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "current-contract-document-and-base-lifecycle-acceptance",
@@ -450334,15 +450351,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -450996,7 +451013,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451096,15 +451114,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -451498,7 +451516,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451598,15 +451617,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -452290,7 +452309,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452390,15 +452410,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -452788,7 +452808,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -452936,10 +452957,10 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
@@ -452956,7 +452977,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "deploy/staging/release.sh",
@@ -453625,7 +453646,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453725,15 +453747,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -454121,7 +454143,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454221,15 +454244,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -454641,7 +454664,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454741,15 +454765,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -455161,7 +455185,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455261,15 +455286,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -455681,7 +455706,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455781,15 +455807,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -456200,7 +456226,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456300,15 +456327,15 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -481192,7 +481219,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -481232,7 +481260,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -481316,7 +481344,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -481372,7 +481401,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -483946,9 +483975,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Business documents retain their existing immutable PendingScan worker flow. Direct provisional uploads now wait for an owner-scoped scan receipt, and the consumers that seal receipt, CRM and verified assets compare the bytes with the worker digest. Previously recorded unclaimed files can be scanned on an authorized repeat.",
-        "Apply the configured malware gate to the separate staff document-template multipart intake, which extracts templates from request bytes before writing them.",
-        "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. The isolated native tests use a controlled socket response, and current live ClamAV signature refresh remains under vendor cooldown."
+        "The code gates cover immutable business documents, owner-scoped direct uploads and multipart template versions. New and retained template bytes are screened before extraction and publishing. The isolated native checks use controlled socket responses.",
+        "Verify the protected live scanner configuration and clean/EICAR, unavailable and retry receipts on the exact candidate. Live ClamAV signature refresh remains under vendor cooldown."
       ],
       "owner": null,
       "depends_on": [],
@@ -483957,7 +483985,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": null
       }
@@ -483987,7 +484016,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -484023,7 +484053,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -484171,7 +484201,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -484187,15 +484218,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -484258,7 +484289,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -484302,7 +484334,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -484382,11 +484414,11 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -484441,7 +484473,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -484477,7 +484510,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document.controller.ts",
@@ -484563,7 +484596,8 @@
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -484603,15 +484637,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "apps/worker/src/main.ts",
@@ -484676,7 +484710,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -484692,7 +484727,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -484736,7 +484771,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -486551,7 +486586,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -486559,7 +486595,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "docs/threat-model.md",
@@ -486693,7 +486729,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -486701,7 +486738,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -486801,7 +486838,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -486809,7 +486847,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -486857,7 +486895,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -486873,7 +486912,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             }
           ],
           "checks": [
@@ -486925,7 +486964,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -486985,7 +487025,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -489779,7 +489819,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -489795,7 +489836,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             }
           ],
           "checks": [
@@ -489840,7 +489881,8 @@
           "release-0.6-original-attachment-disposition",
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -489848,7 +489890,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "24d95f25ec34833cbd9548a900d93c5b77850925335b6011805fc75baadbbbe1"
+              "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -709915,7 +709957,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -709963,11 +710006,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -709975,7 +710018,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -710505,7 +710548,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -710553,11 +710597,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -710565,7 +710609,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -711094,7 +711138,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -711142,11 +711187,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -711154,7 +711199,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -711685,7 +711730,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -711733,11 +711779,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -711745,7 +711791,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -712274,7 +712320,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -712322,11 +712369,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -712334,7 +712381,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -712863,7 +712910,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-original-attachment-disposition",
           "release-0.6-upload-abuse-review",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_acceptance": {
           "kind": "verified-customer-staff-document-media-journey",
@@ -712911,11 +712959,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -712923,7 +712971,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -739433,15 +739481,15 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "kanban/epics/04-invoices-wallet-contracts.md",
@@ -741615,7 +741663,8 @@
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-original-attachment-disposition",
-          "release-0.6-direct-upload-scan-gate"
+          "release-0.6-direct-upload-scan-gate",
+          "release-0.6-document-template-malware-gate"
         ]
       }
     },
@@ -746763,11 +746812,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -746775,7 +746824,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -748207,10 +748256,10 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
@@ -748227,7 +748276,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
@@ -749175,7 +749224,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "a15c536dc43f601add746c3c71366aebe9cccfb800818184ec0075a1dd287903"
+              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -750248,7 +750297,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-document-template-malware-gate"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -750741,11 +750791,11 @@
             },
             {
               "path": "apps/api/src/documents/document-template-extraction.ts",
-              "sha256": "387b1f8549baf77712421f3f2f39a8fda11e86e017f4e02355b8abe7cdd4802c"
+              "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
             },
             {
               "path": "apps/api/src/documents/document-template-http.integration.test.ts",
-              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+              "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
             },
             {
               "path": "apps/api/src/documents/document-template.controller.ts",
@@ -750753,7 +750803,7 @@
             },
             {
               "path": "apps/api/src/documents/document-template.service.ts",
-              "sha256": "277ef132acb58e04c5ccbf2bd2a6fd7cc5dd1d19757c928c7d1a40e08367f834"
+              "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
             },
             {
               "path": "apps/api/src/documents/document-validation.ts",
@@ -752161,10 +752211,10 @@
             },
             {
               "path": "apps/worker/src/documents/clamav.test.ts",
-              "sha256": "c463b671a23010aba3ea3a3dc9c9368c5495159408de37037a680daf48d69f1d"
+              "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
             },
             {
-              "path": "apps/worker/src/documents/clamav.ts",
+              "path": "packages/shared/src/storage/clamav.ts",
               "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
             },
             {
@@ -752181,7 +752231,7 @@
             },
             {
               "path": "apps/worker/src/documents/scan-runner.ts",
-              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+              "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
             },
             {
               "path": "apps/worker/src/invoices/reminder-delivery-policy.ts",
@@ -753125,7 +753175,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "a15c536dc43f601add746c3c71366aebe9cccfb800818184ec0075a1dd287903"
+              "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -754108,7 +754158,8 @@
           "release-0.6-verify-upload-key-and-scanner-tests",
           "release-0.6-upload-abuse-review",
           "release-0.6-direct-upload-scan-gate",
-          "release-0.6-browser-focus-and-recovery"
+          "release-0.6-browser-focus-and-recovery",
+          "release-0.6-document-template-malware-gate"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -858636,6 +858687,80 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/browser-recovery-volume",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "8691231a47225987e87af398841b4608aba1cd1b59f9a236c79b42fb286355f7"
+    },
+    "release-0.6-document-template-malware-gate": {
+      "batch": "release-0.6-document-template-malware-gate",
+      "base_commit": "405bbcf29aa531d49eee71d60d750cb4558dcfd1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01"
+      ],
+      "changed_paths": [
+        "apps/api/src/documents/document-template-extraction.ts",
+        "apps/api/src/documents/document-template-http.integration.test.ts",
+        "apps/api/src/documents/document-template.service.ts",
+        "apps/worker/src/documents/clamav.test.ts",
+        "apps/worker/src/documents/clamav.ts",
+        "apps/worker/src/documents/scan-runner.ts",
+        "apps/worker/src/documents/upload-scan-job.ts",
+        "docs/security/security-verification.md",
+        "packages/shared/src/storage/clamav.ts",
+        "packages/shared/src/storage/index.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/documents/document-template-extraction.ts",
+          "sha256": "394c79c11554d64ee80e99ae42eb82d95744fe4110d37249fd7d1e05a81de5dc"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+          "sha256": "f137ded36e657a7cee44bb08ba40245c9f97ca8d1b89e04995001d470105348c"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.service.ts",
+          "sha256": "3dc2b3b15bf2c852601ba653260a2a4dfc971a3dd2b8463f4aa6b74dbd8447d9"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "b11b691680a16cfd244d5430449a7c91c918a09f5f3e5b5c09ed31299d80359c"
+        },
+        {
+          "path": "apps/worker/src/documents/clamav.test.ts",
+          "sha256": "6bb7c739e091e0fd5bcd569d260b7182ab15d563bdb870c67090247d91942136"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "68b16ace1b428e72bb86b8209ca7eddd30c6433fe2f761af25b5a2bee43da99f"
+        },
+        {
+          "path": "apps/worker/src/documents/upload-scan-job.ts",
+          "sha256": "25f822c23ff6e31fbc42d44c622357a7961eecb53de5107ad79425f8a2ea53d5"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "571ef6c136a4d3d13f7775d45ba85e6c52fb447873878edb0a99351cb24201b9"
+        },
+        {
+          "path": "packages/shared/src/storage/clamav.ts",
+          "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
+        },
+        {
+          "path": "packages/shared/src/storage/index.ts",
+          "sha256": "2b93b51c7c5bef331c755faadb16da7a4b31eb11021e6fd4f478b340a60d836c"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Moved the existing bounded ClamAV client byte for byte to the server-side shared storage export. Both worker callers compile against that export. Five socket protocol and five template extraction cases passed.",
+        "The template suite passed four cases in total. Its three compiled HTTP cases against isolated PostgreSQL and MinIO verified current authority, exact scanner inputs, no publication or storage after a flagged multipart file, clean versioning, retained-byte screening, 503 on scanner failure, unchanged prior bytes and audit, and safe retry. The fourth case called the service in process and verified production fails closed when no scanner is configured.",
+        "The first isolated run exposed that the test fixture set scanner variables after spawning the API. The final test passes the endpoint before the child starts. The MinIO fixture adapter only selected the pinned loopback service and kept the test assertions intact.",
+        "The 33 shared export checks, API and worker type checks, affected lint, formatting and diff checks passed. The controlled scanner results do not certify the live scanner or release."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/template-scan",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "5643efeb539572ef39720753c7af08d3872027cb84af03a9aa35354aa98b3958"
     }
   },
   "historical_improvements": [

@@ -1,8 +1,12 @@
 import { createHash } from 'node:crypto';
 import type { Pool, PoolClient } from 'pg';
-import type { StorageProvider } from '@barghsa/shared/storage';
+import {
+  scanWithClamAv,
+  type ScannerEndpoint,
+  type ScanVerdict,
+  type StorageProvider,
+} from '@barghsa/shared/storage';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
-import { scanWithClamAv, type ScannerEndpoint, type ScanVerdict } from './clamav.js';
 
 type ScanRow = {
   document_id: string;

@@ -1,7 +1,11 @@
 import type { Pool } from 'pg';
-import { STORAGE_UPLOAD_SCAN_JOB_TYPE, type StorageProvider } from '@barghsa/shared/storage';
+import {
+  STORAGE_UPLOAD_SCAN_JOB_TYPE,
+  scanUploadWithClamAv,
+  type ScannerEndpoint,
+  type StorageProvider,
+} from '@barghsa/shared/storage';
 import type { JobContext } from '../jobs/async-runner.js';
-import { scanUploadWithClamAv, type ScannerEndpoint } from './clamav.js';
 
 interface ScanSource {
   inspection: { contentLength?: number; etag?: string; versionId?: string };
