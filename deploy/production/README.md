@@ -44,6 +44,32 @@ Copy this outline into the protected production approval package for the exact c
 
 Use the [service objectives](../../docs/operations/service-objectives.md), [incident contacts and recovery procedures](../../docs/operations/incident-response.md), and [deployment rollback runbook](../../docs/runbooks/bad-deployment.md) to fill in the applicable links and triggers. Verify access with the named on-call responders before requesting approval.
 
+## First-launch promotion check
+
+Use a clean checkout of the exact v0.9.0 staging candidate and the full manual CI and browser run IDs for that commit. The check queries the launch board, strict quarantine, hosted workflows, 40-shard browser rollup and live staging readiness. The same hosted CI run must pass the enforced license and combined coverage gates.
+
+Keep `receipt-index.json` in the protected approval package. Set `candidate_sha` to the full candidate SHA. Under `receipts`, map each key below to a nonempty evidence file in the same protected directory or one of its subdirectories.
+
+| Receipt key                    | Evidence to review                                                                         |
+| ------------------------------ | ------------------------------------------------------------------------------------------ |
+| `authenticated_dast`           | Authenticated scan, findings and dispositions.                                             |
+| `performance_and_load`         | Representative test inputs, measured outcomes and comparison with budgets.                 |
+| `migration_and_rollback`       | Migration and seed results, compatibility and rollback or roll-forward rehearsal.          |
+| `backup_and_restore`           | Recent off-server backup, tested restore, RPO and RTO.                                     |
+| `rollout_controls`             | High-risk flag or canary plan, halt conditions, and post-deploy smoke and comparison plan. |
+| `image_digests_and_scans`      | Pinned runtime digests, image and license scan receipts, SBOMs.                            |
+| `provider_and_storage`         | Protected provider, storage, network and TLS readbacks.                                    |
+| `security_and_incident_review` | Open finding dispositions, independent assessment and incident coverage.                   |
+| `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                            |
+| `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                 |
+
+```sh
+python3 deploy/production/check-promotion.py --ci-run "$CI_RUN" \
+  --browser-run "$BROWSER_RUN" --receipt-index /protected/release-evidence/receipt-index.json
+```
+
+The report records the SHA-256 of each evidence file. Review the underlying receipts and collect explicit owner authorization for the version, commit and production target before deployment.
+
 ## Initial database seed
 
 After the owner approves initial provisioning, use the pinned app image and separate migration principal to migrate and seed a new database before starting the app services. Put only `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` in a root-owned `0600` bootstrap environment file. Keep the direct connection and CA in the existing migration configuration.
