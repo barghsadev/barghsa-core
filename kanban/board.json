@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T02:12:47+00:00",
-  "source_commit": "2f92bf14e4bb642778b28658d2622c4ceb0142fe",
+  "updated": "2026-11-10T02:17:01+00:00",
+  "source_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -11595,7 +11595,8 @@
         ],
         "batches": [
           "release-0.6-storage-abstraction-direct-transfer-and-admin",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -11627,7 +11628,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/web/src/components/FileUpload.test.tsx",
@@ -107610,7 +107611,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107762,7 +107764,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -110766,7 +110768,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
           "release-0.6-browser-origin-security",
-          "release-0.6-nightly-real-admin-journeys"
+          "release-0.6-nightly-real-admin-journeys",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -110782,7 +110785,7 @@
             },
             {
               "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
-              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
             },
             {
               "path": "apps/api/src/admin/upload-policy.controller.test.ts",
@@ -110954,7 +110957,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -111489,7 +111492,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -111505,7 +111509,7 @@
             },
             {
               "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
-              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
             },
             {
               "path": "apps/api/src/admin/upload-policy.controller.test.ts",
@@ -111677,7 +111681,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -114065,7 +114069,8 @@
           "release-0.5-protected-contract-and-finance",
           "release-0.5-dependency-gate-closure",
           "release-0.5-route-census-closure",
-          "release-0.6-browser-origin-security"
+          "release-0.6-browser-origin-security",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-admin-catalogue-vat-upload-and-shared-display-preferences",
@@ -114081,7 +114086,7 @@
             },
             {
               "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
-              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
             },
             {
               "path": "apps/api/src/admin/upload-policy.controller.test.ts",
@@ -114253,7 +114258,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
@@ -448029,7 +448034,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-native-staff-control-targets",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448065,7 +448071,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -448312,7 +448318,8 @@
           "release-0.5-dependency-gate-closure",
           "release-0.5-native-staff-control-targets",
           "release-0.6-document-http-fixture-isolation",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -448348,7 +448355,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -450793,7 +450800,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -450873,7 +450881,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -451292,7 +451300,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -451372,7 +451381,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -452080,7 +452089,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -452160,7 +452170,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -452575,7 +452585,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -452655,7 +452666,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/test/upload.controller.spec.ts",
@@ -453408,7 +453419,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -453488,7 +453500,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -453901,7 +453913,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -453981,7 +453994,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -454418,7 +454431,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -454498,7 +454512,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -454935,7 +454949,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455015,7 +455030,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -455452,7 +455467,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -455532,7 +455548,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -455968,7 +455984,8 @@
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authorization-journal-format",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456048,7 +456065,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/upload-policy.resolver.ts",
@@ -456774,7 +456791,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -456818,7 +456836,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -457121,7 +457139,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457165,7 +457184,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -457470,7 +457489,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -457514,7 +457534,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -457844,7 +457864,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -457888,7 +457909,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -458191,7 +458212,8 @@
           "release-0.6-document-http-fixture-isolation",
           "release-0.6-mandatory-refund-overdue-alert",
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -458235,7 +458257,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/upload/multipart-upload.controller.ts",
@@ -460503,7 +460525,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -460655,7 +460678,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -460958,7 +460981,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461110,7 +461134,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -461415,7 +461439,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -461567,7 +461592,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -461871,7 +461896,8 @@
           "release-0.5-staff-confirmation-fixtures",
           "release-0.5-review-preview-deadlines",
           "release-0.6-mandatory-refund-overdue-alert",
-          "release-0.6-business-safety-metrics-and-critical-wallet-drift"
+          "release-0.6-business-safety-metrics-and-critical-wallet-drift",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "status": "done",
@@ -462023,7 +462049,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/storage/storage-record-db-adapter.ts",
@@ -480919,7 +480945,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -480959,7 +480986,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -481040,7 +481067,8 @@
           "release-0.6-route-budget-and-upgrade-fixture-repair",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -481096,7 +481124,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -483665,18 +483693,21 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.01 | Implement upload validation pipeline: extension allowlist → MIME detection → size check → malware scan → store | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Business documents have verified staged bytes, an immutable scan input, PendingScan and gated reads until a clean verdict when the scanner is configured.",
+        "Reconcile the required malware gate for other upload purposes that consume a generic verified storage record directly. Prove fail-closed operation with the configured live scanner before accepting the whole upload pipeline."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-verify-upload-key-and-scanner-tests"
+        ],
         "current_acceptance": null
       }
     },
@@ -483702,7 +483733,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-verify-private-upload-boundaries",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -483710,7 +483742,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
-              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
             },
             {
               "path": "apps/api/src/admin/upload-policy.controller.ts",
@@ -483774,7 +483806,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "packages/shared/src/admin/upload-policies.ts",
@@ -483812,13 +483844,10 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.03 | Generate random object keys (UUID); never use original filenames in storage path | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Constrain the suffix copied into a random upload key to a safe single extension. The general category permits arbitrary names, and UploadService.reserve currently appends text from the final dot, including a slash or backslash.",
-        "Verify compiled URL issuance and the reservation key for path-shaped names while retaining the original filename as metadata and standard extensions."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -483826,9 +483855,43 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-verify-private-upload-boundaries",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "verified-upload-key-and-scanner-tests",
+          "base_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "13705337dea6b78ab1f7382d551e689444b33b3c6499fb84f00423aff90d2566"
+            },
+            {
+              "path": "apps/api/src/upload/upload-reservations.ts",
+              "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The unchanged production reservation path on the baseline issued a nested key for a path-shaped general filename. The fixed compiled path uses a single UUID segment, preserves ordinary lowercase extension normalization and stores the original name as metadata.",
+            "The targeted compiled PostgreSQL run passed the new slash, backslash and percent-encoded slash cases plus the ordinary Persian name, effective size policy and fail-closed policy read. Both the signed URL and persisted reservation key use the same controlled shape."
+          ]
+        }
       },
       "blocker": null
     },
@@ -483843,20 +483906,78 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.04 | Implement malware scanning integration (ClamAV socket or cloud API) with Quarantine state on detection | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-upload-key-and-scanner-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-upload-key-and-scanner-tests",
+          "base_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "a49320b5c4c29495626374a2ed45e63a85c28b0872f2a0bfdfb0b5860a332bb3"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.test.ts",
+              "sha256": "aaeebe5ffe008c6a2da6cbbd7dedc86092cfe654d6a0825b0c58d16c3de83321"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.ts",
+              "sha256": "fdbece8702d79782d8746068a16d185bda2c01d79be8b335e69179ca752cea13"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "2cd8d39043d3a544564bd61125812536f6249c5bffd75e770f46ae13fa2df7ad"
+            },
+            {
+              "path": "apps/worker/src/notifications/in-app-transport.ts",
+              "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "deploy/clamav/Dockerfile",
+              "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Configured document scans use a durable worker job and the bounded default ClamAV INSTREAM socket implementation. The clean verdict releases the document; an infected verdict quarantines it and records the existing private administrator alert atomically. Socket errors leave it pending for bounded retry.",
+            "Three local socket protocol tests and the existing compiled document state, rollback and private notification cases passed. The live staging signature and clean/EICAR run remain a separate release gate."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.01.05",
@@ -483879,7 +484000,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -484007,7 +484129,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -484059,7 +484181,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-verify-private-upload-boundaries",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -484067,7 +484190,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
-              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
             },
             {
               "path": "apps/api/src/admin/upload-policy.controller.ts",
@@ -484131,7 +484254,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "packages/shared/src/admin/upload-policies.ts",
@@ -484169,20 +484292,106 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.07 | Write tests: valid upload, invalid extension, mismatched MIME, oversized, malware detected, quarantine alert | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-upload-key-and-scanner-tests"
+        ],
+        "current_acceptance": {
+          "kind": "verified-upload-key-and-scanner-tests",
+          "base_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "a49320b5c4c29495626374a2ed45e63a85c28b0872f2a0bfdfb0b5860a332bb3"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "13705337dea6b78ab1f7382d551e689444b33b3c6499fb84f00423aff90d2566"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+              "sha256": "1c26b87c137553904efbbc06ec7209466d94d3ac722b65d18e0134c89c33a394"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+            },
+            {
+              "path": "apps/api/src/upload/upload-reservations.ts",
+              "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.test.ts",
+              "sha256": "aaeebe5ffe008c6a2da6cbbd7dedc86092cfe654d6a0825b0c58d16c3de83321"
+            },
+            {
+              "path": "apps/worker/src/documents/clamav.ts",
+              "sha256": "fdbece8702d79782d8746068a16d185bda2c01d79be8b335e69179ca752cea13"
+            },
+            {
+              "path": "apps/worker/src/documents/scan-runner.ts",
+              "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+            },
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "2cd8d39043d3a544564bd61125812536f6249c5bffd75e770f46ae13fa2df7ad"
+            },
+            {
+              "path": "apps/worker/src/notifications/in-app-transport.ts",
+              "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+            },
+            {
+              "path": "deploy/clamav/Dockerfile",
+              "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Existing tests exercise a real valid upload and checksum, allowed and invalid extensions, declared and stored MIME mismatches, oversize policy enforcement, ClamAV clean/infected/timeout handling, and quarantine denial and administrator alert rollback/delivery.",
+            "The 43-case compiled document and 18-case policy suites passed on the earlier hosted SHA. The overall run failed a separate profile assertion. The relevant upload and scanner checks were carried through the reviewed read-only attachment delta and the scoped random-key regression. Forty-eight local format/policy/extraction cases and three socket protocol cases passed."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.01.08",
@@ -486003,7 +486212,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -486011,7 +486221,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "docs/threat-model.md",
@@ -486142,7 +486352,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -486150,7 +486361,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -486247,7 +486458,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -486255,7 +486467,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -486300,7 +486512,8 @@
         "batches": [
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -486316,7 +486529,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             }
           ],
           "checks": [
@@ -486365,7 +486578,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -486425,7 +486639,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -489214,7 +489428,8 @@
         "batches": [
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -489230,7 +489445,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             }
           ],
           "checks": [
@@ -489272,7 +489487,8 @@
           "release-0.6-authenticated-staging-zap-integration",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -489280,7 +489496,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "69eafafc93dbe2e90af02b4435f253a638e5141e03d91c157ed7cefb0d4f5ad1"
+              "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -746561,7 +746777,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
@@ -749434,7 +749650,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -750531,7 +750748,7 @@
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
-              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+              "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
@@ -753290,7 +753507,8 @@
           "release-0.6-verify-denial-audit-on-agent-remove-replay",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-verify-submission-quota-and-current-replay-authority",
-          "release-0.6-original-attachment-disposition"
+          "release-0.6-original-attachment-disposition",
+          "release-0.6-verify-upload-key-and-scanner-tests"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -857432,6 +857650,114 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/original-attachments",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "a4b167280e5eef5d4bd7895831cfc587232a0fa38c4e64b94bfe44daabf21db7"
+    },
+    "release-0.6-verify-upload-key-and-scanner-tests": {
+      "batch": "release-0.6-verify-upload-key-and-scanner-tests",
+      "base_commit": "1057dc5dd1c909951858e5406958371b3a4739f2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.01.07"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/upload-policy-http.integration.test.ts",
+        "apps/api/src/upload/upload.service.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "ca88c470cb4a74dfdd6cf07085024c2c50136b04849f7f68258d00507fa51f99"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "a49320b5c4c29495626374a2ed45e63a85c28b0872f2a0bfdfb0b5860a332bb3"
+        },
+        {
+          "path": "apps/api/src/documents/document-storage.service.ts",
+          "sha256": "13705337dea6b78ab1f7382d551e689444b33b3c6499fb84f00423aff90d2566"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+        },
+        {
+          "path": "apps/api/src/upload/content-type-sniffer.test.ts",
+          "sha256": "1c26b87c137553904efbbc06ec7209466d94d3ac722b65d18e0134c89c33a394"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+          "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "c3dddc432d74ac3d0f334a14f6d17800e5c587bee87ad12bee53c8964d04e0b6"
+        },
+        {
+          "path": "apps/worker/src/documents/clamav.test.ts",
+          "sha256": "aaeebe5ffe008c6a2da6cbbd7dedc86092cfe654d6a0825b0c58d16c3de83321"
+        },
+        {
+          "path": "apps/worker/src/documents/clamav.ts",
+          "sha256": "fdbece8702d79782d8746068a16d185bda2c01d79be8b335e69179ca752cea13"
+        },
+        {
+          "path": "apps/worker/src/documents/scan-runner.ts",
+          "sha256": "48d0dfbedbc2d57cff0ad46dc2583b0fa45ae9ecac6c984b4e09d993081b9bf2"
+        },
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "2cd8d39043d3a544564bd61125812536f6249c5bffd75e770f46ae13fa2df7ad"
+        },
+        {
+          "path": "apps/worker/src/notifications/in-app-transport.ts",
+          "sha256": "875100b7ac24faa17d2c82f25e4b2380b3d820fc4806d9d1d18732ef7af95282"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "4173db664402b0db5e1b939b73cf12d5087446ad2338cec6e1a9d8a30419d93d"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "bff95b69fc3b17e1431334e7947f38a885647f49d18d65b1fe5f9945e4e145f5"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "942aed8a5a74a159d204dc44242db10914761b01aaf1183e0b20f3dd92962ac9"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "04635b5f37f044f060cb679c55c577a74226df41e9418f66383f575f668309c6"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "The unchanged production reservation path on the baseline issued a nested key for a path-shaped general filename. The fixed compiled path uses a single UUID segment, preserves ordinary lowercase extension normalization and stores the original name as metadata.",
+        "The targeted compiled PostgreSQL run passed the new slash, backslash and percent-encoded slash cases plus the ordinary Persian name, effective size policy and fail-closed policy read. Both the signed URL and persisted reservation key use the same controlled shape.",
+        "Configured document scans use a durable worker job and the bounded default ClamAV INSTREAM socket implementation. The clean verdict releases the document; an infected verdict quarantines it and records the existing private administrator alert atomically. Socket errors leave it pending for bounded retry.",
+        "Three local socket protocol tests and the existing compiled document state, rollback and private notification cases passed. The live staging signature and clean/EICAR run remain a separate release gate.",
+        "Existing tests exercise a real valid upload and checksum, allowed and invalid extensions, declared and stored MIME mismatches, oversize policy enforcement, ClamAV clean/infected/timeout handling, and quarantine denial and administrator alert rollback/delivery.",
+        "The 43-case compiled document and 18-case policy suites passed on the earlier hosted SHA. The overall run failed a separate profile assertion. The relevant upload and scanner checks were carried through the reviewed read-only attachment delta and the scoped random-key regression. Forty-eight local format/policy/extraction cases and three socket protocol cases passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/upload-key-segments",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "6d408f52e9bea47697e821bcad1b0b626e9ea8b46efc09a5d0ec735df27a7223"
     }
   },
   "historical_improvements": [

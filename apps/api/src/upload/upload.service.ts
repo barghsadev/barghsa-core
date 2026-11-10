@@ -224,10 +224,9 @@ export class UploadService {
     // Generate a unique key. The (already validated) category is bound
     // into the key — `uploads/<category>/<uuid><ext>` — so the verify
     // seam can re-derive it server-side instead of trusting a
-    // client-supplied body field (T-09.12.05).
-    const ext = req.fileName.includes('.')
-      ? req.fileName.slice(req.fileName.lastIndexOf('.')).toLowerCase()
-      : '';
+    // client-supplied body field (T-09.12.05). General uploads may have
+    // arbitrary names, so only a single safe extension goes into the key.
+    const ext = req.fileName.match(/\.[a-z0-9]+$/i)?.[0]?.toLowerCase() ?? '';
     const uniqueKey = `${UPLOAD_PREFIX}${category}/${randomUUID()}${ext}`;
 
     await reserveUpload({

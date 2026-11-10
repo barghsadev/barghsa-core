@@ -189,6 +189,41 @@ it('rejects authority revoked while waiting for the actor lock', async () => {
   }
 });
 
+it('keeps general upload names in metadata and signs only a single random key segment', async () => {
+  const uuid = '[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}';
+  for (const [fileName, suffix] of [
+    ['report.part/subpath', ''],
+    ['report.part\\subpath', ''],
+    ['report.part%2fsubpath', ''],
+    ['گزارش.TXT', '\\.txt'],
+  ]) {
+    const response = await fetch(`${http.base}/api/upload/presigned-url`, {
+      method: 'POST',
+      headers: headers.operator!,
+      body: JSON.stringify({
+        fileName,
+        contentType: 'text/plain',
+        fileSize: 16,
+        category: 'general',
+      }),
+    });
+    expect(response.status, await response.clone().text()).toBe(200);
+    const { key, presignedUrl } = (await response.json()) as { key: string; presignedUrl: string };
+    expect(key, fileName).toMatch(new RegExp(`^uploads/general/${uuid}${suffix}$`));
+    expect(new URL(presignedUrl).pathname).toMatch(
+      new RegExp(`/uploads/general/${uuid}${suffix}$`)
+    );
+    expect(
+      (
+        await http.pool.query(
+          'SELECT file_name,category FROM storage_records WHERE storage_key=$1',
+          [key]
+        )
+      ).rows
+    ).toEqual([{ file_name: fileName, category: 'general' }]);
+  }
+});
+
 it('never issues an upload URL when the saved policy cannot be read', async () => {
   const input = {
     fileName: 'policy.pdf',

@@ -53,6 +53,10 @@ When the renderer cannot produce a PNG, the original remains available to
 authorized reviewers as a download. Branding and avatar URLs still serve the
 verified raster image assets selected for display.
 
+Upload reservations record the original name as metadata. The object key uses
+the server-selected category and a random UUID, with a final alphanumeric
+extension when present. A path-shaped suffix stays in the metadata alone.
+
 ## Authorization audit
 
 In the staff workspace, open **Settings → Security → Authorization audit**
