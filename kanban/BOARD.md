@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1203 | Accepted with unchanged source bindings. |
-| verify | 99 | Existing work may be complete; inspect evidence before building. |
+| done | 1204 | Accepted with unchanged source bindings. |
+| verify | 98 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1444,7 +1444,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.02.03` | verify | Inventory needed | Include release marker in structured logs for correlation |
 | `06-security-testing-observability.md#T-06.18.02.04` | verify | Inventory needed | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |
 | `06-security-testing-observability.md#T-06.19.01.01` | done | Recorded batch work | Create DoD PR checklist template (5 categories, 25+ items) with checkboxes |
-| `06-security-testing-observability.md#T-06.19.01.02` | verify | Recorded batch work | Integrate DoD checklist into ticket system (Linear / GitHub Issues) as issue template |
+| `06-security-testing-observability.md#T-06.19.01.02` | done | Recorded batch work | Integrate DoD checklist into ticket system (Linear / GitHub Issues) as issue template |
 | `06-security-testing-observability.md#T-06.19.01.03` | verify | Inventory needed | Add CI check: PR description must contain completed DoD checklist or link to exception record |
 | `06-security-testing-observability.md#T-06.19.01.04` | done | Recorded batch work | Create exception template: written scope, risk, compensating control, owner, approver, expiry |
 | `06-security-testing-observability.md#T-06.19.01.05` | verify | Inventory needed | Automate exception expiry: reopen after expiry if not renewed |

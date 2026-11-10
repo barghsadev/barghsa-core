@@ -524592,21 +524592,37 @@
         "story": "06-security-testing-observability.md#spec-40335dab1cff"
       },
       "requirement": "| T-06.19.01.02 | Integrate DoD checklist into ticket system (Linear / GitHub Issues) as issue template | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Verify the Product or engineering change template appears in the GitHub issue chooser from the protected default branch, without opening an issue."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-issue-definition-of-done-template"
+          "release-0.6-issue-definition-of-done-template",
+          "release-0.6-issue-template-main-readback"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source-bound-github-issue-template-readback",
+          "base_commit": "dc0bd0c9b6d294daeda628d064b0349a2d83facc",
+          "checks": [
+            "Reused exact source validation of GitHub template frontmatter, the canonical Definition of Done link, all five checklist sections, the board as the acceptance authority and non-waivable safeguards.",
+            "GitHub GraphQL reported Issues enabled, main at 6965550b1181b0d09c21bcc3544d344ebd9d970b, and the registered Product or engineering change issue template. Its parsed body matched the reviewed source exactly. The readback used a query only."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/ISSUE_TEMPLATE/change.md",
+              "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+            },
+            {
+              "path": "README.md",
+              "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+            }
+          ]
+        }
       }
     },
     {
@@ -915776,6 +915792,34 @@
         {
           "file": "critical-accessibility-hosted.log",
           "sha256": "5f3f89368a023d599af8adba4491837f31eb81426abac38a9f512ffd49806f31"
+        }
+      ]
+    },
+    "release-0.6-issue-template-main-readback": {
+      "batch": "release-0.6-issue-template-main-readback",
+      "base_commit": "dc0bd0c9b6d294daeda628d064b0349a2d83facc",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.19.01.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/ISSUE_TEMPLATE/change.md",
+          "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+        },
+        {
+          "path": "README.md",
+          "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+        }
+      ],
+      "checks": [
+        "Reused exact source validation of GitHub template frontmatter, the canonical Definition of Done link, all five checklist sections, the board as the acceptance authority and non-waivable safeguards.",
+        "GitHub GraphQL reported Issues enabled, main at 6965550b1181b0d09c21bcc3544d344ebd9d970b, and the registered Product or engineering change issue template. Its parsed body matched the reviewed source exactly. The readback used a query only."
+      ],
+      "proof_logs": [
+        {
+          "file": "issue-template-github-readback.json",
+          "sha256": "450c56dbd3c30af40a1d06dee305d59768bf842568c479511d87002400216e54"
         }
       ]
     }
