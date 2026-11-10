@@ -442,6 +442,10 @@ test('native browser CSP reports carry the provenance required by the bounded te
       if (report['sec-fetch-site']) expect(report['sec-fetch-site']).toBe('same-origin');
     }
   } finally {
-    await new Promise<void>((resolve) => server.close(() => resolve()));
+    await new Promise<void>((resolve) => {
+      server.close(() => resolve());
+      // The browser can keep an active loopback connection after reporting.
+      server.closeAllConnections();
+    });
   }
 });
