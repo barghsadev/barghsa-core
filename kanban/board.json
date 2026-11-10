@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T07:42:55+00:00",
-  "source_commit": "1783cfca99ff21d2bd56c8ea26a33ea532070e7a",
+  "updated": "2026-11-10T07:44:21+00:00",
+  "source_commit": "565a024e261378c745a219a489f2e2837ae76539",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -485229,7 +485229,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Run the corrected saving financial isolation HTTP regression against the exact compiled candidate and full production schema. The latest source-bound consultation and solar mounted cases passed."
+        "Verify the corrected saving financial isolation HTTP regression on the exact hosted candidate and full production schema. The local remote-database setup timed out before any saving assertion; consultation and solar already have source-bound mounted passes."
       ],
       "owner": null,
       "depends_on": [],
@@ -485242,7 +485242,8 @@
           "release-0.6-solar-financial-profile-scope",
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-consultation-isolation-pagination-fixture",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-local-compiled-admission-evidence"
         ],
         "current_acceptance": null
       }
@@ -489410,8 +489411,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Run mounted PostgreSQL HTTP regressions for canonical profile scope, 429/Retry-After, accepted retries, independent actors and refund settlement, with exact staging candidate evidence.",
-        "Verify provider rate limits and anomaly alert delivery on the staged candidate with synthetic funds and controlled provider context. Preserve signed callback and independent money recovery."
+        "Verify standalone refund 429 and exact settlement on the hosted candidate. The local SSH database run hit its test timeout. The exact local mounted online top-up case passed with 429/Retry-After and accepted replay.",
+        "Exercise independent authorized actors, rate limits and anomaly delivery in staging with synthetic funds and controlled provider context. Preserve signed callbacks and independent money recovery."
       ],
       "owner": null,
       "depends_on": [],
@@ -489421,7 +489422,8 @@
         "batches": [
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-local-compiled-admission-evidence"
         ],
         "current_acceptance": null
       }
@@ -489442,7 +489444,7 @@
       "launch_required": true,
       "remaining": [
         "Set and verify a concurrency limit and aggregate storage quota covering live provisional, sealed and legacy profile-bound uploads. Preserve retained contractual and financial bytes and legitimate internal generation.",
-        "Verify the new 20-per-minute policy with the compiled HTTP routes and real PostgreSQL, including canonical profile scope, independent actors/profiles, 429 and unchanged existing upload cases."
+        "Verify canonical profile and independent authorized actors in staging. The exact local compiled unscoped account quota passed across both authorized contexts with 429/Retry-After and no additional reservation."
       ],
       "owner": null,
       "depends_on": [],
@@ -489451,7 +489453,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-upload-profile-request-admission",
-          "release-0.6-hosted-fixture-regression-corrections"
+          "release-0.6-hosted-fixture-regression-corrections",
+          "release-0.6-local-compiled-admission-evidence"
         ],
         "current_acceptance": null
       }
@@ -872506,6 +872509,74 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/performance-budget",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "f0533e87e4be9e5b66518ae4503d981f47d1130bdc022b91875512e5fe003e64"
+    },
+    "release-0.6-local-compiled-admission-evidence": {
+      "batch": "release-0.6-local-compiled-admission-evidence",
+      "base_commit": "565a024e261378c745a219a489f2e2837ae76539",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.05.02.06",
+        "06-security-testing-observability.md#T-06.05.02.07"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "f0521f83368414076f6128aa3fbced34415a4757a8573bdeebb269ca8656e2d1"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.integration.test.ts",
+          "sha256": "5bf55c6cd77b8d08ad7037dfab3ee2f7e3d72a304c61fc6b9ea78560141b1ec4"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.service.ts",
+          "sha256": "ba12854359ae3c3f92e1f5cde15860199bde98ed44af32ca675e60a224b7e668"
+        },
+        {
+          "path": "apps/api/src/finance/profile-financial-rate-limit.ts",
+          "sha256": "c778478bb21adbfc0d4ecaf71a92b96b8511fc681d1b5c82dedfd3f4f715c274"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "086110e258ecdeebe88090a74dcaa0bcfd9ba58a7a2a378a5e72741a2ca21e3f"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.integration.test.ts",
+          "sha256": "946e241bca3d315c64e775bdfe265bab7692c4012d6c7a5b9954fd302418609c"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "258da4b64f3a10d90fc8e1bcfb24bcc52f6e192487ad88be72e28a9b94cc012b"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "37086eb020b54142090b083a29c9a43fecfe125190b56c0d320605568b951a9c"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-http.integration.test.ts",
+          "sha256": "61bf9f59757e26f10541605d73288b91fe137e598e011991c17066aa5abe02f6"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+          "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+        }
+      ],
+      "checks": [
+        "The disposable PostgreSQL 16 template applied all 206 production journal entries through 0285 and was made read-only before cloning. The exact compiled API used local synthetic fixtures and its own database. The disposable database and tunnel were removed.",
+        "Nine selected mounted cases passed: seven branding/storage cases including the account-wide twentieth/21st admission, 429/Retry-After and only one reservation; the corrected consultation foreign financial projection case; and the canonical online top-up limit with accepted HTTP replay and one Pending ledger record.",
+        "The same local run did not pass the saving beforeAll hook over the SSH database tunnel or the standalone refund HTTP test, which reached its test deadline. No assertion failure or successful completion is claimed for those two scopes. Exact hosted candidate 1783cfca is queued in run 42777165000."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/preflight-42772013847-fixture-corrections",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "6feb638a81e8a5d1c492575dda0cc57afa86fd991cc84207d8d447c71a46ad41"
     }
   },
   "historical_improvements": [
