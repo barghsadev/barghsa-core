@@ -1,16 +1,26 @@
 import { expect, type Page, type TestInfo } from './coverage-fixture';
 
-type Sample = { lcp: number | null; cls: number; blocking: number; populated: number };
+type Sample = {
+  lcp: number | null;
+  cls: number;
+  blocking: number;
+  populated: number;
+  observedUntil: number;
+};
 type LayoutShift = PerformanceEntry & { value: number; hadRecentInput: boolean };
 
 declare global {
   interface Window {
-    barghsaMobileSample?: () => Sample;
+    barghsaMobileSample?: () => Promise<Sample>;
   }
 }
 
 /** Run only in the isolated mobile lab. Existing journey assertions still run. */
-export async function startPrimaryMobilePerformance(page: Page, info: TestInfo) {
+export async function startPrimaryMobilePerformance(
+  page: Page,
+  info: TestInfo,
+  populatedSelector: string
+) {
   if (process.env['BARGHSA_PRIMARY_MOBILE_PERF'] !== '1') return async () => {};
   expect(info.project.name).toBe('mobile-chrome');
   const session = await page.context().newCDPSession(page);
@@ -24,7 +34,7 @@ export async function startPrimaryMobilePerformance(page: Page, info: TestInfo) 
   });
   await session.send('Emulation.setCPUThrottlingRate', { rate: 2 });
 
-  await page.addInitScript(() => {
+  await page.addInitScript((selector) => {
     const track = (type: string) => {
       if (!PerformanceObserver.supportedEntryTypes.includes(type)) {
         throw new Error(`Missing lab performance entry: ${type}`);
@@ -42,8 +52,41 @@ export async function startPrimaryMobilePerformance(page: Page, info: TestInfo) 
     const shifts = track('layout-shift');
     const tasks = track('longtask');
 
-    window.barghsaMobileSample = () => {
-      const populated = performance.now();
+    // Observe the rendered fixture in the browser. Locator polling and the
+    // test runner's RPC scheduling can finish hundreds of milliseconds later.
+    const populated = new Promise<number>((resolve) => {
+      let scheduled = false;
+      const visible = () => {
+        const node = document.querySelector(selector);
+        if (!node || getComputedStyle(node).visibility !== 'visible') return false;
+        const bounds = node.getBoundingClientRect();
+        return bounds.width > 0 && bounds.height > 0;
+      };
+      const observer = new MutationObserver(check);
+      function check() {
+        if (scheduled || !visible()) return;
+        scheduled = true;
+        void document.fonts.ready.then(() => {
+          requestAnimationFrame(() =>
+            requestAnimationFrame(() => {
+              if (!visible() || document.fonts.status !== 'loaded') {
+                scheduled = false;
+                check();
+                return;
+              }
+              observer.disconnect();
+              resolve(performance.now());
+            })
+          );
+        });
+      }
+      observer.observe(document, { childList: true, subtree: true, attributes: true });
+      check();
+    });
+
+    window.barghsaMobileSample = async () => {
+      const firstPopulatedPaint = await populated;
+      const observedUntil = performance.now();
       const firstPaint = performance.getEntriesByName('first-contentful-paint')[0]?.startTime;
       if (firstPaint === undefined) throw new Error('Missing first contentful paint');
 
@@ -65,12 +108,18 @@ export async function startPrimaryMobilePerformance(page: Page, info: TestInfo) 
       let blocking = 0;
       for (const task of tasks()) {
         const start = Math.max(firstPaint, task.startTime);
-        const end = Math.min(populated, task.startTime + task.duration);
+        const end = Math.min(observedUntil, task.startTime + task.duration);
         blocking += Math.max(0, end - start - 50);
       }
-      return { lcp: lcp().at(-1)?.startTime ?? null, cls, blocking, populated };
+      return {
+        lcp: lcp().at(-1)?.startTime ?? null,
+        cls,
+        blocking,
+        populated: firstPopulatedPaint,
+        observedUntil,
+      };
     };
-  });
+  }, populatedSelector);
 
   return async () => {
     const sample = await page.evaluate(async () => {

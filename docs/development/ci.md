@@ -10,6 +10,8 @@ The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and 
 
 The web suite pins Playwright 1.65.0 and uses the browser revisions it installs. This release restores WebKit mouse movement deltas used by the NumberField scrub test. Run the web suite with the same Node.js 24 version as CI when reproducing hosted results. [Playwright WebKit fix](https://github.com/microsoft/playwright/issues/43417).
 
+The primary mobile lab measures populated paint in the page once the login control or first populated history row is visible, fonts are ready, and two animation frames have elapsed. The sample also records when Playwright collected the result. LCP, layout shift and blocking time retain their existing observation window and budgets.
+
 Use the [service extraction review](../adr/003-modular-monolith-rationale.md#extraction-review-before-pushing-to-main)
 for changes that move a module into a separate service. Record its evidence
 with the reviewed batch before the direct push to `main`.

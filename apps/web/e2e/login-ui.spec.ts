@@ -10,7 +10,7 @@ for (const locale of ['fa', 'en'])
       'login fields, normalization and generic errors (' + locale + ', dark=' + darkMode + ')',
       { tag: '@a11y-critical' },
       async ({ page }, testInfo) => {
-        const measure = await startPrimaryMobilePerformance(page, testInfo);
+        const measure = await startPrimaryMobilePerformance(page, testInfo, '#username');
         await page.addInitScript((locale) => {
           localStorage.setItem('barghsa.locale', locale);
           localStorage.setItem('barghsa-locale', locale);

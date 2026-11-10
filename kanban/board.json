@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T12:48:16+00:00",
-  "source_commit": "ed6fa9a24213b5d8571f9421c1765388ea0c259f",
+  "updated": "2026-11-10T12:54:36+00:00",
+  "source_commit": "0e11f456b26eb3330a9eb59e7836e06c3ad9ae49",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -13401,7 +13401,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13413,7 +13414,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "AGENTS.md",
@@ -17983,7 +17984,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -17999,7 +18001,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "eslint.config.mjs",
@@ -18169,7 +18171,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18210,7 +18213,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "eslint.config.mjs",
@@ -18902,7 +18905,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -18932,7 +18936,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "package.json",
@@ -19111,7 +19115,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -19135,7 +19140,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -24494,7 +24499,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -24526,7 +24532,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -25329,7 +25335,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -25389,7 +25396,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/src/components/TrustedDevices.tsx",
@@ -26256,7 +26263,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -26320,7 +26328,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/src/routes/login.tsx",
@@ -27083,7 +27091,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -27143,7 +27152,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/src/components/PasswordField.tsx",
@@ -34479,7 +34488,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -34535,7 +34545,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -486504,7 +486514,8 @@
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -486520,7 +486531,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -496068,7 +496079,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -496076,7 +496088,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "vitest.config.ts",
@@ -497974,7 +497986,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -497982,7 +497995,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -498051,7 +498064,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -498059,7 +498073,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -498133,7 +498147,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -498165,7 +498180,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -499108,7 +499123,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -499140,7 +499156,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -499215,7 +499231,8 @@
           "docs/development/ci.md"
         ],
         "batches": [
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -499263,7 +499280,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -500323,7 +500340,8 @@
           "docs/development/ci.md"
         ],
         "batches": [
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -500343,7 +500361,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -500408,7 +500426,8 @@
         ],
         "batches": [
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -500448,7 +500467,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
@@ -500472,11 +500491,11 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/primary-mobile-performance.ts",
-              "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+              "sha256": "cf9a6e3187c5036aa28758c6854e5fa4a34b3163be91fd8868ec91128080c724"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -500488,7 +500507,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -500738,7 +500757,8 @@
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -500762,7 +500782,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -500774,7 +500794,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/route-presentation.ts",
@@ -501515,13 +501535,19 @@
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/web/e2e/customer-service-history-views.spec.ts",
+          "apps/web/e2e/login-ui.spec.ts",
+          "apps/web/e2e/primary-mobile-performance.ts",
+          "docs/development/ci.md"
+        ],
         "batches": [
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-hosted-primary-mobile-performance",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -501529,7 +501555,8 @@
           "checks": [
             "GitHub Actions run 42783833343 used exact candidate 55753b1c and passed the unchanged 102 route and interaction budgets, the primary mobile gate and artifact upload in the build and application integrity job.",
             "The actual artifact has 12 passes, zero failures, skips or flakes. Worst LCP was 1616 ms, first populated render 1926.8 ms, CLS 0.0474 and startup blocking 0 ms. Sign-in and the four populated histories passed in Persian and English using the original profile and unchanged numerical limits.",
-            "The authority regression suite and prior local performance run remain source-bound. The startup blocking metric is a controlled lab measurement. Field interaction latency and live staging promotion are separate evidence."
+            "The authority regression suite and prior local performance run remain source-bound. The startup blocking metric is a controlled lab measurement. Field interaction latency and live staging promotion are separate evidence.",
+            "The mobile lab now captures populated paint inside the page and reports collection time separately. All existing visibility and journey assertions, CPU and network settings, budgets, and LCP/CLS/blocking observation stay in force. All 12 local production-browser cases passed with zero retries. Maximum populated paint was 1495.3 ms, LCP 1480 ms, CLS 0.05 and blocking 0 ms."
           ],
           "source_evidence": [
             {
@@ -501554,15 +501581,15 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/primary-mobile-performance.ts",
-              "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+              "sha256": "cf9a6e3187c5036aa28758c6854e5fa4a34b3163be91fd8868ec91128080c724"
             },
             {
               "path": "apps/web/history-preloads.mjs",
@@ -531408,7 +531435,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -531496,7 +531524,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -531984,7 +532012,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532072,7 +532101,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -532560,7 +532589,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -532648,7 +532678,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -533136,7 +533166,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533224,7 +533255,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -533712,7 +533743,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -533800,7 +533832,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -534288,7 +534320,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534376,7 +534409,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -534864,7 +534897,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -534952,7 +534986,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -535440,7 +535474,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -535528,7 +535563,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -536016,7 +536051,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536104,7 +536140,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -536592,7 +536628,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -536680,7 +536717,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -537168,7 +537205,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537256,7 +537294,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -537744,7 +537782,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -537832,7 +537871,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -538320,7 +538359,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538408,7 +538448,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -538896,7 +538936,8 @@
           "release-0.6-browser-rehearsal-targeted-corrections",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -538984,7 +539025,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -545778,7 +545819,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -545878,7 +545920,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -546602,7 +546644,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -546702,7 +546745,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -547425,7 +547468,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -547525,7 +547569,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -548391,7 +548435,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548419,7 +548464,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -548435,7 +548480,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -548844,7 +548889,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -548872,7 +548918,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -548900,7 +548946,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -549303,7 +549349,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549331,7 +549378,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -549359,7 +549406,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -549754,7 +549801,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -549782,7 +549830,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -549798,7 +549846,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -550239,7 +550287,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -550507,7 +550556,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/maintenance-forms.spec.ts",
@@ -552835,7 +552884,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552863,7 +552913,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -552891,7 +552941,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/notification-inbox-list-recovery.spec.ts",
@@ -553867,7 +553917,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553963,7 +554014,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -554023,7 +554074,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -554740,7 +554791,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554836,7 +554888,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -554896,7 +554948,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -556146,7 +556198,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -556242,7 +556295,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -556302,7 +556355,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -556957,7 +557010,8 @@
           "release-0.6-isolated-compose-test-postgres",
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -556985,7 +557039,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -556993,7 +557047,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/wallet-receipt-timeline.spec.ts",
@@ -648746,7 +648800,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -648974,7 +649029,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -649610,7 +649665,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -649838,7 +649894,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -650474,7 +650530,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -650702,7 +650759,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -651338,7 +651395,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -651566,7 +651624,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -652202,7 +652260,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -652430,7 +652489,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -653067,7 +653126,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -653167,7 +653227,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -653890,7 +653950,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -653990,7 +654051,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -654713,7 +654774,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -654813,7 +654875,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -655536,7 +655598,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -655636,7 +655699,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -656363,7 +656426,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -656463,7 +656527,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -657186,7 +657250,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -657286,7 +657351,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -658009,7 +658074,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -658109,7 +658175,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -658833,7 +658899,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -658933,7 +659000,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -659657,7 +659724,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -659757,7 +659825,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -660481,7 +660549,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -660581,7 +660650,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -661305,7 +661374,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -661405,7 +661475,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -662129,7 +662199,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -662229,7 +662300,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -662953,7 +663024,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -663053,7 +663125,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -663777,7 +663849,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -663877,7 +663950,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -664601,7 +664674,8 @@
           "release-0.6-workspace-pending-performance-correction",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -664701,7 +664775,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/mobile-navigation.spec.ts",
@@ -665423,7 +665497,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -665651,7 +665726,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -666287,7 +666362,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -666515,7 +666591,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -667151,7 +667227,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -667379,7 +667456,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -668015,7 +668092,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -668243,7 +668321,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -668879,7 +668957,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -669107,7 +669186,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -669743,7 +669822,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -669971,7 +670051,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -670607,7 +670687,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -670835,7 +670916,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -671471,7 +671552,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -671699,7 +671781,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -672335,7 +672417,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -672563,7 +672646,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -673199,7 +673282,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -673427,7 +673511,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -674063,7 +674147,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -674291,7 +674376,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -674927,7 +675012,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-new-device-mfa-and-session-revocation-browser-journey",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "localized-current-session-authentication-and-published-terms-journeys",
@@ -675155,7 +675241,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/navigation-fixture.ts",
@@ -737660,7 +737746,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738024,7 +738111,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -738325,7 +738412,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -738689,7 +738777,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -738990,7 +739078,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -739354,7 +739443,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -739656,7 +739745,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740020,7 +740110,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -740321,7 +740411,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -740685,7 +740776,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -740986,7 +741077,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -741350,7 +741442,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -741651,7 +741743,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -742015,7 +742108,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -742317,7 +742410,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -742681,7 +742775,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -742982,7 +743076,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -743346,7 +743441,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -743647,7 +743742,8 @@
           "release-0.6-legal-agent-invitation-and-permissions-browser-journey",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-playwright-fixtures-and-ci-matrix-configuration"
+          "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -744011,7 +744107,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "e7fc93c94b96eb934e61f291d67dd5079477fa3de62a09a92ed5e147e34abf2b"
+              "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -771234,7 +771330,7 @@
             },
             {
               "path": "apps/web/e2e/customer-service-history-views.spec.ts",
-              "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+              "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
             },
             {
               "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
@@ -771242,7 +771338,7 @@
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
-              "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+              "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -773319,7 +773415,8 @@
           "release-0.6-solar-request-touch-target",
           "release-0.6-registration-and-onboarding-browser-journeys",
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
-          "release-0.6-delivery-window-feedback-overlay"
+          "release-0.6-delivery-window-feedback-overlay",
+          "release-0.6-primary-mobile-paint-observation"
         ]
       }
     },
@@ -773425,7 +773522,8 @@
       "remaining": [
         "Reconcile every epic-01 and epic-06 criterion with current source and operational evidence. Apply the approved direct-main workflow while preserving all production gates.",
         "Finish the full exact candidate browser matrix, source coverage and receipt review. The simple and advanced electricity, saving, consultation and solar journeys have local browser receipts. The actual scheduled matrix reported all shards and failed correctly. Residual fixes and exact candidate evidence remain open. Local Firefox wallet accessibility crashes at the native content process, and needs the exact hosted Linux browser matrix. The delivery-window toast overlay is repaired and the notification editor passed all six focused browser cases. Verify the repair on the exact matrix.",
-        "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
+        "Run authenticated ZAP against the exact accepted v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
+        "The primary mobile populated-paint measurement now excludes demonstrated test-runner polling delay. All 12 focused cases passed with unchanged budgets. Verify the repaired hosted integrity check before closing the release gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -773565,7 +773663,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-existing-config-store-and-secret-service",
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-primary-mobile-paint-observation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -883336,6 +883435,59 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/first-launch-promotion-check",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "53a5971afc3741b4961ded70ea1e9969f2bc07cfec0558fb786a33de63562267"
+    },
+    "release-0.6-primary-mobile-paint-observation": {
+      "batch": "release-0.6-primary-mobile-paint-observation",
+      "base_commit": "0e11f456b26eb3330a9eb59e7836e06c3ad9ae49",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/customer-service-history-views.spec.ts",
+        "apps/web/e2e/login-ui.spec.ts",
+        "apps/web/e2e/primary-mobile-performance.ts",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "27715c65b90dfd214b76fe2a75ac64f02ef5ecbabfa913da01aded57eb575936"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "9c4b64dbe6c5533c6768234dd48d278bb88c14de8d9c167e4247c41e5b98296a"
+        },
+        {
+          "path": "apps/web/e2e/primary-mobile-performance.ts",
+          "sha256": "cf9a6e3187c5036aa28758c6854e5fa4a34b3163be91fd8868ec91128080c724"
+        },
+        {
+          "path": "apps/web/history-preloads.mjs",
+          "sha256": "dc445208d9d1b030dfbf17075e48232e52f181f6ed9e01c8fd7d018edefaf181"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "1c7e695ff0bb537022793007a591f22e2b4c3df4883fda11bac3513e03efeeec"
+        },
+        {
+          "path": "scripts/check-route-budgets.mjs",
+          "sha256": "4dd831c645a9dbf1e6fd9b0c211b5559e4fc22652373b31525bd4f4aae38186d"
+        }
+      ],
+      "checks": [
+        "GitHub preflight 42817738385 failed the unchanged 2500 ms populated-render budget at 2670 ms for Persian electricity history, while LCP, CLS and blocking remained within budget. A retry on that run passed and the workflow correctly treated the flake as a failure.",
+        "Two controlled local probes observed the same visible populated row with fonts and two animation frames at 1559 and 1480 ms. The old timer measured 1944 and 1862 ms because it waited for Playwright locator polling and RPC collection.",
+        "The mobile lab now captures populated paint inside the page and reports collection time separately. All existing visibility and journey assertions, CPU and network settings, budgets, and LCP/CLS/blocking observation stay in force. All 12 local production-browser cases passed with zero retries. Maximum populated paint was 1495.3 ms, LCP 1480 ms, CLS 0.05 and blocking 0 ms.",
+        "The check instrumentation is the only behavioral change in this batch. Exact hosted integrity for the repaired check remains separate from the prior failed run and the release acceptance gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/primary-mobile-paint-measurement",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "5b44f2f9b7342cd63f924acd343f9c5755610bea7688131e4686dbf0a410b07f"
     }
   },
   "historical_improvements": [

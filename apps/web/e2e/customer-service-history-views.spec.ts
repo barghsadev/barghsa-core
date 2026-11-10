@@ -29,7 +29,6 @@ for (const locale of ['en', 'fa'] as const) {
       `${kind} views retain pages, workflow links and preferences (${locale})`,
       { tag: '@a11y-critical' },
       async ({ page }, info) => {
-        const measure = await startPrimaryMobilePerformance(page, info);
         const mobile = (page.viewportSize()?.width ?? 1280) < 768;
         const config = {
           saving: {
@@ -65,6 +64,11 @@ for (const locale of ['en', 'fa'] as const) {
             more: tConsultation('moreRequests', locale),
           },
         }[kind];
+        const measure = await startPrimaryMobilePerformance(
+          page,
+          info,
+          `main a[href="${config.path}/${first}"]`
+        );
         await page.addInitScript((value) => {
           localStorage.setItem('barghsa.locale', value);
           // A choice in another history must not override this history's responsive default.
