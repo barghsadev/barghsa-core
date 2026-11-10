@@ -215,7 +215,7 @@ export class DualApprovalService {
     }
 
     this.logger.log(
-      `Approval request ${id} created by ${initiatorUserId} (${normalized.actionType}, IRR ${normalized.amountIrR})`
+      `Approval request ${id} created by ${initiatorUserId} (${normalized.actionType})`
     );
 
     return this.getRequestDto(id);

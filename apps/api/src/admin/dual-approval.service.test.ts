@@ -7,7 +7,7 @@ vi.mock('../session/session-step-up.js', () => ({
   requireSessionStepUp: vi.fn().mockResolvedValue(new Date()),
 }));
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { HttpException } from '@nestjs/common';
+import { HttpException, Logger } from '@nestjs/common';
 import type { DualApprovalService as DualApprovalServiceType } from './dual-approval.service.js';
 import { toApprovalRequestDto } from './dual-approval.service.js';
 
@@ -162,7 +162,12 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
       ],
     }); // getRequestDto
 
+    const log = vi.spyOn(Logger.prototype, 'log').mockImplementation(() => undefined);
     const result = await service.createApprovalRequest(VALID_INPUT, actor('user-1'), '1.1.1.1');
+    const messages = JSON.stringify(log.mock.calls);
+    log.mockRestore();
+    expect(messages).toContain('created by user-1');
+    expect(messages).not.toContain('250000000');
 
     expect(result).toMatchObject({
       id: 'req-1',
@@ -182,7 +187,7 @@ describe('DualApprovalService.createApprovalRequest (T-09.07.02)', () => {
     const auditCall = mockClientQuery.mock.calls[3]!;
     expect(String(auditCall[0])).toContain('INSERT INTO audit_log');
     expect(auditCall[1]).toContain('approval_request_created');
-    expect(String(auditCall[1]![3])).toContain('amountIrR');
+    expect(JSON.parse(String(auditCall[1]![3]))).toMatchObject({ amountIrR: '250000000' });
 
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockRelease).toHaveBeenCalledTimes(1);

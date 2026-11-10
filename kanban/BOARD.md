@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T06:37:11+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T06:39:46+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1132 | Accepted with unchanged source bindings. |
-| verify | 178 | Existing work may be complete; inspect evidence before building. |
+| done | 1135 | Accepted with unchanged source bindings. |
+| verify | 175 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1158,9 +1158,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.02.04` | done | Recorded batch work | Write BOLA/IDOR penetration tests: attempt cross-profile access via UUID enumeration, direct ID manipulation |
 | `06-security-testing-observability.md#T-06.03.02.05` | done | Recorded batch work | Add DAST/security E2E: attempt access to another profile's invoices, orders, contracts, wallet |
 | `06-security-testing-observability.md#T-06.03.03.01` | verify | Inventory needed | Implement audit-logging interceptor for ownership/role/identity changes: before/after values, actor, timestamp |
-| `06-security-testing-observability.md#T-06.03.03.02` | verify | Inventory needed | Implement dual-approval engine: configurable IRR threshold, second authorized user approval needed |
-| `06-security-testing-observability.md#T-06.03.03.03` | verify | Inventory needed | Implement emergency override: reason, elevated permission, immediate alert, audit review |
-| `06-security-testing-observability.md#T-06.03.03.04` | verify | Inventory needed | Write integration tests: dual-approval flow, override flow, denial flow, alert triggers |
+| `06-security-testing-observability.md#T-06.03.03.02` | done | Recorded batch work | Implement dual-approval engine: configurable IRR threshold, second authorized user approval needed |
+| `06-security-testing-observability.md#T-06.03.03.03` | done | Recorded batch work | Implement emergency override: reason, elevated permission, immediate alert, audit review |
+| `06-security-testing-observability.md#T-06.03.03.04` | done | Recorded batch work | Write integration tests: dual-approval flow, override flow, denial flow, alert triggers |
 | `06-security-testing-observability.md#T-06.04.01.01` | verify | Inventory needed | Audit existing Zod schemas for completeness: types, lengths, ranges, enums, pagination caps |
 | `06-security-testing-observability.md#T-06.04.01.02` | partial | Recorded batch work | Add `z.strictObject()` or `stripUnknown: false` to all command DTOs to reject unknown fields |
 | `06-security-testing-observability.md#T-06.04.01.03` | done | Recorded batch work | Implement reusable pagination validation: max limit, cursor/offset constraints |

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:37:11+00:00",
-  "source_commit": "cf2b5bc51ac89f5aef697183365965aa79af62e4",
+  "updated": "2026-11-10T06:39:46+00:00",
+  "source_commit": "15c37b5b62df0b4b8c8a8b6220e86defd7228df1",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -96172,7 +96172,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -96236,11 +96237,11 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.test.ts",
-              "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+              "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -97600,7 +97601,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -97664,11 +97666,11 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.test.ts",
-              "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+              "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -105004,7 +105006,8 @@
           "release-0.6-staff-and-crm-identity-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-saving-financial-profile-scope"
+          "release-0.6-saving-financial-profile-scope",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-admin-financial-controls",
@@ -105068,11 +105071,11 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.test.ts",
-              "sha256": "ce91967760c6319d1e296055e3f5df711db7d59fa8236df59434118772dddd72"
+              "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -143342,7 +143345,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -143350,7 +143354,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/due-at-override.controller.test.ts",
@@ -148409,7 +148413,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -148437,7 +148442,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -148972,7 +148977,8 @@
           "release-0.6-finance-browser-and-caller-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -149000,7 +149006,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -154695,7 +154701,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -154719,7 +154726,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -155349,7 +155356,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-worker-finance-scan-failure-logs",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-callback-and-expiry-preflight-corrections"
+          "release-0.6-callback-and-expiry-preflight-corrections",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -155373,7 +155381,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -156098,7 +156106,8 @@
           "release-0.6-customer-draft-and-contract-history-browser",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-shared-lint-and-git-hooks",
-          "release-0.6-generated-openapi-client-contracts"
+          "release-0.6-generated-openapi-client-contracts",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -156122,7 +156131,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -485516,7 +485525,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485556,7 +485566,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -485655,7 +485665,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -485711,7 +485722,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -486048,19 +486059,110 @@
         "story": "06-security-testing-observability.md#spec-57b540becf52"
       },
       "requirement": "| T-06.03.03.02 | Implement dual-approval engine: configurable IRR threshold, second authorized user approval needed | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dual-approval-and-emergency-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-dual-approval-and-override",
+          "reviewed_sha": "15c37b5b62df0b4b8c8a8b6220e86defd7228df1",
+          "checks": [
+            "The current threshold configuration uses exact IRR, versioned writes and a database lock around the approval decision. Ordinary approval requires a different, currently eligible reviewer and fresh session proof. Threshold and amount, evidence identity, financial allocation, ledger settlement and audit stay bound to the authorized approval.",
+            "The wallet and invoice receipt emergency paths require a bounded reason and the explicit current emergency permission. Each successful override commits private alerts, an audit record and the scoped settlement together. Integration cases prove ordinary finance denial, stale session/step-up denial, mismatched evidence and rejection denial, and full rollback on failed audit or alert.",
+            "Hosted run 42759736897 job 129642496352 passed 217 selected native cases for distinct approvals, threshold races, both override flows, wallet/invoice settlement, audit and alerts, and wallet/external refunds. The listed financial authorization and test source matches that hosted revision. The only current approval service change removes exact amount from a process log.",
+            "The baseline failed the amount privacy regression. All 131 current targeted cases passed, with exact amount preserved in both the authorized DTO and its audit. API typecheck, ESLint, Prettier and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "189146454761a7e13b9cde59c9875534d0321bef86bae9e3602eb27a82400e6a"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+              "sha256": "6dd81183ed5545b6cb20c2a1f20a645dbd233711fe8473e0b9a09cb996285255"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.test.ts",
+              "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+            }
+          ]
+        }
       }
     },
     {
@@ -486074,19 +486176,110 @@
         "story": "06-security-testing-observability.md#spec-57b540becf52"
       },
       "requirement": "| T-06.03.03.03 | Implement emergency override: reason, elevated permission, immediate alert, audit review | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dual-approval-and-emergency-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-dual-approval-and-override",
+          "reviewed_sha": "15c37b5b62df0b4b8c8a8b6220e86defd7228df1",
+          "checks": [
+            "The current threshold configuration uses exact IRR, versioned writes and a database lock around the approval decision. Ordinary approval requires a different, currently eligible reviewer and fresh session proof. Threshold and amount, evidence identity, financial allocation, ledger settlement and audit stay bound to the authorized approval.",
+            "The wallet and invoice receipt emergency paths require a bounded reason and the explicit current emergency permission. Each successful override commits private alerts, an audit record and the scoped settlement together. Integration cases prove ordinary finance denial, stale session/step-up denial, mismatched evidence and rejection denial, and full rollback on failed audit or alert.",
+            "Hosted run 42759736897 job 129642496352 passed 217 selected native cases for distinct approvals, threshold races, both override flows, wallet/invoice settlement, audit and alerts, and wallet/external refunds. The listed financial authorization and test source matches that hosted revision. The only current approval service change removes exact amount from a process log.",
+            "The baseline failed the amount privacy regression. All 131 current targeted cases passed, with exact amount preserved in both the authorized DTO and its audit. API typecheck, ESLint, Prettier and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "189146454761a7e13b9cde59c9875534d0321bef86bae9e3602eb27a82400e6a"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+              "sha256": "6dd81183ed5545b6cb20c2a1f20a645dbd233711fe8473e0b9a09cb996285255"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.test.ts",
+              "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+            }
+          ]
+        }
       }
     },
     {
@@ -486100,19 +486293,110 @@
         "story": "06-security-testing-observability.md#spec-57b540becf52"
       },
       "requirement": "| T-06.03.03.04 | Write integration tests: dual-approval flow, override flow, denial flow, alert triggers | M |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-dual-approval-and-emergency-evidence"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-dual-approval-and-override",
+          "reviewed_sha": "15c37b5b62df0b4b8c8a8b6220e86defd7228df1",
+          "checks": [
+            "The current threshold configuration uses exact IRR, versioned writes and a database lock around the approval decision. Ordinary approval requires a different, currently eligible reviewer and fresh session proof. Threshold and amount, evidence identity, financial allocation, ledger settlement and audit stay bound to the authorized approval.",
+            "The wallet and invoice receipt emergency paths require a bounded reason and the explicit current emergency permission. Each successful override commits private alerts, an audit record and the scoped settlement together. Integration cases prove ordinary finance denial, stale session/step-up denial, mismatched evidence and rejection denial, and full rollback on failed audit or alert.",
+            "Hosted run 42759736897 job 129642496352 passed 217 selected native cases for distinct approvals, threshold races, both override flows, wallet/invoice settlement, audit and alerts, and wallet/external refunds. The listed financial authorization and test source matches that hosted revision. The only current approval service change removes exact amount from a process log.",
+            "The baseline failed the amount privacy regression. All 131 current targeted cases passed, with exact amount preserved in both the authorized DTO and its audit. API typecheck, ESLint, Prettier and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/admin/admin.service.ts",
+              "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+            },
+            {
+              "path": "apps/api/src/admin/approval-notifications.ts",
+              "sha256": "189146454761a7e13b9cde59c9875534d0321bef86bae9e3602eb27a82400e6a"
+            },
+            {
+              "path": "apps/api/src/admin/approval-permissions.ts",
+              "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+              "sha256": "6dd81183ed5545b6cb20c2a1f20a645dbd233711fe8473e0b9a09cb996285255"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-resolution.ts",
+              "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+              "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.controller.ts",
+              "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.test.ts",
+              "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
+            },
+            {
+              "path": "apps/api/src/admin/dual-approval.service.ts",
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
+            },
+            {
+              "path": "apps/api/src/admin/receipt-emergency-override.ts",
+              "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+              "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+            },
+            {
+              "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+              "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+            },
+            {
+              "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+              "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+            },
+            {
+              "path": "apps/api/src/refund/refund.service.ts",
+              "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+            },
+            {
+              "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+              "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+              "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+            },
+            {
+              "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+              "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+            }
+          ]
+        }
       }
     },
     {
@@ -489257,7 +489541,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -489385,7 +489670,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -489702,7 +489987,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -489762,7 +490048,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -489810,7 +490096,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -489859,7 +490146,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -490061,7 +490348,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -490141,7 +490429,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -491797,7 +492085,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -491805,7 +492094,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "docs/threat-model.md",
@@ -491952,7 +492241,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -491960,7 +492250,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492073,7 +492363,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -492081,7 +492372,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -492142,7 +492433,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -492158,7 +492450,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             }
           ],
           "checks": [
@@ -492225,7 +492517,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -492285,7 +492578,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -495557,7 +495850,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -495573,7 +495867,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             }
           ],
           "checks": [
@@ -495632,7 +495926,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-worker-service-failure-logs",
           "release-0.6-provider-command-unknown-fields",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -495640,7 +495935,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "a8d990700c20b0682b317f82235a438019c9ad4ecfd042c470f6589536fd9b2b"
+              "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -497588,7 +497883,8 @@
           "release-0.6-reconciliation-worker-failure-logs",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-worker-service-failure-logs",
-          "release-0.6-provider-diagnostic-privacy"
+          "release-0.6-provider-diagnostic-privacy",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -745266,7 +745562,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "68dfb917478e3ccadab820edf3c3e137fe91aeb057b4775900fe73dd573bc0aa"
+              "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
@@ -748722,7 +749018,8 @@
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-callback-and-expiry-preflight-corrections",
           "release-0.6-saving-financial-profile-scope",
-          "release-0.6-worker-service-failure-logs"
+          "release-0.6-worker-service-failure-logs",
+          "release-0.6-dual-approval-and-emergency-evidence"
         ]
       }
     },
@@ -869909,6 +870206,112 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/full-candidate-42751525133-image-gate",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "bb2e6288ff48835e54f42b51e13cded0e937d4f1de8a04807f87721f34ef5caa"
+    },
+    "release-0.6-dual-approval-and-emergency-evidence": {
+      "batch": "release-0.6-dual-approval-and-emergency-evidence",
+      "base_commit": "15c37b5b62df0b4b8c8a8b6220e86defd7228df1",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.13.02.06"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/dual-approval.service.test.ts",
+        "apps/api/src/admin/dual-approval.service.ts",
+        "docs/security/security-verification.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "2f9134e48215f7e3f589908277eb3f92d02d8e0be6194422bc45c058bd9ff0ae"
+        },
+        {
+          "path": "apps/api/src/admin/approval-notifications.ts",
+          "sha256": "189146454761a7e13b9cde59c9875534d0321bef86bae9e3602eb27a82400e6a"
+        },
+        {
+          "path": "apps/api/src/admin/approval-permissions.ts",
+          "sha256": "802452d1e50ca3e6645499811f7e0471ead0677cab1c947ee27eb720162fdb79"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "6dd81183ed5545b6cb20c2a1f20a645dbd233711fe8473e0b9a09cb996285255"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-resolution.ts",
+          "sha256": "724d65e6d80f47ad3a523441ea8dcd3c2cc83cd16ef04e5c4d28fb1a83742e86"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-threshold-lock.ts",
+          "sha256": "d2a5c5e64f9c1e8c6b70658045ec1a5f9f1a3f6d621e1ba71d635bac4680c6b3"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "bca0b0ad957c0e79921ea2d49095d3f1ad7c2eeff8cdb6789c6cf7d9a947ba18"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.test.ts",
+          "sha256": "de725b84ee24ebbe5cf4a3c7c597dafb08fcdddba45275cbdd3524af2f7ad3a8"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "f739cf442cadedf0457facabc2f94751550e034a9266292e2c1b7073c2f6ca2a"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-emergency-override.ts",
+          "sha256": "e226fddd3d02230af999291a8db1e2306000764ea60b0ab553dae1151914f967"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "9c3a4ab9dfb398cba8c771cb17b72491d6b6715ba449aaf2a549820875cb1208"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+        },
+        {
+          "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
+          "sha256": "debe727fbe8223327b753f6d41f248d8e2081e8e033468429bdb9eb67ab90449"
+        },
+        {
+          "path": "apps/api/src/refund/refund.service.ts",
+          "sha256": "072f842a63e834acdac42ba555142a4b040970066e07a63a362d9d31fb896363"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "7a97bd2f019e4c03754bea8fbcabe1045bb2baf974749fa353a2ed7313b4c694"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "fb502f00bb64c8a334231bf86aba40c3c1346d924abde96b7713a49aa7539ff9"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "c774d4c1152e8b578228c17010049297ee9969f85d0668aec0f0188e734cb7a9"
+        }
+      ],
+      "checks": [
+        "The current threshold configuration uses exact IRR, versioned writes and a database lock around the approval decision. Ordinary approval requires a different, currently eligible reviewer and fresh session proof. Threshold and amount, evidence identity, financial allocation, ledger settlement and audit stay bound to the authorized approval.",
+        "The wallet and invoice receipt emergency paths require a bounded reason and the explicit current emergency permission. Each successful override commits private alerts, an audit record and the scoped settlement together. Integration cases prove ordinary finance denial, stale session/step-up denial, mismatched evidence and rejection denial, and full rollback on failed audit or alert.",
+        "Hosted run 42759736897 job 129642496352 passed 217 selected native cases for distinct approvals, threshold races, both override flows, wallet/invoice settlement, audit and alerts, and wallet/external refunds. The listed financial authorization and test source matches that hosted revision. The only current approval service change removes exact amount from a process log.",
+        "The baseline failed the amount privacy regression. All 131 current targeted cases passed, with exact amount preserved in both the authorized DTO and its audit. API typecheck, ESLint, Prettier and diff checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/dual-approval-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "0cc70abc9fe4a52b9c1bca6499c2682d58ed793af55ad2e637e88f1238476891"
     }
   },
   "historical_improvements": [

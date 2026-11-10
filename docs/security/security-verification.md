@@ -128,6 +128,8 @@ exception text and connection details.
 Staff account and CRM action logs use opaque identifiers. Usernames and
 free-form CRM reasons remain available through their authorized response and
 audit paths.
+Dual-approval creation logs retain the approval ID, actor and action. Exact
+amounts remain available through the authorized approval record and audit.
 SMTP and Resend connection-test logs identify the failed operation. Their
 restricted test results mask configured credentials and contacts when a
 provider echoes them. Verification adapter retries keep the provider and
