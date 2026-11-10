@@ -2,6 +2,8 @@ import { crmShell } from './crm-shell-fixture';
 import { cookieResponse } from './cookie-response';
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
+import { verificationConfigText } from '@barghsa/i18n/verification-config';
+import { securityRateLimitPolicies, securityRateLimitPolicyKeys } from '@barghsa/shared/rate-limit';
 
 async function shell(page: Page, locale: string) {
   await crmShell(page, locale);
@@ -14,6 +16,94 @@ async function shell(page: Page, locale: string) {
       json: { verified: true },
       headers: { 'Set-Cookie': 'barghsa_csrf=otp-fresh-csrf; Path=/; SameSite=Lax' },
     });
+  });
+}
+
+for (const locale of ['en', 'fa'] as const) {
+  test(`security rate limits review and save a bounded emergency rule (${locale})`, async ({
+    page,
+  }) => {
+    await shell(page, locale);
+    await page.route('**/api/admin/config/otp', (route) =>
+      route.fulfill({ json: { ttlSeconds: 300, version: 0 } })
+    );
+    const text = (key: Parameters<typeof verificationConfigText>[0]) =>
+      verificationConfigText(key, locale);
+    const reason =
+      locale === 'fa'
+        ? 'تمرین کنترل‌شده برای محدودیت ورود'
+        : 'Controlled sign-in incident exercise';
+    const expiresAt = '2099-11-10T15:00:00.000Z';
+    const writes: unknown[] = [];
+    let reads = 0;
+    let changed = false;
+    function policySnapshot(policy: (typeof securityRateLimitPolicyKeys)[number]) {
+      const { ceiling, windowMs } = securityRateLimitPolicies[policy];
+      return changed && policy === 'login'
+        ? {
+            policy,
+            ceiling,
+            windowMs,
+            limit: 12,
+            version: 1,
+            emergency: { limit: 2, owner: 'staff-operator', reason, expiresAt, active: true },
+          }
+        : { policy, ceiling, windowMs, limit: ceiling, version: 0, emergency: null };
+    }
+    await page.route('**/api/admin/config/security-rate-limits', async (route) => {
+      if (route.request().method() === 'GET') {
+        reads++;
+        return route.fulfill({
+          json: { policies: securityRateLimitPolicyKeys.map(policySnapshot) },
+        });
+      }
+      expect(route.request().method()).toBe('PUT');
+      expect(route.request().headers()['x-csrf-token']).toBe('otp-fresh-csrf');
+      writes.push(route.request().postDataJSON());
+      changed = true;
+      return route.fulfill({ json: policySnapshot('login') });
+    });
+    await page.goto('/admin/verification');
+    const disclosure = page.locator('summary').filter({ hasText: text('rateLimitTitle') });
+    await expect(disclosure).toBeVisible();
+    expect(reads).toBe(0);
+    await disclosure.focus();
+    await disclosure.press('Enter');
+    const panel = page.getByRole('region', { name: text('rateLimitTitle'), exact: true });
+    const action = panel.getByLabel(text('rateLimitAction'), { exact: true });
+    await action.selectOption('login');
+    const limit = panel.getByLabel(text('rateLimitValue'), { exact: true });
+    await expect(limit).toHaveValue('50');
+    await expect(limit).toHaveAttribute('max', '50');
+    await limit.fill('12');
+    await panel.getByLabel(text('rateLimitEmergency'), { exact: true }).selectOption('set');
+    await panel.getByLabel(text('rateLimitEmergencyValue'), { exact: true }).fill('2');
+    await panel.getByLabel(text('rateLimitMinutes'), { exact: true }).fill('15');
+    await panel.getByLabel(text('rateLimitReason'), { exact: true }).fill(reason);
+    const review = panel.getByRole('button', { name: text('rateLimitSave'), exact: true });
+    await review.click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog).toContainText(reason);
+    await expect(dialog).toContainText(text('login'));
+    expect(writes).toEqual([]);
+    await dialog
+      .getByLabel(locale === 'fa' ? 'رمز عبور خود را تأیید کنید' : 'Confirm your password')
+      .fill('Settings-password-123!');
+    await dialog.locator('button[type=submit]').click();
+    await expect(dialog).toHaveCount(0);
+    await expect(
+      panel.getByRole('status').filter({ hasText: text('rateLimitSaved') })
+    ).toBeVisible();
+    await expect(panel.getByText('staff-operator', { exact: true })).toBeVisible();
+    await expect(panel.locator('time')).toHaveAttribute('datetime', expiresAt);
+    expect(writes).toEqual([
+      {
+        policy: 'login',
+        limit: 12,
+        expectedVersion: 0,
+        emergency: { operation: 'set', limit: 2, minutes: 15, reason },
+      },
+    ]);
   });
 }
 

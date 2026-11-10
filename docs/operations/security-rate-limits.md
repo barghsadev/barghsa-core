@@ -1,0 +1,9 @@
+# Security rate limits
+
+In the staff verification settings, open **Security rate limits** to review a policy's current threshold, window, version, and emergency rule. A change needs `admin:config:write` and recent step-up. Reads need `admin:config:read`. The API checks current authority again inside the write transaction and rejects a stale version. The setting, global configuration revision, and audit entry commit together.
+
+The regular threshold can be any whole number from one through the existing limit for the action. Each affected request reads PostgreSQL, so a committed change applies without a restart. The built-in limits cover destination, IP, device, account, profile, or caller scope as shown in the editor. Each wallet action keeps its own per-profile counter. Order and consultation submissions share the existing per-profile quota, and a replay of a completed idempotent command keeps its original result.
+
+An emergency rule sets a lower threshold for 5 to 1,440 minutes. Provide an incident reference or a short reason without contact details, secrets, or customer content. PostgreSQL sets the expiry. The authenticated operator is recorded as the owner. The audit records the change and preserves the previous rule. To end an incident early, clear the rule and record why. Expired rules stop applying automatically and remain visible until replaced or cleared. Existing request history is retained. A burst truncated at a lower threshold can conservatively count against a later increase until its window expires.
+
+The one-per-minute destination send limit, five failed attempts per OTP challenge, progressive sign-in delay, provider and anomaly controls, upload reservation and storage quotas, and AI concurrency, token, and cost controls keep their existing enforcement. This editor tunes request admission. The browser remains subject to the current session, CSRF, and confirmation requirements.

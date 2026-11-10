@@ -1,4 +1,10 @@
 import type { RateLimitResult, RateLimiterStore, RateLimitLogger } from './types.js';
+import {
+  effectiveSecurityRateLimitSql,
+  findSecurityRateLimitPolicy,
+  readEffectiveSecurityRateLimit,
+  securityRateLimitConfigKey,
+} from './security-rate-limit-policy.js';
 
 // ---------------------------------------------------------------------------
 // Config
@@ -88,11 +94,25 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     limit: number | null,
     windowMs: number,
     increment: boolean
-  ): Promise<{ count: number; resetMs: number }> {
-    const result = await this.query(
-      'SELECT count, reset_ms FROM rate_limit_rolling($1, $2, $3, $4, $5)',
-      [security, key, windowMs, limit, increment]
-    );
+  ): Promise<{ count: number; resetMs: number; effectiveLimit: number | null }> {
+    const policy =
+      security && increment && limit
+        ? findSecurityRateLimitPolicy(key, limit, windowMs)
+        : undefined;
+    const result = policy
+      ? await this.query(
+          `WITH effective AS MATERIALIZED (${effectiveSecurityRateLimitSql})
+           SELECT count, reset_ms, limit_value FROM effective
+           CROSS JOIN LATERAL rate_limit_rolling(true, $3, $4, limit_value, true)`,
+          [securityRateLimitConfigKey(policy), limit, key, windowMs]
+        )
+      : await this.query('SELECT count, reset_ms FROM rate_limit_rolling($1, $2, $3, $4, $5)', [
+          security,
+          key,
+          windowMs,
+          limit,
+          increment,
+        ]);
     const row = result.rows[0];
     const count = !increment && (row?.count === 0 || row?.count === '0') ? 0 : readCounter(row);
     const raw = row?.reset_ms;
@@ -104,7 +124,10 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
           : NaN;
     if (!Number.isSafeInteger(resetMs) || resetMs < 0)
       throw new Error('Invalid persisted rate-limit expiry');
-    return { count, resetMs };
+    const effectiveLimit = policy
+      ? readEffectiveSecurityRateLimit(row?.limit_value, limit!)
+      : limit;
+    return { count, resetMs, effectiveLimit };
   }
 
   private async consume(
@@ -113,8 +136,20 @@ export class PostgresRateLimiterStore implements RateLimiterStore {
     limit: number,
     windowMs: number
   ): Promise<RateLimitResult> {
-    const { count, resetMs } = await this.rolling(security, key, limit, windowMs, true);
-    return { allowed: count <= limit, remaining: Math.max(0, limit - count), limit, resetMs };
+    const { count, resetMs, effectiveLimit } = await this.rolling(
+      security,
+      key,
+      limit,
+      windowMs,
+      true
+    );
+    const threshold = effectiveLimit ?? limit;
+    return {
+      allowed: count <= threshold,
+      remaining: Math.max(0, threshold - count),
+      limit: threshold,
+      resetMs,
+    };
   }
 
   async increment(key: string, limit: number, windowMs: number): Promise<RateLimitResult> {

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T16:03:57+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T16:04:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1183 | Accepted with unchanged source bindings. |
-| verify | 125 | Existing work may be complete; inspect evidence before building. |
-| partial | 52 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1185 | Accepted with unchanged source bindings. |
+| verify | 122 | Existing work may be complete; inspect evidence before building. |
+| partial | 53 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,12 +39,13 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Collect the scheduled browser and quality outcomes and verify the remaining v0.6.0 operational prerequisites before accepting a staging release.
+Verify the exact v0.6 browser and rate-limit receipts, and close public registration account disclosure before release.
 
 - `01-platform-infrastructure.md#T-01.04.04`: Configure Playwright for E2E testing
 - `01-platform-infrastructure.md#T-01.04.06`: Configure flaky-test quarantine process
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
+- `06-security-testing-observability.md#T-06.01.02.06`: Ensure all OTP responses are generic ("If valid, an OTP was sent") — never reveal account existence
 
 ## v0.2.0: Complete customer journeys
 
@@ -1196,9 +1197,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.05.02.06` | partial | Recorded batch work | Configure wallet/payment/refund limits: 10 per profile/minute; stricter provider+anomaly controls |
 | `06-security-testing-observability.md#T-06.05.02.07` | partial | Recorded batch work | Configure file upload limits: 20 per profile/minute; concurrent upload, size, storage quotas |
 | `06-security-testing-observability.md#T-06.05.02.08` | done | Recorded batch work | Configure AI limits: per-user requests, concurrency, token, cost budgets; stricter for tool-enabled actions |
-| `06-security-testing-observability.md#T-06.05.02.09` | verify | Inventory needed | Admin UI: view/edit limits within safe min/max bounds; versioned configuration |
-| `06-security-testing-observability.md#T-06.05.02.10` | verify | Inventory needed | Emergency rule engine: security can set temporary rules with owner, expiry, reason, audit record |
-| `06-security-testing-observability.md#T-06.05.02.11` | verify | Inventory needed | Write tests: each action limit enforced correctly, admin tuning, emergency override |
+| `06-security-testing-observability.md#T-06.05.02.09` | done | Recorded batch work | Admin UI: view/edit limits within safe min/max bounds; versioned configuration |
+| `06-security-testing-observability.md#T-06.05.02.10` | done | Recorded batch work | Emergency rule engine: security can set temporary rules with owner, expiry, reason, audit record |
+| `06-security-testing-observability.md#T-06.05.02.11` | partial | Recorded batch work | Write tests: each action limit enforced correctly, admin tuning, emergency override |
 | `06-security-testing-observability.md#T-06.06.01.01` | partial | Recorded batch work | Implement upload validation pipeline: extension allowlist → MIME detection → size check → malware scan → store |
 | `06-security-testing-observability.md#T-06.06.01.02` | done | Recorded batch work | Build extension+MIME allowlist configurable by category (docs, images, video) with admin limits |
 | `06-security-testing-observability.md#T-06.06.01.03` | done | Recorded batch work | Generate random object keys (UUID); never use original filenames in storage path |

@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { AiTestChatService, type TestChatResponse } from './ai-test-chat.service.js';
 import type { KnowledgeAnswer } from './ai-knowledge-chat.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
@@ -114,26 +115,22 @@ export class AiStatelessKnowledgeService {
     try {
       const agentId = await this.agent(slotKey);
       if (!agentId) fail(409, 'AI_WEBSITE_UNAVAILABLE');
-      const quota = await getDbPool().query<{ count: number; reset_ms: string }>(
-        'SELECT count,reset_ms FROM rate_limit_rolling(true,$1,60000,5,true)',
-        [
-          (publicQuestion
-            ? 'ai:website:'
-            : slotKey === 'staff_chatbot'
-              ? 'ai:staff:'
-              : 'ai:telegram:') + quotaKey,
-        ]
-      );
-      const count = Number(quota.rows[0]!.count);
-      if (count > 5)
-        fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, Number(quota.rows[0]!.reset_ms));
+      const pool = getDbPool();
+      const rateLimits = new PostgresRateLimiterStore((sql, params) => pool.query(sql, params));
+      const prefix = publicQuestion
+        ? 'ai:website:'
+        : slotKey === 'staff_chatbot'
+          ? 'ai:staff:'
+          : 'ai:telegram:';
+      const quota = await rateLimits.incrementSecurity(prefix + quotaKey, 5, 60_000);
+      if (!quota.allowed) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, quota.resetMs);
       const generated = await this.inference.answerForKnowledgeSlot({
         agentId,
         slotKey,
         message,
         sessionId,
         userId: publicQuestion ? 'website:' + actorKey : actorKey,
-        remainingQuota: Math.max(0, 5 - count),
+        remainingQuota: quota.remaining,
       });
       if ((await this.agent(slotKey)) !== agentId) fail(409, 'AI_WEBSITE_SCOPE_CHANGED');
       const ids = [...new Set(generated.sources.map((source) => source.kbId))];

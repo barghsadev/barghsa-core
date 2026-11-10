@@ -27,6 +27,7 @@ import {
 } from '../components/CatalogueEditorFeedback.js';
 import { OtpConfigPanel } from '../components/OtpConfigPanel.js';
 import { VerificationPolicySettings } from '../components/VerificationPolicySettings.js';
+const SecurityRateLimitPanel = lazy(() => import('../components/SecurityRateLimitPanel.js'));
 const TeamActionDialog = lazy(() =>
   import('../components/TeamActionDialog.js').then((module) => ({
     default: module.TeamActionDialog,
@@ -62,6 +63,7 @@ function OwnedVerificationSettings() {
 }
 function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
   const locale = useLocale();
+  const [rateLimitsOpened, setRateLimitsOpened] = useState(false);
   const text = (key: Parameters<typeof verificationConfigText>[0]) =>
     verificationConfigText(key, locale);
   const form = useWizardForm<VerificationDraft>(
@@ -435,6 +437,21 @@ function VerificationSettings({ onReadDenied }: { onReadDenied: () => void }) {
       )}
       <OtpConfigPanel onReadDenied={onReadDenied} />
       <VerificationPolicySettings onReadDenied={onReadDenied} />
+      <details
+        className="max-w-xl rounded border p-3"
+        onToggle={(event) => {
+          if (event.currentTarget.open) setRateLimitsOpened(true);
+        }}
+      >
+        <summary className="min-h-11 cursor-pointer content-center font-medium">
+          {text('rateLimitTitle')}
+        </summary>
+        {rateLimitsOpened && (
+          <Suspense fallback={<LoadingStatus>{text('loading')}</LoadingStatus>}>
+            <SecurityRateLimitPanel onReadDenied={onReadDenied} />
+          </Suspense>
+        )}
+      </details>
     </>
   );
 }

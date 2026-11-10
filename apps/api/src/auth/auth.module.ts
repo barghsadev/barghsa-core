@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller.js';
 import { AuthService } from './auth.service.js';
 import { OtpService } from './otp.service.js';
 import { OtpConfigController } from './otp-config.controller.js';
+import { SecurityRateLimitConfigController } from '../rate-limit/security-rate-limit-config.controller.js';
 import { OtpStepUpController } from './otp-step-up.controller.js';
 import { OtpStepUpService } from './otp-step-up.service.js';
 import { SessionModule } from '../session/session.module.js';
@@ -10,7 +11,12 @@ import { TosModule } from '../tos/tos.module.js';
 
 @Module({
   imports: [SessionModule, TosModule],
-  controllers: [AuthController, OtpConfigController, OtpStepUpController],
+  controllers: [
+    AuthController,
+    OtpConfigController,
+    OtpStepUpController,
+    SecurityRateLimitConfigController,
+  ],
   providers: [AuthService, OtpService, OtpStepUpService],
   exports: [AuthService, OtpService],
 })

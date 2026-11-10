@@ -6,6 +6,7 @@ import { requireAddressGeography } from '../profiles/address-geography.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { queryEffectiveSecurityRateLimit } from '@barghsa/shared/rate-limit';
 import { GiftCodeService } from '../admin/gift-code.service.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
@@ -170,6 +171,10 @@ export class OrdersService {
 
   /** Call after locking the profile and checking whether this is an idempotent retry. */
   async enforceProfileSubmissionLimit(client: PoolClient, profileId: string): Promise<void> {
+    const limit = await queryEffectiveSecurityRateLimit(
+      (sql, params) => client.query(sql, params),
+      'orderSubmission'
+    );
     const result = await client.query<{ count: string }>(
       `SELECT (
          (SELECT count(*) FROM orders o JOIN electricity_orders e ON e.id=o.id
@@ -184,7 +189,7 @@ export class OrdersService {
        )::text AS count`,
       [profileId]
     );
-    if (Number(result.rows[0]?.count ?? 0) >= 5)
+    if (Number(result.rows[0]?.count ?? 0) >= limit)
       throw new HttpException({ error: ErrorCodes.RATE_LIMIT_EXCEEDED.code }, 429);
   }
 

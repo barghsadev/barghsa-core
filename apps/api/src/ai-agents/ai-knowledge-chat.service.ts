@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { ProfilesService } from '../profiles/profiles.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { AiTestChatService, type TestChatResponse } from './ai-test-chat.service.js';
@@ -144,13 +145,14 @@ export class AiKnowledgeChatService {
       }
       if (!capacityKey) fail(503, 'AI_KNOWLEDGE_BUSY');
 
-      const quota = await client.query<{ count: number; reset_ms: string }>(
-        'SELECT count,reset_ms FROM rate_limit_rolling(true,$1,60000,5,true)',
-        [`ai:knowledge:user:${session.userId}:profile:${scope.profileId}`]
+      const rateLimits = new PostgresRateLimiterStore((sql, params) => client.query(sql, params));
+      const quota = await rateLimits.incrementSecurity(
+        `ai:knowledge:user:${session.userId}:profile:${scope.profileId}`,
+        5,
+        60_000
       );
-      const quotaRow = quota.rows[0]!;
-      remainingQuota = Math.max(0, 5 - Number(quotaRow.count));
-      if (Number(quotaRow.count) <= 5) {
+      remainingQuota = quota.remaining;
+      if (quota.allowed) {
         await client.query(
           `INSERT INTO ai_knowledge_questions
            (session_id,request_id,profile_id,slot_key,agent_id,request_hash,expires_at)
@@ -160,7 +162,7 @@ export class AiKnowledgeChatService {
         admitted = true;
       }
       await client.query('COMMIT');
-      if (!admitted) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, Number(quotaRow.reset_ms));
+      if (!admitted) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, quota.resetMs);
 
       const generated = await this.inference.answerForKnowledgeSlot({
         agentId: scope.agentId,

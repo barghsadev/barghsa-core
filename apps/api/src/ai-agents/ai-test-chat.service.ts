@@ -3,6 +3,7 @@ import { Injectable, HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { OpenAiEmbeddingClient, type ChatMessage } from '@barghsa/shared/ai-models';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { v7 as uuidv7 } from 'uuid';
 import { AiModelSecretsService } from '../ai-models/ai-model-secrets.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
@@ -154,13 +155,14 @@ export class AiTestChatService {
         }
         return safeReplay(row.response);
       }
-      const quota = await client.query<{ count: number; reset_ms: string }>(
-        'SELECT count,reset_ms FROM rate_limit_rolling(true,$1,60000,10,true)',
-        [`ai:test-chat:user:${session.userId}`]
+      const rateLimits = new PostgresRateLimiterStore((sql, params) => client.query(sql, params));
+      const quota = await rateLimits.incrementSecurity(
+        `ai:test-chat:user:${session.userId}`,
+        10,
+        60_000
       );
-      const quotaRow = quota.rows[0]!;
-      remainingQuota = Math.max(0, 10 - Number(quotaRow.count));
-      if (Number(quotaRow.count) <= 10) {
+      remainingQuota = quota.remaining;
+      if (quota.allowed) {
         await client.query(
           `INSERT INTO ai_test_chat_turns
            (session_id,request_id,conversation_id,agent_id,request_hash,user_message,expires_at)
@@ -170,7 +172,7 @@ export class AiTestChatService {
         admitted = true;
       }
       await client.query('COMMIT');
-      if (!admitted) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, Number(quotaRow.reset_ms));
+      if (!admitted) fail(429, ErrorCodes.RATE_LIMIT_EXCEEDED.code, quota.resetMs);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => undefined);
       throw error;

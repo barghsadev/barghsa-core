@@ -3,6 +3,10 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import * as argon2 from 'argon2';
 import { startHttpFixture } from '../test/http-fixture.js';
+import {
+  PostgresRateLimiterStore,
+  queryEffectiveSecurityRateLimit,
+} from '@barghsa/shared/rate-limit';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let adminHeaders: Record<string, string>;
@@ -63,6 +67,192 @@ function request(
 function update(body: unknown, headers = adminHeaders) {
   return request('admin/config/otp', 'PUT', body, headers);
 }
+
+const limitsPath = 'admin/config/security-rate-limits';
+const keep = { operation: 'keep' };
+function updateLimit(body: unknown, headers = adminHeaders) {
+  return request(limitsPath, 'PUT', body, headers);
+}
+
+it('requires CSRF, current staff authority and step-up for bounded rate-limit changes', async () => {
+  const body = { policy: 'login', limit: 12, expectedVersion: 0, emergency: keep };
+  expect((await request(limitsPath)).status).toBe(401);
+  expect((await request(limitsPath, 'GET', undefined, customerHeaders)).status).toBe(403);
+  expect((await updateLimit(body, customerHeaders)).status).toBe(403);
+  expect((await updateLimit(body, { Cookie: adminHeaders.Cookie! })).status).toBe(403);
+  for (const invalid of [
+    { ...body, policy: 'otp:destination:personal@example.test' },
+    { ...body, limit: 51 },
+    { ...body, limit: 0 },
+    { ...body, emergency: { operation: 'set', limit: 12, minutes: 5, reason: 'Controlled test' } },
+    {
+      ...body,
+      emergency: { operation: 'set', limit: 1, minutes: 1441, reason: 'Controlled test' },
+    },
+    { ...body, emergency: { operation: 'clear', reason: 'short' } },
+  ]) {
+    expect((await updateLimit(invalid)).status).toBe(400);
+  }
+  await http.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [
+    sessionId,
+  ]);
+  expect((await updateLimit(body)).status).toBe(403);
+  expect(
+    (await http.pool.query("SELECT key FROM app_config WHERE key LIKE 'security_rate_limit:%'"))
+      .rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE metadata::jsonb->>'entity' LIKE 'security_rate_limit:%'"
+      )
+    ).rows
+  ).toEqual([]);
+}, 15000);
+
+it('enforces versioned policy on existing counters, expires the emergency and audits clear', async () => {
+  const pool = http.pool;
+  const store = new PostgresRateLimiterStore((sql, params) => pool.query(sql, params));
+  const consume = (identity: string) =>
+    store.incrementSecurity(`login:device:${identity}`, 50, 900_000);
+  expect(await consume('existing')).toMatchObject({ allowed: true, limit: 50, remaining: 49 });
+  const responses = await Promise.all(
+    [3, 4].map((limit) =>
+      updateLimit({ policy: 'login', limit, expectedVersion: 0, emergency: keep })
+    )
+  );
+  expect(responses.map((response) => response.status).sort()).toEqual([200, 409]);
+  const { limit: regular } = (await responses.find((response) => response.ok)!.json()) as {
+    limit: number;
+  };
+  expect(await consume('existing')).toMatchObject({
+    allowed: true,
+    limit: regular,
+    remaining: regular - 2,
+  });
+
+  const reason = 'Controlled login spray exercise';
+  const saved = await updateLimit({
+    policy: 'login',
+    limit: regular,
+    expectedVersion: 1,
+    emergency: { operation: 'set', limit: 1, minutes: 5, reason },
+  });
+  expect(saved.status, await saved.clone().text()).toBe(200);
+  const active = await saved.json();
+  expect(active).toMatchObject({
+    policy: 'login',
+    version: 2,
+    limit: regular,
+    emergency: { limit: 1, owner: 'otp-admin', reason, active: true },
+  });
+  expect(await consume('existing')).toMatchObject({ allowed: false, limit: 1 });
+  expect(await consume('fresh')).toMatchObject({ allowed: true, limit: 1 });
+  const rejected = await consume('fresh');
+  expect(rejected).toMatchObject({ allowed: false, limit: 1, remaining: 0 });
+  expect(rejected.resetMs).toBeGreaterThan(0);
+  expect(await store.incrementSecurity('login:failures:unchanged', 10, 900_000)).toMatchObject({
+    allowed: true,
+    limit: 10,
+  });
+
+  await pool.query(`UPDATE app_config SET value=jsonb_set(value, '{emergency,expiresAt}',
+      to_jsonb('2000-01-01T00:00:00.000Z'::text)) WHERE key='security_rate_limit:login'`);
+  const list = (await (await request(limitsPath, 'GET', undefined, adminHeaders)).json()) as {
+    policies: unknown[];
+  };
+  expect(list.policies).toContainEqual(
+    expect.objectContaining({
+      policy: 'login',
+      version: 2,
+      emergency: expect.objectContaining({ reason, active: false }),
+    })
+  );
+  expect(await consume('after-expiry')).toMatchObject({ allowed: true, limit: regular });
+  expect((await consume('existing')).remaining).toBe(0);
+  const clearReason = 'Completed the controlled exercise';
+  const cleared = await updateLimit({
+    policy: 'login',
+    limit: regular,
+    expectedVersion: 2,
+    emergency: { operation: 'clear', reason: clearReason },
+  });
+  expect(cleared.status, await cleared.clone().text()).toBe(200);
+  expect(await cleared.json()).toMatchObject({ version: 3, emergency: null });
+  const audit = (
+    await pool.query(`SELECT user_id,correlation_id,metadata::jsonb AS metadata
+    FROM audit_log WHERE metadata::jsonb->>'entity'='security_rate_limit:login'
+    ORDER BY (metadata::jsonb->'current'->>'version')::int`)
+  ).rows;
+  expect(audit).toHaveLength(3);
+  expect(audit[1]).toMatchObject({
+    user_id: 'otp-admin',
+    correlation_id: saved.headers.get('x-correlation-id'),
+    metadata: { emergencyOperation: 'set', current: active, stepUpVerified: true },
+  });
+  expect(audit[2]).toMatchObject({
+    metadata: {
+      emergencyOperation: 'clear',
+      reason: clearReason,
+      previous: { emergency: { owner: 'otp-admin', reason } },
+      current: { emergency: null },
+    },
+  });
+}, 20000);
+
+it('applies persisted thresholds to independent auth, finance, upload, order and AI scopes', async () => {
+  const pool = http.pool;
+  const store = new PostgresRateLimiterStore((sql, params) => pool.query(sql, params));
+  const examples = [
+    ['otpDestinationHour', 'otp:dest:controlled:3600s', 5, 3_600_000],
+    ['otpDestinationDay', 'otp:dest:controlled:86400s', 10, 86_400_000],
+    ['otpNetwork', 'otp:device:controlled:3600s', 20, 3_600_000],
+    ['otpResend', 'otp:resend:controlled:3600s', 3, 3_600_000],
+    ['otpVerify', 'otp:verify:ip:controlled', 5, 60_000],
+    ['passwordReset', 'password-reset:destination:controlled', 5, 3_600_000],
+    ['wallet', 'wallet:payment:profile:controlled', 10, 60_000],
+    ['fileUpload', 'upload:profile:controlled', 20, 60_000],
+    ['aiQuestion', 'ai:knowledge:user:controlled:profile:controlled', 5, 60_000],
+    ['aiTest', 'ai:test-chat:user:controlled', 10, 60_000],
+  ] as const;
+  for (const [policy, key, ceiling, window] of examples) {
+    const saved = await updateLimit({ policy, limit: 1, expectedVersion: 0, emergency: keep });
+    expect(saved.status, await saved.clone().text()).toBe(200);
+    expect(await store.incrementSecurity(key, ceiling, window)).toMatchObject({
+      allowed: true,
+      limit: 1,
+    });
+    expect(await store.incrementSecurity(key, ceiling, window)).toMatchObject({
+      allowed: false,
+      limit: 1,
+    });
+  }
+  expect(await store.incrementSecurity('otp:dest:controlled:60s', 1, 60_000)).toMatchObject({
+    allowed: true,
+    limit: 1,
+  });
+  expect(await store.incrementSecurity('wallet:payment:profile:other', 10, 60_000)).toMatchObject({
+    allowed: true,
+    limit: 1,
+  });
+  const saved = await updateLimit({
+    policy: 'orderSubmission',
+    limit: 2,
+    expectedVersion: 0,
+    emergency: keep,
+  });
+  expect(saved.status, await saved.clone().text()).toBe(200);
+  expect(
+    await queryEffectiveSecurityRateLimit(
+      (sql, params) => pool.query(sql, params),
+      'orderSubmission'
+    )
+  ).toBe(2);
+  await pool.query(
+    `UPDATE app_config SET value='{"limit":0,"emergency":null}' WHERE key='security_rate_limit:fileUpload'`
+  );
+  await expect(store.incrementSecurity('upload:profile:other', 20, 60_000)).rejects.toThrow();
+}, 25000);
 
 async function expectNoChange() {
   expect((await http.pool.query("SELECT value FROM app_config WHERE key='auth_otp'")).rows).toEqual(

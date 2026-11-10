@@ -9,6 +9,7 @@ import {
 import { getDbPool } from '@barghsa/db';
 import { telegramText } from '@barghsa/i18n/telegram';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import { PostgresRateLimiterStore } from '@barghsa/shared/rate-limit';
 import { AiStatelessKnowledgeService } from '../ai-agents/ai-stateless-knowledge.service.js';
 import { appendAiAudit } from '../ai-agents/ai-audit.js';
 import { redactAiText } from '../ai-agents/ai-prompt-redaction.js';
@@ -190,13 +191,14 @@ export class TelegramRuntimeService implements OnModuleInit, OnModuleDestroy {
       if (error instanceof HttpException) return { accepted: true, ignored: true };
       throw error;
     }
-    const quota = (
-      await getDbPool().query<{ count: number }>(
-        'SELECT count FROM rate_limit_rolling(true,$1,60000,5,true)',
-        ['telegram:admission:' + binding.user_id + ':' + binding.profile_id]
-      )
-    ).rows[0]!;
-    if (Number(quota.count) > 5) return { accepted: true, ignored: true };
+    const pool = getDbPool();
+    const rateLimits = new PostgresRateLimiterStore((sql, params) => pool.query(sql, params));
+    const quota = await rateLimits.incrementSecurity(
+      `telegram:admission:${binding.user_id}:${binding.profile_id}`,
+      5,
+      60_000
+    );
+    if (!quota.allowed) return { accepted: true, ignored: true };
     const message = redactAiText(update.text).text.slice(0, 1000);
     const queued = (
       await getDbPool().query<{ id: string; request_hash: string }>(
