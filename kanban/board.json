@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T04:15:57+00:00",
-  "source_commit": "e38887f428d4eb1ecb174d14a05fa8f46a55a72a",
+  "updated": "2026-11-10T04:22:18+00:00",
+  "source_commit": "6596c5b0b75ecaed68d53058b8fcec80c9951d77",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -6760,7 +6760,8 @@
           "release-0.6-session-credential-transport-and-authority",
           "release-0.6-notification-eligible-backlog-alerts",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-authorization-journal-format"
+          "release-0.6-authorization-journal-format",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "deployed_base_column_and_clock_verification",
@@ -6776,7 +6777,7 @@
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
-              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+              "sha256": "8c2307da697fd80aa7d9e70a1325b75a0d23583232961c4e8bee8ad44dc6a255"
             },
             {
               "path": "packages/db/src/base-table.ts",
@@ -7438,7 +7439,8 @@
           "packages/db/src/migrate.ts"
         ],
         "batches": [
-          "release-0.6-database-migration-baseline-and-upgrade"
+          "release-0.6-database-migration-baseline-and-upgrade",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -7454,7 +7456,7 @@
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
-              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+              "sha256": "8c2307da697fd80aa7d9e70a1325b75a0d23583232961c4e8bee8ad44dc6a255"
             }
           ],
           "checks": [
@@ -7637,7 +7639,8 @@
           "packages/db/src/migrate.ts"
         ],
         "batches": [
-          "release-0.6-database-pool-deadlines-and-log-privacy"
+          "release-0.6-database-pool-deadlines-and-log-privacy",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "current-source-and-targeted-database-receipts",
@@ -7645,7 +7648,7 @@
           "source_evidence": [
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
-              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+              "sha256": "8c2307da697fd80aa7d9e70a1325b75a0d23583232961c4e8bee8ad44dc6a255"
             },
             {
               "path": "docs/adr/001-base-column-exceptions.md",
@@ -11101,7 +11104,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -11157,7 +11161,7 @@
             },
             {
               "path": "docs/adr/002-redis-scope.md",
-              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+              "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
             },
             {
               "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
@@ -11258,7 +11262,8 @@
           "release-0.6-payment-idempotency-conflict-alert",
           "release-0.6-security-http-regressions-and-provider-tester-wiring",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-cache-and-wallet-proof",
@@ -11294,7 +11299,7 @@
             },
             {
               "path": "docs/adr/002-redis-scope.md",
-              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+              "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
             },
             {
               "path": "packages/shared/src/config-cache/config-cache.test.ts",
@@ -11359,7 +11364,8 @@
         },
         "changed_paths": [],
         "batches": [
-          "release-0.6-layered-rate-limits-and-diagnostic-privacy"
+          "release-0.6-layered-rate-limits-and-diagnostic-privacy",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -11367,7 +11373,7 @@
           "source_evidence": [
             {
               "path": "docs/adr/002-redis-scope.md",
-              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+              "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
             }
           ],
           "checks": [
@@ -13238,7 +13244,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -13250,7 +13257,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "AGENTS.md",
@@ -17669,7 +17676,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -17685,7 +17693,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "eslint.config.mjs",
@@ -17842,7 +17850,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -17883,7 +17892,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "eslint.config.mjs",
@@ -18125,12 +18134,10 @@
         "story": "01-platform-infrastructure.md#spec-60f7e95e69a7"
       },
       "requirement": "- **T-07.04.02:** Create initial ADRs\n  - **Notes:** `docs/adr/001-data-types-and-conventions.md` — UUIDv7, timestamptz, integer IRR, half-open ranges. `docs/adr/002-redis-scope.md` — optional, disposable, never source of truth. `docs/adr/003-modular-monolith-rationale.md` — why not microservices, extraction criteria. `docs/adr/004-deployment-topology.md` — pilot vs HA, vertical-first scaling. `docs/adr/005-test-database-policy.md` — real PostgreSQL only, no SQLite substitutes. `docs/adr/006-outbox-pattern.md` — transactional outbox instead of Kafka. Each ADR follows the template: Context, Decision, Alternatives, Consequences, Owner, Review trigger.\n  - **Dependencies:** None (documentation)\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18159,8 +18166,51 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-architecture-and-deployment-documentation"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "6596c5b0b75ecaed68d53058b8fcec80c9951d77",
+          "checks": [
+            "Preserved the existing data and Redis decisions and added their alternatives and review ownership. The four missing ADRs capture the current modular monolith, measured extraction, deployment topology, real PostgreSQL integration and durable outbox decisions.",
+            "Checked all six ADRs for the required sections and verified the referenced local sources."
+          ],
+          "source_evidence": [
+            {
+              "path": "README.md",
+              "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+            },
+            {
+              "path": "architecture.md",
+              "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+            },
+            {
+              "path": "docs/adr/001-data-types-and-conventions.md",
+              "sha256": "8c2307da697fd80aa7d9e70a1325b75a0d23583232961c4e8bee8ad44dc6a255"
+            },
+            {
+              "path": "docs/adr/002-redis-scope.md",
+              "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
+            },
+            {
+              "path": "docs/adr/003-modular-monolith-rationale.md",
+              "sha256": "e0be2e538d74c634a0d0434be042d2cad9c94abd40c1f89d1c88a21ae5484779"
+            },
+            {
+              "path": "docs/adr/004-deployment-topology.md",
+              "sha256": "483ec0c833f55b92c5ef13203a5954976898a055bc4b3c11c8da1fbc523a964e"
+            },
+            {
+              "path": "docs/adr/005-test-database-policy.md",
+              "sha256": "58fc04f2d189f32d0df7964dc391ca24f8961736ec9b5e72306b7bf17e03b0aa"
+            },
+            {
+              "path": "docs/adr/006-outbox-pattern.md",
+              "sha256": "ff88dd0d2c4f9d83d6cd044a04bf77c24bd09f8746d1b492acf522db85a9c8e8"
+            }
+          ]
+        }
       }
     },
     {
@@ -18174,12 +18224,10 @@
         "story": "01-platform-infrastructure.md#spec-60f7e95e69a7"
       },
       "requirement": "- **T-07.04.03:** Create deployment guide\n  - **Notes:** `docs/deployment.md`: Prerequisites, Environment variables reference (all vars with descriptions), Pilot topology deployment (step-by-step), Commercial HA deployment, Upgrade procedure (migration, rollout, health check), Rollback procedure (code and data), Configuration reference (reverse proxy settings, PostgreSQL tuning, Redis config, MinIO config), Monitoring setup (Grafana dashboards, alerts).\n  - **Dependencies:** T-05.01.01, T-05.02.01\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18208,8 +18256,59 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-architecture-and-deployment-documentation"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "6596c5b0b75ecaed68d53058b8fcec80c9951d77",
+          "checks": [
+            "The guide covers prerequisites, environment references, isolated pilot and staging deployment, commercial topology, upgrades, rollback, service configuration and monitoring.",
+            "Verified all 27 Compose interpolation names and 86 explicit runtime environment variable reads are covered by the guide or its annotated environment reference. Checked local links, anchors, shell syntax and formatting. This is guide evidence, with live topology and deployment gates tracked separately."
+          ],
+          "source_evidence": [
+            {
+              "path": ".env.example",
+              "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+            },
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+            },
+            {
+              "path": "deploy/staging/README.md",
+              "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+            },
+            {
+              "path": "docker-compose.prod.yml",
+              "sha256": "6692960392eed05f855b41b38befbd26b560662163056076fa3c0a4f56aaf03f"
+            },
+            {
+              "path": "docs/deployment.md",
+              "sha256": "d84a297b4f61aa4a41a0f23614594821daa998d24b2a18f8833b63bc1a8d59c3"
+            },
+            {
+              "path": "docs/operations/backup/postgresql-restore-runbook.md",
+              "sha256": "2847d70d254764dde8123bc4d132f8b0e809ac0e667282cea7f5e6c519799374"
+            },
+            {
+              "path": "docs/runbooks/bad-deployment.md",
+              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+            }
+          ]
+        }
       }
     },
     {
@@ -18523,12 +18622,10 @@
         "story": "01-platform-infrastructure.md#spec-5a483d9327c7"
       },
       "requirement": "- **T-07.05.04:** Document and gate module extraction criteria\n  - **Notes:** Create an ADR covering measured scaling/security/availability/deployment triggers, alternatives, consequences, owner, review trigger, and preservation of API, ownership, idempotency, audit, and observability. Add the extraction checklist to the PR template.\n  - **Dependencies:** T-07.04.02\n  - **Complexity:** S",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -18557,8 +18654,39 @@
         "changed_paths": [
           "audit/skipped-work-handoff.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-architecture-and-deployment-documentation"
+        ],
+        "current_acceptance": {
+          "kind": "implemented-and-verified",
+          "reviewed_sha": "6596c5b0b75ecaed68d53058b8fcec80c9951d77",
+          "checks": [
+            "Recorded measured scaling, security, availability and deployment triggers, alternatives, consequences, owners and review triggers. The review checklist verifies API, ownership, profile isolation, idempotency, audit, observability, rollout and recovery.",
+            "Used the approved direct-main workflow for the extraction checklist. The CI guide links to the checklist and requires source-bound evidence before the reviewed batch push. Link and content checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "README.md",
+              "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+            },
+            {
+              "path": "architecture.md",
+              "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+            },
+            {
+              "path": "docs/adr/003-modular-monolith-rationale.md",
+              "sha256": "e0be2e538d74c634a0d0434be042d2cad9c94abd40c1f89d1c88a21ae5484779"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
+            },
+            {
+              "path": "kanban/WORKFLOW.md",
+              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+            }
+          ]
+        }
       }
     },
     {
@@ -484129,7 +484257,8 @@
         "batches": [
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-reject-unknown-auth-command-fields",
-          "release-0.6-administrative-mutation-log-redaction"
+          "release-0.6-administrative-mutation-log-redaction",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -484181,7 +484310,7 @@
             },
             {
               "path": "docs/adr/002-redis-scope.md",
-              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+              "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
             },
             {
               "path": "packages/shared/src/rate-limit/types.ts",
@@ -484600,7 +484729,8 @@
           "release-0.6-authorization-journal-format",
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-administrative-mutation-log-redaction",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -484656,7 +484786,7 @@
             },
             {
               "path": "docs/adr/002-redis-scope.md",
-              "sha256": "046dea0a96b6df1efae72af1ef2e58fa01898935307ffffc922ff03fcbbc0698"
+              "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
             },
             {
               "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
@@ -488676,7 +488806,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -488684,7 +488815,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "vitest.config.ts",
@@ -489468,7 +489599,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -489476,7 +489608,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -489540,7 +489672,8 @@
           "release-0.6-backend-test-fixture-reconciliation",
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -489548,7 +489681,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -489615,7 +489748,8 @@
         "batches": [
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -489647,7 +489781,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -490542,7 +490676,8 @@
         "batches": [
           "release-0.6-loopback-provider-protocol-fixtures",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -490574,7 +490709,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -724750,7 +724885,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725114,7 +725250,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -725400,7 +725536,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -725764,7 +725901,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -726050,7 +726187,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -726414,7 +726552,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -726701,7 +726839,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727065,7 +727204,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -727351,7 +727490,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -727715,7 +727855,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -728001,7 +728141,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -728365,7 +728506,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -728651,7 +728792,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729015,7 +729157,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -729302,7 +729444,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -729666,7 +729809,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -729952,7 +730095,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730316,7 +730460,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -730602,7 +730746,8 @@
           "release-0.6-staff-and-inbox-browser-verification",
           "release-0.6-administrative-mutation-log-redaction",
           "release-0.6-isolated-compose-test-postgres",
-          "release-0.6-shared-lint-and-git-hooks"
+          "release-0.6-shared-lint-and-git-hooks",
+          "release-0.6-architecture-and-deployment-documentation"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -730966,7 +731111,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2921f74afc572aa99b2d1048434a76313a3957a79cb0933e735a04b97fbe56ce"
+              "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -760036,7 +760181,7 @@
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
-              "sha256": "51dfaed7c88b0e07d748b39af6581d85c0d0ae28a4b1137c66c358466900795e"
+              "sha256": "8c2307da697fd80aa7d9e70a1325b75a0d23583232961c4e8bee8ad44dc6a255"
             },
             {
               "path": "docs/adr/001-base-column-exceptions.md",
@@ -760086,7 +760231,8 @@
           "release-0.6-alpine-node-runtime-candidate",
           "release-0.6-combined-runtime-image-candidate",
           "release-0.6-packaged-production-seed",
-          "release-0.6-container-runtime-hardening"
+          "release-0.6-container-runtime-hardening",
+          "release-0.6-architecture-and-deployment-documentation"
         ]
       }
     },
@@ -861880,6 +862026,118 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/git-hook-toolchain",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "12233901f3e3549c6ff5369cab7a0de027acc4574f30e28902347fa69b0a48ba"
+    },
+    "release-0.6-architecture-and-deployment-documentation": {
+      "batch": "release-0.6-architecture-and-deployment-documentation",
+      "base_commit": "6596c5b0b75ecaed68d53058b8fcec80c9951d77",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.04.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.04"
+      ],
+      "changed_paths": [
+        "docs/adr/001-data-types-and-conventions.md",
+        "docs/adr/002-redis-scope.md",
+        "docs/adr/003-modular-monolith-rationale.md",
+        "docs/adr/004-deployment-topology.md",
+        "docs/adr/005-test-database-policy.md",
+        "docs/adr/006-outbox-pattern.md",
+        "docs/deployment.md",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "596f78ae3d2a24f7834fcbb46e315011011ccc47b087e25b58e14933e9e0b239"
+        },
+        {
+          "path": "README.md",
+          "sha256": "ea3994d7966764d9cf70d693eb3a69aded9850e39beddbeaf745cfc90022bcc3"
+        },
+        {
+          "path": "architecture.md",
+          "sha256": "cbcd79a588d4abc2e4e65760058504bc6619fba4cdd00e76db457ec0e9e0c7e2"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "69bab0b440cf51e592b8a3b61e3e3a661d0cf161bb4826dfdc15956fa8b81b03"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "a309a4778f463ea8d8dc5c3b36fdb439546dc0854b04a975a21e544466338eea"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "5e2d57359df082a0e58c92af947ccf451c4dfa25727477ec67c58ea40bacf58f"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "c748a7f2e6aa70752770b6d2ff704e640ccf404ab27f27f0e2f362d68dd8ca34"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "6692960392eed05f855b41b38befbd26b560662163056076fa3c0a4f56aaf03f"
+        },
+        {
+          "path": "docs/adr/001-data-types-and-conventions.md",
+          "sha256": "8c2307da697fd80aa7d9e70a1325b75a0d23583232961c4e8bee8ad44dc6a255"
+        },
+        {
+          "path": "docs/adr/002-redis-scope.md",
+          "sha256": "95d2d4d5b84577c7635da4c369348849e626120b42ce1d6a3b488a69de53939a"
+        },
+        {
+          "path": "docs/adr/003-modular-monolith-rationale.md",
+          "sha256": "e0be2e538d74c634a0d0434be042d2cad9c94abd40c1f89d1c88a21ae5484779"
+        },
+        {
+          "path": "docs/adr/004-deployment-topology.md",
+          "sha256": "483ec0c833f55b92c5ef13203a5954976898a055bc4b3c11c8da1fbc523a964e"
+        },
+        {
+          "path": "docs/adr/005-test-database-policy.md",
+          "sha256": "58fc04f2d189f32d0df7964dc391ca24f8961736ec9b5e72306b7bf17e03b0aa"
+        },
+        {
+          "path": "docs/adr/006-outbox-pattern.md",
+          "sha256": "ff88dd0d2c4f9d83d6cd044a04bf77c24bd09f8746d1b492acf522db85a9c8e8"
+        },
+        {
+          "path": "docs/deployment.md",
+          "sha256": "d84a297b4f61aa4a41a0f23614594821daa998d24b2a18f8833b63bc1a8d59c3"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "5e80095811ea8c5ab54f6af21b72f61c05c50116ffa262a33500558092e26de2"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "2847d70d254764dde8123bc4d132f8b0e809ac0e667282cea7f5e6c519799374"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+        }
+      ],
+      "checks": [
+        "Preserved the existing data and Redis decisions and added their alternatives and review ownership. The four missing ADRs capture the current modular monolith, measured extraction, deployment topology, real PostgreSQL integration and durable outbox decisions.",
+        "Checked all six ADRs for the required sections and verified the referenced local sources.",
+        "The guide covers prerequisites, environment references, isolated pilot and staging deployment, commercial topology, upgrades, rollback, service configuration and monitoring.",
+        "Verified all 27 Compose interpolation names and 86 explicit runtime environment variable reads are covered by the guide or its annotated environment reference. Checked local links, anchors, shell syntax and formatting. This is guide evidence, with live topology and deployment gates tracked separately.",
+        "Recorded measured scaling, security, availability and deployment triggers, alternatives, consequences, owners and review triggers. The review checklist verifies API, ownership, profile isolation, idempotency, audit, observability, rollout and recovery.",
+        "Used the approved direct-main workflow for the extraction checklist. The CI guide links to the checklist and requires source-bound evidence before the reviewed batch push. Link and content checks passed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/architecture-deployment-docs",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "78cc472e3061bf6c75bb27b89be40d7aa0e43498f66973647a3c70fdcec5e7d6"
     }
   },
   "historical_improvements": [

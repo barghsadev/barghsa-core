@@ -1,0 +1,119 @@
+# Deployment guide
+
+## Prerequisites
+
+Use a Docker and Compose host with protected configuration, verified TLS,
+private database and object storage, and working health probes. Confirm the
+backup destination and rehearse a restore before using durable data. Record
+the accepted source commit, exact image IDs, registry digests, security
+reports and release metadata. [Production prerequisites](../deploy/production/README.md).
+
+## Environment and service configuration
+
+Use the annotated environment template for the application variables and the
+selected Compose file for deployment-only variables. Keep runtime, migration
+and initial administrator bootstrap configuration in separate protected
+files. Use the bootstrap credentials only for initial provisioning.
+[Environment variables](../.env.example) · [Production Compose](../deploy/production/compose.yml).
+
+| Deployment variables                                                                       | Purpose                                                                                                                      |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| `BARGHSA_APP_REPOSITORY`, `BARGHSA_WEB_REPOSITORY`, `BARGHSA_CLAMAV_REPOSITORY`            | Registry repositories for the production app, web and scanner images.                                                        |
+| `BARGHSA_APP_DIGEST`, `BARGHSA_WEB_DIGEST`, `BARGHSA_CLAMAV_DIGEST`                        | Verified registry digests for those images, with the `sha256:` prefix omitted.                                               |
+| `BARGHSA_APP_IMAGE`, `BARGHSA_WEB_IMAGE`, `BARGHSA_CLAMAV_IMAGE`, `BARGHSA_POSTGRES_IMAGE` | Exact image references used by the staging release worker. The worker loads them on the host before starting the services.   |
+| `BARGHSA_RUNTIME_ENV_FILE`, `BARGHSA_MIGRATION_ENV_FILE`                                   | Protected paths for application runtime configuration and the separate migration principal.                                  |
+| `BARGHSA_DATABASE_CA_FILE`                                                                 | CA bundle for the database and pooler TLS certificates.                                                                      |
+| `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD`                                        | Staging PostgreSQL database and protected credentials. Keep the configured identities aligned with the initialized database. |
+| `BARGHSA_PROXY_IPS`                                                                        | Staging proxy addresses trusted by the API. Use the addresses of its actual proxy peers.                                     |
+| `BARGHSA_WEB_CSP_MODE`                                                                     | Browser CSP rollout mode. Use `report-only` through the observation window and `enforce` after the required review.          |
+
+| Service                             | Configuration reference                                                                                                                                                       |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Reverse proxy                       | [Pilot TLS proxy](../deploy/pilot/README.md) and [staging routing, TLS and smoke procedure](../deploy/staging/README.md).                                                     |
+| PostgreSQL and pooler               | [Connection pooling](adr/002-connection-pooling.md), [database TLS and host boundaries](adr/003-hybrid-deployment.md), and [staging tuning](../deploy/staging/postgres.conf). |
+| Redis                               | [Cache, quota and fallback policy](adr/002-redis-scope.md) and [local configuration](../docker-compose.yml).                                                                  |
+| MinIO or private S3                 | [Local bucket initialization](../docker-compose.yml) and [provider, credentials and object controls](operations/storage-configuration.md).                                    |
+| PostgreSQL and configuration backup | [Database restore](operations/backup/postgresql-restore-runbook.md) and [off-host configuration recovery](operations/backup/config-restore-runbook.md).                       |
+
+### Runtime overrides
+
+| Runtime overrides                                                                                                       | Purpose                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `DB_POOL_MIN`, `DB_POOL_MAX`, `DB_CONNECTION_TIMEOUT`                                                                   | Default connection pool bounds and connection timeout in milliseconds.                                                                                 |
+| `EXPECTED_MIGRATION_ID`                                                                                                 | Last migration tag expected from the exact candidate journal.                                                                                          |
+| `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`                                                                            | Host, port and protected password for the API's Redis host-based configuration.                                                                        |
+| `S3_PRIVATE_ENDPOINT`, `S3_PUBLIC_ENDPOINT`                                                                             | Internal object store endpoint and public endpoint used for signed object access.                                                                      |
+| `HOST`, `SHUTDOWN_GRACE_PERIOD_MS`, `WEB_CSP_MODE`                                                                      | Standalone web bind address, graceful shutdown budget and effective CSP mode.                                                                          |
+| `AI_INFERENCE_HOST`, `AI_INFERENCE_PORT`                                                                                | Private listener address and port for the separate inference process.                                                                                  |
+| `CUSTOMER_TELEGRAM_BOT_TOKEN`, `CUSTOMER_TELEGRAM_TRANSPORT`, `CUSTOMER_TELEGRAM_WEBHOOK_SECRET`                        | Protected customer bot credential, transport selection and inbound webhook authentication. [Telegram host configuration](operations/telegram-host.md). |
+| `OPS_ALERT_WEBHOOK_SECRET`, `OPS_ALERT_ENVIRONMENT`, `OPS_ALERT_DATABASE`, `OPS_ALERT_PORT`                             | Protected operations receiver credential, accepted environment and database labels, and private listener port.                                         |
+| `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT`, `OTEL_SERVICE_NAME`, `OTEL_METRIC_EXPORT_INTERVAL`, `OTEL_METRIC_EXPORT_TIMEOUT` | OTLP metric collector, service label, export interval and timeout. Intervals and timeouts use milliseconds.                                            |
+| `OUTBOX_POLL_MS`, `INVITATION_EXPIRY_SCAN_MS`, `WALLET_RECONCILIATION_SCAN_MS`                                          | Worker polling intervals for the outbox, invitation expiry and wallet reconciliation in milliseconds.                                                  |
+| `INVOICE_OVERDUE_SCAN_MS`, `INVOICE_REMINDER_SCHEDULE_MS`, `INVOICE_REMINDER_SEND_MS`                                   | Invoice overdue, reminder scheduling and reminder sending intervals in milliseconds.                                                                   |
+| `SERVICE_BREACH_SCAN_MS`, `SERVICE_ESCALATION_SCAN_MS`                                                                  | Service target breach and escalation scan intervals in milliseconds.                                                                                   |
+| `SAVING_BILL_VERIFICATION_URL`, `SAVING_BILL_VERIFICATION_TOKEN`                                                        | Saving bill verifier endpoint and protected credential.                                                                                                |
+| `SMSIR_API_BASE`                                                                                                        | SMS.ir base URL used by the worker's credit monitor.                                                                                                   |
+| `STEP_UP_WINDOW_MS`                                                                                                     | Freshness window for step-up authorization in milliseconds.                                                                                            |
+| `ENABLE_VERIFICATION_STUB`, `TEST_SEND_ALLOWLIST`                                                                       | Explicit development and test overrides for the verification stub and authorized notification test destinations.                                       |
+
+## Pilot and staging
+
+1. Prepare the isolated pilot host, protected environment, valid certificate
+   chain and private storage. Use the Compose overlay for the isolated pilot
+   rehearsal. Resolve its variables with `docker compose config --quiet`
+   before starting any services. [Pilot overlay](../docker-compose.prod.yml).
+
+   ```sh
+   export BARGHSA_RUNTIME_ENV_FILE=/protected/pilot.env
+   docker compose --env-file "$BARGHSA_RUNTIME_ENV_FILE" \
+     -f docker-compose.yml -f docker-compose.prod.yml config --quiet
+   docker compose --env-file "$BARGHSA_RUNTIME_ENV_FILE" \
+     -f docker-compose.yml -f docker-compose.prod.yml up -d
+   ```
+
+2. Install the pilot TLS proxy with the selected hostnames and certificate
+   paths. Validate its configuration before reload. Confirm that private
+   services stay behind the application and storage access boundaries.
+   [Pilot proxy instructions](../deploy/pilot/README.md).
+3. For Barghsa staging, verify the accepted release SHA on `main` and enqueue
+   the immutable release worker. Check its health, deployed metadata and
+   Persian notification receipt for the same SHA. [Staging release worker](../deploy/staging/README.md#release).
+
+## Commercial high availability
+
+Use two failure domains, stateless API and web replicas behind a managed load
+balancer, redundant workers and managed PostgreSQL with the required recovery
+path. Verify hostname and certificate validation for both database hops.
+Rehearse migration, startup failure, readiness, failover and restore using the
+pinned production manifest and an isolated environment. Obtain explicit owner
+authorization before production promotion. [Topology decision](adr/004-deployment-topology.md) · [Production rehearsal](../deploy/production/README.md).
+
+## Upgrade
+
+1. Verify the current backup, migration compatibility and candidate digests.
+   Record the current images and configuration as the rollback point.
+2. Apply the candidate migrations using the separate migration principal and
+   the candidate's packaged migration runner. Confirm the expected migration
+   tag before starting its application services.
+3. Check readiness, liveness and release metadata, then use the approved
+   rollout and traffic controls. Compare errors, latency and reconciliation
+   with the pre-deploy baseline before increasing traffic.
+
+See the exact staging and hybrid procedures for command order and receipts.
+[Staging deployment](../deploy/staging/README.md) · [Production migration and probes](../deploy/production/README.md).
+
+## Rollback
+
+Use the last verified image digests and configuration. Check compatibility
+with the current schema before returning traffic. If committed writes need
+recovery, isolate and restore from the verified backup or WAL target and
+reconcile the affected ledgers, records and outbox before resuming service.
+[Application, configuration and data rollback](runbooks/bad-deployment.md) · [Database restore](runbooks/database-restore.md).
+
+## Monitoring and release readback
+
+Configure Prometheus scrapes, Alertmanager routing and the relevant Grafana
+views. Verify availability, latency, database and pooler health, backlog age,
+delivery failure and payment reconciliation. Exercise the alert and recovery
+paths and retain the actual routing receipt. Keep deployment identity in the
+post-deploy comparison. [Monitoring configuration](../deploy/monitoring/staging-compose.yml) · [Notification dashboard](../deploy/monitoring/grafana-notifications-dashboard.json) · [Service objectives](operations/service-objectives.md) · [Incident response](operations/incident-response.md).

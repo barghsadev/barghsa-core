@@ -46,6 +46,12 @@ Every cached value and counter window has a defined TTL, an invalidation strateg
 
 ---
 
+## Alternatives
+
+Keeping authoritative state in Redis would require cross-store consistency
+and recovery before normal operation could resume. Using only PostgreSQL
+would simplify failure modes but remove cache and early admission relief.
+
 ## Consequences
 
 ### Positive
@@ -84,6 +90,11 @@ The configuration-cache namespace change itself requires no database migration. 
 - [x] Config cache uses version-gated staleness — TTL alone is insufficient for financial correctness.
 
 ---
+
+## Owner and review trigger
+
+Platform Engineering owns this boundary. Review it when a new feature needs
+Redis for correctness or PostgreSQL fallback exceeds its service budget.
 
 ## Related
 

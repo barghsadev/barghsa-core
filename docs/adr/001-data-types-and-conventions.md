@@ -106,6 +106,13 @@ The [approved exception inventory](001-base-column-exceptions.md) records each a
 - **Camel case** in TypeScript Drizzle schema definitions: `createdAt`, `updatedAt`, `validityPeriod`, `customerId`.
 - Mapping is handled by Drizzle's first argument to each column builder (the database column name).
 
+## Alternatives
+
+Random identifiers make index insertion less predictable. Local timestamps
+make boundary calculations dependent on the server time zone. Floating-point
+amounts introduce rounding error in financial and contractual records. A
+closed upper bound makes adjacent validity windows overlap at their boundary.
+
 ## Consequences
 
 **Positive:**
@@ -123,6 +130,11 @@ The [approved exception inventory](001-base-column-exceptions.md) records each a
 - UUIDv7 primary keys are larger than `serial`/`bigserial` (16 bytes vs 4/8 bytes), increasing index size slightly.
 - `numeric(20, 6)` returns strings in JavaScript, requiring conversion before arithmetic operations.
 - Migration `0133_database_updated_at` installs `modify_updated_at()` on current application tables missing timestamp-trigger coverage. Existing domain-specific triggers remain unchanged. New mutable tables must attach this trigger in their own migration. The trigger stamps row updates with the database clock when the timestamp is unchanged; explicit writer timestamps remain authoritative. It does not backfill existing rows.
+
+## Owner and review trigger
+
+Platform Engineering owns the data conventions. Review this decision before
+changing identifier generation, precision, currency storage or range semantics.
 
 ## Compliance
 

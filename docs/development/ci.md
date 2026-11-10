@@ -8,6 +8,10 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 Nightly jobs are separate from the integrity check. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
+Use the [service extraction review](../adr/003-modular-monolith-rationale.md#extraction-review-before-pushing-to-main)
+for changes that move a module into a separate service. Record its evidence
+with the reviewed batch before the direct push to `main`.
+
 ## Local Git checks
 
 The root ESLint flat configuration delegates to the shared TypeScript, Node and
