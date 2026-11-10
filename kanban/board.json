@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:27:36+00:00",
-  "source_commit": "38d94792eed1db08ff63df4f182b925b6bfda432",
+  "updated": "2026-11-10T06:32:19+00:00",
+  "source_commit": "67029641e48a0c68feb184f24d609e1513c7b615",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -493234,19 +493234,53 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.06 | Write RTL tests for electricity order wizards: simple order, advanced order, green rule disclosure, price review | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-electricity-and-finance-rendered-ui-tests"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rendered-ui-journey-tests",
+          "reviewed_sha": "67029641e48a0c68feb184f24d609e1513c7b615",
+          "checks": [
+            "The rendered simple and advanced electricity wizard suites cover manual and saved quantities, mandatory green constraints, the server quote, profile-scoped delivery addresses and the review before submission in both languages.",
+            "The same suites assert safe retry and captured review authority. All 68 cases passed in hosted run 42759736897 job 129642496352. Web application and test source, shared dependencies and lockfile match the hosted revision.",
+            "These task checks use the repository’s existing rendered React DOM and Vitest harness. The separate library and shared fixture configuration task remains independently tracked."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
+            },
+            {
+              "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+              "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+            },
+            {
+              "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+              "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
+            },
+            {
+              "path": "apps/web/src/pages/electricity-order.test.tsx",
+              "sha256": "e435432a56fd939fb62babefd8ca25cc555ff9bab75df4802dcafb6101cc9de7"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -493260,19 +493294,93 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.07 | Write RTL tests for wallet/invoice/payment pages: balance display, top-up, invoice payment, refund view | L |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-electricity-and-finance-rendered-ui-tests"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-rendered-ui-journey-tests",
+          "reviewed_sha": "67029641e48a0c68feb184f24d609e1513c7b615",
+          "checks": [
+            "Rendered tests cover scoped wallet balance, online and bank-receipt top-up, the zero limit and unsafe gateway redirects, exact invoice payment and review boundaries, and English/Persian payment and refund activity including every refund state.",
+            "The wallet and invoice flow tests preserve authority during profile changes and retain financial review state on recoverable failures. All 155 selected cases passed in hosted run 42759736897 job 129642496352 on matching web application, test and dependency source.",
+            "These task checks use the repository’s existing rendered React DOM and Vitest harness. The separate library and shared fixture configuration task remains independently tracked."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
+              "sha256": "6d4bce981b76dfd3becca39d835afb39869d3fee30ac7008ed75f63a27c4d9b6"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.test.tsx",
+              "sha256": "477fe32a017f822543cb70f605af674f8fbdea9e44ccdfa7e46db40bd9adf123"
+            },
+            {
+              "path": "apps/web/src/components/RefundPanel.tsx",
+              "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
+            },
+            {
+              "path": "apps/web/src/components/WalletFundingPrompt.test.tsx",
+              "sha256": "6518dc82f4d9d0f2b6a2c4c60ea12d6bfccf361970f581a69e7aacb7608b26a3"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+            },
+            {
+              "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
+              "sha256": "888ff321ceaa4f77439d4045bc3cffce69c4061f9e57bada608d75e0124e39b8"
+            },
+            {
+              "path": "apps/web/src/components/service-financial-query.test.tsx",
+              "sha256": "1fc1bc97b0dddf7f7c02b4198f9d19ec604f99a92ea19fca87f43ecc6c6cb9cf"
+            },
+            {
+              "path": "apps/web/src/hooks/useOwnedInvoiceReview.test.tsx",
+              "sha256": "cfc99481975c2d26fbb7425bd32bdb5dcb3ee3767d5d5743e4b53b94dadef616"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+              "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
+            },
+            {
+              "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+              "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+            },
+            {
+              "path": "apps/web/src/pages/InvoicesPage.test.tsx",
+              "sha256": "084ee7af0ba260d98ba6d6008b3a9b7408a9da9e911d01dd21e3988f106fd462"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "f075664a91d886de230f7f3aa3fe3006631cd2f5c336594c115dee3b557f692a"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -869241,6 +869349,106 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-diagnostic-privacy",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "8f6e3f601f540d36be379a7a3dee47a7b1cc04906e7be0997c2f888d4fa50569"
+    },
+    "release-0.6-electricity-and-finance-rendered-ui-tests": {
+      "batch": "release-0.6-electricity-and-finance-rendered-ui-tests",
+      "base_commit": "67029641e48a0c68feb184f24d609e1513c7b615",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.06",
+        "06-security-testing-observability.md#T-06.09.03.07"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "apps/web/src/components/InvoicePaymentSummary.test.tsx",
+          "sha256": "6d4bce981b76dfd3becca39d835afb39869d3fee30ac7008ed75f63a27c4d9b6"
+        },
+        {
+          "path": "apps/web/src/components/RefundPanel.test.tsx",
+          "sha256": "477fe32a017f822543cb70f605af674f8fbdea9e44ccdfa7e46db40bd9adf123"
+        },
+        {
+          "path": "apps/web/src/components/RefundPanel.tsx",
+          "sha256": "9aabbd58b1856c9c76e318a152787307ccbcced48ed92ac91d6e254ce7bb2808"
+        },
+        {
+          "path": "apps/web/src/components/WalletFundingPrompt.test.tsx",
+          "sha256": "6518dc82f4d9d0f2b6a2c4c60ea12d6bfccf361970f581a69e7aacb7608b26a3"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "2ba8f922bd7af1d9b6c91c1931a1fcdb2b7c022f1159c8deac44b021f9468465"
+        },
+        {
+          "path": "apps/web/src/components/WalletPaymentReviewSummary.test.tsx",
+          "sha256": "888ff321ceaa4f77439d4045bc3cffce69c4061f9e57bada608d75e0124e39b8"
+        },
+        {
+          "path": "apps/web/src/components/service-financial-query.test.tsx",
+          "sha256": "1fc1bc97b0dddf7f7c02b4198f9d19ec604f99a92ea19fca87f43ecc6c6cb9cf"
+        },
+        {
+          "path": "apps/web/src/hooks/useOwnedInvoiceReview.test.tsx",
+          "sha256": "cfc99481975c2d26fbb7425bd32bdb5dcb3ee3767d5d5743e4b53b94dadef616"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "9d99b05ce8b3c75f9835b044c50627b1cb17c35949c2bfaecf5d65c562911959"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.test.tsx",
+          "sha256": "51ab0fc03ba229a4783699eba53ac1ebf48762370aeadee9f5ce37e1c091e610"
+        },
+        {
+          "path": "apps/web/src/pages/InvoiceDetailsPage.tsx",
+          "sha256": "98ac0194357d870547c1abc3a340f3ac1a49b90e22cac09ed5fb4ceee2ad543e"
+        },
+        {
+          "path": "apps/web/src/pages/InvoicesPage.test.tsx",
+          "sha256": "084ee7af0ba260d98ba6d6008b3a9b7408a9da9e911d01dd21e3988f106fd462"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "092529a37d2178621babb556d9677d4f0f7497f94ba6d81210b11a45ec61ee48"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+          "sha256": "f075664a91d886de230f7f3aa3fe3006631cd2f5c336594c115dee3b557f692a"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.test.tsx",
+          "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/pages/advanced-electricity-order.test.tsx",
+          "sha256": "6c3c47fa30bd67140149699cc4b4229a840a675885852331320e5e9655de9439"
+        },
+        {
+          "path": "apps/web/src/pages/electricity-order.test.tsx",
+          "sha256": "e435432a56fd939fb62babefd8ca25cc555ff9bab75df4802dcafb6101cc9de7"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+        }
+      ],
+      "checks": [
+        "The rendered simple and advanced electricity wizard suites cover manual and saved quantities, mandatory green constraints, the server quote, profile-scoped delivery addresses and the review before submission in both languages.",
+        "The same suites assert safe retry and captured review authority. All 68 cases passed in hosted run 42759736897 job 129642496352. Web application and test source, shared dependencies and lockfile match the hosted revision.",
+        "Rendered tests cover scoped wallet balance, online and bank-receipt top-up, the zero limit and unsafe gateway redirects, exact invoice payment and review boundaries, and English/Persian payment and refund activity including every refund state.",
+        "The wallet and invoice flow tests preserve authority during profile changes and retain financial review state on recoverable failures. All 155 selected cases passed in hosted run 42759736897 job 129642496352 on matching web application, test and dependency source."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rtl-journey-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "d6a58e906351d914ab66b87e5357be1db2e0861e86013bf1e6259710776a75be"
     }
   },
   "historical_improvements": [
