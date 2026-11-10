@@ -1,7 +1,7 @@
-import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
+import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { renderAuthForm } from '../test/render-auth-form.js';
 import { Route as LoginRoute } from './login.js';
 import { loginFormText } from '@barghsa/i18n/login-forms';
 import { t } from '@barghsa/i18n/auth';
@@ -27,7 +27,7 @@ vi.mock('../lib/public-auth-fetch.js', () => ({
 }));
 vi.mock('../lib/toast-api.js', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 vi.mock('../lib/auth-entry-feedback.js', () => ({ rememberAuthSuccess: vi.fn() }));
-let root: Root, host: HTMLDivElement;
+let view: ReturnType<typeof renderAuthForm>, host: HTMLDivElement;
 const id = '00000000-0000-4000-8000-000000000001';
 const rawCredential = [' short legacy ', 'input '].join('');
 const rawNewPassword = [' Raw synthetic value ', '12A '].join('');
@@ -44,10 +44,9 @@ beforeEach(() => {
   routing.navigate.mockClear();
   host = document.createElement('div');
   document.body.append(host);
-  root = createRoot(host);
 });
 afterEach(async () => {
-  await act(async () => root.unmount());
+  await act(async () => cleanup());
   host.remove();
   vi.unstubAllGlobals();
   document.documentElement.lang = 'fa';
@@ -80,7 +79,9 @@ function fixture() {
 }
 async function mount() {
   const Page = LoginRoute.options.component as ComponentType;
-  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
+  await act(async () => {
+    view = renderAuthForm(<Page />, host);
+  });
 }
 async function fill(selector: string, value: string, blur = false) {
   const input = host.querySelector<HTMLInputElement>(selector)!;
@@ -123,6 +124,24 @@ function held<T>() {
   });
   return { promise, resolve };
 }
+it.each([
+  ['fa', 'rtl'],
+  ['en', 'ltr'],
+] as const)('names the login fields and uses the %s form direction', async (locale, direction) => {
+  document.documentElement.lang = locale;
+  const state = fixture();
+  await mount();
+  const destination = view.getByLabelText(t('auth.register.emailLabel', locale), {
+    selector: 'input',
+  });
+  expect(destination.closest('form')?.closest('[dir]')?.getAttribute('dir')).toBe(direction);
+  expect(destination.getAttribute('dir')).toBe('ltr');
+  expect(view.getByLabelText(t('auth.register.passwordLabel', locale), { selector: 'input' })).toBe(
+    host.querySelector('#password')
+  );
+  expect(state.writes).toEqual([]);
+});
+
 it('links and focuses invalid credentials before I/O', async () => {
   const state = fixture();
   await mount();
@@ -364,7 +383,7 @@ it('ignores credential results after unmount', async () => {
   await mount();
   await credentials();
   await submit();
-  await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+  await act(async () => view.rerender(<></>));
   await act(async () => pending.resolve(Response.json(session)));
   expect(routing.navigate).not.toHaveBeenCalled();
 });
@@ -421,7 +440,7 @@ it('cancels its owned OTP expiry redirect when the page unmounts', async () => {
     state.override = () => Response.json({ error: 'AUTH:OTP:EXPIRED' }, { status: 401 });
     await fill('input[inputmode="numeric"]', '123456');
     await submit();
-    await act(async () => root.render(<QueryProvider>{null}</QueryProvider>));
+    await act(async () => view.rerender(<></>));
     await act(async () => vi.advanceTimersByTimeAsync(500));
     expect(host.textContent).toBe('');
     expect(routing.navigate).not.toHaveBeenCalled();

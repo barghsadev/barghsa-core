@@ -1,7 +1,7 @@
-import { QueryProvider } from '../test/query-provider.js';
 import { act, type ComponentType } from 'react';
-import { createRoot, type Root } from 'react-dom/client';
+import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { renderAuthForm } from '../test/render-auth-form.js';
 import { Route as RegisterRoute } from './register/index.js';
 import { Route as VerifyRoute } from './register/verify.js';
 import { registrationFormText } from '@barghsa/i18n/registration-forms';
@@ -28,7 +28,7 @@ vi.mock('../lib/public-auth-fetch.js', () => ({
 }));
 vi.mock('../lib/toast-api.js', () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 vi.mock('../lib/auth-entry-feedback.js', () => ({ rememberAuthSuccess: vi.fn() }));
-let root: Root, host: HTMLDivElement;
+let view: ReturnType<typeof renderAuthForm>, host: HTMLDivElement;
 const id = '00000000-0000-4000-8000-000000000001';
 const rawPasswordDraft = [' Raw synthetic value ', '12A '].join('');
 const terms = {
@@ -45,10 +45,9 @@ beforeEach(() => {
   routing.search = { challengeId: id, destination: 'd***@example.test' };
   host = document.createElement('div');
   document.body.append(host);
-  root = createRoot(host);
 });
 afterEach(async () => {
-  await act(async () => root.unmount());
+  await act(async () => cleanup());
   host.remove();
   vi.unstubAllGlobals();
   document.documentElement.lang = 'fa';
@@ -85,7 +84,9 @@ function fixture() {
 }
 async function mount(verify = false) {
   const Page = (verify ? VerifyRoute : RegisterRoute).options.component as ComponentType;
-  await act(async () => root.render(<QueryProvider>{<Page />}</QueryProvider>));
+  await act(async () => {
+    view = renderAuthForm(<Page />, host);
+  });
 }
 async function fill(selector: string, value: string, blur = false) {
   const input = host.querySelector<HTMLInputElement>(selector)!;
@@ -116,6 +117,30 @@ function held<T>() {
   });
   return { promise, resolve };
 }
+it.each([
+  ['fa', 'rtl'],
+  ['en', 'ltr'],
+] as const)(
+  'names the registration fields and uses the %s form direction',
+  async (locale, direction) => {
+    document.documentElement.lang = locale;
+    const state = fixture();
+    await mount();
+    const destination = view.getByLabelText(t('auth.register.emailLabel', locale), {
+      selector: 'input',
+    });
+    expect(destination.closest('form')?.closest('[dir]')?.getAttribute('dir')).toBe(direction);
+    expect(
+      view.queryByLabelText(t('auth.register.passwordLabel', locale), { selector: 'input' })
+    ).toBeNull();
+    await fill('#username', 'Draft@Example.test', true);
+    expect(
+      view.getByLabelText(t('auth.register.passwordLabel', locale), { selector: 'input' })
+    ).toBe(host.querySelector('#password'));
+    expect(state.writes).toEqual([]);
+  }
+);
+
 it('validates destination without I/O and links/focuses the native field', async () => {
   const state = fixture();
   await mount();
@@ -300,7 +325,7 @@ it('fences an unmounted pending registration callback', async () => {
   await draft();
   state.override = () => pending.promise;
   await submit();
-  await act(async () => root.render(<QueryProvider>{<p>Another page</p>}</QueryProvider>));
+  await act(async () => view.rerender(<p>Another page</p>));
   await act(async () => pending.resolve(Response.json({ challengeId: id })));
   expect(routing.navigate).not.toHaveBeenCalled();
   expect(host.textContent).toBe('Another page');
