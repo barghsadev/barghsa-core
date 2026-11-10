@@ -304,6 +304,7 @@ for (const locale of ['en', 'fa'] as const) {
     await page.getByRole('button', { name: loginFormText('restart', locale), exact: true }).click();
     await page.locator('#password').fill('Browser-password-123!');
     await page.locator('button[type="submit"]').click();
+    await expect(page.locator('input[inputmode="numeric"]')).toHaveCount(6);
     await page.clock.runFor(61_000);
     await resend.click();
     await expect(resend).toHaveCount(0);

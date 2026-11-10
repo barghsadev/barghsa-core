@@ -3421,7 +3421,20 @@ for (const locale of ['en', 'fa']) {
     await expect(english).toHaveAttribute('dir', 'ltr');
     await persian.fill('شرایط جدید');
     await english.fill('Important terms');
-    await english.press('ControlOrMeta+A');
+    // Linux WebKit can map Control+A to the start of the line.
+    await expect
+      .poll(() =>
+        english.evaluate(async (element: HTMLElement) => {
+          const text = element.querySelector('p')?.firstChild;
+          const selection = window.getSelection();
+          if (!selection || !(text instanceof Text)) return null;
+          element.focus({ preventScroll: true });
+          selection.setBaseAndExtent(text, 0, text, text.length);
+          await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+          return selection.toString();
+        })
+      )
+      .toBe('Important terms');
     await page
       .getByRole('group', {
         name: locale === 'fa' ? 'محتوای انگلیسی: قالب‌بندی' : 'English content: Formatting',

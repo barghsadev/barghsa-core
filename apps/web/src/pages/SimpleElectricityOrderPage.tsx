@@ -36,7 +36,6 @@ import {
 import { useGeographyOptions, loadGeographyOptions } from '../hooks/useGeographyOptions.js';
 import { useWizardStep } from '../hooks/useWizardStep.js';
 import { electricityOrderReceipt } from '../lib/form-receipt.js';
-import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   ElectricityDraftRecovery,
   electricityDraftPath,
@@ -1007,12 +1006,8 @@ function OwnedSimpleElectricityOrderPage() {
       },
       leave
     );
-    if (!saved && epoch === draftGeneration.current)
-      toast.error(
-        drafts.unresolved.current
-          ? confirmationText('unconfirmed', locale)
-          : t('electricity.order.draftSaveFailed', locale)
-      );
+    if (!saved && epoch === draftGeneration.current && !drafts.unresolved.current)
+      toast.error(t('electricity.order.draftSaveFailed', locale));
     return saved;
   };
 

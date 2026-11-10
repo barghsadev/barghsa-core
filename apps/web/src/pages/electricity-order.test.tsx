@@ -572,7 +572,10 @@ it('keeps the current fields when the server confirms a different saved quantity
   ).toHaveLength(1);
   expect(window.location.search).toBe('?step=2');
   expect(container.querySelector<HTMLInputElement>('#electricity-kwh')?.value).toBe('10');
-  expect(notices.error).toHaveBeenCalledWith(confirmationText('unconfirmed', 'en'));
+  expect(
+    [...container.querySelectorAll('[role=alert]')].map((alert) => alert.textContent)
+  ).toContain(confirmationText('unconfirmed', 'en'));
+  expect(notices.error).not.toHaveBeenCalled();
 });
 
 it('freezes the draft snapshot and sends one save until confirmation arrives', async () => {

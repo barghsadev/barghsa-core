@@ -451,6 +451,11 @@ for (const locale of ['en', 'fa'] as const)
         await expect.poll(() => state.saves.length).toBe(1);
         await page.clock.fastForward(15_001);
         await expect(checkDraft(page, locale)).toBeVisible();
+        await expect(
+          page
+            .locator('[data-sonner-toast]')
+            .filter({ hasText: confirmationText('unconfirmed', locale) })
+        ).toHaveCount(0);
         expect(state.saves).toHaveLength(1);
         state.revision = randomUUID();
         if (mode === 'simple') state.draft.data.totalKwh = '160';

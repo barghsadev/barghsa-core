@@ -27,7 +27,6 @@ import {
   isElectricityCatalogue,
   type ElectricityCatalogueProduct,
 } from '../lib/electricity-catalogue.js';
-import { confirmationText } from '@barghsa/i18n/confirmation';
 import {
   ElectricityDraftRecovery,
   electricityDraftPath,
@@ -539,12 +538,8 @@ export function AdvancedElectricityOrderPage() {
       },
       leave
     );
-    if (!saved && epoch === generation.current)
-      toast.error(
-        drafts.unresolved.current
-          ? confirmationText('unconfirmed', locale)
-          : t('electricity.order.draftSaveFailed', locale)
-      );
+    if (!saved && epoch === generation.current && !drafts.unresolved.current)
+      toast.error(t('electricity.order.draftSaveFailed', locale));
     return saved;
   }
 
