@@ -260,12 +260,19 @@ describe('ReminderSender contract (T-04.1.04.03)', () => {
     let groupsSeen = 0;
     const enqueue = vi.fn().mockImplementation(async () => {
       groupsSeen += 1;
-      if (groupsSeen === 1) throw new Error('outbox down');
+      if (groupsSeen === 1)
+        throw Object.assign(new Error('outbox down for customer@example.test'), {
+          code: '55P03',
+        });
       return { outboxId: 'outbox-2', inserted: true };
     });
-    const result = await sendDueInvoiceReminders(sendOptions(db, { enqueue }));
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('outbox down');
+    const options = sendOptions(db, { enqueue });
+    const result = await sendDueInvoiceReminders(options);
+    expect(result.errors).toEqual([`${INVOICE_ID}@-7: lock unavailable`]);
+    expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(
+      `Reminder send failed: ${INVOICE_ID}@-7: lock unavailable`
+    );
+    expect(db.calls.some(({ sql }) => sql === 'ROLLBACK')).toBe(true);
     expect(result.sent).toBe(1);
     expect(enqueue).toHaveBeenCalledTimes(2);
   });
@@ -298,5 +305,33 @@ describe('ReminderSender contract (T-04.1.04.03)', () => {
     expect(result.sent).toBe(1);
     const mark = db.calls.find((c) => c.sql.includes("SET status = 'sent'"));
     expect(mark).toBeDefined();
+  });
+
+  it('records a safe reconciliation reason for an incomplete previous occurrence', async () => {
+    const original = defaultHandler();
+    const db = makeFakeDb((sql) =>
+      sql.includes('FROM notification_outbox o')
+        ? {
+            rows: [
+              {
+                profile_id: PROFILE_ID,
+                user_id: USER_ID,
+                channels: ['in_app'],
+                payload: { invoiceId: INVOICE_ID, offset: -7, dueAt: DUE.toISOString() },
+              },
+            ],
+          }
+        : original(sql)
+    );
+    const enqueue = vi.fn().mockResolvedValue({ outboxId: null, inserted: false });
+    const options = sendOptions(db, { enqueue });
+    const result = await sendDueInvoiceReminders(options);
+    const reason = `${INVOICE_ID}@-7: existing reminder occurrence requires reconciliation`;
+    expect(result.errors).toEqual([reason]);
+    expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(`Reminder send failed: ${reason}`);
+    expect(result.sent).toBe(0);
+    expect(enqueue).toHaveBeenCalledTimes(1);
+    expect(db.calls.some(({ sql }) => sql === 'ROLLBACK')).toBe(true);
+    expect(db.calls.some(({ sql }) => sql.includes("SET status = 'sent'"))).toBe(false);
   });
 });

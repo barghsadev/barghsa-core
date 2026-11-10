@@ -7,6 +7,7 @@ import {
   SERVICE_WORKFLOW_CONFIG_KEY,
 } from '@barghsa/shared/admin';
 import { workflowManagedTypes } from './workflow-scanner.js';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 /**
@@ -297,7 +298,7 @@ export async function scanServiceBreaches(
       await client.query('COMMIT');
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
-      const message = (error as Error)?.message ?? String(error);
+      const message = databaseFailureReason(error);
       result.errors.push(`ledger-clear: ${message}`);
       logger.warn(`Ledger clear failed: ${message}`);
     } finally {
@@ -450,7 +451,7 @@ export async function scanServiceBreaches(
         await client.query('COMMIT');
       } catch (error) {
         await client.query('ROLLBACK').catch(() => {});
-        const message = (error as Error)?.message ?? String(error);
+        const message = databaseFailureReason(error);
         Object.assign(result, before);
         result.errors.push(`${domain.serviceType}: ${message}`);
         logger.warn(`Scan failed for ${domain.serviceType}: ${message}`);

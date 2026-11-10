@@ -12,6 +12,7 @@ import {
   type EnqueueOutboxInput,
   type EnqueueOutboxResult,
 } from '../notifications/outbox-writer.js';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 import { cancelRemindersIfStopState } from './reminder-canceller.js';
 
 /**
@@ -249,7 +250,11 @@ export async function sendDueInvoiceReminders(
       }
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
-      const message = `${group.invoice_id}@${group.offset}: ${(error as Error)?.message ?? String(error)}`;
+      const reason =
+        error instanceof ReminderOccurrenceConflict
+          ? 'existing reminder occurrence requires reconciliation'
+          : databaseFailureReason(error);
+      const message = `${group.invoice_id}@${group.offset}: ${reason}`;
       result.errors.push(message);
       logger.warn(`Reminder send failed: ${message}`);
     } finally {
@@ -261,6 +266,8 @@ export async function sendDueInvoiceReminders(
 }
 
 type SendGroupOutcome = 'sent' | 'skipped' | 'stopped';
+
+class ReminderOccurrenceConflict extends Error {}
 
 async function sendOneGroup(
   client: PoolClient,
@@ -355,7 +362,7 @@ async function sendOneGroup(
       saved.payload?.dueAt !== (dueAt?.toISOString() ?? null) ||
       !channels.every((channel) => saved.channels?.includes(channel))
     )
-      throw new Error('Existing reminder occurrence requires reconciliation');
+      throw new ReminderOccurrenceConflict();
   }
 
   const ids = lockedRows.rows.map((row) => row.id);

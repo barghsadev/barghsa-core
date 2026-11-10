@@ -112,6 +112,10 @@ Their retry records keep the same bounded diagnostics.
 Invoice, provider and refund reconciliation use the same safe diagnostic
 categories for candidate errors and poller failures. Reconciliation reports
 retain their existing restricted financial detail.
+Service breach, escalation, workflow and reminder delivery retries use bounded
+failure reasons. Reminder delivery also records a fixed reconciliation reason
+when a prior notification occurrence is incomplete. Outbox polling and saving
+inventory and invitation expiry use the same bounded database diagnostics.
 Worker and inference process failures report the lifecycle stage. Production
 PostgreSQL pool errors report the event and level. These diagnostics omit
 exception text and connection details.

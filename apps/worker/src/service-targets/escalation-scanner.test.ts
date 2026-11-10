@@ -385,14 +385,19 @@ describe('scanServiceEscalations (T-09.08.03)', () => {
     // First candidate enqueues OK; second candidate's enqueue throws.
     enqueue
       .mockResolvedValueOnce({ outboxId: 'ob-1', inserted: true })
-      .mockRejectedValueOnce(new Error('transport gone'));
+      .mockRejectedValueOnce(
+        Object.assign(new Error('transport gone for customer@example.test'), { code: '40P01' })
+      );
 
-    const result = await scanServiceEscalations(scanOptions(db));
+    const options = scanOptions(db);
+    const result = await scanServiceEscalations(options);
     // The per-type transaction rolled back, so the committed escalation count is 0.
     expect(result.escalated.ticket.level2).toBe(0);
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('ticket');
-    expect(result.errors[0]).toContain('transport gone');
+    expect(result.errors).toEqual(['ticket: deadlock']);
+    expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(
+      'Escalation scan failed for ticket: deadlock'
+    );
+    expect(db.calls.some(({ sql }) => sql === 'ROLLBACK')).toBe(true);
   });
 
   it('isolates a failing service type and still scans the others', async () => {

@@ -470,7 +470,9 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
         return { rows: [{ value: { ticket: 48, verification_case: 24 } }] };
       }
       if (sql.includes('FROM tickets')) {
-        throw new Error('tickets table exploded');
+        throw Object.assign(new Error('tickets table exploded for customer@example.test'), {
+          code: '40001',
+        });
       }
       if (sql.includes('FROM verification_cases')) {
         return { rows: [] };
@@ -481,10 +483,13 @@ describe('scanServiceBreaches (T-09.08.01)', () => {
       return { rows: [] };
     });
 
-    const result = await scanServiceBreaches(scanOptions(db));
-    expect(result.errors).toHaveLength(1);
-    expect(result.errors[0]).toContain('ticket');
-    expect(result.errors[0]).toContain('tickets table exploded');
+    const options = scanOptions(db);
+    const result = await scanServiceBreaches(options);
+    expect(result.errors).toEqual(['ticket: serialization failure']);
+    expect(options.logger.warn).toHaveBeenCalledExactlyOnceWith(
+      'Scan failed for ticket: serialization failure'
+    );
+    expect(db.calls.some(({ sql }) => sql === 'ROLLBACK')).toBe(true);
     // verification_case was still scanned to completion.
     expect(result.scanned.verification_case).toBe(0);
     expect(result.scanned.ticket).toBe(0);

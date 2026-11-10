@@ -332,7 +332,7 @@ it('commits each episode once under concurrent scans and retries a failed notifi
       throw new Error('injected delivery failure');
     },
   });
-  expect(fail.errors).toHaveLength(1);
+  expect(fail.errors).toEqual(['ticket_urgent: database operation failed']);
   expect(fail.alerted).toBe(0);
   expect((await pool.query('SELECT id FROM service_breach_alerts')).rows).toEqual([]);
   expect((await pool.query('SELECT id FROM notification_outbox')).rows).toEqual([]);

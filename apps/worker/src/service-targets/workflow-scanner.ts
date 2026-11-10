@@ -14,6 +14,7 @@ import {
   type ServiceWorkflowPolicy,
   type WorkflowAudience,
 } from '@barghsa/shared/admin';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 /** Static SQL only. No administrator-provided table, predicate, permission or route is executed. */
@@ -324,7 +325,7 @@ export async function scanServiceWorkflows(
         result.pruned += counts.pruned;
       } catch (error) {
         await client.query('ROLLBACK').catch(() => {});
-        result.errors.push(`${key}: ${error instanceof Error ? error.message : String(error)}`);
+        result.errors.push(`${key}: ${databaseFailureReason(error)}`);
         more = false;
       } finally {
         client.release();

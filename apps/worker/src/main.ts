@@ -228,10 +228,11 @@ async function main(): Promise<void> {
       await runSavingInventoryExpiry();
       await recordJobSuccess(SAVING_INVENTORY_EXPIRY_JOB_TYPE);
     } catch (error) {
-      logger.error(`Saving inventory expiry failed: ${(error as Error)?.message ?? String(error)}`);
+      const message = `Saving inventory expiry failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: SAVING_INVENTORY_EXPIRY_JOB_TYPE,
-        error: (error as Error)?.message ?? String(error),
+        error: message,
         errorCategory: 'transient',
       });
     }
@@ -521,10 +522,11 @@ async function main(): Promise<void> {
         await recordJobSuccess('notification_outbox_poll');
       }
     } catch (err) {
-      logger.error(`Outbox poll failed: ${(err as Error)?.message ?? String(err)}`);
+      const message = `Outbox poll failed: ${databaseFailureReason(err)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: 'notification_outbox_poll',
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     }
@@ -550,9 +552,7 @@ async function main(): Promise<void> {
       ? breachScanRaw
       : BREACH_SCAN_DEFAULT_MS;
   if (SERVICE_BREACH_SCAN_MS !== breachScanRaw) {
-    logger.warn(
-      `Invalid SERVICE_BREACH_SCAN_MS '${process.env['SERVICE_BREACH_SCAN_MS'] ?? ''}' — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`
-    );
+    logger.warn(`Invalid SERVICE_BREACH_SCAN_MS — falling back to ${BREACH_SCAN_DEFAULT_MS}ms`);
   }
   let breachScanInFlight = false;
   const breachScanner = pollers.every(async () => {
@@ -583,10 +583,11 @@ async function main(): Promise<void> {
         await recordJobSuccess('service_breach_scan');
       }
     } catch (err) {
-      logger.error(`Breach scan failed: ${(err as Error)?.message ?? String(err)}`);
+      const message = `Breach scan failed: ${databaseFailureReason(err)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: 'service_breach_scan',
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -614,7 +615,7 @@ async function main(): Promise<void> {
       : ESCALATION_SCAN_DEFAULT_MS;
   if (SERVICE_ESCALATION_SCAN_MS !== escalationScanRaw) {
     logger.warn(
-      `Invalid SERVICE_ESCALATION_SCAN_MS '${process.env['SERVICE_ESCALATION_SCAN_MS'] ?? ''}' — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`
+      `Invalid SERVICE_ESCALATION_SCAN_MS — falling back to ${ESCALATION_SCAN_DEFAULT_MS}ms`
     );
   }
   let escalationScanInFlight = false;
@@ -646,10 +647,11 @@ async function main(): Promise<void> {
         await recordJobSuccess('service_escalation_scan');
       }
     } catch (err) {
-      logger.error(`Escalation scan failed: ${(err as Error)?.message ?? String(err)}`);
+      const message = `Escalation scan failed: ${databaseFailureReason(err)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: 'service_escalation_scan',
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -779,7 +781,7 @@ async function main(): Promise<void> {
       : DEFAULT_REMINDER_SEND_INTERVAL_MS;
   if (INVOICE_REMINDER_SEND_MS !== reminderSendRaw) {
     logger.warn(
-      `Invalid INVOICE_REMINDER_SEND_MS '${process.env['INVOICE_REMINDER_SEND_MS'] ?? ''}' — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`
+      `Invalid INVOICE_REMINDER_SEND_MS — falling back to ${DEFAULT_REMINDER_SEND_INTERVAL_MS}ms`
     );
   }
   let reminderSendInFlight = false;
@@ -804,10 +806,11 @@ async function main(): Promise<void> {
         await recordJobSuccess(INVOICE_REMINDER_SEND_JOB_TYPE);
       }
     } catch (err) {
-      logger.error(`Reminder send failed: ${(err as Error)?.message ?? String(err)}`);
+      const message = `Reminder send failed: ${databaseFailureReason(err)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: INVOICE_REMINDER_SEND_JOB_TYPE,
-        error: (err as Error)?.message ?? String(err),
+        error: message,
         errorCategory: 'transient',
       });
     } finally {
@@ -1087,10 +1090,11 @@ async function main(): Promise<void> {
       await expireInvitations();
       await recordJobSuccess(INVITATION_EXPIRY_JOB_TYPE);
     } catch (error) {
-      logger.error('Invitation expiry failed');
+      const message = `Invitation expiry failed: ${databaseFailureReason(error)}`;
+      logger.error(message);
       await recordJobFailure({
         jobType: INVITATION_EXPIRY_JOB_TYPE,
-        error: (error as Error)?.message ?? String(error),
+        error: message,
         errorCategory: 'transient',
       });
     }

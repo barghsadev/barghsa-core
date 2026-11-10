@@ -8,6 +8,7 @@ import {
   SERVICE_WORKFLOW_CONFIG_KEY,
 } from '@barghsa/shared/admin';
 import { workflowManagedTypes } from './workflow-scanner.js';
+import { databaseFailureReason } from '../jobs/database-failure-reason.js';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 import {
   CASE_OPEN_STATUSES,
@@ -316,7 +317,7 @@ export async function scanServiceEscalations(
       result.escalated[domain.serviceType].level3 += tier3;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
-      const message = (error as Error)?.message ?? String(error);
+      const message = databaseFailureReason(error);
       result.errors.push(`${domain.serviceType}: ${message}`);
       logger.warn(`Escalation scan failed for ${domain.serviceType}: ${message}`);
     } finally {
