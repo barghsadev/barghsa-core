@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1195 | Accepted with unchanged source bindings. |
-| verify | 109 | Existing work may be complete; inspect evidence before building. |
+| done | 1196 | Accepted with unchanged source bindings. |
+| verify | 108 | Existing work may be complete; inspect evidence before building. |
 | partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1336,7 +1336,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.02.06` | verify | Inventory needed | Add status check reporting: pass/fail per check, summary comment on PR |
 | `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
 | `06-security-testing-observability.md#T-06.12.03.02` | partial | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
-| `06-security-testing-observability.md#T-06.12.03.03` | verify | Inventory needed | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
+| `06-security-testing-observability.md#T-06.12.03.03` | done | Recorded batch work | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
 | `06-security-testing-observability.md#T-06.12.03.04` | done | Recorded batch work | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
 | `06-security-testing-observability.md#T-06.12.04.01` | done | Recorded batch work | Define production release checklist and automated gate runner |
 | `06-security-testing-observability.md#T-06.12.04.02` | verify | Inventory needed | Implement automatic canary/gradual rollout for high-risk changes (payment, wallet, auth, contract, pricing) |

@@ -8743,7 +8743,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+              "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -8761,6 +8761,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-critical-defect-candidate-gate",
+              "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
             }
           ]
         }
@@ -13769,7 +13777,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+              "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
             },
             {
               "path": "package.json",
@@ -13789,6 +13797,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-critical-defect-candidate-gate",
+              "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
             }
           ]
         }
@@ -19936,7 +19952,17 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+              "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-critical-defect-candidate-gate",
+              "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
             }
           ]
         }
@@ -516012,19 +516038,82 @@
         "story": "06-security-testing-observability.md#spec-7e8081f9925c"
       },
       "requirement": "| T-06.12.03.03 | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-critical-defect-candidate-gate"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-critical-defect-and-flake-gate",
+          "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+          "checks": [
+            "All 14 board integrity tests passed, including acceptance rejection of open P0 and P1 defects even when outside launch-required scope, acceptance with only resolved or lower-severity defects in scope, future milestone isolation, and invalid severity rejection.",
+            "Six promotion, eleven quarantine, two browser-results, and three browser-rollup tests passed. The promotion checker continues to require exact successful hosted runs, a strict 40-shard rollup without flakes, and no active critical quarantine.",
+            "Hosted browser run 42864645557 completed all 40 shards and its strict rollup failed on six flakes. This is evidence that the gate rejected a nonclean run. Replacement run 42878628863 remains a separate release prerequisite.",
+            "The existing protected monorepo integrity check validates the board. The staging worker and its CI-independent flow are unchanged. Workflow Markdown formatting and the whitespace check passed."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "4fb57ed3384d492be5cc6aef3b100ea7c725c635ed5425dfdf5a04d571f23c8e"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "deploy/production/test_check_promotion.py",
+              "sha256": "98fe7f515fc7f4ffc4e9129fef0d3a57ba12ed0e72f52a1662ce2ce1838ffdb8"
+            },
+            {
+              "path": "kanban/WORKFLOW.md",
+              "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
+            },
+            {
+              "path": "kanban/scripts/board.py",
+              "sha256": "8c6520439d3efd610c57d5441841aac174d1d642c25e8ab543912e54e356ca3d"
+            },
+            {
+              "path": "kanban/scripts/test_board.py",
+              "sha256": "134236efd5f1fef91a4e7a1ed98889f4553466c331feacb17be94a409979bc53"
+            },
+            {
+              "path": "scripts/check-browser-results.py",
+              "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+            },
+            {
+              "path": "scripts/check-flaky-tests.py",
+              "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+            },
+            {
+              "path": "scripts/report-nightly-browser.py",
+              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+            },
+            {
+              "path": "scripts/test_check_browser_results.py",
+              "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+            },
+            {
+              "path": "scripts/test_check_flaky_tests.py",
+              "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+            },
+            {
+              "path": "scripts/test_report_nightly_browser.py",
+              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+            }
+          ]
+        }
       }
     },
     {
@@ -516212,7 +516301,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "c0be82bc8fda7976a37462abc1524cf7345fb089ed6f67ba35b6bdbb5d3c6cf0"
+              "sha256": "8c6520439d3efd610c57d5441841aac174d1d642c25e8ab543912e54e356ca3d"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -516231,6 +516320,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-critical-defect-candidate-gate",
+              "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+              "paths": [
+                "kanban/scripts/board.py"
+              ],
+              "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
             }
           ]
         }
@@ -785875,7 +785972,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+              "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
             },
             {
               "path": "kanban/runbooks/provider-delivery.fa.md",
@@ -787387,6 +787484,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-critical-defect-candidate-gate",
+              "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
             }
           ],
           "presentation_renewals": [
@@ -789989,7 +790094,7 @@
             },
             {
               "path": "kanban/WORKFLOW.md",
-              "sha256": "37b50b9e6dda85071fa55389c65480d4951437ece6bd3e210cec715a5424dbe9"
+              "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
             },
             {
               "path": "kanban/runbooks/provider-delivery.fa.md",
@@ -791390,6 +791495,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Add one validated release field and pass the existing full revision build argument to the app image. All other runtime behavior, dependencies and previous CI or deployment gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-critical-defect-candidate-gate",
+              "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+              "paths": [
+                "kanban/WORKFLOW.md"
+              ],
+              "scope": "Document and enforce an additive candidate defect severity gate. Existing task requirements, workflows, release worker behavior, and prior gate rules are preserved. Board integrity and promotion checker tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -911901,6 +912014,108 @@
         {
           "file": "admin-role-rtl-final.log",
           "sha256": "b6a4eea73cd5d3d961e15c39c8527a199a3354a7c67c94d9208e65afba0de207"
+        }
+      ]
+    },
+    "release-0.6-critical-defect-candidate-gate": {
+      "batch": "release-0.6-critical-defect-candidate-gate",
+      "base_commit": "03abe3ba01fb83eaa8ad653ed36f964da32a095e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.03"
+      ],
+      "changed_paths": [
+        "kanban/WORKFLOW.md",
+        "kanban/scripts/board.py",
+        "kanban/scripts/test_board.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "4fb57ed3384d492be5cc6aef3b100ea7c725c635ed5425dfdf5a04d571f23c8e"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "98fe7f515fc7f4ffc4e9129fef0d3a57ba12ed0e72f52a1662ce2ce1838ffdb8"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "28781e0ae92203505d2048fc1d4038f9e7f28c6c716de6db152e6f4f87d36ca4"
+        },
+        {
+          "path": "kanban/scripts/board.py",
+          "sha256": "8c6520439d3efd610c57d5441841aac174d1d642c25e8ab543912e54e356ca3d"
+        },
+        {
+          "path": "kanban/scripts/test_board.py",
+          "sha256": "134236efd5f1fef91a4e7a1ed98889f4553466c331feacb17be94a409979bc53"
+        },
+        {
+          "path": "scripts/check-browser-results.py",
+          "sha256": "1e7086dac76325086f48072519d3c9052fd973eee4299d1c533b484d4b4f45b0"
+        },
+        {
+          "path": "scripts/check-flaky-tests.py",
+          "sha256": "460d14c40fad8d345d4917c572a56abace1b39f7d7a859b2bf2a2260f4f249de"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+        },
+        {
+          "path": "scripts/test_check_browser_results.py",
+          "sha256": "92825d371a4eba553b459e76779fcdbdce3e82edfe30bedcfcd20c6588ab5475"
+        },
+        {
+          "path": "scripts/test_check_flaky_tests.py",
+          "sha256": "ea6ba6ee7b8033f850951697c4b684d8ee74656d08a33033526f902311b05372"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+        }
+      ],
+      "checks": [
+        "All 14 board integrity tests passed, including acceptance rejection of open P0 and P1 defects even when outside launch-required scope, acceptance with only resolved or lower-severity defects in scope, future milestone isolation, and invalid severity rejection.",
+        "Six promotion, eleven quarantine, two browser-results, and three browser-rollup tests passed. The promotion checker continues to require exact successful hosted runs, a strict 40-shard rollup without flakes, and no active critical quarantine.",
+        "Hosted browser run 42864645557 completed all 40 shards and its strict rollup failed on six flakes. This is evidence that the gate rejected a nonclean run. Replacement run 42878628863 remains a separate release prerequisite.",
+        "The existing protected monorepo integrity check validates the board. The staging worker and its CI-independent flow are unchanged. Workflow Markdown formatting and the whitespace check passed."
+      ],
+      "proof_logs": [
+        {
+          "file": "board.log",
+          "sha256": "59ee47478ba657a1682a4f254cc4f02273c716373e63fe3283360ddf8409593a"
+        },
+        {
+          "file": "browser_results.log",
+          "sha256": "a6707d4eff38012da33ddc34bc6dc076a3b17151cfc9aef223c8790cbe64c3da"
+        },
+        {
+          "file": "browser_rollup.log",
+          "sha256": "a5b3ebd985e73b516cb7e1e01ce783acdc4b14595541c11efbf7616d9432e42d"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "promotion.log",
+          "sha256": "d8788fb668ab485288228ba408880db88f6bc1e91fecb5466716ec0bebc051a5"
+        },
+        {
+          "file": "quarantine.log",
+          "sha256": "ffaa92b67e320c73341f4d223acc9d20508e93547e3ebe3bde9fcb9e1f0e1f85"
         }
       ]
     }

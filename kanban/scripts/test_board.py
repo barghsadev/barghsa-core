@@ -1,7 +1,7 @@
 import copy
 import unittest
 
-from board import read, validate
+from board import blocking_defects, read, render, validate
 
 
 class BoardIntegrityTests(unittest.TestCase):
@@ -52,6 +52,33 @@ class BoardIntegrityTests(unittest.TestCase):
     def test_release_dependencies_cannot_point_forward(self):
         self.board['releases'][0]['depends_on'] = ['1.0.0']
         self.rejects('Invalid release dependency')
+
+    def test_candidate_rejects_open_critical_and_major_defects_outside_launch_scope(self):
+        release = next(r for r in self.board['releases'] if r['version'] == '0.6.0')
+        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        defect = next(t for t in self.board['tasks'] if t['release'] == '0.6.0' and t['status'] == 'verify')
+        defect['launch_required'] = False
+        for severity in ('P0', 'P1'):
+            with self.subTest(severity=severity):
+                defect['defect_severity'] = severity
+                self.rejects(f'v0.6.0 has an open {severity} defect')
+
+    def test_candidate_gate_preserves_severity_scope_and_resolution(self):
+        release = next(r for r in self.board['releases'] if r['version'] == '0.6.0')
+        release.update(status='accepted', acceptance={'gates': {'fixture': 'verified'}})
+        open_minor = next(t for t in self.board['tasks'] if t['release'] == '0.6.0' and t['status'] == 'verify')
+        resolved = next(t for t in self.board['tasks'] if t['release'] == '0.5.0' and t['status'] == 'done')
+        future = next(t for t in self.board['tasks'] if t['release'] == '0.9.0' and t['status'] != 'done')
+        open_minor['defect_severity'] = 'P2'
+        resolved['defect_severity'] = 'P1'
+        future['defect_severity'] = 'P0'
+        validate(self.board)
+        self.assertIn(' (P2 defect)', render(self.board))
+        self.assertEqual(blocking_defects(self.board['tasks'], {'0.5.0', '0.6.0', '0.9.0'}), [future])
+
+    def test_rejects_invalid_defect_severity(self):
+        self.board['tasks'][0]['defect_severity'] = 'critical'
+        self.rejects('Invalid defect severity')
 
     def test_released_milestone_requires_external_receipts(self):
         release = self.board['releases'][0]

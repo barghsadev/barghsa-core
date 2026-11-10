@@ -14,6 +14,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[2]
 STATES = {'todo', 'in_progress', 'partial', 'blocked', 'verify', 'done', 'superseded'}
+DEFECT_SEVERITIES = ('P0', 'P1', 'P2', 'P3')
 
 
 def sha(path):
@@ -22,6 +23,11 @@ def sha(path):
 
 def read(root=ROOT):
     return json.loads((root / 'kanban/board.json').read_text())
+
+
+def blocking_defects(tasks, releases):
+    return [task for task in tasks if task['release'] in releases and task['status'] != 'done'
+            and task.get('defect_severity') in ('P0', 'P1')]
 
 
 def validate(board, root=ROOT):
@@ -82,6 +88,8 @@ def validate(board, root=ROOT):
             raise ValueError(f'Invalid task state or release: {key}')
         if not task['title'] or not task['requirement'] or not isinstance(task['launch_required'], bool):
             raise ValueError(f'Missing task requirement or launch disposition: {key}')
+        if 'defect_severity' in task and task['defect_severity'] not in DEFECT_SEVERITIES:
+            raise ValueError(f'Invalid defect severity: {key}')
         if task['spec'] is not None and task['spec']['story'] not in board['stories']:
             raise ValueError(f'Missing original story context: {key}')
         if not set(task['depends_on']) <= set(by_key) or key in task['depends_on']:
@@ -102,6 +110,13 @@ def validate(board, root=ROOT):
                     raise ValueError(f'Done evidence changed; return task to verify: {key}')
             if task['remaining']:
                 raise ValueError(f'Done task still has remaining requirements: {key}')
+    through = set()
+    for release in board['releases']:
+        through.add(release['version'])
+        if release['status'] == 'accepted':
+            defects = blocking_defects(tasks, through)
+            if defects:
+                raise ValueError(f"Release v{release['version']} has an open {defects[0]['defect_severity']} defect: {defects[0]['key']}")
     visiting, visited = set(), set()
     def visit(key):
         if key in visiting:
@@ -159,6 +174,8 @@ def render(board):
             history = ev.get('historical_acceptance')
             proof = ('Earlier '+history['status'] if history else 'Recorded batch work' if ev.get('batches') else 'Inventory needed')
             title = t['title'].replace('|','\\|').replace('\n',' ')
+            if 'defect_severity' in t:
+                title += f" ({t['defect_severity']} defect)"
             lines.append(f'| `{t["key"]}` | {t["status"]} | {proof} | {title} |')
     return '\n'.join(lines) + '\n'
 
@@ -198,9 +215,12 @@ def main():
                 raise ValueError('Use --release with a known milestone')
             earlier = {r['version'] for r in board['releases'][:board['releases'].index(release) + 1]}
             unresolved = [t for t in board['tasks'] if t['launch_required'] and t['release'] in earlier and t['status'] != 'done']
+            defects = blocking_defects(board['tasks'], earlier)
             print(f"v{release['version']}: {len(unresolved)} unresolved launch-required tasks through this milestone")
+            for defect in defects:
+                print(f"Open {defect['defect_severity']} defect: {defect['key']}")
             print('Business gates also need recorded acceptance; this query does not certify them.')
-            return 1 if unresolved or not release.get('acceptance') else 0
+            return 1 if unresolved or defects or not release.get('acceptance') else 0
         else:
             for task in board['tasks']:
                 if args.action == 'next' and task['key'] not in board['next_batch']['task_keys']:

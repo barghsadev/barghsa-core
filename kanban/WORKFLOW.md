@@ -53,6 +53,8 @@ Explicitly stage reviewed implementation and board changes, verify the staged di
 
 Run `python3 kanban/scripts/board.py ready --release <version>` to list the unresolved count. Accept all assigned launch-required tasks and prerequisite releases. Pass the milestone goal and its gates on the final candidate. Review and run combined acceptance once at this boundary. Fix critical/major issues before acceptance. Record exact checks and source bindings; a prose approval or CLI exit code alone is insufficient.
 
+Record a confirmed defect on its qualified board task with `defect_severity` set to `P0`, `P1`, `P2` or `P3`. The candidate check blocks acceptance while a P0 or P1 defect through that milestone remains open, including defects outside the launch-required task list. Keep the severity with the task's resolution evidence. The strict browser rollup and promotion quarantine check cover flaky critical tests.
+
 Set root `package.json` SemVer at the release boundary. Write Persian `releases/<version>.md` notes beginning with `برقسا نسخه <version>` and concrete Markdown bullets. Use PATCH for a necessary compatible hotfix, MINOR for a capability milestone and MAJOR for the production launch or an incompatible public contract. Never reuse a published version. Login, emitted release metadata and Telegram show the same version.
 
 Commit and push the accepted release, verify its exact remote SHA, then enqueue the detached staging worker immediately. Do not wait for CI. The worker uses an immutable checkout, runs `./deploy/staging/deploy.sh`, verifies health and exact live version/commit, and then announces success. Development continues during deployment. Staging releases are serialized.
