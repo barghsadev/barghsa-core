@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T06:32:19+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T06:34:41+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1129 | Accepted with unchanged source bindings. |
-| verify | 181 | Existing work may be complete; inspect evidence before building. |
+| done | 1132 | Accepted with unchanged source bindings. |
+| verify | 178 | Existing work may be complete; inspect evidence before building. |
 | partial | 50 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1256,10 +1256,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.01.04` | partial | Recorded batch work | Add `vitest --related` for affected-only test runs in CI |
 | `06-security-testing-observability.md#T-06.09.02.01` | verify | Inventory needed | Author unit tests for all state machines: Orders, Contracts, Invoices, Payments, Refunds, Documents, Wallet transactions, Invitations, Verification cases |
 | `06-security-testing-observability.md#T-06.09.02.02` | done | Recorded batch work | Author unit tests for pricing engine: VAT calculation, discounts, rounding (half-up to IRR), electricity composition rules, Jalali period calculations |
-| `06-security-testing-observability.md#T-06.09.02.03` | verify | Inventory needed | Author unit tests for authorization policy: role permissions, capability checks, profile-scoped access, BOLA denial |
+| `06-security-testing-observability.md#T-06.09.02.03` | done | Recorded batch work | Author unit tests for authorization policy: role permissions, capability checks, profile-scoped access, BOLA denial |
 | `06-security-testing-observability.md#T-06.09.02.04` | verify | Inventory needed | Author unit tests for idempotency: idempotency key verification, duplicate detection, refund-amount calculations |
-| `06-security-testing-observability.md#T-06.09.02.05` | verify | Inventory needed | Author unit tests for input validation: Zod schema edge cases, normalization, locale-specific formatting |
-| `06-security-testing-observability.md#T-06.09.02.06` | verify | Inventory needed | Author unit tests for provider adapter responses: success, timeout, throttle, error classification, mapping |
+| `06-security-testing-observability.md#T-06.09.02.05` | done | Recorded batch work | Author unit tests for input validation: Zod schema edge cases, normalization, locale-specific formatting |
+| `06-security-testing-observability.md#T-06.09.02.06` | done | Recorded batch work | Author unit tests for provider adapter responses: success, timeout, throttle, error classification, mapping |
 | `06-security-testing-observability.md#T-06.09.02.07` | done | Recorded batch work | Author unit tests for Jalali calendar: month lengths, leap years, period boundaries, Gregorian conversion |
 | `06-security-testing-observability.md#T-06.09.03.01` | verify | Inventory needed | Configure RTL with custom render helpers, providers (auth, i18n, theme), and MSW/api contract fixtures |
 | `06-security-testing-observability.md#T-06.09.03.02` | verify | Inventory needed | Write RTL tests for registration form: validation, OTP flow, error states, RTL layout |

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T06:32:19+00:00",
-  "source_commit": "67029641e48a0c68feb184f24d609e1513c7b615",
+  "updated": "2026-11-10T06:34:41+00:00",
+  "source_commit": "8ac1c7d8f390f1ba741c21a7ea84c627bd956310",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -492939,19 +492939,84 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.03 | Author unit tests for authorization policy: role permissions, capability checks, profile-scoped access, BOLA denial | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-domain-unit-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-domain-unit-tests",
+          "reviewed_sha": "8ac1c7d8f390f1ba741c21a7ea84c627bd956310",
+          "checks": [
+            "Current unit tests cover explicit staff grants and denial before service access, exact and additive agent grants, invalid session/profile/role/metadata denial, and commercial verification. The invoice service unit suite asserts a foreign invoice and an unavailable profile both return 404.",
+            "254 current API and nine current shared permission cases passed. Hosted run 42759736897 job 129642496352 supplies 33 unchanged native-fixture-free invoice and profile guard cases. This unit acceptance is distinct from the exact native HTTP profile-isolation work."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+              "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+            },
+            {
+              "path": "apps/api/src/admin/admin.controller.ts",
+              "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
+              "sha256": "ca2d1cf0437d692d1238aa10e47995ceb7533dc070e3c22b9123940368f43fee"
+            },
+            {
+              "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+              "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-role.guard.test.ts",
+              "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
+            },
+            {
+              "path": "apps/api/src/profiles/agent-role.guard.ts",
+              "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.guard.test.ts",
+              "sha256": "83f77df548a27103bec6ce6b2960d8a317f65746ec699af30873b6cf946ca31a"
+            },
+            {
+              "path": "apps/api/src/profiles/profiles.guard.ts",
+              "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/session/staff-permissions.ts",
+              "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "packages/shared/src/agent-permissions/agent-permissions.test.ts",
+              "sha256": "6ca347adaa12a486d4e4c450dfb78f1a1ac2713dfda1b608fce05e318519336f"
+            },
+            {
+              "path": "packages/shared/src/agent-permissions/index.ts",
+              "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -492991,19 +493056,88 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.05 | Author unit tests for input validation: Zod schema edge cases, normalization, locale-specific formatting | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-domain-unit-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-domain-unit-tests",
+          "reviewed_sha": "8ac1c7d8f390f1ba741c21a7ea84c627bd956310",
+          "checks": [
+            "Tests cover E.164 and email normalization, invalid and ambiguous values, Zod bounds, malformed date/query windows, unknown provider command fields, and Persian and Arabic-Indic monetary input converted to exact IRR before submission.",
+            "84 selected hosted cases match the application and shared validation source. Current related provider command validation passed 96 API and 77 web cases. This accepts the unit-test criterion. The separate comprehensive command-schema inventory remains open."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/provider-config/provider-input-fields.test.ts",
+              "sha256": "8c82d6541ce5b89c83eba867efff1469772e36793129d99d904b3578f284c298"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-input-fields.ts",
+              "sha256": "79ecdc98f41e4de136a3c9e9299965dde7312f4d35dfa09c50346600162ac0fb"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+              "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
+            },
+            {
+              "path": "apps/api/src/verification/verification-provider.controller.test.ts",
+              "sha256": "81220a0fd61408df3fb4ddcaff95efde6af920262eac572ca478c93a3c3dd618"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.test.tsx",
+              "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "packages/shared/src/validation/date-range-filter.test.ts",
+              "sha256": "8896b9024e6f18ae906cccc1e1fe3738dc7d7be3adf35926d7011f2b2adcba05"
+            },
+            {
+              "path": "packages/shared/src/validation/date-range-filter.ts",
+              "sha256": "833c792b792925e89bfe8a1a423334720a974f213f1a6af22bcfe7e664d148cf"
+            },
+            {
+              "path": "packages/shared/src/validation/history-query.test.ts",
+              "sha256": "c6396cb81461707a0fc30b09402c3665cc9e6719aaa878c15317e45ffaa36393"
+            },
+            {
+              "path": "packages/shared/src/validation/invoice-list-query.test.ts",
+              "sha256": "24b2dd110adc98b13c7887266eed853ffb0fec9d498423373b3f1c8d7e85f050"
+            },
+            {
+              "path": "packages/shared/src/validation/invoice-list-query.ts",
+              "sha256": "ee106923189511874186a17670506a5bf61d08c0a9ea60b19e9371f03c8b1041"
+            },
+            {
+              "path": "packages/shared/src/validation/normalize-username.ts",
+              "sha256": "f04c70372d751909f0c142056143b8873044316415021c8607a3a34750a5a8b2"
+            },
+            {
+              "path": "packages/shared/src/validation/validation.test.ts",
+              "sha256": "2c32b76f1fdccb77b1bef95deb93bb4815c358960b89348b2f39028be5df1860"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -493017,19 +493151,108 @@
         "story": "06-security-testing-observability.md#spec-5b8a34999cf1"
       },
       "requirement": "| T-06.09.02.06 | Author unit tests for provider adapter responses: success, timeout, throttle, error classification, mapping | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-domain-unit-acceptance"
+        ],
+        "current_acceptance": {
+          "kind": "source-bound-domain-unit-tests",
+          "reviewed_sha": "8ac1c7d8f390f1ba741c21a7ea84c627bd956310",
+          "checks": [
+            "Unit and isolated transport tests cover success, timeout and throttle, invalid responses, uncertain payment reconciliation, exact amount conversion, retry categories, endpoint bounds and output mapping. The exercised seams include payment gateways, email and SMS, storage, bill providers, verification and embeddings.",
+            "189 selected unchanged hosted cases and 143 current provider diagnostic, network and verification cases passed. These tests use injected inputs and local fixtures. Live provider receipts are separate release gates."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
+              "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
+            },
+            {
+              "path": "apps/api/src/provider-config/bill-provider-transport.test.ts",
+              "sha256": "cf4d1b9273e4c45c185d0847dfdce6e318c3f4d4d486c7b7fb8dddce7c101fb8"
+            },
+            {
+              "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+              "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+            },
+            {
+              "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
+              "sha256": "ffa92af835d39a7c925e0eb6901b0564ea675c4627bb40bd39b8c46fe2370d99"
+            },
+            {
+              "path": "apps/api/src/provider-config/smsir-connection-tester.service.ts",
+              "sha256": "7ceeaf7a409c2205227fcc20b29dfa5dd076d756e337b16dc4924c1484f1bc18"
+            },
+            {
+              "path": "apps/api/src/provider-config/smtp-connection-tester.service.ts",
+              "sha256": "4e2e90be50e6d144fc528fbf47b9f84193f72fd522df8438e1e6363ed3dd0f62"
+            },
+            {
+              "path": "apps/api/src/saving/bill-verification.provider.ts",
+              "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
+            },
+            {
+              "path": "apps/api/src/verification/provider-registry.test.ts",
+              "sha256": "c4415ee8827f883f1e4fbf99c7ed86a12d1736ca2ce1f34d9dbf18b0ae694ff6"
+            },
+            {
+              "path": "apps/api/src/verification/provider-registry.ts",
+              "sha256": "26aa75774f71089ab7be9b6cf87eea2bf0735bce91de8fec3e5ef193aa853b43"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+              "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.test.ts",
+              "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+            },
+            {
+              "path": "apps/api/src/wallet/payment-gateway.ts",
+              "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+            },
+            {
+              "path": "apps/web/package.json",
+              "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+            },
+            {
+              "path": "packages/shared/src/ai-models/embedding.test.ts",
+              "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
+            },
+            {
+              "path": "packages/shared/src/ai-models/embedding.ts",
+              "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+              "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+            },
+            {
+              "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+              "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+            },
+            {
+              "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
+              "sha256": "6203460859ebbed90ad17ec8d6ea4e2d5e450e231b79be66af8679a4209d1f1c"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+            }
+          ]
+        }
       }
     },
     {
@@ -869449,6 +869672,209 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rtl-journey-evidence",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "d6a58e906351d914ab66b87e5357be1db2e0861e86013bf1e6259710776a75be"
+    },
+    "release-0.6-domain-unit-acceptance": {
+      "batch": "release-0.6-domain-unit-acceptance",
+      "base_commit": "8ac1c7d8f390f1ba741c21a7ea84c627bd956310",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.02.03",
+        "06-security-testing-observability.md#T-06.09.02.05",
+        "06-security-testing-observability.md#T-06.09.02.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/admin-permission-boundaries.test.ts",
+          "sha256": "c7628b109656d474684c709849cf579df5d5ac2ce0356864b7529fe53399ad84"
+        },
+        {
+          "path": "apps/api/src/admin/admin.controller.ts",
+          "sha256": "3a22dfe56ec057e8f3e6525fc88a2e672536e947768ccf07d2dfe077ccd17a51"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
+          "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
+          "sha256": "ca2d1cf0437d692d1238aa10e47995ceb7533dc070e3c22b9123940368f43fee"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "623aa108f967dc846294609c5baabb5fc25df0a0a27277dd60befc68cf6d2f3b"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-role.guard.test.ts",
+          "sha256": "7e832215fd8564edd7b4c9f28d880ac6fee902b34cd7c07b901f5d2f0094f1fe"
+        },
+        {
+          "path": "apps/api/src/profiles/agent-role.guard.ts",
+          "sha256": "363e3da597e5b0b64b2d206bab307e6daf7eee632e65324cd2f55cd8c8d4e3ee"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.test.ts",
+          "sha256": "83f77df548a27103bec6ce6b2960d8a317f65746ec699af30873b6cf946ca31a"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.guard.ts",
+          "sha256": "853391a898f19ef6386234216fad187e59d6686cead2fff36320516e14071d3d"
+        },
+        {
+          "path": "apps/api/src/provider-config/bill-provider-transport.test.ts",
+          "sha256": "cf4d1b9273e4c45c185d0847dfdce6e318c3f4d4d486c7b7fb8dddce7c101fb8"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-input-fields.test.ts",
+          "sha256": "8c82d6541ce5b89c83eba867efff1469772e36793129d99d904b3578f284c298"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-input-fields.ts",
+          "sha256": "79ecdc98f41e4de136a3c9e9299965dde7312f4d35dfa09c50346600162ac0fb"
+        },
+        {
+          "path": "apps/api/src/provider-config/resend-connection-tester.service.ts",
+          "sha256": "249f6c2bc066a3eb9e018d0374f3de1395785e6d2f5a7ff632774e4adb27114d"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
+          "sha256": "1c0c34d12a79a64d8b701fce74a95bc54b2380b0f3023d2d4b3529df5aa9e893"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
+          "sha256": "ffa92af835d39a7c925e0eb6901b0564ea675c4627bb40bd39b8c46fe2370d99"
+        },
+        {
+          "path": "apps/api/src/provider-config/smsir-connection-tester.service.ts",
+          "sha256": "7ceeaf7a409c2205227fcc20b29dfa5dd076d756e337b16dc4924c1484f1bc18"
+        },
+        {
+          "path": "apps/api/src/provider-config/smtp-connection-tester.service.ts",
+          "sha256": "4e2e90be50e6d144fc528fbf47b9f84193f72fd522df8438e1e6363ed3dd0f62"
+        },
+        {
+          "path": "apps/api/src/saving/bill-verification.provider.ts",
+          "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/session/staff-permissions.ts",
+          "sha256": "9fefeb55d646f12d6803f2819f2285dcc715fb6ebf91fd2fabc9259b29ba7fc8"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registry.test.ts",
+          "sha256": "c4415ee8827f883f1e4fbf99c7ed86a12d1736ca2ce1f34d9dbf18b0ae694ff6"
+        },
+        {
+          "path": "apps/api/src/verification/provider-registry.ts",
+          "sha256": "26aa75774f71089ab7be9b6cf87eea2bf0735bce91de8fec3e5ef193aa853b43"
+        },
+        {
+          "path": "apps/api/src/verification/verification-provider.controller.test.ts",
+          "sha256": "81220a0fd61408df3fb4ddcaff95efde6af920262eac572ca478c93a3c3dd618"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
+          "sha256": "8b275a988a09206b3feb59c78ba5a01c54faef7b8aa8efc4f5e25f2606696147"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.test.ts",
+          "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "c8945b247aeca252651eef7514d06c0280e51061e160359710f34f649401a67b"
+        },
+        {
+          "path": "apps/web/package.json",
+          "sha256": "5a3332374e37d4a7d9eb5165a34156172d191be2dc1c3e77b1068eca5ab3818a"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.test.tsx",
+          "sha256": "aa94260dffbc2fa0bb04e9734228499dd86fdea6914113f7716450f740be0d54"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/agent-permissions.test.ts",
+          "sha256": "6ca347adaa12a486d4e4c450dfb78f1a1ac2713dfda1b608fce05e318519336f"
+        },
+        {
+          "path": "packages/shared/src/agent-permissions/index.ts",
+          "sha256": "8c8bf060d6a1354c0ba93a1210b51dd86a13adce0cc9d6f4d02a33e4c0ae3bbd"
+        },
+        {
+          "path": "packages/shared/src/ai-models/embedding.test.ts",
+          "sha256": "6fca7140e412e3ae305d8dc9468a5be71505fe294163b75aebdd8f35b587dc17"
+        },
+        {
+          "path": "packages/shared/src/ai-models/embedding.ts",
+          "sha256": "f581937a9351e024efb00c8fd001766d5780804b7328b2eca1e12c3f4e704ddb"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
+          "sha256": "f4ded48b7e12eaa12e76b70e776e97e68478d667ae1744c44f2cc9d62065e86b"
+        },
+        {
+          "path": "packages/shared/src/auth-delivery/smsir-client.ts",
+          "sha256": "f2d5247adf585f08144a67c016f40baccab39eee76c1bff5f64a7e84c9f047df"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/provider-errors.test.ts",
+          "sha256": "6203460859ebbed90ad17ec8d6ea4e2d5e450e231b79be66af8679a4209d1f1c"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+        },
+        {
+          "path": "packages/shared/src/validation/date-range-filter.test.ts",
+          "sha256": "8896b9024e6f18ae906cccc1e1fe3738dc7d7be3adf35926d7011f2b2adcba05"
+        },
+        {
+          "path": "packages/shared/src/validation/date-range-filter.ts",
+          "sha256": "833c792b792925e89bfe8a1a423334720a974f213f1a6af22bcfe7e664d148cf"
+        },
+        {
+          "path": "packages/shared/src/validation/history-query.test.ts",
+          "sha256": "c6396cb81461707a0fc30b09402c3665cc9e6719aaa878c15317e45ffaa36393"
+        },
+        {
+          "path": "packages/shared/src/validation/invoice-list-query.test.ts",
+          "sha256": "24b2dd110adc98b13c7887266eed853ffb0fec9d498423373b3f1c8d7e85f050"
+        },
+        {
+          "path": "packages/shared/src/validation/invoice-list-query.ts",
+          "sha256": "ee106923189511874186a17670506a5bf61d08c0a9ea60b19e9371f03c8b1041"
+        },
+        {
+          "path": "packages/shared/src/validation/normalize-username.ts",
+          "sha256": "f04c70372d751909f0c142056143b8873044316415021c8607a3a34750a5a8b2"
+        },
+        {
+          "path": "packages/shared/src/validation/validation.test.ts",
+          "sha256": "2c32b76f1fdccb77b1bef95deb93bb4815c358960b89348b2f39028be5df1860"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "acc5f4df899fea132ed03121d10e205838e901ab9d31cfec30ab08129e1b3ba8"
+        }
+      ],
+      "checks": [
+        "Current unit tests cover explicit staff grants and denial before service access, exact and additive agent grants, invalid session/profile/role/metadata denial, and commercial verification. The invoice service unit suite asserts a foreign invoice and an unavailable profile both return 404.",
+        "254 current API and nine current shared permission cases passed. Hosted run 42759736897 job 129642496352 supplies 33 unchanged native-fixture-free invoice and profile guard cases. This unit acceptance is distinct from the exact native HTTP profile-isolation work.",
+        "Tests cover E.164 and email normalization, invalid and ambiguous values, Zod bounds, malformed date/query windows, unknown provider command fields, and Persian and Arabic-Indic monetary input converted to exact IRR before submission.",
+        "84 selected hosted cases match the application and shared validation source. Current related provider command validation passed 96 API and 77 web cases. This accepts the unit-test criterion. The separate comprehensive command-schema inventory remains open.",
+        "Unit and isolated transport tests cover success, timeout and throttle, invalid responses, uncertain payment reconciliation, exact amount conversion, retry categories, endpoint bounds and output mapping. The exercised seams include payment gateways, email and SMS, storage, bill providers, verification and embeddings.",
+        "189 selected unchanged hosted cases and 143 current provider diagnostic, network and verification cases passed. These tests use injected inputs and local fixtures. Live provider receipts are separate release gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/provider-adapter-unit-evidence",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "5b67374d6920c094b57ad2eaf87901c6aa405b1d561479151b4ea7eba1d4cdcd"
     }
   },
   "historical_improvements": [
