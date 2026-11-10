@@ -498043,7 +498043,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The live v0.5 controlled report reached the log sink. Resolve the observed cross-origin favicon. Collect and review a full week of representative report-only observations for the policy to enforce, and verify the real customer and staff journeys."
+        "An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation.",
+        "Collect and review a full week of representative report-only observations for the policy to enforce, then verify the real customer and staff journeys."
       ],
       "owner": null,
       "depends_on": [],
@@ -498053,7 +498054,8 @@
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-browser-and-edge-privacy"
+          "release-0.6-browser-and-edge-privacy",
+          "release-0.6-staging-favicon-publication-prep"
         ],
         "current_acceptance": null
       }
@@ -799729,7 +799731,7 @@
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "The EU private feed, current signatures and live staging daemon clean/EICAR verdicts are verified. Verify current signed updates and application upload receipts on the final operational topology.",
-        "Staging CSP report-only review found five cross-origin image reports and the live public branding response references the same barghsa.com favicon origin. Publish the preserved PNG as a sealed staging asset with authorized staff step-up, verify the byte-identical response and complete the full week of reviewed reports before enforcing CSP.",
+        "The live staging CSP reports and public branding response identify the cross-origin favicon. An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation. Complete the full reviewed observation window before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "The active staging scanner retains its 50M image and now loads signed daily 28179 from the EU mirror. The isolated source-matching 100M image passed current clean/EICAR and full 100 MiB tests. Roll out the reviewed 100M scanner and recurring private feed while preserving rollback."
       ],
@@ -799755,7 +799757,8 @@
           "release-0.6-business-safety-metrics-and-critical-wallet-drift",
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-official-clamav-feed-recheck",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-staging-favicon-publication-prep"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -917050,6 +917053,43 @@
         {
           "file": "typecheck.log",
           "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        }
+      ]
+    },
+    "release-0.6-staging-favicon-publication-prep": {
+      "batch": "release-0.6-staging-favicon-publication-prep",
+      "base_commit": "2f5f38df080ea9dde013f4b281a84d82c14a32ba",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/brand-asset.service.ts",
+          "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+        },
+        {
+          "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
+          "sha256": "b77c8cd06fabfee049e7ed41cd68310bf6b202d2fe6d913a089e3350b395a017"
+        },
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+        }
+      ],
+      "checks": [
+        "Live v0.5.0 at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c still returns the cross-origin favicon from its public branding configuration. The exact original 150×150 PNG was fetched over HTTPS and verified at SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda.",
+        "Prepared the same bytes for a staff operator to upload and activate through the existing staging branding workflow and verification prompt. Public asset byte and URL verification, a full week of representative report-only review and real customer and staff checks remain open."
+      ],
+      "proof_logs": [
+        {
+          "file": "staging-favicon-preparation.json",
+          "sha256": "edb7e0590681671d7573c50eb0fcd8c889e794d436348631c0644d2ff8f70bd4"
+        },
+        {
+          "file": "staging-favicon.png",
+          "sha256": "c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda"
         }
       ]
     }
