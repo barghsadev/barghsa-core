@@ -45,4 +45,6 @@ export const Route = createFileRoute('/_app')({
   },
   component: AppLayout,
   pendingComponent: () => <RouteSkeleton />,
+  // Reveal the workspace as soon as the fresh session read succeeds.
+  pendingMinMs: 0,
 });

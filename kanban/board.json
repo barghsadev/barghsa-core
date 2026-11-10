@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T08:11:32+00:00",
-  "source_commit": "a4d1aec0d9296a0b67d9709d92642fbde014f275",
+  "updated": "2026-11-10T08:17:47+00:00",
+  "source_commit": "5e77baad5fb7f8fa94e0c77ecfc3324d015ccfa6",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -497352,7 +497352,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the new strict primary mobile performance step and measurement artifact in the required GitHub Actions quality job on the exact candidate. The unchanged Size Limit gate and all 12 local production Chromium mobile journeys passed."
+        "Verify the exact hosted correction with the same primary mobile performance budgets and retain its successful artifact. The first hosted run at a4d1aec0 passed all login cases and all LCP/CLS/blocking thresholds, but all eight first-populated history cases failed at 2.68–2.81 seconds. The scoped workspace timing correction passed all 12 local production cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -497360,7 +497360,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": null
       }
@@ -517609,7 +517610,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517653,7 +517655,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -517884,7 +517886,8 @@
           "release-0.5-compact-touch-and-saving-feedback",
           "release-0.5-native-touch-and-setup-recovery",
           "release-0.5-conditional-native-choices",
-          "release-0.5-essential-control-contrast"
+          "release-0.5-essential-control-contrast",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517928,7 +517931,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "packages/i18n/src/shell.ts",
@@ -540920,7 +540923,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -541292,7 +541296,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -541740,7 +541744,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -542112,7 +542117,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -542559,7 +542564,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -542931,7 +542937,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -543518,7 +543524,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543678,7 +543685,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -544866,7 +544873,8 @@
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-accessibility-impact-and-manual-review",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -545026,7 +545034,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -647580,7 +647588,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -647952,7 +647961,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -648399,7 +648408,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -648771,7 +648781,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -649218,7 +649228,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -649590,7 +649601,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -650037,7 +650048,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -650409,7 +650421,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -650860,7 +650872,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -651232,7 +651245,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -651679,7 +651692,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -652051,7 +652065,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -652498,7 +652512,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -652870,7 +652885,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -653318,7 +653333,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -653690,7 +653706,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -654138,7 +654154,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -654510,7 +654527,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -654958,7 +654975,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -655330,7 +655348,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -655778,7 +655796,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -656150,7 +656169,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -656598,7 +656617,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -656970,7 +656990,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -657418,7 +657438,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -657790,7 +657811,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -658238,7 +658259,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -658610,7 +658632,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -659058,7 +659080,8 @@
           "release-0.6-typed-locale-dictionary",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "current-authority-profile-switch-and-responsive-workspace-navigation",
@@ -659430,7 +659453,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/admin.tsx",
@@ -687118,7 +687141,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -687402,7 +687426,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -687773,7 +687797,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -688057,7 +688082,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -688428,7 +688453,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -688712,7 +688738,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -689081,7 +689107,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -689365,7 +689392,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -689734,7 +689761,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -690018,7 +690046,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -690389,7 +690417,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -690673,7 +690702,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -691043,7 +691072,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -691327,7 +691357,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -691697,7 +691727,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -691981,7 +692012,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -692351,7 +692382,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -692635,7 +692667,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -693005,7 +693037,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -693289,7 +693322,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -693659,7 +693692,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -693943,7 +693977,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -694313,7 +694347,8 @@
           "release-0.6-verify-submission-quota-and-current-replay-authority",
           "release-0.6-shared-lint-and-git-hooks",
           "release-0.6-generated-openapi-client-contracts",
-          "release-0.6-staff-and-crm-identity-logs"
+          "release-0.6-staff-and-crm-identity-logs",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-dashboard-widget-journeys",
@@ -694597,7 +694632,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/dashboard.tsx",
@@ -731644,7 +731679,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -731972,7 +732008,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -732300,7 +732336,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -732628,7 +732665,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -732956,7 +732993,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733284,7 +733322,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -733613,7 +733651,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -733941,7 +733980,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -734269,7 +734308,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -734597,7 +734637,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -734925,7 +734965,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735253,7 +735294,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -735581,7 +735622,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -735909,7 +735951,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -736238,7 +736280,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -736566,7 +736609,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -736894,7 +736937,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737222,7 +737266,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -737550,7 +737594,8 @@
           "release-0.6-agent-guard-requires-capability",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-business-state-machine-unit-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -737878,7 +737923,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/settings/team.tsx",
@@ -766157,7 +766202,7 @@
             },
             {
               "path": "apps/web/src/routes/_app.tsx",
-              "sha256": "d81be9a804c23acc4c6df8aabc2687ff3c05867aded797ccd8c0d22ffaad165e"
+              "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
             },
             {
               "path": "apps/web/src/routes/_app/electricity/index.tsx",
@@ -767102,7 +767147,8 @@
           "release-0.6-saving-financial-profile-scope",
           "release-0.6-accessibility-impact-and-manual-review",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-browser-rehearsal-targeted-corrections"
+          "release-0.6-browser-rehearsal-targeted-corrections",
+          "release-0.6-workspace-pending-performance-correction"
         ]
       }
     },
@@ -873410,6 +873456,80 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/full-browser-42751525133",
       "source_scope_proof": "source-scope-proof.json",
       "source_scope_proof_sha256": "8647eb94f99cb7daee73aa218dda5e4b1cfb8f7729ddfa466b40a167f40bb043"
+    },
+    "release-0.6-workspace-pending-performance-correction": {
+      "batch": "release-0.6-workspace-pending-performance-correction",
+      "base_commit": "5e77baad5fb7f8fa94e0c77ecfc3324d015ccfa6",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.03.05"
+      ],
+      "changed_paths": [
+        "apps/web/src/routes/_app.tsx",
+        "docs/route-bundle-budgets.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "bd165f6e49428517802b09deb235748ccfdcdb82afe4ae666eb1059bd0127194"
+        },
+        {
+          "path": ".size-limit.json",
+          "sha256": "7fe0e2dcf8f3b937679e7563754addaf625ef5f5477447f69f499f93e6db6fd9"
+        },
+        {
+          "path": "apps/web/e2e/auth-entry-session.spec.ts",
+          "sha256": "7f27a9100aba250ee163ed1ccc0288648e106062d0f6df16379ec9db9102f13f"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+        },
+        {
+          "path": "apps/web/e2e/dashboard-widget-loading.spec.ts",
+          "sha256": "346c312b37de92189f5ddb13e7ea40bce8352f5cc6440374af2a0f0d3c624781"
+        },
+        {
+          "path": "apps/web/e2e/login-ui.spec.ts",
+          "sha256": "bd42092aa4f562d81a249ac509343e3f1ac21dd156fc96064fc5c7c4e251b615"
+        },
+        {
+          "path": "apps/web/e2e/primary-mobile-performance.ts",
+          "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+        },
+        {
+          "path": "apps/web/e2e/profile-switch.spec.ts",
+          "sha256": "515b6699def78381649b5d3d7b970b5b99a1e57a19d4652e0fce8de75ccce24e"
+        },
+        {
+          "path": "apps/web/src/lib/route-bootstrap-read.ts",
+          "sha256": "322598d4968e5db3d2870cab9c51a3a4f213900f6b2c9d0f53fde8ac4ee9508c"
+        },
+        {
+          "path": "apps/web/src/lib/session-role.ts",
+          "sha256": "ea895eb2e1897b094d18e854d7f0251c90af82bb0e71db2db191c77cf7519eb0"
+        },
+        {
+          "path": "apps/web/src/router.tsx",
+          "sha256": "cc5f12451ec879989e0142b58a293fc46812e72f2c11f42875be3bf12b08fca5"
+        },
+        {
+          "path": "apps/web/src/routes/_app.tsx",
+          "sha256": "06fb88f919ce05d0367b8251261383c868ba6bc5ad232cb44279f03f79a2e6d7"
+        },
+        {
+          "path": "docs/route-bundle-budgets.md",
+          "sha256": "c5972456a14687d5e06adb1760d70b4657a841aaef94234cb4f5c0923cccfab1"
+        }
+      ],
+      "checks": [
+        "Hosted candidate a4d1aec0 in run 42779839689 uploaded the actual primary mobile report. All LCP, CLS and blocking limits passed, while eight populated history cases missed the strict 2.5 second limit. The four login cases passed.",
+        "The authenticated workspace keeps its pending skeleton and reveals completed content without a fixed 500 ms minimum hold. Fresh session reads, aborts, current authority, profile isolation, error handling and default timing for other router boundaries are unchanged.",
+        "The exact local production build passed all 12 mobile cases with the same throttles and numerical assertions. The slowest first populated render was 1,882.9 ms, compared with 2,365.5 ms in the prior local build. Slowest LCP was 1,456 ms, maximum CLS was 0.0474 and startup blocking was zero.",
+        "All 24 related Chromium journeys passed for protected entry, session expiry, dashboard widget loading, profile switches and old-response denial. All 34 session/profile authority unit cases, the 102 unchanged Size Limit budgets, web typecheck, lint, formatting and diff checks passed. A new hosted pass remains required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/mobile-performance-42779839689",
+      "source_scope_proof": "source-scope-proof.json",
+      "source_scope_proof_sha256": "07e070138d2cad2fec41b02da76a7f27d963ac27245d2810d4044cfc949a3c02"
     }
   },
   "historical_improvements": [
