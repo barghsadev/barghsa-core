@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T11:18:20+00:00",
-  "source_commit": "9b627d1408233ad00e8787d9d562bd14d108d8c7",
+  "updated": "2026-11-10T11:23:37+00:00",
+  "source_commit": "9087649ca3f465f3bab01c4158815ca9f870462b",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -5553,7 +5553,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate.",
+        "Actual scheduled run 42789410833 reported all 40 shards with 127 unexpected outcomes and 18 flakes. The customer request, owned-read and Firefox document replays passed. The Firefox electricity submission race and the Persian saving touch-target flake now have source-bound local passing evidence. Resolve remaining failures and repeat the complete matrix on the exact candidate. The solar Submit request touch target also has source-bound passing geometry and mobile gate receipts.",
         "Bind current critical registration, MFA, legal onboarding, electricity and wallet, saving, solar construction and admin browser journeys to the accepted release source. The saving payment and fulfillment journey has separate local acceptance."
       ],
       "owner": null,
@@ -5622,7 +5622,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": null
       }
@@ -5882,7 +5883,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": null
       }
@@ -14093,7 +14095,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-solar-issued-browser-journey-and-nightly-receipts",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": null
       }
@@ -521557,7 +521560,8 @@
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -522021,7 +522025,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -542795,7 +542799,8 @@
           "release-0.6-scheduled-staff-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -543111,7 +543116,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -552092,7 +552097,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -552444,7 +552450,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -552961,7 +552967,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -553313,7 +553320,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -554362,7 +554369,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-mobile-request-and-owned-read-browser-replay",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -554714,7 +554722,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/routes/__root.tsx",
@@ -632615,7 +632623,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -633318,7 +633327,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/StaffNotificationCenterPage.tsx",
@@ -673802,7 +673811,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -674234,7 +674244,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -674956,7 +674966,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -675388,7 +675399,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -676110,7 +676121,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -676542,7 +676554,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -677267,7 +677279,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -677699,7 +677712,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -678424,7 +678437,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -678856,7 +678870,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -679608,7 +679622,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -680040,7 +680055,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -680761,7 +680776,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -681193,7 +681209,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -681914,7 +681930,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -682346,7 +682363,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -683068,7 +683085,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -683500,7 +683518,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -684240,7 +684258,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -684672,7 +684691,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -685395,7 +685414,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -685827,7 +685847,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -717921,7 +717941,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -718353,7 +718374,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -719073,7 +719094,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -719505,7 +719527,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -720225,7 +720247,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -720657,7 +720680,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -721377,7 +721400,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -721809,7 +721833,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -768208,7 +768232,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/StaffNotificationCenterPage.tsx",
@@ -768952,7 +768976,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ]
       }
     },
@@ -770112,7 +770137,7 @@
             },
             {
               "path": "apps/web/src/pages/SolarRequestsPage.tsx",
-              "sha256": "ed87817804165fb9cd129254f664175832d1eb3e7f3fa420f9f7995bde21ef38"
+              "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
             },
             {
               "path": "apps/web/src/pages/TeamPage.tsx",
@@ -771105,7 +771130,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-consultation-paid-browser-journey",
-          "release-0.6-saving-touch-and-electricity-quote-browser-replay"
+          "release-0.6-saving-touch-and-electricity-quote-browser-replay",
+          "release-0.6-solar-request-touch-target"
         ]
       }
     },
@@ -771333,7 +771359,8 @@
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-advanced-electricity-bank-refund-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
-          "release-0.6-contract-amendment-invoice-readback-browser-journey"
+          "release-0.6-contract-amendment-invoice-readback-browser-journey",
+          "release-0.6-solar-request-touch-target"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -879384,6 +879411,61 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/contract-amendment-invoice-readback",
       "source_scope_proof": "browser-source-scope-proof.json",
       "source_scope_proof_sha256": "82288b7e87f2825c913909d599a0148f9e144d11f5bf6f64493673949d8e0456"
+    },
+    "release-0.6-solar-request-touch-target": {
+      "batch": "release-0.6-solar-request-touch-target",
+      "base_commit": "9087649ca3f465f3bab01c4158815ca9f870462b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/pages/SolarRequestsPage.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/customer-request-routes.spec.ts",
+          "sha256": "78344f6625ebdb198af906043f148a9b520381fa6505d3faf0e972fad8eaa89a"
+        },
+        {
+          "path": "apps/web/e2e/customer-service-history-views.spec.ts",
+          "sha256": "d66282f9d2f34ac4a5fca3823990f42b5f2bd0ccd18b47c5de4cbbe784526c89"
+        },
+        {
+          "path": "apps/web/e2e/primary-mobile-performance.ts",
+          "sha256": "179314a776dc2e08f7a3279492331695b94891b39bb271312a761efb73961cd2"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "ad9a9e23b46599266a7fe0dcfd7185e12e612cdc50c040453533d1fccbea85cf"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestsPage.tsx",
+          "sha256": "3baed0481cb5461e3fbf73c35614ae3db091f46e3ec544cb412d7870b060a512"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "The exact hosted 42803223063 artifact recorded a failed first attempt for the English solar Submit request link at 320 px. The retry passed and the strict gate rejected the flake. Eight ordinary production-browser loads kept 44 px. A controlled reproduction of the existing entrance translation measured 62 subpixel positions below 44 px across two viewport sequences while computed minimum remained 44 px.",
+        "The solar link uses the existing scoped 45 px touch override. The final computed minimum was 45 px. The smallest ordinary measurement was 44.99996948 px and all 1024 controlled positions met the unchanged 44 px threshold. Both affected Mobile Safari solar request navigation cases passed.",
+        "All 12 primary mobile cases passed without retries. The highest populated render was 1862.7 ms, LCP 1480.0 ms, CLS 0.0474 and blocking 0.0 ms. The production build, 102 gzip budgets, lint, format and diff checks passed. The full exact hosted browser matrix remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/solar-touch-target",
+      "source_scope_proof": "browser-source-scope-proof.json",
+      "source_scope_proof_sha256": "69f40a88164b630be3dd64a2bbd5096868ca0a9392f8d56b421fc9f8914593b6"
     }
   },
   "historical_improvements": [
