@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-10T01:52:10+00:00",
-  "source_commit": "4592d7ea6f70bd16ae523f75fae08f1639e5dadb",
+  "updated": "2026-11-10T01:56:16+00:00",
+  "source_commit": "da4066db4ee38485e0f58004da7ccc9cf3e6619c",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
     "electricity",
@@ -483530,20 +483530,114 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.02 | Build extension+MIME allowlist configurable by category (docs, images, video) with admin limits | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-private-upload-boundaries"
+        ],
+        "current_acceptance": {
+          "kind": "verified-private-upload-boundaries",
+          "base_commit": "da4066db4ee38485e0f58004da7ccc9cf3e6619c",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.ts",
+              "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+              "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+            },
+            {
+              "path": "apps/api/src/upload/upload-access.test.ts",
+              "sha256": "8bc3a9de9ee9d213c5869f811e4f3ea41ce8e28df14dbf82b2f1a2cac060a2d7"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload-reservations.ts",
+              "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+            },
+            {
+              "path": "packages/shared/src/admin/upload-policies.ts",
+              "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "The existing versioned document, image and video upload policies bind extension and MIME allowlists and byte limits to the current effective category. Protected admin writes retain step-up, audit, history and fail-closed policy reads.",
+            "Reused 18 compiled admin policy cases, 14 resolver cases and the file-policy cases. The cases cover validation, actual URL issuance, authority loss and rollback."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.01.03",
@@ -483556,20 +483650,114 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.03 | Generate random object keys (UUID); never use original filenames in storage path | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-private-upload-boundaries"
+        ],
+        "current_acceptance": {
+          "kind": "verified-private-upload-boundaries",
+          "base_commit": "da4066db4ee38485e0f58004da7ccc9cf3e6619c",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.ts",
+              "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+              "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+            },
+            {
+              "path": "apps/api/src/upload/upload-access.test.ts",
+              "sha256": "8bc3a9de9ee9d213c5869f811e4f3ea41ce8e28df14dbf82b2f1a2cac060a2d7"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload-reservations.ts",
+              "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+            },
+            {
+              "path": "packages/shared/src/admin/upload-policies.ts",
+              "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Upload keys use a controlled category prefix, a cryptographically random UUID and the normalized extension. Sealed document originals use a separate random UUID and checksum path. Original names stay separate from object-key construction.",
+            "Reused the source-matching compiled document, multipart and shared S3 storage suites, covering verified bytes, private reservation and sealed object retrieval."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.01.04",
@@ -483634,20 +483822,114 @@
         "story": "06-security-testing-observability.md#spec-ff557ea04904"
       },
       "requirement": "| T-06.06.01.06 | Ensure uploads are private by default; access via short-lived authorized URLs or backend streaming after auth check | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-verify-private-upload-boundaries"
+        ],
+        "current_acceptance": {
+          "kind": "verified-private-upload-boundaries",
+          "base_commit": "da4066db4ee38485e0f58004da7ccc9cf3e6619c",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+              "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.controller.ts",
+              "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+            },
+            {
+              "path": "apps/api/src/admin/upload-policy.service.ts",
+              "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.test.ts",
+              "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+            },
+            {
+              "path": "apps/api/src/documents/document-preview.ts",
+              "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+            },
+            {
+              "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+              "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+            },
+            {
+              "path": "apps/api/src/documents/document.controller.ts",
+              "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+            },
+            {
+              "path": "apps/api/src/upload/file-policy.test.ts",
+              "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+            },
+            {
+              "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+              "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+            },
+            {
+              "path": "apps/api/src/upload/upload-access.test.ts",
+              "sha256": "8bc3a9de9ee9d213c5869f811e4f3ea41ce8e28df14dbf82b2f1a2cac060a2d7"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+              "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+            },
+            {
+              "path": "apps/api/src/upload/upload-policy.resolver.ts",
+              "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+            },
+            {
+              "path": "apps/api/src/upload/upload-reservations.ts",
+              "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+            },
+            {
+              "path": "packages/shared/src/admin/upload-policies.ts",
+              "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+            },
+            {
+              "path": "packages/shared/src/storage/storage.test.ts",
+              "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+            }
+          ],
+          "checks": [
+            "Source objects are private by default. Customer and staff document operations recheck current authority and scan state before generating the owner-approved 300-second signed links. Signed URL issuance is recorded in the append-only access log. Preview and download responses retain private no-store handling.",
+            "Reused the 43 compiled document cases and related template, preview and storage suites, including foreign-profile denial, explicit staff grants and quarantine denial. Final deployment and the separate original attachment disposition remain independently tracked."
+          ]
+        }
+      },
+      "blocker": null
     },
     {
       "key": "06-security-testing-observability.md#T-06.06.01.07",
@@ -856467,6 +856749,108 @@
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/electricity-replay-authority",
       "source_scope_proof": "electricity-replay-source-proof.json",
       "source_scope_proof_sha256": "71e32e6d0bca1456569952536a67428d199638eb63fa171a01d1c86ea0e2517f"
+    },
+    "release-0.6-verify-private-upload-boundaries": {
+      "batch": "release-0.6-verify-private-upload-boundaries",
+      "base_commit": "da4066db4ee38485e0f58004da7ccc9cf3e6619c",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.06"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/upload-policy-http.integration.test.ts",
+          "sha256": "d332a9256a0e0315e7afd101bc33934b88500c2b9ea206ab80a3eb35a8c33838"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy.controller.ts",
+          "sha256": "4e3780953131cb3ac4466d08e7bfc19b99bc0e4b540d3370917d3617548b9922"
+        },
+        {
+          "path": "apps/api/src/admin/upload-policy.service.ts",
+          "sha256": "d58d3d1a09a1dfd5b2a265b86184070304f9dc96cc907142f858ed0f44437378"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "189966963e3852350e1b1874c52a20c7f0a3b9b3a190e8386ca3f3426f5dfa77"
+        },
+        {
+          "path": "apps/api/src/documents/document-preview.test.ts",
+          "sha256": "4c608792e7693e8c555f0c8b5a984ff8e23b2973da94d2688dfa0a9ac8a36d6b"
+        },
+        {
+          "path": "apps/api/src/documents/document-preview.ts",
+          "sha256": "b132db46c354d9c00c64b728b3f8c78c2ccb34e8048c4e61801ee4928bbf4ac0"
+        },
+        {
+          "path": "apps/api/src/documents/document-storage.service.ts",
+          "sha256": "8b13acb8b019522ecffca88a0af2e8f49d990cc01d0ce431e19e782745f1d851"
+        },
+        {
+          "path": "apps/api/src/documents/document-template-http.integration.test.ts",
+          "sha256": "1620adfc9f88bf453446770c9777e1b9bf54a363d22f4f1623a1d07c13037594"
+        },
+        {
+          "path": "apps/api/src/documents/document.controller.ts",
+          "sha256": "9808de9e671a9b4a5261e207b831b9e77454a1cf9d70116e7a2eb8816252d6f9"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "96dd472ebb2422a1811b27e0c29a8d004645717d1c8a455fea4e48b4bbc8a2ff"
+        },
+        {
+          "path": "apps/api/src/upload/file-policy.test.ts",
+          "sha256": "419c5bd942efe9d73f8c5098098c931df0f0fad2db5dc3e97b884c53d7910cd7"
+        },
+        {
+          "path": "apps/api/src/upload/multipart-http.integration.test.ts",
+          "sha256": "0ee98fc4cf227e14756ddae7f3625ef888af7631412c26c4a35ae66ec3d817e6"
+        },
+        {
+          "path": "apps/api/src/upload/upload-access.test.ts",
+          "sha256": "8bc3a9de9ee9d213c5869f811e4f3ea41ce8e28df14dbf82b2f1a2cac060a2d7"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.test.ts",
+          "sha256": "3ef64e738e42012a4ce79bc8b452b6d2aa4eecbd4279c93696fb2552d085b6c0"
+        },
+        {
+          "path": "apps/api/src/upload/upload-policy.resolver.ts",
+          "sha256": "caa6cfb8661b7a9203408463426bbe5a81a9e64314412b49e67029c5ad0156b6"
+        },
+        {
+          "path": "apps/api/src/upload/upload-reservations.ts",
+          "sha256": "611b32f437fc1d841420f12c41936033ed53ba9bb719a2d18246bcd0474f785f"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "0f44b511cef397bebf63dd1af63e869577d53abac278a7aee5d94dc2d9f6959e"
+        },
+        {
+          "path": "packages/shared/src/admin/upload-policies.ts",
+          "sha256": "036070914bfa70bb75fef25db50c9ebd980ce628e986927f90f2d7cc9d58a02c"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "2281b7baea118f61094f67829a63379b5fc0a2505adf3278d5ccfe998405644e"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "1a45253e6327390059aec9aa158b8954aed838338f98823c44aceb88c182f3a5"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "897ad67f7dcdf7af35bee0714cbb1d0cdae6b589161f62a5a0e598a80a19287f"
+        }
+      ],
+      "checks": [
+        "Reused passing compiled storage, upload, policy and document suites from an exact source-matching scope. The overall prior hosted job failed on the separately repaired agent-removal snapshot."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation",
+      "source_scope_proof": "private-upload-boundary-source-proof.json",
+      "source_scope_proof_sha256": "af4e1491b411734957df4f4ae937cd048355cff0eb00301bcd8766d831a4c713"
     }
   },
   "historical_improvements": [
