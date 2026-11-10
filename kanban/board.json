@@ -14562,7 +14562,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-native-csp-fixture-teardown",
-          "release-0.6-runtime-navigation-route-checks"
+          "release-0.6-runtime-navigation-route-checks",
+          "release-0.6-nightly-source-security-scan"
         ],
         "current_acceptance": null
       }
@@ -513878,7 +513879,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "8a3eb56a308060802374c2cee650ee54aeb3f42b833543c0dd02c6cfa28861c8"
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -513935,6 +513936,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-nightly-source-security-scan",
+              "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
             }
           ]
         }
@@ -514189,7 +514198,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "8a3eb56a308060802374c2cee650ee54aeb3f42b833543c0dd02c6cfa28861c8"
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -514245,6 +514254,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-nightly-source-security-scan",
+              "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
             }
           ]
         }
@@ -517469,7 +517486,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "8a3eb56a308060802374c2cee650ee54aeb3f42b833543c0dd02c6cfa28861c8"
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -517528,6 +517545,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-nightly-source-security-scan",
+              "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
             }
           ]
         }
@@ -517698,7 +517723,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "8a3eb56a308060802374c2cee650ee54aeb3f42b833543c0dd02c6cfa28861c8"
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -517753,6 +517778,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-nightly-source-security-scan",
+              "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
             }
           ]
         }
@@ -517933,7 +517966,7 @@
       "launch_required": true,
       "remaining": [
         "Reconcile the terminal 40-shard result of run 42878628863 at a51b8b74. Verify a clean exact candidate run with all five browsers, no unexpected, flaky or runner errors and seven days of quarantine history.",
-        "Read back the final nightly dependency and security checks, schema drift and expanded navigation receipt. Source-bound targeted evidence covers the previous Firefox, WebKit, consultation, threshold, receipt, saving and native CSP fixes. The selected local navigation scope passed 26 browser cases."
+        "Read back the final hosted dependency, expanded navigation, schema drift and source-security reports. The exact local Semgrep gate scanned 2,124 files with zero findings or errors, and the selected navigation scope passed 26 browser cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -517950,7 +517983,8 @@
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-native-safari-saving-shell-staff-team",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-runtime-navigation-route-checks"
+          "release-0.6-runtime-navigation-route-checks",
+          "release-0.6-nightly-source-security-scan"
         ],
         "current_acceptance": null
       }
@@ -518049,7 +518083,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "8a3eb56a308060802374c2cee650ee54aeb3f42b833543c0dd02c6cfa28861c8"
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -518104,6 +518138,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-nightly-source-security-scan",
+              "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
             }
           ]
         }
@@ -518151,7 +518193,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "8a3eb56a308060802374c2cee650ee54aeb3f42b833543c0dd02c6cfa28861c8"
+              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -518206,6 +518248,14 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-nightly-source-security-scan",
+              "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
             }
           ]
         }
@@ -916230,6 +916280,66 @@
         {
           "file": "navigation-results.json",
           "sha256": "596468863c0e4695fbd54831a43538eaa211fcc930991f0b12b6c7a5a7614b5c"
+        }
+      ]
+    },
+    "release-0.6-nightly-source-security-scan": {
+      "batch": "release-0.6-nightly-source-security-scan",
+      "base_commit": "1a05e5754b6f7ba40bfa8d8380d9ba4a477e2b73",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "06-security-testing-observability.md#T-06.12.05.01"
+      ],
+      "changed_paths": [
+        ".github/workflows/browser-nightly.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "fba36ede907c0236c93435bbb7112c78fcc4a75b1becfa865795f7410b1c8038"
+        },
+        {
+          "path": ".semgrep/security.yml",
+          "sha256": "22c6d0f49113cafe78b1fea60b8e536597cd0b27d0e1348386349d6a16a616a9"
+        },
+        {
+          "path": ".semgrep/security.tsx",
+          "sha256": "9178cea1717f6cf4652b75b293bc6f291900cb1213fdb45246f8eb58a64df01b"
+        },
+        {
+          "path": "scripts/check-sast.py",
+          "sha256": "93fb331d8107e3ba79858d6b9fa9bd0460de11438b99f93844a75df0134a4ab9"
+        },
+        {
+          "path": "scripts/test_check_sast.py",
+          "sha256": "d1677e994a2e46763efdeac4f414a6b2c91def515283e88ed8e285af76529d57"
+        }
+      ],
+      "checks": [
+        "The nightly dependency, migration and navigation job also runs the existing Semgrep 1.176.1 fixtures and full application source scan. The scan runs after earlier gate failures where the Python setup succeeds. The existing artifact name now includes the sanitized static scan report.",
+        "The exact pinned command passed all six rules, scanned 2,124 source files and returned zero findings and zero scanner errors. Four report handling cases passed. The source digest manifest preserves the scan scope. Workflow actionlint, Prettier and whitespace checks passed.",
+        "This is current source and workflow evidence. The final hosted scheduled run, its strict browser rollup and authorized external result delivery remain open."
+      ],
+      "proof_logs": [
+        {
+          "file": "static-security.json",
+          "sha256": "dc653330ef84e63841db76861dfa9353965d2288387df95f206f89d27de3a359"
+        },
+        {
+          "file": "nightly-sast-source.sha256",
+          "sha256": "459d50293fda7e2de34dc2640ddc529e30016823b90e8c284e78e89dc591415f"
+        },
+        {
+          "file": "nightly-sast.log",
+          "sha256": "0289dc7c3638c8888eac91e25e15bacfcb0761ada0e67ad4d7a50a13367b6e6a"
+        },
+        {
+          "file": "sast-report-unit.log",
+          "sha256": "e6ec182765cd965f2837d8eeaef5a64af48a104f245cd1a0b7281559194c57c1"
         }
       ]
     }
