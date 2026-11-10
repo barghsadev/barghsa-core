@@ -200,6 +200,26 @@
         "default": "./dist/cjs/password-hash.js"
       }
     },
+    "./password-policy": {
+      "import": {
+        "types": "./dist/validation/password-policy.d.ts",
+        "default": "./dist/validation/password-policy.js"
+      },
+      "require": {
+        "types": "./dist/cjs/validation/password-policy.d.ts",
+        "default": "./dist/cjs/validation/password-policy.js"
+      }
+    },
+    "./password-validation": {
+      "import": {
+        "types": "./dist/validation/password.d.ts",
+        "default": "./dist/validation/password.js"
+      },
+      "require": {
+        "types": "./dist/cjs/validation/password.d.ts",
+        "default": "./dist/cjs/validation/password.js"
+      }
+    },
     "./errors/domain": {
       "import": {
         "types": "./dist/errors/domain-error-codes.d.ts",
@@ -258,6 +278,16 @@
       "require": {
         "types": "./dist/cjs/pagination/index.d.ts",
         "default": "./dist/cjs/pagination/index.js"
+      }
+    },
+    "./types": {
+      "import": {
+        "types": "./dist/types/index.d.ts",
+        "default": "./dist/types/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/types/index.d.ts",
+        "default": "./dist/cjs/types/index.js"
       }
     },
     "./catalogue-query": {

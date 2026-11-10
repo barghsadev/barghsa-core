@@ -25,6 +25,14 @@ test('root and subpath imports share module state within each format', async () 
   const cjsErrors = require('@barghsa/shared/errors');
   assert.equal(esm.ErrorCodes, esmErrors.ErrorCodes);
   assert.equal(cjs.ErrorCodes, cjsErrors.ErrorCodes);
+  assert.equal(
+    esm.ELECTRICITY_ORDER_STATUSES,
+    (await import('@barghsa/shared/types')).ELECTRICITY_ORDER_STATUSES
+  );
+  assert.equal(
+    cjs.ELECTRICITY_ORDER_STATUSES,
+    require('@barghsa/shared/types').ELECTRICITY_ORDER_STATUSES
+  );
   assert.equal(esm.validatePostalCode('1234567890'), true);
   assert.equal(cjs.validatePostalCode('0123456789'), false);
 });
@@ -36,11 +44,13 @@ test('TypeScript resolves ESM and CommonJS declarations with strict checking', (
     const source = `
       import { validatePostalCode } from '@barghsa/shared';
       import { ErrorCodes } from '@barghsa/shared/errors';
+      import { ELECTRICITY_ORDER_STATUSES } from '@barghsa/shared/types';
       const valid: boolean = validatePostalCode('1234567890');
       const code: string = ErrorCodes.AUTHZ_FORBIDDEN.code;
+      const status: 'submitted' = ELECTRICITY_ORDER_STATUSES[0];
       // @ts-expect-error Exported functions must not degrade to any.
       const invalid: number = validatePostalCode('1234567890');
-      void [valid, code, invalid];
+      void [valid, code, status, invalid];
     `;
     for (const extension of ['mts', 'cts'])
       writeFileSync(join(scratch, `consumer.${extension}`), source);

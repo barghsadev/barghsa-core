@@ -1,3 +1,4 @@
+import { meetsReplacementPasswordPolicy } from '@barghsa/shared/password-policy';
 import { authResponseRecord } from './auth-responses.js';
 export type RecoveryStage = 'request' | 'verify' | 'reset';
 export type RecoveryValues = {
@@ -47,11 +48,5 @@ export function recoveryResetReceipt(value: unknown): boolean {
   );
 }
 export function recoveryPasswordValid(value: string): boolean {
-  return (
-    value.length >= 8 &&
-    value.length <= 128 &&
-    /[a-z]/.test(value) &&
-    /[A-Z]/.test(value) &&
-    /\d/.test(value)
-  );
+  return meetsReplacementPasswordPolicy(value);
 }

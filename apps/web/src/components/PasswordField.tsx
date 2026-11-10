@@ -1,4 +1,5 @@
 import { type Locale, t } from '@barghsa/i18n/auth';
+import { meetsPasswordMinimum } from '@barghsa/shared/password-policy';
 import { Input, Label } from '@barghsa/ui';
 import { type ReactNode, useCallback, useEffect, useState } from 'react';
 
@@ -11,12 +12,6 @@ const STRENGTH_COLORS = [
   'bg-yellow-500',
   'bg-success',
 ];
-
-function meetsMinimumRequirements(password: string): boolean {
-  return (
-    password.length >= 8 && /[a-z]/.test(password) && /[A-Z]/.test(password) && /\d/.test(password)
-  );
-}
 
 // ─── Inline SVG icons ────────────────────────────────────────────────────
 
@@ -155,7 +150,7 @@ export function PasswordField({
     assessment?.input === value && assessment.locale === locale ? assessment : null;
   const strength = currentAssessment?.result;
   const checkingStrength = !!value && !strength && !currentAssessment?.failed;
-  const meetsReq = meetsMinimumRequirements(value);
+  const meetsReq = meetsPasswordMinimum(value);
   const color = STRENGTH_COLORS[strength ? strength.score / 25 : 0]!;
   const filled = strength ? Math.max(1, strength.score / 25) : 0;
 

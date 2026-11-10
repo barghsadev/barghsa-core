@@ -1,3 +1,4 @@
+import { meetsPasswordMinimum } from '@barghsa/shared/password-policy';
 import { authResponseRecord } from './auth-responses.js';
 export type RegistrationValues = { username: string; password: string; tos: boolean; otp: string };
 export const emptyRegistration: RegistrationValues = {
@@ -38,6 +39,5 @@ export function registrationChallenge(value: unknown): string | null {
   return typeof id === 'string' && uuid.test(id) ? id : null;
 }
 export function registrationPasswordValid(value: string): boolean {
-  // Registration has no backend maximum; recovery's separate maximum must not narrow this flow.
-  return value.length >= 8 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /\d/.test(value);
+  return meetsPasswordMinimum(value);
 }

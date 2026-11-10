@@ -5,6 +5,49 @@ import {
   validateLegalNationalIdentifier,
   normalizeUsername,
 } from './index.js';
+import { passwordSchema, replacementPasswordSchema } from './password.js';
+import { meetsPasswordMinimum, meetsReplacementPasswordPolicy } from './password-policy.js';
+
+describe('password policy', () => {
+  it('enforces length and ASCII character classes without rewriting the input', () => {
+    for (const schema of [passwordSchema, replacementPasswordSchema]) {
+      expect(schema.parse('Abcdefg1')).toBe('Abcdefg1');
+      expect(schema.parse(' Abcdefg1 ')).toBe(' Abcdefg1 ');
+      for (const invalid of ['Abcdef1', 'abcdefg1', 'ABCDEFG1', 'Abcdefgh', 'Abcdefg۱']) {
+        const result = schema.safeParse(invalid);
+        expect(result.error?.issues[0]?.message).toBe('AUTH:REGISTER:WEAK_PASSWORD');
+      }
+    }
+  });
+
+  it('retains the replacement-only upper bound', () => {
+    const limit = 'Ab1' + 'x'.repeat(125);
+    expect(replacementPasswordSchema.parse(limit)).toBe(limit);
+    expect(replacementPasswordSchema.safeParse(limit + 'x').error?.issues[0]?.message).toBe(
+      'AUTH:REGISTER:WEAK_PASSWORD'
+    );
+    expect(passwordSchema.parse(limit + 'x')).toBe(limit + 'x');
+  });
+
+  it('keeps the lightweight browser checks aligned with both schemas', () => {
+    for (const value of [
+      '',
+      ' Abcdefg1 ',
+      'Abcdef1',
+      'abcdefg1',
+      'ABCDEFG1',
+      'Abcdefgh',
+      'Abcdefg۱',
+      'Ab1' + 'x'.repeat(125),
+      'Ab1' + 'x'.repeat(126),
+    ]) {
+      expect(meetsPasswordMinimum(value)).toBe(passwordSchema.safeParse(value).success);
+      expect(meetsReplacementPasswordPolicy(value)).toBe(
+        replacementPasswordSchema.safeParse(value).success
+      );
+    }
+  });
+});
 
 describe('normalizeUsername', () => {
   it('converts Iranian mobile 09xxxxxxxxx to E.164', () => {

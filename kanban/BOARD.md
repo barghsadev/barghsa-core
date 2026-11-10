@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-10T01:00:58+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-10T01:20:50+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1086 | Accepted with unchanged source bindings. |
-| verify | 239 | Existing work may be complete; inspect evidence before building. |
+| done | 1088 | Accepted with unchanged source bindings. |
+| verify | 237 | Existing work may be complete; inspect evidence before building. |
 | partial | 36 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1046,9 +1046,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.05.02` | verify | Earlier deferred | Create weekly load/performance regression test |
 | `01-platform-infrastructure.md#T-05.05.03` | verify | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
 | `01-platform-infrastructure.md#T-05.05.04` | verify | Earlier deferred | Create quarterly access review and threat-model update |
-| `01-platform-infrastructure.md#T-06.01.01` | verify | Earlier deferred | Initialize `packages/shared` with tsconfig and dependencies |
+| `01-platform-infrastructure.md#T-06.01.01` | done | Earlier deferred | Initialize `packages/shared` with tsconfig and dependencies |
 | `01-platform-infrastructure.md#T-06.01.02` | verify | Earlier deferred | Create username validation and normalization helpers |
-| `01-platform-infrastructure.md#T-06.01.03` | verify | Earlier deferred | Create password validation with strength meter logic |
+| `01-platform-infrastructure.md#T-06.01.03` | done | Earlier deferred | Create password validation with strength meter logic |
 | `01-platform-infrastructure.md#T-06.01.04` | done | Earlier acceptance_verified | Create stable error code enum with HTTP status mapping |
 | `01-platform-infrastructure.md#T-06.01.05` | done | Earlier deferred | Create pagination helper schemas |
 | `01-platform-infrastructure.md#T-06.02.01` | verify | Earlier deferred | Initialize `packages/i18n` with message dictionary structure |

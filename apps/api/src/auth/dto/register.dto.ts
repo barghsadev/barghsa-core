@@ -1,3 +1,4 @@
+import { passwordSchema } from '@barghsa/shared/password-validation';
 import { z } from 'zod';
 
 /**
@@ -35,12 +36,7 @@ export const RegisterSchema = z.object({
       },
       { message: 'AUTH:REGISTER:INVALID_USERNAME' }
     ),
-  password: z
-    .string()
-    .min(8, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .regex(/[a-z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .regex(/[A-Z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .regex(/\d/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' }),
+  password: passwordSchema,
   tosVersionId: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }),
 });
 

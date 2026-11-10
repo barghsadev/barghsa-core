@@ -1,3 +1,4 @@
+import { replacementPasswordSchema } from '@barghsa/shared/password-validation';
 import { z } from 'zod';
 
 /** OTP-first reset exchange and the legacy combined reset request (T-02.03.02). */
@@ -6,13 +7,7 @@ const OtpSchema = z
   .string()
   .length(6)
   .regex(/^\d{6}$/);
-export const ResetPasswordStrengthSchema = z
-  .string()
-  .min(8, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-  .max(128, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-  .regex(/[A-Z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-  .regex(/[a-z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-  .regex(/[0-9]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' });
+export const ResetPasswordStrengthSchema = replacementPasswordSchema;
 
 export const VerifyResetOtpSchema = z
   .object({ challengeId: ChallengeIdSchema, otp: OtpSchema })

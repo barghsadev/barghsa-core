@@ -1,3 +1,4 @@
+import { replacementPasswordSchema } from '@barghsa/shared/password-validation';
 import { z } from 'zod';
 
 /**
@@ -8,13 +9,7 @@ import { z } from 'zod';
  */
 export const ForceChangePasswordSchema = z.object({
   passwordChangeToken: z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' }),
-  newPassword: z
-    .string()
-    .min(8, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .max(128, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .regex(/[A-Z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .regex(/[a-z]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' })
-    .regex(/[0-9]/, { message: 'AUTH:REGISTER:WEAK_PASSWORD' }),
+  newPassword: replacementPasswordSchema,
 });
 
 export type ForceChangePasswordInput = z.infer<typeof ForceChangePasswordSchema>;
