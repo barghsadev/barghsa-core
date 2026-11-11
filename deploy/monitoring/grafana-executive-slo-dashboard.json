@@ -291,6 +291,67 @@
           "range": false
         }
       ]
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "Last synthetic run age",
+      "description": "Time since each independent runner completed a check. Compare with the five-minute schedule and the 12-minute freshness bound.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": { "x": 0, "y": 18, "w": 8, "h": 5 },
+      "fieldConfig": {
+        "defaults": { "unit": "s", "noValue": "No runner data", "decimals": 0 },
+        "overrides": []
+      },
+      "options": { "colorMode": "none", "graphMode": "none", "textMode": "value_and_name" },
+      "targets": [
+        {
+          "expr": "time() - barghsa_synthetic_probe_completed_timestamp_seconds{job=\"barghsa-synthetic\",environment=\"$environment\",database=\"$database\"}",
+          "legendFormat": "{{instance}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "stat",
+      "title": "Last executed synthetic checks",
+      "description": "Passed or failed checks from a fresh independent run. Checks skipped after a failed prerequisite have no result.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": { "x": 8, "y": 18, "w": 16, "h": 5 },
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "No current results",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "Failed", "color": "red" },
+                "1": { "text": "Passed", "color": "green" }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": { "colorMode": "value", "graphMode": "none", "textMode": "value_and_name" },
+      "targets": [
+        {
+          "expr": "barghsa_synthetic_probe_success{job=\"barghsa-synthetic\",environment=\"$environment\",database=\"$database\"} and on (job, instance, environment, database) barghsa:synthetic_probe:fresh and on (job, instance, environment, database) (up{job=\"barghsa-synthetic\"} == 1)",
+          "legendFormat": "{{instance}} · {{check}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
     }
   ]
 }

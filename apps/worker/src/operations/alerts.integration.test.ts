@@ -279,6 +279,13 @@ it.each([
     availability_tier: 'commercial',
     window: '24h',
   },
+  {
+    alertname: 'SyntheticProbeFailed',
+    severity: 'critical',
+    priority: 'P1',
+    check: 'login',
+  },
+  { alertname: 'SyntheticProbeUnavailable', severity: 'critical', priority: 'P1' },
 ])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);
@@ -308,6 +315,7 @@ it.each([
       payload: {
         priority: labels.priority,
         ...('service' in labels ? { details: expect.stringContaining('خورشیدی / Solar') } : {}),
+        ...('check' in labels ? { details: expect.stringContaining('ورود / Sign-in') } : {}),
       },
     },
   ]);

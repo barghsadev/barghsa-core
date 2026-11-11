@@ -60,3 +60,33 @@ it.each([
     })
   ).toThrow('Invalid alert scope or identity');
 });
+
+it.each([
+  ['SyntheticProbeFailed', { check: 'login' }, { syntheticCheck: 'login' }],
+  ['SyntheticProbeUnavailable', {}, {}],
+] as const)('validates the scoped P1 and dashboard link for %s', (alertname, extra, expected) => {
+  expect(
+    parse({ ...base, alertname, severity: 'critical', priority: 'P1', ...extra })
+  ).toMatchObject([{ name: alertname, priority: 'P1', ...expected }]);
+  expect(
+    operationsAlertLinks('admin.operations_alert', {
+      operationsAlertName: alertname,
+      operationsDashboardOrigin: 'https://grafana.example.test',
+    }).map(({ href }) => href)
+  ).toEqual([
+    'https://grafana.example.test/d/barghsa-executive-slo',
+    'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md',
+  ]);
+});
+
+it.each(['', '__proto__', 'unlisted'])('rejects an unknown synthetic check %j', (check) => {
+  expect(() =>
+    parse({
+      ...base,
+      alertname: 'SyntheticProbeFailed',
+      severity: 'critical',
+      priority: 'P1',
+      check,
+    })
+  ).toThrow('Invalid alert scope or identity');
+});

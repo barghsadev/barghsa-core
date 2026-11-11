@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T22:39:48+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T22:45:47+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1230 | Accepted with unchanged source bindings. |
-| verify | 58 | Existing work may be complete; inspect evidence before building. |
-| partial | 72 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 57 | Existing work may be complete; inspect evidence before building. |
+| partial | 73 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1436,7 +1436,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.17.03.01` | done | Recorded batch work | Define synthetic check endpoints: `/health` (public), authenticated read-only query, login flow |
 | `06-security-testing-observability.md#T-06.17.03.02` | partial | Recorded batch work | Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider) |
 | `06-security-testing-observability.md#T-06.17.03.03` | partial | Recorded batch work | Ensure synthetic checks use isolated test accounts and never create real orders/payments |
-| `06-security-testing-observability.md#T-06.17.03.04` | verify | Recorded batch work | Configure alert on synthetic check failure → on-call |
+| `06-security-testing-observability.md#T-06.17.03.04` | partial | Recorded batch work | Configure alert on synthetic check failure → on-call |
 | `06-security-testing-observability.md#T-06.18.01.01` | verify | Inventory needed | Configure Loki log retention: 30 days searchable, longer-term archive to cold storage |
 | `06-security-testing-observability.md#T-06.18.01.02` | verify | Inventory needed | Configure Prometheus metric retention: 13 months at downsampled resolution |
 | `06-security-testing-observability.md#T-06.18.01.03` | verify | Inventory needed | Configure Tempo trace retention: 7 days ordinary, 30 days error/slow |

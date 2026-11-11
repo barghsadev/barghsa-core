@@ -1,0 +1,36 @@
+groups:
+  - name: barghsa-synthetic
+    rules:
+      - record: barghsa:synthetic_probe:fresh
+        expr: |
+          (time() - barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",environment!="",database!=""} >= 0)
+          and
+          (time() - barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",environment!="",database!=""} <= 720)
+      - alert: SyntheticProbeFailed
+        expr: |
+          (barghsa_synthetic_probe_success{job="barghsa-synthetic",environment!="",database!="",check=~"liveness|readiness|login|account|electricity|saving|solar|consultation|logout"} == 0)
+          and on (job, instance, environment, database) barghsa:synthetic_probe:fresh
+          and on (job, instance, environment, database) (up{job="barghsa-synthetic"} == 1)
+        for: 6m
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: 'The independent synthetic check {{ $labels.check }} keeps failing'
+          dashboard_uid: barghsa-executive-slo
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - alert: SyntheticProbeUnavailable
+        expr: |
+          (up{job="barghsa-synthetic",environment!="",database!=""} == 0)
+          or (
+            (up{job="barghsa-synthetic",environment!="",database!=""} == 1)
+            unless on (job, instance, environment, database) barghsa:synthetic_probe:fresh
+          )
+        for: 2m
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: The independent synthetic runner stopped reporting
+          dashboard_uid: barghsa-executive-slo
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md

@@ -6,4 +6,8 @@ For a P1 fast burn, the on-call operator verifies customer impact and opens an i
 2. Check the release revision, API errors and latency, database and worker readiness, and the service's critical dependencies. Preserve payment, refund and contract evidence. Follow the relevant containment and recovery procedure when the failure is confirmed.
 3. Read back the affected authenticated journey, both burn windows and the resolved alert. Record the incident reference, owner, before and after attempt counts and delivery receipts.
 
+For a P1 synthetic failure, inspect the reported check and its validated correlation ID in the independent runner journal. Verify the affected public endpoint or the dedicated customer fixture before attributing the result to customer traffic. The Executive SLO dashboard shows the last run age and the checks executed by a fresh runner.
+
+For a P1 synthetic reporting outage, check the configured scrape target, timer, recent unit status and protected fixture configuration. Restore the approved runner and verify a fresh result before resolving the incident. The failure and unavailable rules feed the private operations receiver. Verify the approved P1 pager route with a firing and resolved receipt before relying on it for on-call delivery.
+
 [Service objectives](../operations/service-objectives.md) · [Incident response](../operations/incident-response.md) · [Bad deployment and rollback](bad-deployment.md)

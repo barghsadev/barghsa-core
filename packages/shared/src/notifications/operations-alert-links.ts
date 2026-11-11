@@ -16,6 +16,8 @@ const alertResources = {
   WorkerUnavailable: ['barghsa-worker-health', 'notification-outage'],
   JourneyErrorBudgetFastBurn: ['barghsa-executive-slo', 'journey-availability'],
   JourneyErrorBudgetSlowBurn: ['barghsa-executive-slo', 'journey-availability'],
+  SyntheticProbeFailed: ['barghsa-executive-slo', 'journey-availability'],
+  SyntheticProbeUnavailable: ['barghsa-executive-slo', 'journey-availability'],
 } as const;
 
 export function operationsDashboardOrigin(value: unknown): string | null {

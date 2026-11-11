@@ -25,12 +25,22 @@ const labels: Record<string, string> = {
   JourneyErrorBudgetFastBurn: 'افت سریع دسترس‌پذیری خدمت / Rapid loss of service availability',
   JourneyErrorBudgetSlowBurn:
     'افت پایدار دسترس‌پذیری خدمت / Sustained loss of service availability',
+  SyntheticProbeFailed: 'بررسی آزمایشی ناموفق است / Synthetic check failed',
+  SyntheticProbeUnavailable: 'گزارش بررسی آزمایشی در دسترس نیست / Synthetic reporting unavailable',
 };
 const journeyNames: Record<string, string> = {
   electricity: 'برق / Electricity',
   saving: 'صرفه‌جویی / Energy saving',
   solar: 'خورشیدی / Solar',
   consultation: 'مشاوره / Consultation',
+};
+const syntheticCheckNames: Record<string, string> = {
+  ...journeyNames,
+  liveness: 'زنده بودن / Liveness',
+  readiness: 'آمادگی / Readiness',
+  login: 'ورود / Sign-in',
+  account: 'حساب آزمایشی / Test account',
+  logout: 'خروج / Sign-out',
 };
 const criticalAlerts = new Set([
   'NotificationDeadLettersAccumulating',
@@ -40,6 +50,8 @@ const criticalAlerts = new Set([
   'PaymentIdempotencyConflict',
   'WorkerUnavailable',
   'JourneyErrorBudgetFastBurn',
+  'SyntheticProbeFailed',
+  'SyntheticProbeUnavailable',
 ]);
 const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['SmsProviderLowCredit', 'P2'],
@@ -51,6 +63,8 @@ const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['PaymentIdempotencyConflict', 'P1'],
   ['JourneyErrorBudgetFastBurn', 'P1'],
   ['JourneyErrorBudgetSlowBurn', 'P2'],
+  ['SyntheticProbeFailed', 'P1'],
+  ['SyntheticProbeUnavailable', 'P1'],
 ]);
 type Alert = {
   name: string;
@@ -62,6 +76,7 @@ type Alert = {
   severity: 'warning' | 'critical';
   priority: 'P1' | 'P2' | null;
   service?: string;
+  syntheticCheck?: string;
 };
 
 export function parseOperationsAlerts(
@@ -87,6 +102,7 @@ export function parseOperationsAlerts(
     const journeyBurn =
       name === 'JourneyErrorBudgetFastBurn' || name === 'JourneyErrorBudgetSlowBurn';
     const service = journeyBurn ? source?.service : undefined;
+    const syntheticCheck = name === 'SyntheticProbeFailed' ? source?.check : undefined;
     if (
       !source ||
       typeof name !== 'string' ||
@@ -100,6 +116,9 @@ export function parseOperationsAlerts(
           !Object.hasOwn(journeyNames, service) ||
           (source.availability_tier !== 'pilot' && source.availability_tier !== 'commercial') ||
           source.window !== (name === 'JourneyErrorBudgetFastBurn' ? '1h' : '24h'))) ||
+      (name === 'SyntheticProbeFailed' &&
+        (typeof syntheticCheck !== 'string' ||
+          !Object.hasOwn(syntheticCheckNames, syntheticCheck))) ||
       (item.status !== 'firing' && item.status !== 'resolved') ||
       typeof item.fingerprint !== 'string' ||
       !/^[a-f0-9]{16,128}$/.test(item.fingerprint) ||
@@ -119,6 +138,7 @@ export function parseOperationsAlerts(
       severity: source.severity as 'warning' | 'critical',
       priority,
       ...(typeof service === 'string' ? { service } : {}),
+      ...(typeof syntheticCheck === 'string' ? { syntheticCheck } : {}),
     };
   });
 }
@@ -183,13 +203,16 @@ export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
         user_id: string;
       }>('SELECT user_id FROM public.lock_operations_alert_admins()');
       if (!admins.rowCount) throw new Error('Operations alert requires an active administrator');
+      const subject = alert.service
+        ? journeyNames[alert.service]
+        : alert.syntheticCheck && syntheticCheckNames[alert.syntheticCheck];
       const data = {
         alertReceiptId: id,
         alertStatus: alert.status,
         operationsAlertName: alert.name,
         operationsDashboardOrigin: dashboardOrigin,
         priority: alert.priority,
-        details: `${labels[alert.name]}${alert.service ? ` (${journeyNames[alert.service]})` : ''}: ${alert.status === 'firing' ? 'هشدار مشاهده شد / Firing' : 'رفع هشدار مشاهده شد / Resolved'}`,
+        details: `${labels[alert.name]}${subject ? ` (${subject})` : ''}: ${alert.status === 'firing' ? 'هشدار مشاهده شد / Firing' : 'رفع هشدار مشاهده شد / Resolved'}`,
         eta:
           alert.status === 'resolved'
             ? 'بازیابی مشاهده شد / Recovery observed'

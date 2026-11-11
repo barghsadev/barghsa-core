@@ -1,0 +1,107 @@
+rule_files: [synthetic-probe-alerts.yml]
+evaluation_interval: 1m
+tests:
+  - name: An executed failure pages after six minutes and clears on recovery
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1+0x12'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0+0x4 300+0x4 600+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '0+0x9 1+0x2'
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: SyntheticProbeFailed
+        exp_alerts: []
+      - eval_time: 7m
+        alertname: SyntheticProbeFailed
+        exp_alerts:
+          - exp_labels:
+              job: barghsa-synthetic
+              instance: runner
+              environment: staging
+              database: core
+              check: login
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: The independent synthetic check login keeps failing
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 10m
+        alertname: SyntheticProbeFailed
+        exp_alerts: []
+      - eval_time: 10m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+  - name: A stale result cannot hide an outage and clears after a fresh completion
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1+0x17'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0+0x15 960+0x1'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '1+0x17'
+    alert_rule_test:
+      - eval_time: 12m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+      - eval_time: 15m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              job: barghsa-synthetic
+              instance: runner
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: The independent synthetic runner stopped reporting
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 16m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts: []
+  - name: Exporter outage pages without replaying a stale failure or foreign result
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0+0x7'
+      - series: 'up{job="barghsa-synthetic",instance="new",environment="staging",database="core"}'
+        values: '1+0x7'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="new",environment="production",database="core"}'
+        values: '0+0x4 300+0x2'
+      - series: 'barghsa_synthetic_probe_success{job="barghsa-synthetic",instance="runner",environment="staging",database="core",check="login"}'
+        values: '0+0x7'
+    alert_rule_test:
+      - eval_time: 7m
+        alertname: SyntheticProbeFailed
+        exp_alerts: []
+      - eval_time: 2m
+        alertname: SyntheticProbeUnavailable
+        exp_alerts:
+          - exp_labels:
+              job: barghsa-synthetic
+              instance: new
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: The independent synthetic runner stopped reporting
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+          - exp_labels:
+              job: barghsa-synthetic
+              instance: runner
+              environment: staging
+              database: core
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: The independent synthetic runner stopped reporting
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md

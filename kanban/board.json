@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:39:48+00:00",
+  "updated": "2026-11-11T22:45:47+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10413,7 +10413,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-structured-release-log-marker",
           "release-0.6-maintenance-health",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10425,7 +10426,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10554,6 +10555,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -15602,7 +15611,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15614,7 +15624,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15674,6 +15684,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -15729,7 +15747,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15741,7 +15760,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15801,6 +15820,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -24394,7 +24421,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24415,7 +24443,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -24609,6 +24637,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -25942,7 +25978,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-maintenance-health",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -25970,7 +26007,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             }
           ],
           "checks": [
@@ -26033,6 +26070,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -86678,7 +86723,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -87478,7 +87524,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -87502,11 +87548,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -89174,6 +89220,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -92272,7 +92328,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-notification-contrast",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92304,7 +92361,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -92324,11 +92381,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -92520,6 +92577,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -107411,7 +107478,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107635,7 +107703,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -107655,11 +107723,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -107942,6 +108010,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -489806,7 +489884,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -489998,7 +490077,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -490014,11 +490093,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -490445,6 +490524,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -491973,7 +492062,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492197,7 +492287,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -492655,6 +492745,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ],
           "presentation_renewals": [
@@ -556704,7 +556802,8 @@
           "release-0.6-load-client-address-fixture",
           "release-0.6-load-regression-and-durable-count-receipt",
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -556760,7 +556859,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -556840,6 +556939,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ]
         }
@@ -558196,7 +558303,8 @@
           "release-0.6-reconciliation-failure-injection",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-reconciliation-recovery-tests",
@@ -558230,11 +558338,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -558318,6 +558426,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ]
         }
@@ -560142,7 +560259,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -560164,7 +560282,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -560332,6 +560450,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -560432,7 +560558,8 @@
           "release-0.6-executive-slo-dashboard",
           "release-0.6-maintenance-health",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -560443,7 +560570,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -560547,6 +560674,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -562961,7 +563096,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -562985,7 +563121,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -562997,7 +563133,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             }
           ],
           "checks": [
@@ -563123,6 +563259,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -563353,7 +563498,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -563377,7 +563523,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -563524,6 +563670,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending."
             }
           ]
         }
@@ -563568,7 +563722,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -563628,7 +563783,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -563786,6 +563941,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending."
             }
           ]
         }
@@ -563849,7 +564012,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -563865,11 +564029,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -564053,6 +564217,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ]
         }
@@ -564097,7 +564270,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -564121,7 +564295,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -564268,6 +564442,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending."
             }
           ]
         }
@@ -564453,7 +564635,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-maintenance-health",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564461,7 +564644,7 @@
           "source_evidence": [
             {
               "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
-              "sha256": "0f3eabc9197e4af85245e0de66ee64b06e1946d8fb0501fb3f60d439a90d6936"
+              "sha256": "89d2f9bdd5b409798b5f179b8383029b0184a260491f7aea573c23f16170f393"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -564477,7 +564660,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -564538,6 +564721,15 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope. Adds a distinct protected synthetic mode. The rollout mode reuses the original customer and fixture checks through extracted functions and preserves its CLI and metrics contract. All nine existing rollout observer cases and six new synthetic cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/grafana-executive-slo-dashboard.json",
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds synthetic age and result panels. All five previous panels and dashboard settings are unchanged. The new exact queries passed fresh and stale fixtures in Promtool. Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -564575,7 +564767,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -564615,7 +564808,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -564703,6 +564896,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules. Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -564732,7 +564933,8 @@
           "release-0.6-postgresql-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-pool-dashboard",
@@ -564753,7 +564955,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -564788,6 +564990,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -564822,7 +565032,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -564851,7 +565062,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -564943,6 +565154,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -565140,7 +565359,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565200,7 +565420,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -565245,6 +565465,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -565424,7 +565652,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565480,7 +565709,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -565579,6 +565808,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -565850,7 +566087,8 @@
           "release-0.6-ai-usage-and-cost-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-budget-charge",
@@ -565896,7 +566134,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -565937,6 +566175,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -566364,7 +566610,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -566376,7 +566623,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -566384,11 +566631,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -566490,6 +566737,16 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration."
             }
           ]
         }
@@ -566566,7 +566823,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-alert-dashboards",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": null
       }
@@ -566869,7 +567127,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -566885,11 +567144,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -567058,6 +567317,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ]
         }
@@ -567119,7 +567387,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -567135,11 +567404,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -567323,6 +567592,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ]
         }
@@ -567382,7 +567660,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -567398,11 +567677,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -567552,6 +567831,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
             }
           ]
         }
@@ -567591,7 +567879,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-payment-transport-circuit",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -567627,11 +567916,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -567663,7 +567952,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -567761,6 +568050,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -567804,7 +568103,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -567832,11 +568132,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -567880,7 +568180,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -567985,6 +568285,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -569501,7 +569811,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-quarterly-storage-recovery",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -569523,7 +569834,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -569611,6 +569922,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
             }
           ]
         }
@@ -570274,7 +570593,8 @@
         ],
         "batches": [
           "release-0.6-maintenance-health",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -570322,7 +570642,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -570350,6 +570670,14 @@
                 "deploy/production/rollout-observer.py"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope. Adds a distinct protected synthetic mode. The rollout mode reuses the original customer and fixture checks through extracted functions and preserves its CLI and metrics contract. All nine existing rollout observer cases and six new synthetic cases passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -570597,7 +570925,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -570645,7 +570974,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -570748,6 +571077,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
             }
           ]
         }
@@ -570783,7 +571120,8 @@
           "deploy/production/test_synthetic_probe.py"
         ],
         "batches": [
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": null
       }
@@ -570833,19 +571171,33 @@
         "story": "06-security-testing-observability.md#spec-e0acbf77e4ef"
       },
       "requirement": "| T-06.17.03.04 | Configure alert on synthetic check failure → on-call | S |\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery.",
+        "Read back the candidate dashboard with live results and run the expanded native PostgreSQL receipt cases."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/journey-alerts.test.ts",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/staging-compose.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "deploy/monitoring/synthetic-probe-alerts.yml",
+          "deploy/production/README.md",
+          "docs/runbooks/journey-availability.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
         "batches": [
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": null
       }
@@ -571079,7 +571431,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -571099,7 +571452,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -571200,6 +571553,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-alerts",
+              "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration."
             }
           ]
         }
@@ -862941,7 +863302,8 @@
           "release-0.6-sentry-version-tag-coverage",
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-probe"
+          "release-0.6-synthetic-probe",
+          "release-0.6-synthetic-alerts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -990814,6 +991176,158 @@
         {
           "file": "source.sha256",
           "sha256": "e727a475cb92ad2b2d8595ff7c0e4f253beb338cd97aa72d0a7928dc09e56ede"
+        }
+      ]
+    },
+    "release-0.6-synthetic-alerts": {
+      "batch": "release-0.6-synthetic-alerts",
+      "base_commit": "e44780d7e357b179114cc663c73e0bacb061d82e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+        },
+        {
+          "path": "apps/worker/src/operations/journey-alerts.test.ts",
+          "sha256": "10876d520b001fb84a4e793eef417a2210e3ae42cbbe767e1b226335222bfced"
+        },
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "89d2f9bdd5b409798b5f179b8383029b0184a260491f7aea573c23f16170f393"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "1682cdacdca541b62a4fc55b79760f9332ab5ef7662c3972c9728011b0ce3926"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "f6b4f58143a230106c26f712d95b967a937da30366ffc61cfabe1da07d03f8b6"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+        },
+        {
+          "path": "docs/runbooks/journey-availability.md",
+          "sha256": "61d8229112ac2b3c3c69ad3d0355e3dd97ed19c39d2d10342ab5dadb5d6e490f"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "21245de124ffa8723668ca25f9370331349f766d39bb933d97669e702549a744"
+        }
+      ],
+      "checks": [
+        "The synthetic scrape job has separate P1 signals for a fresh sustained failure and a missing, stale or unreachable runner. Only successful exporter scrapes and results at most twelve minutes old qualify for check-failure evaluation. Matching uses the exact environment, database and instance. Three Promtool scenarios and nine alert evaluation points passed.",
+        "The worker accepts both critical P1 types, validates the check allowlist and uses fixed bilingual text and the approved dashboard/runbook mapping. All 14 focused cases, the worker and dependency build, two typechecks and lint passed.",
+        "Four exact dashboard query assertions verified current results, stale suppression and age. The original five panels and the remaining dashboard settings are unchanged in the parsed JSON. All four read-only rule mounts and local links were verified and Prometheus accepted the full rendered config. Formatting and whitespace passed."
+      ],
+      "limitations": [
+        "The new rules, panels and worker receipts have not been deployed or observed live. The configuration needs the approved external runner scrape and protected on-call pager route. Local tests neither exercised an actual pager nor established a deployed inbox receipt.",
+        "The expanded native PostgreSQL receiver cases await hosted verification."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-alerts",
+      "execution_receipts": [
+        {
+          "file": "rules.log",
+          "sha256": "301a75347dac7c933a382195cf60c4019ad003248a4b99bc4c8e643091b4e22e"
+        },
+        {
+          "file": "rule-tests.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "verify-dashboard.py",
+          "sha256": "11812255e5aadf7bd0da4174ed416006459263af3f179b5dc029005fdfa83612"
+        },
+        {
+          "file": "dashboard-and-config.log",
+          "sha256": "4afeb3b08c8ac18112822322090385c792a09c0d6d3dd08f72c0490d44050b3b"
+        },
+        {
+          "file": "build.log",
+          "sha256": "63f4994dff4732093e60d58471802e9d811e9da376c183dc7ec890ea20597a30"
+        },
+        {
+          "file": "worker-unit.config.mjs",
+          "sha256": "9b952e6605140772d2e93409c8c2abfb701f041091efcb70a3779c9b36fd41f7"
+        },
+        {
+          "file": "worker-unit.log",
+          "sha256": "a94de7ae1986eb4677170da25dedd0ba8739a789c64973ea6901fefdf05bb366"
+        },
+        {
+          "file": "worker-typecheck.log",
+          "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e"
+        },
+        {
+          "file": "shared-typecheck.log",
+          "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "7704aa4d2a1a780beeaaa50a3d6c8f172425cb0573d4618d6d08e5840348206f"
         }
       ]
     }
