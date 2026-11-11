@@ -8,7 +8,7 @@ groups:
         annotations:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Email provider circuit is open
-          description: 'Provider {{ $labels.provider_id }} stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds.'
+          description: 'Provider {{ $labels.provider_id }} stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after the configured cooldown.'
       - alert: SmsProviderLowCredit
         expr: max without (instance, pod) (provider_sms_credit_low) == 1
         labels:

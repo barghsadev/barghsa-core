@@ -53,7 +53,7 @@ it('atomically counts concurrent failures and stops at the trip threshold', asyn
 });
 it('expires spaced failure windows and resets healthy failures after success', async () => {
   for (let i = 0; i < 5; i++) {
-    time += 360_000;
+    time += 60_001;
     expect(await service.recordOutcome(provider, { ok: false })).toMatchObject({
       windowFailures: 1,
       degraded: false,
@@ -67,12 +67,15 @@ it('expires spaced failure windows and resets healthy failures after success', a
 });
 it('allows exactly one concurrent recovery probe and binds its successful result', async () => {
   await trip();
-  time += 60_001;
+  time += 119_999;
+  expect(await service.decision(provider)).toMatchObject({ allow: false, kind: 'open' });
+  time += 1;
   const decisions = await Promise.all(Array.from({ length: 12 }, () => service.decision(provider)));
   const allowed = decisions.filter((decision) => decision.allow);
   expect(allowed).toHaveLength(1);
   const probe = allowed[0]!;
   if (!probe.allow || !probe.probeToken) throw new Error('No probe claim');
+  expect(probe.probeToken).toBe(new Date(time + 30_000).toISOString());
   expect(await service.recordOutcome(provider, { ok: true, isProbe: true })).toMatchObject({
     degraded: true,
   });
@@ -88,10 +91,10 @@ it('allows exactly one concurrent recovery probe and binds its successful result
 });
 it('ignores expired/replaced probe results and extends cooldown after the current probe fails', async () => {
   await trip();
-  time += 60_001;
+  time += 120_000;
   const first = await service.decision(provider);
   if (!first.allow || !first.probeToken) throw new Error('No first probe');
-  time += 60_001;
+  time += 30_001;
   const next = await service.decision(provider);
   if (!next.allow || !next.probeToken) throw new Error('No next probe');
   expect(
@@ -101,6 +104,7 @@ it('ignores expired/replaced probe results and extends cooldown after the curren
     await service.recordOutcome(provider, { ok: false, probeToken: next.probeToken })
   ).toMatchObject({ degraded: true });
   expect(await service.decision(provider)).toMatchObject({ allow: false });
+  expect((await service.readState(provider)).cooldownUntil).toEqual(new Date(time + 120_000));
 });
 it('uses the database clock without an injected test clock', async () => {
   const real = new EmailCircuitBreakerService(fixture.pool);
@@ -108,6 +112,30 @@ it('uses the database clock without an injected test clock', async () => {
     degraded: false,
     windowFailures: 1,
   });
+});
+
+it('uses the configured notification threshold, rolling window and cooldown', async () => {
+  vi.stubEnv('NOTIFICATION_PROVIDER_CIRCUIT_FAILURES', '2');
+  vi.stubEnv('NOTIFICATION_PROVIDER_CIRCUIT_WINDOW_MS', '3000');
+  vi.stubEnv('NOTIFICATION_PROVIDER_CIRCUIT_COOLDOWN_MS', '7000');
+  try {
+    const configured = new EmailCircuitBreakerService(fixture.pool, undefined, {
+      now: () => new Date(time),
+    });
+    await configured.recordOutcome(provider, { ok: false });
+    time += 3_001;
+    expect(await configured.recordOutcome(provider, { ok: false })).toMatchObject({
+      degraded: false,
+      windowFailures: 1,
+    });
+    expect(await configured.recordOutcome(provider, { ok: false })).toMatchObject({
+      degraded: true,
+      windowFailures: 2,
+      cooldownUntil: new Date(time + 7_000),
+    });
+  } finally {
+    vi.unstubAllEnvs();
+  }
 });
 
 it('the actual sender trips on provider failures and admits one pending recovery request', async () => {
@@ -161,9 +189,44 @@ it('the actual sender trips on provider failures and admits one pending recovery
   });
 });
 
+it('does not contact Resend when the recovery lease expires before dispatch', async () => {
+  await fixture.pool.query(
+    `UPDATE email_provider_configs SET status='active',last_test_status='passed',config=$2,
+      last_test_at=NOW(),delivery_verified_at=NOW(),
+      delivery_config_hash=encode(sha256(convert_to(jsonb_build_array(transport,$2::jsonb)::text,'UTF8')),'hex') WHERE id=$1`,
+    [provider, JSON.stringify({ api_key: 'fixture-only', from_email: 'sender@example.test' })]
+  );
+  await trip();
+  await fixture.pool.query(
+    "UPDATE email_provider_configs SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+    [provider]
+  );
+  const request = vi.fn<typeof fetch>();
+  const tick = performance.now();
+  const clock = vi.spyOn(performance, 'now').mockReturnValue(tick);
+  try {
+    const send = createEmailSender(fixture.pool, request, async (_provider, dispatch) => {
+      clock.mockReturnValue(tick + 30_001);
+      return dispatch();
+    });
+    await expect(
+      send({
+        destination: 'staff@example.test',
+        subject: 'Test',
+        text: 'Test',
+        idempotencyKey: 'expiry-test',
+      })
+    ).rejects.toMatchObject({ name: 'TimeoutError' });
+    expect(request).not.toHaveBeenCalled();
+    expect(await service.readState(provider)).toMatchObject({ degraded: true, windowFailures: 5 });
+  } finally {
+    clock.mockRestore();
+  }
+});
+
 it('trips on five recent failures even when the first failure of the run is outside the rolling window', async () => {
   await service.recordOutcome(provider, { ok: false });
-  time += 299_000;
+  time += 59_000;
   for (let i = 0; i < 3; i++) await service.recordOutcome(provider, { ok: false });
   time += 2_000;
   await service.recordOutcome(provider, { ok: false });
@@ -184,7 +247,7 @@ it('a permanent failure interrupts the transient sequence but cannot close a fai
     windowFailures: 1,
   });
   await trip();
-  time += 60_001;
+  time += 120_001;
   const probe = await service.decision(provider);
   if (!probe.allow || !probe.probeToken) throw new Error('No recovery probe');
   expect(

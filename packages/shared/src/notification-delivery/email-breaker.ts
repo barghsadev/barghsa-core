@@ -7,13 +7,49 @@ export interface EmailBreakerConfig {
   readonly windowMs: number;
   /** How long the breaker stays open before a HALF_OPEN probe is allowed. */
   readonly cooldownMs: number;
+  /** How long a single recovery probe owns the admission lease. */
+  readonly probeTimeoutMs?: number;
 }
 
 export const DEFAULT_EMAIL_BREAKER_CONFIG: EmailBreakerConfig = {
   threshold: 5,
-  windowMs: 5 * 60_000, // 5 minutes
-  cooldownMs: 60_000, // 60 seconds
+  windowMs: 60_000,
+  cooldownMs: 120_000,
+  probeTimeoutMs: 30_000,
 };
+
+const DEFAULT_AI_BREAKER_CONFIG: EmailBreakerConfig = {
+  threshold: 5,
+  windowMs: 5 * 60_000,
+  cooldownMs: 60_000,
+};
+
+function notificationBreakerConfig(): EmailBreakerConfig {
+  const positiveInteger = (key: string, fallback: number, maximum: number): number => {
+    const name = `NOTIFICATION_PROVIDER_CIRCUIT_${key}`;
+    const value = process.env[name]?.trim();
+    if (!value) return fallback;
+    const number = Number(value);
+    if (!/^\d+$/.test(value) || !Number.isSafeInteger(number) || number < 1 || number > maximum) {
+      throw new Error(`${name} must be a positive integer no greater than ${maximum}`);
+    }
+    return number;
+  };
+  return {
+    ...DEFAULT_EMAIL_BREAKER_CONFIG,
+    threshold: positiveInteger('FAILURES', DEFAULT_EMAIL_BREAKER_CONFIG.threshold, 100),
+    windowMs: positiveInteger('WINDOW_MS', DEFAULT_EMAIL_BREAKER_CONFIG.windowMs, 600_000),
+    cooldownMs: positiveInteger('COOLDOWN_MS', DEFAULT_EMAIL_BREAKER_CONFIG.cooldownMs, 600_000),
+  };
+}
+
+/** Bound the transport to the remaining lease, measured conservatively on this process. */
+export function limitRecoveryProbeSignal(deadline: number, signal?: AbortSignal): AbortSignal {
+  const remaining = Math.floor(deadline - performance.now());
+  if (remaining <= 0) throw new DOMException('Provider recovery probe expired', 'TimeoutError');
+  const limit = AbortSignal.timeout(remaining);
+  return signal ? AbortSignal.any([signal, limit]) : limit;
+}
 
 /** Persisted breaker state for a provider (mirrors migration 0033 columns). */
 export interface EmailBreakerState {
@@ -30,7 +66,13 @@ export interface EmailBreakerState {
 
 /** Decision handed to the send path for a provider. */
 export type EmailBreakerDecision =
-  | { allow: true; kind: 'closed' | 'half_open'; state: EmailBreakerState; probeToken?: string }
+  | {
+      allow: true;
+      kind: 'closed' | 'half_open';
+      state: EmailBreakerState;
+      probeToken?: string;
+      probeDeadlineMs?: number;
+    }
   | {
       allow: false;
       kind: 'open';
@@ -110,8 +152,10 @@ export class ProviderCircuitBreaker {
         degradedReason: PROVIDER_CONFIGURATION_PAUSE,
         cooldownUntil: null,
       };
+    const started = performance.now();
     const now = await this.now();
-    const deadline = new Date(now.getTime() + this.config.cooldownMs);
+    const duration = this.config.probeTimeoutMs ?? this.config.cooldownMs;
+    const deadline = new Date(now.getTime() + duration);
     const claimed = await this.pool.query(
       `UPDATE ${this.table} SET cooldown_until=$3
       WHERE id=$1 AND degraded=true AND degraded_reason IS DISTINCT FROM 'provider_configuration_pause'
@@ -121,7 +165,15 @@ export class ProviderCircuitBreaker {
     );
     if (claimed.rows[0]) {
       state = { ...claimed.rows[0], providerId } as unknown as EmailBreakerState;
-      return { allow: true, kind: 'half_open', state, probeToken: deadline.toISOString() };
+      return {
+        allow: true,
+        kind: 'half_open',
+        state,
+        probeToken: deadline.toISOString(),
+        ...(this.config.probeTimeoutMs === undefined
+          ? {}
+          : { probeDeadlineMs: started + duration }),
+      };
     }
     state = await this.readState(providerId);
     return {
@@ -143,9 +195,12 @@ export class ProviderCircuitBreaker {
     const token = outcome.probeToken ?? null;
     // A legacy boolean is not proof of ownership of the current recovery probe.
     if (outcome.isProbe && !token) return this.readState(providerId);
+    const probeClock = this.clock
+      ? '$2::timestamptz'
+      : 'GREATEST($2::timestamptz, clock_timestamp())';
     const owned = `(degraded_reason IS DISTINCT FROM 'provider_configuration_pause' AND
       ((NOT degraded AND $3::timestamptz IS NULL) OR
-      (degraded AND cooldown_until=$3::timestamptz AND cooldown_until>$2::timestamptz)))`;
+      (degraded AND cooldown_until=$3::timestamptz AND cooldown_until>${probeClock})))`;
     if (!outcome.ok && outcome.configurationFailure && this.channel !== 'ai') {
       await this.pool.query(
         `UPDATE ${this.table} SET degraded=true,degraded_reason='provider_configuration_pause',
@@ -197,14 +252,14 @@ export class ProviderCircuitBreaker {
 
 export class EmailCircuitBreaker extends ProviderCircuitBreaker {
   constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
-    super(pool, config, clock, 'email');
+    super(pool, config ?? notificationBreakerConfig(), clock, 'email');
   }
 }
 
 /** The same persisted, single-probe breaker used by delivery providers. */
 export class AiModelCircuitBreaker extends ProviderCircuitBreaker {
   constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
-    super(pool, config, clock, 'ai');
+    super(pool, config ?? DEFAULT_AI_BREAKER_CONFIG, clock, 'ai');
   }
 
   /** An authorized connection test is an explicit probe, even during cooldown. */
@@ -224,6 +279,6 @@ export class AiModelCircuitBreaker extends ProviderCircuitBreaker {
 /** SMS shares the same persisted, leased recovery state machine as email. */
 export class SmsCircuitBreaker extends ProviderCircuitBreaker {
   constructor(pool: DeliveryPool, config?: EmailBreakerConfig, clock?: Clock) {
-    super(pool, config, clock, 'sms');
+    super(pool, config ?? notificationBreakerConfig(), clock, 'sms');
   }
 }

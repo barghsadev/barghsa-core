@@ -1,4 +1,8 @@
-import { EmailCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
+import {
+  EmailCircuitBreaker,
+  limitRecoveryProbeSignal,
+  type EmailBreakerOutcome,
+} from './email-breaker.js';
 import { isTransientEmailError, requiresProviderConfigurationFix } from './email-errors.js';
 import { lookup } from 'node:dns/promises';
 import { createHash } from 'node:crypto';
@@ -61,9 +65,17 @@ export function createEmailSender(
     const decision = await breaker.decision(provider.id);
     if (!decision.allow) throw new Error('Email provider circuit is open');
     let providerOutcome: EmailBreakerOutcome | undefined;
-    const observe = async (deliver: () => Promise<string>): Promise<string> => {
+    const observe = async (
+      deliver: (signal: AbortSignal) => Promise<string>,
+      signal: AbortSignal
+    ): Promise<string> => {
+      const deliverySignal =
+        decision.probeDeadlineMs === undefined
+          ? signal
+          : limitRecoveryProbeSignal(decision.probeDeadlineMs, signal);
+      deliverySignal.throwIfAborted();
       try {
-        const receipt = await deliver();
+        const receipt = await deliver(deliverySignal);
         providerOutcome = { ok: true };
         return receipt;
       } catch (error) {
@@ -93,11 +105,11 @@ export function createEmailSender(
       if (provider.transport === 'resend') {
         const config = ResendConfigSchema.parse(provider.config);
         const authorization = `Bearer ${decryptProviderSecret(config.api_key)}`;
-        const deliver = async () => {
+        const deliver = async (deliverySignal: AbortSignal) => {
           const response = await request('https://api.resend.com/emails', {
             method: 'POST',
             redirect: 'error',
-            signal,
+            signal: deliverySignal,
             headers: {
               Authorization: authorization,
               'Content-Type': 'application/json',
@@ -131,8 +143,10 @@ export function createEmailSender(
           return body.id;
         };
         return execute
-          ? execute({ id: provider.id as string, transport: 'resend' }, () => observe(deliver))
-          : observe(deliver);
+          ? execute({ id: provider.id as string, transport: 'resend' }, () =>
+              observe(deliver, signal)
+            )
+          : observe(deliver, signal);
       }
       if (provider.transport !== 'smtp') throw new Error('Email transport unavailable');
       const config = SmtpConfigSchema.parse(provider.config);
@@ -158,19 +172,19 @@ export function createEmailSender(
         disableFileAccess: true,
         disableUrlAccess: true,
       });
-      const deliver = async () => {
-        signal.throwIfAborted();
+      const deliver = async (deliverySignal: AbortSignal) => {
+        deliverySignal.throwIfAborted();
         let abort!: () => void;
         const cancelled = new Promise<never>((_, reject) => {
           abort = () => {
             transport.close();
             reject(new Error('Email delivery cancelled'));
           };
-          signal.addEventListener('abort', abort, { once: true });
-          if (signal.aborted) abort();
+          deliverySignal.addEventListener('abort', abort, { once: true });
+          if (deliverySignal.aborted) abort();
         });
         try {
-          signal.throwIfAborted();
+          deliverySignal.throwIfAborted();
           const result = await Promise.race([
             cancelled,
             transport.sendMail({
@@ -189,13 +203,15 @@ export function createEmailSender(
             throw new Error('SMTP returned an uncertain outcome');
           return result.messageId;
         } finally {
-          signal.removeEventListener('abort', abort);
+          deliverySignal.removeEventListener('abort', abort);
         }
       };
       try {
         return await (execute
-          ? execute({ id: provider.id as string, transport: 'smtp' }, () => observe(deliver))
-          : observe(deliver));
+          ? execute({ id: provider.id as string, transport: 'smtp' }, () =>
+              observe(deliver, signal)
+            )
+          : observe(deliver, signal));
       } finally {
         transport.close();
       }

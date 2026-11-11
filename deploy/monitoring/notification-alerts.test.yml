@@ -505,7 +505,7 @@
                       {
                         'summary': 'Email provider circuit is open',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
-                        'description': 'Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds.',
+                        'description': 'Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after the configured cooldown.',
                       },
                   },
                 ],
@@ -522,7 +522,7 @@
                       {
                         'summary': 'Email provider circuit is open',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
-                        'description': 'Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after 60 seconds.',
+                        'description': 'Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after the configured cooldown.',
                       },
                   },
                 ],

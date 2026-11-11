@@ -15,13 +15,28 @@ const code = '123456',
 const hash = (value: string) => createHash('sha256').update(value).digest('hex');
 beforeAll(async () => {
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
-  await management.query(`CREATE DATABASE "${database}"`);
+  const template = process.env.BARGHSA_HTTP_TEMPLATE_DATABASE;
+  const useTemplate =
+    process.env.BARGHSA_HTTP_FIXTURE_FRESH_MIGRATIONS !== '1' &&
+    template !== undefined &&
+    /^http_template_[a-f0-9]{32}$/.test(template);
+  await management.query(
+    useTemplate
+      ? `CREATE DATABASE "${database}" TEMPLATE "${template}"`
+      : `CREATE DATABASE "${database}"`
+  );
   const url = new URL(process.env.TEST_DATABASE_URL!);
   url.pathname = `/${database}`;
-  execFileSync(process.execPath, [resolve(__dirname, '../../../../packages/db/dist/migrate.js')], {
-    env: { ...process.env, DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString() },
-    stdio: 'pipe',
-  });
+  if (!useTemplate) {
+    execFileSync(
+      process.execPath,
+      [resolve(__dirname, '../../../../packages/db/dist/migrate.js')],
+      {
+        env: { ...process.env, DATABASE_URL: url.toString(), PGDIRECT_URL: url.toString() },
+        stdio: 'pipe',
+      }
+    );
+  }
   pool = new Pool({ connectionString: url.toString() });
 }, 20000);
 afterAll(async () => {

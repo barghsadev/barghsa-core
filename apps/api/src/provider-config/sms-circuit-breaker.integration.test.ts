@@ -70,10 +70,12 @@ it.each(['HTTP 503', 'transport timeout'] as const)(
     for (let i = 0; i < 5; i++)
       await expect(send(message(providerId))).rejects.toThrow(messageText);
     const breaker = new SmsCircuitBreaker(fixture.pool);
-    expect(await breaker.readState(providerId)).toMatchObject({
+    const opened = await breaker.readState(providerId);
+    expect(opened).toMatchObject({
       degraded: true,
       windowFailures: 5,
     });
+    expect(opened.cooldownUntil!.getTime() - opened.lastFailureAt!.getTime()).toBe(120_000);
     expect(
       (await new SmsProviderConfigService(fixture.pool).list()).find((row) => row.id === providerId)
     ).toMatchObject({
@@ -105,6 +107,33 @@ it.each(['HTTP 503', 'transport timeout'] as const)(
     ).toEqual(['circuit_open', 'circuit_recovered']);
   }
 );
+
+it('does not contact SMS.ir when the recovery lease expires before dispatch', async () => {
+  const breaker = new SmsCircuitBreaker(fixture.pool);
+  for (let attempt = 0; attempt < 5; attempt++)
+    await breaker.recordOutcome(providerId, { ok: false });
+  await fixture.pool.query(
+    "UPDATE sms_provider_configs SET cooldown_until=NOW()-INTERVAL '1 second' WHERE id=$1",
+    [providerId]
+  );
+  const request = vi.fn<typeof fetch>();
+  const tick = performance.now();
+  const clock = vi.spyOn(performance, 'now').mockReturnValue(tick);
+  try {
+    const send = createSmsSender(fixture.pool, request, async (_provider, dispatch) => {
+      clock.mockReturnValue(tick + 30_001);
+      return dispatch();
+    });
+    await expect(send(message(providerId))).rejects.toMatchObject({ name: 'TimeoutError' });
+    expect(request).not.toHaveBeenCalled();
+    expect(await breaker.readState(providerId)).toMatchObject({
+      degraded: true,
+      windowFailures: 5,
+    });
+  } finally {
+    clock.mockRestore();
+  }
+});
 
 it('pauses credential rejection immediately without counting transient failures or probing', async () => {
   const request = vi.fn<typeof fetch>().mockResolvedValue(new Response('{}', { status: 401 }));

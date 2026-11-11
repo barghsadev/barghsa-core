@@ -7,7 +7,11 @@ import {
 import { resolvePath, renderTemplate } from '../notifications/template-engine.js';
 import { PostgresRateLimiterStore } from '../rate-limit/index.js';
 import type { DeliveryPool } from './email.js';
-import { SmsCircuitBreaker, type EmailBreakerOutcome } from './email-breaker.js';
+import {
+  SmsCircuitBreaker,
+  limitRecoveryProbeSignal,
+  type EmailBreakerOutcome,
+} from './email-breaker.js';
 import { isTransientProviderError, requiresProviderConfigurationFix } from './email-errors.js';
 import { DeliveryRejected, type DeliveryExecutor } from './execution.js';
 
@@ -145,6 +149,11 @@ export function createSmsSender(
     if (!decision.allow) throw new Error('SMS provider circuit is open');
     let providerOutcome: EmailBreakerOutcome | undefined;
     const send = async () => {
+      const deliverySignal =
+        decision.probeDeadlineMs === undefined
+          ? signal
+          : limitRecoveryProbeSignal(decision.probeDeadlineMs, signal);
+      deliverySignal?.throwIfAborted();
       try {
         const base = process.env.SMSIR_API_BASE || 'https://api.sms.ir';
         const receipt =
@@ -157,7 +166,7 @@ export function createSmsSender(
                 message.text,
                 request,
                 config.timeout * 1000,
-                signal
+                deliverySignal
               )
             : await sendSmsirVerification(
                 apiKey,
@@ -167,7 +176,7 @@ export function createSmsSender(
                 message.parameters,
                 request,
                 config.timeout * 1000,
-                signal
+                deliverySignal
               );
         providerOutcome = { ok: true };
         return receipt;
