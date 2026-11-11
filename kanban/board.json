@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:09:11+00:00",
+  "updated": "2026-11-11T22:14:00+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -568102,7 +568102,8 @@
         ],
         "batches": [
           "release-0.6-process-error-reporting",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-sentry-version-tag-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-process-error-reporting",
@@ -568182,7 +568183,7 @@
             },
             {
               "path": "packages/shared/src/error-reporting.test.ts",
-              "sha256": "4eb700c289f7d14baf54175bb105d9b06df56bcf6bf13114d0742473f72cf1a5"
+              "sha256": "6635c294eca2a9144021b3fe9757f75b4e1f4747b4b51ac6b80a9195a08fba5b"
             },
             {
               "path": "packages/shared/src/error-reporting.ts",
@@ -568208,6 +568209,14 @@
                 "packages/shared/src/error-reporting.ts"
               ],
               "scope": "The Sentry event may include a validated root package version for a valid existing build SHA. Endpoint, authentication boundaries, privacy filtering, sampling, acknowledgement and existing error recovery retain their behavior. Thirty focused reporter and API-controller cases and the compiled CJS and ESM envelope verification passed."
+            },
+            {
+              "batch": "release-0.6-sentry-version-tag-coverage",
+              "base_commit": "2222505930401bceea61a7a857c99313636c57b6",
+              "paths": [
+                "packages/shared/src/error-reporting.test.ts"
+              ],
+              "scope": "Added source coverage for valid and rejected package manifests, including prerelease/build metadata and length, type, name and missing data checks. Existing reporter tests and executable source retain their bytes. All 11 cases and the repository changed-source coverage calculation passed."
             }
           ]
         }
@@ -568251,7 +568260,8 @@
         ],
         "batches": [
           "release-0.6-process-error-reporting",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-sentry-version-tag-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-process-error-reporting",
@@ -568331,7 +568341,7 @@
             },
             {
               "path": "packages/shared/src/error-reporting.test.ts",
-              "sha256": "4eb700c289f7d14baf54175bb105d9b06df56bcf6bf13114d0742473f72cf1a5"
+              "sha256": "6635c294eca2a9144021b3fe9757f75b4e1f4747b4b51ac6b80a9195a08fba5b"
             },
             {
               "path": "packages/shared/src/error-reporting.ts",
@@ -568357,6 +568367,14 @@
                 "packages/shared/src/error-reporting.ts"
               ],
               "scope": "The Sentry event may include a validated root package version for a valid existing build SHA. Endpoint, authentication boundaries, privacy filtering, sampling, acknowledgement and existing error recovery retain their behavior. Thirty focused reporter and API-controller cases and the compiled CJS and ESM envelope verification passed."
+            },
+            {
+              "batch": "release-0.6-sentry-version-tag-coverage",
+              "base_commit": "2222505930401bceea61a7a857c99313636c57b6",
+              "paths": [
+                "packages/shared/src/error-reporting.test.ts"
+              ],
+              "scope": "Added source coverage for valid and rejected package manifests, including prerelease/build metadata and length, type, name and missing data checks. Existing reporter tests and executable source retain their bytes. All 11 cases and the repository changed-source coverage calculation passed."
             }
           ]
         }
@@ -568444,7 +568462,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
           "release-0.6-sentry-version-tag",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-sentry-version-tag-coverage"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -568536,7 +568555,7 @@
             },
             {
               "path": "packages/shared/src/error-reporting.test.ts",
-              "sha256": "4eb700c289f7d14baf54175bb105d9b06df56bcf6bf13114d0742473f72cf1a5"
+              "sha256": "6635c294eca2a9144021b3fe9757f75b4e1f4747b4b51ac6b80a9195a08fba5b"
             },
             {
               "path": "packages/shared/src/error-reporting.ts",
@@ -568651,6 +568670,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-sentry-version-tag-coverage",
+              "base_commit": "2222505930401bceea61a7a857c99313636c57b6",
+              "paths": [
+                "packages/shared/src/error-reporting.test.ts"
+              ],
+              "scope": "Added source coverage for valid and rejected package manifests, including prerelease/build metadata and length, type, name and missing data checks. Existing reporter tests and executable source retain their bytes. All 11 cases and the repository changed-source coverage calculation passed."
             }
           ]
         }
@@ -570516,10 +570543,12 @@
         "changed_paths": [
           "docs/design/notification-recovery.md",
           "packages/shared/scripts/package-exports.check.mjs",
+          "packages/shared/src/error-reporting.test.ts",
           "packages/shared/src/error-reporting.ts"
         ],
         "batches": [
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-sentry-version-tag-coverage"
         ],
         "current_acceptance": null
       }
@@ -862411,7 +862440,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
           "release-0.6-sentry-version-tag",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-sentry-version-tag-coverage"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -989924,6 +989954,65 @@
         {
           "file": "active-ruleset.json",
           "sha256": "6abccbcaf47414ebcbb52d7a1e587efc5f2398a767d467a55a50ebb3fc1b6f92"
+        }
+      ]
+    },
+    "release-0.6-sentry-version-tag-coverage": {
+      "batch": "release-0.6-sentry-version-tag-coverage",
+      "base_commit": "2222505930401bceea61a7a857c99313636c57b6",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.16.02.02",
+        "06-security-testing-observability.md#T-06.16.02.03",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/error-reporting.test.ts",
+          "sha256": "6635c294eca2a9144021b3fe9757f75b4e1f4747b4b51ac6b80a9195a08fba5b"
+        },
+        {
+          "path": "packages/shared/src/error-reporting.ts",
+          "sha256": "559dbca196909717532df07e4fcddccf220e36fa05d861e7d4b8f680f129e5f6"
+        },
+        {
+          "path": "scripts/check-changed-coverage.py",
+          "sha256": "d3a3a2615d56e9a1e1a2f3f747c321fdee600a5e56bfb7df835e29496e5f5871"
+        }
+      ],
+      "checks": [
+        "Added source coverage for valid and rejected package manifests, including prerelease/build metadata and length, type, name and missing data checks. Existing reporter tests and executable source retain their bytes. All 11 cases and the repository changed-source coverage calculation passed.",
+        "The existing evaluator counted 9 of 9 changed lines and 16 of 16 changed branches. Focused lint, typecheck, formatting and diff whitespace passed."
+      ],
+      "limitations": [
+        "Coverage is focused on the release tag change since f140bb64. The final release still requires the full combined source coverage and live Sentry release evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sentry-version-tag-coverage",
+      "execution_receipts": [
+        {
+          "file": "coverage.log",
+          "sha256": "38e9e638d8ccc1066e30ab8cf81594b4ba4798d4efcc036f1ba6dc78c86c2bbd"
+        },
+        {
+          "file": "coverage/coverage-final.json",
+          "sha256": "18d8a6f0c712b21604b36ae1d28c2e878a615313230344fa660ff50db15df375"
+        },
+        {
+          "file": "exact-changed-coverage.json",
+          "sha256": "edbf4f4a5c44fc2a84436593cdb828a6d1721ea9f8f2ad58f8482b565224c9ea"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "1127862e14d380fad57371fd0ad3737ca165e064c1d489313c62055be698eeba"
         }
       ]
     }

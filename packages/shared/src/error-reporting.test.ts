@@ -38,6 +38,34 @@ it('keeps a raw route query, invalid release value and arbitrary data out of an 
   });
 });
 
+it.each([
+  [{ name: 'barghsa-core', version: '0.6.0-rc.1+build' }, '0.6.0-rc.1+build'],
+  [{ name: 'barghsa-core', version: 'invalid-version' }, undefined],
+  [{ name: 'barghsa-core', version: `0.6.0+${'a'.repeat(64)}` }, undefined],
+  [{ name: 'barghsa-core', version: 6 }, undefined],
+  [{ name: 'other-package', version: '0.6.0' }, undefined],
+  [null, undefined],
+])('validates the packaged release manifest %j', async (manifest, expected) => {
+  const revision = 'a'.repeat(40);
+  vi.stubEnv('BARGHSA_RELEASE_SHA', revision);
+  const readFileSync = vi.fn(() => JSON.stringify(manifest));
+  vi.resetModules();
+  vi.doMock('node:fs', () => ({ readFileSync }));
+  try {
+    const { reportServerError: reportFromPackage } = await import('./error-reporting.js');
+    await reportFromPackage('API_REQUEST_FAILED');
+    expect(readFileSync).toHaveBeenCalledExactlyOnceWith('root-package.json', 'utf8');
+    expect(transport).toHaveBeenCalledOnce();
+    const [, options] = transport.mock.calls[0]!;
+    const payload = JSON.parse(String(options?.body).split('\n')[2]!);
+    expect(payload.release).toBe(revision);
+    expect(payload.tags.release_version).toBe(expected);
+  } finally {
+    vi.doUnmock('node:fs');
+    vi.resetModules();
+  }
+});
+
 it.each(['development', 'staging'])('samples eligible events in %s', async (environment) => {
   vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', environment);
   vi.stubEnv('SENTRY_ERROR_SAMPLE_RATE', '0');
