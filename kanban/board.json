@@ -9551,7 +9551,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -9631,6 +9631,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -13993,7 +14001,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -14013,6 +14021,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -14077,7 +14093,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -14097,6 +14113,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -21400,7 +21424,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -21464,6 +21488,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -22579,7 +22611,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             }
           ],
           "checks": [
@@ -22602,6 +22634,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -539284,7 +539324,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -539355,6 +539395,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -539462,7 +539510,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -539518,6 +539566,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -539538,7 +539594,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Implement and verify the real observation adapter for exact release identity, readiness and authenticated smoke for all four services, candidate-scoped HTTP errors, per-service SLO inputs, reconciliation and security. Compare the previous and candidate observations on the approved topology."
+        "Configure the approved topology with the exact pinned candidate and previous pools, route and image readbacks, dedicated customer fixtures and complete scoped API, journey, wallet and security monitoring.",
+        "Capture and review both release observations on that topology, including all four journey baselines and current halt and rollback receipts. The isolated Prometheus proof does not certify the deployed environment."
       ],
       "owner": null,
       "depends_on": [],
@@ -539548,10 +539605,13 @@
           "deploy/production/README.md",
           "deploy/production/guarded-rollout.py",
           "deploy/production/test_guarded_rollout.py",
-          "docs/runbooks/bad-deployment.md"
+          "docs/runbooks/bad-deployment.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py"
         ],
         "batches": [
-          "release-0.6-launch-halt-and-rollback"
+          "release-0.6-launch-halt-and-rollback",
+          "release-0.6-post-deploy-observation"
         ],
         "current_acceptance": null
       }
@@ -546833,7 +546893,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -546880,6 +546940,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-post-deploy-observation",
+              "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
             }
           ]
         }
@@ -828911,7 +828979,8 @@
           "release-0.6-approved-document-destruction-boundary",
           "release-0.6-alert-dashboards",
           "release-0.6-multipart-upgrade-preflight-fix",
-          "release-0.6-launch-halt-and-rollback"
+          "release-0.6-launch-halt-and-rollback",
+          "release-0.6-post-deploy-observation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -949239,6 +949308,79 @@
           "sha256": "5561bd019e7279bc61ab3005b74ff5b46c229b1b4040b3b659b1a872510d3d61"
         }
       ]
+    },
+    "release-0.6-post-deploy-observation": {
+      "batch": "release-0.6-post-deploy-observation",
+      "base_commit": "d00c3831d317eb87beecb624ab8d3c4663838ecf",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.04.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_guarded_rollout.py",
+        "deploy/production/test_rollout_observer.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "0c243868e5e6d44e2fd5a5570884d34d918f6789c37680614a3350b06a34cbe6"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "36ae12a9dee9c1706fb9d0c846052860e07d606e2685fd7d52bffffef4f27560"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "9aab368b53e0a2c24e6980ffd18c879825ad0b71c5941aa603a372cc075e0eb6"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "c118988340a74239c918cb4afab81f2c0cf897cd1764f24679180296145c591e"
+        }
+      ],
+      "checks": [
+        "Observer binds two live web SHAs, API release metrics, both API target sets and the exact scope to the operator plan. The guard re-reads traffic weight and running image identities before each observation.",
+        "Read-only HTTP smoke checks the current ordinary customer, its selected profile and the expected synthetic record for each of electricity, saving, solar and consultation. Credentials stay on their configured origins. Redirects and invalid identity cannot pass.",
+        "Prometheus 3.15.0 scraped five isolated endpoints and evaluated the repository alert rules. The previous baseline recorded 60 API attempts and 0 server errors. Candidate smoke passed all five checks, and the measured window had 84 API attempts, 4 server errors and eligible synthetic counts for all four services. A controlled worker gauge and security-rule transition each produced one scoped fault. This proof used isolated HTTP fixtures and synthetic telemetry.",
+        "All 25 production helper tests passed, including exact identities, route drift, failed rollback, isolated credentials, stale telemetry, counter reset, missing solar coverage and nanosecond Prometheus timestamps. Python compilation, Prettier and whitespace checks passed.",
+        "Acceptance still needs the approved ingress, pinned live pools, dedicated synthetic customer fixtures and authoritative scoped journey collectors. No staging or production state changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/production-tests.log",
+          "sha256": "0ba10f3919b38b7477dd39ee2fc3a56d0d71f166db790842150e6e8ccda200c3"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/prometheus-rehearsal.py",
+          "sha256": "4b8f678499f0f8e691b32793367dedecf4dc7a6b142e6864745dfde144cabf2b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/prometheus-rehearsal.json",
+          "sha256": "1592374ac0626063626505114816bf3ad9d51a0a5de324bcceee22664c0e65f5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/prometheus.log",
+          "sha256": "d06c0f8e6de88b902218e6f5b2e9865b6fe1c3b3443d4689446f4efd4b54f489"
+        }
+      ],
+      "reused_source_bindings": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ]
     }
   },
   "historical_improvements": [
@@ -949284,7 +949426,7 @@
       "06-security-testing-observability.md#T-06.12.04.05",
       "release-readiness#R-05.02"
     ],
-    "goal": "Implement the protected post-deploy observation adapter for exact release identity, authenticated smoke and scoped candidate and baseline telemetry."
+    "goal": "Restore hosted integrity checks on the exact v0.6.0 source and capture remaining operational acceptance on the approved topology."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

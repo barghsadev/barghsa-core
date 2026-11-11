@@ -62,6 +62,12 @@ def traffic_counts(value):
     )
 
 
+def journey_counts(value):
+    return isinstance(value, dict) and set(value) == set(SERVICES) and all(
+        traffic_counts(counts) for counts in value.values()
+    )
+
+
 def validate_plan(plan, now):
     require(isinstance(plan, dict), 'invalid_plan')
     require(identity(plan.get('scope')), 'invalid_scope')
@@ -104,9 +110,14 @@ def validate_plan(plan, now):
         traffic_counts(baseline) and baseline.get('revision') == plan['previous']
         and baseline.get('scope') == plan['scope']
         and finite(baseline.get('observed_at'), now - policy['baseline_max_age_seconds'], now)
+        and finite(baseline.get('window_start'), baseline['observed_at'] - 7200,
+                   baseline['observed_at'] - policy['minimum_observation_seconds'])
         and baseline['attempts'] >= policy['minimum_api_samples'],
         'baseline_unavailable',
     )
+    require(journey_counts(baseline.get('journeys')) and all(
+        counts['attempts'] >= policy['minimum_journey_samples'] for counts in baseline['journeys'].values()
+    ), 'baseline_journeys_unavailable')
     for key in ('route', 'observe'):
         command = plan.get(key)
         require(
@@ -158,8 +169,8 @@ def hook(plan, kind, *, timeout=None, **fields):
     return result
 
 
-def route(plan, action, weight):
-    response = hook(plan, 'route', action=action, candidate_weight=weight)
+def route(plan, action, weight, *, timeout=None):
+    response = hook(plan, 'route', timeout=timeout, action=action, candidate_weight=weight)
     require(integer(response.get('candidate_weight'), 0, 100) and
             response['candidate_weight'] == weight, 'route_weight_mismatch')
     require(response.get('previous_ready') is True, 'previous_not_ready')
@@ -196,8 +207,7 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
     api = sample.get('api')
     journeys = sample.get('journeys')
     require(traffic_counts(api), 'api_counts_unavailable')
-    require(isinstance(journeys, dict) and set(journeys) == set(SERVICES)
-            and all(traffic_counts(item) for item in journeys.values()), 'journey_counts_unavailable')
+    require(journey_counts(journeys), 'journey_counts_unavailable')
     baseline = plan['baseline']['failures'] / plan['baseline']['attempts']
     error_ratio = api['failures'] / api['attempts'] if api['attempts'] else None
     burn = {}
@@ -209,6 +219,11 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
         require(error_ratio - baseline <= policy['max_http_error_increase'], 'http_error_increase',
                 observed=error_ratio, baseline=baseline, limit=policy['max_http_error_increase'])
     budget = ERROR_BUDGET[policy['availability_tier']]
+    previous_journeys = plan['baseline']['journeys']
+    previous_burn = {
+        service: (counts['failures'] / counts['attempts']) / budget
+        for service, counts in previous_journeys.items()
+    }
     for service, counts in journeys.items():
         attempts = counts['attempts']
         burn[service] = (counts['failures'] / attempts) / budget if attempts else None
@@ -228,6 +243,7 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
             for service, counts in journeys.items()
         },
         'journey_burn': burn,
+        'baseline_journey_burn': previous_burn,
     }
 
 
@@ -246,6 +262,7 @@ def roll_out(plan, record):
             record('traffic_verified', weight=weight)
             deadline = time.monotonic() + policy['stage_timeout_seconds']
             while True:
+                route(plan, 'read', weight, timeout=deadline - time.monotonic())
                 ready, evidence = observe(plan, weight, since, timeout=deadline - time.monotonic())
                 record('observation', weight=weight, ready=ready, **evidence)
                 require(time.monotonic() <= deadline, 'observation_deadline')

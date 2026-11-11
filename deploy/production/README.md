@@ -103,19 +103,21 @@ new receipt path for each invocation. The plan contains these fields.
 | `scope`                 | Exact `environment` and `database` labels.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | `candidate`, `previous` | Each has a full `commit` SHA and the verified platform `app_image` and `web_image` IDs, including the `sha256:` prefix.                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | `weights`               | Two to ten increasing integer percentages ending at 100. Keep the previous pool available throughout the ramp.                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| `baseline`              | Previous release's `revision`, the same `scope`, UTC `observed_at` in epoch seconds, and completed API `attempts` and server-error `failures` from a comparable pre-ramp window.                                                                                                                                                                                                                                                                                                                                                        |
+| `baseline`              | Previous release's `revision`, the same `scope`, UTC `window_start` and `observed_at` in epoch seconds, plus API and per-service journey counts from a comparable pre-ramp window.                                                                                                                                                                                                                                                                                                                                                      |
 | `policy`                | The rollout window and thresholds approved for the environment. Use `availability_tier` of `pilot` or `commercial` for the documented error budgets. Set positive `minimum_api_samples` and `minimum_journey_samples`, `minimum_observation_seconds`, `stage_timeout_seconds`, `poll_seconds`, `hook_timeout_seconds`, `baseline_max_age_seconds` and `observation_max_age_seconds`. Set `max_http_error_ratio`, `max_http_error_increase` over the baseline as fractions, and `max_slo_burn` as a multiple of the tier's error budget. |
 | `route`, `observe`      | Argument arrays starting with an absolute executable. Use operator-controlled adapters that finish synchronously and exit nonzero when readback is unavailable.                                                                                                                                                                                                                                                                                                                                                                         |
 
 Both adapters read a JSON request on stdin and write one JSON object on stdout.
-Read back `scope`, `candidate`, `previous` and `candidate_weight` from the
-selected targets in every response. Keep credentials in protected configuration.
+Use `scope`, `candidate`, `previous` and `candidate_weight` to bind the
+responses to one rollout. Keep credentials in protected configuration.
 
 - The route request includes `action` of `read` or `set` and
   `candidate_weight`. Before `set`, verify readiness of the previous pool.
   Apply that absolute percentage and read it back before returning. Include
   `previous_ready` from the compatible pool's current readiness check. On restoration, verify that the ingress
   sends all traffic to that pool and its running images match the prior release.
+  The guard reads the route and running image identities before every
+  observation.
 - The observation request includes `candidate_weight` and `window_start`
   in UTC epoch seconds. Return the actual `window_start`, `observed_at`,
   `smoke`, `api`, `journeys`, `critical_wallet_drift` and `security_alerts`.
@@ -128,6 +130,59 @@ selected targets in every response. Keep credentials in protected configuration.
   dependency failures. Take drift and security counts from their current
   authoritative monitoring sources. During zero-traffic preflight, only
   smoke, drift and security signals are evaluated.
+
+### Configure the observation hook
+
+Point `observe` at the absolute Python executable, the absolute path to
+`rollout-observer.py`, and `--config /protected/observer.json`. Give the
+operator ownership of that JSON file and mode `0600`. It contains:
+
+- `scope` matching the plan, and `candidate` and `previous` objects with
+  `revision` matching the plan, a pool-specific `origin`, and separate
+  `api_job` and `journey_job` names. Each HTTPS origin serves that pool's
+  `/release.json` and API. The observer verifies both live release SHAs
+  and matches each API pool to its scraped release metric. The ingress
+  hook verifies route weight and running image IDs.
+- `user_id`, `profile_id`, `session_id` and a `fixtures` object mapping
+  `electricity`, `saving`, `solar` and `consultation` to a known order or
+  request ID from that synthetic customer profile. Put the fixture on the
+  first page returned by each service. Use a current ordinary customer
+  session from the candidate environment. The observer makes read-only
+  calls and checks the active profile and the four expected records.
+- `prometheus_origin`, `prometheus_token` for a read-only bearer credential,
+  `wallet_job` for the reconciliation worker and `targets` mapping each of
+  the five job names to its full expected list of Prometheus `instance`
+  labels. Set `max_scrape_age_seconds` to cover the configured scrape and
+  rule evaluation intervals and allow for normal jitter. Set the guard's
+  observation age limit to accommodate that freshness bound.
+  `additional_security_rules` can list other deployed security rule names
+  to evaluate alongside `PaymentCallbackAnomaly` and
+  `PaymentIdempotencyConflict`. Require both scope labels on those alerts.
+
+Label every scrape target with the exact `environment` and `database` in
+the plan. Scrape the API histogram, API process start time and revision, and
+the worker's wallet reconciliation gauge from their existing endpoints.
+Scrape one `process_start_time_seconds` per journey collector and initialize
+`barghsa_rollout_journey_attempts_total{revision,service,outcome}` for all
+four services and both `success` and `failure`. Feed those counters from
+eligible authenticated attempts on the associated release, including timed
+out or failed critical dependencies. Verify collector coverage against the
+[service objectives](../../docs/operations/service-objectives.md).
+The four read-only smoke calls check the synthetic account independently of
+that availability input.
+
+The observer computes counter deltas from complete scrapes within the
+window. Restarts, scope or target changes, missing journey series, scrape
+gaps and stale rule evaluations make the observation unavailable. The HTTP
+ratio uses completed API responses and their 5xx subset. A lack of measured
+traffic leaves the ramp waiting for volume.
+
+Before changing traffic, collect the previous release baseline with
+`python3 rollout-observer.py --config /protected/observer.json --baseline-seconds N`.
+Use a comparable workload and enough time to meet the plan's minimum
+observation and sample thresholds. Review the output and put it in the plan's
+`baseline` field. The receipt reports previous and candidate journey burn
+and HTTP error ratios for each measured stage.
 
 The protected JSONL receipt records requested and verified traffic, the
 observation counts and any halt or rollback. Exit status 0 means the final

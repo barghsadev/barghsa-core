@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Implement the protected post-deploy observation adapter for exact release identity, authenticated smoke and scoped candidate and baseline telemetry.
+Restore hosted integrity checks on the exact v0.6.0 source and capture remaining operational acceptance on the approved topology.
 
 - `06-security-testing-observability.md#T-06.12.04.05`: Implement post-deploy smoke tests and SLO/error comparison against previous release
 - `release-readiness#R-05.02`: Renew security and operational task acceptance

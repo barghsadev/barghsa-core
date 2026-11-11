@@ -33,7 +33,9 @@ def plan(now=100):
             'max_http_error_increase': 0.05, 'max_slo_burn': 2,
         },
         'baseline': {'scope': SCOPE, 'revision': PREVIOUS, 'observed_at': now - 1,
-                     'attempts': 100, 'failures': 2},
+                     'window_start': now - 3, 'attempts': 100, 'failures': 2,
+                     'journeys': {service: {'attempts': 100, 'failures': 1}
+                                  for service in rollout.SERVICES}},
         'route': ['/usr/bin/false'],
         'observe': ['/usr/bin/false'],
     }
@@ -63,6 +65,7 @@ class ObservationsTest(unittest.TestCase):
         self.assertEqual(details['api'], {'attempts': 100, 'failures': 2})
         self.assertEqual(details['baseline_http_error_ratio'], 0.02)
         self.assertEqual(details['journey_burn'], dict.fromkeys(rollout.SERVICES, 0))
+        self.assertEqual(details['baseline_journey_burn'], dict.fromkeys(rollout.SERVICES, 2))
         self.assertNotIn('SYNTHETIC_SECRET', json.dumps(details))
 
     def test_every_rollback_signal_is_evaluated(self):
@@ -113,6 +116,8 @@ class ObservationsTest(unittest.TestCase):
             ({'route': ['relative-command']}, 'invalid_route_command'),
             ({'baseline': {**value['baseline'], 'observed_at': 1}}, 'baseline_unavailable'),
             ({'baseline': {**value['baseline'], 'revision': CANDIDATE}}, 'baseline_unavailable'),
+            ({'baseline': {**value['baseline'], 'window_start': 99}}, 'baseline_unavailable'),
+            ({'baseline': {**value['baseline'], 'journeys': {}}}, 'baseline_journeys_unavailable'),
         ):
             with self.subTest(reason=reason), self.assertRaisesRegex(rollout.RolloutError, reason):
                 rollout.validate_plan({**value, **changes}, 100)
@@ -169,6 +174,8 @@ if kind == "route":
         state["changes"].append(weight)
         path.write_text(json.dumps(state))
     result.update(candidate_weight=state["weight"], previous_ready=True)
+    if fault == "route_drift" and request["action"] == "read" and state["weight"] == 5:
+        result["candidate_weight"] = 4
 else:
     weight = request["candidate_weight"]
     assert weight == state["weight"]
@@ -240,6 +247,7 @@ class IsolatedRolloutTest(unittest.TestCase):
         for fault, reason, status, changes in (
             ('smoke_before_traffic', 'smoke_failed_health', 1, []),
             ('foreign_observation', 'observe_identity_mismatch', 2, [5, 0]),
+            ('route_drift', 'route_weight_mismatch', 2, [5, 0]),
         ):
             with self.subTest(fault=fault):
                 observed, state, events = self.run_fixture(fault)
