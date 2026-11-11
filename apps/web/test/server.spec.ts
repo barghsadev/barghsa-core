@@ -65,7 +65,7 @@ describe('static server', () => {
     );
     await writeFile(
       join(distDir, 'auth', 'index.html'),
-      '<html><body>Authentication<script type="module" src="/auth/assets/auth-a1b2c3d4.js"></script></body></html>'
+      '<html><head></head><body>Authentication<script type="module" src="/auth/assets/auth-a1b2c3d4.js"></script></body></html>'
     );
     await writeFile(join(distDir, 'assets', 'app-a1b2c3d4.js'), 'console.log("ok");');
     await writeFile(join(distDir, 'assets', 'style-XyZ78901.css'), 'body { color: red; }');
@@ -80,7 +80,9 @@ describe('static server', () => {
     }
     await compressStaticAssets(distDir);
 
+    vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', 'production');
     server = createStaticServer({ distDir });
+    vi.unstubAllEnvs();
     return new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
   });
 
@@ -117,10 +119,36 @@ describe('static server', () => {
   );
 
   it('sets production security headers', async () => {
-    const res = await fetch(server, '/');
+    const res = await fetch(server, '/', 'GET', { 'x-environment': 'development' });
+    expect(res.headers['x-environment']).toBe('production');
+    expect(res.body).not.toContain('class="environment-indicator"');
     expect(res.headers['x-content-type-options']).toBe('nosniff');
     expect(res.headers['x-frame-options']).toBe('DENY');
     expect(res.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
+  });
+
+  it.each([
+    ['development', 'Dev'],
+    ['staging', 'Staging'],
+  ])('renders the %s badge with the response CSP nonce', async (environment, label) => {
+    vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', environment);
+    const lower = createStaticServer({ distDir });
+    vi.unstubAllEnvs();
+    try {
+      await new Promise<void>((resolve) => lower.listen(0, '127.0.0.1', resolve));
+      for (const path of ['/login', '/wallet']) {
+        const res = await fetch(lower, path);
+        expect(res.headers['x-environment']).toBe(environment);
+        expect(res.body).toContain(`data-environment="${environment}"`);
+        expect(res.body).toContain(`<span lang="en">${label}</span>`);
+        const nonce =
+          res.headers['content-security-policy-report-only']?.match(/'nonce-([^']+)'/)?.[1];
+        expect(nonce).toBeTruthy();
+        expect(res.body).toContain(`<style nonce="${nonce}">\n  .environment-indicator`);
+      }
+    } finally {
+      await new Promise<void>((resolve) => lower.close(() => resolve()));
+    }
   });
 
   it.each(['/', '/index.html', '/account'])(

@@ -18,6 +18,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { join, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { isAuthEntryPath } from './entry-routes.js';
+import { addEnvironmentIndicator } from './environment-indicator.js';
 
 const __dirname = join(fileURLToPath(import.meta.url), '..');
 const DEFAULT_DIST_DIR = resolve(__dirname, 'dist');
@@ -136,6 +137,11 @@ function preferredEncodings(header) {
  */
 export function createStaticServer(options = {}) {
   const distDir = resolve(options.distDir ?? DEFAULT_DIST_DIR);
+  const configuredEnvironment = process.env['BARGHSA_DEPLOYMENT_ENV'] ?? process.env['NODE_ENV'];
+  const environment =
+    configuredEnvironment === 'development' || configuredEnvironment === 'staging'
+      ? configuredEnvironment
+      : 'production';
   const historyPreloads = readFile(join(distDir, '.vite', 'history-preloads.json'), 'utf8')
     .then((content) => JSON.parse(content))
     .catch(() => ({}));
@@ -167,6 +173,7 @@ export function createStaticServer(options = {}) {
     res.once('finish', finish);
     res.once('close', finish);
     const url = req.url ?? '/';
+    res.setHeader('X-Environment', environment);
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('Cache-Control', 'private, no-store');
@@ -185,8 +192,7 @@ export function createStaticServer(options = {}) {
         .filter((file) => typeof file === 'string' && /^assets\/[a-zA-Z0-9_-]+\.js$/.test(file))
         .map((file) => `<link rel="modulepreload" crossorigin href="/${file}">`)
         .join('');
-      const html = content
-        .toString('utf8')
+      const html = addEnvironmentIndicator(content.toString('utf8'), environment)
         .replace('</head>', `${links}</head>`)
         .replace(/<(script|style|link)\b[^>]*>/gi, (tag, name) => {
           if (name.toLowerCase() === 'link' && !/\brel\s*=\s*["']modulepreload["']/i.test(tag))

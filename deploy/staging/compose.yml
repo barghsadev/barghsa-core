@@ -90,6 +90,7 @@ services:
     env_file: /etc/barghsa/staging/runtime.env
     environment:
       NODE_ENV: production
+      BARGHSA_DEPLOYMENT_ENV: staging
       NODE_OPTIONS: --max-old-space-size=512 --no-deprecation
       PORT: '4000'
       API_TRUSTED_PROXY_IPS: ${BARGHSA_PROXY_IPS:-}
@@ -183,6 +184,7 @@ services:
     pull_policy: never
     environment:
       NODE_ENV: production
+      BARGHSA_DEPLOYMENT_ENV: staging
       NODE_OPTIONS: --max-old-space-size=256 --no-deprecation
       PORT: '3000'
       WEB_CSP_MODE: ${BARGHSA_WEB_CSP_MODE:-report-only}

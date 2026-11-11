@@ -7,6 +7,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import { isAuthEntryPath } from './entry-routes.js';
+import { addEnvironmentIndicator } from './environment-indicator.js';
 
 const version: string = JSON.parse(
   readFileSync(resolve(__dirname, '../../package.json'), 'utf8')
@@ -159,6 +160,17 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
+      {
+        name: 'development-environment-indicator',
+        apply: 'serve',
+        configureServer(server) {
+          server.middlewares.use((_request, response, next) => {
+            response.setHeader('X-Environment', 'development');
+            next();
+          });
+        },
+        transformIndexHtml: (html) => addEnvironmentIndicator(html, 'development'),
+      },
       TanStackRouterVite({
         routesDirectory: './src/routes',
         generatedRouteTree: './src/routeTree.gen.ts',

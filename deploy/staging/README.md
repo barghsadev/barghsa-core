@@ -41,6 +41,11 @@ Preview evidence is recorded on the launch-candidate tasks in the board.
 Formal milestone acceptance and its Telegram notification use the release
 procedure below.
 
+The staging API and web services set `BARGHSA_DEPLOYMENT_ENV=staging` at
+runtime. Both return `X-Environment: staging`, and the web server renders a
+localized staging badge. Production manifests set the production label for
+the same build artifacts.
+
 The preview runs on a copy of the staging database. The previous app checks
 its packaged migration head at readiness, so recovery restores its original
 database connection and image manifest together. The protected pre-preview

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1213 | Accepted with unchanged source bindings. |
-| verify | 89 | Existing work may be complete; inspect evidence before building. |
+| done | 1214 | Accepted with unchanged source bindings. |
+| verify | 88 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1064,7 +1064,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.01.01` | verify | Earlier deferred | Create `pnpm setup:dev` convenience script |
 | `01-platform-infrastructure.md#T-07.01.02` | verify | Earlier deferred | Configure dev-mode OTP bypass and console printing |
 | `01-platform-infrastructure.md#T-07.01.03` | verify | Earlier deferred | Create `pnpm db:push` script for dev schema synchronization |
-| `01-platform-infrastructure.md#T-07.01.04` | verify | Earlier deferred | Add environment indicator middleware |
+| `01-platform-infrastructure.md#T-07.01.04` | done | Earlier deferred | Add environment indicator middleware |
 | `01-platform-infrastructure.md#T-07.02.01` | done | Earlier deferred | Create versioned configuration store in PostgreSQL |
 | `01-platform-infrastructure.md#T-07.02.02` | verify | Earlier deferred | Create configuration validation framework |
 | `01-platform-infrastructure.md#T-07.02.03` | partial | Earlier deferred | Implement configuration rollback |

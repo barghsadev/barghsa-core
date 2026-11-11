@@ -4,26 +4,36 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 const revision = 'a3'.repeat(20);
 
-async function startWithRevision(value: string | undefined) {
+async function startWithRevision(value: string | undefined, environment: string) {
   const previous = process.env.BARGHSA_RELEASE_SHA;
+  const previousEnvironment = process.env.BARGHSA_DEPLOYMENT_ENV;
   vi.stubEnv('BARGHSA_RELEASE_SHA', value);
+  vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', environment);
   try {
     return await startHttpFixture(process.env.TEST_DATABASE_URL!);
   } finally {
     vi.stubEnv('BARGHSA_RELEASE_SHA', previous);
+    vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', previousEnvironment);
   }
 }
 
 beforeAll(async () => {
-  fixture = await startWithRevision(revision);
+  fixture = await startWithRevision(revision, 'staging');
 }, 60_000);
 afterAll(async () => {
   await fixture?.close();
 });
 
 it('counts completed HTTP outcomes with route templates and keeps request data out of metrics', async () => {
-  const request = (path: string, init?: RequestInit) => fetch(`${fixture.base}${path}`, init);
-  expect((await request('/api/public/branding/config')).status).toBe(200);
+  const request = async (path: string, init?: RequestInit) => {
+    const response = await fetch(`${fixture.base}${path}`, init);
+    expect(response.headers.get('X-Environment')).toBe('staging');
+    return response;
+  };
+  expect(
+    (await request('/api/public/branding/config', { headers: { 'X-Environment': 'production' } }))
+      .status
+  ).toBe(200);
   for (const profile of ['private-profile-one', 'private-profile-two']) {
     const response = await request(`/api/profiles/${profile}/addresses?token=private-query`);
     expect(response.status).toBe(401);
@@ -62,13 +72,17 @@ it('counts completed HTTP outcomes with route templates and keeps request data o
   expect(metrics).toContain(`barghsa_api_release_info{revision="${revision}"} 1\n`);
 });
 
-it.each(['private-invalid-release', undefined])(
-  'omits the release series for an invalid or absent build revision (%s)',
-  async (value) => {
-    const isolated = await startWithRevision(value);
+it.each([
+  { value: 'private-invalid-release', environment: 'development', expected: 'development' },
+  { value: undefined, environment: 'private-invalid-environment', expected: 'production' },
+])(
+  'omits the release series for an invalid or absent build revision ($value)',
+  async ({ value, environment, expected }) => {
+    const isolated = await startWithRevision(value, environment);
     try {
       const response = await fetch(`${isolated.base}/metrics`);
       expect(response.status).toBe(200);
+      expect(response.headers.get('X-Environment')).toBe(expected);
       expect(await response.text()).not.toMatch(/barghsa_api_release_info|private-invalid-release/);
     } finally {
       await isolated.close();

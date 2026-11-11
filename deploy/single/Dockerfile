@@ -19,7 +19,7 @@ COPY nginx.conf /etc/nginx/nginx.conf
 COPY start.sh healthcheck.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/start.sh /usr/local/bin/healthcheck.sh
 
-ENV NODE_ENV=production NODE_OPTIONS=--max-old-space-size=512 \
+ENV NODE_ENV=production BARGHSA_DEPLOYMENT_ENV=staging NODE_OPTIONS=--max-old-space-size=512 \
     PGDATA=/data/postgres S3_BUCKET=barghsa-stg S3_REGION=us-east-1 \
     S3_FORCE_PATH_STYLE=true S3_ENDPOINT=http://127.0.0.1:8333 \
     S3_PRIVATE_ENDPOINT=http://127.0.0.1:8333 \

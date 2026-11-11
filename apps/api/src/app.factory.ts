@@ -12,7 +12,7 @@ import { Reflector } from '@nestjs/core';
 import { sanitizeBodyParserErrors } from './common/body-parser-errors.js';
 import { browserCorsOptions } from './common/browser-origin.js';
 import { observeHttpRequest } from './metrics/http-request-metrics.js';
-import type { Server } from 'node:http';
+import type { Server, ServerResponse } from 'node:http';
 
 export async function createApplication() {
   const proxies = trustedProxyIps();
@@ -30,6 +30,15 @@ export async function createApplication() {
     .disable('x-powered-by')
     .set('etag', false)
     .set('trust proxy', proxies.length ? proxies : false);
+  const configuredEnvironment = process.env['BARGHSA_DEPLOYMENT_ENV'] ?? process.env['NODE_ENV'];
+  const environment =
+    configuredEnvironment === 'development' || configuredEnvironment === 'staging'
+      ? configuredEnvironment
+      : 'production';
+  app.use((_request: unknown, response: ServerResponse, next: () => void) => {
+    response.setHeader('X-Environment', environment);
+    next();
+  });
   app.use(observeHttpRequest);
   app.enableCors(browserCorsOptions());
 

@@ -78,6 +78,7 @@ services:
     <<: *app-runtime
     environment:
       <<: *db-environment
+      BARGHSA_DEPLOYMENT_ENV: production
       PORT: '4000'
       AI_INFERENCE_URL: http://ai-inference:9091
       DOCUMENT_CLAMAV_HOST: clamav
@@ -107,6 +108,7 @@ services:
     image: '${BARGHSA_WEB_REPOSITORY:?Set the web image repository}@sha256:${BARGHSA_WEB_DIGEST:?Set the verified web image digest}'
     environment:
       NODE_ENV: production
+      BARGHSA_DEPLOYMENT_ENV: production
       PORT: '3000'
       WEB_CSP_MODE: ${BARGHSA_WEB_CSP_MODE:-report-only}
     ports: ['127.0.0.1:3000:3000']

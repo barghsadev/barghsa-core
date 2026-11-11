@@ -18,7 +18,7 @@ RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack 
 COPY --from=build /app/apps/web/package.json ./package.json
 COPY --from=build /app/apps/web/dist ./dist
 COPY --from=build /app/browser-license-inventory ./browser-license-inventory
-COPY apps/web/server.js apps/web/healthcheck.js apps/web/entry-routes.js ./
+COPY apps/web/server.js apps/web/healthcheck.js apps/web/entry-routes.js apps/web/environment-indicator.js ./
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512 --no-deprecation"
 USER node
 EXPOSE 3000
