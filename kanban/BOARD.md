@@ -39,9 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Restore signed Ubuntu package acquisition for the protected integrity check and verify the exact candidate and main readback.
+Verify the tooling candidate under the active main ruleset, reconcile scheduled browser evidence and continue the exact v0.6.0 package review.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
+- `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
 - `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
 
 ## v0.2.0: Complete customer journeys

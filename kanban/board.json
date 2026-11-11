@@ -5866,7 +5866,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -5951,6 +5951,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
             }
           ]
         }
@@ -11477,7 +11485,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -11583,6 +11591,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
             }
           ]
         }
@@ -16055,7 +16071,7 @@
       "remaining": [
         "Read back a successful 02:00 UTC scheduled run on current release source and its seven-day history, preserving the six unavailable historical detailed receipts as gaps. The same workflow passed by manual dispatch at f0f9434c.",
         "Verify actual result delivery to the authorized dedicated receiver and repeat invalidated checks for the exact accepted candidate.",
-        "Reconcile scheduled run 42990347003 on the current source. The provider, ownership and registration fixtures have focused evidence. Verify the WebKit branding fixture loopback read and the one transient contrast measurement through a clean current-source rollup."
+        "Reconcile scheduled run 42990347003 on the final candidate. The provider, ownership and registration fixture corrections and the WebKit branding transport repair have focused evidence. Verify the remaining transient contrast measurement and a clean scheduled 40-shard rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -16083,6 +16099,7 @@
           "historically_skipped": true
         },
         "changed_paths": [
+          "apps/api/scripts/http-test-server.cjs",
           "apps/web/e2e/consumer-theme.spec.ts",
           "apps/web/e2e/registration-feature.spec.ts",
           "apps/web/e2e/team.spec.ts",
@@ -16127,7 +16144,8 @@
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
-          "release-0.6-scheduled-browser-fixture-contracts"
+          "release-0.6-scheduled-browser-fixture-contracts",
+          "release-0.6-webkit-fixture-idle-connection"
         ],
         "current_acceptance": null
       }
@@ -540886,7 +540904,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             }
           ],
           "checks": [
@@ -540894,6 +540912,16 @@
             "The exact hosted fixture test passed on the source-matching compiled path and verified expected production triggers and seeded staff roles in both cloned databases.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            }
           ]
         }
       },
@@ -540966,7 +540994,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             }
           ],
           "checks": [
@@ -540974,6 +541002,16 @@
             "Lower-level tests retain random isolated schemas and explicit cleanup. No changes to the database or application harness were required.",
             "The CI guide gained a provider fixture section and OpenSSL prerequisite. Existing build, coverage, and PostgreSQL guidance remains unchanged.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            }
           ]
         }
       },
@@ -545299,7 +545337,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             },
             {
               "path": "apps/api/src/crm/crm.controller.ts",
@@ -545390,6 +545428,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
             }
           ]
         }
@@ -550808,7 +550854,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -550840,6 +550886,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
             }
           ]
         }
@@ -551792,7 +551846,7 @@
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
-              "sha256": "4766868846c6ee2b43307d4434ba305b48a802c9d82d68209fcf52c7e5902f80"
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
@@ -551849,6 +551903,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-webkit-fixture-idle-connection",
+              "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+              "paths": [
+                "apps/api/scripts/http-test-server.cjs"
+              ],
+              "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
             }
           ]
         }
@@ -843393,7 +843455,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Signed archive acquisition and the required integrity check passed on 54113032 in run 43042551318. The duplicate branch-seed suite left a failed result on the same SHA. Verify a single candidate preflight, direct push and exact main readback under the active ruleset.",
         "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
@@ -843600,7 +843661,8 @@
           "release-0.6-environment-indicator",
           "release-0.6-scheduled-browser-fixture-contracts",
           "release-0.6-dev-restart-and-preflight-refs",
-          "release-0.6-rollout-latency-and-readonly-smoke"
+          "release-0.6-rollout-latency-and-readonly-smoke",
+          "release-0.6-webkit-fixture-idle-connection"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -966509,6 +966571,114 @@
         "06-security-testing-observability.md#T-06.12.04.04",
         "06-security-testing-observability.md#T-06.17.03.01"
       ]
+    },
+    "release-0.6-webkit-fixture-idle-connection": {
+      "batch": "release-0.6-webkit-fixture-idle-connection",
+      "base_commit": "65b1abe994d55c8bd916392ea58c30b017079b9a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/scripts/http-test-server.cjs"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "33cd0b1589d80c842f463b450f68975297895afe9377f37e061ccdce20b230e9"
+        },
+        {
+          "path": "apps/api/scripts/admin-ui-fixture.ts",
+          "sha256": "699228cec9e01c1a833dd740fb2a0b6e8f2954b5ebb3f3af213460e7db733fc0"
+        },
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Hosted run 42990347003 saved the second Persian branding draft with HTTP 200. The following configs read reset before receiving an HTTP response, 6000.503 ms after the previous configs read completed. That response advertised a 5-second idle timeout and Node 24 applies an additional default 1-second buffer. The timing supports an idle pooled connection expiring during the forwarded request.",
+        "The compiled API fixture retains idle connections only when the existing loopback browser fixture flag is set. No retries or product server changes were added. The actual fixture executable kept its browser connection after 6300 ms with the patch and the ordinary fixture still released it. Both stopped cleanly with idle connections open.",
+        "The first WebKit run over the SSH database tunnel recorded four failures with fixture session errors or action timeouts. The same-host run with an isolated PostgreSQL network namespace passed all four Persian and English branding save/review/activation and team persistence journeys with zero retries. It used the pinned WebKit runtime and the current API and browser assertions. Only the disposable database provisioning differs from hosted CI.",
+        "The hosted 40-shard nightly rollup and its remaining transient contrast receipt still require exact-candidate verification.",
+        "GitHub Actions run 43049416360 completed successfully at de6e5374, with one successful Verify monorepo integrity result from integration 15368. The direct push succeeded and GitHub API readback verified the exact main revision. Final milestone checks remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/hosted-transport.json",
+          "sha256": "11fa82a6a7dcb032f7b398dd32ad861134af3741761507c86e96efa383c2e0d5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/transport-before.json",
+          "sha256": "08eee354c403c961f36fe528501df7731694b13b2f185276a482c472c09eb360"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/transport-after.json",
+          "sha256": "71275341ea148f10f0a1c6fcaace03d44738cffba4890dc8cd287d7428260253"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/transport-teardown.json",
+          "sha256": "71275341ea148f10f0a1c6fcaace03d44738cffba4890dc8cd287d7428260253"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/browser-proof.json",
+          "sha256": "209a8959811a80620ac2720dbb32b1ee814787c7d10abd72bef3d745fad15a67"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/webkit-browser.log",
+          "sha256": "6b9dff2b42802d54a135743a724b98e1f72bc4df7836b16d9e37befac497786a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/native-webkit.log",
+          "sha256": "67e3e8d90bc51a60386ab99885342add410021af7af3745c23bfda30d2f3ee82"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/native-webkit-results.json",
+          "sha256": "20a2f6f79029834120153bca827493ed35674100b6ccbfd2c8ccd471ffea6804"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/native-template-migration.log",
+          "sha256": "0dcf4767a09ed7688935e38a96e2f0c1f6c645d46e1d602b208c06840d6d2755"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/worktree-build.log",
+          "sha256": "1314ea7fbc3a911f373c6c36277f5557964e95e24aa9223f452263c71b386dc9"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/environment-integrity.json",
+          "sha256": "8c378690027bf437d6deacdd1cd7b3d49894116b199a57d304e8b62e59693d30"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/webkit-branding.cv6sF5kl/main-readback.txt",
+          "sha256": "8152553c58daa25642caddcca2462f8c323df5d465844e6c91dbe991686bf557"
+        }
+      ],
+      "reused_source_bindings": [
+        "01-platform-infrastructure.md#T-01.04.03",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.14.01.02",
+        "06-security-testing-observability.md#T-06.14.02.02"
+      ]
     }
   },
   "historical_improvements": [
@@ -966548,18 +966718,19 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-hosted-archive-reachability",
+    "id": "release-0.6-protected-tooling-and-browser",
     "release": "0.6.0",
     "task_keys": [
       "release-readiness#R-05.02",
+      "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Restore signed Ubuntu package acquisition for the protected integrity check and verify the exact candidate and main readback."
+    "goal": "Verify the tooling candidate under the active main ruleset, reconcile scheduled browser evidence and continue the exact v0.6.0 package review."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
     "next_update_after": "Complete v0.6.0 scheduled quality receipts, CSP observation, package license disposition, image distribution, and production-equivalent environment evidence.",
-    "method": "v0.5.0 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open."
+    "method": "v0.5.0 staging and Telegram receipts are confirmed. The v0.6.0 predecessor f0f9434c passed all 40 hosted browser shards. The latest full manual check has a locally repaired database-fixture timeout and a pending license disposition. The November 9 delivery target passed. The required scheduled receipt, candidate CSP window, package approval, and production-equivalent TLS, provider, off-server recovery and load proof remain open. GitHub verified main at de6e5374 after a successful exact preflight. The targeted WebKit branding and team journeys passed with the repaired test fixture. The final scheduled rollup and legal dispositions remain open."
   },
   "capabilities": [
     {
