@@ -439,7 +439,7 @@ def traffic(targets, selected, since, until):
             api['failures'] += failures
             histogram = [total + count for total, count in zip(histogram, buckets)]
         if job == selected['journey_job']:
-            stable(metrics, PROBE_START, times)
+            stable(metrics, API_START if job == selected['api_job'] else PROBE_START, times)
             expected = {(service, outcome) for service in JOURNEYS for outcome in ('success', 'failure')}
             for key, values in metrics.get(JOURNEY, {}).items():
                 labels = dict(key)
@@ -562,8 +562,10 @@ def validate_config(config):
                 and re.fullmatch(r'[a-f0-9]{40}', revision['commit'])
                 and all(re.fullmatch(r'sha256:[a-f0-9]{64}', revision[name]) for name in ('app_image', 'web_image')),
                 'invalid_release_identity')
-        jobs.update((selected['api_job'], selected['journey_job']))
-    require(len(jobs) == 5 and jobs == set(config['targets'])
+        pool_jobs = {selected['api_job'], selected['journey_job']}
+        require(not jobs.intersection(pool_jobs), 'invalid_monitoring_targets')
+        jobs.update(pool_jobs)
+    require(jobs == set(config['targets'])
             and all(re.fullmatch(LABEL, job) and isinstance(instances, list) and instances
                     and len(set(instances)) == len(instances)
                     and all(isinstance(instance, str) and instance for instance in instances)

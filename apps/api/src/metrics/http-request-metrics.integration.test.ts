@@ -70,6 +70,17 @@ it('counts completed HTTP outcomes with route templates and keeps request data o
   );
   expect(metrics).not.toMatch(/private-profile|private-query|private-path|private-malformed-body/);
   expect(metrics).toContain(`barghsa_api_release_info{revision="${revision}"} 1\n`);
+  const journeys = metrics
+    .split('\n')
+    .filter((line) => line.startsWith('barghsa_rollout_journey_attempts_total{'));
+  expect(journeys).toEqual(
+    ['electricity', 'saving', 'solar', 'consultation'].flatMap((service) =>
+      ['success', 'failure'].map(
+        (outcome) =>
+          `barghsa_rollout_journey_attempts_total{revision="${revision}",service="${service}",outcome="${outcome}"} 0`
+      )
+    )
+  );
 });
 
 it.each([
@@ -83,7 +94,9 @@ it.each([
       const response = await fetch(`${isolated.base}/metrics`);
       expect(response.status).toBe(200);
       expect(response.headers.get('X-Environment')).toBe(expected);
-      expect(await response.text()).not.toMatch(/barghsa_api_release_info|private-invalid-release/);
+      expect(await response.text()).not.toMatch(
+        /barghsa_api_release_info|barghsa_rollout_journey_attempts_total|private-invalid-release/
+      );
     } finally {
       await isolated.close();
     }

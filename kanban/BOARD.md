@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T22:45:47+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T22:57:38+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -1399,7 +1399,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.01.08` | partial | Recorded batch work | Every alert links to its dashboard and runbook |
 | `06-security-testing-observability.md#T-06.15.02.01` | done | Recorded batch work | Define SLOs with SLIs: availability, API latency (p95), core page LCP (p75), job start time (p99), RPO, RTO |
 | `06-security-testing-observability.md#T-06.15.02.02` | partial | Recorded batch work | Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2 |
-| `06-security-testing-observability.md#T-06.15.02.03` | verify | Inventory needed | Implement error budget tracking dashboard with consumption rate and burn-down |
+| `06-security-testing-observability.md#T-06.15.02.03` | verify | Recorded batch work | Implement error budget tracking dashboard with consumption rate and burn-down |
 | `06-security-testing-observability.md#T-06.15.02.04` | partial | Recorded batch work | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection |
 | `06-security-testing-observability.md#T-06.15.02.05` | verify | Inventory needed | Ensure outbox backlog, refund mismatch, and provider health alerts have SLO-linked burn budgets |
 | `06-security-testing-observability.md#T-06.15.03.01` | done | Recorded batch work | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 |

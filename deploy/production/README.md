@@ -144,8 +144,9 @@ Point `observe` at the absolute Python executable, the absolute path to
 operator ownership of that JSON file and mode `0600`. It contains:
 
 - `scope` matching the plan, and `candidate` and `previous` objects with
-  `revision` matching the plan, a pool-specific `origin`, and separate
-  `api_job` and `journey_job` names. Each HTTPS origin serves that pool's
+  `revision` matching the plan, a pool-specific `origin`, and
+  `api_job` and `journey_job` names. For the native journey counters, set
+  `journey_job` to the pool's `api_job`. Each HTTPS origin serves that pool's
   `/release.json` and API. The observer verifies both live release SHAs
   and matches each API pool to its scraped release metric. The ingress
   hook verifies route weight and running image IDs.
@@ -159,8 +160,8 @@ operator ownership of that JSON file and mode `0600`. It contains:
   includes pass or fail signals. Keep the fresh sign-in receipt from the
   synthetic login journey with the operational evidence.
 - `prometheus_origin`, `prometheus_token` for a read-only bearer credential,
-  `wallet_job` for the reconciliation worker and `targets` mapping each of
-  the five job names to its full expected list of Prometheus `instance`
+  `wallet_job` for the reconciliation worker and `targets` mapping each
+  distinct job name to its full expected list of Prometheus `instance`
   labels. Set `max_scrape_age_seconds` to cover the configured scrape and
   rule evaluation intervals and allow for normal jitter. Set the guard's
   observation age limit to accommodate that freshness bound.
@@ -171,11 +172,12 @@ operator ownership of that JSON file and mode `0600`. It contains:
 Label every scrape target with the exact `environment` and `database` in
 the plan. Scrape the API histogram, API process start time and revision, and
 the worker's wallet reconciliation gauge from their existing endpoints.
-Scrape one `process_start_time_seconds` per journey collector and initialize
-`barghsa_rollout_journey_attempts_total{revision,service,outcome}` for all
-four services and both `success` and `failure`. Feed those counters from
-eligible authenticated attempts on the associated release, including timed
-out or failed critical dependencies. Verify collector coverage against the
+The native API exports the eight `barghsa_rollout_journey_attempts_total`
+series for its exact build revision and provides the same
+`node_process_start_time_seconds` for both API and journey continuity.
+Scrape each API replica once. If a pool uses a separate journey collector,
+scrape its `process_start_time_seconds` and all eight revision-scoped
+success and failure counters. Verify collector coverage against the
 [service objectives](../../docs/operations/service-objectives.md).
 The authenticated smoke reads check the synthetic account independently of
 that availability input.

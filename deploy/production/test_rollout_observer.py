@@ -66,7 +66,8 @@ class Rehearsal:
             if job.endswith('-api'):
                 api_sha = 'c' * 40 if job == 'candidate-api' and self.fault == 'mixed-release' else commit
                 add('barghsa_api_release_info', [1] * 13, revision=api_sha)
-                add('node_process_start_time_seconds', [42] * 13)
+                add('node_process_start_time_seconds',
+                    [42] * 12 + [44 if self.fault == 'api-restarted' else 42])
                 for status, counts, latency in (
                     ('200', [10] * 12 + [1] if self.fault == 'reset' else range(0, 260, 20), 0.25),
                     ('503', range(13), 0.5),
@@ -85,8 +86,9 @@ class Rehearsal:
                         if self.fault == 'wrong-total-bucket' and bound == '+Inf':
                             values = [0] * 13
                         add('barghsa_http_request_duration_seconds_bucket', values, le=bound, **labels)
-            if job.endswith('-probes'):
-                add('process_start_time_seconds', [43] * 13)
+            if job in {self.config[pool]['journey_job'] for pool in ('candidate', 'previous')}:
+                if not job.endswith('-api'):
+                    add('process_start_time_seconds', [43] * 13)
                 for service, _, _ in SERVICES.values():
                     if self.fault == 'missing-solar' and service == 'solar':
                         continue
@@ -224,6 +226,36 @@ class ObserverTest(unittest.TestCase):
         self.assertEqual(baseline['p95_upper_seconds'], 0.25)
         self.assertGreaterEqual(baseline['failures'], 5)
         self.assertEqual(set(baseline['journeys']), set(data['journeys']))
+
+    def test_native_api_scrape_covers_both_metric_families_without_duplicate_targets(self):
+        config = self.rehearsal.config
+        for pool in ('candidate', 'previous'):
+            config['targets'].pop(config[pool]['journey_job'])
+            config[pool]['journey_job'] = config[pool]['api_job']
+        result = self.observe()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        data = json.loads(result.stdout)
+        self.assertGreater(data['api']['attempts'], 0)
+        self.assertEqual(len(data['journeys']), 4)
+        for value in data['journeys'].values():
+            self.assertEqual(value, {'attempts': 2 * data['api']['failures'], 'failures': 0})
+        for fault, expected in (
+            ('api-restarted', 'unstable_node_process_start_time_seconds'),
+            ('missing-solar', 'journey_counters_missing'),
+        ):
+            with self.subTest(fault=fault):
+                failed = self.observe(fault)
+                self.assertEqual(failed.returncode, 1)
+                self.assertIn(expected, failed.stderr)
+
+    def test_shared_job_is_only_valid_within_the_same_release_pool(self):
+        config = self.rehearsal.config
+        config['targets'].pop(config['previous']['journey_job'])
+        config['previous']['journey_job'] = config['candidate']['api_job']
+        result = self.observe()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn('invalid_monitoring_targets', result.stderr)
+        self.assertEqual(self.rehearsal.requests, [])
 
     def test_foreign_session_or_fixture_cannot_pass_smoke(self):
         for fault in ('foreign-profile', 'foreign-saving'):

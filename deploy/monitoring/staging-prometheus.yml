@@ -20,6 +20,7 @@ scrape_configs:
         labels:
           environment: staging
           database: core
+          availability_tier: pilot
   - job_name: barghsa-worker
     static_configs:
       - targets: ['barghsa-staging-worker-1:9090']

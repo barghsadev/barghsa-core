@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:45:47+00:00",
+  "updated": "2026-11-11T22:57:38+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10414,7 +10414,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10426,7 +10427,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10563,6 +10564,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -15612,7 +15621,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15624,7 +15634,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15692,6 +15702,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -15748,7 +15766,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15760,7 +15779,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15828,6 +15847,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -22559,7 +22586,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -22581,7 +22609,7 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "71a7c57b1c99b1719481b1eeaa9a9dbc5d9c34256bbc825661024cf021d73651"
+              "sha256": "5a236632a3a05036b21dda572b77307a296e17aa1267d5f1e631427c0051dd00"
             },
             {
               "path": "apps/web/environment-indicator.js",
@@ -22713,6 +22741,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts"
+              ],
+              "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification."
             }
           ]
         }
@@ -24422,7 +24458,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24443,7 +24480,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -24645,6 +24682,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -24713,7 +24758,8 @@
           "release-0.6-executive-slo-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-quarterly-storage-recovery",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -24725,7 +24771,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -24845,6 +24891,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -25979,7 +26033,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -25995,7 +26050,7 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "71a7c57b1c99b1719481b1eeaa9a9dbc5d9c34256bbc825661024cf021d73651"
+              "sha256": "5a236632a3a05036b21dda572b77307a296e17aa1267d5f1e631427c0051dd00"
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
@@ -26007,7 +26062,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             }
           ],
           "checks": [
@@ -26078,6 +26133,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+                "deploy/production/README.md"
+              ],
+              "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -86724,7 +86788,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -87552,7 +87617,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -89230,6 +89295,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ],
           "presentation_renewals": [
@@ -92329,7 +92402,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92385,7 +92459,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -92587,6 +92661,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ],
           "presentation_renewals": [
@@ -107479,7 +107561,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107727,7 +107810,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -108020,6 +108103,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ],
           "presentation_renewals": [
@@ -489885,7 +489976,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490097,7 +490189,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -490534,6 +490626,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ],
           "presentation_renewals": [
@@ -556690,7 +556790,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-postgresql-dashboard",
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "documented-performance-rehearsal-budget",
@@ -556711,7 +556812,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -556766,6 +556867,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -556803,7 +556912,8 @@
           "release-0.6-load-regression-and-durable-count-receipt",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -556863,7 +556973,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             }
           ],
           "checks": [
@@ -556947,6 +557057,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -560260,7 +560378,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -560282,7 +560401,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -560458,6 +560577,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -560559,7 +560686,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -560570,7 +560698,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -560578,7 +560706,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -560682,6 +560810,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope. Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -563097,7 +563234,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -563133,7 +563271,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             }
           ],
           "checks": [
@@ -563268,6 +563406,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -563300,7 +563446,8 @@
           "release-0.6-suppress-api-framework-header",
           "release-0.6-database-protection-export-leases",
           "release-0.6-postgresql-dashboard",
-          "release-0.6-browser-provider-loopback-boundary"
+          "release-0.6-browser-provider-loopback-boundary",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -563312,11 +563459,11 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
-              "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
+              "sha256": "9d1fcf39bd4b57eebe681e562c4f2e6ca4271c689aa74b94a191f0e5cf8dfdbd"
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "71a7c57b1c99b1719481b1eeaa9a9dbc5d9c34256bbc825661024cf021d73651"
+              "sha256": "5a236632a3a05036b21dda572b77307a296e17aa1267d5f1e631427c0051dd00"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -563364,6 +563511,15 @@
                 "apps/api/scripts/http-test-server.cjs"
               ],
               "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+                "apps/api/src/metrics/http-request-metrics.ts"
+              ],
+              "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Adds revision-scoped counters for 33 matched authenticated customer methods and routes. Existing completed response histogram and release gauge assertions are preserved. Actual loopback HTTP requests verified count increments and exclusions."
             }
           ]
         }
@@ -564636,7 +564792,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564660,15 +564817,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "a1656e57569f5f94603899c2c22002ea137deba32a117d1a54b08310ff00f34c"
+              "sha256": "fbe9d087d17a8434cb4b458d76aa91c5382acad96539d6f6772fbfc3223c379c"
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             }
           ],
           "checks": [
@@ -564730,6 +564887,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds synthetic age and result panels. All five previous panels and dashboard settings are unchanged. The new exact queries passed fresh and stale fixtures in Promtool. Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope. Accepts native API and journey measurements from the same scrape within one pool and continues to require distinct pool and wallet targets, exact release, uninterrupted measurement and scoped outcomes. Both collector layouts and failure cases passed. Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -564768,7 +564935,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -564784,11 +564952,11 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "71a7c57b1c99b1719481b1eeaa9a9dbc5d9c34256bbc825661024cf021d73651"
+              "sha256": "5a236632a3a05036b21dda572b77307a296e17aa1267d5f1e631427c0051dd00"
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
-              "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
+              "sha256": "9d1fcf39bd4b57eebe681e562c4f2e6ca4271c689aa74b94a191f0e5cf8dfdbd"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -564808,7 +564976,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -564820,7 +564988,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             }
           ],
           "checks": [
@@ -564904,6 +565072,17 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+                "apps/api/src/metrics/http-request-metrics.ts",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Adds revision-scoped counters for 33 matched authenticated customer methods and routes. Existing completed response histogram and release gauge assertions are preserved. Actual loopback HTTP requests verified count increments and exclusions. Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests. Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -564934,7 +565113,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-pool-dashboard",
@@ -564955,7 +565135,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -564998,6 +565178,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -565033,7 +565221,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -565062,7 +565251,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -565162,6 +565351,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -565360,7 +565557,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565380,7 +565578,7 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
-              "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
+              "sha256": "9d1fcf39bd4b57eebe681e562c4f2e6ca4271c689aa74b94a191f0e5cf8dfdbd"
             },
             {
               "path": "apps/api/src/metrics/metrics-http.integration.test.ts",
@@ -565420,7 +565618,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -565473,6 +565671,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds revision-scoped counters for 33 matched authenticated customer methods and routes. Existing completed response histogram and release gauge assertions are preserved. Actual loopback HTTP requests verified count increments and exclusions. Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -565653,7 +565860,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565709,7 +565917,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -565816,6 +566024,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -566088,7 +566304,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-budget-charge",
@@ -566134,7 +566351,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -566183,6 +566400,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -566332,7 +566557,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -566340,7 +566566,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -566464,6 +566690,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -566856,7 +567090,8 @@
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -566864,7 +567099,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
             },
             {
               "path": "architecture.md",
@@ -566935,6 +567170,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
             }
           ]
         }
@@ -566955,7 +567198,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the approved authenticated journey collector feeds fresh scoped success and failure counters with one availability tier per environment and database. Read back both rule evaluations and the corresponding firing and resolved alerts in the target environment.",
+        "On the exact staged candidate, verify that the API scrape records fresh successes and failures for each measured service and carries exactly one pilot tier per staging environment and database. Verify both rule evaluations and read back controlled firing and resolved alerts.",
         "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts."
       ],
       "owner": null,
@@ -566963,6 +567206,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "apps/api/src/metrics/http-request-metrics.ts",
+          "apps/api/src/metrics/journey-availability.test.ts",
           "apps/worker/src/operations/alerts.integration.test.ts",
           "apps/worker/src/operations/alerts.ts",
           "apps/worker/src/operations/journey-alerts.test.ts",
@@ -566970,12 +567216,16 @@
           "deploy/monitoring/journey-slo-alerts.yml",
           "deploy/monitoring/staging-compose.yml",
           "deploy/monitoring/staging-prometheus.yml",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py",
           "docs/operations/service-objectives.md",
           "docs/runbooks/journey-availability.md",
           "packages/shared/src/notifications/operations-alert-links.ts"
         ],
         "batches": [
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": null
       }
@@ -566995,14 +567245,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "The dashboard shows the remaining budget for the selected period and two burn rates. Verify a historical remaining-budget view against the explicit burn-down requirement, then read it back with live candidate data from the native counters."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-native-journey-availability"
+        ],
         "current_acceptance": null
       }
     },
@@ -567021,7 +567273,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the approved authenticated journey collector feeds fresh scoped success and failure counters with one availability tier per environment and database. Read back both rule evaluations and the corresponding firing and resolved alerts in the target environment.",
+        "On the exact staged candidate, verify that the API scrape records fresh successes and failures for each measured service and carries exactly one pilot tier per staging environment and database. Verify both rule evaluations and read back controlled firing and resolved alerts.",
         "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts."
       ],
       "owner": null,
@@ -567029,6 +567281,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "apps/api/src/metrics/http-request-metrics.ts",
+          "apps/api/src/metrics/journey-availability.test.ts",
           "apps/worker/src/operations/alerts.integration.test.ts",
           "apps/worker/src/operations/alerts.ts",
           "apps/worker/src/operations/journey-alerts.test.ts",
@@ -567036,12 +567291,16 @@
           "deploy/monitoring/journey-slo-alerts.yml",
           "deploy/monitoring/staging-compose.yml",
           "deploy/monitoring/staging-prometheus.yml",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_rollout_observer.py",
           "docs/operations/service-objectives.md",
           "docs/runbooks/journey-availability.md",
           "packages/shared/src/notifications/operations-alert-links.ts"
         ],
         "batches": [
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": null
       }
@@ -567880,7 +568139,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -567952,7 +568212,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -568060,6 +568320,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -568104,7 +568372,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -568180,7 +568449,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -568295,6 +568564,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -569812,7 +570089,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -569834,7 +570112,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "d7b797b301eb973408cd68c4d6dc5e799833ac5effb6ccfa66c15708629a3615"
+              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -569930,6 +570208,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the synthetic rule file. Existing targets and other rules are unchanged."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
             }
           ]
         }
@@ -570594,7 +570880,8 @@
         "batches": [
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -570642,15 +570929,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "a1656e57569f5f94603899c2c22002ea137deba32a117d1a54b08310ff00f34c"
+              "sha256": "fbe9d087d17a8434cb4b458d76aa91c5382acad96539d6f6772fbfc3223c379c"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
-              "sha256": "c462b2241b71d2431f9da8e40e16cbe68e4dff5e5078d8a045ee9c414a251d1d"
+              "sha256": "392f14153d776f0b56f90b58d422fc32f64ecc925fb00ed70b643e0286aca115"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -570678,6 +570965,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py",
+                "deploy/production/test_rollout_observer.py"
+              ],
+              "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope. Accepts native API and journey measurements from the same scrape within one pool and continues to require distinct pool and wallet targets, exact release, uninterrupted measurement and scoped outcomes. Both collector layouts and failure cases passed. Preserves existing assertions and adds same-pool native success, restarted API, missing outcome series and cross-pool job collision tests. All 11 observer tests passed."
             }
           ]
         }
@@ -570926,7 +571223,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -570950,7 +571248,7 @@
             },
             {
               "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
-              "sha256": "71a7c57b1c99b1719481b1eeaa9a9dbc5d9c34256bbc825661024cf021d73651"
+              "sha256": "5a236632a3a05036b21dda572b77307a296e17aa1267d5f1e631427c0051dd00"
             },
             {
               "path": "apps/api/src/metrics/metrics.controller.ts",
@@ -570974,7 +571272,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "68c0a7f548d458b1af159f44a72d0278754293dd4bb994de4f4b5f3875ad92ac"
+              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -571085,6 +571383,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents the synthetic scrape label, alerts and pager readback. The previous deployment and observation instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-native-journey-availability",
+              "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+              "paths": [
+                "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+                "deploy/production/README.md"
+              ],
+              "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
             }
           ]
         }
@@ -863303,7 +863610,8 @@
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-native-journey-availability"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -991328,6 +991636,146 @@
         {
           "file": "source.sha256",
           "sha256": "7704aa4d2a1a780beeaaa50a3d6c8f172425cb0573d4618d6d08e5840348206f"
+        }
+      ]
+    },
+    "release-0.6-native-journey-availability": {
+      "batch": "release-0.6-native-journey-availability",
+      "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.02",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "06-security-testing-observability.md#T-06.15.02.03",
+        "06-security-testing-observability.md#T-06.15.02.04",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.integration.test.ts",
+          "sha256": "5a236632a3a05036b21dda572b77307a296e17aa1267d5f1e631427c0051dd00"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "9d1fcf39bd4b57eebe681e562c4f2e6ca4271c689aa74b94a191f0e5cf8dfdbd"
+        },
+        {
+          "path": "apps/api/src/metrics/journey-availability.test.ts",
+          "sha256": "688d37965caca6513724726f12c82c988181fc04598f4b7f30d3c200c94a2849"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "fbe9d087d17a8434cb4b458d76aa91c5382acad96539d6f6772fbfc3223c379c"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "392f14153d776f0b56f90b58d422fc32f64ecc925fb00ed70b643e0286aca115"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+        }
+      ],
+      "checks": [
+        "A real Nest loopback fixture tested eight initialized revision-scoped series, all four customer service successes, completed 503 and 408 failures, a dropped HTTP response, and exclusions for expected business rejections, staff, anonymous and unmatched routes. The focused changed-code gate measured 24 of 24 lines and 25 of 29 branches.",
+        "The API built and typechecked. The generated OpenAPI exactly matched the committed contract, including all 33 measured methods and paths. Focused ESLint, Prettier and whitespace checks passed.",
+        "All 11 rollout observer and 6 independent synthetic probe cases passed. Compose and Promtool accepted the complete rendered staging configuration and four rules files. Both the journey burn and synthetic alert rule test files passed."
+      ],
+      "limitations": [
+        "The metrics fixture supplies test session context. Docker Desktop did not answer a bounded health probe, so the expanded PostgreSQL integration fixture did not run locally.",
+        "Scope covers authenticated API intake and progress requests. Browser and edge outages, pre-session requests, shared wallet/contract calls and async fulfillment still need independent evidence.",
+        "Live candidate scrape, real alert and dashboard readback, the on-call receipts and release acceptance are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-native-journey-availability",
+      "execution_receipts": [
+        {
+          "file": "api-unit.config.mjs",
+          "sha256": "4a9113b920ea2cf193c8fad5bcb88914fd4fd6d7a078efd8606f188e259d01b8"
+        },
+        {
+          "file": "coverage/coverage-final.json",
+          "sha256": "533604e6b2de7e44df982e7f49b28ab7a8f82b0be00ce32473d449be8e9a9075"
+        },
+        {
+          "file": "coverage-scope.json",
+          "sha256": "b428269a7b475c8d2c5dc66620c31565e229471c9b10a1480b6ba40a65532415"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "fixture.log",
+          "sha256": "83e68ab9520577c53364c5b8ef77941e393e0d762708c007d7175946bfbf7b98"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "observer.log",
+          "sha256": "0fbf50425bd1d478c30ea64027e8cbe1c1f2fe95b136d3de393d4f74eefa3bc1"
+        },
+        {
+          "file": "openapi.log",
+          "sha256": "e56113bcf33b5ccd23dd282ea8900a0ddd0dec9d67bb83ca6a3ab68c9f0b6e71"
+        },
+        {
+          "file": "prometheus.log",
+          "sha256": "61f7aeeeeabf041edf07b8c59f61d44c1fd0fbeb7793065b3152c8839b26e51c"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "87f5a44e281962b07d3965b90d1545ecdec51449ac5b63777b842b35e556db28"
+        },
+        {
+          "file": "synthetic.log",
+          "sha256": "003db2bcfe7db95cb9ab06f2abcac950654a4f62f64825317a7aa6158b953a29"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
         }
       ]
     }
