@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T13:53:04+00:00",
+  "updated": "2026-11-11T13:57:30+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8743,7 +8743,8 @@
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
-          "release-0.6-database-migration-baseline-and-upgrade"
+          "release-0.6-database-migration-baseline-and-upgrade",
+          "release-0.6-multipart-upgrade-preflight-fix"
         ],
         "current_acceptance": null
       }
@@ -21879,7 +21880,7 @@
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
-              "sha256": "875872c07d59a9b44e432c96e3e4e2b79a0d924cfe59d303f691b12f91081e64"
+              "sha256": "b35609327e50a2318eb7e72af2db0c12e19f07b51740303383463159dd219d2c"
             },
             {
               "path": "packages/db/src/storage-multipart.ts",
@@ -22265,6 +22266,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "The exact callback path matches the prior verified logger-only change. Its transaction and provider control flow is unchanged."
+            },
+            {
+              "batch": "release-0.6-multipart-upgrade-preflight-fix",
+              "base_commit": "3f0b2de06dd3aaf8def8b9d2090def4df7b962f1",
+              "paths": [
+                "packages/db/src/storage-multipart.migrated.test.ts"
+              ],
+              "scope": "The exact historical migration sequence includes the additive solar destruction guard. The multipart receipts, journal, rollback and concurrency assertions passed without changes to the migrator or application behavior."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -492839,7 +492848,7 @@
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
-              "sha256": "875872c07d59a9b44e432c96e3e4e2b79a0d924cfe59d303f691b12f91081e64"
+              "sha256": "b35609327e50a2318eb7e72af2db0c12e19f07b51740303383463159dd219d2c"
             },
             {
               "path": "packages/db/src/storage-multipart.ts",
@@ -493107,6 +493116,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-multipart-upgrade-preflight-fix",
+              "base_commit": "3f0b2de06dd3aaf8def8b9d2090def4df7b962f1",
+              "paths": [
+                "packages/db/src/storage-multipart.migrated.test.ts"
+              ],
+              "scope": "The exact historical migration sequence includes the additive solar destruction guard. The multipart receipts, journal, rollback and concurrency assertions passed without changes to the migrator or application behavior."
             }
           ],
           "presentation_renewals": [
@@ -828754,7 +828771,8 @@
           "release-0.6-electricity-contract-pdf-boundary",
           "release-0.6-solar-contract-source-boundary",
           "release-0.6-approved-document-destruction-boundary",
-          "release-0.6-alert-dashboards"
+          "release-0.6-alert-dashboards",
+          "release-0.6-multipart-upgrade-preflight-fix"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -948956,6 +948974,56 @@
           "sha256": "383e00d057bfec37c4d775ca00518c463b20897d8f2ac328008423ce56d8a17d"
         }
       ]
+    },
+    "release-0.6-multipart-upgrade-preflight-fix": {
+      "batch": "release-0.6-multipart-upgrade-preflight-fix",
+      "base_commit": "3f0b2de06dd3aaf8def8b9d2090def4df7b962f1",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "packages/db/src/storage-multipart.migrated.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/src/storage-multipart.migrated.test.ts",
+          "sha256": "b35609327e50a2318eb7e72af2db0c12e19f07b51740303383463159dd219d2c"
+        }
+      ],
+      "checks": [
+        "Hosted preflight 43030792920 at dc8f3a3f failed the historical multipart upgrade assertion because the current migrator applied all three pending migrations, including the new 0289 solar document destruction guard. Build, runtime image scanning, static security and history scanning completed successfully on that SHA.",
+        "The historical test asserts the exact ordered 0287, 0288 and 0289 sequence. It continues to check untouched receipts and journal prefix, signed storage protections, durable pending intents and an empty subsequent migration run.",
+        "All three selected native PostgreSQL tests passed with 2,100 source inputs verified. DB typecheck, changed-file ESLint, Prettier and whitespace checks passed. Hosted acceptance requires the corrected SHA."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/multipart-upgrade-preflight.7dVGEj",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/multipart-upgrade-preflight.7dVGEj/native-multipart-upgrade-preflight.log",
+          "sha256": "f33d33d425eb74a97daaa3c83cc73e03b4221a72c3af7d102fbc280d991a330c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/multipart-upgrade-preflight.7dVGEj/native-source.sha256",
+          "sha256": "3b547b44e1adb723f0e822f8def8472529570513b78afefe8ecb2fde6fe55cd6"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/multipart-upgrade-preflight.7dVGEj/native-source-check.log",
+          "sha256": "6ca0ace509f38c60b7228d75c7da34fa6a15151a44e512c1caa91a1257671dba"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/multipart-upgrade-preflight.7dVGEj/changed-native-files",
+          "sha256": "492b38ef2487e2b482467a2a8f1120b69d6993b9518eee083bf36743976b614a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/alert-dashboard-links.8LboQa/preceding-preflight-failed.log",
+          "sha256": "e0f1ae7afb8c2bb7ed92763a5f22c8b7d0b7a57341adce95934b6c623938cfd1"
+        }
+      ],
+      "failed_preflight": {
+        "sha": "dc8f3a3f467e4742c152f16203e4aa98c5ae10b9",
+        "url": "https://github.com/barghsadev/barghsa-core/actions/runs/43030792920",
+        "failed_case": "historical multipart cleanup upgrade preserves old receipts and the journal while allowing durable pending intent"
+      }
     }
   },
   "historical_improvements": [
@@ -948995,13 +949063,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-multipart-upgrade-preflight-fix",
+    "id": "release-0.6-launch-halt-and-rollback",
     "release": "0.6.0",
     "task_keys": [
-      "01-platform-infrastructure.md#T-02.03.02",
+      "06-security-testing-observability.md#T-06.12.04.03",
       "release-readiness#R-05.02"
     ],
-    "goal": "Correct the exact multipart historical upgrade expectation for migration 0289. Recheck retained receipts, journal, cleanup constraints and repeat execution before pushing the next preflight."
+    "goal": "Verify existing rollout halt and rollback controls in an isolated rehearsal for failed smoke, rising error rate, SLO burn, reconciliation mismatch and security alerts."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

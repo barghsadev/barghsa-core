@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T13:53:04+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T13:57:30+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Correct the exact multipart historical upgrade expectation for migration 0289. Recheck retained receipts, journal, cleanup constraints and repeat execution before pushing the next preflight.
+Verify existing rollout halt and rollback controls in an isolated rehearsal for failed smoke, rising error rate, SLO burn, reconciliation mismatch and security alerts.
 
-- `01-platform-infrastructure.md#T-02.03.02`: Create migration runner script for production deployments
+- `06-security-testing-observability.md#T-06.12.04.03`: Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

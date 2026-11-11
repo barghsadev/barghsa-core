@@ -158,7 +158,11 @@ describe('historical multipart cleanup upgrade', () => {
   it('preserves old receipts and the journal while allowing durable pending intent', async () => {
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0287_multipart_operation_recovery', '0288_storage_cleanup_operation_claim'],
+      applied: [
+        '0287_multipart_operation_recovery',
+        '0288_storage_cleanup_operation_claim',
+        '0289_solar_document_destruction_guard',
+      ],
     });
     expect(
       (await pool.query('SELECT * FROM upload_cleanup_log ORDER BY storage_key')).rows
