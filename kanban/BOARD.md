@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T21:16:07+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T21:26:46+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1226 | Accepted with unchanged source bindings. |
-| verify | 69 | Existing work may be complete; inspect evidence before building. |
+| done | 1229 | Accepted with unchanged source bindings. |
+| verify | 66 | Existing work may be complete; inspect evidence before building. |
 | partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1444,10 +1444,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.02.04` | partial | Recorded batch work | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |
 | `06-security-testing-observability.md#T-06.19.01.01` | done | Recorded batch work | Create DoD PR checklist template (5 categories, 25+ items) with checkboxes |
 | `06-security-testing-observability.md#T-06.19.01.02` | done | Recorded batch work | Integrate DoD checklist into ticket system (Linear / GitHub Issues) as issue template |
-| `06-security-testing-observability.md#T-06.19.01.03` | verify | Inventory needed | Add CI check: PR description must contain completed DoD checklist or link to exception record |
+| `06-security-testing-observability.md#T-06.19.01.03` | done | Recorded batch work | Add CI check: PR description must contain completed DoD checklist or link to exception record |
 | `06-security-testing-observability.md#T-06.19.01.04` | done | Recorded batch work | Create exception template: written scope, risk, compensating control, owner, approver, expiry |
-| `06-security-testing-observability.md#T-06.19.01.05` | verify | Inventory needed | Automate exception expiry: reopen after expiry if not renewed |
-| `06-security-testing-observability.md#T-06.19.01.06` | verify | Recorded batch work | DoD items cannot waive: financial correctness, authorization, auditability, backup/recovery, or Credential Critical security issue |
+| `06-security-testing-observability.md#T-06.19.01.05` | done | Recorded batch work | Automate exception expiry: reopen after expiry if not renewed |
+| `06-security-testing-observability.md#T-06.19.01.06` | done | Recorded batch work | DoD items cannot waive: financial correctness, authorization, auditability, backup/recovery, or Credential Critical security issue |
 
 ## v0.9.0: Launch rehearsal
 

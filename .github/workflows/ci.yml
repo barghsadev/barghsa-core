@@ -2,6 +2,7 @@ name: CI
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, edited]
   push:
     # Create a preflight branch directly at the immutable candidate SHA.
     branches: [main, 'codex/preflight/**']
@@ -109,6 +110,8 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ github.event_name == 'pull_request' && '0' || '1' }}
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -117,7 +120,12 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: pnpm
       - name: Validate current task and release board
-        run: python3 kanban/scripts/board.py check
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = pull_request ]; then
+            python3 kanban/scripts/board.py check --pull-request-event "$GITHUB_EVENT_PATH"
+          else
+            python3 kanban/scripts/board.py check
+          fi
       - name: Verify task inventory and acceptance safety
         run: python3 -m unittest discover -s kanban/scripts -p 'test_*.py'
       - run: pnpm install --frozen-lockfile

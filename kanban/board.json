@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T21:16:07+00:00",
+  "updated": "2026-11-11T21:26:46+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4105,7 +4105,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4133,7 +4134,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             }
           ],
           "checks": [
@@ -4198,6 +4199,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -4564,7 +4573,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4580,7 +4590,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4656,6 +4666,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -4848,7 +4866,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4872,7 +4891,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             }
           ],
           "checks": [
@@ -4969,6 +4988,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -5254,7 +5281,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5262,7 +5290,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".size-limit.json",
@@ -5354,6 +5382,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -5563,7 +5599,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5603,7 +5640,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5678,6 +5715,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -5746,7 +5791,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5786,7 +5832,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5861,6 +5907,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -6191,7 +6245,8 @@
           "release-0.6-integrity-requires-tests",
           "integrated-qa-preview-journeys",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6203,7 +6258,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6360,6 +6415,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -6478,7 +6541,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6518,7 +6582,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6593,6 +6657,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -6705,7 +6777,8 @@
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6717,7 +6790,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6821,6 +6894,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -9728,7 +9809,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -9748,7 +9830,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             }
           ],
           "checks": [
@@ -9819,6 +9901,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -15892,7 +15982,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15900,7 +15991,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "docs/development/ci.md",
@@ -15990,6 +16081,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -16052,7 +16151,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16060,7 +16160,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -16173,6 +16273,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -16241,7 +16349,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16249,7 +16358,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "package.json",
@@ -16366,6 +16475,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -16581,7 +16698,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16589,7 +16707,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -16671,6 +16789,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -20532,7 +20658,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -20546,7 +20673,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -21056,6 +21183,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -22640,7 +22775,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
@@ -22659,7 +22795,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -22727,6 +22863,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -22988,7 +23132,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -23001,7 +23146,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "docs/development/ci.md",
@@ -23090,6 +23235,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -23149,7 +23302,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -23165,7 +23319,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".prettierignore",
@@ -23242,6 +23396,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -23305,7 +23467,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23323,7 +23486,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".husky/commit-msg",
@@ -23440,6 +23603,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -24343,7 +24514,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24388,7 +24560,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -24982,6 +25154,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -25047,7 +25227,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -25062,7 +25243,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".prettierignore",
@@ -25215,6 +25396,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -490234,7 +490423,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490242,7 +490432,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -490678,6 +490868,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "presentation_renewals": [
@@ -490819,7 +491017,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490827,7 +491026,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -491461,6 +491660,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "presentation_renewals": [
@@ -491603,7 +491810,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491611,7 +491819,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -492033,6 +492241,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "presentation_renewals": [
@@ -492141,7 +492357,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492149,7 +492366,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -492571,6 +492788,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "presentation_renewals": [
@@ -492679,7 +492904,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492687,7 +492913,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -493109,6 +493335,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "presentation_renewals": [
@@ -532125,7 +532359,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -532133,7 +532368,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "Dockerfile.web",
@@ -532262,6 +532497,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -532482,7 +532725,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -532526,7 +532770,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -532628,6 +532872,14 @@
                 "scripts/test-pilot-proxy.py"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -532677,7 +532929,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -532685,7 +532938,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "Dockerfile.web",
@@ -532814,6 +533067,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -533152,7 +533413,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -533180,7 +533442,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             }
           ],
           "checks": [
@@ -533262,6 +533524,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -534957,7 +535227,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -534997,7 +535268,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/db/drizzle/production/0284_authorization_denials.sql",
@@ -535109,6 +535380,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -535189,7 +535468,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-process-error-reporting",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -535245,7 +535525,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
@@ -535342,6 +535622,14 @@
                 "packages/i18n/src/workspace-admin-messages.ts"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -536385,7 +536673,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -536475,7 +536764,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             }
           ],
           "source_renewals": [
@@ -536517,6 +536806,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -536551,7 +536848,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -536641,7 +536939,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             }
           ],
           "source_renewals": [
@@ -536683,6 +536981,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -536717,7 +537023,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-dual-approval-and-override",
@@ -536807,7 +537114,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             }
           ],
           "source_renewals": [
@@ -536849,6 +537156,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -537500,7 +537815,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-crm-page-before-profile-summaries",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-sql-field-allowlists",
@@ -537584,7 +537900,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             }
           ],
           "checks": [
@@ -537649,6 +537965,14 @@
                 "apps/api/src/electricity/electricity-order.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -537717,7 +538041,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -537725,7 +538050,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -537806,6 +538131,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -541910,7 +542243,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -542038,7 +542372,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
@@ -542217,6 +542551,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -542494,7 +542836,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-staging-scanner-ceiling"
+          "release-0.6-staging-scanner-ceiling",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -542503,7 +542846,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -542754,6 +543097,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -542810,7 +543161,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-upload-abuse-review",
@@ -542870,7 +543222,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -542924,6 +543276,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -542970,7 +543330,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -543019,7 +543380,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -543055,6 +543416,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -543290,7 +543659,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -543371,7 +543741,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/db/src/schema/email-webhook-events.ts",
@@ -543434,6 +543804,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -543597,7 +543975,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
@@ -543637,7 +544016,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "packages/shared/src/ai-models/secrets.test.ts",
@@ -543731,6 +544110,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -543784,7 +544171,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -543796,7 +544184,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".gitignore",
@@ -543943,6 +544331,14 @@
                 ".env.example"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -543991,7 +544387,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -544003,7 +544400,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".gitignore",
@@ -544135,6 +544532,14 @@
                 ".env.example"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         },
@@ -544246,7 +544651,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -544254,7 +544660,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -544329,6 +544735,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         },
@@ -544424,7 +544838,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -544432,7 +544847,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -544513,6 +544928,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -544560,7 +544983,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -544568,7 +544992,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "Dockerfile.base",
@@ -544681,6 +545105,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -544729,7 +545161,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -544741,7 +545174,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".gitignore",
@@ -544873,6 +545306,14 @@
                 ".env.example"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         },
@@ -544966,7 +545407,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -544978,7 +545420,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -545047,6 +545489,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -545744,7 +546194,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -545768,7 +546219,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -545858,6 +546309,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -546228,7 +546687,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -546236,7 +546696,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "docs/threat-model.md",
@@ -546274,6 +546734,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -546346,7 +546814,8 @@
         ],
         "batches": [
           "release-0.6-source-grounded-threat-model-and-review",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -546354,7 +546823,7 @@
           "source_evidence": [
             {
               "path": ".github/PULL_REQUEST_TEMPLATE.md",
-              "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
+              "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
             },
             {
               "path": "docs/threat-model.md",
@@ -546372,6 +546841,14 @@
                 ".github/PULL_REQUEST_TEMPLATE.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/PULL_REQUEST_TEMPLATE.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -546430,7 +546907,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -546438,7 +546916,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -546484,6 +546962,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -546595,7 +547081,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -546603,7 +547090,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -546649,6 +547136,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -546707,7 +547202,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -546723,7 +547219,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             }
           ],
           "checks": [
@@ -546758,6 +547254,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -546828,7 +547332,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-compiled-http-security-regressions",
@@ -546888,7 +547393,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -546972,6 +547477,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -547294,7 +547807,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -547354,7 +547868,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -547424,6 +547938,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -547457,7 +547979,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-bill-electricity-caller"
+          "release-0.6-bill-electricity-caller",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -547469,7 +547992,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -547572,6 +548095,14 @@
                 "apps/api/src/electricity/electricity-bill-data.test.ts"
               ],
               "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -547604,7 +548135,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -547616,7 +548148,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -547707,6 +548239,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -552825,7 +553365,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -552837,7 +553378,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -552945,6 +553486,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -553352,7 +553901,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -553366,7 +553916,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -553516,6 +554066,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -553556,7 +554114,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -553572,7 +554131,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -553709,6 +554268,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -553816,7 +554383,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-native-authenticated-staging-zap",
@@ -553832,7 +554400,7 @@
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             }
           ],
           "checks": [
@@ -553867,6 +554435,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -553930,7 +554506,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-payment-transport-circuit",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -553938,7 +554515,7 @@
           "source_evidence": [
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
             },
             {
               "path": "apps/api/src/common/browser-origin.test.ts",
@@ -554120,6 +554697,14 @@
                 "apps/api/src/wallet/payment-gateway.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -554161,7 +554746,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -554169,7 +554755,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -554250,6 +554836,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -554291,7 +554885,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -554299,7 +554894,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -554386,6 +554981,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -555108,7 +555711,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -555123,7 +555727,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".size-limit.json",
@@ -555284,6 +555888,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -556113,7 +556725,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -556126,7 +556739,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -556241,6 +556854,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -556274,7 +556895,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -556286,7 +556908,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -556401,6 +557023,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -556434,7 +557064,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -556448,7 +557079,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -556563,6 +557194,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -556596,7 +557235,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -556607,7 +557247,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -556722,6 +557362,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -556805,7 +557453,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -556817,7 +557466,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -556924,6 +557573,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -556959,7 +557616,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -556970,7 +557628,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/openapi.json",
@@ -557094,6 +557752,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -557265,7 +557931,8 @@
           "release-0.6-critical-defect-candidate-gate",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -557283,7 +557950,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -557299,11 +557966,11 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "8c6520439d3efd610c57d5441841aac174d1d642c25e8ab543912e54e356ca3d"
+              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
             },
             {
               "path": "kanban/scripts/test_board.py",
-              "sha256": "134236efd5f1fef91a4e7a1ed98889f4553466c331feacb17be94a409979bc53"
+              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
             },
             {
               "path": "scripts/check-browser-results.py",
@@ -557395,6 +558062,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "kanban/scripts/board.py",
+                "kanban/scripts/test_board.py"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -557430,7 +558107,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -557439,7 +558117,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -557616,6 +558294,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -557653,7 +558339,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -557671,7 +558358,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "deploy/production/README.md",
@@ -557687,7 +558374,7 @@
             },
             {
               "path": "kanban/scripts/board.py",
-              "sha256": "8c6520439d3efd610c57d5441841aac174d1d642c25e8ab543912e54e356ca3d"
+              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
             },
             {
               "path": "scripts/check-flaky-tests.py",
@@ -557810,6 +558497,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "kanban/scripts/board.py"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -558236,7 +558932,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -558253,7 +558950,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -558360,6 +559057,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -558397,7 +559102,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -558414,7 +559120,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -558521,6 +559227,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -565947,7 +566661,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -565955,7 +566670,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "Dockerfile.base",
@@ -566122,6 +566837,14 @@
                 "apps/api/src/route-errors/route-errors.controller.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -568022,7 +568745,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-bill-provider-circuits",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -568030,7 +568754,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "Dockerfile.base",
@@ -568111,6 +568835,14 @@
                 "docs/deployment.md"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -568165,7 +568897,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-document-template-verification",
@@ -568177,11 +568910,22 @@
           "source_evidence": [
             {
               "path": ".github/PULL_REQUEST_TEMPLATE.md",
-              "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
+              "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/PULL_REQUEST_TEMPLATE.md",
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -568242,19 +568986,71 @@
         "story": "06-security-testing-observability.md#spec-40335dab1cff"
       },
       "requirement": "| T-06.19.01.03 | Add CI check: PR description must contain completed DoD checklist or link to exception record | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          ".github/PULL_REQUEST_TEMPLATE.md",
+          ".github/workflows/ci.yml",
+          "docs/security/security-verification.md",
+          "kanban/scripts/board.py",
+          "kanban/scripts/definition_of_done.py",
+          "kanban/scripts/test_board.py",
+          "kanban/scripts/test_definition_of_done.py"
+        ],
+        "batches": [
+          "release-0.6-definition-of-done-enforcement"
+        ],
+        "current_acceptance": {
+          "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+          "kind": "native_verification",
+          "source_evidence": [
+            {
+              "path": ".github/ISSUE_TEMPLATE/change.md",
+              "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+            },
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
+            },
+            {
+              "path": "kanban/scripts/board.py",
+              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+            },
+            {
+              "path": "kanban/scripts/definition_of_done.py",
+              "sha256": "24c4c7a55857f38bf24d7f479c264c4657fa9d7b24c89734a5e8aded82d88426"
+            },
+            {
+              "path": "kanban/scripts/test_board.py",
+              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+            },
+            {
+              "path": "kanban/scripts/test_definition_of_done.py",
+              "sha256": "7849c7228fd906d050a6700309ef29a4ef3cab16830246e3422e58020e93a08e"
+            }
+          ],
+          "checks": [
+            "The existing integrity workflow checks complete checklist items or exact-head, unexpired approval links from the pull request base. It rechecks edits and keeps direct-main board validation in place. Valid, missing, duplicate, hidden, foreign-revision and expired paths passed against fixture events and an actual isolated Git base."
+          ]
+        }
       }
     },
     {
@@ -568278,7 +569074,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "source-bound-document-template-verification",
@@ -568290,11 +569087,22 @@
           "source_evidence": [
             {
               "path": ".github/PULL_REQUEST_TEMPLATE.md",
-              "sha256": "2f98802bbf0bdc41fd70a3742d21b3c38d0767b86950d1392ee855abfa97b8ce"
+              "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
             },
             {
               "path": "docs/security/security-verification.md",
-              "sha256": "31f6a9f8982f047e66c64106f32dd61ff06669f92077ffda594ebcbd973dd647"
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/PULL_REQUEST_TEMPLATE.md",
+                "docs/security/security-verification.md"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -568311,19 +569119,71 @@
         "story": "06-security-testing-observability.md#spec-40335dab1cff"
       },
       "requirement": "| T-06.19.01.05 | Automate exception expiry: reopen after expiry if not renewed | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          ".github/PULL_REQUEST_TEMPLATE.md",
+          ".github/workflows/ci.yml",
+          "docs/security/security-verification.md",
+          "kanban/scripts/board.py",
+          "kanban/scripts/definition_of_done.py",
+          "kanban/scripts/test_board.py",
+          "kanban/scripts/test_definition_of_done.py"
+        ],
+        "batches": [
+          "release-0.6-definition-of-done-enforcement"
+        ],
+        "current_acceptance": {
+          "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+          "kind": "native_verification",
+          "source_evidence": [
+            {
+              "path": ".github/ISSUE_TEMPLATE/change.md",
+              "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+            },
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
+            },
+            {
+              "path": "kanban/scripts/board.py",
+              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+            },
+            {
+              "path": "kanban/scripts/definition_of_done.py",
+              "sha256": "24c4c7a55857f38bf24d7f479c264c4657fa9d7b24c89734a5e8aded82d88426"
+            },
+            {
+              "path": "kanban/scripts/test_board.py",
+              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+            },
+            {
+              "path": "kanban/scripts/test_definition_of_done.py",
+              "sha256": "7849c7228fd906d050a6700309ef29a4ef3cab16830246e3422e58020e93a08e"
+            }
+          ],
+          "checks": [
+            "The board resolves the current approved record for each task, item, immutable commit and environment. An exception reopens at its UTC expiry and blocks the affected release readiness. Renewal preserves the prior approval and records a fresh approval link. Verified resolution closes the current record. The earlier release scope and existing acceptance safeguards passed."
+          ]
+        }
       }
     },
     {
@@ -568337,21 +569197,72 @@
         "story": "06-security-testing-observability.md#spec-40335dab1cff"
       },
       "requirement": "| T-06.19.01.06 | DoD items cannot waive: financial correctness, authorization, auditability, backup/recovery, or Credential Critical security issue | S |\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "The written exception template excludes all five protected gate classes. Verify this rule in the actual issue and CI exception enforcement path before accepting enforcement."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [
-          "release-0.6-definition-of-done-and-exception-templates"
+        "changed_paths": [
+          ".github/PULL_REQUEST_TEMPLATE.md",
+          ".github/workflows/ci.yml",
+          "docs/security/security-verification.md",
+          "kanban/scripts/board.py",
+          "kanban/scripts/definition_of_done.py",
+          "kanban/scripts/test_board.py",
+          "kanban/scripts/test_definition_of_done.py"
         ],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-definition-of-done-enforcement"
+        ],
+        "current_acceptance": {
+          "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+          "kind": "native_verification",
+          "source_evidence": [
+            {
+              "path": ".github/ISSUE_TEMPLATE/change.md",
+              "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+            },
+            {
+              "path": ".github/PULL_REQUEST_TEMPLATE.md",
+              "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
+            },
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
+            },
+            {
+              "path": "deploy/production/check-promotion.py",
+              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+            },
+            {
+              "path": "docs/security/security-verification.md",
+              "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
+            },
+            {
+              "path": "kanban/scripts/board.py",
+              "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+            },
+            {
+              "path": "kanban/scripts/definition_of_done.py",
+              "sha256": "24c4c7a55857f38bf24d7f479c264c4657fa9d7b24c89734a5e8aded82d88426"
+            },
+            {
+              "path": "kanban/scripts/test_board.py",
+              "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+            },
+            {
+              "path": "kanban/scripts/test_definition_of_done.py",
+              "sha256": "7849c7228fd906d050a6700309ef29a4ef3cab16830246e3422e58020e93a08e"
+            }
+          ],
+          "checks": [
+            "The existing change issue and approval templates retain the five protected risk classes. Board and CI reject protected risks, guarded checklist items and open approvals on P0 or P1 defects. An inapplicability note cannot replace the protected checklist attestation. The production approval check continues to call strict board readiness and require independent operational evidence."
+          ]
+        }
       }
     },
     {
@@ -618317,7 +619228,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618325,7 +619237,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".size-limit.json",
@@ -619229,6 +620141,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -619362,7 +620282,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -619370,7 +620291,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".size-limit.json",
@@ -620274,6 +621195,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -621025,7 +621954,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -621033,7 +621963,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".size-limit.json",
@@ -621937,6 +622867,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -621998,7 +622936,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -622017,7 +622956,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -622123,6 +623062,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         }
@@ -845394,7 +846341,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/openapi.json",
@@ -849562,6 +850509,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "presentation_renewals": [
@@ -849948,7 +850903,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -850001,7 +850957,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": "apps/api/openapi.json",
@@ -854019,6 +854975,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -854422,7 +855386,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -856270,7 +857235,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+              "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
             },
             {
               "path": ".size-limit.json",
@@ -858493,6 +859458,14 @@
                 "packages/i18n/src/workspace-admin-messages.ts"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-definition-of-done-enforcement",
+              "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
             }
           ]
         },
@@ -858643,7 +859616,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-definition-of-done-enforcement"
         ]
       }
     },
@@ -858999,7 +859973,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-notification-contrast",
           "release-0.6-maintenance-health",
-          "release-0.6-staging-scanner-ceiling"
+          "release-0.6-staging-scanner-ceiling",
+          "release-0.6-definition-of-done-enforcement"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -985720,6 +986695,176 @@
           "sha256": "61b36b75a1b031f9923b98c7ce41fa8128be0dc85c24f2d355918a3b26650047"
         }
       ]
+    },
+    "release-0.6-definition-of-done-enforcement": {
+      "batch": "release-0.6-definition-of-done-enforcement",
+      "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.03.01.09",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.06.01.08",
+        "06-security-testing-observability.md#T-06.06.02.01",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.01.06",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.08.02.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.01",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.04",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/ISSUE_TEMPLATE/change.md",
+          "sha256": "8ee285761b980334ff2e8f0000bcbf3673532121cba9c4283f05ee9ad3b0e2af"
+        },
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "sha256": "3cd2e4c6515b18f5b5507eb8378e0e4b973787f45eabc28f4f565d3858f4db19"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "c8c796fc2736bea50a2f3b1aedd213187f72b3fbb8d7dc31bb23d1abbe8208cc"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+        },
+        {
+          "path": "docs/security/security-verification.md",
+          "sha256": "249cda8a01c0bcb954d5f43c41f362b87807d1ff881ad0d24d2f346fdc4c0574"
+        },
+        {
+          "path": "kanban/scripts/board.py",
+          "sha256": "80ea8e7a498611c1cc6f946afe9b5bcfacc5d7174e428720616cc1e35363aa3f"
+        },
+        {
+          "path": "kanban/scripts/definition_of_done.py",
+          "sha256": "24c4c7a55857f38bf24d7f479c264c4657fa9d7b24c89734a5e8aded82d88426"
+        },
+        {
+          "path": "kanban/scripts/test_board.py",
+          "sha256": "5578ffc496d70e01fcf42ff6048d0737f85044c13c044e847e837eead8ade77e"
+        },
+        {
+          "path": "kanban/scripts/test_definition_of_done.py",
+          "sha256": "7849c7228fd906d050a6700309ef29a4ef3cab16830246e3422e58020e93a08e"
+        }
+      ],
+      "checks": [
+        "The existing integrity workflow checks complete checklist items or exact-head, unexpired approval links from the pull request base. It rechecks edits and keeps direct-main board validation in place. Valid, missing, duplicate, hidden, foreign-revision and expired paths passed against fixture events and an actual isolated Git base.",
+        "The board resolves the current approved record for each task, item, immutable commit and environment. An exception reopens at its UTC expiry and blocks the affected release readiness. Renewal preserves the prior approval and records a fresh approval link. Verified resolution closes the current record. The earlier release scope and existing acceptance safeguards passed.",
+        "The existing change issue and approval templates retain the five protected risk classes. Board and CI reject protected risks, guarded checklist items and open approvals on P0 or P1 defects. An inapplicability note cannot replace the protected checklist attestation. The production approval check continues to call strict board readiness and require independent operational evidence.",
+        "All 20 kanban tests passed, including the new exact-expiry, earlier-scope, renewal, protected-risk and fixture-boundary cases. Workflow actionlint, Python syntax, documentation formatting and diff whitespace passed."
+      ],
+      "limitations": [
+        "The task board has zero Definition of Done exception approvals. The exception scenarios use disposable fixtures. Hosted exact-SHA CI and the existing strict candidate gates still need their final receipts."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-definition-of-done-enforcement",
+      "execution_receipts": [
+        {
+          "file": "kanban-tests.log",
+          "sha256": "6ddde3e72c84062f6555b6ad3a8266c656d66b703b0989d8cebe046e4ce3f0bf"
+        },
+        {
+          "file": "git-event.log",
+          "sha256": "bf67af537f88f127a9d5f17b1284629bc3ca4568edfc1f2af44a8ea2b880b95f"
+        },
+        {
+          "file": "verify-git-event.py",
+          "sha256": "88ee714332586c9672163f25ad597ae7eb6366dd555725a1d2d47c229a736dbf"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "5616aae1e812ddb99a1aae223e31615d6574defefd63f1d7c79e93a1736597dd"
+        },
+        {
+          "file": "source-checks.log",
+          "sha256": "5e2d65f12fa4c1362c688e24f9add6b1294a8df55ee102cc1b444a5a850102c7"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -985850,5 +986995,6 @@
       ],
       "release_acceptance": "Inspect actual consumers and live adapters; management or connection probes do not prove a complete assistant."
     }
-  ]
+  ],
+  "dod_exceptions": []
 }

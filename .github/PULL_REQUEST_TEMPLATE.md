@@ -16,6 +16,11 @@ Check each applicable item after review and link the evidence for the reviewed
 commit. Explain inapplicable items and record unresolved criteria on the task
 board. Link any approved [exception record](../docs/security/security-verification.md#definition-of-done-exception).
 
+Keep the checklist lines intact. For an inapplicable item, append ` — N/A: reason`
+to its unchecked line. Mark protected criteria after verifying the safeguard
+still holds. For an approved exception, leave the item unchecked and put the
+approval link in this section.
+
 ### Product and UX
 
 - [ ] The change meets the agreed task scope and acceptance criteria.

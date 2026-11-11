@@ -306,6 +306,28 @@ exception. Store the completed record with the restricted review evidence and
 link it from the task board. The item stays open until the designated approver
 records a decision. An expired exception requires fresh approval and evidence.
 
+Record the reference and scope in `dod_exceptions` in the task board. Include
+`task`, `item` with the exact checklist text, the reviewed `commit`,
+`environment`, `risk_class`, `risk`, `control`, `control_receipt`,
+`owner`, `approver`, `approval_ref`, `approved_at`, `expires_at`, and
+`remediation`. Use an HTTPS link to the written approval and UTC timestamps
+such as `2026-11-11T21:00:00Z`. The eligible risk classes are `product_ux`,
+`engineering`, `test_quality`, `security_privacy`, and `operations`.
+Record the real impact and applicable safeguards in the restricted review.
+
+Renew a scope with a dated approval and a new approval link. Preserve the
+earlier record. After verified remediation, add `closed_at` and `closure_ref`
+to the current record. At expiry the board query reopens the exception and
+the readiness check blocks promotion until the new approval or verified
+resolution is recorded.
+
+Direct-main checks validate the board and its source-bound acceptance. If a
+pull request is used, CI also checks its Definition of Done. An unchecked
+exception needs the approval link in that section and a current board record
+on the base revision that names the exact head commit and checklist item.
+The release readiness check still requires every launch-required criterion
+and closure of all P0 and P1 defects.
+
 | Field                | Record                                                                                                                      |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
 | Scope                | Qualified task and checklist item, exact commit and environment, affected flow, and the reason the criterion remains unmet. |

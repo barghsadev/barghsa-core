@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from datetime import datetime, timezone
 import hashlib
 import json
 from pathlib import Path
 import sys
 
 from specs import HEADING_RE, parse_epic
+from definition_of_done import exception_state, latest_exceptions, scope, validate_exceptions, verify_pull_request
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,7 +32,7 @@ def blocking_defects(tasks, releases):
             and task.get('defect_severity') in ('P0', 'P1')]
 
 
-def validate(board, root=ROOT):
+def validate(board, root=ROOT, *, now=None):
     if board.get('schema_version') != 1:
         raise ValueError('Unsupported board schema')
     if set(board['launch_scope']) != {'electricity', 'saving', 'solar', 'consultation'}:
@@ -39,6 +41,9 @@ def validate(board, root=ROOT):
     by_key = {t['key']: t for t in tasks}
     if len(by_key) != len(tasks):
         raise ValueError('Duplicate qualified task identity')
+    if now is None:
+        now = datetime.now(timezone.utc)
+    validate_exceptions(board.get('dod_exceptions', []), by_key, root, now)
     releases = {r['version']: r for r in board['releases']}
     if len(releases) != len(board['releases']):
         raise ValueError('Duplicate release version')
@@ -186,15 +191,23 @@ def main():
     parser.add_argument('key', nargs='?')
     parser.add_argument('--release')
     parser.add_argument('--status', choices=sorted(STATES))
+    parser.add_argument('--pull-request-event', type=Path)
     args = parser.parse_args()
+    if args.pull_request_event and args.action != 'check':
+        parser.error('--pull-request-event requires check')
     try:
         board = read()
-        validate(board)
+        now = datetime.now(timezone.utc)
+        validate(board, now=now)
+        exceptions = board.get('dod_exceptions', [])
+        latest = latest_exceptions(exceptions)
         if args.action == 'render':
             (ROOT / 'kanban/BOARD.md').write_text(render(board))
         elif args.action == 'check':
             if (ROOT / 'kanban/BOARD.md').read_text() != render(board):
                 raise ValueError('Generated board is stale; run board.py render')
+            if args.pull_request_event:
+                verify_pull_request(args.pull_request_event, ROOT, now, {t['key']: t for t in board['tasks']})
             print(f"Validated {len(board['tasks'])} tasks, {len(board['releases'])} releases and {len(board['source_sections'])} source sections")
         elif args.action == 'show':
             match = next((t for t in board['tasks'] if t['key'] == args.key), None)
@@ -203,6 +216,12 @@ def main():
             detail = {**match}
             if match['spec']:
                 detail['story_context'] = board['stories'][match['spec']['story']]['context']
+            records = [
+                {**record, 'state': exception_state(record, now) if latest[scope(record)] is record else 'superseded'}
+                for record in exceptions if record['task'] == match['key']
+            ]
+            if records:
+                detail['dod_exceptions'] = records
             print(json.dumps(detail, ensure_ascii=False, indent=2))
         elif args.action == 'evidence':
             match = board['batch_evidence'].get(args.key)
@@ -216,11 +235,18 @@ def main():
             earlier = {r['version'] for r in board['releases'][:board['releases'].index(release) + 1]}
             unresolved = [t for t in board['tasks'] if t['launch_required'] and t['release'] in earlier and t['status'] != 'done']
             defects = blocking_defects(board['tasks'], earlier)
+            earlier_tasks = {t['key'] for t in board['tasks'] if t['release'] in earlier}
+            expired = [
+                record for record in latest.values()
+                if record['task'] in earlier_tasks and exception_state(record, now) == 'expired'
+            ]
             print(f"v{release['version']}: {len(unresolved)} unresolved launch-required tasks through this milestone")
             for defect in defects:
                 print(f"Open {defect['defect_severity']} defect: {defect['key']}")
+            for record in expired:
+                print(f"Reopened Definition of Done exception: {record['task']} ({record['expires_at']})")
             print('Business gates also need recorded acceptance; this query does not certify them.')
-            return 1 if unresolved or defects or not release.get('acceptance') else 0
+            return 1 if unresolved or defects or expired or not release.get('acceptance') else 0
         else:
             for task in board['tasks']:
                 if args.action == 'next' and task['key'] not in board['next_batch']['task_keys']:

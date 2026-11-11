@@ -1,7 +1,11 @@
 import copy
+from contextlib import redirect_stdout
+from io import StringIO
 import unittest
+from unittest.mock import patch
 
-from board import blocking_defects, read, render, validate
+from board import blocking_defects, main, read, render, validate
+from test_definition_of_done import record
 
 
 class BoardIntegrityTests(unittest.TestCase):
@@ -75,6 +79,32 @@ class BoardIntegrityTests(unittest.TestCase):
         validate(self.board)
         self.assertIn(' (P2 defect)', render(self.board))
         self.assertEqual(blocking_defects(self.board['tasks'], {'0.5.0', '0.6.0', '0.9.0'}), [future])
+
+    def test_ready_reopens_expired_approval_at_the_scope_boundary(self):
+        task = next(t for t in self.board['tasks'] if t['release'] == '0.3.0' and t['status'] == 'done')
+        exception = record(task=task['key'], approved_at='2024-10-11T08:00:00Z',
+                           expires_at='2024-10-12T08:00:00Z')
+        self.board['dod_exceptions'] = [exception]
+
+        def readiness(version):
+            output = StringIO()
+            with patch('board.read', return_value=self.board), patch(
+                'sys.argv', ['board.py', 'ready', '--release', version]
+            ), redirect_stdout(output):
+                status = main()
+            return status, output.getvalue()
+
+        earlier_status, earlier_output = readiness('0.2.0')
+        self.assertEqual(earlier_status, 0)
+        self.assertNotIn('Reopened Definition of Done exception', earlier_output)
+        status, output = readiness('0.3.0')
+        self.assertEqual(status, 1)
+        self.assertIn('0 unresolved launch-required tasks', output)
+        self.assertIn(f"Reopened Definition of Done exception: {task['key']}", output)
+        exception.update(closed_at='2024-10-13T08:00:00Z', closure_ref='verified-review-receipt')
+        status, output = readiness('0.3.0')
+        self.assertEqual(status, 0)
+        self.assertNotIn('Reopened Definition of Done exception', output)
 
     def test_rejects_invalid_defect_severity(self):
         self.board['tasks'][0]['defect_severity'] = 'critical'
