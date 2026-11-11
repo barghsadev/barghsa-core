@@ -1,0 +1,40 @@
+services:
+  prometheus:
+    networks: [private, dashboards]
+  operations:
+    environment:
+      OPS_ALERT_DASHBOARD_ORIGIN: http://127.0.0.1:3009
+  grafana:
+    image: ${BARGHSA_GRAFANA_IMAGE:?Set a verified immutable Grafana image}
+    environment:
+      GF_SERVER_ROOT_URL: http://127.0.0.1:3009/
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana-admin-password
+      GF_AUTH_ANONYMOUS_ENABLED: 'false'
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_SECURITY_DISABLE_GRAVATAR: 'true'
+      GF_ANALYTICS_REPORTING_ENABLED: 'false'
+      GF_ANALYTICS_CHECK_FOR_UPDATES: 'false'
+      GF_ANALYTICS_CHECK_FOR_PLUGIN_UPDATES: 'false'
+      GF_LOG_MODE: console
+    volumes:
+      - grafanadata:/var/lib/grafana
+      - ./grafana-provisioning/dashboards.yml:/etc/grafana/provisioning/dashboards/barghsa.yml:ro
+      - ./grafana-provisioning/datasources.yml:/etc/grafana/provisioning/datasources/barghsa.yml:ro
+      - ./grafana-notifications-dashboard.json:/var/lib/grafana/operations/notifications.json:ro
+      - ./grafana-finance-safety-dashboard.json:/var/lib/grafana/operations/finance.json:ro
+      - ./grafana-ai-usage-dashboard.json:/var/lib/grafana/operations/ai.json:ro
+      - ./grafana-worker-health-dashboard.json:/var/lib/grafana/operations/worker.json:ro
+      - ${BARGHSA_GRAFANA_ADMIN_PASSWORD_FILE:-/etc/barghsa/staging/grafana-admin-password}:/run/secrets/grafana-admin-password:ro
+    ports: ['127.0.0.1:3009:3000']
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    restart: unless-stopped
+    mem_limit: 384m
+    networks: [dashboards]
+networks:
+  dashboards:
+    internal: true
+volumes:
+  grafanadata:

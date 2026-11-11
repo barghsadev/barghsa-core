@@ -4,6 +4,7 @@ import { useNavigate, type NavigateOptions } from '@tanstack/react-router';
 import { t } from '@barghsa/i18n/app';
 import { BellIcon, CheckCheckIcon, Loader2Icon, InboxIcon } from 'lucide-react';
 import { Button, ListPage, LoadingSkeleton } from '@barghsa/ui';
+import { operationsAlertLinks } from '@barghsa/shared/notifications';
 import { useNotificationAccessDenied } from '../hooks/useNotificationAccessDenied.js';
 import { useLocale } from '../hooks/useLocale.js';
 import {
@@ -388,27 +389,48 @@ function OwnedInbox({ operatingContext = 'customer', queries }: InboxProps) {
                     {notificationFeedback(group.key, locale)}
                   </h2>
                   <ul className="divide-y divide-border rounded-lg border bg-card text-card-foreground">
-                    {group.items.map((item) => (
-                      <li key={item.id}>
-                        <button
-                          type="button"
-                          onClick={() => void markRead(item)}
-                          disabled={!ready}
-                          className="flex w-full min-w-0 items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
-                          aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
-                        >
-                          <span className="min-w-0 flex-1">
-                            <NotificationRow
-                              item={item}
-                              locale={locale}
-                              unread={!item.isRead}
-                              muted={item.isRead}
-                              operatingContext={operatingContext}
-                            />
-                          </span>
-                        </button>
-                      </li>
-                    ))}
+                    {group.items.map((item) => {
+                      const alertLinks =
+                        operatingContext === 'staff' && ready
+                          ? operationsAlertLinks(item.type, item.params)
+                          : [];
+                      return (
+                        <li key={item.id}>
+                          <button
+                            type="button"
+                            onClick={() => void markRead(item)}
+                            disabled={!ready}
+                            className="flex w-full min-w-0 items-start gap-3 px-4 py-3 text-start transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary"
+                            aria-label={`${t('notifications.markReadAria', locale)} — ${notificationContent(item, locale).title}`}
+                          >
+                            <span className="min-w-0 flex-1">
+                              <NotificationRow
+                                item={item}
+                                locale={locale}
+                                unread={!item.isRead}
+                                muted={item.isRead}
+                                operatingContext={operatingContext}
+                              />
+                            </span>
+                          </button>
+                          {alertLinks.length ? (
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 px-4 pb-3 ps-14">
+                              {alertLinks.map(({ label, href }) => (
+                                <a
+                                  className="rounded-sm py-1 text-sm text-primary underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                                  href={href}
+                                  key={label}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {t(label, locale)}
+                                </a>
+                              ))}
+                            </div>
+                          ) : null}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </section>
               ))}

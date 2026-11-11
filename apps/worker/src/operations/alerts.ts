@@ -1,6 +1,7 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Pool } from 'pg';
+import { operationsDashboardOrigin } from '@barghsa/shared/notifications';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 
 const labels: Record<string, string> = {
@@ -102,6 +103,7 @@ export function parseOperationsAlerts(
 
 /** Receipt and admin delivery intents commit together. Repeats preserve the original audience. */
 export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
+  const dashboardOrigin = operationsDashboardOrigin(process.env['OPS_ALERT_DASHBOARD_ORIGIN']);
   const client = await pool.connect();
   const receipts: { id: string; inserted: boolean }[] = [];
   try {
@@ -162,6 +164,8 @@ export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
       const data = {
         alertReceiptId: id,
         alertStatus: alert.status,
+        operationsAlertName: alert.name,
+        operationsDashboardOrigin: dashboardOrigin,
         priority: alert.priority,
         details: `${labels[alert.name]}: ${alert.status === 'firing' ? 'هشدار مشاهده شد / Firing' : 'رفع هشدار مشاهده شد / Resolved'}`,
         eta:

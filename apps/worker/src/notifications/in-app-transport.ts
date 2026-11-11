@@ -152,8 +152,13 @@ export class InAppNotificationTransport implements INotificationTransport {
         payload.eventKey === 'admin.operations_alert'
       ) {
         const source = await pool.query(
-          'SELECT id FROM operations_alert_receipts WHERE id=$1 AND status=$2',
-          [payload.payload.alertReceiptId, payload.payload.alertStatus]
+          `SELECT id FROM operations_alert_receipts WHERE id=$1 AND status=$2
+             AND ($3::text IS NULL OR alert_name=$3)`,
+          [
+            payload.payload.alertReceiptId,
+            payload.payload.alertStatus,
+            payload.payload.operationsAlertName ?? null,
+          ]
         );
         if (!source.rows[0]) throw new Error('Operations alert requires its protected receipt');
       }

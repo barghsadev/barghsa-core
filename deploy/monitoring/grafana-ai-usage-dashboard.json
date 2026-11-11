@@ -208,6 +208,39 @@
       ],
       "title": "Model completion error ratio",
       "type": "timeseries"
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Model circuit health",
+      "description": "0 indicates an open circuit. An absent sample indicates no current observation.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "min without (instance, pod) (ai_model_health)",
+          "legendFormat": "{{model_id}} · {{environment}}/{{database}}"
+        }
+      ]
     }
   ],
   "refresh": "1m",
@@ -234,6 +267,6 @@
   "timezone": "utc",
   "title": "Barghsa — AI Usage & Cost",
   "uid": "barghsa-ai-usage",
-  "version": 1,
+  "version": 2,
   "weekStart": ""
 }

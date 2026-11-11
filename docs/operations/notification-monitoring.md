@@ -50,6 +50,30 @@ A configuration-pause rehearsal may use isolated provider tables in the staging 
 
 Validate configuration with `promtool check config`, the existing `promtool test rules` file and `amtool check-config`. Start the staging monitoring stack only against its accepted image and protected configuration. Binary rollback can retain the additive receipt table; its history remains append-only. Acceptance and actual deployment/notification receipts belong in `kanban/board.json`.
 
+### Operator dashboards
+
+Add `deploy/monitoring/staging-dashboards.yml` after `staging-compose.yml` when
+starting the accepted staging monitoring configuration. Set the approved Grafana
+image digest as `BARGHSA_GRAFANA_IMAGE` in the protected Compose environment.
+Place the initial Grafana admin password at
+`/etc/barghsa/staging/grafana-admin-password`, readable by the image's runtime
+UID only. Use the admin account to provision named operator accounts.
+[Grafana Docker secrets](https://grafana.com/docs/grafana/latest/setup-grafana/configure-docker/).
+
+Grafana listens on the staging host's loopback port 3009. Authorized operators
+forward local port 3009 to that port over SSH, then sign in. The overlay
+provisions the notifications, finance safety, AI usage and worker health
+dashboards with the private Prometheus source. It sets
+`OPS_ALERT_DASHBOARD_ORIGIN=http://127.0.0.1:3009` on the staging receiver. In
+production, set this variable to the approved HTTPS monitoring origin.
+[Grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/).
+
+Open the dashboard and runbook links from a fresh staff inbox receipt. Verify
+the same links in email for outages where email is enabled. The receiver
+derives both destinations from the alert name and protected configuration.
+Existing receipts keep their original content and read state. Confirm access
+from an operator account and keep anonymous Grafana access disabled.
+
 Select the intended Prometheus instance in the dashboard's **Prometheus** data-source selector. Its failure-ratio panel uses fractional values: warning at 0.10 and critical at 0.25, displayed as 10% and 25%. The open-dead-letter panel retains count thresholds. This follows Grafana's [data-source variable](https://grafana.com/docs/grafana/latest/visualizations/dashboards/variables/add-template-variables/) and [threshold](https://grafana.com/docs/grafana/latest/panels-visualizations/configure-thresholds/) configuration. A September12 local check imported the unchanged dashboard into Grafana11.2.0 with Prometheus3.5.0 and synthetic samples. All five queries returned data; Chromium rendered the selected data source,90s age,12 queued,3 dead letters and an orange12.5% failure ratio. This verifies local dashboard compatibility, not deployed worker scrapes or alert delivery. See the [historical review screenshot](https://github.com/barghsadev/barghsa-core/blob/fcd7678ba742fbbaa7cd0907471f3f2aec86bb82/audit/evidence/r02-outbox-delivery/grafana-dashboard.png).
 
 The rules use the maximum open dead-letter count across worker replicas, rather than summing copies of the same database count. They remove only `instance` and `pod` labels. Keep identical remaining labels for replicas of one database and distinct environment/database labels for separate deployments.

@@ -38,6 +38,47 @@ async function click(label: string) {
   await act(async () => found!.click());
 }
 const cursor = notificationCursor();
+it.each([
+  ['staff', 'fa'],
+  ['customer', 'en'],
+] as const)('shows operations resource links in the %s workspace', async (context, locale) => {
+  document.documentElement.lang = locale;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () =>
+      Response.json({
+        ...page(),
+        data: [
+          {
+            ...item('Overdue refund'),
+            type: 'admin.operations_alert',
+            linkRoute: '/admin',
+            params: {
+              operationsAlertName: 'RefundObligationOverdue',
+              operationsDashboardOrigin: 'https://monitoring.example.test/',
+            },
+          },
+        ],
+      })
+    )
+  );
+  await act(async () => root.render(<QueryProvider>{<Bound context={context} />}</QueryProvider>));
+  expect(host.textContent).toContain('Overdue refund');
+  const links = [...host.querySelectorAll('ul li a')];
+  expect(host.querySelector('ul button a')).toBeNull();
+  expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual(
+    context === 'staff'
+      ? [
+          ['داشبورد پایش', 'https://monitoring.example.test/d/barghsa-finance-safety'],
+          [
+            'راهنمای اقدام',
+            'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/refund-backlog.md',
+          ],
+        ]
+      : []
+  );
+});
+
 for (const context of ['customer', 'staff'] as const) {
   it(`${context}: failed next pages retry exactly, deduplicate and history restores one window`, async () => {
     let fail = true;

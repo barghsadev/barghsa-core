@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T13:35:28+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T13:53:04+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Give each operator alert a dashboard for its configured metrics and retain evidence that the operator can follow its dashboard and runbook links.
+Correct the exact multipart historical upgrade expectation for migration 0289. Recheck retained receipts, journal, cleanup constraints and repeat execution before pushing the next preflight.
 
-- `06-security-testing-observability.md#T-06.15.01.08`: Every alert links to its dashboard and runbook
+- `01-platform-infrastructure.md#T-02.03.02`: Create migration runner script for production deployments
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

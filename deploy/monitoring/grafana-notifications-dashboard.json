@@ -314,6 +314,49 @@
       ],
       "title": "Resend email bounce rate (24h)",
       "type": "timeseries"
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Provider health and SMS credit",
+      "description": "Provider health is 0 for a degraded configuration. The SMS credit signal is 1 below its configured threshold.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "min without (instance, pod) (provider_email_health)",
+          "legendFormat": "Email {{provider_id}} · {{environment}}/{{database}}"
+        },
+        {
+          "refId": "B",
+          "expr": "min without (instance, pod) (provider_sms_health)",
+          "legendFormat": "SMS {{provider_id}} · {{environment}}/{{database}}"
+        },
+        {
+          "refId": "C",
+          "expr": "max without (instance, pod) (provider_sms_credit_low)",
+          "legendFormat": "SMS low credit {{provider_id}} · {{environment}}/{{database}}"
+        }
+      ]
     }
   ],
   "refresh": "30s",
@@ -337,6 +380,6 @@
   "timezone": "",
   "title": "Barghsa — Notifications & Outbox",
   "uid": "barghsa-notifications",
-  "version": 3,
+  "version": 4,
   "weekStart": ""
 }

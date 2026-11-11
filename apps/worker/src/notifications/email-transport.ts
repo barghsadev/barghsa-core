@@ -1,4 +1,5 @@
 import { getDbPool } from '@barghsa/db';
+import { t } from '@barghsa/i18n/app';
 import { durableDelivery, readDeliveryReceipt } from './send-receipt.js';
 import {
   createEmailSender,
@@ -7,6 +8,8 @@ import {
   type DeliveryPool,
 } from '@barghsa/shared/notification-delivery';
 import {
+  escapeHtml,
+  operationsAlertLinks,
   renderTemplate,
   type INotificationTransport,
   type NotificationSendPayload,
@@ -94,8 +97,16 @@ export class EmailNotificationTransport implements INotificationTransport {
         body.unknown.length
       )
         throw new Error('Email template data incomplete');
+      const alertLinks = operationsAlertLinks(payload.eventKey, payload.payload);
+      const footer = alertLinks.length
+        ? `<p>${alertLinks
+            .map(
+              ({ label, href }) => `<a href="${escapeHtml(href)}">${t(label, recipient.locale)}</a>`
+            )
+            .join(' · ')}</p>`
+        : '';
       const brandedBody = renderBrandedEmail(
-        body.output,
+        body.output + footer,
         await loadEmailBranding(this.pool),
         recipient.locale
       );

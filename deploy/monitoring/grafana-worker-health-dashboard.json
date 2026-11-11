@@ -1,0 +1,99 @@
+{
+  "uid": "barghsa-worker-health",
+  "title": "Barghsa Worker Health",
+  "tags": ["barghsa", "operations"],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "refresh": "30s",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "refresh": 1,
+        "current": {},
+        "options": []
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Worker scrape availability",
+      "description": "0 means Prometheus could not scrape the worker. An absent series means there is no observation for that target.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "up{job=\"barghsa-worker\"}",
+          "legendFormat": "{{instance}} · {{environment}}/{{database}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Notification processing and scheduled retries",
+      "description": "Shows completed processing and scheduled retries per second.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (environment, database) (rate(notifications_outbox_processing_seconds_count[5m]))",
+          "legendFormat": "Processed · {{environment}}/{{database}}"
+        },
+        {
+          "refId": "B",
+          "expr": "sum by (environment, database) (rate(notifications_scheduled_retries_total[5m]))",
+          "legendFormat": "Retried · {{environment}}/{{database}}"
+        }
+      ]
+    }
+  ]
+}

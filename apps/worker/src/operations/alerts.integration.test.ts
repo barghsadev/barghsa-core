@@ -17,6 +17,7 @@ import { collectNotificationGauges, exportWorkerMetrics } from '../notifications
 import { collectRefundObligationMetrics } from '../refunds/refund-metrics.js';
 import { collectReconciliationMetrics } from '../wallet/reconciliation-metrics.js';
 import { WALLET_MISMATCH_CRITICAL_ABS_IRR } from '@barghsa/shared/finance';
+import { operationsAlertLinks } from '@barghsa/shared/notifications';
 
 let ctx: { pool: Pool; connectionString: string; close: () => Promise<void> };
 let server: ReturnType<typeof createServer>, base: string;
@@ -81,6 +82,7 @@ beforeEach(async () => {
   vi.stubEnv('OPS_ALERT_WEBHOOK_SECRET', secret);
   vi.stubEnv('OPS_ALERT_ENVIRONMENT', 'staging');
   vi.stubEnv('OPS_ALERT_DATABASE', 'core');
+  vi.stubEnv('OPS_ALERT_DASHBOARD_ORIGIN', 'http://127.0.0.1:3009');
   await ctx.pool.query('DELETE FROM notification_outbox');
   await ctx.pool.query('DELETE FROM in_app_notifications');
 });
@@ -103,7 +105,11 @@ function envelope(status = 'firing', fingerprint = randomUUID().replaceAll('-', 
           database: 'core',
           severity: 'warning',
         },
-        annotations: { description: 'token=DO_NOT_COPY' },
+        annotations: {
+          description: 'token=DO_NOT_COPY',
+          dashboard_url: 'https://unsafe.example/dashboard',
+          runbook_url: 'https://unsafe.example/runbook',
+        },
         generatorURL: 'https://unsafe.example/?secret=DO_NOT_COPY',
       },
     ],
@@ -479,6 +485,14 @@ it.each(['EmailProviderDegraded', 'SmsProviderDegraded'])(
       })
     ).toMatchObject({ delivered: 2, failed: 0 });
     expect(send).toHaveBeenCalledTimes(2);
+    for (const [, options] of send.mock.calls) {
+      const message = JSON.parse(String(options?.body)) as { html: string };
+      expect(message.html).toContain('href="http://127.0.0.1:3009/d/barghsa-notifications"');
+      expect(message.html).toContain(
+        'href="https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md"'
+      );
+      expect(message.html).not.toMatch(/DO_NOT_COPY|unsafe\.example/);
+    }
     const notices = (
       await ctx.pool.query(
         "SELECT * FROM in_app_notifications WHERE type='system.service_outage' ORDER BY created_at"
@@ -495,6 +509,12 @@ it.each(['EmailProviderDegraded', 'SmsProviderDegraded'])(
       )
     ).toBe(true);
     expect(notices.map((n) => n.params.alertStatus).sort()).toEqual(['firing', 'resolved']);
+    for (const notice of notices) {
+      expect(operationsAlertLinks(notice.type, notice.params).map(({ href }) => href)).toEqual([
+        'http://127.0.0.1:3009/d/barghsa-notifications',
+        'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
+      ]);
+    }
     expect(
       notices.find((n) => n.params.alertStatus === 'firing').localized_content.fa.body
     ).toContain('اختلال');
