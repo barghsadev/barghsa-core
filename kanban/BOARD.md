@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1212 | Accepted with unchanged source bindings. |
-| verify | 90 | Existing work may be complete; inspect evidence before building. |
+| done | 1213 | Accepted with unchanged source bindings. |
+| verify | 89 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1060,7 +1060,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-06.03.04` | done | Earlier acceptance_verified | Create localized DatePicker component |
 | `01-platform-infrastructure.md#T-06.03.05` | partial | Earlier partial | Implement theme system with admin overrides |
 | `01-platform-infrastructure.md#T-06.03.06` | done | Earlier acceptance_verified | Create loading/empty/error state components |
-| `01-platform-infrastructure.md#T-06.04.01` | verify | Earlier deferred | Create privacy-safe analytics abstraction with consent gate and redaction |
+| `01-platform-infrastructure.md#T-06.04.01` | done | Earlier deferred | Create privacy-safe analytics abstraction with consent gate and redaction |
 | `01-platform-infrastructure.md#T-07.01.01` | verify | Earlier deferred | Create `pnpm setup:dev` convenience script |
 | `01-platform-infrastructure.md#T-07.01.02` | verify | Earlier deferred | Configure dev-mode OTP bypass and console printing |
 | `01-platform-infrastructure.md#T-07.01.03` | verify | Earlier deferred | Create `pnpm db:push` script for dev schema synchronization |

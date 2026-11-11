@@ -13,7 +13,7 @@ import { Button } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { useLocale } from '../hooks/useLocale.js';
 import { withCsrf } from '../lib/csrf.js';
-import { createBrowserAnalytics } from '../lib/analytics-client.js';
+import type { createBrowserAnalytics } from '../lib/analytics-client.js';
 
 type Consent = boolean | null;
 interface AnalyticsConsentContextValue {
@@ -46,13 +46,16 @@ export function AnalyticsConsentProvider({
   children: ReactNode;
 }) {
   const { pathname } = useLocation();
-  const analytics = useMemo(createBrowserAnalytics, []);
+  const [analytics, setAnalytics] = useState<ReturnType<typeof createBrowserAnalytics> | null>(
+    null
+  );
   const [consent, setConsent] = useState<Consent>(null);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [revision, setRevision] = useState(0);
   const reload = useCallback(() => setRevision((value) => value + 1), []);
+  const allowed = status === 'ready' && consent === true && !saving;
 
   useEffect(() => {
     const request = new AbortController();
@@ -78,17 +81,31 @@ export function AnalyticsConsentProvider({
   }, [revision]);
 
   useEffect(() => {
-    analytics.setConsent(status === 'ready' && consent === true);
-    return () => analytics.setConsent(false);
-  }, [analytics, consent, status]);
+    if (!allowed || analytics) return;
+    let active = true;
+    void import('../lib/analytics-client.js')
+      .then(({ createBrowserAnalytics }) => {
+        if (active) setAnalytics(createBrowserAnalytics());
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [allowed, analytics]);
 
   useEffect(() => {
-    if (status === 'ready' && consent === true) void analytics.track({ name: 'page_view', area });
-  }, [analytics, area, consent, pathname, status]);
+    analytics?.setConsent(allowed);
+    return () => analytics?.setConsent(false);
+  }, [allowed, analytics]);
+
+  useEffect(() => {
+    if (allowed) void analytics?.track({ name: 'page_view', area });
+  }, [allowed, analytics, area, pathname]);
 
   const updateConsent = useCallback(
     async (value: boolean) => {
       if (saving) return;
+      if (!value) analytics?.setConsent(false);
       setSaving(true);
       setSaveError(false);
       try {
@@ -102,12 +119,13 @@ export function AnalyticsConsentProvider({
         setConsent(value);
         setStatus('ready');
       } catch {
+        if (!value) setStatus('error');
         setSaveError(true);
       } finally {
         setSaving(false);
       }
     },
-    [saving]
+    [analytics, saving]
   );
 
   const context = useMemo(

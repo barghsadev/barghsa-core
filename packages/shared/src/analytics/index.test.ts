@@ -25,9 +25,30 @@ it('blocks all adapters without opt-in and redacts before both providers receive
   expect(selfHosted).not.toHaveBeenCalled();
   analytics.setConsent(true);
   await analytics.track({ name: 'page_view', area: 'admin', password: 'never-send' });
-  expect(selfHosted).toHaveBeenCalledWith({ name: 'page_view', area: 'admin' });
-  expect(google).toHaveBeenCalledWith({ name: 'page_view', area: 'admin' });
+  expect(selfHosted).toHaveBeenCalledWith(
+    { name: 'page_view', area: 'admin' },
+    expect.any(Function)
+  );
+  expect(google).toHaveBeenCalledWith({ name: 'page_view', area: 'admin' }, expect.any(Function));
   analytics.setConsent(false);
   await analytics.track({ name: 'page_view', area: 'admin' });
   expect(selfHosted).toHaveBeenCalledTimes(1);
+});
+
+it('invalidates an event’s consent check after revocation and a new opt-in', async () => {
+  const checks: (() => boolean)[] = [];
+  const analytics = createAnalytics([
+    {
+      send: (_event, hasCurrentConsent) => {
+        checks.push(hasCurrentConsent);
+      },
+    },
+  ]);
+  analytics.setConsent(true);
+  await analytics.track({ name: 'page_view', area: 'admin' });
+  expect(checks).toHaveLength(1);
+  expect(checks[0]!()).toBe(true);
+  analytics.setConsent(false);
+  analytics.setConsent(true);
+  expect(checks[0]!()).toBe(false);
 });

@@ -20151,12 +20151,10 @@
         "story": "01-platform-infrastructure.md#spec-9c5a8f9719f2"
       },
       "requirement": "- **T-06.04.01:** Create privacy-safe analytics abstraction with consent gate and redaction\n  - **Notes:** Add `packages/shared/analytics` with a typed `AnalyticsEvent` interface, `track(event)` API, provider adapters (Google Analytics gtag, self-hosted backend endpoint), a `useAnalyticsConsent()` gate, and a redaction utility that strips credentials, OTPs, tokens, national IDs, bank data, file contents, and raw free-text before forwarding. Consent state persists per user. Operational product events required for correctness are sent to Barghsa's backend independent of third-party consent. Never include the values listed in the source's prohibited-data filter in any analytics payload.\n  - **Dependencies:** T-06.01.01 (shared package)\n  - **Complexity:** M\n  - **UI/UX:** Analytics is invisible to users apart from a consent prompt on first visit; no user-visible component.\n\n---",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -20183,12 +20181,76 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "apps/web/src/lib/analytics-client.test.ts",
+          "apps/web/src/lib/analytics-client.ts",
+          "apps/web/src/providers/AnalyticsConsentProvider.tsx",
+          "audit/skipped-work-handoff.md",
+          "docs/security/session-lifetime.md",
+          "packages/shared/src/analytics/index.test.ts",
+          "packages/shared/src/analytics/index.ts"
         ],
         "batches": [
-          "2026-09-24-private-analytics"
+          "2026-09-24-private-analytics",
+          "release-0.6-analytics-consent-boundary"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source_bound_batch",
+          "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+          "checks": [
+            "The typed event projection retains only the existing event names, area and service enums. Per-account consent is persisted and audited through the current first-party API. Product analytics is separate from the operational actions that record business and audit state.",
+            "A Google event requires a successful first-party consent and event receipt, then checks the same local consent revision again. Consent changes invalidate pending callbacks, and the UI pauses optional tracking at the start of revocation. The adapter supplies a fixed site context in place of the current route, title and referrer.",
+            "The browser loads the optional analytics module after consent. The first build measured the wallet at 300.07 KB gzip. Lazy loading brought it to 299.73 KB under the existing 300 KB cap. All 102 route and interaction budgets passed.",
+            "Three shared tests, 17 web cases, four Persian/English desktop/mobile Chromium checks and both analytics HTTP tests passed. The isolated Linux fixture compiled the exact tracked inputs and applied the production migration journal. Shared exports, typecheck, lint, formatting and whitespace passed.",
+            "Google forwarding was verified with a test adapter. The repository provides the adapter and documents the manual host configuration for any approved deployment."
+          ],
+          "source_evidence": [
+            {
+              "path": "apps/web/src/lib/analytics-client.test.ts",
+              "sha256": "fb2d93c1a954c241a94ffd30ca40308b533d744d37361cf5a86ee479a651f316"
+            },
+            {
+              "path": "apps/web/src/lib/analytics-client.ts",
+              "sha256": "9ef01ef99f94f75e4ba19ff3255c96dbcf96efb3b3315a2fdef36e2c602dabad"
+            },
+            {
+              "path": "apps/web/src/providers/AnalyticsConsentProvider.tsx",
+              "sha256": "3e037721c25c93eade9c53477e456036b17a15c50759cc53aa06018c312711f8"
+            },
+            {
+              "path": "docs/security/session-lifetime.md",
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
+            },
+            {
+              "path": "packages/shared/src/analytics/index.test.ts",
+              "sha256": "c7ce754f8b996737990e0bc3926cf4a527b1bdd8ff010939837b9e79e02c2607"
+            },
+            {
+              "path": "packages/shared/src/analytics/index.ts",
+              "sha256": "399bbb63c59a94529205296df21612280dcdcc7c2e44d7672327fa60bd91e473"
+            },
+            {
+              "path": "apps/api/src/user-settings/analytics.controller.ts",
+              "sha256": "dc4db1f5943f509754a085c2b95655b49def1062fef7849ad7e64f4291d0c147"
+            },
+            {
+              "path": "apps/api/src/user-settings/analytics-http.integration.test.ts",
+              "sha256": "e5fb24cce4b054782ce484dc7303bb0dddbc89ea8254612863e4518ddbf66fef"
+            },
+            {
+              "path": "apps/web/e2e/analytics-consent.spec.ts",
+              "sha256": "66b56d6dd6b7eb8ec9524e6a06ced8e9cc8482063784878da0366e47c96069aa"
+            },
+            {
+              "path": "packages/db/drizzle/production/0187_analytics_consent_events.sql",
+              "sha256": "aa301a1b7f50a7e5e24a5ba7418a93c48890505850f886c1468dbbad1fe1c08d"
+            },
+            {
+              "path": "kanban/epics/01-platform-infrastructure.md",
+              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+            }
+          ],
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw"
+        }
       }
     },
     {
@@ -516586,7 +516648,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -516656,6 +516718,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -516819,7 +516889,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             }
           ],
           "checks": [
@@ -516836,6 +516906,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -517137,7 +517215,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -517206,6 +517284,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -517388,11 +517474,11 @@
             },
             {
               "path": "apps/web/src/lib/analytics-client.test.ts",
-              "sha256": "19932fbc34cfb7cbceeae33c2fd7e2d677dbeb2cbd5ed8e3736a3492a8e9a707"
+              "sha256": "fb2d93c1a954c241a94ffd30ca40308b533d744d37361cf5a86ee479a651f316"
             },
             {
               "path": "apps/web/src/lib/analytics-client.ts",
-              "sha256": "3f1e7a436bdcf4adec83a56696f38d2e12d65b68163a5d0467b27191ee7dd1a5"
+              "sha256": "9ef01ef99f94f75e4ba19ff3255c96dbcf96efb3b3315a2fdef36e2c602dabad"
             },
             {
               "path": "apps/web/src/lib/auth-entry-feedback.test.ts",
@@ -517456,7 +517542,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -517468,7 +517554,7 @@
             },
             {
               "path": "packages/shared/src/analytics/index.test.ts",
-              "sha256": "2ba2073de74257f9986e6c6b7ac44aa6f884153c9c47d791f2822f56b1022a53"
+              "sha256": "c7ce754f8b996737990e0bc3926cf4a527b1bdd8ff010939837b9e79e02c2607"
             }
           ],
           "checks": [
@@ -517559,6 +517645,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "apps/web/src/lib/analytics-client.test.ts",
+                "apps/web/src/lib/analytics-client.ts",
+                "docs/security/session-lifetime.md",
+                "packages/shared/src/analytics/index.test.ts"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -517707,7 +517804,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             },
             {
               "path": "packages/db/src/schema/sessions.ts",
@@ -517765,6 +517862,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -517850,7 +517955,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             }
           ],
           "checks": [
@@ -517867,6 +517972,14 @@
                 "apps/api/src/session/session.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -532131,11 +532244,21 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             }
           ],
           "checks": [
             "The procedure distinguishes application and deployment API keys, provider and callback secrets, account-scoped and mass session/refresh revocation, and TLS certificate replacement and retirement. Each class has an authority boundary and an old/new verification step."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
+            }
           ]
         }
       },
@@ -549252,7 +549375,7 @@
             },
             {
               "path": "docs/security/session-lifetime.md",
-              "sha256": "078d2964c7b3bdf3b57e742dc6034278ee985053a2f7534a289295416067bb90"
+              "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
             }
           ],
           "checks": [
@@ -549295,6 +549418,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "docs/security/session-lifetime.md"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         }
@@ -831176,7 +831307,7 @@
             },
             {
               "path": "apps/web/src/providers/AnalyticsConsentProvider.tsx",
-              "sha256": "d80b352fc0c918005c734af78c3038271e294afb356c0c2ca80a2feaf2901d7c"
+              "sha256": "3e037721c25c93eade9c53477e456036b17a15c50759cc53aa06018c312711f8"
             },
             {
               "path": "apps/web/src/providers/BrandThemeProvider.tsx",
@@ -832177,6 +832308,14 @@
                 "apps/web/src/lib/email-providers-api.ts"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-analytics-consent-boundary",
+              "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+              "paths": [
+                "apps/web/src/providers/AnalyticsConsentProvider.tsx"
+              ],
+              "scope": "The analytics event projection retains its exact source and receives fresh tests. The browser consent state, optional load boundary and vendor forwarding were verified with current source. Unrelated browser privacy and application behavior reuse source-bound evidence."
             }
           ]
         },
@@ -832639,7 +832778,8 @@
           "release-0.6-post-deploy-observation",
           "release-0.6-hosted-ubuntu-runner-pin",
           "release-0.6-hosted-signed-ubuntu-archive-fallback",
-          "release-0.6-explicit-provider-test-recipient"
+          "release-0.6-explicit-provider-test-recipient",
+          "release-0.6-analytics-consent-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -953715,6 +953855,125 @@
         "release-readiness#R-03.01",
         "release-readiness#R-03.02",
         "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ]
+    },
+    "release-0.6-analytics-consent-boundary": {
+      "batch": "release-0.6-analytics-consent-boundary",
+      "base_commit": "b016a18f843eceb386cce8ab15d0c2019b35e971",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.04.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/src/lib/analytics-client.test.ts",
+        "apps/web/src/lib/analytics-client.ts",
+        "apps/web/src/providers/AnalyticsConsentProvider.tsx",
+        "docs/security/session-lifetime.md",
+        "packages/shared/src/analytics/index.test.ts",
+        "packages/shared/src/analytics/index.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/lib/analytics-client.test.ts",
+          "sha256": "fb2d93c1a954c241a94ffd30ca40308b533d744d37361cf5a86ee479a651f316"
+        },
+        {
+          "path": "apps/web/src/lib/analytics-client.ts",
+          "sha256": "9ef01ef99f94f75e4ba19ff3255c96dbcf96efb3b3315a2fdef36e2c602dabad"
+        },
+        {
+          "path": "apps/web/src/providers/AnalyticsConsentProvider.tsx",
+          "sha256": "3e037721c25c93eade9c53477e456036b17a15c50759cc53aa06018c312711f8"
+        },
+        {
+          "path": "docs/security/session-lifetime.md",
+          "sha256": "94fc4d9751bf19257420a048df6b5e2e74a3e45958ba0242d7686b2aebc46c10"
+        },
+        {
+          "path": "packages/shared/src/analytics/index.test.ts",
+          "sha256": "c7ce754f8b996737990e0bc3926cf4a527b1bdd8ff010939837b9e79e02c2607"
+        },
+        {
+          "path": "packages/shared/src/analytics/index.ts",
+          "sha256": "399bbb63c59a94529205296df21612280dcdcc7c2e44d7672327fa60bd91e473"
+        }
+      ],
+      "checks": [
+        "The typed event projection retains only the existing event names, area and service enums. Per-account consent is persisted and audited through the current first-party API. Product analytics is separate from the operational actions that record business and audit state.",
+        "A Google event requires a successful first-party consent and event receipt, then checks the same local consent revision again. Consent changes invalidate pending callbacks, and the UI pauses optional tracking at the start of revocation. The adapter supplies a fixed site context in place of the current route, title and referrer.",
+        "The browser loads the optional analytics module after consent. The first build measured the wallet at 300.07 KB gzip. Lazy loading brought it to 299.73 KB under the existing 300 KB cap. All 102 route and interaction budgets passed.",
+        "Three shared tests, 17 web cases, four Persian/English desktop/mobile Chromium checks and both analytics HTTP tests passed. The isolated Linux fixture compiled the exact tracked inputs and applied the production migration journal. Shared exports, typecheck, lint, formatting and whitespace passed.",
+        "Google forwarding was verified with a test adapter. The repository provides the adapter and documents the manual host configuration for any approved deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/shared-tests.log",
+          "sha256": "169c64122b525be887a37451ba345ca2603c313cc8196eeea4ba8d45face08d6"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/web-tests.log",
+          "sha256": "0838e6977eed32894076d55e5bd4071d975e205e30793f73a9cc84173ffc48d0"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/browser.log",
+          "sha256": "ec0c89801bdb895980a474a097443f2c03c6cadbe9923b7dbdf11211ccd8462c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/native-analytics.log",
+          "sha256": "f6619e6753de9eee17c95fd184f5a794c0ae9aecd373cfd5d8abea8694047f82"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/native-results.json",
+          "sha256": "1be9d6841c6e996573e33f4e2a8cd416345dda6d2c836744257c02b4b7b4af6e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/bundle-budget.log",
+          "sha256": "e1235c57e11a2506fa1be9efe5e0b7d66e45ff5e50b61a8737ecce3b96b1b954"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/wallet-budget-before-lazy-load.log",
+          "sha256": "8a5b7b06deba8c9b653aeedf97603eed42ef334cef892062a6f6fb72ad48aca7"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/shared-build.log",
+          "sha256": "a63af0d29eb35759e993612d8aa90ef51095d52c0dbd9f71c3d4c835b419bdd5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/web-build.log",
+          "sha256": "9421afeb33460e8bc5742a66bab09ada6b493a8d589a2a6dd4d0cbcf4754e5a8"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/shared-typecheck.log",
+          "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/web-typecheck.log",
+          "sha256": "ab57a18fc360361f785560ac4d818642169ccceaa66c23a2e841eed41ad7c77d"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/eslint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/prettier.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw/inputs.sha256",
+          "sha256": "13165a4f8b280ef0790dd37f993fd6d0cbb800fea99939c57d3d958555f5b0f6"
+        }
+      ],
+      "reused_source_bindings": [
+        "06-security-testing-observability.md#T-06.01.04.03",
+        "06-security-testing-observability.md#T-06.01.04.05",
+        "06-security-testing-observability.md#T-06.01.04.07",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.01.04.09",
+        "06-security-testing-observability.md#T-06.01.04.10",
+        "06-security-testing-observability.md#T-06.08.03.02",
+        "06-security-testing-observability.md#T-06.17.03.01",
         "release-readiness#R-04.02"
       ]
     }

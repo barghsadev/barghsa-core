@@ -25,6 +25,8 @@ Authentication forms keep passwords, one-time codes and short-lived password-cha
 
 Browser storage holds presentation preferences, brief translated acknowledgements and non-authenticating invoice return identifiers. Structured identity edits send national identifiers in request bodies. CRM free-text search matches account names and personal or organization names.
 
-Product analytics sends only approved event names and their permitted area or service. Route error reporting sends an approved error code and a random support reference. These payloads omit request bodies, form data and URL parameters.
+The first-party analytics endpoint stores approved event names and their permitted area or service. Route error reporting sends an approved error code and a random support reference. These payloads omit request bodies, form data and URL parameters.
+
+The optional Google adapter forwards events after the first-party endpoint confirms current account consent. Its page context uses the site origin and a fixed title. Configure any approved Google tag in manual measurement mode with automatic pageviews and enhanced measurement disabled. [Google pageview configuration](https://developers.google.com/analytics/devguides/collection/ga4/views)
 
 Staging and pilot proxy access records contain the HTTP method, fixed route group, response and upstream status, timing and bytes sent. They record individual session revocations as `/api/auth/sessions/:id` and omit raw paths, query strings, client addresses and request headers. The proxies use these records for HTTP outcomes and keep process diagnostics separate from Nginx's raw request error lines. Keep historical access and error logs restricted through the credential cutover.

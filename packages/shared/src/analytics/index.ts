@@ -21,22 +21,29 @@ export function redactAnalyticsEvent(value: unknown): AnalyticsEvent | null {
 }
 
 export interface AnalyticsAdapter {
-  send(event: AnalyticsEvent): Promise<void> | void;
+  send(event: AnalyticsEvent, hasCurrentConsent: () => boolean): Promise<void> | void;
 }
 
 /** No optional analytics leave the client until the current account has opted in. */
 export function createAnalytics(adapters: readonly AnalyticsAdapter[]) {
   let consent = false;
+  let revision = 0;
   return {
     setConsent(value: boolean) {
+      if (consent === value) return;
       consent = value;
+      revision++;
     },
     async track(value: unknown): Promise<void> {
       if (!consent) return;
       const event = redactAnalyticsEvent(value);
       if (!event) return;
+      const expectedRevision = revision;
+      const hasCurrentConsent = () => consent && revision === expectedRevision;
       await Promise.allSettled(
-        adapters.map((adapter) => Promise.resolve().then(() => adapter.send(event)))
+        adapters.map(async (adapter) => {
+          if (hasCurrentConsent()) await adapter.send(event, hasCurrentConsent);
+        })
       );
     },
   };
