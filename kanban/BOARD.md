@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T05:50:34+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T06:04:22+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Move ticket creation and reply storage copies out of business transactions while preserving exact replay and current ticket and profile authority before provider work and final publication.
+Prepare verification evidence outside business transactions with durable cleanup, and publish only against current correction or lost-contact recovery authority.
 
 - `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance

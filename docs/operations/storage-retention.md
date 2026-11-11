@@ -163,6 +163,13 @@ business revision before recording the immutable copy alongside the business
 change and audit. A rejected or interrupted save leaves its unpublished copy
 eligible for cleanup after the grace period.
 
+Ticket creation and replies check the original request receipt before copying.
+Requests with a replay key hold an advisory lock on the direct connection while
+the copy is prepared. Other requests with that key wait for the receipt. The
+ticket, profile and staff permission locks are acquired again for publication.
+If ownership, assignment or ticket state changes during upload, the next
+transaction applies the current rules and leaves rejected copies for cleanup.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

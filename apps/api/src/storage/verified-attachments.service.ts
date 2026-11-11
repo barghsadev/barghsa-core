@@ -2,6 +2,7 @@ import { readCappedBytes } from './read-capped-bytes.js';
 import { reserveStorageCopy } from './reserve-storage-copy.js';
 import { createDirectDbPool } from '@barghsa/db';
 import { withMultipartUploadLock } from '@barghsa/db/storage-multipart';
+import type { PoolClient } from 'pg';
 import {
   BadRequestException,
   Inject,
@@ -164,7 +165,7 @@ export class VerifiedAttachmentsService {
   }
 
   /** Copy scanned bytes after the authorization transaction commits. */
-  async copy(plan: AttachmentPlan): Promise<PreparedAttachmentCopies> {
+  async copy(plan: AttachmentPlan, directClient?: PoolClient): Promise<PreparedAttachmentCopies> {
     const storage = this.storageProvider();
     const { binding } = plan;
     const copies: PreparedAttachmentCopies['copies'] = [];
@@ -173,22 +174,26 @@ export class VerifiedAttachmentsService {
       const key = `${prefix(binding.purpose)}${randomUUID()}/${digest}`;
       const metadata = this.copyMetadata(binding, source, digest);
       await reserveStorageCopy(key, metadata);
-      const outcome = await withMultipartUploadLock(createDirectDbPool(), key, async (client) => {
-        const ready = await client.query(
-          `SELECT 1 FROM storage_records WHERE storage_key=$1 AND status='removed'
+      const outcome = await withMultipartUploadLock(
+        directClient ?? createDirectDbPool(),
+        key,
+        async (client) => {
+          const ready = await client.query(
+            `SELECT 1 FROM storage_records WHERE storage_key=$1 AND status='removed'
            AND cleanup_operation IS NULL AND metadata @> $2::jsonb`,
-          [key, JSON.stringify({ ...metadata, provisionalCopy: true, deletionRequested: true })]
-        );
-        if (!ready.rows[0]) throw this.copyExpired();
-        await storage.putObject(key, bytes, contentType);
-        // Give the publication transaction a fresh cleanup grace period after a slow upload.
-        const refreshed = await client.query(
-          `UPDATE storage_records SET updated_at=NOW() WHERE storage_key=$1
+            [key, JSON.stringify({ ...metadata, provisionalCopy: true, deletionRequested: true })]
+          );
+          if (!ready.rows[0]) throw this.copyExpired();
+          await storage.putObject(key, bytes, contentType);
+          // Give the publication transaction a fresh cleanup grace period after a slow upload.
+          const refreshed = await client.query(
+            `UPDATE storage_records SET updated_at=NOW() WHERE storage_key=$1
            AND status='removed' AND cleanup_operation IS NULL`,
-          [key]
-        );
-        if (refreshed.rowCount !== 1) throw this.copyExpired();
-      });
+            [key]
+          );
+          if (refreshed.rowCount !== 1) throw this.copyExpired();
+        }
+      );
       if (!outcome.acquired) throw this.copyExpired();
       copies.push({ source, key, digest, size: bytes.length, contentType });
     }
@@ -236,47 +241,6 @@ export class VerifiedAttachmentsService {
     if (!saved.rows[0]) throw this.copyExpired();
   }
 
-  // Ticket create/reply still use their transaction-bound copy until their replay checks can run before I/O.
-  async seal(
-    client: DualApprovalQueryClient,
-    keys: string[],
-    actorId: string,
-    profileId: string | null,
-    purpose: AttachmentPurpose = 'ticket_attachment',
-    ticketId?: string
-  ): Promise<string[]> {
-    const { binding, sources } = await this.plan(
-      client,
-      keys,
-      actorId,
-      profileId,
-      purpose,
-      ticketId
-    );
-    const storage = this.storageProvider();
-    const sealed: string[] = [];
-    for (const source of sources) {
-      const { bytes, contentType, digest } = await this.readBytes(storage, source, purpose);
-      const key = `${prefix(purpose)}${randomUUID()}/${digest}`;
-      await reserveStorageCopy(key, this.copyMetadata(binding, source, digest));
-      const reservation = await client.query(
-        `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND cleanup_operation IS NULL
-         AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' FOR UPDATE`,
-        [key]
-      );
-      if (!reservation.rows[0]) throw this.copyExpired();
-      await storage.putObject(key, bytes, contentType);
-      await this.publishCopy(client, binding, {
-        key,
-        digest,
-        size: bytes.length,
-        contentType,
-        source,
-      });
-      sealed.push(key);
-    }
-    return sealed;
-  }
   async downloadUrls(
     keys: string[],
     purpose: AttachmentPurpose = 'ticket_attachment'

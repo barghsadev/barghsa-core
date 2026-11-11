@@ -1,15 +1,17 @@
 import type { Pool, PoolClient } from 'pg';
 
-/** Call with a direct/session pool. Transaction-pooled connections cannot own this lock. */
+/** Call with a direct pool or an already checked-out direct client. */
 export async function withMultipartUploadLock<T>(
-  pool: Pool,
+  connection: Pool | PoolClient,
   key: string,
   work: (client: PoolClient) => Promise<T>
 ): Promise<{ acquired: false } | { acquired: true; value: T }> {
-  const client = await pool.connect();
+  const ownsClient = !('release' in connection);
+  const client = ownsClient ? await connection.connect() : connection;
   const lockKey = `storage:multipart:${key}`;
   let locked = false;
   let releaseError: Error | undefined;
+  let value: T;
   try {
     locked =
       (
@@ -19,17 +21,24 @@ export async function withMultipartUploadLock<T>(
         )
       ).rows[0]?.acquired === true;
     if (!locked) return { acquired: false };
-    return { acquired: true, value: await work(client) };
+    value = await work(client);
   } finally {
     if (locked) {
       try {
-        await client.query('SELECT pg_advisory_unlock(hashtextextended($1,0))', [lockKey]);
+        const unlocked = await client.query<{ released: boolean }>(
+          'SELECT pg_advisory_unlock(hashtextextended($1,0)) AS released',
+          [lockKey]
+        );
+        if (unlocked.rows[0]?.released !== true)
+          releaseError = new Error('Multipart lock was not held');
       } catch (error) {
         releaseError = error instanceof Error ? error : new Error('Multipart lock release failed');
       }
     }
-    client.release(releaseError);
+    if (ownsClient) client.release(releaseError);
   }
+  if (!ownsClient && releaseError) throw releaseError;
+  return { acquired: true, value };
 }
 
 /** Finalize only the committed intent, with its cleanup receipt in the same short transaction. */

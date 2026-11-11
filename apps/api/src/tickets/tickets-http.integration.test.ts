@@ -15,6 +15,7 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let storageServer: Server;
 const objects = new Map<string, Buffer>();
 const objectTags = new Map<string, string>();
+let onObjectPut: ((key: string) => Promise<void>) | undefined;
 const headers: Record<string, Record<string, string>> = {};
 const transientActors: string[] = [];
 beforeAll(async () => {
@@ -69,6 +70,7 @@ beforeAll(async () => {
       const chunks: Buffer[] = [];
       for await (const chunk of req) chunks.push(Buffer.from(chunk));
       objects.set(key, Buffer.concat(chunks));
+      await onObjectPut?.(key);
       res.setHeader('ETag', '"test"');
       res.end();
       return;
@@ -1068,6 +1070,54 @@ function createTicket(body: unknown, user = 'customer') {
     body: JSON.stringify(body),
   });
 }
+
+async function duringTicketCopy(
+  prefix: string,
+  submit: () => Promise<Response>,
+  check: () => Promise<void>
+) {
+  let entered!: () => void, release!: () => void;
+  const started = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  onObjectPut = async (key) => {
+    if (!key.startsWith(prefix)) return;
+    entered();
+    await gate;
+  };
+  const response = submit();
+  try {
+    await Promise.race([
+      started,
+      response.then(async (result) => {
+        throw new Error(
+          `Copy was never reached: ${result.status} ${await result.clone().text()} ${http.logs()}`
+        );
+      }),
+    ]);
+    await check();
+  } finally {
+    onObjectPut = undefined;
+    release();
+  }
+  return response;
+}
+
+async function expectReplayWaiting() {
+  await expect
+    .poll(
+      async () =>
+        (
+          await http.pool.query(`SELECT 1 FROM pg_locks WHERE locktype='advisory' AND NOT granted
+      AND database=(SELECT oid FROM pg_database WHERE datname=current_database())`)
+        ).rowCount
+    )
+    .toBe(1);
+}
+
 it('validates creation fields and scopes profile and related invoice links to the owner', async () => {
   const own = randomUUID(),
     other = randomUUID(),
@@ -1129,13 +1179,40 @@ it('persists a fixed attachment copy and releases downloads only to the owner or
     (await createTicket({ subject: 'No access', body: 'Another user file', attachments: [key] }))
       .status
   ).toBe(400);
-  const response = await createTicket(
-    { subject: 'Attachment', body: 'Details', attachments: [key] },
-    'staffCustomer'
-  );
+  const input = {
+    subject: 'Attachment',
+    body: 'Details',
+    attachments: [key],
+    idempotencyKey: randomUUID(),
+  };
+  const submit = () => createTicket(input, 'staffCustomer');
+  let replay!: Promise<Response>;
+  const response = await duringTicketCopy('ticket-attachments/', submit, async () => {
+    replay = submit();
+    await expectReplayWaiting();
+    expect(
+      (
+        await http.pool.query(
+          'SELECT storage_key FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+          [key]
+        )
+      ).rows
+    ).toEqual([{ storage_key: key }]);
+  });
   expect(response.status, http.logs()).toBe(201);
   const row = (await response.json()) as { id: string; attachments: string[] };
+  const duplicate = await replay;
+  expect(duplicate.status, http.logs()).toBe(201);
+  expect(await duplicate.json()).toEqual(row);
   expect(row.attachments[0]).toMatch(/^ticket-attachments\//);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT storage_key,status FROM storage_records WHERE metadata->>'sourceKey'=$1",
+        [key]
+      )
+    ).rows
+  ).toEqual([{ storage_key: row.attachments[0], status: 'immutable' }]);
   objects.set(key, Buffer.from('%PDF-1.7\nReplaced original'));
   expect(
     (await fetch(`${http.base}/api/tickets/${row.id}`, { headers: headers.customer! })).status
@@ -1970,16 +2047,30 @@ it('deduplicates concurrent/lost reply acknowledgements, conflicts on changed co
     attachments: [upload.key],
     submissionId: randomUUID(),
   };
-  const responses = await Promise.all([
-    postReply(id, 'assigned', input),
-    postReply(id, 'assigned', input),
-  ]);
+  const submit = () => postReply(id, 'assigned', input);
+  let replay!: Promise<Response>;
+  const first = await duringTicketCopy('ticket-reply-attachments/', submit, async () => {
+    replay = submit();
+    await expectReplayWaiting();
+    expect(
+      (await http.pool.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE NOWAIT', [id])).rows
+    ).toEqual([{ id }]);
+  });
+  const responses = [first, await replay];
   expect(responses.map((response) => response.status)).toEqual([201, 201]);
   const rows = await Promise.all(
     responses.map(async (response) => (await response.json()) as TicketCommentRow)
   );
   expect(rows[0]!.id).toBe(rows[1]!.id);
   expect(rows[0]!.attachments[0]!.key).toBe(rows[1]!.attachments[0]!.key);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT storage_key,status FROM storage_records WHERE metadata->>'sourceKey'=$1",
+        [upload.key]
+      )
+    ).rows
+  ).toEqual([{ storage_key: rows[0]!.attachments[0]!.key, status: 'immutable' }]);
   expect(
     (
       await http.pool.query(
@@ -1994,6 +2085,50 @@ it('deduplicates concurrent/lost reply acknowledgements, conflicts on changed co
   await assign(id, 'staff');
   expect((await postReply(id, 'assigned', input)).status).toBe(404);
 });
+
+it('keeps a reply copy private when assigned staff lose the ticket during storage I/O', async () => {
+  const id = await ticket();
+  await assign(id, 'assigned');
+  const upload = await replyUpload(id, 'assigned');
+  expect(upload.response.status).toBe(200);
+  const input = { body: 'Former assignee', attachments: [upload.key], submissionId: randomUUID() };
+  const response = await duringTicketCopy(
+    'ticket-reply-attachments/',
+    () => postReply(id, 'assigned', input),
+    async () => {
+      expect(
+        (await http.pool.query('SELECT id FROM tickets WHERE id=$1 FOR UPDATE NOWAIT', [id])).rows
+      ).toEqual([{ id }]);
+      await assign(id, 'staff');
+    }
+  );
+  expect(response.status, http.logs()).toBe(404);
+  expect(
+    (await http.pool.query('SELECT id FROM ticket_comments WHERE ticket_id=$1', [id])).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='ticket_comment_added' AND metadata::jsonb->>'ticketId'=$1",
+        [id]
+      )
+    ).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT status, metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+        [upload.key]
+      )
+    ).rows
+  ).toEqual([
+    {
+      status: 'removed',
+      metadata: expect.objectContaining({ provisionalCopy: true, deletionRequested: true }),
+    },
+  ]);
+});
+
 it('rolls back reply sealing and retry identity when its audit fails', async () => {
   const id = await ticket();
   const upload = await replyUpload(id);

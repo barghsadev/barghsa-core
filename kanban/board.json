@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T05:50:34+00:00",
+  "updated": "2026-11-11T06:04:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21431,8 +21431,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Move ticket creation and reply attachment provider calls out of their business transactions. Preserve current authority, assigned staff and owner boundaries, exact replay before provider copies, profile/ticket binding, assignment and notice atomicity, audit rollback and immutable publication.",
-        "Reconcile the separate verification evidence copy, direct document, contract and bank receipt copy paths, and approved document destruction. finishDestruction still deletes versions after BEGIN. Preserve monetary and signed-record boundaries, permanent retention, legal holds and approved destruction semantics."
+        "Move verification evidence provider work out of identity correction and lost-contact recovery business transactions. Add committed provisional cleanup and preserve purpose and profile binding, current staff step-up, exact keyed replays and the existing evidence ordering and authority.",
+        "Reconcile direct document, contract and bank receipt copy paths, and approved document destruction. finishDestruction still deletes versions after BEGIN. Preserve monetary and signed-record boundaries, permanent retention, legal holds and approved destruction semantics."
       ],
       "owner": null,
       "depends_on": [],
@@ -21464,6 +21464,7 @@
           "apps/api/src/admin/brand-config.service.ts",
           "apps/api/src/admin/contract-template.service.ts",
           "apps/api/src/contract/contract-pdf.service.ts",
+          "apps/api/src/database/idempotency.ts",
           "apps/api/src/documents/document-http.integration.test.ts",
           "apps/api/src/documents/document-storage.service.ts",
           "apps/api/src/documents/document-template.service.ts",
@@ -21485,6 +21486,9 @@
           "apps/api/src/storage/storage-record-admin.service.ts",
           "apps/api/src/storage/storage-record-http.integration.test.ts",
           "apps/api/src/storage/verified-attachments.service.ts",
+          "apps/api/src/tickets/ticket-form-authority.test.ts",
+          "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "apps/api/src/tickets/tickets.service.ts",
           "apps/api/src/upload/multipart-http.integration.test.ts",
           "apps/api/src/upload/upload-reservations.ts",
           "apps/api/src/upload/upload.service.ts",
@@ -21525,7 +21529,8 @@
           "release-0.6-provider-tests-outside-transactions",
           "release-0.6-committed-storage-cleanup",
           "release-0.6-staff-storage-signing-probe",
-          "release-0.6-profile-and-settings-attachment-copy-boundary"
+          "release-0.6-profile-and-settings-attachment-copy-boundary",
+          "release-0.6-ticket-attachment-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21552,7 +21557,10 @@
             "Staff signing first checks authority and records the eligible storage row's identity and PostgreSQL revision, then releases its locks before the storage existence read. The final transaction checks current staff permission and step-up, the same row identity and revision, and records signature and audit together. Existing signatures still return the same result without a duplicate audit.",
             "The complete affected storage HTTP file passed all 31 cases against the compiled API and all 209 production migrations in isolation. Five paused-read cases allowed immediate row locks from another session and rejected concurrent removal, a row edit, permission loss, expired step-up and session revocation without a signature or signature audit. Missing objects, normal removal, repeat signing, audit rollback, uploads and cleanup still pass.",
             "Legal profile documents, branding images and conversation avatars copy eligible scanned bytes outside the business transaction. The provisional copy reservation commits before the provider write. The per-key advisory lock fences cleanup during that write. Final publication rechecks live authority, the business and source revisions, and the digest, and commits the immutable record with the business write and audit.",
-            "Against the compiled API and all 209 production migrations, 97 affected caller and form-authority tests and 6 focused ticket compatibility tests passed. The legal upload race test took profile and source row locks immediately during PUT, proved concurrent cleanup skipped the in-flight copy, rejected the changed source without business or audit writes, and verified deletion of the unpublished copies. Existing audit rollback, access isolation and exact avatar replay assertions passed. The isolated two-CPU run passed 95 cases before two unchanged file-format cases hit the generic five-second harness deadline. Those two alone passed on retry with a 20-second fixture timeout and the same assertions and compiled source. Hosted CI retains its configured timeouts. The minimal test image lacked the PDF renderer, so the one preview case was rerun with Poppler from the accepted staging image and passed against the same compiled API."
+            "Against the compiled API and all 209 production migrations, 97 affected caller and form-authority tests and 6 focused ticket compatibility tests passed. The legal upload race test took profile and source row locks immediately during PUT, proved concurrent cleanup skipped the in-flight copy, rejected the changed source without business or audit writes, and verified deletion of the unpublished copies. Existing audit rollback, access isolation and exact avatar replay assertions passed. The isolated two-CPU run passed 95 cases before two unchanged file-format cases hit the generic five-second harness deadline. Those two alone passed on retry with a 20-second fixture timeout and the same assertions and compiled source. Hosted CI retains its configured timeouts. The minimal test image lacked the PDF renderer, so the one preview case was rerun with Poppler from the accepted staging image and passed against the same compiled API.",
+            "Ticket creation and replies authorize and check exact replays before copying. Keyed copies serialize on a direct advisory lock. Their provider writes occur between short transactions. Final publication rechecks live profile/ticket scope, session and source revision and commits attachment, business change, assignment, notification, audit and replay receipts together.",
+            "Native PostgreSQL ran all 209 migrations and passed three multipart lock/migration cases. The compiled API passed 120 ticket, form-authority, legal profile and identity cases across the original and focused corrected runs. The first run had 117 passing cases and three test fixture failures. The corrected test file clones diagnostic response bodies and casts the text audit payload to JSONB. All three corrected cases passed with unchanged assertions and the same compiled API. Four existing verification and profile receipt cases passed with the shared idempotency lookup.",
+            "Paused storage writes allow immediate row locks on the ticket/source. A second request with the same key waits for the original receipt. Concurrent create/reply each publish one copy and one result. Reassignment while the copy is pending rejects the reply without creating a comment or audit and leaves the private copy eligible for cleanup."
           ],
           "source_evidence": [
             {
@@ -21645,7 +21653,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -21677,7 +21685,7 @@
             },
             {
               "path": "packages/db/src/storage-multipart.ts",
-              "sha256": "e503c894502f49f6928bae51f454d3349f644f4d5557c0bdc4a4c500ca3ff216"
+              "sha256": "94b647911b672b58d0d38867aef5ca6fad69ac65ee2da499f518d67aeb405ba5"
             },
             {
               "path": "packages/shared/src/storage/index.ts",
@@ -21757,7 +21765,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "packages/db/drizzle/production/0288_storage_cleanup_operation_claim.sql",
@@ -21798,6 +21806,22 @@
             {
               "path": "packages/db/src/documents.migrated.test.ts",
               "sha256": "1d1eaa9d351fbbbe7dc48c6b9da8c5ae3975d163756e21d0c9ebc967f5e16ae1"
+            },
+            {
+              "path": "apps/api/src/database/idempotency.ts",
+              "sha256": "ba61641cd6bddca776d608ab31a0da412b5d942a86b9a641b81d5467c1724889"
+            },
+            {
+              "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             }
           ],
           "source_renewals": [
@@ -21848,6 +21872,16 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts",
+                "docs/operations/storage-retention.md",
+                "packages/db/src/storage-multipart.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         }
@@ -53713,7 +53747,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -54276,6 +54310,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -58941,7 +58983,7 @@
             },
             {
               "path": "apps/api/src/database/idempotency.ts",
-              "sha256": "939b065943ccf6746fdbab13d97823b31130785c5cf02d397eb7f120e933a4d4"
+              "sha256": "ba61641cd6bddca776d608ab31a0da412b5d942a86b9a641b81d5467c1724889"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.service.ts",
@@ -59299,6 +59341,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/database/idempotency.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -67379,7 +67429,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -67399,7 +67449,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -67415,7 +67465,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -68139,6 +68189,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -68541,7 +68601,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -68561,7 +68621,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -68577,7 +68637,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -69301,6 +69361,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -69703,7 +69773,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -69723,7 +69793,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -69739,7 +69809,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -70463,6 +70533,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -73790,7 +73870,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -74031,6 +74111,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -81118,11 +81206,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -82973,6 +83061,15 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -106960,7 +107057,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -106980,7 +107077,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -106996,7 +107093,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -107720,6 +107817,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -108054,7 +108161,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -108074,7 +108181,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -108090,7 +108197,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -108814,6 +108921,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -109154,7 +109271,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -109174,7 +109291,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -109190,7 +109307,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -109914,6 +110031,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -212507,7 +212634,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -213263,6 +213390,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -213477,7 +213612,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -214233,6 +214368,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -214465,7 +214608,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -215331,6 +215474,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -215648,7 +215799,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -217317,6 +217468,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -217679,7 +217838,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -219348,6 +219507,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -219606,7 +219773,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -220362,6 +220529,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -473835,7 +474010,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -474066,6 +474241,14 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Staff signing read and reauthorization boundary only. All 31 affected storage HTTP cases passed on the migrated database, including concurrency, idempotence and audit rollback. Unrelated runtime and migration sources retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -474180,7 +474363,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/upload/upload.service.ts",
@@ -474382,6 +474565,14 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Staff signing read and reauthorization boundary only. All 31 affected storage HTTP cases passed on the migrated database, including concurrency, idempotence and audit rollback. Unrelated runtime and migration sources retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -483507,7 +483698,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -483722,6 +483913,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -483921,7 +484120,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -484136,6 +484335,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -484337,7 +484544,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -484573,6 +484780,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -484806,7 +485021,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -484918,7 +485133,7 @@
             },
             {
               "path": "packages/db/src/storage-multipart.ts",
-              "sha256": "e503c894502f49f6928bae51f454d3349f644f4d5557c0bdc4a4c500ca3ff216"
+              "sha256": "94b647911b672b58d0d38867aef5ca6fad69ac65ee2da499f518d67aeb405ba5"
             },
             {
               "path": "packages/shared/src/storage/index.ts",
@@ -485103,6 +485318,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "docs/operations/storage-retention.md",
+                "packages/db/src/storage-multipart.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -485302,7 +485526,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485517,6 +485741,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -502197,7 +502429,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/build.mjs",
@@ -502440,6 +502672,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -502591,7 +502831,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/build.mjs",
@@ -502858,6 +503098,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -503009,7 +503257,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/build.mjs",
@@ -503252,6 +503500,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -503404,7 +503660,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/build.mjs",
@@ -503671,6 +503927,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -510347,7 +510611,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -510405,6 +510669,14 @@
                 "apps/api/src/documents/document.service.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         }
@@ -513382,7 +513654,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -513435,6 +513707,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         }
@@ -517320,7 +517600,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
@@ -517482,6 +517762,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         }
@@ -517738,7 +518026,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
@@ -517865,6 +518153,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         }
@@ -528196,7 +528492,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -528276,6 +528572,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         }
@@ -589866,7 +590170,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -590736,6 +591040,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -590877,7 +591189,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -591747,6 +592059,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -591888,7 +592208,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -592758,6 +593078,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -592899,7 +593227,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -593769,6 +594097,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -593910,7 +594246,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -594780,6 +595116,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -594921,7 +595265,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -595791,6 +596135,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -595932,7 +596284,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -596802,6 +597154,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -596943,7 +597303,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -597813,6 +598173,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -597954,7 +598322,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -598824,6 +599192,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -598965,7 +599341,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -599835,6 +600211,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -599976,7 +600360,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -600846,6 +601230,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -600987,7 +601379,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -601857,6 +602249,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -601998,7 +602398,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -602868,6 +603268,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -603009,7 +603417,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -603879,6 +604287,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -604020,7 +604436,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604890,6 +605306,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -605031,7 +605455,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -605901,6 +606325,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -606042,7 +606474,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -606912,6 +607344,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -607053,7 +607493,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -607923,6 +608363,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -608064,7 +608512,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -608934,6 +609382,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -609075,7 +609531,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -609945,6 +610401,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ]
         },
@@ -756886,7 +757350,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -756906,7 +757370,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -756922,7 +757386,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -757255,6 +757719,16 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -757453,7 +757927,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -757473,7 +757947,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -757489,7 +757963,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -757822,6 +758296,16 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -758024,7 +758508,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -758044,7 +758528,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -758060,7 +758544,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -758393,6 +758877,16 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -758592,7 +759086,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -758612,7 +759106,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -758628,7 +759122,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -758961,6 +759455,16 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -759159,7 +759663,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -759179,7 +759683,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -759195,7 +759699,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -759528,6 +760032,16 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -759728,7 +760242,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -759748,7 +760262,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -759764,7 +760278,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -760097,6 +760611,16 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -786446,7 +786970,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "a17c09921b9eb9ad9b5a618b2437497b157cf7e0d504369a4bc8d9b39b635e79"
+              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -786686,6 +787210,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -798805,7 +799337,7 @@
             },
             {
               "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
-              "sha256": "b56f959255e476062e805382adbcd0711c44233494308db1f1880253f39534d8"
+              "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
             },
             {
               "path": "apps/api/src/tickets/ticket-form-input-fields.test.ts",
@@ -798825,7 +799357,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -798841,7 +799373,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -803113,6 +803645,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/ticket-form-authority.test.ts",
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -804591,11 +805133,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -805787,7 +806329,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -807455,6 +807997,16 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "presentation_renewals": [
@@ -808876,11 +809428,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
-              "sha256": "252e0b4497cb835e15500b4d448fc4c6054fb202ab79f9abc951420dd4cd8211"
+              "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "773ed5453a821b800e05404479ebff48f9127eef08ce99d4b1f3aea4ada684c7"
+              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -810052,7 +810604,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "dc9ec7a935419c0225fe5099979de5743ea621738e1fbcc96602163363575f90"
+              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -811609,6 +812161,16 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-ticket-attachment-copy-boundary",
+              "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+              "paths": [
+                "apps/api/src/tickets/tickets-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -816346,7 +816908,8 @@
           "release-0.6-provider-tests-outside-transactions",
           "release-0.6-committed-storage-cleanup",
           "release-0.6-staff-storage-signing-probe",
-          "release-0.6-profile-and-settings-attachment-copy-boundary"
+          "release-0.6-profile-and-settings-attachment-copy-boundary",
+          "release-0.6-ticket-attachment-copy-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -935489,6 +936052,102 @@
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ]
+    },
+    "release-0.6-ticket-attachment-copy-boundary": {
+      "batch": "release-0.6-ticket-attachment-copy-boundary",
+      "base_commit": "89547c188371959c2e858452976d1b806cf45af1",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/database/idempotency.ts",
+        "apps/api/src/storage/verified-attachments.service.ts",
+        "apps/api/src/tickets/ticket-form-authority.test.ts",
+        "apps/api/src/tickets/tickets-http.integration.test.ts",
+        "apps/api/src/tickets/tickets.service.ts",
+        "docs/operations/storage-retention.md",
+        "packages/db/src/storage-multipart.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/database/idempotency.ts",
+          "sha256": "ba61641cd6bddca776d608ab31a0da412b5d942a86b9a641b81d5467c1724889"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-form-authority.test.ts",
+          "sha256": "9ad93f7a12dcb2cbcef192bcfae4d0f521d20686aa5a8ea19180ab34da07b94e"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
+          "sha256": "dd31af3ad2e2b6693c83661cc95073b4f44ec83d4a1567855791c168139fa7ac"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+        },
+        {
+          "path": "packages/db/src/storage-multipart.ts",
+          "sha256": "94b647911b672b58d0d38867aef5ca6fad69ac65ee2da499f518d67aeb405ba5"
+        }
+      ],
+      "checks": [
+        "Ticket creation and replies authorize and check exact replays before copying. Keyed copies serialize on a direct advisory lock. Their provider writes occur between short transactions. Final publication rechecks live profile/ticket scope, session and source revision and commits attachment, business change, assignment, notification, audit and replay receipts together.",
+        "Native PostgreSQL ran all 209 migrations and passed three multipart lock/migration cases. The compiled API passed 120 ticket, form-authority, legal profile and identity cases across the original and focused corrected runs. The first run had 117 passing cases and three test fixture failures. The corrected test file clones diagnostic response bodies and casts the text audit payload to JSONB. All three corrected cases passed with unchanged assertions and the same compiled API. Four existing verification and profile receipt cases passed with the shared idempotency lookup.",
+        "Paused storage writes allow immediate row locks on the ticket/source. A second request with the same key waits for the original receipt. Concurrent create/reply each publish one copy and one result. Reassignment while the copy is pending rejects the reply without creating a comment or audit and leaves the private copy eligible for cleanup.",
+        "All 2,096 native input bytes match after test fixture corrections. Scoped ESLint, Prettier, API and database typechecks and whitespace passed. HTTP contracts and SQL migrations did not change."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/native-ticket-copy-initial.log",
+          "sha256": "6232e8e099fa349740b51d679fff7392c70ff97cc2ddcbdc287de0deccb174ef"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/native-ticket-copy.log",
+          "sha256": "32759bec2baa863ce9256dfb2b363219853ed2d12a29f2483d0c9ff64116a840"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/native-source-initial.sha256",
+          "sha256": "7c0229bd0176f8b2c800c57ba293cb86bf3668d790347fb949e669bf39e8ee3e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/native-source.sha256",
+          "sha256": "013f2260890a1203e9a42eddbbb357792efd246e10b7e8b86ac2409b7f1b9460"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/final-source-bindings.json",
+          "sha256": "68e7237f70ed6121098fd55bdc31942b56d4bb3983f548a6d961ca901f05552b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/eslint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/prettier.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/api-typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/db-typecheck.log",
+          "sha256": "dc2e083d18e7e4da7a7d19e11fe20a9e11c86eb0b5cee66cd14af018180de630"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/ticket-copy.OXBRaO/whitespace.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -935528,13 +936187,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-ticket-attachment-copy-boundary",
+    "id": "release-0.6-verification-evidence-copy-boundary",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Move ticket creation and reply storage copies out of business transactions while preserving exact replay and current ticket and profile authority before provider work and final publication."
+    "goal": "Prepare verification evidence outside business transactions with durable cleanup, and publish only against current correction or lost-contact recovery authority."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

@@ -49,13 +49,15 @@ function fixture() {
   h.connect.mockResolvedValue(client);
   const service = new TicketsService();
   const choose = vi.spyOn(service['assignmentService'], 'choose');
-  const seal = vi.spyOn(service['attachmentService'], 'seal');
+  const plan = vi.spyOn(service['attachmentService'], 'plan');
+  const copy = vi.spyOn(service['attachmentService'], 'copy');
   const notify = vi.spyOn(service['notifications'], 'create');
-  return { state, client, service, choose, seal, notify };
+  return { state, client, service, choose, plan, copy, notify };
 }
 function noEffects(f: ReturnType<typeof fixture>) {
   expect(f.choose).not.toHaveBeenCalled();
-  expect(f.seal).not.toHaveBeenCalled();
+  expect(f.plan).not.toHaveBeenCalled();
+  expect(f.copy).not.toHaveBeenCalled();
   expect(f.notify).not.toHaveBeenCalled();
   expect(f.client.query.mock.calls.map(([sql]) => sql).join('\n')).not.toMatch(
     /INSERT|UPDATE tickets|DELETE|idempotency_keys|pg_advisory|audit_log|notifications/
