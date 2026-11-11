@@ -19,6 +19,7 @@ let onGet: ((key: string) => Promise<void>) | undefined;
 const objects = new Map<string, Buffer>();
 let headers: Record<string, string>;
 let staffHeaders: Record<string, string>;
+const staffSession = randomUUID();
 beforeAll(async () => {
   storage = createServer(async (req, res) => {
     const url = new URL(req.url!, 'http://localhost');
@@ -81,14 +82,13 @@ beforeAll(async () => {
   await http.pool.query(
     "INSERT INTO users(user_id,username,password_hash,is_admin,is_staff) VALUES ('storage-actor','storage-actor@example.test','test-only',true,true)"
   );
-  const session = randomUUID(),
-    csrf = randomUUID();
+  const csrf = randomUUID();
   await http.pool.query(
     "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,step_up_verified_at) VALUES ($1,'storage-actor',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes',NOW())",
-    [session, csrf, randomUUID()]
+    [staffSession, csrf, randomUUID()]
   );
   staffHeaders = {
-    Cookie: `barghsa_session=${session}`,
+    Cookie: `barghsa_session=${staffSession}`,
     'X-CSRF-Token': csrf,
     'Content-Type': 'application/json',
   };
@@ -190,6 +190,92 @@ it('reads real metadata and binds an idempotent signature to the authenticated a
     ).rows
   ).toHaveLength(1);
 });
+for (const change of ['removal', 'record revision', 'permission', 'step-up', 'session'] as const) {
+  it(`rejects signing if ${change} changes during the storage read`, async () => {
+    const key = await seed();
+    const prior = (
+      await http.pool.query(
+        'SELECT step_up_verified_at,revoked_at FROM sessions WHERE session_id=$1',
+        [staffSession]
+      )
+    ).rows[0];
+    let entered = false;
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    onGet = async (objectKey) => {
+      if (objectKey !== key) return;
+      entered = true;
+      await held;
+    };
+    const pending = request(key, 'POST', {});
+    try {
+      await expect.poll(() => entered).toBe(true);
+      const observer = await http.pool.connect();
+      try {
+        await observer.query('BEGIN');
+        await observer.query(
+          'SELECT 1 FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+          [key]
+        );
+        await observer.query('SELECT 1 FROM sessions WHERE session_id=$1 FOR UPDATE NOWAIT', [
+          staffSession,
+        ]);
+        await observer.query("SELECT 1 FROM users WHERE user_id='storage-actor' FOR UPDATE NOWAIT");
+      } finally {
+        await observer.query('ROLLBACK');
+        observer.release();
+      }
+      if (change === 'removal') {
+        expect((await request(key, 'DELETE')).status).toBe(204);
+      } else if (change === 'record revision') {
+        await http.pool.query(
+          "UPDATE storage_records SET file_name='changed.pdf' WHERE storage_key=$1",
+          [key]
+        );
+      } else if (change === 'permission') {
+        await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='storage-actor'");
+      } else if (change === 'step-up') {
+        await http.pool.query(
+          "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 day' WHERE session_id=$1",
+          [staffSession]
+        );
+      } else {
+        await http.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [
+          staffSession,
+        ]);
+      }
+      release();
+      const result = await pending;
+      expect(result.status, http.logs()).toBe(
+        change === 'session' ? 401 : change === 'permission' || change === 'step-up' ? 403 : 409
+      );
+      expect(await row(key)).toMatchObject({
+        status: change === 'removal' ? 'removed' : 'active',
+        signed_at: null,
+      });
+      expect(
+        (
+          await http.pool.query(
+            "SELECT id FROM audit_log WHERE event='storage_record_signed' AND metadata::jsonb->>'storageKey'=$1",
+            [key]
+          )
+        ).rows
+      ).toHaveLength(0);
+    } finally {
+      onGet = undefined;
+      release();
+      await pending.catch(() => {});
+      await http.pool.query(
+        'UPDATE sessions SET step_up_verified_at=$2,revoked_at=$3 WHERE session_id=$1',
+        [staffSession, prior.step_up_verified_at, prior.revoked_at]
+      );
+      if (change === 'permission')
+        await http.pool.query("UPDATE users SET is_admin=true WHERE user_id='storage-actor'");
+    }
+  });
+}
 it('queues active deletion after commit and retains signed files with truthful repeat responses', async () => {
   const active = await seed(),
     signed = await seed();

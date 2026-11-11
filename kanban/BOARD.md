@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T04:46:43+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T04:53:28+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Probe the object before the signing transaction, then commit only if current staff authority and the unchanged eligible record still authorize signing. Verify concurrent removal, revoked staff and audit rollback through the actual route.
+Prepare and verify shared attachment copies outside the business transaction, then publish only the unchanged, authorized, scanned source and exact sealed copy. Cover legal profile, conversation identity and branding callers.
 
 - `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance

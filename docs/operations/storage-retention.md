@@ -49,6 +49,12 @@ restarting an older worker or upload promotion code, reconcile rows with a
 `cleanup_operation` and `metadata.deletionRequested=true` using the updated
 worker. Keep their claims as the record of the cleanup decision.
 
+Staff signing checks that the stored object exists between two short database
+transactions. It checks staff permission and step-up again before signing,
+and requires the same record and revision. Concurrent removal or edits require
+the staff member to reload the record. Repeating a completed signature returns
+the existing signature without writing another audit event.
+
 The provider enumerates exact-key versions, preserves other tags, and retains
 any existing legal-hold value other than false. Preview generation and document
 supersession must call the same version-aware classification operation only
