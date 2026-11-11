@@ -160,6 +160,10 @@ notification receipt table does not certify their crash recovery.
 
 ## Staff provider tests
 
+Enter your verified email address or international mobile number when testing a
+saved provider draft. Both test endpoints require the recipient in the request.
+The API matches it to the current staff account before sending.
+
 Email and SMS configuration tests hold the provider family's advisory lock on a
 direct PostgreSQL connection. The test commits its preparation before contacting
 the provider. Before the provider probe and again before sending, the test

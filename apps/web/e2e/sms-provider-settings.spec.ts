@@ -63,6 +63,7 @@ for (const locale of ['en', 'fa'] as const) {
         json: [
           {
             ...provider('sms-active', 'active'),
+            activatedAt: '2026-09-20T12:00:00Z',
             degraded: true,
             breakerCooldownUntil: '2099-09-24T12:00:00Z',
             lastFailureAt: '2026-09-24T12:00:00Z',
@@ -89,6 +90,8 @@ for (const locale of ['en', 'fa'] as const) {
     const row = page
       .locator('table:visible tbody tr, ol[role=list]:visible > li')
       .filter({ hasText: 'sms-active' });
+    await expect(row).toContainText(providerText('admin.providers.meta.activatedAt', locale));
+    await expect(row.locator('time[datetime="2026-09-20T12:00:00.000Z"]')).toBeVisible();
     await expect(row).toContainText(text('healthPaused'));
     await expect(row).toContainText(text('healthLastFailure'));
     await expect(row).toContainText(
@@ -375,7 +378,10 @@ for (const locale of ['en', 'fa'] as const) {
       if (path.endsWith('template-event-keys'))
         return route.fulfill({ json: ['auth.otp', 'invoice.created'] });
       if (path.endsWith('/test-connection')) {
-        expect(route.request().postDataJSON()).toEqual({ eventKey: 'invoice.created' });
+        expect(route.request().postDataJSON()).toEqual({
+          eventKey: 'invoice.created',
+          recipient: '+989121234567',
+        });
         if (!verified)
           return route.fulfill({ status: 403, json: { error: 'AUTHZ:STEP_UP_REQUIRED' } });
         expect(route.request().headers()['x-csrf-token']).toBe('sms-current');
@@ -419,6 +425,8 @@ for (const locale of ['en', 'fa'] as const) {
     );
     await expect(preview).toContainText('INVOICE_CODE');
     await expect(preview).toContainText('test-code');
+    await expect(preview.getByRole('button', { name: text('test'), exact: true })).toBeDisabled();
+    await preview.getByLabel(text('testRecipient'), { exact: true }).fill('+989121234567');
     await press(preview.getByRole('button', { name: text('test'), exact: true }));
     const dialog = page.getByRole('dialog');
     await startProviderOtp(page, locale, isMobile);
@@ -485,6 +493,8 @@ for (const locale of ['en', 'fa'] as const) {
     expect(rollbacks).toBe(2);
     await press(panel.getByRole('button', { name: text('preview'), exact: true }));
     await page.locator('#sms-test-event').selectOption('invoice.created');
+    await expect(preview.getByLabel(text('testRecipient'), { exact: true })).toHaveValue('');
+    await preview.getByLabel(text('testRecipient'), { exact: true }).fill('+989121234567');
     await press(preview.getByRole('button', { name: text('test'), exact: true }));
     await expect(activate).toBeEnabled();
     await press(activate);

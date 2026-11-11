@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -41,13 +42,8 @@ export const RecordTestSchema = z.strictObject({
   error: z.string().max(1000).optional(),
 });
 
-/**
- * Optional body for `POST :id/test-connection`. `recipient` is required for
- * the Resend transport (the admin's email to which the test-send is delivered);
- * SMTP ignores it.
- */
 export const TestConnectionSchema = z.strictObject({
-  recipient: z.string().email().optional(),
+  recipient: z.string().trim().email().max(320),
 });
 
 function httpError(code: string, message: string, statusCode = 409): never {
@@ -175,19 +171,20 @@ export class EmailProviderConfigController {
     summary: 'Run a live connection test and record the outcome',
     description:
       'SMTP verifies the connection and requires acceptance of a test email; Resend checks ' +
-      'the sending domain and sends a test email. Both use the current staff member’s verified ' +
-      'email by default; an explicit recipient must match that contact. The SMTP network guard ' +
+      'the sending domain and sends a test email. Enter the current staff member’s verified ' +
+      'email as the recipient. The SMTP network guard ' +
       'continues to reject private/internal destinations unless allow-listed.',
   })
+  @ApiZodBody(TestConnectionSchema)
   @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
   async testConnection(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body?: z.infer<typeof TestConnectionSchema>
+    @Body() body: unknown
   ): Promise<EmailProviderConfigResult & { test: { ok: boolean; error: string | null } }> {
     this.assertProviderEditPermission(req);
-    const parsed = body === undefined ? null : TestConnectionSchema.safeParse(body);
-    if (body !== undefined && !parsed!.success) {
+    const parsed = TestConnectionSchema.safeParse(body);
+    if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
         400
@@ -195,7 +192,7 @@ export class EmailProviderConfigController {
     }
     const { ok, error, result } = await this.service.testConnection(
       id,
-      parsed?.data?.recipient,
+      parsed.data.recipient,
       req.session.userId,
       req.session
     );

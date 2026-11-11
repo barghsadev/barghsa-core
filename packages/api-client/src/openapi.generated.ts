@@ -2128,7 +2128,7 @@ export interface paths {
         put?: never;
         /**
          * Run a live connection test and record the outcome
-         * @description SMTP verifies the connection and requires acceptance of a test email; Resend checks the sending domain and sends a test email. Both use the current staff member’s verified email by default; an explicit recipient must match that contact. The SMTP network guard continues to reject private/internal destinations unless allow-listed.
+         * @description SMTP verifies the connection and requires acceptance of a test email; Resend checks the sending domain and sends a test email. Enter the current staff member’s verified email as the recipient. The SMTP network guard continues to reject private/internal destinations unless allow-listed.
          */
         post: operations["EmailProviderConfigController_testConnection"];
         delete?: never;
@@ -3990,7 +3990,7 @@ export interface paths {
         put?: never;
         /**
          * Run a live SMS.ir credential/template check and record the outcome
-         * @description Validates draft SMS.ir credentials and credit, then sends through every configured mapping to the current staff member’s verified mobile. An omitted recipient uses that contact; an explicit recipient must match it. An eventKey runs that mapping first. Activation requires successful delivery through all mappings for the saved configuration.
+         * @description Validates draft SMS.ir credentials and credit, then sends through every configured mapping to the entered recipient, which must match the current staff member’s verified mobile. An eventKey runs that mapping first. Activation requires successful delivery through all mappings for the saved configuration.
          */
         post: operations["SmsProviderConfigController_testConnection"];
         delete?: never;
@@ -17067,7 +17067,14 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: email */
+                    recipient: string;
+                };
+            };
+        };
         responses: {
             /** @description Test outcome with the updated config state. */
             200: {
@@ -21070,7 +21077,14 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": {
+                    eventKey?: string;
+                    recipient: string;
+                };
+            };
+        };
         responses: {
             /** @description Test outcome with the updated config state. */
             200: {

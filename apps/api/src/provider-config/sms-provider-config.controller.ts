@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
@@ -46,17 +47,15 @@ export const RecordSmsTestSchema = z.strictObject({
 });
 
 /**
- * Optional body for `POST :id/test-connection`. `recipient` is the admin's
+ * `recipient` is the admin's
  * verified mobile number to receive the real test SMS messages; `eventKey`
- * selects which mapping runs first. Every configured mapping must pass. An omitted
- * recipient uses the admin's current verified mobile. Every successful
- * test must include a live send; another person's contact is forbidden.
+ * selects which mapping runs first. Every configured mapping must pass.
  */
 export const TestConnectionSmsSchema = z.strictObject({
   recipient: z
     .string()
-    .regex(/^\+?[0-9]{10,15}$/, 'Recipient must be a valid mobile number')
-    .optional(),
+    .trim()
+    .regex(/^\+?[1-9][0-9]{9,14}$/, 'Recipient must be a valid mobile number'),
   eventKey: z.string().min(1).max(128).optional(),
 });
 
@@ -198,19 +197,20 @@ export class SmsProviderConfigController {
     summary: 'Run a live SMS.ir credential/template check and record the outcome',
     description:
       'Validates draft SMS.ir credentials and credit, then sends through every configured mapping ' +
-      'to the current staff member’s verified mobile. An omitted recipient uses that contact; ' +
-      'an explicit recipient must match it. An eventKey runs that mapping first. ' +
+      'to the entered recipient, which must match the current staff member’s verified mobile. ' +
+      'An eventKey runs that mapping first. ' +
       'Activation requires successful delivery through all mappings for the saved configuration.',
   })
+  @ApiZodBody(TestConnectionSmsSchema)
   @ApiResponse({ status: 200, description: 'Test outcome with the updated config state.' })
   async testConnection(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: string,
-    @Body() body?: z.infer<typeof TestConnectionSmsSchema>
+    @Body() body: unknown
   ): Promise<SmsProviderConfigResult & { test: { ok: boolean; error: string | null } }> {
     this.assertProviderEditPermission(req);
-    const parsed = body === undefined ? null : TestConnectionSmsSchema.safeParse(body);
-    if (body !== undefined && !parsed!.success) {
+    const parsed = TestConnectionSmsSchema.safeParse(body);
+    if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_PARSE_ZOD.code },
         400
@@ -218,8 +218,8 @@ export class SmsProviderConfigController {
     }
     const { ok, error, result } = await this.service.testConnection(
       id,
-      parsed?.data?.recipient,
-      parsed?.data?.eventKey,
+      parsed.data.recipient,
+      parsed.data.eventKey,
       req.session.userId,
       req.session
     );

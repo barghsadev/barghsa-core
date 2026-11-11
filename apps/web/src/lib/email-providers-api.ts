@@ -253,13 +253,9 @@ export async function updateProvider(
 }
 export async function testConnection(
   id: string,
-  recipient?: string
+  recipient: string
 ): Promise<TestConnectionOutcome> {
-  const data = await request(
-    `/${encodeURIComponent(id)}/test-connection`,
-    'POST',
-    recipient ? { recipient } : {}
-  );
+  const data = await request(`/${encodeURIComponent(id)}/test-connection`, 'POST', { recipient });
   return validateConnectionResult(data, id);
 }
 function providerReceipt(value: unknown) {

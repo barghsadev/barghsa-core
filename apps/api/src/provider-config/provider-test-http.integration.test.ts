@@ -73,7 +73,7 @@ it('rejects a private SMTP destination through the provider test API before dial
     const response = await fetch(`${http.base}/api/admin/email-providers/${id}/test-connection`, {
       method: 'POST',
       headers,
-      body: '{}',
+      body: JSON.stringify({ recipient: 'provider-editor@example.test' }),
     });
     expect(response.status, await response.clone().text()).toBe(200);
     expect(await response.json()).toMatchObject({
@@ -96,6 +96,25 @@ for (const channel of ['email', 'sms']) {
     );
     return id;
   }
+  it(`${channel}: rejects an omitted test recipient before changing the draft`, async () => {
+    const id = await seed();
+    const response = await fetch(
+      `${http.base}/api/admin/${channel}-providers/${id}/test-connection`,
+      {
+        method: 'POST',
+        headers,
+        body: '{}',
+      }
+    );
+    expect(response.status).toBe(400);
+    expect(
+      (
+        await http.pool.query(`SELECT last_test_status, last_test_at FROM ${table} WHERE id=$1`, [
+          id,
+        ])
+      ).rows
+    ).toEqual([{ last_test_status: 'pending', last_test_at: null }]);
+  });
   for (const passed of [true, false]) {
     it(`${channel}: rejects a client-supplied test outcome (${passed})`, async () => {
       const id = await seed();

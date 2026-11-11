@@ -98,7 +98,7 @@ describe('provider response contracts', () => {
     { test: null },
   ])('rejects contradictory test results %j', async (value) => {
     respond({ ...row, lastTestStatus: 'passed', ...value });
-    await expect(testConnection(row.id)).rejects.toThrow();
+    await expect(testConnection(row.id, 'test@example.test')).rejects.toThrow();
   });
   it('preserves failed provider diagnostics and captures an explicit recipient', async () => {
     respond({ ...row, lastTestStatus: 'failed', test: { ok: false, error: 'Connection refused' } });
@@ -112,7 +112,10 @@ describe('provider response contracts', () => {
   });
   it('accepts a successful connection test', async () => {
     respond({ ...row, lastTestStatus: 'passed', test: { ok: true, error: null } });
-    await expect(testConnection(row.id)).resolves.toEqual({ ok: true, error: null });
+    await expect(testConnection(row.id, 'test@example.test')).resolves.toEqual({
+      ok: true,
+      error: null,
+    });
   });
   it('does not expose HTTP response internals', async () => {
     respond({ message: 'private connection detail' }, 500);

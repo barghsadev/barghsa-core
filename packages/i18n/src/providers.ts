@@ -262,6 +262,7 @@ const smsEn = {
   cancel: 'Cancel',
   preview: 'Test preview',
   firstEvent: 'First event to test',
+  testRecipient: 'Your verified mobile number with country code',
   test: 'Send test messages',
   testNotice:
     'This sends {count} test messages to your verified mobile number, one for every saved mapping. The selected event is sent first. Testing stops if a mapping fails.',
@@ -353,6 +354,7 @@ const smsFa: Record<keyof typeof smsEn, string> = {
   cancel: 'انصراف',
   preview: 'پیش‌نمایش آزمایش',
   firstEvent: 'اولین رویداد آزمایش',
+  testRecipient: 'شماره موبایل تأییدشده شما با کد کشور',
   test: 'ارسال پیامک‌های آزمایشی',
   testNotice:
     'تعداد {count} پیامک آزمایشی به شماره موبایل تأییدشده شما ارسال می‌شود؛ یک پیامک برای هر نگاشت ذخیره‌شده. رویداد انتخاب‌شده ابتدا ارسال می‌شود. در صورت شکست یک نگاشت، آزمایش متوقف می‌شود.',

@@ -135,7 +135,13 @@ for (const channel of ['email', 'sms']) {
         return fetch(`${http.base}/api/admin/${channel}-providers/${id}/${action}`, {
           method: 'POST',
           headers,
-          body: '{}',
+          body: JSON.stringify(
+            action === 'test-connection'
+              ? {
+                  recipient: channel === 'email' ? 'provider-writer@example.test' : '+989121234567',
+                }
+              : {}
+          ),
         });
       const config =
         channel === 'email'

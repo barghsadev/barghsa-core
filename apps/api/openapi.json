@@ -15427,7 +15427,7 @@
     },
     "/api/admin/email-providers/{id}/test-connection": {
       "post": {
-        "description": "SMTP verifies the connection and requires acceptance of a test email; Resend checks the sending domain and sends a test email. Both use the current staff member’s verified email by default; an explicit recipient must match that contact. The SMTP network guard continues to reject private/internal destinations unless allow-listed.",
+        "description": "SMTP verifies the connection and requires acceptance of a test email; Resend checks the sending domain and sends a test email. Enter the current staff member’s verified email as the recipient. The SMTP network guard continues to reject private/internal destinations unless allow-listed.",
         "operationId": "EmailProviderConfigController_testConnection",
         "parameters": [
           {
@@ -15439,6 +15439,28 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "recipient": {
+                    "format": "email",
+                    "maxLength": 320,
+                    "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recipient"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Test outcome with the updated config state."
@@ -21111,7 +21133,7 @@
     },
     "/api/admin/sms-providers/{id}/test-connection": {
       "post": {
-        "description": "Validates draft SMS.ir credentials and credit, then sends through every configured mapping to the current staff member’s verified mobile. An omitted recipient uses that contact; an explicit recipient must match it. An eventKey runs that mapping first. Activation requires successful delivery through all mappings for the saved configuration.",
+        "description": "Validates draft SMS.ir credentials and credit, then sends through every configured mapping to the entered recipient, which must match the current staff member’s verified mobile. An eventKey runs that mapping first. Activation requires successful delivery through all mappings for the saved configuration.",
         "operationId": "SmsProviderConfigController_testConnection",
         "parameters": [
           {
@@ -21123,6 +21145,31 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "eventKey": {
+                    "maxLength": 128,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "recipient": {
+                    "pattern": "^\\+?[1-9][0-9]{9,14}$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recipient"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Test outcome with the updated config state."

@@ -433,8 +433,7 @@ export default function AdminEmailProvidersPage() {
 
   async function runProviderAction(
     p: EmailProvider,
-    operation: 'test' | 'activate' | 'disable' | 'rollback',
-    recipient?: string
+    ...[operation, recipient]: ['test', string] | ['activate' | 'disable' | 'rollback']
   ) {
     if (inFlight.current || actionsDisabled) return;
     inFlight.current = true;

@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1211 | Accepted with unchanged source bindings. |
-| verify | 91 | Existing work may be complete; inspect evidence before building. |
+| done | 1212 | Accepted with unchanged source bindings. |
+| verify | 90 | Existing work may be complete; inspect evidence before building. |
 | partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify signed archive acquisition and the required exact integrity check before direct main readback.
+Restore signed Ubuntu package acquisition for the protected integrity check and verify the exact candidate and main readback.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 - `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
@@ -1069,7 +1069,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.02.02` | verify | Earlier deferred | Create configuration validation framework |
 | `01-platform-infrastructure.md#T-07.02.03` | partial | Earlier deferred | Implement configuration rollback |
 | `01-platform-infrastructure.md#T-07.02.04` | done | Earlier deferred | Create secrets encryption and masking service |
-| `01-platform-infrastructure.md#T-07.02.05` | verify | Earlier deferred | Implement provider configuration lifecycle with test-send |
+| `01-platform-infrastructure.md#T-07.02.05` | done | Earlier deferred | Implement provider configuration lifecycle with test-send |
 | `01-platform-infrastructure.md#T-07.03.01` | done | Earlier deferred | Create shared ESLint configuration |
 | `01-platform-infrastructure.md#T-07.03.02` | done | Earlier deferred | Configure Prettier with consistent formatting |
 | `01-platform-infrastructure.md#T-07.03.03` | done | Earlier deferred | Set up Husky, lint-staged, and commitlint |

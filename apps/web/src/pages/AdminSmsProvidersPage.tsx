@@ -9,7 +9,7 @@ import {
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { LoadingStatus, Button, DateCell, Input, Label, ListPage, ScrollArea } from '@barghsa/ui';
 import { buildSmsTestParameters } from '@barghsa/shared/notifications';
-import { smsProviderText } from '@barghsa/i18n/providers';
+import { providerText, smsProviderText } from '@barghsa/i18n/providers';
 import { TeamActionDialog, type TeamAction } from '../components/TeamActionDialog.js';
 import { DeliveryProviderTable } from '../components/DeliveryProviderTable.js';
 import { ProviderHealthMetrics } from '../components/ProviderHealthMetrics.js';
@@ -67,6 +67,7 @@ export default function AdminSmsProvidersPage() {
   const [showEditor, setShowEditor] = useState(false),
     [selected, setSelected] = useState<string | null>(null),
     [firstEvent, setFirstEvent] = useState('');
+  const [testContact, setTestContact] = useState<{ basis: string; value: string } | null>(null);
   const [error, setError] = useState<string | null>(null),
     [notice, setNotice] = useState<string | null>(null);
   const [protectedAction, setProtectedAction] = useState<{
@@ -135,6 +136,7 @@ export default function AdminSmsProvidersPage() {
     setEditSource(null);
     setSelected(null);
     setFirstEvent('');
+    setTestContact(null);
     protectedDispatched.current = false;
     setProtectedAction(null);
     setError(null);
@@ -240,6 +242,9 @@ export default function AdminSmsProvidersPage() {
     </div>
   );
   const testProvider = providers.find((p) => p.id === selected);
+  const testContactBasis = testProvider ? rowBasis(testProvider, false) : '';
+  const testRecipient = testContact?.basis === testContactBasis ? testContact.value : '';
+  const validTestRecipient = /^\+?[1-9][0-9]{9,14}$/.test(testRecipient.trim());
   const testMappings = [...(testProvider?.config.template_mappings ?? [])].sort(
     (a, b) => Number(b.event_key === firstEvent) - Number(a.event_key === firstEvent)
   );
@@ -398,6 +403,7 @@ export default function AdminSmsProvidersPage() {
       !eventsReady ||
       !testProvider ||
       testProvider.status !== 'draft' ||
+      !validTestRecipient ||
       !testMappings.length ||
       !testMappings.some((m) => m.event_key === firstEvent)
     )
@@ -407,7 +413,7 @@ export default function AdminSmsProvidersPage() {
       {
         path: `/${encodeURIComponent(id)}/test-connection`,
         method: 'POST',
-        body: { eventKey: firstEvent },
+        body: { eventKey: firstEvent, recipient: testRecipient.trim() },
       },
       async (result) => {
         let saved: SmsProvider;
@@ -464,6 +470,12 @@ export default function AdminSmsProvidersPage() {
           {text(p.status)}
           {p.status === 'active' && (
             <>
+              {p.activatedAt && (
+                <p className="text-xs text-muted-foreground">
+                  {providerText('admin.providers.meta.activatedAt', locale)}{' '}
+                  <DateCell value={p.activatedAt} format={(value) => time.format(value)} />
+                </p>
+              )}
               <p className={`text-xs ${p.degraded ? 'text-destructive' : 'text-muted-foreground'}`}>
                 {healthLabel(p)}
               </p>
@@ -1005,9 +1017,28 @@ export default function AdminSmsProvidersPage() {
               </dl>
             </div>
           ))}
+          <div className="space-y-1">
+            <Label htmlFor="sms-test-recipient">{text('testRecipient')}</Label>
+            <Input
+              id="sms-test-recipient"
+              dir="ltr"
+              type="tel"
+              autoComplete="off"
+              maxLength={16}
+              value={testRecipient}
+              disabled={disabled}
+              onChange={(event) =>
+                setTestContact({ basis: testContactBasis, value: event.target.value })
+              }
+            />
+          </div>
           <Button
             disabled={
-              disabled || !eventsReady || testProvider.status !== 'draft' || !testMappings.length
+              disabled ||
+              !eventsReady ||
+              testProvider.status !== 'draft' ||
+              !testMappings.length ||
+              !validTestRecipient
             }
             onClick={() => void test()}
           >
