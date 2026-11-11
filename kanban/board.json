@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T17:28:58+00:00",
+  "updated": "2026-11-11T17:38:37+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4103,7 +4103,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4131,7 +4132,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             }
           ],
           "checks": [
@@ -4180,6 +4181,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -4544,7 +4553,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4560,7 +4570,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4620,6 +4630,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -4809,7 +4827,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4833,7 +4852,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             }
           ],
           "checks": [
@@ -4906,6 +4925,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -5189,7 +5216,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5197,7 +5225,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".size-limit.json",
@@ -5273,6 +5301,14 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -5480,7 +5516,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5520,7 +5557,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5579,6 +5616,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -5645,7 +5690,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5685,7 +5731,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5744,6 +5790,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -6072,7 +6126,8 @@
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-integrity-requires-tests",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6084,7 +6139,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6225,6 +6280,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -6341,7 +6404,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6381,7 +6445,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6440,6 +6504,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -6550,7 +6622,8 @@
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6562,7 +6635,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6650,6 +6723,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -9527,7 +9608,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -9547,7 +9629,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             }
           ],
           "checks": [
@@ -9602,6 +9684,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -15297,7 +15387,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15305,7 +15396,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "docs/development/ci.md",
@@ -15379,6 +15470,14 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -15439,7 +15538,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15447,7 +15547,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -15544,6 +15644,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -15609,7 +15717,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15617,7 +15726,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "package.json",
@@ -15710,6 +15819,14 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -15923,7 +16040,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15931,7 +16049,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -15997,6 +16115,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -19806,7 +19932,8 @@
         ],
         "batches": [
           "release-0.6-shared-catalogue-wcag22",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -19820,7 +19947,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -20306,6 +20433,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -22150,7 +22285,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -22163,7 +22299,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "docs/development/ci.md",
@@ -22236,6 +22372,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -22293,7 +22437,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -22309,7 +22454,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".prettierignore",
@@ -22370,6 +22515,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -22431,7 +22584,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -22449,7 +22603,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".husky/commit-msg",
@@ -22550,6 +22704,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -23334,7 +23496,8 @@
           "release-0.6-electricity-contract-pdf-boundary",
           "release-0.6-solar-contract-source-boundary",
           "release-0.6-approved-document-destruction-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23379,7 +23542,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -23933,6 +24096,14 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -23995,7 +24166,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24010,7 +24182,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".prettierignore",
@@ -24138,6 +24310,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -485099,7 +485279,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -485107,7 +485288,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -485497,6 +485678,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "presentation_renewals": [
@@ -485632,7 +485821,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -485640,7 +485830,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -486217,6 +486407,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "presentation_renewals": [
@@ -486355,7 +486553,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -486363,7 +486562,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -486748,6 +486947,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "presentation_renewals": [
@@ -486852,7 +487059,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -486860,7 +487068,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -487245,6 +487453,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "presentation_renewals": [
@@ -487349,7 +487565,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "status": "done",
@@ -487357,7 +487574,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -487742,6 +487959,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "presentation_renewals": [
@@ -525514,7 +525739,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -525522,7 +525748,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "Dockerfile.web",
@@ -525617,6 +525843,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -525815,7 +526049,8 @@
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -525859,7 +526094,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -525937,6 +526172,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -525982,7 +526225,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -525990,7 +526234,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "Dockerfile.web",
@@ -526085,6 +526329,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -526389,7 +526641,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -526417,7 +526670,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             }
           ],
           "checks": [
@@ -526475,6 +526728,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -530872,7 +531133,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -530880,7 +531142,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -530945,6 +531207,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -535492,7 +535762,8 @@
           "release-0.6-hosted-upload-admission-and-scanner-tests",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -535501,7 +535772,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -535727,6 +535998,14 @@
                 "apps/worker/src/documents/upload-scan-job.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -536703,7 +536982,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-protected-storage-origins",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -536715,7 +536995,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".gitignore",
@@ -536805,6 +537085,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -536846,7 +537134,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-protected-storage-origins",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -536858,7 +537147,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".gitignore",
@@ -536934,6 +537223,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         },
@@ -537043,7 +537340,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -537051,7 +537349,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -537110,6 +537408,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         },
@@ -537203,7 +537509,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -537211,7 +537518,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -537276,6 +537583,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -537320,7 +537635,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -537328,7 +537644,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "Dockerfile.base",
@@ -537415,6 +537731,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -537456,7 +537780,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-protected-storage-origins",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -537468,7 +537793,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".gitignore",
@@ -537544,6 +537869,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         },
@@ -537635,7 +537968,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -537647,7 +537981,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -537699,6 +538033,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -538337,7 +538679,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -538361,7 +538704,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -538426,6 +538769,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -539794,7 +540145,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -539854,7 +540206,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -539908,6 +540260,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -539938,7 +540298,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -539950,7 +540311,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -540029,6 +540390,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -540059,7 +540428,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -540071,7 +540441,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -540146,6 +540516,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -545154,7 +545532,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -545166,7 +545545,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -545258,6 +545637,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -545656,7 +546043,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-shared-catalogue-wcag22",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -545670,7 +546058,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -545796,6 +546184,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -545833,7 +546229,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -545849,7 +546246,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -545961,6 +546358,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -546382,7 +546787,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -546390,7 +546796,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -546455,6 +546861,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -546494,7 +546908,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -546502,7 +546917,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -546572,6 +546987,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -547246,7 +547669,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -547261,7 +547685,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".size-limit.json",
@@ -547398,6 +547822,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -548147,7 +548579,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -548160,7 +548593,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -548259,6 +548692,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -548290,7 +548731,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -548302,7 +548744,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -548401,6 +548843,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -548432,7 +548882,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -548446,7 +548897,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -548545,6 +548996,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -548576,7 +549035,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -548587,7 +549047,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -548686,6 +549146,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -548767,7 +549235,8 @@
           "release-0.6-native-credential-and-migration-acceptance",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -548779,7 +549248,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -548870,6 +549339,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -548902,7 +549379,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -548913,7 +549391,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -549012,6 +549490,14 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -549176,7 +549662,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-critical-defect-candidate-gate",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -549194,7 +549681,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -549290,6 +549777,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -549318,7 +549813,8 @@
         "batches": [
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -549327,7 +549823,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -549447,6 +549943,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -549481,7 +549985,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -549499,7 +550004,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "deploy/production/README.md",
@@ -549614,6 +550119,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -550020,7 +550533,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -550037,7 +550551,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -550128,6 +550642,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -550163,7 +550685,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -550180,7 +550703,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -550271,6 +550794,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -556154,7 +556685,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -556162,7 +556694,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "Dockerfile.base",
@@ -556226,6 +556758,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -607740,7 +608280,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607748,7 +608289,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".size-limit.json",
@@ -608627,6 +609168,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -608757,7 +609306,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -608765,7 +609315,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".size-limit.json",
@@ -609644,6 +610194,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -610374,7 +610932,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -610382,7 +610941,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".size-limit.json",
@@ -611261,6 +611820,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -611320,7 +611887,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -611339,7 +611907,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -611429,6 +611997,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         }
@@ -832037,7 +832613,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -836106,6 +836682,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "presentation_renewals": [
@@ -836483,7 +837067,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -836536,7 +837121,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": "apps/api/openapi.json",
@@ -840455,6 +841040,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -840849,7 +841442,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -842678,7 +843272,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7b703677bbb8885e343eb581aad6fa6063158d000919fec3045451478f0bf48f"
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
             },
             {
               "path": ".size-limit.json",
@@ -844858,6 +845452,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-bounded-pdf-renderer-setup",
+              "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
             }
           ]
         },
@@ -845003,7 +845605,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-bounded-pdf-renderer-setup"
         ]
       }
     },
@@ -845342,7 +845945,8 @@
           "release-0.6-scheduled-browser-fixture-contracts",
           "release-0.6-dev-restart-and-preflight-refs",
           "release-0.6-rollout-latency-and-readonly-smoke",
-          "release-0.6-webkit-fixture-idle-connection"
+          "release-0.6-webkit-fixture-idle-connection",
+          "release-0.6-bounded-pdf-renderer-setup"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -845360,7 +845964,11 @@
           "distinct_package_urls": 142,
           "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
           "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
-        }
+        },
+        "changed_paths": [
+          ".github/workflows/ci.yml",
+          "scripts/install-ci-pdf-renderer.sh"
+        ]
       }
     },
     {
@@ -968741,6 +969349,109 @@
         {
           "file": "grafana-dashboard-readback.json",
           "sha256": "cedd21135342dc8dbf6e60598a9853795a1fc99cfb6c64212c68e83ae35f637d"
+        }
+      ]
+    },
+    "release-0.6-bounded-pdf-renderer-setup": {
+      "batch": "release-0.6-bounded-pdf-renderer-setup",
+      "base_commit": "91f225f60512cd9dd32f6e5a2325d000da9e64a4",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+        },
+        {
+          "path": "scripts/install-ci-pdf-renderer.sh",
+          "sha256": "122f344c0dede2f7cdda8281aa05d7c3fbc56f3e647e5be841483fc518b011bd"
+        }
+      ],
+      "checks": [
+        "Hosted run 43054839800 shows the previous PDF renderer setup spent 5m35s retrying Azure HTTP and eventually installed Poppler from the signed Ubuntu mirror. Run 43062687646 was still in that step after 35 minutes; GitHub did not expose live logs. The update uses ordered HTTPS Ubuntu archives, archive signing, only Noble main/updates/security, bounded mirror attempts and a six-minute Actions step deadline.",
+        "Clean Ubuntu 24.04 test installed Poppler 24.02.0 from the signed package archive and rendered a real first-page PNG at 640x512. An unavailable preferred mirror selected the alternate signed archive and installed the same package. An offline package source failed setup. A second invocation reused the working renderer with a deliberately failing apt-get on PATH.",
+        "Bash syntax, ShellCheck, actionlint, workflow formatting and diff checks passed. Source comparison limits the existing CI workflow edit to the renderer install step; all other jobs, test selection, assertions and promotion gates retain their existing source."
+      ],
+      "limitations": [
+        "The Ubuntu package and failure-path proofs ran in disposable fixtures. The required hosted integrity result must be read from the exact pushed candidate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-bounded-pdf-renderer-setup",
+      "execution_receipts": [
+        {
+          "file": "ubuntu-noble-package-proof.log",
+          "sha256": "81a0ea3e18add7131fd12de46b6c9854048a83a4c74fc393888ca5a6cb6a3406"
+        },
+        {
+          "file": "ubuntu-noble-mirror-failover.log",
+          "sha256": "799f08e2da951736b9cd0628d931aefeb40925b16d1a9ab88b01696e2d7b6df4"
         }
       ]
     }

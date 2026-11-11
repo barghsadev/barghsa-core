@@ -306,11 +306,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Install PDF preview renderer
-        run: |
-          bash scripts/configure-ci-ubuntu-mirrors.sh
-          sudo apt-get update
-          sudo apt-get install --yes --no-install-recommends poppler-utils
-          pdftoppm -v
+        timeout-minutes: 6
+        run: bash scripts/install-ci-pdf-renderer.sh
       - run: pnpm build
       # Every workspace coverage script runs the same test suite with coverage enabled.
       # Run it once, with at most two packages starting database/server fixtures together.
