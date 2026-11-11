@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T12:30:29+00:00",
+  "updated": "2026-11-11T12:49:03+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13434,7 +13434,8 @@
           "release-0.6-proxy-trust-and-request-limits",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "integrated-qa-preview-deployment"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -13454,7 +13455,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -13467,6 +13468,16 @@
           ],
           "checks": [
             "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+          ],
+          "source_renewals": [
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
+            }
           ]
         }
       }
@@ -21213,7 +21224,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "integrated-qa-preview-deployment"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21242,7 +21254,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -21281,6 +21293,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Correct the documented calendar to the first Saturday of each quarter at the existing hour. The isolation, RPO/RTO and alert procedures retain their existing evidence."
+            },
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
             }
           ]
         }
@@ -119741,7 +119761,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "integrated-qa-preview-deployment"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -120113,7 +120134,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -120681,6 +120702,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -498897,7 +498926,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "integrated-qa-preview-deployment"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -499269,7 +499299,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -499861,6 +499891,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -517142,7 +517180,8 @@
         "batches": [
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "integrated-qa-preview-deployment"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -517154,7 +517193,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -517176,6 +517215,16 @@
           "checks": [
             "Reused the source-bound edge implementation evidence from 01-platform-infrastructure.md#T-04.04.03.",
             "Both NGINX profiles enforce separate auth 10/s burst 5, upload 5/s burst 3 and AI 5/s burst 2 quotas. The isolated stage exercised both languages on all three paths, including forwarded-IP forgery, localized 429 and Retry-After, security headers, preserved application cooldown and unaffected health. Live candidate rollout remains a separate receipt."
+          ],
+          "source_renewals": [
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
+            }
           ]
         }
       }
@@ -809359,7 +809408,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -811124,6 +811173,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
             }
           ],
           "presentation_renewals": [
@@ -811496,7 +811553,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "integrated-qa-preview-deployment"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -813665,7 +813723,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "dc727f434a1853ee2bff10edbf360910804c22916395f93781ae8abd3e6ff0a8"
+              "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -815319,6 +815377,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "integrated-qa-preview-deployment",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -815708,7 +815774,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "integrated-qa-preview-deployment"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -820184,7 +820251,8 @@
       "evidence": {
         "current_acceptance": null,
         "batches": [
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "integrated-qa-preview-deployment"
         ]
       }
     },
@@ -820213,7 +820281,8 @@
       "evidence": {
         "current_acceptance": null,
         "batches": [
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "integrated-qa-preview-deployment"
         ]
       }
     },
@@ -939682,6 +939751,87 @@
         {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa-api.UwN3f7/native-integrated-qa-api.log",
           "sha256": "e2416bf42c6987712b8343fae571b67b20d41f64af81269165cc7e105884fd2e"
+        }
+      ]
+    },
+    "integrated-qa-preview-deployment": {
+      "batch": "integrated-qa-preview-deployment",
+      "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+      "task_keys": [
+        "release-readiness#R-06.01",
+        "release-readiness#R-06.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "e98c52850c27f015b474bd4bbd989aaff47f59023a1168e837b891a46a08390f"
+        }
+      ],
+      "qa_preview": {
+        "commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+        "url": "https://stg.barghsa.com",
+        "root_version": "0.5.0",
+        "app_image_id": "sha256:3ebd9716b3718cb1965380f193fabf8980b43a21646fb3ef2263857119ce0fa4",
+        "web_image_id": "sha256:b46c85d74ce098bdc6ce86efc9b26504e35ed0b3466c245c37a366e6ce86daec",
+        "staging_database": "barghsa_qa_b0dce58ca8d2",
+        "rollback_database": "barghsa_staging",
+        "confirmed_at": "2026-11-11T12:49:03+00:00"
+      },
+      "checks": [
+        "Verified immutable app and web build from the pushed preview commit. The build retried a diagnosed registry DNS failure using a verified address scoped to this build, with the locked dependencies and TLS intact.",
+        "The candidate migration applied seven pending migrations on an isolated copy of staging and an exact repeat had no pending migrations. The prior image rejected readiness on the upgraded schema. The exact prior image returned ready using the preserved pre-preview schema while the 209-migration candidate database remained separate.",
+        "The live preview uses a dedicated database copy, with the prior 202-migration database and protected rollback snapshot retained. API, worker, AI inference and web ran the expected healthy image IDs. Both browser shells returned the exact commit. PostgreSQL, Redis, ClamAV and object storage stayed on the existing service images. Private object write and public signed read passed.",
+        "Staging has four priced electricity products, an available saving plan and hardware with a test agreement, a readable solar draft and eligible consultation products. Live electricity and saving quotes passed after the fixture accepted the published terms through the normal endpoint. The earlier unaccepted saving quote received the required 403. The test sessions were revoked and all four protected unauthenticated reads returned 401. The payment sandbox reported realFunds=false.",
+        "Both web shells served the exact compiled browser license notices. The preview has its own deployment receipt. Formal release acceptance, license dispositions, Telegram receipts and production approval remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/image-build-registry-dns.log",
+          "sha256": "37102c39dfae67f7e46f207cef472ff296abcfec86b32204239f82a79bf10f5b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/image-build.log",
+          "sha256": "ea109a2b805b1f2b0573449134c74fa8146f7f6446f1fa02a228a2f366bc8e2a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/migration-shadow-prepare.log",
+          "sha256": "2746c151819cac84d33f9c9c1e5ab56c62356be5c9ec494d40aa3bd367edccaa"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/migration-rehearsal.log",
+          "sha256": "cd0c103493314d17cf2b02e7d1e4af1dae1a002a0ba2bec503c685734af5311b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/rollback-rehearsal.log",
+          "sha256": "40c65a2cba22013c0311e968459fbc52f78bc75c8e3de10c23f54044d88a7970"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/preview-deploy.log",
+          "sha256": "4d01add9c9dc1366e8bf8551372e21f01ad576f0112fb7a4cbfd056b2e26a0a2"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/preview-readback.log",
+          "sha256": "b6d774e3473437ecaa76e4bc1c8e5bfdd0e1bfbe8f2697940b8f0bd820dd5c5b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/qa-catalogue-before-terms.log",
+          "sha256": "939908e2769c13b45b7fe3969b96dd15cfc737c85da58b0f9377426c553a31d8"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/qa-catalogue.log",
+          "sha256": "d135795b4f06790a3f04bbe7030378aa9916b94b17f49a6d5c31e2004bc997e1"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/served-license-notices.sha256",
+          "sha256": "acffd0f50baffd942a882d536d53c873629d11c645b8c8fe03c7fad63da0a980"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/payment-sandbox-health.json",
+          "sha256": "9c51099b04333cad42dba9cca6100da881c2454498dbc0674d4f4617524e599a"
         }
       ]
     }

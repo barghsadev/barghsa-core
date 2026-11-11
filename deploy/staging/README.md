@@ -33,6 +33,30 @@ The automatic Certbot timer and `certbot-reload-nginx.sh` renewal hook keep
 the certificate current. DNS challenge is not required while port 80 reaches
 the host.
 
+## Integrated QA preview
+
+Use the commit in `/release.json` to identify the preview. The login footer
+shows the root package version, which follows the formal release schedule.
+Preview evidence is recorded on the launch-candidate tasks in the board.
+Formal milestone acceptance and its Telegram notification use the release
+procedure below.
+
+The preview runs on a copy of the staging database. The previous app checks
+its packaged migration head at readiness, so recovery restores its original
+database connection and image manifest together. The protected pre-preview
+snapshot and configuration are retained on the staging host. The preview
+database is retained separately if recovery is needed.
+
+Use staging accounts and synthetic data. The payment sandbox reports
+`realFunds: false` and requires a separate operator for settlement. [Sandbox procedure](../../docs/operations/staging-payment-sandbox.md).
+
+| Service      | Customer workflow                                                                                                         | Staff workflow                                                                                       |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Electricity  | `/electricity` and `/electricity/advanced`. Quote and submit from a legal profile, then check the invoice and contract.   | `/admin/electricity-orders`. Review the submitted order and verify the resulting customer state.     |
+| Saving       | `/savings`. Select the QA plan and compatible hardware from an individual profile, accept the test agreement, and submit. | `/admin/saving-orders`. Review and track fulfillment after a controlled test payment.                |
+| Solar        | `/solar/requests/new`. Submit a request with a synthetic installation address and test documents.                         | `/admin/solar-requests`. Verify document review and the contract and invoice handoff.                |
+| Consultation | `/consultations`. Choose an eligible service and submit a request.                                                        | `/admin/consultations`. Assign and review the request, then check the fee offer and completion flow. |
+
 ## Release
 
 Prepare the version and notes after the release milestone and its gates are
