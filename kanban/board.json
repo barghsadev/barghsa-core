@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T17:38:37+00:00",
+  "updated": "2026-11-11T17:49:15+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10013,7 +10013,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10021,7 +10022,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "deploy/production/README.md",
@@ -10049,7 +10050,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -10129,6 +10130,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -10668,7 +10678,8 @@
           "release-0.6-shipped-component-license-gate",
           "release-0.6-packaged-production-seed",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "current-application-image-healthchecks",
@@ -10676,11 +10687,11 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -10700,7 +10711,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             }
           ],
           "checks": [
@@ -10725,6 +10736,16 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -10803,7 +10824,8 @@
         "batches": [
           "release-0.6-container-runtime-hardening",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "packaged-runtime-and-compose-hardening",
@@ -10811,23 +10833,23 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+              "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+              "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -10867,6 +10889,18 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web",
+                "deploy/production/compose.yml",
+                "docker-compose.prod.yml",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -14764,7 +14798,8 @@
           "scripts/test-container-packaging.py"
         ],
         "batches": [
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -14776,7 +14811,7 @@
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+              "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
             },
             {
               "path": "docker-compose.yml",
@@ -14784,7 +14819,7 @@
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "02725b94fdd2b28a0288ad28a36b104bbcae1c39eba91d8323e80e3075de56b6"
+              "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -14812,7 +14847,7 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+              "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
             }
           ],
           "checks": [
@@ -14823,6 +14858,18 @@
           ],
           "limitations": [
             "This accepts the pilot manifest and its disposable operational rehearsal. The S3 sink ran in a separate private container on the same fixture host. Owner-selected off-host storage and measured operational restore, RPO/RTO, timer/alert receipts and final production authorization remain separate requirements."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "docker-compose.prod.yml",
+                "docs/deployment.md",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            }
           ]
         }
       },
@@ -21440,7 +21487,8 @@
         "batches": [
           "release-0.6-environment-indicator",
           "release-0.6-local-compose-storage",
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -21454,7 +21502,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "apps/api/src/app.factory.ts",
@@ -21482,7 +21530,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/single/Dockerfile",
@@ -21498,11 +21546,11 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+              "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
             },
             {
               "path": ".env.example",
@@ -21534,6 +21582,17 @@
                 "docker-compose.prod.yml"
               ],
               "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.web",
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml",
+                "docker-compose.prod.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -23064,7 +23123,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-protected-storage-origins",
           "integrated-qa-preview-deployment",
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23089,7 +23149,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/README.md",
@@ -23097,15 +23157,15 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+              "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "02725b94fdd2b28a0288ad28a36b104bbcae1c39eba91d8323e80e3075de56b6"
+              "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
@@ -23185,6 +23245,17 @@
                 "docs/deployment.md"
               ],
               "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml",
+                "docker-compose.prod.yml",
+                "docs/deployment.md"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -84419,7 +84490,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -85243,7 +85315,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -86835,6 +86907,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -89868,7 +89948,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -89920,7 +90001,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -90046,6 +90127,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -104688,7 +104777,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -104932,7 +105022,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -105155,6 +105245,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -124175,7 +124273,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -124183,7 +124282,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -124551,7 +124650,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -125157,6 +125256,15 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -423008,7 +423116,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -423108,7 +423217,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -423949,6 +424058,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -424096,7 +424213,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -424196,7 +424314,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -425037,6 +425155,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -425183,7 +425309,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "current-saving-documents-comments-and-retention-acceptance",
@@ -425283,7 +425410,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -426124,6 +426251,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -483874,7 +484009,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -484082,7 +484218,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -484432,6 +484568,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -510026,7 +510170,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -510258,7 +510403,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -510533,6 +510678,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -510653,7 +510806,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -510885,7 +511039,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -511160,6 +511314,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -511278,7 +511440,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -511510,7 +511673,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -511785,6 +511948,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -511903,7 +512074,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -512135,7 +512307,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -512434,6 +512606,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -513046,7 +513226,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -513278,7 +513459,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -513553,6 +513734,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -513722,7 +513911,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -513730,7 +513920,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -514098,7 +514288,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -514728,6 +514918,15 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -515001,7 +515200,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -515233,7 +515433,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -515508,6 +515708,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -515625,7 +515833,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -515857,7 +516066,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -516132,6 +516341,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -516250,7 +516467,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -516482,7 +516700,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -516757,6 +516975,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -516876,7 +517102,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -517108,7 +517335,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -517407,6 +517634,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -517524,7 +517759,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -517756,7 +517992,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -518031,6 +518267,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -518148,7 +518392,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "status": "done",
@@ -518380,7 +518625,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -518655,6 +518900,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -520646,7 +520899,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -520654,7 +520908,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/scripts/benchmark-password-hash.mjs",
@@ -520662,7 +520916,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/password-hashing.md",
@@ -520709,6 +520963,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -520747,7 +521010,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-public-registration-privacy",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-password-creation-verification",
@@ -520755,7 +521019,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/scripts/benchmark-password-hash.mjs",
@@ -520779,7 +521043,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/password-hashing.md",
@@ -520853,6 +521117,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -525740,7 +526013,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -525752,7 +526026,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "apps/web/build.mjs",
@@ -525768,11 +526042,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -525851,6 +526125,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.web",
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -525882,7 +526166,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-browser-dynamic-evaluation-boundary",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -525898,11 +526183,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -525925,6 +526210,15 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -526226,7 +526520,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -526238,7 +526533,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "apps/web/build.mjs",
@@ -526254,11 +526549,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -526337,6 +526632,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.web",
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -526505,7 +526810,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -526521,11 +526827,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -526572,6 +526878,15 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -535008,7 +535323,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "reviewed_current_source",
@@ -535052,11 +535368,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -535147,6 +535463,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -536522,7 +536847,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -536595,11 +536921,11 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -536649,6 +536975,15 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -537636,7 +537971,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -537648,11 +537984,11 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "deploy/clamav/Dockerfile",
@@ -537739,6 +538075,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -538357,7 +538702,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-local-compose-storage",
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source-bound-node-options-and-isolated-runtime",
@@ -538365,23 +538711,23 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+              "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -538389,7 +538735,7 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+              "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
             },
             {
               "path": "docker-compose.yml",
@@ -538438,6 +538784,19 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web",
+                "deploy/production/compose.yml",
+                "deploy/staging/compose.yml",
+                "docker-compose.prod.yml",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -538469,7 +538828,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -538497,11 +538857,11 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+              "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             }
           ],
           "checks": [
@@ -538526,6 +538886,15 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/production/compose.yml",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -538680,7 +539049,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -538688,11 +539058,11 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "deploy/clamav/Dockerfile",
@@ -538777,6 +539147,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -538805,7 +539184,8 @@
         "batches": [
           "release-0.6-container-runtime-hardening",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-pilot-compose-boundary"
+          "release-0.6-pilot-compose-boundary",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "packaged-runtime-and-compose-hardening",
@@ -538813,19 +539193,19 @@
           "source_evidence": [
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+              "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "54e6c8cc7098581e1f4521ad822f8f73fbb7b01d7ae4dde01c9b90dd6a67ae3b"
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "scripts/run-packaged-migrations.cjs",
@@ -538871,6 +539251,17 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web",
+                "deploy/production/compose.yml",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -538900,7 +539291,8 @@
         ],
         "batches": [
           "release-0.6-source-grounded-threat-model-and-review",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -538908,7 +539300,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/threat-model.md",
@@ -538928,6 +539320,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -538966,7 +539366,8 @@
           "release-0.6-high-risk-staff-step-up",
           "release-0.6-transactional-sensitive-audit-and-ownership-history",
           "release-0.6-reusable-profile-and-staff-capability-scope",
-          "release-0.6-private-clamav-signature-mirror"
+          "release-0.6-private-clamav-signature-mirror",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "reviewed-repository-threat-model-and-process",
@@ -538974,7 +539375,7 @@
           "source_evidence": [
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "docs/security/authorization.md",
@@ -538998,6 +539399,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -547670,7 +548079,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -547693,7 +548103,7 @@
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "apps/web/build.mjs",
@@ -547830,6 +548240,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.web"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -552640,7 +553058,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -552664,11 +553083,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -552733,6 +553152,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -553805,7 +554233,8 @@
           "docs/operations/service-objectives.md"
         ],
         "batches": [
-          "release-0.6-api-health-by-build-revision"
+          "release-0.6-api-health-by-build-revision",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -553813,7 +554242,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/scripts/http-test-server.cjs",
@@ -553882,6 +554311,14 @@
                 "apps/api/scripts/http-test-server.cjs"
               ],
               "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -554870,7 +555307,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -554882,7 +555320,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "4b790180d0edb115fbd353c9722f6a29d0f006a3dbaceb23fb35fad22564c3f8"
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -554954,6 +555392,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -556686,7 +557132,8 @@
         "batches": [
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -556698,7 +557145,7 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -556766,6 +557213,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         }
@@ -558398,19 +558853,82 @@
         "story": "06-security-testing-observability.md#spec-616d60ba27da"
       },
       "requirement": "| T-06.18.02.03 | Include release marker in structured logs for correlation | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "Dockerfile.base",
+          "Dockerfile.web",
+          "deploy/monitoring/staging-compose.yml",
+          "deploy/production/compose.yml",
+          "deploy/staging/compose.yml",
+          "docker-compose.prod.yml",
+          "docs/deployment.md",
+          "scripts/test-container-packaging.py"
+        ],
+        "batches": [
+          "release-0.6-structured-release-log-marker"
+        ],
+        "current_acceptance": {
+          "kind": "acceptance_verified",
+          "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+            },
+            {
+              "path": "Dockerfile.base",
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+            },
+            {
+              "path": "Dockerfile.web",
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
+            },
+            {
+              "path": "deploy/monitoring/staging-compose.yml",
+              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
+            },
+            {
+              "path": "deploy/staging/deploy.sh",
+              "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+            },
+            {
+              "path": "docker-compose.prod.yml",
+              "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
+            },
+            {
+              "path": "docs/deployment.md",
+              "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
+            },
+            {
+              "path": "scripts/test-container-packaging.py",
+              "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
+            }
+          ],
+          "checks": [
+            "The app and web runtime stages carry org.opencontainers.image.revision from BARGHSA_RELEASE_SHA. Existing CI and staging image build commands supply the complete checked-out SHA. The pilot supplies the same build argument for its four application services.",
+            "Native staging-host Docker fixtures added the exact app and web Dockerfile instructions to cached images without a full build. The Docker JSON driver exposed the corresponding distinct revisions with both stdout and stderr via docker logs --details. A different runtime release environment value, synthetic private environment value, and unrelated label did not appear in the log details or replace the image revision.",
+            "Docker Compose normalized all four manifests with fixture inputs. API, worker, inference, web, migration and operations services received the revision-only logging option wherever present. Staging database and infrastructure services kept their log settings. The packaging Compose checks, Prettier and diff checks passed."
+          ],
+          "limitations": [
+            "The native log proof used disposable metadata-only app and web images on the staging host. Check full candidate image identity and Docker log details after the accepted release is deployed.",
+            "This criterion covers the image revision in Docker JSON records. Application log schema and aggregation, Sentry deployment events, and dashboard annotations are separate criteria."
+          ]
+        }
       }
     },
     {
@@ -818145,7 +818663,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -818153,7 +818672,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -818607,6 +819126,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -819017,7 +819544,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -819025,7 +819553,7 @@
           "source_evidence": [
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "apps/api/openapi.json",
@@ -819479,6 +820007,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -834773,7 +835309,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -836690,6 +837226,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "presentation_renewals": [
@@ -837068,7 +837612,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -839241,7 +839786,7 @@
             },
             {
               "path": "deploy/staging/compose.yml",
-              "sha256": "60f9f94dca67b427e9640fa1d664a64df8bc463ae6b506805f535c3582bf3718"
+              "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -841048,6 +841593,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "deploy/staging/compose.yml"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -841443,7 +841996,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-structured-release-log-marker"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -845652,11 +846206,11 @@
             },
             {
               "path": "Dockerfile.base",
-              "sha256": "761e38676f916217c682eaf9ca82367d2dff00c1ba8dd2ca1f715c19db74693a"
+              "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
             },
             {
               "path": "Dockerfile.web",
-              "sha256": "3f2e2eaea17c1626d1748138971a01964e57fbdeb22ba033900d0f5b32bcd819"
+              "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
             },
             {
               "path": "docs/design/design-system.md",
@@ -845707,6 +846261,15 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-structured-release-log-marker",
+              "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+              "paths": [
+                "Dockerfile.base",
+                "Dockerfile.web"
+              ],
+              "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
             }
           ]
         },
@@ -845719,7 +846282,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-local-compose-storage"
+          "release-0.6-local-compose-storage",
+          "release-0.6-structured-release-log-marker"
         ]
       }
     },
@@ -969452,6 +970016,122 @@
         {
           "file": "ubuntu-noble-mirror-failover.log",
           "sha256": "799f08e2da951736b9cd0628d931aefeb40925b16d1a9ab88b01696e2d7b6df4"
+        }
+      ]
+    },
+    "release-0.6-structured-release-log-marker": {
+      "batch": "release-0.6-structured-release-log-marker",
+      "base_commit": "5ff48abafb4664810bf3135b0a30b0990d5ba6dd",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-03.01.04",
+        "01-platform-infrastructure.md#T-03.01.05",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.10.02.01",
+        "03-core-business.md#T-03.10.02.02",
+        "03-core-business.md#T-03.10.02.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.01.01.02",
+        "06-security-testing-observability.md#T-06.01.01.03",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.07.03.06",
+        "06-security-testing-observability.md#T-06.08.01.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.01"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "65b74cde95e768f179cbaae9fa54da26c97153560597810cc5263d4d0fda3bee"
+        },
+        {
+          "path": "docs/deployment.md",
+          "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "82a4d155d845b98a5f7425591f12e8745d743df928a680eb7b5a17f5e8ec2520"
+        }
+      ],
+      "checks": [
+        "The app and web runtime stages carry org.opencontainers.image.revision from BARGHSA_RELEASE_SHA. Existing CI and staging image build commands supply the complete checked-out SHA. The pilot supplies the same build argument for its four application services.",
+        "Native staging-host Docker fixtures added the exact app and web Dockerfile instructions to cached images without a full build. The Docker JSON driver exposed the corresponding distinct revisions with both stdout and stderr via docker logs --details. A different runtime release environment value, synthetic private environment value, and unrelated label did not appear in the log details or replace the image revision.",
+        "Docker Compose normalized all four manifests with fixture inputs. API, worker, inference, web, migration and operations services received the revision-only logging option wherever present. Staging database and infrastructure services kept their log settings. The packaging Compose checks, Prettier and diff checks passed."
+      ],
+      "limitations": [
+        "The native log proof used disposable metadata-only app and web images on the staging host. Check full candidate image identity and Docker log details after the accepted release is deployed.",
+        "This criterion covers the image revision in Docker JSON records. Application log schema and aggregation, Sentry deployment events, and dashboard annotations are separate criteria."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-structured-release-log-marker",
+      "execution_receipts": [
+        {
+          "file": "native-json-log-details.log",
+          "sha256": "2aaeea71aec598785d873b6f9f0800c7c73ec52219d31a316a6e7adedc583c95"
         }
       ]
     }

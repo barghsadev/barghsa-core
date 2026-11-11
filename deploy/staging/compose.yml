@@ -2,6 +2,11 @@ name: barghsa-staging
 
 # All state lives on the VPS in Docker volumes; only NGINX publishes HTTP(S).
 # Runtime secrets live in /etc/barghsa/staging/runtime.env on the VPS.
+x-release-logging: &release-logging
+  driver: json-file
+  options:
+    labels: org.opencontainers.image.revision
+
 services:
   postgres:
     image: ${BARGHSA_POSTGRES_IMAGE:?Set the released PostgreSQL image}
@@ -86,6 +91,7 @@ services:
 
   api:
     image: ${BARGHSA_APP_IMAGE:?Set the released API/worker image}
+    logging: *release-logging
     pull_policy: never
     env_file: /etc/barghsa/staging/runtime.env
     environment:
@@ -121,6 +127,7 @@ services:
 
   worker:
     image: ${BARGHSA_APP_IMAGE:?Set the released API/worker image}
+    logging: *release-logging
     pull_policy: never
     command: [node, worker/dist/main.js]
     env_file: /etc/barghsa/staging/runtime.env
@@ -152,6 +159,7 @@ services:
 
   ai-inference:
     image: ${BARGHSA_APP_IMAGE:?Set the released API/worker image}
+    logging: *release-logging
     pull_policy: never
     command: [node, worker/dist/ai-inference/main.js]
     env_file: /etc/barghsa/staging/runtime.env
@@ -181,6 +189,7 @@ services:
 
   web:
     image: ${BARGHSA_WEB_IMAGE:?Set the released web image}
+    logging: *release-logging
     pull_policy: never
     environment:
       NODE_ENV: production

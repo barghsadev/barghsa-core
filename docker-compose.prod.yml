@@ -5,6 +5,11 @@
 
 name: barghsa-prod
 
+x-release-logging: &release-logging
+  driver: json-file
+  options:
+    labels: org.opencontainers.image.revision
+
 services:
   postgres:
     extends:
@@ -62,10 +67,13 @@ services:
   api:
     env_file:
       - ${BARGHSA_RUNTIME_ENV_FILE:?Set the external runtime configuration file}
-    build:
+    build: &app-build
       context: .
       dockerfile: Dockerfile.base
       target: production
+      args: &release-build-args
+        BARGHSA_RELEASE_SHA: ${BARGHSA_RELEASE_SHA:-}
+    logging: *release-logging
     ports:
       - '127.0.0.1:4000:4000'
     environment:
@@ -112,6 +120,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.web
+      args: *release-build-args
+    logging: *release-logging
     ports:
       - '127.0.0.1:3000:3000'
     environment:
@@ -141,10 +151,8 @@ services:
   worker:
     env_file:
       - ${BARGHSA_RUNTIME_ENV_FILE:?Set the external runtime configuration file}
-    build:
-      context: .
-      dockerfile: Dockerfile.base
-      target: production
+    build: *app-build
+    logging: *release-logging
     command: ['node', 'worker/dist/main.js']
     environment:
       NODE_ENV: production
@@ -173,10 +181,8 @@ services:
   ai-inference:
     env_file:
       - ${BARGHSA_RUNTIME_ENV_FILE:?Set the external runtime configuration file}
-    build:
-      context: .
-      dockerfile: Dockerfile.base
-      target: production
+    build: *app-build
+    logging: *release-logging
     command: ['node', 'worker/dist/ai-inference/main.js']
     environment:
       NODE_ENV: production

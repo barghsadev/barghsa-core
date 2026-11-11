@@ -29,6 +29,10 @@ services:
     networks: [private]
   operations:
     image: ${BARGHSA_APP_IMAGE:?Set the accepted immutable application image}
+    logging:
+      driver: json-file
+      options:
+        labels: org.opencontainers.image.revision
     pull_policy: never
     command: [node, worker/dist/operations/server.js]
     env_file: ${BARGHSA_OPERATIONS_ENV_FILE:-/etc/barghsa/staging/operations.env}

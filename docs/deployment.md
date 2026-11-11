@@ -72,6 +72,8 @@ manual entry available when the provider fails.
    [backup runbook](operations/backup/postgresql-restore-runbook.md).
    Use a private HTTPS backup bucket outside the pilot host and make the
    mounted passphrase file readable by the container's PostgreSQL user.
+   Set `BARGHSA_RELEASE_SHA` to the full reviewed source commit before
+   building the application images.
 
    ```bash
    export BARGHSA_RUNTIME_ENV_FILE=/protected/pilot-runtime.env
@@ -139,3 +141,9 @@ views. Verify availability, latency, database and pooler health, backlog age,
 delivery failure and payment reconciliation. Exercise the alert and recovery
 paths and retain the actual routing receipt. Keep deployment identity in the
 post-deploy comparison. [Monitoring configuration](../deploy/monitoring/staging-compose.yml) · [Notification dashboard](../deploy/monitoring/grafana-notifications-dashboard.json) · [Service objectives](operations/service-objectives.md) · [Incident response](operations/incident-response.md).
+
+Use `docker logs --details <container>` to read the
+`org.opencontainers.image.revision` attribute alongside application log lines.
+The API, worker, inference, and web images carry this label from the build.
+It matches the full SHA used in release metadata and error reports. Compose
+passes the revision label to the JSON log driver.

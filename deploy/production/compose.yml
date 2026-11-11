@@ -9,6 +9,10 @@ x-node-service: &node-service
   stop_grace_period: 40s
   restart: unless-stopped
   networks: [private]
+  logging:
+    driver: json-file
+    options:
+      labels: org.opencontainers.image.revision
 
 x-app-image: &app-image '${BARGHSA_APP_REPOSITORY:?Set the app image repository}@sha256:${BARGHSA_APP_DIGEST:?Set the verified app image digest}'
 

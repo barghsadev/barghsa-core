@@ -18,6 +18,8 @@ prefix = 'barghsa-packaging-' + uuid.uuid4().hex[:10]
 owned = []
 node_options = '--max-old-space-size=512 --no-deprecation'
 unsafe_node_options = '--inspect=0.0.0.0 --insecure-http-parser'
+release_revision = 'a' * 40
+release_logging = {'driver': 'json-file', 'options': {'labels': 'org.opencontainers.image.revision'}}
 
 
 def docker(*args, check=True):
@@ -91,11 +93,12 @@ def check_compose():
         runtime.write_text('\n'.join(f'{k}={v}' for k, v in runtime_values.items())
                            + f'\nNODE_OPTIONS={unsafe_node_options}\n')
         env = {k: v for k, v in os.environ.items() if k not in
-               {*runtime_values, *pilot_values, 'COMPOSE_PROFILES', 'REDIS_URL'}}
+               {*runtime_values, *pilot_values, 'COMPOSE_PROFILES', 'REDIS_URL', 'BARGHSA_RELEASE_SHA'}}
         env['BARGHSA_RUNTIME_ENV_FILE'] = str(runtime)
 
         def resolve(values, *options):
-            pilot.write_text('\n'.join(f'{k}={v}' for k, v in values.items()) + '\n')
+            pilot.write_text('\n'.join(f'{k}={v}' for k, v in values.items())
+                             + f'\nBARGHSA_RELEASE_SHA={release_revision}\n')
             return subprocess.run(
                 ['docker', 'compose', '--env-file', str(runtime), '--env-file', str(pilot),
                  '-f', 'docker-compose.yml', '-f', 'docker-compose.prod.yml', *options,
@@ -111,13 +114,15 @@ def check_compose():
         config = json.loads(enabled.stdout)
         services = config['services']
         assert 'pgbouncer' in services
-        assert services['api']['build'] == services['worker']['build']
+        assert services['api']['build'] == services['worker']['build'] == services['ai-inference']['build']
         assert services['worker']['command'] == ['node', 'worker/dist/main.js']
         for name in ['api', 'worker', 'web', 'ai-inference']:
             service = services[name]
             assert service['read_only'] and service['cap_drop'] == ['ALL']
             assert 'no-new-privileges:true' in service['security_opt']
             assert service['environment']['NODE_OPTIONS'] == node_options, name
+            assert service['build']['args']['BARGHSA_RELEASE_SHA'] == release_revision, name
+            assert service['logging'] == release_logging, name
         assert services['api']['healthcheck']['test'] == ['CMD', 'node', 'healthcheck-runtime.cjs']
         published = {
             name: {(p['host_ip'], p['target'], p['published']) for p in service['ports']}
@@ -150,7 +155,7 @@ def check_compose():
                                                     'BACKUP_ALLOW_HTTP'}):
             failure = resolve({**pilot_values, required: ''})
             assert failure.returncode != 0 and required in failure.stderr, required
-    print('PASS pilot Compose: app hardening, private services, protected inputs and encrypted WAL configuration', flush=True)
+    print('PASS pilot Compose: app hardening, private services, protected inputs, encrypted WAL and release logging', flush=True)
 
 
 def check_hybrid_compose():
@@ -174,7 +179,9 @@ def check_hybrid_compose():
             service = services[name]
             assert service['environment']['NODE_OPTIONS'] == node_options, name
             assert service['read_only'] and service['cap_drop'] == ['ALL'], name
-    print('PASS hybrid Compose ignores unsafe Node flags from runtime and migration files', flush=True)
+        for name in ('api', 'worker', 'ai-inference', 'migrate', 'web'):
+            assert services[name]['logging'] == release_logging, name
+    print('PASS hybrid Compose enforces runtime Node flags and release logging', flush=True)
 
 
 check_compose()

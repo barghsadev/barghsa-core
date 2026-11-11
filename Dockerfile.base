@@ -23,6 +23,9 @@ COPY deploy/licenses/sharp-libvips/1.3.4/ ./licenses/sharp-libvips/1.3.4/
 COPY scripts/healthcheck-runtime.cjs ./healthcheck-runtime.cjs
 COPY scripts/run-packaged-migrations.cjs ./run-packaged-migrations.cjs
 COPY scripts/run-packaged-seed.cjs ./run-packaged-seed.cjs
+ARG BARGHSA_RELEASE_SHA
+LABEL org.opencontainers.image.revision=$BARGHSA_RELEASE_SHA
+ENV BARGHSA_RELEASE_SHA=$BARGHSA_RELEASE_SHA
 ENV NODE_ENV=production NODE_OPTIONS="--max-old-space-size=512 --no-deprecation"
 USER node
 EXPOSE 4000 9090 9091
@@ -34,6 +37,4 @@ CMD ["node", "worker/dist/main.js"]
 
 # Keep the API as the default target for existing build commands.
 FROM runtime AS production
-ARG BARGHSA_RELEASE_SHA
-ENV BARGHSA_RELEASE_SHA=$BARGHSA_RELEASE_SHA
 CMD ["node", "dist/src/main.js"]

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T17:38:37+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T17:49:15+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1218 | Accepted with unchanged source bindings. |
-| verify | 82 | Existing work may be complete; inspect evidence before building. |
+| done | 1219 | Accepted with unchanged source bindings. |
+| verify | 81 | Existing work may be complete; inspect evidence before building. |
 | partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1440,7 +1440,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.01.05` | verify | Inventory needed | Admin UI: view and change operational retention (with warning about audit retention) |
 | `06-security-testing-observability.md#T-06.18.02.01` | verify | Inventory needed | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |
 | `06-security-testing-observability.md#T-06.18.02.02` | verify | Inventory needed | Configure Sentry release tracking: associate commits, tag errors with release version |
-| `06-security-testing-observability.md#T-06.18.02.03` | verify | Inventory needed | Include release marker in structured logs for correlation |
+| `06-security-testing-observability.md#T-06.18.02.03` | done | Recorded batch work | Include release marker in structured logs for correlation |
 | `06-security-testing-observability.md#T-06.18.02.04` | verify | Inventory needed | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |
 | `06-security-testing-observability.md#T-06.19.01.01` | done | Recorded batch work | Create DoD PR checklist template (5 categories, 25+ items) with checkboxes |
 | `06-security-testing-observability.md#T-06.19.01.02` | done | Recorded batch work | Integrate DoD checklist into ticket system (Linear / GitHub Issues) as issue template |
