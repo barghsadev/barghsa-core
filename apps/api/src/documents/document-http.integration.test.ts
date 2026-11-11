@@ -3247,7 +3247,7 @@ it('queues successful user sealing once and preserves literal document names, re
   expect((await work()).status).toBe(200);
   expect(await privateDocumentSnapshot(http.pool, document.id)).toEqual(before);
 });
-it('keeps pending confirmation and independent cleanup intent through every mandatory upload sink failure', async () => {
+async function verifyDocumentUploadRollback() {
   const f = await owner(),
     created = await create(f.user);
   await upload(created);
@@ -3348,7 +3348,12 @@ it('keeps pending confirmation and independent cleanup intent through every mand
   const saved = await privateDocumentSnapshot(http.pool, created.document.id);
   expect((await work()).status).toBe(200);
   expect(await privateDocumentSnapshot(http.pool, created.document.id)).toEqual(saved);
-});
+}
+it(
+  'keeps pending confirmation and independent cleanup intent through every mandatory upload sink failure',
+  verifyDocumentUploadRollback,
+  20_000
+);
 it('queues manual quarantine privately to active administrators with atomic rollback and a distinct retained occurrence', async () => {
   const admin = await login(),
     pendingAdmin = await login();

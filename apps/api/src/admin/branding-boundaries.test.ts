@@ -5,7 +5,13 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 const draftId = '11111111-2222-4333-8444-555555555555';
 function request(permissions = ['admin:branding:edit']): AuthenticatedRequest {
   return {
-    session: { userId: 'trusted-actor', permissions, isAdmin: false },
+    session: {
+      userId: 'trusted-actor',
+      sessionId: '22222222-3333-4444-8555-666666666666',
+      csrfToken: 'fixture-csrf',
+      permissions,
+      isAdmin: false,
+    },
   } as AuthenticatedRequest;
 }
 function fixture() {
@@ -94,7 +100,7 @@ describe('branding authority and version boundaries', () => {
     );
     expect(save).toHaveBeenCalledWith(
       expect.objectContaining({ appTitle: 'Reviewed title', logoUrl }),
-      'trusted-actor',
+      request().session,
       2,
       'upload-key',
       undefined,
@@ -143,7 +149,7 @@ describe('branding authority and version boundaries', () => {
         borderRadiusRem: 1,
         spacingScale: 1.125,
       }),
-      'trusted-actor',
+      request().session,
       2,
       undefined,
       undefined,
@@ -160,7 +166,7 @@ it('forwards a favicon upload with the trusted actor and validates its type and 
   );
   expect(save).toHaveBeenCalledWith(
     expect.any(Object),
-    'trusted-actor',
+    request().session,
     2,
     undefined,
     'verified-favicon',
@@ -184,7 +190,7 @@ it.each(['light', 'dark', 'system'] as const)(
     );
     expect(save).toHaveBeenCalledWith(
       expect.objectContaining({ themeMode, darkMode: themeMode === 'dark' }),
-      'trusted-actor',
+      request().session,
       2,
       undefined,
       undefined,
@@ -214,7 +220,7 @@ it('forwards only validated dark branding and the trusted editor to the existing
       darkSecondaryColor: '#234567',
       darkAccentColor: '#567890',
     }),
-    'trusted-actor',
+    request().session,
     2,
     undefined,
     undefined,

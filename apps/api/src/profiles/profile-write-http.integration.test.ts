@@ -166,6 +166,20 @@ it('rolls back profile and new address changes on audit failure and rejects part
   expect(await snapshot()).toEqual(before);
   expect((await http.pool.query('SELECT id FROM addresses')).rows).toHaveLength(0);
 });
+async function blockedQueries(blockerPid: number): Promise<string[]> {
+  const result = await http.pool.query<{ query: string }>(
+    `WITH RECURSIVE activity AS (
+            SELECT pid,query,pg_blocking_pids(pid) AS blockers FROM pg_stat_activity
+            WHERE datname=current_database()
+          ), waiting AS (
+            SELECT pid,query FROM activity WHERE $1=ANY(blockers)
+            UNION SELECT a.pid,a.query FROM activity a JOIN waiting w ON w.pid=ANY(a.blockers)
+          ) SELECT query FROM waiting ORDER BY pid`,
+    [blockerPid]
+  );
+  return result.rows.map(({ query }) => query);
+}
+
 for (const type of ['INDIVIDUAL', 'LEGAL']) {
   it(`allows only one concurrent ${type} onboarding submission`, async () => {
     await http.pool.query('UPDATE profiles SET profile_type=$2 WHERE id=$1', [profileId, type]);
@@ -204,18 +218,24 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
     try {
       await blocker.query('BEGIN');
       await blocker.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [profileId]);
+      const blockerPid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
       submitting = Promise.all([submit(), submit()]);
       await expect
-        .poll(async () =>
-          Number(
-            (
-              await http.pool.query(
-                `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND query LIKE '%UPDATE profiles%'`
+        .poll(async () => {
+          const queries = await blockedQueries(blockerPid);
+          return queries
+            .map((query) => {
+              if (query.includes('UPDATE profiles')) return 'profile';
+              if (
+                query.includes('FROM users WHERE user_id=$1 FOR UPDATE') ||
+                query.includes('WHERE s.session_id=$1 FOR UPDATE OF u')
               )
-            ).rows[0].count
-          )
-        )
-        .toBe(2);
+                return 'account';
+              return query;
+            })
+            .sort();
+        })
+        .toEqual(type === 'LEGAL' ? ['account', 'profile'] : ['profile', 'profile']);
       await blocker.query('COMMIT');
       expect((await submitting).map((response) => response.status).sort()).toEqual([200, 404]);
     } finally {
@@ -411,21 +431,7 @@ for (const includeCompletion of [false, true]) {
           : create(),
       ]);
       await expect
-        .poll(async () =>
-          // A tuple-lock waiter can queue behind the first waiting request.
-          (
-            await http.pool.query(
-              `WITH RECURSIVE activity AS (
-            SELECT pid,query,pg_blocking_pids(pid) AS blockers FROM pg_stat_activity
-            WHERE datname=current_database()
-          ), waiting AS (
-            SELECT pid,query FROM activity WHERE $1=ANY(blockers)
-            UNION SELECT a.pid,a.query FROM activity a JOIN waiting w ON w.pid=ANY(a.blockers)
-          ) SELECT query FROM waiting ORDER BY pid`,
-              [blockerPid]
-            )
-          ).rows.map((row) => row.query)
-        )
+        .poll(() => blockedQueries(blockerPid))
         .toEqual([
           expect.stringContaining('WHERE s.session_id=$1 FOR UPDATE OF u'),
           expect.stringContaining('WHERE s.session_id=$1 FOR UPDATE OF u'),
