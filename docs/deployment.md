@@ -63,18 +63,35 @@ manual entry available when the provider fails.
 
 ## Pilot and staging
 
-1. Prepare the isolated pilot host, protected environment, valid certificate
-   chain and private storage. Use the Compose overlay for the isolated pilot
-   rehearsal. Resolve its variables with `docker compose config --quiet`
-   before starting any services. [Pilot overlay](../docker-compose.prod.yml).
+1. Prepare a dedicated pilot host with Docker Compose 2.24.4 or later, a valid
+   certificate chain, and private S3 storage. Keep application settings in
+   `/protected/pilot-runtime.env`. In
+   `/protected/pilot-compose.env`, set `POSTGRES_PASSWORD`, `MINIO_ACCESS_KEY`,
+   `MINIO_SECRET_KEY`, and the backup endpoint, bucket, credentials, cluster ID,
+   and key-file path required by the
+   [backup runbook](operations/backup/postgresql-restore-runbook.md).
+   Use a private HTTPS backup bucket outside the pilot host and make the
+   mounted passphrase file readable by the container's PostgreSQL user.
 
-   ```sh
-   export BARGHSA_RUNTIME_ENV_FILE=/protected/pilot.env
-   docker compose --env-file "$BARGHSA_RUNTIME_ENV_FILE" \
-     -f docker-compose.yml -f docker-compose.prod.yml config --quiet
-   docker compose --env-file "$BARGHSA_RUNTIME_ENV_FILE" \
-     -f docker-compose.yml -f docker-compose.prod.yml up -d
+   ```bash
+   export BARGHSA_RUNTIME_ENV_FILE=/protected/pilot-runtime.env
+   pilot=(docker compose --env-file "$BARGHSA_RUNTIME_ENV_FILE"
+     --env-file /protected/pilot-compose.env
+     -f docker-compose.yml -f docker-compose.prod.yml)
+   "${pilot[@]}" config --quiet
+   "${pilot[@]}" up -d --wait postgres pgbouncer minio
+   "${pilot[@]}" run --rm minio-init
    ```
+
+   Apply the packaged migrations with the separate migration principal before
+   starting the application services. Verify encrypted WAL readback, a full
+   backup, and restore before accepting traffic. Schedule the daily backup
+   through the backup runbook. Start the stack with `"${pilot[@]}" up -d`.
+   PostgreSQL and PgBouncer are private to Compose. The API, web, and local
+   object store publish only on loopback. For remote browsers, configure a
+   browser-reachable HTTPS S3 endpoint and its allowed origins. To enable the
+   optional cache, use `--profile cache` and set `REDIS_URL=redis://redis:6379`
+   in the application environment. [Pilot overlay](../docker-compose.prod.yml).
 
 2. Install the pilot TLS proxy with the selected hostnames and certificate
    paths. Validate its configuration before reload. Confirm that private

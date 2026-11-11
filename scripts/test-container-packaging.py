@@ -69,19 +69,47 @@ assert.match(response, /^HTTP\/1\.1 400\b/);
 
 def check_compose():
     with tempfile.TemporaryDirectory(prefix='barghsa-compose-proof-') as temporary:
-        runtime = Path(temporary) / 'runtime.env'
-        values = dict(BARGHSA_RUNTIME_ENV_FILE=str(runtime),
-                      DATABASE_URL='postgresql://test:synthetic@postgres:5432/barghsa',
-                      APP_PUBLIC_URL='https://app.example.test', API_PUBLIC_URL='https://app.example.test',
-                      PAYMENT_GATEWAY_MERCHANT_ID='synthetic-only', AUTH_DELIVERY_ENCRYPTION_KEY='11'*32)
-        runtime.write_text('\n'.join(f'{k}={v}' for k, v in values.items())
+        fixture = Path(temporary)
+        runtime = fixture / 'runtime.env'
+        pilot = fixture / 'pilot-compose.env'
+        backup_key = fixture / 'backup-key'
+        backup_key.write_text('synthetic-only\n')
+        runtime_values = dict(DATABASE_URL='postgresql://test:synthetic@pgbouncer:6432/barghsa',
+                              APP_PUBLIC_URL='https://app.example.test', API_PUBLIC_URL='https://app.example.test',
+                              PAYMENT_GATEWAY_MERCHANT_ID='synthetic-only', AUTH_DELIVERY_ENCRYPTION_KEY='11'*32)
+        pilot_values = dict(POSTGRES_PASSWORD='pilot-db-test-only',
+                            MINIO_ACCESS_KEY='pilot-storage-test', MINIO_SECRET_KEY='pilot-storage-test-only',
+                            BACKUP_CLUSTER_ID='pilot-test',
+                            BACKUP_GPG_PASSPHRASE_FILE=str(backup_key),
+                            BACKUP_S3_ENDPOINT='https://off-host.example.test',
+                            BACKUP_S3_BUCKET='pilot-test-backups',
+                            BACKUP_S3_REGION='eu-central-1',
+                            BACKUP_S3_ACCESS_KEY='pilot-backup-test',
+                            BACKUP_S3_SECRET_KEY='pilot-backup-test-only',
+                            BACKUP_S3_SESSION_TOKEN='pilot-temporary-token',
+                            BACKUP_ALLOW_HTTP='true')
+        runtime.write_text('\n'.join(f'{k}={v}' for k, v in runtime_values.items())
                            + f'\nNODE_OPTIONS={unsafe_node_options}\n')
-        result = subprocess.run(['docker', 'compose', '--env-file', str(runtime),
-                                 '-f', 'docker-compose.yml', '-f', 'docker-compose.prod.yml',
-                                 'config', '--format', 'json'], capture_output=True, text=True,
-                                env={**os.environ, **values}, cwd=Path(__file__).resolve().parents[1])
-        assert result.returncode == 0, result.stderr
-        services = json.loads(result.stdout)['services']
+        env = {k: v for k, v in os.environ.items() if k not in
+               {*runtime_values, *pilot_values, 'COMPOSE_PROFILES', 'REDIS_URL'}}
+        env['BARGHSA_RUNTIME_ENV_FILE'] = str(runtime)
+
+        def resolve(values, *options):
+            pilot.write_text('\n'.join(f'{k}={v}' for k, v in values.items()) + '\n')
+            return subprocess.run(
+                ['docker', 'compose', '--env-file', str(runtime), '--env-file', str(pilot),
+                 '-f', 'docker-compose.yml', '-f', 'docker-compose.prod.yml', *options,
+                 'config', '--format', 'json'], capture_output=True, text=True, env=env,
+                cwd=Path(__file__).resolve().parents[1],
+            )
+
+        default = resolve(pilot_values)
+        assert default.returncode == 0, default.stderr
+        assert 'redis' not in json.loads(default.stdout)['services']
+        enabled = resolve({**pilot_values, 'REDIS_URL': 'redis://redis:6379'}, '--profile', 'cache')
+        assert enabled.returncode == 0, enabled.stderr
+        config = json.loads(enabled.stdout)
+        services = config['services']
         assert 'pgbouncer' in services
         assert services['api']['build'] == services['worker']['build']
         assert services['worker']['command'] == ['node', 'worker/dist/main.js']
@@ -91,7 +119,38 @@ def check_compose():
             assert 'no-new-privileges:true' in service['security_opt']
             assert service['environment']['NODE_OPTIONS'] == node_options, name
         assert services['api']['healthcheck']['test'] == ['CMD', 'node', 'healthcheck-runtime.cjs']
-    print('PASS production Compose: shared image, worker override, hardening and enabled pool dependency', flush=True)
+        published = {
+            name: {(p['host_ip'], p['target'], p['published']) for p in service['ports']}
+            for name, service in services.items() if service.get('ports')
+        }
+        assert published == {
+            'api': {('127.0.0.1', 4000, '4000')},
+            'web': {('127.0.0.1', 3000, '3000')},
+            'minio': {('127.0.0.1', 9000, '9000'), ('127.0.0.1', 9001, '9001')},
+        }
+        assert services['api']['environment']['REDIS_URL'] == 'redis://redis:6379'
+        postgres = services['postgres']
+        assert postgres['healthcheck']['test'] == ['CMD', 'pg_isready', '-h', '127.0.0.1', '-U', 'barghsa']
+        assert postgres['command'][-2:] == ['-c', 'archive_mode=on']
+        assert 'pgdata' in {v.get('source') for v in postgres['volumes']}
+        assert postgres['environment']['POSTGRES_PASSWORD'] == pilot_values['POSTGRES_PASSWORD']
+        assert services['pgbouncer']['environment']['POSTGRESQL_PASSWORD'] == pilot_values['POSTGRES_PASSWORD']
+        assert services['minio']['environment']['MINIO_ROOT_PASSWORD'] == pilot_values['MINIO_SECRET_KEY']
+        assert services['minio-init']['environment']['MINIO_SECRET_KEY'] == pilot_values['MINIO_SECRET_KEY']
+        for key in ['BACKUP_CLUSTER_ID', 'BACKUP_S3_ENDPOINT', 'BACKUP_S3_BUCKET', 'BACKUP_S3_REGION',
+                    'BACKUP_S3_ACCESS_KEY', 'BACKUP_S3_SECRET_KEY', 'BACKUP_S3_SESSION_TOKEN']:
+            assert postgres['environment'][key] == pilot_values[key], key
+        assert postgres['environment']['BACKUP_ALLOW_HTTP'] == 'false'
+        assert postgres['environment']['BACKUP_GPG_PASSPHRASE_FILE'] == '/run/secrets/postgres_backup_key'
+        assert {s['source'] for s in postgres['secrets']} == {'postgres_backup_key'}
+        assert config['secrets']['postgres_backup_key']['file'] == str(backup_key)
+        for name in ['api', 'worker', 'ai-inference', 'web']:
+            assert not set(pilot_values) & services[name]['environment'].keys(), name
+        for required in sorted(set(pilot_values) - {'BACKUP_S3_REGION', 'BACKUP_S3_SESSION_TOKEN',
+                                                    'BACKUP_ALLOW_HTTP'}):
+            failure = resolve({**pilot_values, required: ''})
+            assert failure.returncode != 0 and required in failure.stderr, required
+    print('PASS pilot Compose: app hardening, private services, protected inputs and encrypted WAL configuration', flush=True)
 
 
 def check_hybrid_compose():

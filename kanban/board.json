@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T16:49:07+00:00",
+  "updated": "2026-11-11T17:06:13+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10712,7 +10712,8 @@
         ],
         "batches": [
           "release-0.6-container-runtime-hardening",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-pilot-compose-boundary"
         ],
         "current_acceptance": {
           "kind": "packaged-runtime-and-compose-hardening",
@@ -10728,7 +10729,7 @@
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "1363eb44da7c3796ab658917f8c92e0ca54ba1d92efc8e446b4fd432eb50342d"
+              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -10736,7 +10737,7 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
+              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -10767,6 +10768,15 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-pilot-compose-boundary",
+              "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+              "paths": [
+                "docker-compose.prod.yml",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
             }
           ]
         }
@@ -14610,12 +14620,10 @@
         "story": "01-platform-infrastructure.md#spec-ff2c0bec0e87"
       },
       "requirement": "- **T-05.01.02:** Create `docker-compose.prod.yml` for pilot single-VM deployment\n  - **Notes:** Services: `postgres` (with persistent volume, backups, WAL archiving), `redis` (optional, commented out if not used), `minio` (or external S3 config), `api` (image, port 4000, depends on postgres, healthcheck), `web` (image, port 3000, depends on api), `worker` (image, command, depends on postgres). Environment variables sourced from `.env.production` or secret manager. For full single-server: all on one host.\n  - **Dependencies:** E-03, E-04\n  - **Complexity:** M",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -14642,11 +14650,75 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "docker-compose.prod.yml",
+          "docs/deployment.md",
+          "scripts/test-container-packaging.py"
         ],
-        "batches": [],
-        "current_acceptance": null
-      }
+        "batches": [
+          "release-0.6-pilot-compose-boundary"
+        ],
+        "current_acceptance": {
+          "kind": "acceptance_verified",
+          "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+          "source_evidence": [
+            {
+              "path": "docker-compose.backup.yml",
+              "sha256": "cb5ba903845075a974e4c3c84266ce30447ef509552b6fb93200d2ff34d331fb"
+            },
+            {
+              "path": "docker-compose.prod.yml",
+              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+            },
+            {
+              "path": "docker-compose.yml",
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
+            },
+            {
+              "path": "docs/deployment.md",
+              "sha256": "02725b94fdd2b28a0288ad28a36b104bbcae1c39eba91d8323e80e3075de56b6"
+            },
+            {
+              "path": "packages/db/scripts/backup/Dockerfile",
+              "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+            },
+            {
+              "path": "packages/db/scripts/backup/archive-wal.sh",
+              "sha256": "5d9a44852eb48ee03b8777059dd54e2bd05b6d3b50fcfe775aa61f6c1cc95d9a"
+            },
+            {
+              "path": "packages/db/scripts/backup/backup-pg.sh",
+              "sha256": "5b246bcd85f3e63d16f68612e71f8164dfa581a1dfa6c7d1f2897c44c67b29c0"
+            },
+            {
+              "path": "packages/db/scripts/backup/physical_backup.py",
+              "sha256": "8b320a8c80071becbc69172114dec585ccc2bfdf3fe5c2da7e3e0a9e90612479"
+            },
+            {
+              "path": "packages/db/scripts/backup/restore-pg.sh",
+              "sha256": "8a55f5036979d2bccb3173edb4c1b397acd7e7335e5598300a3434fe8a21179c"
+            },
+            {
+              "path": "postgres-config/barghsa-postgres.conf",
+              "sha256": "97e45ca64dab75191478c8a32c7ba2fdba6563aa49c787b6ab6da42de21e66ed"
+            },
+            {
+              "path": "scripts/test-container-packaging.py",
+              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+            }
+          ],
+          "checks": [
+            "The pre-change resolved pilot manifest exposed PostgreSQL, PgBouncer, Redis and object storage on all interfaces, supplied the development password fallback and selected the local object store for backups. The current Compose proof shows no host ports for PostgreSQL, PgBouncer or opt-in Redis. Application and local storage ports are loopback-only. The app, worker, web, AI and unchanged hybrid checks pass. Every required pilot credential and backup input rejects an empty value, the archive command is enabled, and application containers receive none of the separate operator settings.",
+            "The first native run found a false healthy result while PostgreSQL was still initializing on a Unix socket. The standalone pg_basebackup diagnostic succeeded after initialization. The pilot now probes TCP so the temporary initialization server cannot satisfy readiness. The first native run and the later early-read restore probe are excluded from passing results.",
+            "The final native Linux run used the exact Compose overlay and byte-matching backup scripts mounted into the cached PostgreSQL 16.15 proof image. A private disposable CA-verified HTTPS S3 service accepted encrypted WAL and a verified encrypted full backup. The mounted GPG key was readable by postgres and the runtime rejected the HTTP endpoint. A separate socket-only recovery container waited for readiness and read the base backup row plus a distinct post-backup WAL row after promotion. Scratch containers, volume and network were removed.",
+            "Formatting, Compose resolution and source scope checks passed. In the existing packaging checker only check_compose changes. Previous isolated exact app/worker/web image, non-root runtime, readiness and shutdown evidence remains applicable to those unmodified paths."
+          ],
+          "limitations": [
+            "This accepts the pilot manifest and its disposable operational rehearsal. The S3 sink ran in a separate private container on the same fixture host. Owner-selected off-host storage and measured operational restore, RPO/RTO, timer/alert receipts and final production authorization remain separate requirements."
+          ]
+        }
+      },
+      "defect_severity": "P1"
     },
     {
       "key": "01-platform-infrastructure.md#T-05.01.03",
@@ -21214,7 +21286,8 @@
         ],
         "batches": [
           "release-0.6-environment-indicator",
-          "release-0.6-local-compose-storage"
+          "release-0.6-local-compose-storage",
+          "release-0.6-pilot-compose-boundary"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -21276,7 +21349,7 @@
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "1363eb44da7c3796ab658917f8c92e0ca54ba1d92efc8e446b4fd432eb50342d"
+              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
             },
             {
               "path": ".env.example",
@@ -21300,6 +21373,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-pilot-compose-boundary",
+              "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+              "paths": [
+                "docker-compose.prod.yml"
+              ],
+              "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
             }
           ]
         }
@@ -22802,7 +22883,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-protected-storage-origins",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-pilot-compose-boundary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -22839,11 +22921,11 @@
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "1363eb44da7c3796ab658917f8c92e0ca54ba1d92efc8e446b4fd432eb50342d"
+              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "57c962b93d7f8c4dffaadf632b178f2ea8c0f95873387643ba93fe584b66732b"
+              "sha256": "02725b94fdd2b28a0288ad28a36b104bbcae1c39eba91d8323e80e3075de56b6"
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
@@ -22914,6 +22996,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-pilot-compose-boundary",
+              "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+              "paths": [
+                "docker-compose.prod.yml",
+                "docs/deployment.md"
+              ],
+              "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
             }
           ]
         }
@@ -536847,7 +536938,8 @@
           "release-0.6-runtime-node-options",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-local-compose-storage"
+          "release-0.6-local-compose-storage",
+          "release-0.6-pilot-compose-boundary"
         ],
         "current_acceptance": {
           "kind": "source-bound-node-options-and-isolated-runtime",
@@ -536871,7 +536963,7 @@
             },
             {
               "path": "docker-compose.prod.yml",
-              "sha256": "1363eb44da7c3796ab658917f8c92e0ca54ba1d92efc8e446b4fd432eb50342d"
+              "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -536879,7 +536971,7 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
+              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
             },
             {
               "path": "docker-compose.yml",
@@ -536919,6 +537011,15 @@
                 "docker-compose.yml"
               ],
               "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-pilot-compose-boundary",
+              "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+              "paths": [
+                "docker-compose.prod.yml",
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
             }
           ]
         }
@@ -536949,7 +537050,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-pilot-compose-boundary"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -536977,7 +537079,7 @@
             },
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
+              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -536998,6 +537100,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-pilot-compose-boundary",
+              "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+              "paths": [
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
             }
           ]
         }
@@ -537267,7 +537377,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-container-runtime-hardening",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-pilot-compose-boundary"
         ],
         "current_acceptance": {
           "kind": "packaged-runtime-and-compose-hardening",
@@ -537275,7 +537386,7 @@
           "source_evidence": [
             {
               "path": "scripts/test-container-packaging.py",
-              "sha256": "d26e7104238852e55cfdbfc3b647e0583634d8fee51298d93211aaae76a8936e"
+              "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -537325,6 +537436,14 @@
                 "Dockerfile.web"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-pilot-compose-boundary",
+              "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+              "paths": [
+                "scripts/test-container-packaging.py"
+              ],
+              "scope": "Pilot backing-service port, credential, TCP readiness and encrypted archive configuration only. The pilot instructions now use those settings. App build, worker commands, TLS proxy, environment labels, image hardening and other packaging test cases retain their prior evidence. Both pilot and hybrid Compose checks passed on the current source."
             }
           ]
         }
@@ -966936,6 +967055,77 @@
         "Local development acceptance. The native Compose proof exercised linux/amd64. OCI linux/arm64 availability was verified through the published index.",
         "Live staging storage, production bucket cleanup configuration, and elapsed-day expiry retain their separate evidence requirements."
       ]
+    },
+    "release-0.6-pilot-compose-boundary": {
+      "batch": "release-0.6-pilot-compose-boundary",
+      "base_commit": "54d1f8f299ea6be7d0cc42856edda85a7c72fca3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-03.01.05",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.06"
+      ],
+      "source_evidence": [
+        {
+          "path": "docker-compose.backup.yml",
+          "sha256": "cb5ba903845075a974e4c3c84266ce30447ef509552b6fb93200d2ff34d331fb"
+        },
+        {
+          "path": "docker-compose.prod.yml",
+          "sha256": "747176fea641c25c3b75f2e5c3a2cf73a49fead03351a0ac88f4d550739abb22"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
+        },
+        {
+          "path": "docs/deployment.md",
+          "sha256": "02725b94fdd2b28a0288ad28a36b104bbcae1c39eba91d8323e80e3075de56b6"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "packages/db/scripts/backup/archive-wal.sh",
+          "sha256": "5d9a44852eb48ee03b8777059dd54e2bd05b6d3b50fcfe775aa61f6c1cc95d9a"
+        },
+        {
+          "path": "packages/db/scripts/backup/backup-pg.sh",
+          "sha256": "5b246bcd85f3e63d16f68612e71f8164dfa581a1dfa6c7d1f2897c44c67b29c0"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "8b320a8c80071becbc69172114dec585ccc2bfdf3fe5c2da7e3e0a9e90612479"
+        },
+        {
+          "path": "packages/db/scripts/backup/restore-pg.sh",
+          "sha256": "8a55f5036979d2bccb3173edb4c1b397acd7e7335e5598300a3434fe8a21179c"
+        },
+        {
+          "path": "postgres-config/barghsa-postgres.conf",
+          "sha256": "97e45ca64dab75191478c8a32c7ba2fdba6563aa49c787b6ab6da42de21e66ed"
+        },
+        {
+          "path": "scripts/test-container-packaging.py",
+          "sha256": "8d927797b09c460c34923eddba9a0e6139de094b923dab2aa50ebec75934a7c8"
+        }
+      ],
+      "checks": [
+        "The pre-change resolved pilot manifest exposed PostgreSQL, PgBouncer, Redis and object storage on all interfaces, supplied the development password fallback and selected the local object store for backups. The current Compose proof shows no host ports for PostgreSQL, PgBouncer or opt-in Redis. Application and local storage ports are loopback-only. The app, worker, web, AI and unchanged hybrid checks pass. Every required pilot credential and backup input rejects an empty value, the archive command is enabled, and application containers receive none of the separate operator settings.",
+        "The first native run found a false healthy result while PostgreSQL was still initializing on a Unix socket. The standalone pg_basebackup diagnostic succeeded after initialization. The pilot now probes TCP so the temporary initialization server cannot satisfy readiness. The first native run and the later early-read restore probe are excluded from passing results.",
+        "The final native Linux run used the exact Compose overlay and byte-matching backup scripts mounted into the cached PostgreSQL 16.15 proof image. A private disposable CA-verified HTTPS S3 service accepted encrypted WAL and a verified encrypted full backup. The mounted GPG key was readable by postgres and the runtime rejected the HTTP endpoint. A separate socket-only recovery container waited for readiness and read the base backup row plus a distinct post-backup WAL row after promotion. Scratch containers, volume and network were removed.",
+        "Formatting, Compose resolution and source scope checks passed. In the existing packaging checker only check_compose changes. Previous isolated exact app/worker/web image, non-root runtime, readiness and shutdown evidence remains applicable to those unmodified paths."
+      ],
+      "limitations": [
+        "This accepts the pilot manifest and its disposable operational rehearsal. The S3 sink ran in a separate private container on the same fixture host. Owner-selected off-host storage and measured operational restore, RPO/RTO, timer/alert receipts and final production authorization remain separate requirements."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-pilot-compose-boundary",
+      "source_scope_proof": "native-archive-restore-readback.log",
+      "source_scope_proof_sha256": "532c64bcb60c13223c00608b0721a81cd841251e794a4ee35b6e72b3603255d4"
     }
   },
   "historical_improvements": [
