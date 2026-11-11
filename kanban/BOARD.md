@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T14:15:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T16:49:07+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1215 | Accepted with unchanged source bindings. |
-| verify | 85 | Existing work may be complete; inspect evidence before building. |
+| done | 1216 | Accepted with unchanged source bindings. |
+| verify | 84 | Existing work may be complete; inspect evidence before building. |
 | partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -996,7 +996,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-03.01.03` | done | Earlier acceptance_verified | Create `.dockerignore` |
 | `01-platform-infrastructure.md#T-03.01.04` | done | Earlier acceptance_verified | Add `HEALTHCHECK` instruction to all Dockerfiles |
 | `01-platform-infrastructure.md#T-03.01.05` | done | Earlier acceptance_verified | Implement security hardening in Docker images |
-| `01-platform-infrastructure.md#T-03.02.01` | verify | Earlier acceptance_verified | Create `docker-compose.yml` with PostgreSQL, Redis, MinIO |
+| `01-platform-infrastructure.md#T-03.02.01` | done | Earlier acceptance_verified | Create `docker-compose.yml` with PostgreSQL, Redis, MinIO |
 | `01-platform-infrastructure.md#T-03.02.02` | done | Earlier acceptance_verified | Create `.env.example` with all required development variables |
 | `01-platform-infrastructure.md#T-03.02.03` | done | Earlier acceptance_verified | Create root `pnpm dev` script for hot-reload local development across all apps |
 | `01-platform-infrastructure.md#T-03.02.04` | done | Earlier acceptance_verified | Configure file-watch with proper polling for Docker-for-Mac compatibility |

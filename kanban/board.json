@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T14:15:29+00:00",
+  "updated": "2026-11-11T16:49:07+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -984,7 +984,7 @@
     }
   },
   "specification_sources": {
-    "kanban/epics/01-platform-infrastructure.md": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429",
+    "kanban/epics/01-platform-infrastructure.md": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d",
     "kanban/epics/02-auth-users-admin.md": "caba2c48cfb51ef51950b6eead29b7997f804d5cb196b77b65de7c46fa76c774",
     "kanban/epics/03-core-business.md": "3d1306e5a9443b63e23c9a2b50e646549a88b0ba8d3e7385452f43b49e42c8f8",
     "kanban/epics/04-invoices-wallet-contracts.md": "bc76f87142cad06f9d0feb3ab8d42728403a3bfa9f3f931a8636393cf1f85fb0",
@@ -2405,7 +2405,7 @@
     },
     "01-platform-infrastructure.md#spec-57b9aa15b310": {
       "source": "kanban/epics/01-platform-infrastructure.md",
-      "context": "#### S-03.02: Docker Compose for local development\n\n**Description:** As a developer, I want a `docker-compose.yml` that runs PostgreSQL, Redis, and MinIO for local development so that I can start the full stack with one command and have a production-like environment.\n\n**Acceptance Criteria:**\n- `docker-compose.yml` defines services: `postgres`, `redis`, `minio`\n- `postgres` uses `postgis/postgres:16` image with persistent volume and init script for UUIDv7 extension\n- `redis` uses `redis:7-alpine` — optional, no persistent data required\n- `minio` uses `minio/minio` with persistent volume, console on port 9001, API on port 9000\n- Environment variables default to development-safe values in `.env.example`\n- Service dependencies: app processes depend on `postgres` being healthy\n- `pnpm dev` runs Turborepo dev mode with hot reload\n- Hot reload uses `tsx watch` or SWC for NestJS and Vite dev server for web\n- `.env.example` contains all required variables with sensible development defaults; `DATABASE_URL`, `REDIS_URL`, `MINIO_*`, `SESSION_SECRET`, `CSRF_SECRET`, etc.\n- OTP codes are printed to API console in dev environment\n- SWC or webpack watch mode recompiles on save within ~500ms\n\n**Tasks:**"
+      "context": "#### S-03.02: Docker Compose for local development\n\n**Description:** As a developer, I want a `docker-compose.yml` that runs PostgreSQL, Redis, and MinIO for local development so that I can start the full stack with one command and have a production-like environment.\n\n**Acceptance Criteria:**\n- `docker-compose.yml` defines services: `postgres`, `redis`, `minio`\n- `postgres` uses the project backup-capable image built from PostgreSQL 16/PostGIS 3.6 with a persistent volume. Project migrations install the UUIDv7 function.\n- `redis` uses `redis:7-alpine` — optional, no persistent data required\n- `minio` uses the digest-pinned Silo MinIO fork with a persistent volume, console on port 9001, and API on port 9000. The fork replaces the retired [MinIO Community Edition images](https://github.com/minio/minio#source-only-distribution) for local development.\n- Environment variables default to development-safe values in `.env.example`\n- Service dependencies: app processes depend on `postgres` being healthy\n- `pnpm dev` runs Turborepo dev mode with hot reload\n- Hot reload uses `tsx watch` or SWC for NestJS and Vite dev server for web\n- `.env.example` contains all required variables with sensible development defaults; `DATABASE_URL`, `REDIS_URL`, `MINIO_*`, `SESSION_SECRET`, `CSRF_SECRET`, etc.\n- OTP codes are printed to API console in dev environment\n- SWC or webpack watch mode recompiles on save within ~500ms\n\n**Tasks:**"
     },
     "01-platform-infrastructure.md#spec-fa9c8259e872": {
       "source": "kanban/epics/01-platform-infrastructure.md",
@@ -7706,7 +7706,8 @@
           "release-0.6-architecture-and-deployment-documentation",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "deployed_base_column_and_clock_verification",
@@ -7714,7 +7715,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
             },
             {
               "path": "docs/adr/001-base-column-exceptions.md",
@@ -8235,6 +8236,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ]
         }
@@ -10773,13 +10782,11 @@
         "line": 469,
         "story": "01-platform-infrastructure.md#spec-57b9aa15b310"
       },
-      "requirement": "- **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO\n  - **Notes:** PostgreSQL: image `postgis/postgis:16-3.5`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address \":9001\"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).\n  - **Dependencies:** None (infrastructure only)\n  - **Complexity:** S",
-      "status": "verify",
+      "requirement": "- **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO\n  - **Notes:** PostgreSQL: backup-capable image based on PostgreSQL 16/PostGIS 3.6, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO-compatible storage: digest-pinned Silo image, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address \":9001\"`. The initializer uses the bundled `mc` client to create private upload and backup buckets. Health checks use `pg_isready` for PostgreSQL and `curl -f http://localhost:9000/minio/health/live` for storage.\n  - **Dependencies:** None (infrastructure only)\n  - **Complexity:** S",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Renew the earlier acceptance against changed paths; preserve working code."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -10809,11 +10816,61 @@
           "historically_skipped": false
         },
         "changed_paths": [
+          ".env.example",
           "docker-compose.yml",
-          ".env.example"
+          "kanban/epics/01-platform-infrastructure.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-local-compose-storage"
+        ],
+        "current_acceptance": {
+          "kind": "acceptance_verified",
+          "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+          "source_evidence": [
+            {
+              "path": "docker-compose.yml",
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
+            },
+            {
+              "path": ".env.example",
+              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+            },
+            {
+              "path": "postgres-config/barghsa-postgres.conf",
+              "sha256": "97e45ca64dab75191478c8a32c7ba2fdba6563aa49c787b6ab6da42de21e66ed"
+            },
+            {
+              "path": "packages/db/scripts/backup/Dockerfile",
+              "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+            },
+            {
+              "path": "packages/shared/src/storage/setup-bucket.ts",
+              "sha256": "1d051cc0794019bad1cf1845bd6d96af02a0847598dc0f93d86baefbfd1a0801"
+            },
+            {
+              "path": "apps/worker/src/storage/multipart-cleanup.ts",
+              "sha256": "a8e3df6043898593fea200359de46f959f104830a0dbf1db665add757ec41e2a"
+            },
+            {
+              "path": "kanban/epics/01-platform-infrastructure.md",
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
+            }
+          ],
+          "checks": [
+            "The two retired Docker Hub image references failed from a clean manifest lookup. The new shared Silo OCI index resolved by immutable digest 7bb2aff6b89efe1cb1303c10fc21d579447434ed06649ac9ec05a5e2dbf30ad7 for both linux/amd64 and linux/arm64. Exact amd64 digest pulled and reported upstream release 2026-10-26 at c3ad836aed0d8a7d23c2e44a5eaa3009d08525e3.",
+            "The exact root Compose file resolved with the tracked environment template and preserved published ports, volume names, service names, health ordering and stale-upload settings. In a private disposable Compose project with no published ports, the real server and initializer passed a clean-volume boot, repeated initialization, invalid-credential rejection, console HTTP 200, exact authenticated reads and anonymous reads and listings returning 403 for both buckets. The same volume reopened with Silo after the previous pgsty MinIO fork and retained both private buckets and exact bytes.",
+            "The same isolated Compose project reported PostgreSQL 16 / PostGIS 3.6.4 and Redis 7.4.11 with PONG. Native startup used the cached PostgreSQL proof image and the cached Redis 7 Alpine digest because the staging network denied the fresh Redis blob. The exact unchanged PostgreSQL Dockerfile was built and scanned separately by GitHub Actions run 43054839800, job 130641396193. The initial stdin-fed probe did not complete its assertions and is excluded from acceptance.",
+            "The rebuilt shared package passed all 34 packaging checks. The actual S3 adapter and policy code against the exact Silo digest verified repeat versioning and four lifecycle rules with legal-hold opt-in, signed two-part resume and exact completed bytes, private reads, and hold-safe per-version classification. The first abort probe used a directory Prefix and failed. A targeted old/new comparison reproduced that inherited directory-prefix behavior on both images, proved the worker’s empty-prefix listing sees both pending uploads, and verified only the target disappears after repeated abort while the sibling remains readable and completes."
+          ],
+          "limitations": [
+            "Local development acceptance. The native Compose proof exercised linux/amd64. OCI linux/arm64 availability was verified through the published index.",
+            "Live staging storage, production bucket cleanup configuration, and elapsed-day expiry retain their separate evidence requirements."
+          ]
+        }
       }
     },
     {
@@ -10878,7 +10935,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "source-bound-development-configuration-and-behavior",
@@ -10890,7 +10948,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "README.md",
@@ -10946,6 +11004,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ]
         }
@@ -11035,7 +11101,8 @@
           "turbo.json"
         ],
         "batches": [
-          "release-0.6-dev-restart-and-preflight-refs"
+          "release-0.6-dev-restart-and-preflight-refs",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -11108,10 +11175,20 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
             }
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            }
+          ]
         }
       }
     },
@@ -20859,7 +20936,8 @@
         ],
         "batches": [
           "2026-09-24-private-analytics",
-          "release-0.6-analytics-consent-boundary"
+          "release-0.6-analytics-consent-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -20914,10 +20992,20 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
             }
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/analytics-consent-boundary._1t079yw",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            }
+          ]
         }
       }
     },
@@ -21125,7 +21213,8 @@
           "docker-compose.prod.yml"
         ],
         "batches": [
-          "release-0.6-environment-indicator"
+          "release-0.6-environment-indicator",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -21199,10 +21288,20 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
             }
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/environment-indicator.mrh0hhoy"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/environment-indicator.mrh0hhoy",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            }
+          ]
         }
       }
     },
@@ -21774,7 +21873,8 @@
           "packages/i18n/src/providers.ts"
         ],
         "batches": [
-          "release-0.6-explicit-provider-test-recipient"
+          "release-0.6-explicit-provider-test-recipient",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -21858,7 +21958,7 @@
             },
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -21881,7 +21981,17 @@
               "sha256": "4357b96888a6aed8ed9a9d40775e618d9f40f1ded3b8e7a1e724fd11ad15faee"
             }
           ],
-          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo"
+          "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo",
+          "source_renewals": [
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            }
+          ]
         }
       }
     },
@@ -497768,7 +497878,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "status": "done",
@@ -497860,7 +497971,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/storage-retention.md",
@@ -498163,6 +498274,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -498268,7 +498387,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "status": "done",
@@ -498360,7 +498480,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/storage-retention.md",
@@ -498663,6 +498783,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -498770,7 +498898,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -498862,7 +498991,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/storage-retention.md",
@@ -499186,6 +499315,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -499325,7 +499462,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-durable-multipart-operations",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "status": "done",
@@ -499417,7 +499555,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/storage-retention.md",
@@ -499813,6 +499951,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -499918,7 +500064,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "status": "done",
@@ -500010,7 +500157,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/storage-retention.md",
@@ -500313,6 +500460,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -536691,7 +536846,8 @@
           "release-0.6-container-runtime-hardening",
           "release-0.6-runtime-node-options",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-local-compose-storage"
         ],
         "current_acceptance": {
           "kind": "source-bound-node-options-and-isolated-runtime",
@@ -536727,7 +536883,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             }
           ],
           "checks": [
@@ -536755,6 +536911,14 @@
                 "docker-compose.prod.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ]
         }
@@ -832600,7 +832764,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -834460,6 +834624,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -834835,7 +835007,8 @@
           "release-0.6-integrity-requires-tests",
           "integrated-qa-preview-deployment",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -837036,7 +837209,7 @@
             },
             {
               "path": "docker-compose.yml",
-              "sha256": "e1988b13aa6671f943136b593b44e1b828d689e8db5e5359a41302c577baf462"
+              "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -838786,6 +838959,14 @@
                 "package.json"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "docker-compose.yml"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -839178,7 +839359,8 @@
           "release-0.6-integrity-requires-tests",
           "integrated-qa-preview-deployment",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-contract-template-copy-boundary"
+          "release-0.6-contract-template-copy-boundary",
+          "release-0.6-local-compose-storage"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -843362,7 +843544,7 @@
           "source_evidence": [
             {
               "path": "kanban/epics/01-platform-infrastructure.md",
-              "sha256": "218fc5ee7b31ba3d5d2c6e0b31e9da15a5357b67318cbc11a517194471f42429"
+              "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
@@ -843425,6 +843607,14 @@
                 "Dockerfile.web"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-local-compose-storage",
+              "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+              "paths": [
+                "kanban/epics/01-platform-infrastructure.md"
+              ],
+              "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
             }
           ]
         },
@@ -843436,7 +843626,8 @@
           "release-0.6-packaged-production-seed",
           "release-0.6-container-runtime-hardening",
           "release-0.6-architecture-and-deployment-documentation",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-local-compose-storage"
         ]
       }
     },
@@ -966678,6 +966869,72 @@
         "06-security-testing-observability.md#T-06.11.03.02",
         "06-security-testing-observability.md#T-06.14.01.02",
         "06-security-testing-observability.md#T-06.14.02.02"
+      ]
+    },
+    "release-0.6-local-compose-storage": {
+      "batch": "release-0.6-local-compose-storage",
+      "base_commit": "805dc17b8b67100d418116fed2bdf0a9767b0946",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-02.02.02",
+        "01-platform-infrastructure.md#T-03.02.02",
+        "01-platform-infrastructure.md#T-03.02.03",
+        "01-platform-infrastructure.md#T-06.04.01",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "docker-compose.yml",
+          "sha256": "fe222d1767b6ad0c895ea8a022608c974da1d2b1b19bef9f9b9b0afa2d84a99f"
+        },
+        {
+          "path": ".env.example",
+          "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+        },
+        {
+          "path": "postgres-config/barghsa-postgres.conf",
+          "sha256": "97e45ca64dab75191478c8a32c7ba2fdba6563aa49c787b6ab6da42de21e66ed"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "1d051cc0794019bad1cf1845bd6d96af02a0847598dc0f93d86baefbfd1a0801"
+        },
+        {
+          "path": "apps/worker/src/storage/multipart-cleanup.ts",
+          "sha256": "a8e3df6043898593fea200359de46f959f104830a0dbf1db665add757ec41e2a"
+        },
+        {
+          "path": "kanban/epics/01-platform-infrastructure.md",
+          "sha256": "af5952889c3f4c3cd2790c4a9c4ab48cef717cbee1a20b8629468645cafa011d"
+        }
+      ],
+      "checks": [
+        "The two retired Docker Hub image references failed from a clean manifest lookup. The new shared Silo OCI index resolved by immutable digest 7bb2aff6b89efe1cb1303c10fc21d579447434ed06649ac9ec05a5e2dbf30ad7 for both linux/amd64 and linux/arm64. Exact amd64 digest pulled and reported upstream release 2026-10-26 at c3ad836aed0d8a7d23c2e44a5eaa3009d08525e3.",
+        "The exact root Compose file resolved with the tracked environment template and preserved published ports, volume names, service names, health ordering and stale-upload settings. In a private disposable Compose project with no published ports, the real server and initializer passed a clean-volume boot, repeated initialization, invalid-credential rejection, console HTTP 200, exact authenticated reads and anonymous reads and listings returning 403 for both buckets. The same volume reopened with Silo after the previous pgsty MinIO fork and retained both private buckets and exact bytes.",
+        "The same isolated Compose project reported PostgreSQL 16 / PostGIS 3.6.4 and Redis 7.4.11 with PONG. Native startup used the cached PostgreSQL proof image and the cached Redis 7 Alpine digest because the staging network denied the fresh Redis blob. The exact unchanged PostgreSQL Dockerfile was built and scanned separately by GitHub Actions run 43054839800, job 130641396193. The initial stdin-fed probe did not complete its assertions and is excluded from acceptance.",
+        "The rebuilt shared package passed all 34 packaging checks. The actual S3 adapter and policy code against the exact Silo digest verified repeat versioning and four lifecycle rules with legal-hold opt-in, signed two-part resume and exact completed bytes, private reads, and hold-safe per-version classification. The first abort probe used a directory Prefix and failed. A targeted old/new comparison reproduced that inherited directory-prefix behavior on both images, proved the worker’s empty-prefix listing sees both pending uploads, and verified only the target disappears after repeated abort while the sibling remains readable and completes."
+      ],
+      "limitations": [
+        "Local development acceptance. The native Compose proof exercised linux/amd64. OCI linux/arm64 availability was verified through the published index.",
+        "Live staging storage, production bucket cleanup configuration, and elapsed-day expiry retain their separate evidence requirements."
       ]
     }
   },

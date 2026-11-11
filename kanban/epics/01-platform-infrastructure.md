@@ -453,9 +453,9 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 
 **Acceptance Criteria:**
 - `docker-compose.yml` defines services: `postgres`, `redis`, `minio`
-- `postgres` uses `postgis/postgres:16` image with persistent volume and init script for UUIDv7 extension
+- `postgres` uses the project backup-capable image built from PostgreSQL 16/PostGIS 3.6 with a persistent volume. Project migrations install the UUIDv7 function.
 - `redis` uses `redis:7-alpine` — optional, no persistent data required
-- `minio` uses `minio/minio` with persistent volume, console on port 9001, API on port 9000
+- `minio` uses the digest-pinned Silo MinIO fork with a persistent volume, console on port 9001, and API on port 9000. The fork replaces the retired [MinIO Community Edition images](https://github.com/minio/minio#source-only-distribution) for local development.
 - Environment variables default to development-safe values in `.env.example`
 - Service dependencies: app processes depend on `postgres` being healthy
 - `pnpm dev` runs Turborepo dev mode with hot reload
@@ -467,7 +467,7 @@ This domain owns every piece of platform infrastructure the Barghsa energy platf
 **Tasks:**
 
 - **T-03.02.01:** Create `docker-compose.yml` with PostgreSQL, Redis, MinIO
-  - **Notes:** PostgreSQL: image `postgis/postgis:16-3.5`, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO: image `minio/minio`, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address ":9001"`. Add `healthcheck` to PostgreSQL (`pg_isready`) and MinIO (`curl -f http://localhost:9000/minio/health/live`).
+  - **Notes:** PostgreSQL: backup-capable image based on PostgreSQL 16/PostGIS 3.6, port `5432`, volume `pgdata:/var/lib/postgresql/data`, env `POSTGRES_DB=barghsa`, `POSTGRES_USER=barghsa`, `POSTGRES_PASSWORD`. Redis: image `redis:7-alpine`, port `6379`. MinIO-compatible storage: digest-pinned Silo image, ports `9000:9000` (API), `9001:9001` (console), volume `minio-data:/data`, command `server /data --console-address ":9001"`. The initializer uses the bundled `mc` client to create private upload and backup buckets. Health checks use `pg_isready` for PostgreSQL and `curl -f http://localhost:9000/minio/health/live` for storage.
   - **Dependencies:** None (infrastructure only)
   - **Complexity:** S
 
