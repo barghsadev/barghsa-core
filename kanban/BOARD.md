@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T21:56:02+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T22:04:44+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1229 | Accepted with unchanged source bindings. |
-| verify | 65 | Existing work may be complete; inspect evidence before building. |
-| partial | 66 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 64 | Existing work may be complete; inspect evidence before building. |
+| partial | 67 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1439,7 +1439,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.01.04` | verify | Inventory needed | Ensure audit/security/financial evidence follows legal retention (10 years default) and cannot be shortened via operational settings |
 | `06-security-testing-observability.md#T-06.18.01.05` | verify | Inventory needed | Admin UI: view and change operational retention (with warning about audit retention) |
 | `06-security-testing-observability.md#T-06.18.02.01` | verify | Inventory needed | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |
-| `06-security-testing-observability.md#T-06.18.02.02` | verify | Inventory needed | Configure Sentry release tracking: associate commits, tag errors with release version |
+| `06-security-testing-observability.md#T-06.18.02.02` | partial | Recorded batch work | Configure Sentry release tracking: associate commits, tag errors with release version |
 | `06-security-testing-observability.md#T-06.18.02.03` | done | Recorded batch work | Include release marker in structured logs for correlation |
 | `06-security-testing-observability.md#T-06.18.02.04` | partial | Recorded batch work | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |
 | `06-security-testing-observability.md#T-06.19.01.01` | done | Recorded batch work | Create DoD PR checklist template (5 categories, 25+ items) with checkboxes |

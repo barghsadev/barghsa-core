@@ -64,6 +64,8 @@ The main error boundary sends one same-origin report per displayed failure. If t
 
 Set `ROUTE_ERROR_SENTRY_DSN` in the protected API runtime configuration. Use the staging project's HTTPS DSN for staging. Verify a controlled staging route failure by finding its matching reference in Sentry and recording the provider event ID with the candidate commit. Use the existing support reference and avoid copying any unrelated event data.
 
+Packaged browser and server reports identify the Sentry release by the full image commit and include the root package version in `release_version`. Verify both on the candidate event. To associate repository commits in Sentry, register that same release identifier with the repository and head commit through the protected release integration, then read back the release's commit list. [Sentry release registration](https://docs.sentry.io/api/releases/create-a-new-release-for-an-organization/) · [Sentry commit readback](https://docs.sentry.io/api/releases/list-a-project-releases-commits/)
+
 For account settings, use the query's deadline error to end visible loading even when the request owner discards updates from the aborted transport. An explicit retry renews only the failed settings read. Companion sections keep their confirmed data, and writes in the failed section stay disabled until a fresh read succeeds.
 
 Username, contact and Telegram linking commands wait up to 15 seconds for an acknowledgement, including the response body. An unconfirmed command requires a fresh account or link-status check before further writes. No code or command is resent automatically.

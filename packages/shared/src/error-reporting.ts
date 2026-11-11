@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { readCappedJson } from './storage/read-capped-bytes.js';
 
 export const browserErrorCodes = ['CHUNK_LOAD_FAILED', 'ROUTE_RENDER_FAILED'] as const;
@@ -15,6 +16,30 @@ const MAX_IN_FLIGHT = 4;
 const MAX_RECEIPT_BYTES = 4096;
 const REQUEST_TIMEOUT_MS = 3000;
 const inFlight = { web: 0, server: 0 };
+const releaseVersion = packagedReleaseVersion();
+
+function packagedReleaseVersion(): string | undefined {
+  try {
+    // The API, worker and inference image retain the workspace manifest at their working directory.
+    const manifest: { name?: unknown; version?: unknown } = JSON.parse(
+      readFileSync('root-package.json', 'utf8')
+    );
+    const version = manifest?.version;
+    if (
+      manifest?.name === 'barghsa-core' &&
+      typeof version === 'string' &&
+      version.length <= 64 &&
+      /^(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/.test(
+        version
+      )
+    ) {
+      return version;
+    }
+  } catch {
+    // Local tools can run without the packaged manifest.
+  }
+  return undefined;
+}
 
 function deploymentEnvironment() {
   const value = process.env.BARGHSA_DEPLOYMENT_ENV ?? process.env.NODE_ENV;
@@ -64,7 +89,8 @@ async function deliver(
   if (inFlight[lane] >= MAX_IN_FLIGHT) return 'unavailable';
 
   const eventId = reference.replaceAll('-', '').toLowerCase();
-  const release = process.env.BARGHSA_RELEASE_SHA;
+  const revision = process.env.BARGHSA_RELEASE_SHA;
+  const release = /^[a-f0-9]{40}$/.test(revision ?? '') ? revision : undefined;
   const event = JSON.stringify({
     event_id: eventId,
     timestamp: new Date().toISOString(),
@@ -73,9 +99,10 @@ async function deliver(
     message: code,
     fingerprint: route ? [code, route] : [code],
     environment,
-    ...(/^[a-f0-9]{40}$/.test(release ?? '') ? { release } : {}),
+    ...(release ? { release } : {}),
     tags: {
       process: processName,
+      ...(release && releaseVersion ? { release_version: releaseVersion } : {}),
       ...(processName === 'web' ? { support_reference: reference } : {}),
       ...(route ? { route } : {}),
     },

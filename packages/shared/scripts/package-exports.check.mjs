@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -35,6 +36,70 @@ test('root and subpath imports share module state within each format', async () 
   );
   assert.equal(esm.validatePostalCode('1234567890'), true);
   assert.equal(cjs.validatePostalCode('0123456789'), false);
+});
+
+test('packaged error reports associate the commit and root version in both module formats', () => {
+  const manifest = readFileSync(new URL('../../../package.json', import.meta.url), 'utf8');
+  const { version } = JSON.parse(manifest);
+  const revision = 'a'.repeat(40);
+  const cwd = mkdtempSync(join(tmpdir(), 'barghsa-release-manifest-'));
+  const env = {
+    ...process.env,
+    BARGHSA_DEPLOYMENT_ENV: 'staging',
+    BARGHSA_RELEASE_SHA: revision,
+    ROUTE_ERROR_SENTRY_DSN: 'https://fixturekey@receiver.example.test/17',
+    SERVER_ERROR_SENTRY_DSN: 'https://fixturekey@receiver.example.test/17',
+  };
+  const verify = `
+    const envelopes = [];
+    globalThis.fetch = async (_url, { body }) => {
+      const [header, , event] = body.split('\\n').map(JSON.parse);
+      envelopes.push(event);
+      return Response.json({ id: header.event_id });
+    };
+    const reference = '12345678-1234-4123-8123-123456789abc';
+    assert.equal(await reporter.reportBrowserError('ROUTE_RENDER_FAILED', reference), 'acknowledged');
+    await reporter.reportServerError('WORKER_POLLER_FAILED');
+    assert.deepEqual(envelopes.map(event => event.tags.process), ['web', 'worker']);
+    for (const event of envelopes) {
+      assert.equal(event.release, process.env.BARGHSA_RELEASE_SHA);
+      assert.equal(event.tags.release_version, process.env.EXPECTED_RELEASE_VERSION);
+    }
+  `;
+  const esm = new URL('../dist/error-reporting.js', import.meta.url).href;
+  const cjs = require.resolve('@barghsa/shared/error-reporting');
+  const formats = [
+    [
+      'module',
+      `import assert from 'node:assert/strict'; import * as reporter from ${JSON.stringify(esm)};`,
+    ],
+    [
+      'commonjs',
+      `const assert = require('node:assert/strict'); const reporter = require(${JSON.stringify(cjs)});`,
+    ],
+  ];
+  try {
+    for (const [contents, expected] of [
+      [manifest, version],
+      ['{"name":"another-package","version":"0.0.0"}', undefined],
+      ['{"name":"barghsa-core","version":"invalid-version"}', undefined],
+      [undefined, undefined],
+    ]) {
+      const file = join(cwd, 'root-package.json');
+      if (contents) writeFileSync(file, contents);
+      else rmSync(file, { force: true });
+      for (const [format, imports] of formats) {
+        const result = spawnSync(
+          process.execPath,
+          [`--input-type=${format}`, '-e', `${imports}\n(async () => { ${verify} })();`],
+          { cwd, env: { ...env, EXPECTED_RELEASE_VERSION: expected }, encoding: 'utf8' }
+        );
+        assert.equal(result.status, 0, result.error?.message ?? result.stdout + result.stderr);
+      }
+    }
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
 });
 
 test('TypeScript resolves ESM and CommonJS declarations with strict checking', () => {
