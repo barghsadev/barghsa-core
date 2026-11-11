@@ -128,7 +128,10 @@ for (const locale of ['fa', 'en']) {
       if (sample.input.startsWith('09'))
         await expect(page.locator('#username-hint')).toHaveText('+98 912 123 4567');
       await page.locator('#password').fill(password);
-      await page.getByRole('checkbox').click();
+      await expect(page.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
+      const terms = page.getByRole('checkbox');
+      await terms.click();
+      await expect(terms).toBeChecked();
       await page.locator('button[type="submit"]').click();
       await expect(page).toHaveURL(/\/register\/verify\?/);
       const hint = new URL(page.url()).searchParams.get('destination')!;

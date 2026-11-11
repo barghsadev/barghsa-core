@@ -6024,7 +6024,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
@@ -6116,6 +6116,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -15667,7 +15675,8 @@
       "launch_required": true,
       "remaining": [
         "Read back a successful 02:00 UTC scheduled run on current release source and its seven-day history, preserving the six unavailable historical detailed receipts as gaps. The same workflow passed by manual dispatch at f0f9434c.",
-        "Verify actual result delivery to the authorized dedicated receiver and repeat invalidated checks for the exact accepted candidate."
+        "Verify actual result delivery to the authorized dedicated receiver and repeat invalidated checks for the exact accepted candidate.",
+        "Reconcile scheduled run 42990347003 on the current source. The provider, ownership and registration fixtures have focused evidence. Verify the WebKit branding fixture loopback read and the one transient contrast measurement through a clean current-source rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -15695,6 +15704,9 @@
           "historically_skipped": true
         },
         "changed_paths": [
+          "apps/web/e2e/consumer-theme.spec.ts",
+          "apps/web/e2e/registration-feature.spec.ts",
+          "apps/web/e2e/team.spec.ts",
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
@@ -15735,7 +15747,8 @@
           "release-0.6-nightly-source-security-scan",
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
-          "release-0.6-clean-browser-rollup-and-brand-rehearsal"
+          "release-0.6-clean-browser-rollup-and-brand-rehearsal",
+          "release-0.6-scheduled-browser-fixture-contracts"
         ],
         "current_acceptance": null
       }
@@ -16259,7 +16272,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-native-forms.spec.ts",
@@ -16355,6 +16368,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -23682,7 +23703,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -24119,6 +24140,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -24351,7 +24380,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -24788,6 +24817,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -25153,7 +25190,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -25590,6 +25627,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -25813,7 +25858,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -26250,6 +26295,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -26487,7 +26540,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -26924,6 +26977,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -27162,7 +27223,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -27599,6 +27660,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -27836,7 +27905,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -28273,6 +28342,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -28514,7 +28591,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -28951,6 +29028,14 @@
                 "apps/web/e2e/registration-recovery.spec.ts"
               ],
               "scope": "Only the E2E readiness wait before the existing consent pointer changes. All original request, challenge, localized retry, input-retention and support assertions are retained. Product and browser retry settings are unchanged."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -46486,7 +46571,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -47255,6 +47340,14 @@
                 "apps/web/src/pages/AdminEmailProvidersPage.tsx"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -63142,7 +63235,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -63645,6 +63738,14 @@
                 "apps/api/src/profiles/agents.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -63980,7 +64081,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -64781,6 +64882,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -65036,7 +65145,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -65555,6 +65664,14 @@
                 "apps/api/src/profiles/invitations.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -65840,7 +65957,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -67045,6 +67162,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -67296,7 +67421,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -67815,6 +67940,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -68750,7 +68883,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -68872,6 +69005,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -76486,7 +76627,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -76902,6 +77043,14 @@
                 "apps/web/src/pages/AdminEmailProvidersPage.tsx"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -537454,7 +537603,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -537504,6 +537653,14 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser interactions and additional readiness assertions changed. Exact focused native cases exercise the existing finance, profile, privacy, accessibility and retry assertions."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -568672,7 +568829,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -569303,6 +569460,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -573832,7 +573997,7 @@
             },
             {
               "path": "apps/web/e2e/registration-feature.spec.ts",
-              "sha256": "6aa0bbc0d777665336c9ca16464175a47c453d9b0c4d2c49a2b4b50eeec9589c"
+              "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
             },
             {
               "path": "apps/web/e2e/global-setup.ts",
@@ -574463,6 +574628,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/registration-feature.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -574827,7 +575000,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -575288,6 +575461,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -575484,7 +575665,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -575945,6 +576126,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -576141,7 +576330,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -576602,6 +576791,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -576798,7 +576995,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -577259,6 +577456,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -577455,7 +577660,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -577916,6 +578121,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -578112,7 +578325,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -578573,6 +578786,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -578769,7 +578990,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -579230,6 +579451,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -579426,7 +579655,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -579887,6 +580116,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -580083,7 +580320,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -580544,6 +580781,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -580740,7 +580985,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -581201,6 +581446,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -581397,7 +581650,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -581858,6 +582111,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -582054,7 +582315,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -582515,6 +582776,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -582711,7 +582980,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -583172,6 +583441,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -583368,7 +583645,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -583829,6 +584106,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -596133,7 +596418,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -597241,6 +597526,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -598289,7 +598582,7 @@
           "source_evidence": [
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/control-contrast.ts",
@@ -598403,6 +598696,14 @@
                 "apps/web/e2e/saving-journey.spec.ts"
               ],
               "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -599695,7 +599996,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -599859,7 +600160,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -600495,6 +600796,15 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -600693,7 +601003,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -600857,7 +601167,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -601493,6 +601803,15 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -602282,7 +602601,7 @@
             },
             {
               "path": "apps/web/e2e/consumer-theme.spec.ts",
-              "sha256": "7d7080a0c62569bc169f3f870d189b8919c243da95f33f4966af15d6dffb9058"
+              "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
             },
             {
               "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
@@ -602446,7 +602765,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/e2e/timezone-settings.spec.ts",
@@ -603082,6 +603401,15 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/consumer-theme.spec.ts",
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -656403,7 +656731,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/e2e/telegram-link.spec.ts",
@@ -658779,6 +659107,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ]
         }
@@ -747821,7 +748157,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -748250,6 +748586,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -748555,7 +748899,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -748984,6 +749328,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -749289,7 +749641,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -749718,6 +750070,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -750021,7 +750381,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -750450,6 +750810,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -750753,7 +751121,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -751182,6 +751550,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -751487,7 +751863,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -751916,6 +752292,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -752220,7 +752604,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -752649,6 +753033,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -752953,7 +753345,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -753382,6 +753774,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -753686,7 +754086,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -754115,6 +754515,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -754419,7 +754827,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -754848,6 +755256,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -755152,7 +755568,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -755581,6 +755997,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -755885,7 +756309,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/package.json",
@@ -756314,6 +756738,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -796272,7 +796704,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -796654,6 +797086,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -797007,7 +797447,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -797389,6 +797829,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -797742,7 +798190,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -798124,6 +798572,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -798478,7 +798934,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -798860,6 +799316,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -799213,7 +799677,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -799595,6 +800059,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -799948,7 +800420,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -800330,6 +800802,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -800683,7 +801163,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -801065,6 +801545,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -801419,7 +801907,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -801801,6 +802289,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -802154,7 +802650,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -802536,6 +803032,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -802889,7 +803393,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -803271,6 +803775,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -817309,7 +817821,7 @@
             },
             {
               "path": "apps/web/e2e/team.spec.ts",
-              "sha256": "6256cd5c9291ff972f177589c07fb4b679b93dedd64dbc37a35a92681d22f5d1"
+              "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
             },
             {
               "path": "apps/web/src/components/TeamActionDialog.tsx",
@@ -821362,6 +821874,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-scheduled-browser-fixture-contracts",
+              "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+              "paths": [
+                "apps/web/e2e/team.spec.ts"
+              ],
+              "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
             }
           ],
           "presentation_renewals": [
@@ -835035,7 +835555,8 @@
           "release-0.6-hosted-signed-ubuntu-archive-fallback",
           "release-0.6-explicit-provider-test-recipient",
           "release-0.6-analytics-consent-boundary",
-          "release-0.6-environment-indicator"
+          "release-0.6-environment-indicator",
+          "release-0.6-scheduled-browser-fixture-contracts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -956645,6 +957166,165 @@
         "release-readiness#R-03.02",
         "release-readiness#R-04.02",
         "release-readiness#R-05.01"
+      ]
+    },
+    "release-0.6-scheduled-browser-fixture-contracts": {
+      "batch": "release-0.6-scheduled-browser-fixture-contracts",
+      "base_commit": "de6e537454ede63e148fa48d398d5428977228a4",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/consumer-theme.spec.ts",
+        "apps/web/e2e/registration-feature.spec.ts",
+        "apps/web/e2e/team.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
+        },
+        {
+          "path": "apps/web/e2e/registration-feature.spec.ts",
+          "sha256": "3b96b2431c452521f205f236bd71bb6bcc08b23102fbee0c42ef4e2e8ee69c13"
+        },
+        {
+          "path": "apps/web/e2e/team.spec.ts",
+          "sha256": "984102619a1b91a16dd4846b2e5136dc62ba8639befb256bbcae12c121f3c0cc"
+        },
+        {
+          "path": "apps/web/src/lib/email-providers-api.ts",
+          "sha256": "0b147d5bf3d70c1a34095df9c68ba865b16392d86f6c859160dc9d9f36d7b807"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
+        },
+        {
+          "path": "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "sha256": "800e2746504e1f0251ea8581db2fb447c46fe2bacccbdd13d6be35764e031c45"
+        },
+        {
+          "path": "apps/web/src/components/PasswordField.tsx",
+          "sha256": "69f3ad64ddf1279ec4a897edd877779078eecf9bba4d499164eb85be5013adc6"
+        }
+      ],
+      "checks": [
+        "Scheduled browser run 42990347003 at da81eebf failed. One repeatable failure affected 20 locale, theme and browser variants. The contrast fixture returned an already-active replacement for email rollback, but the API creates a new untested draft and keeps the active row. The same failure reproduced in Chromium against the current built application.",
+        "The revised fixture returns a new pending draft with no activation timestamp, retains the previously active provider and asserts that both remain visible. All original contrast, confirmation, error, notice and request-count assertions remain.",
+        "The ownership fixture now returns a revoked auth session after the one exact accepted POST. The registration masking test waits for the asynchronous password meter to finish and verifies the terms control accepted the same pointer interaction before asserting the original masked OTP URL and request.",
+        "The contrast scenarios passed eight Chromium cases, 11 Firefox/WebKit/mobile Safari cases and four isolated repeats of the one WebKit case that returned a transient contrast measurement of 1 in the initial cross-browser run. That failed measurement remains in the evidence. The ownership scenarios passed nine Chromium cases and nine Firefox cases after installing its locked binary. The initial mixed run recorded nine Firefox launch failures caused by the missing binary. All 18 mobile Chromium registration normalization cases passed.",
+        "The WebKit Persian branding fixture also reported ECONNRESET on the loopback configs read, with a successful retry in the scheduled run. That transient and a successful exact-candidate 40-shard scheduled rollup remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/nightly-failed.log",
+          "sha256": "d6295f4f94947fd2a5dce2428e056b867563e6ddff4b77308adb4610d5582f70"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/consumer-theme-cross-browser.log",
+          "sha256": "63c4681953e1e71cebcd0c0ee1f0356b493941bc24dba6c06307f129f7b53aef"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/browser-install.log",
+          "sha256": "2bb7b2cf94ba435026dd75d51bc68eca4d8922168cd97e6359d948f6acc4c8e5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/consumer-theme-before.log",
+          "sha256": "2f15630551fd2b011241b91117d5dfe46baf9824cb9ae68d8d5aff5688de3f8f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/consumer-theme-chromium.log",
+          "sha256": "e1cce03590f9e4bcbe80a98c5e7a2751a89010d33a5eb2c8b2a41a5ea913efbf"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/consumer-theme-cross-browser-fixed.log",
+          "sha256": "8d3bac4e7be378b3a5a9b4621c23d09bb483c2dfd9fb04c0b3f00374c9be7c9d"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/contrast-webkit.log",
+          "sha256": "4fc9044d02cbfc336152f01de2be8f965c123d8918ab63dd249c24adacffb86e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/team-regression.log",
+          "sha256": "6e63dd3ee33680fabc6ea9d18098ba481fea25228fc0b7c9b14599ac1381d064"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/team-firefox.log",
+          "sha256": "6148928bf5858e4e7af4f6b9009cb9ebbdf585225ecec3cb91ffa9c8818f9acb"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/dev-entry-proof.T4c4LTQ2/registration.log",
+          "sha256": "8c4895dabc7a0134874fa84f11317aa902e6d1010bfacc26d9d398e2c302420a"
+        }
+      ],
+      "reused_source_bindings": [
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-06.01.02",
+        "02-auth-users-admin.md#T-01.01.01",
+        "02-auth-users-admin.md#T-01.01.02",
+        "02-auth-users-admin.md#T-01.01.04",
+        "02-auth-users-admin.md#T-01.01.05",
+        "02-auth-users-admin.md#T-01.01.06",
+        "02-auth-users-admin.md#T-01.02.01",
+        "02-auth-users-admin.md#T-01.02.02",
+        "02-auth-users-admin.md#T-01.02.03",
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-05.04.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "02-auth-users-admin.md#T-05.04.03",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-05.04.05",
+        "02-auth-users-admin.md#T-05.05.02",
+        "02-auth-users-admin.md#T-09.01.02",
+        "06-security-testing-observability.md#T-06.10.03.05",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.19.01.01",
+        "07-ui-ux-design.md#T-07.19.01.02",
+        "07-ui-ux-design.md#T-07.19.01.03",
+        "07-ui-ux-design.md#T-07.19.02.01",
+        "07-ui-ux-design.md#T-07.19.02.02",
+        "07-ui-ux-design.md#T-07.19.02.03",
+        "07-ui-ux-design.md#T-07.19.02.04",
+        "07-ui-ux-design.md#T-07.19.02.05",
+        "07-ui-ux-design.md#T-07.19.02.06",
+        "07-ui-ux-design.md#T-07.19.02.07",
+        "07-ui-ux-design.md#T-07.19.02.08",
+        "07-ui-ux-design.md#T-07.19.02.09",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-02.02"
       ]
     }
   },

@@ -788,6 +788,10 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
   page,
 }) => {
   await shell(page);
+  let acceptances = 0;
+  await page.route('**/api/auth/user', (route) =>
+    acceptances > 0 ? route.fulfill({ status: 401, json: {} }) : route.fallback()
+  );
   await page.route('**/api/profiles/ownership-transfers', (route) =>
     route.fulfill({
       json: {
@@ -804,7 +808,9 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
     })
   );
   await page.route(`**/api/profiles/${profileId}/ownership-accept`, (route) => {
+    expect(route.request().method()).toBe('POST');
     expect(route.request().postDataJSON()).toEqual({ transferId });
+    acceptances++;
     return route.fulfill({ json: { profileId, transferId, status: 'Completed' } });
   });
   await page.goto('/dashboard');
@@ -822,6 +828,7 @@ test('incoming ownership is visible and acceptance sends the bound transfer then
   await authorizeAction(page);
   await page.getByRole('dialog').getByRole('button', { name: 'Confirm', exact: true }).click();
   await expect(page).toHaveURL(/\/login$/);
+  expect(acceptances).toBe(1);
 });
 
 test('stale transfer remains an error and never reports acceptance', async ({ page }) => {

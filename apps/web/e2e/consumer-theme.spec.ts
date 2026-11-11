@@ -156,12 +156,25 @@ for (const locale of ['en', 'fa'] as const)
         lastTestStatus: 'passed',
         maskedConfig: { from_email: 'mail@example.test' },
       };
-      const disabled = { ...provider, id: 'theme-disabled-email', status: 'disabled' };
+      const disabled = {
+        ...provider,
+        id: 'theme-disabled-email',
+        status: 'disabled',
+        activatedAt: '2026-10-01T08:00:00.000Z',
+      };
+      const active = {
+        ...provider,
+        id: 'theme-active-email',
+        label: 'Active provider',
+        status: 'active',
+        activatedAt: '2026-10-02T08:00:00.000Z',
+      };
       const restored = {
         ...provider,
         id: 'theme-restored-email',
         label: 'Restored provider',
-        status: 'active',
+        lastTestStatus: 'pending',
+        activatedAt: null,
       };
       let rollbackAttempts = 0;
       await page.route(`**/api/admin/email-providers/${disabled.id}/rollback`, (route) => {
@@ -173,18 +186,7 @@ for (const locale of ['en', 'fa'] as const)
       });
       await page.route('**/api/admin/email-providers', (route) =>
         route.fulfill({
-          json: [
-            provider,
-            disabled,
-            rollbackAttempts >= 2
-              ? restored
-              : {
-                  ...provider,
-                  id: 'theme-active-email',
-                  label: 'Active provider',
-                  status: 'active',
-                },
-          ],
+          json: [provider, disabled, active, ...(rollbackAttempts >= 2 ? [restored] : [])],
         })
       );
 
@@ -320,6 +322,9 @@ for (const locale of ['en', 'fa'] as const)
       }
       await expect(
         page.getByText(restored.label, { exact: true }).filter({ visible: true })
+      ).toBeVisible();
+      await expect(
+        page.getByText(active.label, { exact: true }).filter({ visible: true })
       ).toBeVisible();
       expect(rollbackAttempts).toBe(2);
     });
