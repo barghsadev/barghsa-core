@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T20:54:26+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T21:03:13+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1225 | Accepted with unchanged source bindings. |
-| verify | 70 | Existing work may be complete; inspect evidence before building. |
+| done | 1226 | Accepted with unchanged source bindings. |
+| verify | 69 | Existing work may be complete; inspect evidence before building. |
 | partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1427,7 +1427,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.17.02.01` | done | Recorded batch work | Design capability-based maintenance mode: granular toggles per module/capability with admin UI |
 | `06-security-testing-observability.md#T-06.17.02.02` | done | Recorded batch work | Implement maintenance mode middleware: check capability toggle before processing; return `503` with safe message and support link |
 | `06-security-testing-observability.md#T-06.17.02.03` | done | Recorded batch work | Build admin UI: view active maintenance modes, activate/deactivate with reason + estimated duration + owner |
-| `06-security-testing-observability.md#T-06.17.02.04` | verify | Inventory needed | Ensure in-app and synthetic health checks respect maintenance mode (don't alert on expected unavailability) |
+| `06-security-testing-observability.md#T-06.17.02.04` | done | Recorded batch work | Ensure in-app and synthetic health checks respect maintenance mode (don't alert on expected unavailability) |
 | `06-security-testing-observability.md#T-06.17.02.05` | done | Recorded batch work | Write integration tests: maintenance-prevented action returns correct status; non-maintained capabilities unaffected |
 | `06-security-testing-observability.md#T-06.17.03.01` | done | Recorded batch work | Define synthetic check endpoints: `/health` (public), authenticated read-only query, login flow |
 | `06-security-testing-observability.md#T-06.17.03.02` | verify | Inventory needed | Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider) |

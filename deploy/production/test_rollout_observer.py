@@ -133,6 +133,9 @@ class Rehearsal:
                 elif path == '/api/health/live':
                     payload = {'status': 'ok'}
                 elif path == '/api/health/ready':
+                    if kind == 'candidate' and fixture.fault == 'database-down':
+                        self.send_error(503)
+                        return
                     payload = {'status': 'ok', 'checks': {'postgresql': {'status': 'ok'}}}
                 elif kind != 'candidate' or cookie != 'barghsa_session=' + fixture.config['session_id'] or token:
                     self.send_error(401)
@@ -252,6 +255,17 @@ class ObserverTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertEqual([row for row in self.rehearsal.requests if row[2]], [
             ('candidate', '/api/auth/user', 'barghsa_session=' + self.rehearsal.config['session_id'], None),
+        ])
+
+    def test_database_unavailability_stops_before_authenticated_smoke(self):
+        result = self.observe('database-down')
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(result.stdout, '')
+        self.assertEqual(result.stderr.strip(), 'observation_unavailable')
+        self.assertEqual(self.rehearsal.requests, [
+            ('candidate', '/release.json', None, None),
+            ('candidate', '/api/health/live', None, None),
+            ('candidate', '/api/health/ready', None, None),
         ])
 
     def test_missing_or_untrustworthy_measurements_fail_closed(self):

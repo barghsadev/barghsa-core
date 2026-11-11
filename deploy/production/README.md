@@ -180,6 +180,11 @@ out or failed critical dependencies. Verify collector coverage against the
 The authenticated smoke reads check the synthetic account independently of
 that availability input.
 
+The synthetic smoke uses read-only health and account requests during a
+capability pause. For example, electricity checkout maintenance can reject a
+new order while liveness, database readiness and the existing order list
+remain available. A failed readiness check still stops the observation.
+
 The observer computes counter deltas from complete scrapes within the
 window. Restarts, scope or target changes, missing journey series, scrape
 gaps and stale rule evaluations make the observation unavailable. The HTTP

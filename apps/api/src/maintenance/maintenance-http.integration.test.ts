@@ -62,6 +62,11 @@ it('pauses only the selected new action while other capabilities and health rema
   const health = await fetch(`${http.base}/api/health/live`);
   expect(health.status).toBe(200);
   expect(await health.json()).toEqual({ status: 'ok' });
+  const readiness = await fetch(`${http.base}/api/health/ready`);
+  expect(readiness.status, http.logs()).toBe(200);
+  expect(await readiness.json()).toMatchObject({
+    checks: { postgresql: { status: 'ok' } },
+  });
 
   await setMaintenance('electricity_checkout', false);
   const resumed = await fetch(`${http.base}/api/electricity/orders/simple`, { method: 'POST' });

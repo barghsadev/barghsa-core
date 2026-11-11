@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T20:54:26+00:00",
+  "updated": "2026-11-11T21:03:13+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10141,7 +10141,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-sentry-build-release-envelope",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10153,7 +10154,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10266,6 +10267,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -15303,7 +15312,8 @@
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15315,7 +15325,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15359,6 +15369,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -15412,7 +15430,8 @@
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15424,7 +15443,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15468,6 +15487,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -23782,7 +23809,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23803,7 +23831,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -23973,6 +24001,14 @@
                 "deploy/pilot/README.md"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -25231,7 +25267,8 @@
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-production-notes-and-provider-inventory",
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -25259,7 +25296,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             }
           ],
           "checks": [
@@ -25306,6 +25343,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -557604,7 +557649,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -557626,7 +557672,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -557753,6 +557799,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -557850,7 +557904,8 @@
         "batches": [
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-executive-slo-dashboard"
+          "release-0.6-executive-slo-dashboard",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -557861,7 +557916,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -557941,6 +557996,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -561734,7 +561797,8 @@
         "batches": [
           "release-0.6-executive-slo-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -561758,7 +561822,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -561794,6 +561858,14 @@
                 "deploy/monitoring/staging-dashboards.yml"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -566566,7 +566638,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -566642,7 +566715,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
+              "sha256": "6ad69b13420cd41b8c1d9cab970c5ce0f20248c15abf45c6d661027d2e95d9ef"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -566734,6 +566807,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -566767,7 +566848,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -566843,7 +566925,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
+              "sha256": "6ad69b13420cd41b8c1d9cab970c5ce0f20248c15abf45c6d661027d2e95d9ef"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -566935,6 +567017,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -566969,7 +567059,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -567045,7 +567136,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
+              "sha256": "6ad69b13420cd41b8c1d9cab970c5ce0f20248c15abf45c6d661027d2e95d9ef"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -567137,6 +567228,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -567153,19 +567252,88 @@
         "story": "06-security-testing-observability.md#spec-480b1f235a2e"
       },
       "requirement": "| T-06.17.02.04 | Ensure in-app and synthetic health checks respect maintenance mode (don't alert on expected unavailability) | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+          "deploy/production/README.md",
+          "deploy/production/test_rollout_observer.py"
+        ],
+        "batches": [
+          "release-0.6-maintenance-health"
+        ],
+        "current_acceptance": {
+          "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+          "kind": "native_verification",
+          "source_evidence": [
+            {
+              "path": "apps/api/src/consultation/consultation-request.controller.ts",
+              "sha256": "b322a7fc20fd929aed9b0872082b6981661fbe8a5abfa991b0acca5b2e6a3ce7"
+            },
+            {
+              "path": "apps/api/src/electricity/electricity-order.controller.ts",
+              "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+            },
+            {
+              "path": "apps/api/src/health/health.controller.ts",
+              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+            },
+            {
+              "path": "apps/api/src/health/health.service.ts",
+              "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+              "sha256": "6ad69b13420cd41b8c1d9cab970c5ce0f20248c15abf45c6d661027d2e95d9ef"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.guard.ts",
+              "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+            },
+            {
+              "path": "apps/api/src/maintenance/maintenance.service.ts",
+              "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
+            },
+            {
+              "path": "apps/api/src/saving/saving-order.controller.ts",
+              "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+            },
+            {
+              "path": "apps/api/src/solar/solar-request.controller.ts",
+              "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+            },
+            {
+              "path": "apps/api/src/wallet/wallet.controller.ts",
+              "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+            },
+            {
+              "path": "deploy/production/rollout-observer.py",
+              "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+            },
+            {
+              "path": "deploy/production/test_rollout_observer.py",
+              "sha256": "c462b2241b71d2431f9da8e40e16cbe68e4dff5e5078d8a045ee9c414a251d1d"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+            }
+          ],
+          "checks": [
+            "The compiled API passed all three capability maintenance integration cases with isolated migrated PostgreSQL. During electricity checkout maintenance, the guarded submit returned the typed 503, unrelated saving remained reachable, unauthenticated liveness and readiness both returned 200 and PostgreSQL remained healthy. The existing test verified resumption after clearing the flag. Wallet isolation, validation, staff authority, step-up, versioning and audit cases still passed.",
+            "Nine read-only rollout observer tests passed. The smoke reads exact public release and health metadata before using the protected synthetic account, then checks owned dashboard, wallet and all four service reads. A readiness HTTP 503 from the isolated fixture made the observer fail before sending any credential. The operator documentation describes the write-pause behavior."
+          ]
+        }
       }
     },
     {
@@ -567197,7 +567365,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -567273,7 +567442,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
+              "sha256": "6ad69b13420cd41b8c1d9cab970c5ce0f20248c15abf45c6d661027d2e95d9ef"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -567365,6 +567534,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -567399,7 +567576,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-public-registration-privacy",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-maintenance-health"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -567447,7 +567625,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -567534,6 +567712,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-maintenance-health",
+              "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
             }
           ]
         }
@@ -858808,7 +858994,8 @@
           "release-0.6-webkit-contrast-readback",
           "release-0.6-pdf-preflight-and-license-readback",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-maintenance-health"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -985314,6 +985501,124 @@
         {
           "file": "source-checks.log",
           "sha256": "d267d2b212a4504994596c971aa6dd2ccb60a6137a15819bfd9d0515a6d0fdd9"
+        }
+      ]
+    },
+    "release-0.6-maintenance-health": {
+      "batch": "release-0.6-maintenance-health",
+      "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-request.controller.ts",
+          "sha256": "b322a7fc20fd929aed9b0872082b6981661fbe8a5abfa991b0acca5b2e6a3ce7"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+        },
+        {
+          "path": "apps/api/src/health/health.service.ts",
+          "sha256": "cafbb49eda3715d91702c4529d756f154d0f8c485278ddfdbfc8409ce281ea36"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+          "sha256": "6ad69b13420cd41b8c1d9cab970c5ce0f20248c15abf45c6d661027d2e95d9ef"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.guard.ts",
+          "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.service.ts",
+          "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.controller.ts",
+          "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.controller.ts",
+          "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "c462b2241b71d2431f9da8e40e16cbe68e4dff5e5078d8a045ee9c414a251d1d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        }
+      ],
+      "checks": [
+        "The compiled API passed all three capability maintenance integration cases with isolated migrated PostgreSQL. During electricity checkout maintenance, the guarded submit returned the typed 503, unrelated saving remained reachable, unauthenticated liveness and readiness both returned 200 and PostgreSQL remained healthy. The existing test verified resumption after clearing the flag. Wallet isolation, validation, staff authority, step-up, versioning and audit cases still passed.",
+        "Nine read-only rollout observer tests passed. The smoke reads exact public release and health metadata before using the protected synthetic account, then checks owned dashboard, wallet and all four service reads. A readiness HTTP 503 from the isolated fixture made the observer fail before sending any credential. The operator documentation describes the write-pause behavior."
+      ],
+      "limitations": [
+        "The isolated Linux test toolchain lock differs only in the unrelated nodemon pstree.remy development patch. No development watcher is used by these checks.",
+        "The independent production synthetic schedule, its live test account and its on-call alert receipt remain separate release criteria."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-maintenance-health",
+      "execution_receipts": [
+        {
+          "file": "native-postgres.log",
+          "sha256": "49605b553832b361d678f81bb9156d2537b3231612149d321a24dadb40cdd83e"
+        },
+        {
+          "file": "observer-tests.log",
+          "sha256": "9d94a4185be3a3b8d67b18fbc7077812aba24baaaea4bdbf4e7043cd0c22588c"
+        },
+        {
+          "file": "native-toolchain-lock.diff",
+          "sha256": "5d8b8dfdf5fdab3314a8c892630c0a7194cc19a54cca25b54e715a85e812ef2a"
+        },
+        {
+          "file": "run-native.sh",
+          "sha256": "fadd31f584fb3c925e5dd6bcc1a049dab2b71890931a502741f4bac2c1533b96"
+        },
+        {
+          "file": "build.log",
+          "sha256": "d7f6cd4295fce5e23c80d98f281be1ff0b59911251c10ff41a8cdc1b0af34330"
+        },
+        {
+          "file": "tested-sources.log",
+          "sha256": "4f220c203d70df4c513034b6d1ebf10ad5c6425a32f19dca60f6b63ba921ea2a"
+        },
+        {
+          "file": "source-checks.log",
+          "sha256": "88b46f076327acf000919c46dbde3fa7e87c5acbd6e8cbb48eb6f34fd08196ac"
         }
       ]
     }
