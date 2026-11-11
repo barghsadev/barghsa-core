@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:14:00+00:00",
+  "updated": "2026-11-11T22:20:57+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17605,7 +17605,8 @@
           "audit/skipped-work-handoff.md"
         ],
         "batches": [
-          "release-0.6-quarterly-database-restore-calendar"
+          "release-0.6-quarterly-database-restore-calendar",
+          "release-0.6-quarterly-storage-recovery"
         ],
         "current_acceptance": null
       }
@@ -24126,7 +24127,8 @@
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-quarterly-storage-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -24154,7 +24156,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+              "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
             },
             {
               "path": "docs/runbooks/notification-outage.md",
@@ -24198,6 +24200,14 @@
                 "docs/runbooks/payment-wallet-mismatch.md"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-quarterly-storage-recovery",
+              "base_commit": "87ea4e81daeae03671d7c01e7c4f0ffdd584496b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "Added the quarterly checks and off-server exercise to the storage runbook. Existing escalation, recovery, policy, alert links and response instructions retain their bytes. Formatting and links passed."
             }
           ]
         }
@@ -24629,7 +24639,8 @@
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-quarterly-storage-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -24661,7 +24672,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+              "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
             },
             {
               "path": "docs/runbooks/notification-outage.md",
@@ -24745,6 +24756,14 @@
                 "docs/runbooks/payment-wallet-mismatch.md"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-quarterly-storage-recovery",
+              "base_commit": "87ea4e81daeae03671d7c01e7c4f0ffdd584496b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "Added the quarterly checks and off-server exercise to the storage runbook. Existing escalation, recovery, policy, alert links and response instructions retain their bytes. Formatting and links passed."
             }
           ]
         }
@@ -558006,18 +558025,24 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.05 | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the quarterly recovery workflow against an exact protected preflight commit and inspect both hosted artifacts for passing version, hold and orphan cases. Verify the workflow is active on main with the quarterly schedule.",
+        "Keep recovery from approved off-server storage, destination integrity, measured RPO/RTO and critical-journey proof in the separate disaster-recovery exercise."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          ".github/workflows/storage-recovery-quarterly.yml",
+          "docs/runbooks/storage-outage.md"
+        ],
+        "batches": [
+          "release-0.6-quarterly-storage-recovery"
+        ],
         "current_acceptance": null
       }
     },
@@ -568868,7 +568893,8 @@
         "batches": [
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-quarterly-storage-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -568876,7 +568902,7 @@
           "source_evidence": [
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+              "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -568887,6 +568913,16 @@
             "Reviewed scoped read-only fallback, approved region change preserving versions and holds, version-aware checksum recovery and authorized browser revalidation.",
             "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
             "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-quarterly-storage-recovery",
+              "base_commit": "87ea4e81daeae03671d7c01e7c4f0ffdd584496b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "Added the quarterly checks and off-server exercise to the storage runbook. Existing escalation, recovery, policy, alert links and response instructions retain their bytes. Formatting and links passed."
+            }
           ]
         }
       }
@@ -569069,7 +569105,8 @@
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-quarterly-storage-recovery"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -569135,7 +569172,7 @@
             },
             {
               "path": "docs/runbooks/storage-outage.md",
-              "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+              "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
             }
           ],
           "source_renewals": [
@@ -569163,6 +569200,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-quarterly-storage-recovery",
+              "base_commit": "87ea4e81daeae03671d7c01e7c4f0ffdd584496b",
+              "paths": [
+                "docs/runbooks/storage-outage.md"
+              ],
+              "scope": "Added the quarterly checks and off-server exercise to the storage runbook. Existing escalation, recovery, policy, alert links and response instructions retain their bytes. Formatting and links passed."
             }
           ]
         }
@@ -862441,7 +862486,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-sentry-version-tag",
           "release-0.6-coverage-required-check",
-          "release-0.6-sentry-version-tag-coverage"
+          "release-0.6-sentry-version-tag-coverage",
+          "release-0.6-quarterly-storage-recovery"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -990015,6 +990061,81 @@
           "sha256": "1127862e14d380fad57371fd0ad3737ca165e064c1d489313c62055be698eeba"
         }
       ]
+    },
+    "release-0.6-quarterly-storage-recovery": {
+      "batch": "release-0.6-quarterly-storage-recovery",
+      "base_commit": "87ea4e81daeae03671d7c01e7c4f0ffdd584496b",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.03",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.11.04.05",
+        "06-security-testing-observability.md#T-06.17.01.04",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/storage-recovery-quarterly.yml",
+          "sha256": "b20211822da03d0f9744f715763d75f9e70c6c11dd4eed3457017f6a29494a7e"
+        },
+        {
+          "path": "docs/runbooks/storage-outage.md",
+          "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+        },
+        {
+          "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
+          "sha256": "92961c892cb0521099719b356892e902257526e9dbce38c8cff9956d9a3065f3"
+        },
+        {
+          "path": "apps/worker/scripts/build-test-worker.mjs",
+          "sha256": "48b10432dc3cbe015ba1af569dc279a6c28c1ec2b7959e7d82ff88e2f750d289"
+        }
+      ],
+      "checks": [
+        "The quarterly workflow builds the worker and dependencies once, then runs retained-version and lifecycle cases on real disposable MinIO and the orphan/retry suite on real MinIO and migrated PostgreSQL. Both commands preserve pass/fail outcomes and separate logs. The schedule is at 04:17 UTC on the first day of January, April, July and October, with manual and scoped workflow-change triggers.",
+        "Hosted predecessor 43099755916 at 256a0d1c passed the MinIO lifecycle and retained historical version cases and all 12 worker multipart cleanup cases. Those are test-suite receipts for the predecessor, with exact execution of the new workflow pending.",
+        "Calendar parsing verified twelve occurrences across 2026–2028. Four shell exit and receipt scenarios, actionlint, format, relative links and whitespace passed."
+      ],
+      "limitations": [
+        "The new workflow has not run on GitHub. The static and shell fixture proof does not claim it was installed, scheduled or executed.",
+        "The recovery suites use synthetic storage and credentials. Actual off-server backup availability, destination recovery, recovery time and service-journey evidence remain required under the disaster-recovery gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-quarterly-storage-recovery",
+      "execution_receipts": [
+        {
+          "file": "verify-workflow.py",
+          "sha256": "24decc3279b90b2b82403b7978ea7c008988e1f3b41e7a4bd313e94973ec750a"
+        },
+        {
+          "file": "workflow.log",
+          "sha256": "ff529f14e97a1974759a50abdd0a88ea80ffe26c1a3433467bc50ac393c4b25c"
+        },
+        {
+          "file": "previous-storage-cases.log",
+          "sha256": "66d01ccf262f40005952437773ce1b5d4b39b8d936cefdc7da97c2145698a7f1"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "2d9b85e823b677c24cb7c37ff46de4271cc9a7a9df8f61dae38ec7f8dd9b7a68"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -990054,14 +990175,15 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-protected-tooling-and-browser",
+    "id": "release-0.6-protected-tooling-and-recovery",
     "release": "0.6.0",
     "task_keys": [
       "release-readiness#R-05.02",
+      "06-security-testing-observability.md#T-06.11.04.05",
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify the tooling candidate under the active main ruleset, reconcile scheduled browser evidence and continue the exact v0.6.0 package review."
+    "goal": "Verify exact protected-main preflights and quarterly storage workflow, reconcile scheduled browser evidence, and continue the package review."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

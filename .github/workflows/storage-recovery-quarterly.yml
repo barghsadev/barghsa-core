@@ -1,0 +1,62 @@
+name: Quarterly object storage recovery
+
+on:
+  schedule:
+    - cron: '17 4 1 1,4,7,10 *'
+  workflow_dispatch:
+  push:
+    branches: ['codex/preflight/**']
+    paths: ['.github/workflows/storage-recovery-quarterly.yml']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: storage-recovery-quarterly-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  recover:
+    name: Verify object versions, retention and orphan recovery
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build storage provider and worker
+        id: build
+        run: pnpm --filter '@barghsa/worker...' build
+      - name: Retrieve a retained version and verify lifecycle policy
+        shell: bash
+        run: |
+          node --test --test-reporter=tap packages/shared/scripts/setup-bucket.integration.test.mjs \
+            2>&1 | tee "$RUNNER_TEMP/storage-version-recovery.tap"
+      - name: Detect orphaned uploads and recover interrupted operations
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/worker exec vitest run --reporter=verbose \
+            src/storage/multipart-cleanup.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/storage-orphan-recovery.log"
+      - name: Preserve recovery check results
+        if: ${{ !cancelled() && steps.build.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarterly-storage-recovery
+          path: |
+            ${{ runner.temp }}/storage-version-recovery.tap
+            ${{ runner.temp }}/storage-orphan-recovery.log
+          if-no-files-found: error
+          retention-days: 90
