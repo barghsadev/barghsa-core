@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T18:26:25+00:00",
+  "updated": "2026-11-11T18:43:42+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11673,7 +11673,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -11705,7 +11706,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/jobs/poller-group.ts",
@@ -11819,6 +11820,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -22933,7 +22942,8 @@
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -22945,7 +22955,7 @@
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
-              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+              "sha256": "026aa1a2e9fe8201236c8cb517f305611c5fa9ddd454ec90ae76885e5d41401a"
             },
             {
               "path": "docs/runbooks/refund-backlog.md",
@@ -22997,6 +23007,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "docs/runbooks/payment-wallet-mismatch.md"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -23352,7 +23370,8 @@
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-executive-slo-dashboard"
+          "release-0.6-executive-slo-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -23368,7 +23387,7 @@
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
-              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+              "sha256": "026aa1a2e9fe8201236c8cb517f305611c5fa9ddd454ec90ae76885e5d41401a"
             },
             {
               "path": "docs/runbooks/refund-backlog.md",
@@ -23460,6 +23479,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "docs/runbooks/payment-wallet-mismatch.md"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -23608,7 +23635,8 @@
           "release-0.6-solar-contract-source-boundary",
           "release-0.6-approved-document-destruction-boundary",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23717,7 +23745,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/storage/cleanup.integration.test.ts",
@@ -24215,6 +24243,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -65507,7 +65543,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-identity-staff-and-legal-membership-boundary-verification",
@@ -65591,7 +65628,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/profiles/invitation-expiry.integration.test.ts",
@@ -66384,6 +66421,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -83130,7 +83175,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "renewed-notification-foundation-acceptance",
@@ -83146,7 +83192,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -84271,6 +84317,14 @@
                 "apps/worker/src/notifications/send-receipt.integration.test.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -84541,7 +84595,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -85273,7 +85328,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/meta/0269_snapshot.json",
@@ -86975,6 +87030,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -107585,7 +107648,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -107685,7 +107749,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -108085,6 +108149,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -115216,7 +115288,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -115704,7 +115777,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -116171,6 +116244,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -121719,7 +121800,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -121835,7 +121917,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -122167,6 +122249,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -122444,7 +122534,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -122604,7 +122695,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -122858,6 +122949,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -147104,7 +147203,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -147316,7 +147416,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -147903,6 +148003,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -148212,7 +148320,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -148424,7 +148533,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -149011,6 +149120,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -149320,7 +149437,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -149532,7 +149650,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -150119,6 +150237,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -150428,7 +150554,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -150640,7 +150767,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -151227,6 +151354,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -151536,7 +151671,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -151748,7 +151884,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -152335,6 +152471,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -152644,7 +152788,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -152856,7 +153001,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -153443,6 +153588,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -153838,7 +153991,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -154074,7 +154228,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -154778,6 +154932,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -155097,7 +155259,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -155309,7 +155472,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -155896,6 +156059,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -156291,7 +156462,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -156527,7 +156699,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -157231,6 +157403,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -157550,7 +157730,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -157762,7 +157943,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -158349,6 +158530,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -158651,7 +158840,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -158823,7 +159013,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -159283,6 +159473,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -159494,7 +159692,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -159682,7 +159881,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -160168,6 +160367,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -160362,7 +160569,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-invoice-lifecycle-verification",
@@ -160518,7 +160726,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -160982,6 +161190,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -163278,7 +163494,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -163314,7 +163531,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts",
@@ -163644,6 +163861,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -166324,7 +166549,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -166372,7 +166598,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/receipt-notices.integration.test.ts",
@@ -166791,6 +167017,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -357529,7 +357763,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -357581,7 +357816,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -358362,6 +358597,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -358503,7 +358746,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -358555,7 +358799,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -359336,6 +359580,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -359480,7 +359732,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -359532,7 +359785,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -360313,6 +360566,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -360454,7 +360715,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -360506,7 +360768,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -361287,6 +361549,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -361429,7 +361699,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -361481,7 +361752,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -362262,6 +362533,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -362403,7 +362682,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -362455,7 +362735,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -363236,6 +363516,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -363379,7 +363667,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -363431,7 +363720,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -364212,6 +364501,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -364359,7 +364656,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -364411,7 +364709,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -365192,6 +365490,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -373409,7 +373715,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -373461,7 +373768,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -374242,6 +374549,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -374391,7 +374706,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -374443,7 +374759,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -375224,6 +375540,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -375374,7 +375698,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-lifecycle",
@@ -375426,7 +375751,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -376207,6 +376532,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -482411,7 +482744,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -482511,7 +482845,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -482909,6 +483243,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -483021,7 +483363,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -483121,7 +483464,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -483519,6 +483862,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -483630,7 +483981,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -483730,7 +484082,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -484130,6 +484482,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -484243,7 +484603,8 @@
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -484343,7 +484704,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -484819,6 +485180,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -484957,7 +485326,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -485085,7 +485455,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -485556,6 +485926,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -499470,7 +499848,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -499486,7 +499865,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -499881,6 +500260,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -499988,7 +500375,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -500004,7 +500392,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -500399,6 +500787,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -500508,7 +500904,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -500524,7 +500921,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -500940,6 +501337,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -501081,7 +501486,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -501097,7 +501503,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -501587,6 +501993,14 @@
                 "apps/worker/src/documents/upload-scan-job.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -501694,7 +502108,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -501710,7 +502125,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/documents/destruction-runner.ts",
@@ -502105,6 +502520,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -502217,7 +502640,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -502333,7 +502757,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -502665,6 +503089,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -502796,7 +503228,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -502912,7 +503345,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -503244,6 +503677,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -503377,7 +503818,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -503493,7 +503935,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -503825,6 +504267,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -503956,7 +504406,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -504072,7 +504523,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/shared/src/ai-models/index.ts",
@@ -504404,6 +504855,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -504531,7 +504990,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -504691,7 +505151,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -504945,6 +505405,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -505062,7 +505530,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -505222,7 +505691,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -505476,6 +505945,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -505595,7 +506072,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -505755,7 +506233,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -506009,6 +506487,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -506127,7 +506613,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -506287,7 +506774,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/web/src/pages/AdminKnowledgeBasesPage.tsx",
@@ -506541,6 +507028,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -519370,7 +519865,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -519470,7 +519966,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -519701,6 +520197,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -519805,7 +520309,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -519905,7 +520410,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -520160,6 +520665,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -520264,7 +520777,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "done",
@@ -520364,7 +520878,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -520595,6 +521109,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -520700,7 +521222,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-browser-provider-loopback-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -520800,7 +521323,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -521055,6 +521578,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -521903,7 +522434,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -521935,7 +522467,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -521998,6 +522530,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -522170,7 +522710,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -522214,7 +522755,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "docs/security/otp.md",
@@ -522295,6 +522836,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -522570,7 +523119,8 @@
           "release-0.6-worker-service-failure-logs",
           "release-0.6-database-protection-export-leases",
           "release-0.6-public-registration-privacy",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -522614,7 +523164,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/src/schema/auth-delivery-outbox.ts",
@@ -522684,6 +523234,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -522793,7 +523351,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -522849,7 +523408,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "docs/security/otp.md",
@@ -522917,6 +523476,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -535678,7 +536245,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "reviewed_current_source",
@@ -535706,7 +536274,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -535826,6 +536394,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -548224,7 +548800,8 @@
           "release-0.6-postgresql-dashboard",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-video-upload-policy-ceiling",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-matched-database-protection-and-export-lease-cap",
@@ -548298,7 +548875,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -548422,6 +548999,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -549003,7 +549588,8 @@
           "release-0.6-database-protection-export-leases",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-process-recovery-tests",
@@ -549044,7 +549630,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -549128,6 +549714,14 @@
                 "apps/worker/src/notifications/send-receipt.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -553472,7 +554066,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -553488,7 +554083,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -553583,6 +554178,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -553798,7 +554401,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -553834,7 +554438,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -553929,6 +554533,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -554201,7 +554813,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -554213,7 +554826,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -554355,6 +554968,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -554394,7 +555015,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -554430,7 +555052,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-lease.ts",
@@ -554525,6 +555147,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -555210,19 +555840,96 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.07 | Create Payments/Wallet/Refunds dashboard: transaction volume, success rate, refund count/value, mismatch alerts | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "apps/worker/src/main.ts",
+          "apps/worker/src/wallet/finance-activity-metrics.integration.test.ts",
+          "apps/worker/src/wallet/finance-activity-metrics.ts",
+          "deploy/monitoring/grafana-finance-safety-dashboard.json",
+          "docs/runbooks/payment-wallet-mismatch.md"
+        ],
+        "batches": [
+          "release-0.6-finance-activity-dashboard"
+        ],
+        "current_acceptance": {
+          "kind": "acceptance_verified",
+          "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+          "source_evidence": [
+            {
+              "path": "apps/worker/src/main.ts",
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
+            },
+            {
+              "path": "apps/worker/src/refunds/refund-metrics.ts",
+              "sha256": "7783d96ca52fc8bd8e102a534c07ce7625c98fada8f614f0f72955a756d1f435"
+            },
+            {
+              "path": "apps/worker/src/wallet/finance-activity-metrics.integration.test.ts",
+              "sha256": "4b35d317e1c0847d0e6b8a2f9884bbfe15d6821a15bc07bb5a15a0b4349158af"
+            },
+            {
+              "path": "apps/worker/src/wallet/finance-activity-metrics.ts",
+              "sha256": "10e1a111d5fa553d405bc489013ad1f013ea33acc9e72d40559dbd3762561c7c"
+            },
+            {
+              "path": "apps/worker/src/wallet/reconciliation-metrics.ts",
+              "sha256": "06a932504c359abf67ba960c4b6e3d2ecd04d3924aea93948e9503de79754e3b"
+            },
+            {
+              "path": "deploy/monitoring/grafana-finance-safety-dashboard.json",
+              "sha256": "93343745712ed6893d6dd15f83cc6faa78a5b1bac5acff6cedef503a2b89dbb2"
+            },
+            {
+              "path": "deploy/monitoring/notification-alerts.yml",
+              "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
+            },
+            {
+              "path": "deploy/monitoring/staging-dashboards.yml",
+              "sha256": "58a530359f16fd0f873eff1d1f079eec9792b717a0a57b6e1c6ae29a55127439"
+            },
+            {
+              "path": "docs/runbooks/payment-wallet-mismatch.md",
+              "sha256": "026aa1a2e9fe8201236c8cb517f305611c5fa9ddd454ec90ae76885e5d41401a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+              "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+            },
+            {
+              "path": "packages/db/drizzle/production/0266_online_topup_notifications.sql",
+              "sha256": "36138a941dd03d9842b47d2d361de52f5984dfb09f03893f7994db4f799465e0"
+            },
+            {
+              "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+              "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+            },
+            {
+              "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+              "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+            },
+            {
+              "path": "packages/shared/src/finance/wallet-bank-receipt-confirmation.ts",
+              "sha256": "436141b64cc2d6735e9460e47199fa86b2d699df19936004e15052afd0733d47"
+            }
+          ],
+          "checks": [
+            "The read-only worker collector samples one-hour outcome records from existing indexed audit and outbox windows. It picks the latest outcome per recorded intent, including a recovered late online payment, and joins distinct audited refunds to completed financial records for count and durable IRR value. Scrape failure clears the optional series without suppressing the separate safety signals. Labels contain fixed operation, outcome and destination values.",
+            "Native PostgreSQL passed 30 tests across the exact collector and the wallet and refund reconciliation callers. The new fixture verified idle success, duplicate and malformed audit handling, old outcomes, late credits, payment decisions, actual wallet and external-bank completion, pending refund exclusion, ledger amount provenance, privacy and optional collection failure and recovery.",
+            "All eleven exact Prometheus panel expressions passed fixture checks for scope isolation, newest successful worker scrape selection, idle success-share gaps, verified refund totals and firing alerts. The first query probe caught a scrape-timestamp tie. The corrected query selects the original healthy sample timestamp and retained all assertions.",
+            "Isolated Grafana 13.3.1 replaced the four-panel dashboard with eleven exact panels under the same provisioned UID and database ID. Authenticated readback succeeded and unauthenticated read returned 401. Read-only Compose bind, build, typecheck, lint, formatting and diff checks passed."
+          ],
+          "limitations": [
+            "Payment success share covers the authoritative terminal outcomes for online top-ups and bank receipt reviews. Wallet invoice debits have an observed completion volume only. Refund amounts in Grafana are monitoring summaries of the exact durable amounts, with protected ledgers retained for reconciliation.",
+            "Tests used native disposable PostgreSQL, synthetic records and isolated Grafana. Accepted deployment, live payment provider outcomes and alert delivery receipts remain separate gates."
+          ]
+        }
       }
     },
     {
@@ -555260,7 +555967,8 @@
         "batches": [
           "release-0.6-storage-upload-dashboard",
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -555296,7 +556004,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -555358,6 +556066,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -555393,7 +556109,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -555405,7 +556122,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/delivery-log.ts",
@@ -555546,6 +556263,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -556472,7 +557197,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -556484,7 +557210,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -556611,6 +557337,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -556666,7 +557400,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -556678,7 +557413,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -556820,6 +557555,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -558064,7 +558807,8 @@
         "batches": [
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-incident-runbook-review",
@@ -558072,7 +558816,7 @@
           "source_evidence": [
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
-              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+              "sha256": "026aa1a2e9fe8201236c8cb517f305611c5fa9ddd454ec90ae76885e5d41401a"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -558083,6 +558827,16 @@
             "Reviewed detection, affected-payment containment, provider inquiry, audited correction and independent invoice and ledger readback.",
             "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
             "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "docs/runbooks/payment-wallet-mismatch.md"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            }
           ]
         }
       }
@@ -558412,7 +559166,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -558470,7 +559225,7 @@
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
-              "sha256": "3d93ef1f083cf42d39853ad94c565d4ea0b1c8ecce85e3106b74b10dc6a37aa6"
+              "sha256": "026aa1a2e9fe8201236c8cb517f305611c5fa9ddd454ec90ae76885e5d41401a"
             },
             {
               "path": "docs/runbooks/refund-backlog.md",
@@ -558489,6 +559244,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "docs/runbooks/payment-wallet-mismatch.md"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ]
         }
@@ -820070,7 +820833,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -820206,7 +820970,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -820540,6 +821304,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -820951,7 +821723,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-service-workflow-settings",
@@ -821087,7 +821860,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -821421,6 +822194,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -825580,7 +826361,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -829196,6 +829977,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -829511,7 +830300,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ]
       }
     },
@@ -830679,7 +831469,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "packages/db/drizzle/production/0171_electricity_term_completion.sql",
@@ -834090,6 +834880,14 @@
                 "apps/api/src/upload/upload-reservations.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -834527,7 +835325,8 @@
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "integrated-qa-preview-journeys",
           "release-0.6-bank-receipt-copy-boundary",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ]
       }
     },
@@ -836515,7 +837314,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -838654,6 +839453,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "presentation_renewals": [
@@ -839034,7 +839841,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -841007,7 +841815,7 @@
             },
             {
               "path": "apps/worker/src/main.ts",
-              "sha256": "ecba52baabad840f2aaadd28355db424ac5c731f2d4670b0e5b6327c50dc4d53"
+              "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
             },
             {
               "path": "apps/worker/src/notifications/channel-availability-loader.test.ts",
@@ -843036,6 +843844,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Changes add provider-only samples around the existing durable send result and extend the existing SMS credit and AI budget reads. Existing delivery, permission, circuit, money, and alert semantics and assertions are retained. Focused native API/worker checks and isolated monitoring readback passed."
+            },
+            {
+              "batch": "release-0.6-finance-activity-dashboard",
+              "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+              "paths": [
+                "apps/worker/src/main.ts"
+              ],
+              "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -843433,7 +844249,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-external-provider-dashboard"
+          "release-0.6-external-provider-dashboard",
+          "release-0.6-finance-activity-dashboard"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -971883,7 +972700,8 @@
         "The existing durable send boundary observes email and SMS latency and outcome once per admitted provider callback before writing the receipt. Accepted receipt recovery, ownership checks, rejection and uncertainty handling, retry rules and send configuration remain intact. Receipt persistence failure after acceptance retains the observed provider result.",
         "The worker exposes last observed credit and its timestamp for the verified active SMS configuration. The API exposes current UTC-month utilization separately for each configured model token and USD limit using the existing budget read. No usage or credit is synthesized for an unavailable observation or unconfigured limit. The new exports contain only configuration IDs, fixed labels and numeric samples.",
         "Nine targeted API tests and 30 worker tests passed against an isolated native PostgreSQL fixture with the exact built API. The tests cover independently configured AI limits, lazy rollover without ledger mutation, unavailable scrape data, one sample across competing workers and receipt recovery, unknown outcome holds, acceptance with a lost database write, retired SMS samples and preserved delivery safeguards.",
-        "Prometheus 3.12.0 evaluated 20 exact dashboard query expectations for latency, error share, replica circuit disagreement, dual budgets, SMS credit and its age, idle samples and cross-scope gaps. Isolated Grafana 13.3.1 authenticated API readback confirmed all six provisioned panels and ten expressions. An unauthenticated read was denied. Compose read-only mount, scoped TypeScript checks, builds, lint, formatting and diff validation passed."
+        "Prometheus 3.12.0 evaluated 20 exact dashboard query expectations for latency, error share, replica circuit disagreement, dual budgets, SMS credit and its age, idle samples and cross-scope gaps. Isolated Grafana 13.3.1 authenticated API readback confirmed all six provisioned panels and ten expressions. An unauthenticated read was denied. Compose read-only mount, scoped TypeScript checks, builds, lint, formatting and diff validation passed.",
+        "Required GitHub preflight 43075841910 passed at c9fac07fd7a86e21185232b8c5dec948527ce000 with one eligible successful Verify monorepo integrity result. The direct push and GitHub API confirmed that exact SHA on main."
       ],
       "limitations": [
         "Dashboard creation and metric behavior are verified using isolated tests and synthetic provider responses. Live provider data, signed callback acceptance, hosted required checks and accepted release deployment are separate evidence.",
@@ -972091,6 +972909,186 @@
         {
           "file": "browser.log",
           "sha256": "6bcce99ce06a9147ddef629fdf768d0da37d174aebea97b336ef6c0954a54475"
+        }
+      ]
+    },
+    "release-0.6-finance-activity-dashboard": {
+      "batch": "release-0.6-finance-activity-dashboard",
+      "base_commit": "ae83a76eec91de2d8d558839f08a2f78a47466b8",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.07",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-07.04.01",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-05.04.02",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "02-auth-users-admin.md#T-09.11.01",
+        "02-auth-users-admin.md#T-09.11.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.2.01.08",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "03-core-business.md#T-03.07.01.02",
+        "03-core-business.md#T-03.07.01.03",
+        "03-core-business.md#T-03.07.01.04",
+        "03-core-business.md#T-03.07.02.01",
+        "03-core-business.md#T-03.07.02.02",
+        "03-core-business.md#T-03.07.02.03",
+        "03-core-business.md#T-03.07.02.04",
+        "03-core-business.md#T-03.07.02.05",
+        "03-core-business.md#T-03.07.04.01",
+        "03-core-business.md#T-03.07.04.02",
+        "03-core-business.md#T-03.07.04.03",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "05-notifications-documents-ai.md#T-05.16.01",
+        "05-notifications-documents-ai.md#T-05.16.02",
+        "05-notifications-documents-ai.md#T-05.16.03",
+        "05-notifications-documents-ai.md#T-05.16.04",
+        "05-notifications-documents-ai.md#T-05.17.01",
+        "05-notifications-documents-ai.md#T-05.17.02",
+        "05-notifications-documents-ai.md#T-05.17.03",
+        "05-notifications-documents-ai.md#T-05.17.04",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "06-security-testing-observability.md#T-06.01.02.02",
+        "06-security-testing-observability.md#T-06.01.02.04",
+        "06-security-testing-observability.md#T-06.01.02.07",
+        "06-security-testing-observability.md#T-06.01.02.09",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.11.04.02",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.17.01.01",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/main.ts",
+          "sha256": "14c24711f754c0add8fe394df0227f7f2a705d95d9ecd97ff7cdfaf5dd1fe517"
+        },
+        {
+          "path": "apps/worker/src/refunds/refund-metrics.ts",
+          "sha256": "7783d96ca52fc8bd8e102a534c07ce7625c98fada8f614f0f72955a756d1f435"
+        },
+        {
+          "path": "apps/worker/src/wallet/finance-activity-metrics.integration.test.ts",
+          "sha256": "4b35d317e1c0847d0e6b8a2f9884bbfe15d6821a15bc07bb5a15a0b4349158af"
+        },
+        {
+          "path": "apps/worker/src/wallet/finance-activity-metrics.ts",
+          "sha256": "10e1a111d5fa553d405bc489013ad1f013ea33acc9e72d40559dbd3762561c7c"
+        },
+        {
+          "path": "apps/worker/src/wallet/reconciliation-metrics.ts",
+          "sha256": "06a932504c359abf67ba960c4b6e3d2ecd04d3924aea93948e9503de79754e3b"
+        },
+        {
+          "path": "deploy/monitoring/grafana-finance-safety-dashboard.json",
+          "sha256": "93343745712ed6893d6dd15f83cc6faa78a5b1bac5acff6cedef503a2b89dbb2"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "d0cea9839c8eb2fa28fa750f177bcc5428190f9ddd1658c61d90b69cb68ed442"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "58a530359f16fd0f873eff1d1f079eec9792b717a0a57b6e1c6ae29a55127439"
+        },
+        {
+          "path": "docs/runbooks/payment-wallet-mismatch.md",
+          "sha256": "026aa1a2e9fe8201236c8cb517f305611c5fa9ddd454ec90ae76885e5d41401a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0137_refund_transactions.sql",
+          "sha256": "7f6aeef5c932b2b4afe0cd67c38cca7d7a3f31444c6ac28e30c737393543ebd0"
+        },
+        {
+          "path": "packages/db/drizzle/production/0266_online_topup_notifications.sql",
+          "sha256": "36138a941dd03d9842b47d2d361de52f5984dfb09f03893f7994db4f799465e0"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+        },
+        {
+          "path": "packages/shared/src/finance/pay-invoice-with-wallet.ts",
+          "sha256": "1470cd391ba0f2a595b29d40e1ece78ed99f8aabf75ce77a24daa6527c7e1242"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-bank-receipt-confirmation.ts",
+          "sha256": "436141b64cc2d6735e9460e47199fa86b2d699df19936004e15052afd0733d47"
+        }
+      ],
+      "checks": [
+        "The read-only worker collector samples one-hour outcome records from existing indexed audit and outbox windows. It picks the latest outcome per recorded intent, including a recovered late online payment, and joins distinct audited refunds to completed financial records for count and durable IRR value. Scrape failure clears the optional series without suppressing the separate safety signals. Labels contain fixed operation, outcome and destination values.",
+        "Native PostgreSQL passed 30 tests across the exact collector and the wallet and refund reconciliation callers. The new fixture verified idle success, duplicate and malformed audit handling, old outcomes, late credits, payment decisions, actual wallet and external-bank completion, pending refund exclusion, ledger amount provenance, privacy and optional collection failure and recovery.",
+        "All eleven exact Prometheus panel expressions passed fixture checks for scope isolation, newest successful worker scrape selection, idle success-share gaps, verified refund totals and firing alerts. The first query probe caught a scrape-timestamp tie. The corrected query selects the original healthy sample timestamp and retained all assertions.",
+        "Isolated Grafana 13.3.1 replaced the four-panel dashboard with eleven exact panels under the same provisioned UID and database ID. Authenticated readback succeeded and unauthenticated read returned 401. Read-only Compose bind, build, typecheck, lint, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "Payment success share covers the authoritative terminal outcomes for online top-ups and bank receipt reviews. Wallet invoice debits have an observed completion volume only. Refund amounts in Grafana are monitoring summaries of the exact durable amounts, with protected ledgers retained for reconciliation.",
+        "Tests used native disposable PostgreSQL, synthetic records and isolated Grafana. Accepted deployment, live payment provider outcomes and alert delivery receipts remain separate gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-finance-activity-dashboard",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "a218e27c120c7887acdea70f0ab4d86b6b0e7e5415162d55846c789cae839c9f"
+        },
+        {
+          "file": "native-postgres.log",
+          "sha256": "e0c8845cc5b6d81c75f7322fa2ca09730ab25a7d07f4481de888b580571f0969"
+        },
+        {
+          "file": "dashboard-promql.yml",
+          "sha256": "c1acbe3734d71de8f6b4cb21bc7625a02891f8239ac5029cf5a4b89d949a5e39"
+        },
+        {
+          "file": "dashboard-promql.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "grafana-readback.json",
+          "sha256": "11b3b9e497fceb6fca9908bbbe654aa268ed34ca0f2720831fc379b672257ef9"
         }
       ]
     }

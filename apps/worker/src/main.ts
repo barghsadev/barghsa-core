@@ -56,6 +56,7 @@ import { evaluateWalletLowBalanceSignals } from './wallet/low-balance-notificati
 import { collectNotificationGauges, exportWorkerMetrics } from './notifications/worker-metrics.js';
 import { collectRefundObligationMetrics } from './refunds/refund-metrics.js';
 import { collectReconciliationMetrics } from './wallet/reconciliation-metrics.js';
+import { collectFinanceActivityMetrics } from './wallet/finance-activity-metrics.js';
 import { InAppNotificationTransport } from './notifications/in-app-transport.js';
 import { scanServiceBreaches } from './service-targets/breach-scanner.js';
 import { scanServiceWorkflows } from './service-targets/workflow-scanner.js';
@@ -159,6 +160,7 @@ async function main(): Promise<void> {
           collectNotificationGauges(pool),
           collectRefundObligationMetrics(pool),
           collectReconciliationMetrics(pool),
+          collectFinanceActivityMetrics(pool),
           collectStorageScanBacklog(pool),
         ]);
         const body = await exportWorkerMetrics();

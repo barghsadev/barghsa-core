@@ -1,9 +1,9 @@
 {
   "uid": "barghsa-finance-safety",
-  "title": "Barghsa Finance Safety",
+  "title": "Barghsa Payments, Wallet and Refunds",
   "tags": ["barghsa", "operations"],
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "editable": true,
   "refresh": "30s",
   "time": {
@@ -159,6 +159,259 @@
           "legendFormat": "{{environment}}/{{database}}"
         }
       ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Unresolved reconciliation cases",
+      "description": "Distinct cases awaiting or undergoing investigation. Includes cases below the critical wallet threshold.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max by (environment, database) (reconciliation_mismatches_unresolved)",
+          "legendFormat": "{{environment}}/{{database}}"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Firing financial alerts",
+      "description": "Active financial safety rules evaluated by Prometheus. Alert delivery is verified separately.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max by (environment, database, alertname) (ALERTS{alertstate=\"firing\",alertname=~\"WalletReconciliationCritical|RefundObligationOverdue|PaymentCallbackAnomaly|PaymentIdempotencyConflict\"})",
+          "legendFormat": "{{environment}}/{{database}} \u00b7 {{alertname}}"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Recorded payment outcomes in the last hour",
+      "description": "Distinct payment intents with a recorded terminal outcome. The most recent result for an intent is counted. Each scope uses the latest successful worker scrape.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (environment, database, operation) ((finance_payment_outcomes_1h and on (environment, database, job, instance) topk by (environment, database) (1, timestamp(finance_activity_collection_success) and (finance_activity_collection_success == 1))))",
+          "legendFormat": "{{environment}}/{{database}} \u00b7 {{operation}}"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Payment success share in the last hour",
+      "description": "Completed outcomes divided by all recorded terminal outcomes for online top-ups and bank receipt reviews. Wallet invoice debits have a completion record only. Idle operations have no rate.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 24,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max by (environment, database, operation) ((finance_payment_outcomes_1h{outcome=\"completed\",operation!=\"wallet_invoice_payment\"} and on (environment, database, job, instance) topk by (environment, database) (1, timestamp(finance_activity_collection_success) and (finance_activity_collection_success == 1)))) / (sum by (environment, database, operation) ((finance_payment_outcomes_1h and on (environment, database, job, instance) topk by (environment, database) (1, timestamp(finance_activity_collection_success) and (finance_activity_collection_success == 1)))) > 0)",
+          "legendFormat": "{{environment}}/{{database}} \u00b7 {{operation}}"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Completed refunds in the last hour",
+      "description": "Distinct audited completions with a completed refund transaction, by destination.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max by (environment, database, destination) ((finance_refunds_completed_1h and on (environment, database, job, instance) topk by (environment, database) (1, timestamp(finance_activity_collection_success) and (finance_activity_collection_success == 1))))",
+          "legendFormat": "{{environment}}/{{database}} \u00b7 {{destination}}"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "timeseries",
+      "title": "Refunded value in the last hour",
+      "description": "Sum of the durable amounts of the same completed refunds, in IRR.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 32,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "suffix: IRR"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "max by (environment, database, destination) ((finance_refunds_completed_irr_1h and on (environment, database, job, instance) topk by (environment, database) (1, timestamp(finance_activity_collection_success) and (finance_activity_collection_success == 1))))",
+          "legendFormat": "{{environment}}/{{database}} \u00b7 {{destination}}"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "timeseries",
+      "title": "Finance activity collection health",
+      "description": "1 means the activity window was collected successfully. 0 means the collector could not read it. Existing safety gauges are collected independently.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 40,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "showLegend": true
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "min by (environment, database) (finance_activity_collection_success)",
+          "legendFormat": "{{environment}}/{{database}}"
+        }
+      ]
     }
-  ]
+  ],
+  "description": "Observed payment outcomes, completed refunds and financial reconciliation alerts."
 }

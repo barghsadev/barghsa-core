@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T18:26:25+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T18:43:42+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1221 | Accepted with unchanged source bindings. |
-| verify | 78 | Existing work may be complete; inspect evidence before building. |
+| done | 1222 | Accepted with unchanged source bindings. |
+| verify | 77 | Existing work may be complete; inspect evidence before building. |
 | partial | 61 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1377,7 +1377,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.02.04` | done | Recorded batch work | Create Worker/Outbox dashboard: queue depth, oldest age, processing rate, retries, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.02.05` | done | Recorded batch work | Create External Providers dashboard: latency, error rate, circuit-breaker state, quota usage |
 | `06-security-testing-observability.md#T-06.14.02.06` | verify | Inventory needed | Create Authentication/Security dashboard: login rate, MFA pass/fail, OTP send/verify rate, rate-limit hits, audit events |
-| `06-security-testing-observability.md#T-06.14.02.07` | verify | Inventory needed | Create Payments/Wallet/Refunds dashboard: transaction volume, success rate, refund count/value, mismatch alerts |
+| `06-security-testing-observability.md#T-06.14.02.07` | done | Recorded batch work | Create Payments/Wallet/Refunds dashboard: transaction volume, success rate, refund count/value, mismatch alerts |
 | `06-security-testing-observability.md#T-06.14.02.08` | done | Recorded batch work | Create Storage/Uploads dashboard: upload count, size distribution, scan state, malware count |
 | `06-security-testing-observability.md#T-06.14.02.09` | done | Recorded batch work | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate |
 | `06-security-testing-observability.md#T-06.14.02.10` | done | Recorded batch work | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate |
