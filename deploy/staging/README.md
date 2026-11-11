@@ -64,6 +64,14 @@ Use staging accounts and synthetic data. The payment sandbox reports
 
 ## Release
 
+Before transferring a new image, check free space on the filesystem backing
+Docker. Registry download sizes describe compressed layers. Leave room for
+their unpacked contents and the retained rollback images. If unused build
+cache is consuming that space, inventory its last-use dates and reclaim only
+unused cache with an age filter and retained-space budget. Compare image,
+volume and running-container identities before and after maintenance, then
+read back staging health and release metadata.
+
 Prepare the version and notes after the release milestone and its gates are
 accepted. Use a Docker-equipped machine with SSH key access to the VPS and a
 `codex/preflight/<batch>` branch whose tip matches the current

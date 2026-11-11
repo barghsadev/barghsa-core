@@ -65,6 +65,9 @@ Validate configuration with `promtool check config`, the existing `promtool test
 Add `deploy/monitoring/staging-dashboards.yml` after `staging-compose.yml` when
 starting the accepted staging monitoring configuration. Set the approved Grafana
 image digest as `BARGHSA_GRAFANA_IMAGE` in the protected Compose environment.
+Review the Linux platform manifest and scan that exact digest before pulling it
+onto staging. Include bundled backends in the review, including Prometheus.
+Keep the registry digest and scan evidence with the board receipt.
 Place the initial Grafana admin password at
 `/etc/barghsa/staging/grafana-admin-password`, readable by the image's runtime
 UID only. Use the admin account to provision named operator accounts.

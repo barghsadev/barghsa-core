@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T21:26:46+00:00",
+  "updated": "2026-11-11T21:43:20+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14800,7 +14800,8 @@
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-immutable-staging-acceptance",
           "integrated-qa-preview-deployment",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -14820,7 +14821,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -14860,6 +14861,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -22196,7 +22205,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -22250,7 +22260,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -22342,6 +22352,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -23981,7 +23999,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24010,7 +24029,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -24180,6 +24199,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -86174,7 +86201,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -87018,7 +87046,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -88652,6 +88680,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -91748,7 +91784,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-notification-contrast"
+          "release-0.6-notification-contrast",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "done",
@@ -91776,7 +91813,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -91978,6 +92015,14 @@
                 "apps/web/src/components/DeadLetterPanel.tsx"
               ],
               "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -92104,7 +92149,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -92124,7 +92170,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             }
           ],
           "checks": [
@@ -92224,6 +92270,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -101186,7 +101240,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -101382,7 +101437,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -101894,6 +101949,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -102310,7 +102373,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -102506,7 +102570,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -103018,6 +103082,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -103434,7 +103506,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -103630,7 +103703,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -104142,6 +104215,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -104559,7 +104640,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -104755,7 +104837,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -105267,6 +105349,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -105683,7 +105773,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -105879,7 +105970,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -106391,6 +106482,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -106813,7 +106912,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "done",
@@ -106949,7 +107049,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -107326,6 +107426,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -107740,7 +107848,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107900,7 +108009,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -108248,6 +108357,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -108532,7 +108649,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -108728,7 +108846,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -109240,6 +109358,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -126679,7 +126805,8 @@
           "release-0.6-sentry-build-release-envelope",
           "integrated-qa-preview-deployment",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -127051,7 +127178,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -127681,6 +127808,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -488891,7 +489026,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "done",
@@ -489111,7 +489247,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -489512,6 +489648,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -491018,7 +491162,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491174,7 +491319,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -491668,6 +491813,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -519725,7 +519878,8 @@
           "release-0.6-sentry-build-release-envelope",
           "integrated-qa-preview-deployment",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "status": "complete",
@@ -520097,7 +520251,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -520751,6 +520905,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -539949,7 +540111,8 @@
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-immutable-staging-acceptance",
           "integrated-qa-preview-deployment",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -539961,7 +540124,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -540010,6 +540173,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -561667,7 +561838,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -561715,7 +561887,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -561869,6 +562041,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -562846,7 +563026,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -562879,7 +563060,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             }
           ],
           "source_renewals": [
@@ -562951,6 +563132,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -562992,7 +563181,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -563048,7 +563238,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -563100,6 +563290,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -563412,7 +563610,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -563472,7 +563671,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -563551,6 +563750,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -563591,7 +563798,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -563635,7 +563843,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -563784,6 +563992,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -564038,7 +564254,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -564058,7 +564275,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             }
           ],
           "checks": [
@@ -564154,6 +564371,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -564298,7 +564523,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-structured-release-log-marker",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -564338,7 +564564,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             }
           ],
           "checks": [
@@ -564406,6 +564632,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ]
         }
@@ -564452,7 +564686,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Install the dashboard overlay with an approved immutable Grafana image on the accepted staging monitoring stack. Verify the authorized operator can open all four dashboards and confirm the dashboard and runbook destinations from fresh deployed Alertmanager and staff inbox receipts. Verify authorized email receipts for the outage path where email is enabled."
+        "Select and scan a patched immutable Grafana image. The official 13.3.1 Linux/amd64 manifest 1c88285f1dd391a62232c010e6c224846e6a73bdc583b3365be2eba614b7919e has 20 high-severity scan findings. The required Prometheus binary contains the four affected GO-2026-6860 functions and links x/net v0.61.0. The current official Prometheus 13.2.5 catalog entry reports the same source revision. Staging retains its existing healthy monitoring stack.",
+        "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled."
       ],
       "owner": null,
       "depends_on": [],
@@ -564479,7 +564714,8 @@
         ],
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-alert-dashboards"
+          "release-0.6-alert-dashboards",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_acceptance": null
       }
@@ -848497,7 +848733,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -848545,7 +848781,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -850517,6 +850753,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "presentation_renewals": [
@@ -850904,7 +851149,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -853073,7 +853319,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7108332015712466d5fe9928c8d06c0a1cb63ff75d57f7fdfc3476681803bd75"
+              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -853121,7 +853367,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "ebe17ed0d35a3cc3ce7a7ce348a6cca248706921dff5ad4deb68f9fc273e7448"
+              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -854983,6 +855229,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+              "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+              "paths": [
+                "deploy/staging/README.md",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -855387,7 +855642,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -859974,7 +860230,8 @@
           "release-0.6-notification-contrast",
           "release-0.6-maintenance-health",
           "release-0.6-staging-scanner-ceiling",
-          "release-0.6-definition-of-done-enforcement"
+          "release-0.6-definition-of-done-enforcement",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -860047,7 +860304,8 @@
           "release-0.6-official-clamav-feed-recheck",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-staging-favicon-publication-prep",
-          "release-0.6-staging-scanner-ceiling"
+          "release-0.6-staging-scanner-ceiling",
+          "release-0.6-grafana-image-review-and-staging-capacity"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -860063,6 +860321,15 @@
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/staging-postgres-monitoring-readback-proof.json",
           "sha256": "7cb43555b0aacebd0bbf421190ceabdd6f18a3be0e356ba810cc3e7d4d2a1691",
           "observed_at": "2026-11-09T15:15:36+00:00"
+        },
+        "staging_image_storage": {
+          "filesystem": "/var/lib/docker",
+          "available_before_mib": 2244,
+          "available_after_mib": 4732,
+          "receipt": {
+            "file": "staging-cache-recovery.log",
+            "sha256": "7b522b251975fcb23729af70bbb6619390d66c51f2314a9e860da9232e4400a1"
+          }
         }
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
@@ -986863,6 +987130,155 @@
         {
           "file": "source-checks.log",
           "sha256": "5e2d65f12fa4c1362c688e24f9add6b1294a8df55ee102cc1b444a5a850102c7"
+        }
+      ]
+    },
+    "release-0.6-grafana-image-review-and-staging-capacity": {
+      "batch": "release-0.6-grafana-image-review-and-staging-capacity",
+      "base_commit": "ab73eddc194855226730809ee3ea97cf812407ef",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "release-readiness#R-05.03",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+          "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        }
+      ],
+      "checks": [
+        "Verified the official Grafana OCI index and Linux/amd64 manifest and matched the pulled manifest reference on Docker. The initial identity comparison incorrectly expected a config ID where Docker exposes the manifest ID for a pulled digest. The first pull occupied 1,912 MiB and left 332 MiB free. Removed only that unused image and verified healthy staging at the original 2,244 MiB free.",
+        "Scanned the exact same Linux/amd64 manifest remotely from EU with checksum-verified Trivy 0.76.2 and a refreshed vulnerability DB. Matched the registry config ID and produced the complete inventory and CycloneDX SBOM. The report contains 20 high findings across seven distinct advisory IDs.",
+        "Verified the exact layer digest and extracted the required Prometheus backend without executing it. Govulncheck v1.9.0 found all four functions named in GO-2026-6860, and Go build metadata confirms x/net v0.61.0. The official catalog Prometheus 13.2.5 API reports the same source revision as the bundled backend. A separately verified patched binary is still needed.",
+        "Audited unused build-cache ages. The initial dangling-only prune reclaimed zero bytes. Scoped the second prune to unused build cache older than 48 hours and retained a 5 GB cache budget. Recovered 2,488 MiB to 4,732 MiB free. All image tags and IDs, named volumes and running container identities matched. Prometheus, Alertmanager, staging liveness/readiness and exact v0.5.0 application metadata remained healthy.",
+        "Runbook formatting and diff whitespace passed. The reviewed Compose overlay and application source remain unchanged."
+      ],
+      "limitations": [
+        "The Grafana image remains a rejected staging candidate. Binary analysis establishes compiled function presence. It does not establish a network-reachable call path.",
+        "The deployed staging application preview predates alert-link support. Live viewer access, current alert-link receipts and the approved Grafana artifact remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-live-grafana",
+      "execution_receipts": [
+        {
+          "file": "grafana-registry-readback.json",
+          "sha256": "f71c35ab8f68d362f5ef3fa49fc48ed1643003b8b0f7da648f4a17e5d5b4ba6a"
+        },
+        {
+          "file": "staging-scan.log",
+          "sha256": "960a279acbbe3c70fc4cbb61270d08fe08a80eac2551fde27b7a7312af5f7f95"
+        },
+        {
+          "file": "staging-image-space-recovery.log",
+          "sha256": "4cf293c90957cd80071dd56a24d7ba6372307d0bdabe59b24606b38164593bb1"
+        },
+        {
+          "file": "scan-eu.sh",
+          "sha256": "cc41f9f375e07ae4d601d0181cf75b2eebf3ebee1bd1a8af7ba1a1496765a112"
+        },
+        {
+          "file": "eu-scan.log",
+          "sha256": "d24e93214493883f26cf726c569d27dc7abcf44374599c604004962c65e6708a"
+        },
+        {
+          "file": "scan-results/grafana-provenance.json",
+          "sha256": "ad70a1b253a9cda359919f2bab3439eebc718a8e636b2db4570cd7e1dccc5e7b"
+        },
+        {
+          "file": "scan-results/grafana-vulnerabilities.json",
+          "sha256": "e686e2b7e465ea787b2284916caad1768efae2e771a97f2fe325438714f7e93c"
+        },
+        {
+          "file": "scan-results/grafana-sbom.cdx.json",
+          "sha256": "5a9625dcf8c3b71a2eb7e2f287bd37501a7df9b3e2eb0bfb0db1022cce51d527"
+        },
+        {
+          "file": "prometheus-backend-identity.json",
+          "sha256": "b15b5cb4848e331b09f8c9f16e4de403435329c7efb937b32ec67741cc161509"
+        },
+        {
+          "file": "prometheus-backend-proof.log",
+          "sha256": "f1a5305823d5dc308013f0debb0d4c98fbd1efbd65ea9beb8070313587d3f57c"
+        },
+        {
+          "file": "prometheus-backend-buildinfo.log",
+          "sha256": "6346f90fe88da3357070e57c0f206101b3016a04e962a339ce59bc9ec30a79ab"
+        },
+        {
+          "file": "prometheus-catalog-readback.json",
+          "sha256": "425fe825060649297e74ac4eeb84fb41f948d71411dfad23c96ac7c6db1a60d3"
+        },
+        {
+          "file": "cache-age-audit.log",
+          "sha256": "9114ce07cbdecb1b5e02a8804398cf9bacdb93afa21ba3782b3607ed17ca7488"
+        },
+        {
+          "file": "staging-dangling-cache.log",
+          "sha256": "6286f80d9162ad4a0fdb598a46d83de48105bd56bf640b95ab80e5e3bd08696c"
+        },
+        {
+          "file": "reclaim-staging-build-cache.sh",
+          "sha256": "f3b5835932583d585a7935b1a46e0a5086e67dc79eb1de20d399946ce326fbaf"
+        },
+        {
+          "file": "staging-cache-recovery.log",
+          "sha256": "7b522b251975fcb23729af70bbb6619390d66c51f2314a9e860da9232e4400a1"
+        },
+        {
+          "file": "docs-checks.log",
+          "sha256": "67ad64199c78c566b353e293513ac4734dddff117990f368ae3ca0b7ddd34b5d"
         }
       ]
     }
