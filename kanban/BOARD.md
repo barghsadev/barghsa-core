@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T19:46:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T19:53:08+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1223 | Accepted with unchanged source bindings. |
-| verify | 75 | Existing work may be complete; inspect evidence before building. |
-| partial | 62 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 74 | Existing work may be complete; inspect evidence before building. |
+| partial | 63 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1332,7 +1332,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.02.03` | done | Recorded batch work | Implement migration validation: apply on clean DB + upgrade from previous schema |
 | `06-security-testing-observability.md#T-06.12.02.04` | done | Recorded batch work | Implement OpenAPI drift detection: generated schema vs committed spec |
 | `06-security-testing-observability.md#T-06.12.02.05` | verify | Inventory needed | Configure required reviewers: domain owner; Finance/Security/Legal when protected rules change |
-| `06-security-testing-observability.md#T-06.12.02.06` | verify | Inventory needed | Add status check reporting: pass/fail per check, summary comment on PR |
+| `06-security-testing-observability.md#T-06.12.02.06` | partial | Recorded batch work | Add status check reporting: pass/fail per check, summary comment on PR |
 | `06-security-testing-observability.md#T-06.12.03.01` | partial | Recorded batch work | Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM |
 | `06-security-testing-observability.md#T-06.12.03.02` | partial | Recorded batch work | Build staging smoke deployment: readiness/liveness verification, migration rehearsal |
 | `06-security-testing-observability.md#T-06.12.03.03` | done | Recorded batch work | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |

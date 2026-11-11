@@ -12,6 +12,7 @@ env:
   PNPM_VERSION: '10.11.1'
   # Manual release checks always run the full suite. Ordinary pushes and PRs can use affected tests.
   FULL_CI: ${{ github.event_name == 'workflow_dispatch' || vars.CI_FULL_CHECKS == 'true' || (github.event_name == 'pull_request' && vars.CI_FULL_PR_CHECKS == 'true') }}
+  ENFORCE_RELEASE_LICENSES: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -88,8 +89,6 @@ jobs:
       - name: Verify release license policy handling
         run: python3 -m unittest discover -s scripts -p 'test_check_release_licenses.py'
       - name: Check shipped component licenses
-        env:
-          ENFORCE_RELEASE_LICENSES: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
         run: |
           args=()
           if [ "$ENFORCE_RELEASE_LICENSES" != true ]; then args+=(--report-only); fi
@@ -283,6 +282,26 @@ jobs:
           QUALITY_RESULT: ${{ needs.quality.result }}
           TEST_RESULT: ${{ needs.test.result }}
         run: |
+          if [ "$FULL_CI" = true ]; then
+            test_mode=full
+          else
+            test_mode=affected
+          fi
+          if [ "$ENFORCE_RELEASE_LICENSES" = true ]; then
+            license_mode=enforced
+          else
+            license_mode=report-only
+          fi
+          {
+            printf '### Monorepo integrity for %s\n\n' "$GITHUB_SHA"
+            printf 'Test mode **%s**. Image license policy **%s**.\n\n' "$test_mode" "$license_mode"
+            printf '| Required job | Result |\n| --- | --- |\n'
+            printf '| Static security | %s |\n' "$SAST_RESULT"
+            printf '| Secret scan | %s |\n' "$SECRET_SCAN_RESULT"
+            printf '| Runtime images | %s |\n' "$IMAGE_SCAN_RESULT"
+            printf '| Build and application integrity | %s |\n' "$QUALITY_RESULT"
+            printf '| Tests | %s |\n' "$TEST_RESULT"
+          } >> "$GITHUB_STEP_SUMMARY"
           test "$SAST_RESULT" = success
           test "$SECRET_SCAN_RESULT" = success
           test "$IMAGE_SCAN_RESULT" = success

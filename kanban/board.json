@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T19:46:56+00:00",
+  "updated": "2026-11-11T19:53:08+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4104,7 +4104,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4132,7 +4133,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             }
           ],
           "checks": [
@@ -4189,6 +4190,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -4554,7 +4563,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4570,7 +4580,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4638,6 +4648,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -4828,7 +4846,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4852,7 +4871,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             }
           ],
           "checks": [
@@ -4933,6 +4952,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -5217,7 +5244,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5225,7 +5253,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".size-limit.json",
@@ -5309,6 +5337,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -5517,7 +5553,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5557,7 +5594,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5624,6 +5661,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -5691,7 +5736,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5731,7 +5777,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5798,6 +5844,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -6127,7 +6181,8 @@
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-integrity-requires-tests",
           "integrated-qa-preview-journeys",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6139,7 +6194,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6288,6 +6343,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -6405,7 +6468,8 @@
           "release-0.6-quarantine-coverage-and-reporting",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6445,7 +6509,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6512,6 +6576,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -6623,7 +6695,8 @@
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6635,7 +6708,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6731,6 +6804,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -9628,7 +9709,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -9648,7 +9730,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             }
           ],
           "checks": [
@@ -9711,6 +9793,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -15638,7 +15728,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15646,7 +15737,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "docs/development/ci.md",
@@ -15728,6 +15819,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -15789,7 +15888,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15797,7 +15897,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -15902,6 +16002,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -15968,7 +16076,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -15976,7 +16085,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "package.json",
@@ -16077,6 +16186,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -16291,7 +16408,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16299,7 +16417,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -16373,6 +16491,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -20184,7 +20310,8 @@
         "batches": [
           "release-0.6-shared-catalogue-wcag22",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -20198,7 +20325,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -20692,6 +20819,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -22603,7 +22738,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -22616,7 +22752,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "docs/development/ci.md",
@@ -22697,6 +22833,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -22755,7 +22899,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -22771,7 +22916,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".prettierignore",
@@ -22840,6 +22985,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -22902,7 +23055,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -22920,7 +23074,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".husky/commit-msg",
@@ -23029,6 +23183,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -23901,7 +24063,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23946,7 +24109,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -24524,6 +24687,14 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -24587,7 +24758,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24602,7 +24774,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".prettierignore",
@@ -24738,6 +24910,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -488257,7 +488437,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -488265,7 +488446,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -488693,6 +488874,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -488833,7 +489022,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -488841,7 +489031,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -489467,6 +489657,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -489608,7 +489806,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -489616,7 +489815,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -490030,6 +490229,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -490137,7 +490344,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490145,7 +490353,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -490559,6 +490767,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -490666,7 +490882,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490674,7 +490891,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -491088,6 +491305,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -529622,7 +529847,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -529630,7 +529856,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "Dockerfile.web",
@@ -529743,6 +529969,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -529952,7 +530186,8 @@
           "release-0.6-wallet-keyboard-before-responsive-probe",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -529996,7 +530231,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -530082,6 +530317,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -530129,7 +530372,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -530137,7 +530381,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "Dockerfile.web",
@@ -530250,6 +530494,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -530565,7 +530817,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -530593,7 +530846,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             }
           ],
           "checks": [
@@ -530659,6 +530912,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -535066,7 +535327,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -535074,7 +535336,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -535147,6 +535409,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -539790,7 +540060,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -539799,7 +540070,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -540042,6 +540313,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -541061,7 +541340,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -541073,7 +541353,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".gitignore",
@@ -541089,7 +541369,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+              "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -541203,6 +541483,15 @@
                 ".env.example"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -541249,7 +541538,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -541261,7 +541551,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".gitignore",
@@ -541377,6 +541667,14 @@
                 ".env.example"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         },
@@ -541487,7 +541785,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -541495,7 +541794,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -541562,6 +541861,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         },
@@ -541656,7 +541963,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -541664,7 +541972,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -541737,6 +542045,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -541783,7 +542099,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -541791,7 +542108,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "Dockerfile.base",
@@ -541807,7 +542124,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+              "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -541895,6 +542212,15 @@
                 "Dockerfile.web"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -541941,7 +542267,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -541953,7 +542280,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".gitignore",
@@ -542069,6 +542396,14 @@
                 ".env.example"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         },
@@ -542161,7 +542496,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -542169,11 +542505,11 @@
           "source_evidence": [
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+              "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -542233,6 +542569,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -542898,7 +543243,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -542922,7 +543268,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -543004,6 +543350,14 @@
                 "Dockerfile.web"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -543557,7 +543911,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -543569,7 +543924,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+              "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
             }
           ],
           "checks": [
@@ -543603,6 +543958,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -543713,7 +544076,8 @@
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -543725,7 +544089,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+              "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
             }
           ],
           "checks": [
@@ -543759,6 +544123,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -544403,7 +544775,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -544463,7 +544836,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -544525,6 +544898,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -544556,7 +544937,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -544568,7 +544950,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -544655,6 +545037,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -544686,7 +545076,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -544698,7 +545089,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -544781,6 +545172,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -549889,7 +550288,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -549901,7 +550301,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -550001,6 +550401,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -550400,7 +550808,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-shared-catalogue-wcag22",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -550414,7 +550823,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -550548,6 +550957,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -550586,7 +551003,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -550602,7 +551020,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -550722,6 +551140,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -551162,7 +551588,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -551170,7 +551597,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -551243,6 +551670,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -551283,7 +551718,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -551291,7 +551727,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -551303,7 +551739,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "cea098b450ca07840fdd3bd27b48ef55bb5e0773bc6d452a79004d61bc2111c1"
+              "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
             },
             {
               "path": "scripts/check-sast.py",
@@ -551369,6 +551805,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -552072,7 +552517,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -552087,7 +552533,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".size-limit.json",
@@ -552240,6 +552686,14 @@
                 "Dockerfile.web"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -553059,7 +553513,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -553072,7 +553527,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -553179,6 +553634,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -553211,7 +553674,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -553223,7 +553687,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -553330,6 +553794,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -553362,7 +553834,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -553376,7 +553849,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -553483,6 +553956,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -553515,7 +553996,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -553526,7 +554008,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -553633,6 +554115,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -553715,7 +554205,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -553727,7 +554218,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -553826,6 +554317,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -553859,7 +554358,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -553870,7 +554370,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/openapi.json",
@@ -553977,6 +554477,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -554019,18 +554527,23 @@
         "story": "06-security-testing-observability.md#spec-ab5e488f2a6f"
       },
       "requirement": "| T-06.12.02.06 | Add status check reporting: pass/fail per check, summary comment on PR | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Read back the five-job Actions summary on an exact-source hosted push preflight. Verify full tests and enforced image license policy in the summary on the frozen release candidate."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          ".github/workflows/ci.yml",
+          "docs/security/supply-chain.md"
+        ],
+        "batches": [
+          "release-0.6-required-check-summary"
+        ],
         "current_acceptance": null
       }
     },
@@ -554142,7 +554655,8 @@
         "batches": [
           "release-0.6-critical-defect-candidate-gate",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -554160,7 +554674,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -554264,6 +554778,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -554297,7 +554819,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -554306,7 +554829,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -554467,6 +554990,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -554502,7 +555033,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -554520,7 +555052,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "deploy/production/README.md",
@@ -554643,6 +555175,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -555059,7 +555599,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -555076,7 +555617,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -555175,6 +555716,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -555211,7 +555760,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -555228,7 +555778,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -555327,6 +555877,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -562382,7 +562940,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -562390,7 +562949,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "Dockerfile.base",
@@ -562470,6 +563029,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -564209,7 +564776,8 @@
         "batches": [
           "release-0.6-structured-release-log-marker",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564217,7 +564785,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "Dockerfile.base",
@@ -564281,6 +564849,14 @@
                 "docs/deployment.md"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -614211,7 +614787,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -614219,7 +614796,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".size-limit.json",
@@ -615106,6 +615683,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -615237,7 +615822,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -615245,7 +615831,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".size-limit.json",
@@ -616132,6 +616718,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -616872,7 +617466,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616880,7 +617475,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".size-limit.json",
@@ -617767,6 +618362,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -617827,7 +618430,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-required-check-summary"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -617846,7 +618450,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -617944,6 +618548,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         }
@@ -839329,7 +839941,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/openapi.json",
@@ -843477,6 +844089,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -843861,7 +844481,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -843914,7 +844535,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": "apps/api/openapi.json",
@@ -847912,6 +848533,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -848313,7 +848942,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-required-check-summary"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -850151,7 +850781,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3d8ccc7717687b2eb712e3c6f761ad53a3e946995976bd3d5a7f23b5ccba8cf6"
+              "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
             },
             {
               "path": ".size-limit.json",
@@ -852349,6 +852979,14 @@
                 "packages/i18n/src/maintenance.ts"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-required-check-summary",
+              "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
             }
           ]
         },
@@ -852496,7 +853134,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-required-check-summary"
         ]
       }
     },
@@ -978108,6 +978747,133 @@
         {
           "file": "grafana-readback.json",
           "sha256": "e895665c567d1ca28f6601f265b4a0bd7948878a266bfb7b8029032f3169f347"
+        }
+      ]
+    },
+    "release-0.6-required-check-summary": {
+      "batch": "release-0.6-required-check-summary",
+      "base_commit": "44a9a0dbe297d1456eb2290f64fde85194712f67",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.06",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "d9723b8b39505f5aee1f5395345b8effdaeba16f73aca8004d699b5d6e33d4ba"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "def02fae2d20afcf0a17d8a8e473d7e6e017551414ed0c38ab787425da57e3bc"
+        },
+        {
+          "path": "kanban/WORKFLOW.md",
+          "sha256": "6fb0faf8043401cad6c17051c232bae80554ce9d9f55f4d01af3e24efecf7045"
+        }
+      ],
+      "checks": [
+        "The active default-branch ruleset 26844024 requires Verify monorepo integrity from GitHub App 15368, with fast-forward and deletion protection. Direct-main runs now write the report to the GitHub Actions summary.",
+        "The summary records the source SHA, test mode, license mode and the five job outcomes before the aggregate check requires success. The prior license event condition is shared by the image scan and the report.",
+        "Executed the exact workflow step in 24 cases. Four all-green mode combinations passed. Failures, cancellations, skips and missing results for each required job produced the matching summary and failed the check. actionlint, Prettier and diff checks passed."
+      ],
+      "limitations": [
+        "The extracted shell step was run locally. Exact-source hosted summary readback and the frozen release candidate full run remain pending.",
+        "Release-wide security, license, coverage and protected domain approvals retain their independent gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-required-check-summary",
+      "execution_receipts": [
+        {
+          "file": "workflow-contract.json",
+          "sha256": "b6f82b1dbd973d62d1067b76f7c6c822935b5d1cfa849e93423032785d5f3a0c"
+        },
+        {
+          "file": "check-summary.py",
+          "sha256": "1cdd92734345a2f950cf4d46d0ae3ec1bd107d6ab7d873f159d79c9ca237ac9e"
+        },
+        {
+          "file": "summary-check.log",
+          "sha256": "69a38d61f17f9ba6594dce7fe19385b1849af996b13d84777afe9b509a80c1ee"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "2031040405c2299b2aedbd3e8b220448364ac294b5d7056161742e82a5e3e9fe"
+        },
+        {
+          "file": "format-check.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "main-rules.json",
+          "sha256": "f7ee051384e99e5f7886d9100e0634a0f79d49ee4a71286b4429b68b93da75a8"
         }
       ]
     }

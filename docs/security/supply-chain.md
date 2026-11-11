@@ -1,6 +1,8 @@
 # Supply-chain checks
 
-The required GitHub check is `Verify monorepo integrity`. It fails if the build and application checks, source scan, secret scan, or runtime image scan fail, are cancelled, or are skipped. The application checks also validate the dependency audit report and refuse high or critical advisories. Keep the lockfile frozen and use the scan artifacts when diagnosing a failure.
+The required GitHub check is `Verify monorepo integrity`. It requires successful build and application checks, tests, static analysis, secret scanning and runtime image scanning. A cancelled, skipped or failed job blocks the check. The Actions run summary shows all five results with the source SHA, test mode and license enforcement mode. The application checks also validate the dependency audit report and refuse high or critical advisories. Keep the lockfile frozen and use the scan artifacts when diagnosing a failure.
+
+Static analysis, secret scanning and image scanning run independently of the application checks and tests. The API integration and browser fixtures use compiled outputs, so their builds run before those suites. Required source coverage and the complete browser matrix are verified for the frozen release candidate. Domain review and package-specific approval remain part of release acceptance.
 
 Semgrep checks production app, worker and shared source for direct request data in SQL text, outbound URLs and redirects, unsafe HTML, and literal credentials. The SQL rule includes typed Nest request parameters and Drizzle `sql.raw`. Keep values bound through Drizzle's SQL templates or driver placeholders. The rules do not replace review of cross-file data flows or dynamically chosen identifiers.
 
