@@ -4,6 +4,7 @@ import { storageUploadProfileScope } from '@barghsa/db/schema/storage-record';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE, type CreateRecordOptions } from '@barghsa/shared/storage';
 import { v5 as uuidv5 } from 'uuid';
 import type { PoolClient } from 'pg';
+import { observeVerifiedUpload } from '../metrics/storage-upload-metrics.js';
 import type { UploadContext } from './upload.types.js';
 import type { OperatingContext } from '../session/session.service.js';
 import { checkUploadCapacity, withUploadScope } from './upload-quota.js';
@@ -152,9 +153,9 @@ export async function queueUploadScan(input: {
   inspection: { contentLength: number; etag: string | undefined; versionId: string | undefined };
 }): Promise<string> {
   const id = uuidv5(`barghsa:storage-upload-scan:${input.key}`, uuidv5.URL);
-  const result = await getDbPool().query(
+  const result = await getDbPool().query<{ new_upload: boolean }>(
     `WITH source AS MATERIALIZED (
-       SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
+       SELECT storage_key,status FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
          AND ${storageUploadProfileScope} IS NOT DISTINCT FROM lower($8::text)
          AND signed_at IS NULL AND metadata->>'scanJobId' IS NULL AND (status='active' OR
            (status='removed' AND metadata->>'provisionalUpload'='true'
@@ -169,7 +170,8 @@ export async function queueUploadScan(input: {
      UPDATE storage_records s SET metadata=(s.metadata-'scanSkippedReason'-'scanResolvedAt'-'scanSha256')
        ||jsonb_build_object('scanJobId',created.id::text,'scanState','Pending scan',
           'scanRequestedAt',clock_timestamp(),'storageInspection',$6::jsonb,'scanContext',$7::jsonb),updated_at=NOW()
-     FROM source,created WHERE s.storage_key=source.storage_key`,
+     FROM source,created WHERE s.storage_key=source.storage_key
+     RETURNING source.status='removed' AS new_upload`,
     [
       input.key,
       input.userId,
@@ -181,7 +183,10 @@ export async function queueUploadScan(input: {
       input.context.profileId ?? null,
     ]
   );
-  if (result.rowCount === 1) return id;
+  if (result.rowCount === 1) {
+    if (result.rows[0]?.new_upload) observeVerifiedUpload(input.inspection.contentLength);
+    return id;
+  }
   const current = await requireOwnedUpload(input.key, input.userId);
   const context = current.metadata.scanContext as UploadContext | undefined;
   if (
@@ -221,4 +226,5 @@ export async function completeUpload(options: CreateRecordOptions, scanJobId?: s
   );
   if (result.rowCount !== 1)
     throw new ConflictException('Upload expired or changed; request a new upload');
+  if (!scanJobId && options.fileSize !== undefined) observeVerifiedUpload(options.fileSize);
 }

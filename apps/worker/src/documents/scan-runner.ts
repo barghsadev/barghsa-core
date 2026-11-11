@@ -7,6 +7,7 @@ import {
   type StorageProvider,
 } from '@barghsa/shared/storage';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
+import { observeScanOutcome } from './storage-scan-metrics.js';
 
 type ScanRow = {
   document_id: string;
@@ -211,6 +212,7 @@ export async function runDocumentScans(
       const verdict = await scanSealedObject(storage, row, endpoint, scan);
       await resolve(client, row, verdict);
       await client.query('COMMIT');
+      observeScanOutcome('document', verdict);
       result[verdict === 'clean' ? 'clean' : 'infected']++;
     } catch {
       await client.query('ROLLBACK');

@@ -1,0 +1,126 @@
+{
+  "uid": "barghsa-storage-uploads",
+  "title": "Barghsa Storage and Uploads",
+  "description": "Verified uploads and scanner activity for the selected environment and database. Counts come from Prometheus observations, not a storage or security audit ledger.",
+  "tags": ["barghsa", "operations", "storage"],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "refresh": "30s",
+  "time": { "from": "now-6h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "refresh": 1
+      },
+      {
+        "name": "environment",
+        "type": "query",
+        "label": "Environment",
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "query": "label_values(barghsa_storage_verified_upload_bytes_count, environment)",
+        "refresh": 1
+      },
+      {
+        "name": "database",
+        "type": "query",
+        "label": "Database",
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "query": "label_values(barghsa_storage_verified_upload_bytes_count{environment=\"$environment\"}, database)",
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Verified uploads",
+      "description": "Observed uploads first recorded or queued for scanning during the selected range. Includes files later rejected by the scanner.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 4 },
+      "fieldConfig": { "defaults": { "decimals": 0 }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "expr": "sum(increase(barghsa_storage_verified_upload_bytes_count{environment=\"$environment\",database=\"$database\"}[$__range]))"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Malware detections",
+      "description": "Observed infected verdicts committed to quarantine during the selected range. Replays and unverified scanner responses are excluded.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 4 },
+      "fieldConfig": { "defaults": { "decimals": 0 }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "instant": true,
+          "range": false,
+          "expr": "sum(increase(barghsa_storage_scan_outcomes_total{environment=\"$environment\",database=\"$database\",outcome=\"infected\"}[$__range]))"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "heatmap",
+      "title": "Verified upload size distribution",
+      "description": "Each cell shows uploads within a size bucket over the query interval. Sizes come from inspected object bytes.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 0, "y": 4, "w": 24, "h": 9 },
+      "options": { "calculate": false, "yAxis": { "unit": "bytes" } },
+      "targets": [
+        {
+          "refId": "A",
+          "format": "heatmap",
+          "legendFormat": "{{le}}",
+          "range": true,
+          "expr": "sum by (le) (increase(barghsa_storage_verified_upload_bytes_bucket{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Active scan jobs by state",
+      "description": "Waiting document jobs may be in their first scan. Document retries have a recorded error. Upload retries have expired leases. Duplicate database observations from worker replicas are combined with max.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 0, "y": 13, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "min": 0, "decimals": 0 }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "legendFormat": "{{source}} · {{state}}",
+          "expr": "max by (source, state) (barghsa_storage_scan_backlog{environment=\"$environment\",database=\"$database\"})"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Committed scan verdicts",
+      "description": "Shows clean and infected verdicts over time. A pending or failed scan produces no verdict.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 12, "y": 13, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "min": 0 }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "legendFormat": "{{source}} · {{outcome}}",
+          "expr": "sum by (source, outcome) (increase(barghsa_storage_scan_outcomes_total{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))"
+        }
+      ]
+    }
+  ]
+}

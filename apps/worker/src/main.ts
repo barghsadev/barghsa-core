@@ -25,6 +25,7 @@ import {
   runDocumentScans,
 } from './documents/scan-runner.js';
 import { scanStoredUpload } from './documents/upload-scan-job.js';
+import { collectStorageScanBacklog } from './documents/storage-scan-metrics.js';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE } from '@barghsa/shared/storage';
 import {
   DOCUMENT_DESTRUCTION_JOB_TYPE,
@@ -158,6 +159,7 @@ async function main(): Promise<void> {
           collectNotificationGauges(pool),
           collectRefundObligationMetrics(pool),
           collectReconciliationMetrics(pool),
+          collectStorageScanBacklog(pool),
         ]);
         const body = await exportWorkerMetrics();
         res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' });

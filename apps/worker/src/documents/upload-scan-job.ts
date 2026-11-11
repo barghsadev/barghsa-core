@@ -6,6 +6,7 @@ import {
   type StorageProvider,
 } from '@barghsa/shared/storage';
 import type { JobContext } from '../jobs/async-runner.js';
+import { observeScanOutcome } from './storage-scan-metrics.js';
 
 interface ScanSource {
   inspection: { contentLength?: number; etag?: string; versionId?: string };
@@ -76,4 +77,5 @@ export async function scanStoredUpload(
     ]
   );
   if (result.rowCount !== 1) throw new Error('Upload scan lease or object changed');
+  observeScanOutcome('upload', verdict);
 }

@@ -62,8 +62,13 @@ UID only. Use the admin account to provision named operator accounts.
 
 Grafana listens on the staging host's loopback port 3009. Authorized operators
 forward local port 3009 to that port over SSH, then sign in. The overlay
-provisions the notifications, finance safety, AI usage and worker health
-dashboards with the private Prometheus source. It sets
+provisions the notifications, finance safety, AI usage, worker health and
+[Storage and Uploads](../../deploy/monitoring/grafana-storage-uploads-dashboard.json)
+dashboards with the private Prometheus source. Select the environment and
+database in the storage dashboard. Upload counts and size buckets come from
+verified object bytes. The malware panel counts committed infected verdicts.
+The queue panel reads active jobs and combines duplicate database observations
+from worker replicas. The overlay sets
 `OPS_ALERT_DASHBOARD_ORIGIN=http://127.0.0.1:3009` on the staging receiver. In
 production, set this variable to the approved HTTPS monitoring origin.
 [Grafana provisioning](https://grafana.com/docs/grafana/latest/administration/provisioning/).

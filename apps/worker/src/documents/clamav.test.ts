@@ -9,6 +9,8 @@ import {
   type StorageProvider,
 } from '@barghsa/shared/storage';
 import { runDocumentScans } from './scan-runner.js';
+import { scanStoredUpload } from './upload-scan-job.js';
+import { exportWorkerMetrics } from '../notifications/worker-metrics.js';
 
 let server: Server | undefined;
 afterEach(async () => {
@@ -142,6 +144,9 @@ it('streams a sealed document at the full upload ceiling without buffering the o
     'Available',
     'Available',
   ]);
+  expect(await exportWorkerMetrics()).toContain(
+    'barghsa_storage_scan_outcomes_total{source="document",outcome="clean"} 1\n'
+  );
 });
 
 it('retries a clean scanner result whose full stream differs from the sealed checksum', async () => {
@@ -162,6 +167,32 @@ it('retries a clean scanner result whose full stream differs from the sealed che
     30,
     0,
   ]);
+});
+
+it('counts an upload quarantine only after persisting its scanner verdict', async () => {
+  const fake = await fakeScanner('stream: Eicar-Test-Signature FOUND');
+  const bytes = Buffer.from('scanner fixture bytes');
+  const inspection = { contentLength: bytes.length, etag: '"fixture"' };
+  const getObject = vi.fn(async () => ({ ...inspection, body: ReadableStream.from([bytes]) }));
+  const storage = { getObject } as unknown as StorageProvider;
+  const query = vi
+    .fn()
+    .mockResolvedValueOnce({
+      rows: [{ inspection, scan_state: 'Pending scan', scan_sha256: null }],
+    })
+    .mockResolvedValueOnce({ rowCount: 1 })
+    .mockResolvedValueOnce({
+      rows: [{ inspection, scan_state: 'Quarantined', scan_sha256: 'a'.repeat(64) }],
+    });
+  const pool = { query } as unknown as Pool;
+  const payload = { key: 'uploads/document/fixture.pdf' };
+  const context = { jobId: 'job', leaseToken: 'lease', setProgress: async () => undefined };
+  await scanStoredUpload(pool, storage, fake.endpoint, payload, context);
+  await scanStoredUpload(pool, storage, fake.endpoint, payload, context);
+  expect(getObject).toHaveBeenCalledTimes(1);
+  expect(await exportWorkerMetrics()).toContain(
+    'barghsa_storage_scan_outcomes_total{source="upload",outcome="infected"} 1\n'
+  );
 });
 
 it('bounds an unresponsive scanner by a wall-clock timeout', async () => {

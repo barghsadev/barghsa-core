@@ -386,16 +386,24 @@ it('authenticates every upload step and requires CSRF before storage access', as
   });
 });
 
-async function issue(context: Record<string, unknown> = {}, requestHeaders = headers) {
-  const response = await presignUpload(context, requestHeaders);
+async function issue(
+  context: Record<string, unknown> = {},
+  requestHeaders = headers,
+  base = http.base
+) {
+  const response = await presignUpload(context, requestHeaders, base);
   expect(response.status, await response.clone().text()).toBe(200);
   const upload = (await response.json()) as { key: string };
   objects.set(upload.key, Buffer.from('%PDF-1.7 test'));
   return upload.key;
 }
 
-function presignUpload(context: Record<string, unknown>, requestHeaders = headers) {
-  return fetch(`${http.base}/api/upload/presigned-url`, {
+function presignUpload(
+  context: Record<string, unknown>,
+  requestHeaders = headers,
+  base = http.base
+) {
+  return fetch(`${base}/api/upload/presigned-url`, {
     method: 'POST',
     headers: requestHeaders,
     body: JSON.stringify({
@@ -416,8 +424,14 @@ it('keeps reserved upload URLs in the context that issued them', async () => {
   expect((await uploadRequest(key, 'record')).status).toBe(200);
 });
 
-function uploadRequest(key: string, action: string, requestHeaders = headers, body: unknown = {}) {
-  return fetch(`${http.base}/api/upload/${encodeURIComponent(key)}/${action}`, {
+function uploadRequest(
+  key: string,
+  action: string,
+  requestHeaders = headers,
+  body: unknown = {},
+  base = http.base
+) {
+  return fetch(`${base}/api/upload/${encodeURIComponent(key)}/${action}`, {
     method: 'POST',
     headers: requestHeaders,
     body: JSON.stringify(body),
@@ -680,7 +694,19 @@ for (const method of ['POST', 'DELETE']) {
   });
 }
 
+async function observedUploads(base = http.base) {
+  const response = await fetch(`${base}/metrics`);
+  expect(response.status).toBe(200);
+  const metrics = await response.text();
+  const count = metrics.match(/^barghsa_storage_verified_upload_bytes_count (\d+)$/m);
+  const sum = metrics.match(/^barghsa_storage_verified_upload_bytes_sum (\d+)$/m);
+  expect(count).not.toBeNull();
+  expect(sum).not.toBeNull();
+  return { count: Number(count![1]), bytes: Number(sum![1]) };
+}
+
 it('persists Pending scan inspection and records the explicit unconfigured-scanner fallback', async () => {
+  const baseline = await observedUploads();
   const key = await issue();
   expect((await row(key)).metadata.scanState).toBe('Uploading');
   expect((await uploadRequest(key, 'verify')).status).toBe(200);
@@ -696,6 +722,7 @@ it('persists Pending scan inspection and records the explicit unconfigured-scann
   });
   expect(pending.scanRequestedAt).toBeTruthy();
   expect(pending).not.toHaveProperty('scanSkippedReason');
+  expect(await observedUploads()).toEqual(baseline);
   expect((await uploadRequest(key, 'record')).status).toBe(200);
   expect((await row(key)).metadata).toMatchObject({
     scanState: 'Available',
@@ -704,7 +731,60 @@ it('persists Pending scan inspection and records the explicit unconfigured-scann
   });
   expect((await uploadRequest(key, 'verify')).status).toBe(200);
   expect((await row(key)).metadata.scanState).toBe('Available');
+  expect((await uploadRequest(key, 'record')).status).toBe(200);
+  expect(await observedUploads()).toEqual({
+    count: baseline.count + 1,
+    bytes: baseline.bytes + 13,
+  });
 });
+
+it('observes concurrent recording once when the scan job is committed', async () => {
+  const previous = process.env['DOCUMENT_CLAMAV_HOST'];
+  process.env['DOCUMENT_CLAMAV_HOST'] = '127.0.0.1';
+  let scanFixture: typeof http | undefined;
+  try {
+    scanFixture = await startHttpFixture(
+      process.env.TEST_DATABASE_URL!,
+      `http://127.0.0.1:${(storage.address() as { port: number }).port}`
+    );
+  } finally {
+    if (previous === undefined) delete process.env['DOCUMENT_CLAMAV_HOST'];
+    else process.env['DOCUMENT_CLAMAV_HOST'] = previous;
+  }
+  try {
+    const { base, pool } = scanFixture;
+    const session = randomUUID(),
+      csrf = randomUUID();
+    await pool.query(
+      "INSERT INTO users(user_id,username,password_hash) VALUES ('scan-actor','scan-actor@example.test','test-only')"
+    );
+    await pool.query(
+      "INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,expires_at,idle_deadline) VALUES ($1,'scan-actor',$2,$3,'customer',NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')",
+      [session, csrf, randomUUID()]
+    );
+    const scanHeaders = {
+      Cookie: `barghsa_session=${session}`,
+      'X-CSRF-Token': csrf,
+      'Content-Type': 'application/json',
+    };
+    const key = await issue({}, scanHeaders, base);
+    const responses = await Promise.all([
+      uploadRequest(key, 'record', scanHeaders, {}, base),
+      uploadRequest(key, 'record', scanHeaders, {}, base),
+    ]);
+    const receipts = await Promise.all(
+      responses.map(async (response) => {
+        expect(response.status, await response.clone().text()).toBe(200);
+        return response.json();
+      })
+    );
+    expect(receipts[0]).toMatchObject({ key, status: 'pending_scan', jobId: expect.any(String) });
+    expect(receipts[1]).toEqual(receipts[0]);
+    expect(await observedUploads(base)).toEqual({ count: 1, bytes: 13 });
+  } finally {
+    await scanFixture.close();
+  }
+}, 40_000);
 it('does not queue an inspection for bytes that differ from the authorized upload size', async () => {
   const key = await issue();
   objects.set(key, Buffer.from('%PDF-too-long-for-issued-size'));
