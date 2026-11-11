@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { Pool } from 'pg';
+import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 beforeAll(async () => {
@@ -67,6 +68,36 @@ it('reports each AI model circuit and current UTC month spend independently', as
   expect(await scrape()).toContain(`ai_model_health{model_id="${modelId}"} 0`);
 });
 
+it('counts only selected security events in the recent audit window', async () => {
+  const user = 'metrics-security-fixture';
+  const privateValue = 'AUDIT_CONTENT_NOT_FOR_METRICS';
+  await fixture.pool.query(
+    "INSERT INTO users(user_id,username,password_hash) VALUES ($1,$1,'test-only')",
+    [user]
+  );
+  for (const [event, age] of [
+    ['new_device_login', 0],
+    ['new_device_login', 0],
+    ['new_device_login', 2],
+    ['password_changed', 0],
+    ['unrelated_private_event', 0],
+  ] as const) {
+    await fixture.pool.query(
+      `INSERT INTO audit_log(id,user_id,event,metadata,created_at)
+       VALUES ($1,$2,$3,$4,now()-($5::int * INTERVAL '1 hour'))`,
+      [randomUUID(), user, event, JSON.stringify({ content: privateValue }), age]
+    );
+  }
+  const metrics = await (await fetch(`${fixture.base}/metrics`)).text();
+  expect(metrics).toContain('security_audit_collection_success 1\n');
+  expect(metrics).toContain('security_audit_events_1h{event="new_device_login"} 2\n');
+  expect(metrics).toContain('security_audit_events_1h{event="password_changed"} 1\n');
+  expect(metrics).toContain('security_audit_events_1h{event="contact_added"} 0\n');
+  for (const privateText of [user, privateValue, 'unrelated_private_event']) {
+    expect(metrics).not.toContain(privateText);
+  }
+});
+
 it('serves unavailable metrics through a database outage and recovers without stale samples', async () => {
   async function scrape() {
     const response = await fetch(`${fixture.base}/metrics`, {
@@ -107,6 +138,8 @@ it('serves unavailable metrics through a database outage and recovers without st
     expect(failed).not.toMatch(/^pg_checkpoints_timed_total /m);
     expect(failed).not.toMatch(/^ai_model_monthly_spend_usd\{/m);
     expect(failed).not.toMatch(/^ai_model_monthly_budget_usage_ratio\{/m);
+    expect(failed).toContain('security_audit_collection_success 0\n');
+    expect(failed).not.toMatch(/^security_audit_events_1h\{/m);
     expect(failed).toMatch(/^pg_pool_capacity 7$/m);
   } finally {
     try {

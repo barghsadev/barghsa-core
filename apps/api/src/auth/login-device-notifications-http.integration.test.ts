@@ -122,6 +122,13 @@ it('alerts an authenticated unrecognized device without granting requested trust
     '123456',
   ]);
   expect((await http.pool.query('SELECT id FROM device_trusts')).rows).toEqual([]);
+  const metrics = await (await fetch(`${http.base}/metrics`)).text();
+  expect(metrics).toContain(
+    'barghsa_http_request_duration_seconds_count{route="/api/auth/login/verify",method="POST",status="200"} 1\n'
+  );
+  expect(metrics).toContain('security_audit_events_1h{event="new_device_login"} 1\n');
+  expect(metrics).not.toContain(user);
+  expect(metrics).not.toContain(id);
 });
 it('does not publish an alert for invalid or disabled login attempts', async () => {
   const id = await challenge();
@@ -135,6 +142,11 @@ it('does not publish an alert for invalid or disabled login attempts', async () 
   expect((await complete(id)).status).toBe(403);
   expect((await http.pool.query('SELECT * FROM in_app_notifications')).rows).toEqual([]);
   expect((await http.pool.query('SELECT * FROM notification_outbox')).rows).toEqual([]);
+  const metrics = await (await fetch(`${http.base}/metrics`)).text();
+  expect(metrics).toContain(
+    'barghsa_http_request_duration_seconds_count{route="/api/auth/login/verify",method="POST",status="401"} 1\n'
+  );
+  expect(metrics).toContain('security_audit_events_1h{event="new_device_login"} 0\n');
 });
 it('rolls back the alert and authorization if mandatory persistence crosses challenge expiry', async () => {
   const id = await challenge();

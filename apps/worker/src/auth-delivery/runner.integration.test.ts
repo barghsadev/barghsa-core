@@ -6,6 +6,7 @@ import { afterAll, afterEach, beforeAll, beforeEach, expect, it, vi } from 'vite
 import { decryptAuthDelivery, encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
 import { runAuthDelivery } from './runner.js';
 import { createAuthSender, type AuthMessage } from './providers.js';
+import { exportWorkerMetrics } from '../notifications/worker-metrics.js';
 
 let pool: Pool, management: Pool;
 const database = `test_delivery_${randomUUID().replaceAll('-', '')}`;
@@ -78,6 +79,13 @@ async function state(id: string) {
   return (await pool.query('SELECT * FROM auth_delivery_outbox WHERE id=$1', [id])).rows[0];
 }
 
+async function sentOtpEmails(): Promise<number> {
+  const match = (await exportWorkerMetrics()).match(
+    /^auth_otp_deliveries_sent_total\{channel="email"\} (\d+)$/m
+  );
+  return Number(match?.[1] ?? 0);
+}
+
 it('cancels pending step-up delivery after its bound session is revoked', async () => {
   const { id, challenge } = await queued();
   const session = randomUUID();
@@ -98,6 +106,7 @@ it('cancels pending step-up delivery after its bound session is revoked', async 
 
 it('retains request correlation across retry and secret erasure without logging the message', async () => {
   const { id } = await queued();
+  const initialDeliveries = await sentOtpEmails();
   const correlationId = randomUUID();
   await pool.query('UPDATE auth_delivery_outbox SET correlation_id=$2 WHERE id=$1', [
     id,
@@ -110,11 +119,15 @@ it('retains request correlation across retry and secret erasure without logging 
     .mockResolvedValue('receipt');
   try {
     expect(await runAuthDelivery(pool, send)).toBe('retry');
+    expect(await sentOtpEmails()).toBe(initialDeliveries);
     await pool.query(
       "UPDATE auth_delivery_outbox SET available_at=NOW()-INTERVAL '1 second' WHERE id=$1",
       [id]
     );
     expect(await runAuthDelivery(pool, send)).toBe('sent');
+    expect(await runAuthDelivery(pool, send)).toBe('idle');
+    expect(await sentOtpEmails()).toBe(initialDeliveries + 1);
+    expect(await exportWorkerMetrics()).not.toContain(destination);
     expect(send).toHaveBeenCalledTimes(2);
     for (const [message] of send.mock.calls) expect(message).toMatchObject({ id, correlationId });
     expect(await state(id)).toMatchObject({
@@ -286,6 +299,7 @@ it('claims once during an in-flight send and recovers expired leases', async () 
   expect((await state(id)).status).toBe('sent');
 });
 it('cannot overwrite a newer lease after a provider accepted the old attempt', async () => {
+  const before = await sentOtpEmails();
   const { id } = await queued(),
     newToken = randomUUID();
   const send = vi.fn(async () => {
@@ -296,6 +310,7 @@ it('cannot overwrite a newer lease after a provider accepted the old attempt', a
     return 'stale-receipt';
   });
   expect(await runAuthDelivery(pool, send)).toBe('retry');
+  expect(await sentOtpEmails()).toBe(before);
   expect(await state(id)).toMatchObject({
     status: 'leased',
     lease_token: newToken,
@@ -307,6 +322,7 @@ const invitationLink = (token: string) =>
 const staffCode = `v2_${'a'.repeat(64)}`;
 
 it('sends a valid staff invitation and cancels a replaced code', async () => {
+  const before = await sentOtpEmails();
   const id = randomUUID(),
     token = staffCode,
     link = invitationLink(token);
@@ -321,6 +337,7 @@ it('sends a valid staff invitation and cancels a replaced code', async () => {
   );
   const send = vi.fn(async () => 'activation-receipt');
   expect(await runAuthDelivery(pool, send)).toBe('sent');
+  expect(await sentOtpEmails()).toBe(before);
   expect(send).toHaveBeenCalledWith({
     id,
     code: token,

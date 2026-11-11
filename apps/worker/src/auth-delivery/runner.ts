@@ -8,10 +8,12 @@ import {
   type EmailBranding,
 } from '@barghsa/shared/notification-delivery';
 import { createAuthSender, staffActivationUrl, type AuthMessage } from './providers.js';
+import { recordAuthOtpSent } from '../notifications/worker-metrics.js';
 
 interface DeliveryRow {
   correlation_id: string | null;
   id: string;
+  kind: 'otp' | 'staff_activation';
   challenge_id: string;
   code_hash: string;
   encrypted_payload: string | null;
@@ -70,6 +72,7 @@ export async function runAuthDelivery(
     await finish('dead');
     return 'dead';
   }
+  const channel = challenge.destination.includes('@') ? 'email' : 'sms';
   try {
     const payload = decryptAuthDelivery(
       row.id,
@@ -93,7 +96,7 @@ export async function runAuthDelivery(
       return 'cancelled';
     }
     let emailBranding: EmailBranding | null | undefined;
-    if (challenge.destination.includes('@')) {
+    if (channel === 'email') {
       if (payload.emailBranding) emailBranding = normalizeEmailBranding(payload.emailBranding);
       else if (payload.emailBranding === null || row.attempts > 1) {
         // A previous app version may have sent this idempotency key already.
@@ -117,7 +120,6 @@ export async function runAuthDelivery(
       ...(activationUrl ? { activationUrl } : {}),
     });
     await finish('sent', ref);
-    return 'sent';
   } catch {
     const dead = row.attempts >= 5;
     const saved = await pool.query(
@@ -135,4 +137,6 @@ export async function runAuthDelivery(
     );
     return dead ? 'dead' : 'retry';
   }
+  if (row.kind === 'otp') recordAuthOtpSent(channel);
+  return 'sent';
 }

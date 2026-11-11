@@ -37,6 +37,17 @@ import type { DeliveryExecutor } from '@barghsa/shared/notification-delivery';
  */
 const registry = new Registry();
 
+const authOtpSent = new Counter({
+  name: 'auth_otp_deliveries_sent_total',
+  help: 'OTP deliveries recorded as sent by the authentication outbox worker',
+  labelNames: ['channel'] as const,
+  registers: [registry],
+});
+
+export function recordAuthOtpSent(channel: 'email' | 'sms'): void {
+  authOtpSent.inc({ channel });
+}
+
 export const notificationsOutboxAge = new Gauge({
   name: 'notifications_outbox_age_seconds',
   help: 'Age in seconds of the oldest pending (queued/scheduled/sending) notification outbox row',

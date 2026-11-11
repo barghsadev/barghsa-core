@@ -9,6 +9,23 @@ import promClient from 'prom-client';
 import { createDatabaseTelemetry } from './database-telemetry.js';
 import { aiInferenceQueue } from '../ai-agents/ai-inference-queue.js';
 
+const securityAuditEvents = [
+  'new_device_login',
+  'device_trust_granted',
+  'device_trust_revoked',
+  'session_lifecycle_revoked',
+  'sessions_revoked',
+  'step_up_verified',
+  'password_reset_verified',
+  'password_reset',
+  'password_changed',
+  'username_changed',
+  'contact_added',
+  'staff_user_activated',
+  'account_recovery_completed',
+  'auth.operating_context_switched',
+] as const;
+
 /**
  * NestJS service that registers and updates Prometheus gauges for PostgreSQL
  * performance monitoring.  Metrics are pulled from PG system views via
@@ -64,6 +81,15 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     name: 'ai_model_monthly_budget_usage_ratio',
     help: 'Fraction of the configured token or USD limit used in the current UTC month',
     labelNames: ['model_id', 'unit'] as const,
+  });
+  private readonly securityAuditCounts = new promClient.Gauge({
+    name: 'security_audit_events_1h',
+    help: 'Selected committed authentication and security audit events in the past hour',
+    labelNames: ['event'] as const,
+  });
+  private readonly securityAuditAvailable = new promClient.Gauge({
+    name: 'security_audit_collection_success',
+    help: 'Whether the one-hour security audit window was collected',
   });
   private readonly aiInferenceActive = new promClient.Gauge({
     name: 'ai_inference_active_requests',
@@ -257,6 +283,8 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     this.aiModelHealth.reset();
     this.aiModelMonthlySpend.reset();
     this.aiModelMonthlyBudgetUsage.reset();
+    this.securityAuditCounts.reset();
+    this.securityAuditAvailable.set(0);
   }
 
   constructor() {
@@ -399,9 +427,11 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       this.aiModelHealth.reset();
       this.aiModelMonthlySpend.reset();
       this.aiModelMonthlyBudgetUsage.reset();
+      this.securityAuditCounts.reset();
+      this.securityAuditAvailable.set(0);
       try {
         const pool = getDbPool();
-        const [models, budgets] = await Promise.allSettled([
+        const [models, budgets, audit] = await Promise.allSettled([
           pool.query<{ id: string; degraded: boolean }>(
             'SELECT id,degraded FROM ai_model_circuit_states'
           ),
@@ -425,6 +455,12 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
                     ELSE used_cost_micros::double precision / monthly_cost_limit_micros END AS usd_ratio
              FROM budget`
           ),
+          pool.query<{ event: string; count: string }>(
+            `SELECT event,COUNT(*)::text AS count FROM audit_log
+             WHERE created_at BETWEEN now() - INTERVAL '1 hour' AND now()
+               AND event=ANY($1::text[]) GROUP BY event`,
+            [securityAuditEvents]
+          ),
         ]);
         if (models.status === 'fulfilled')
           for (const model of models.value.rows)
@@ -438,11 +474,21 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
             if (budget.usd_ratio != null)
               this.aiModelMonthlyBudgetUsage.set({ model_id, unit: 'usd' }, budget.usd_ratio);
           }
+        if (audit.status === 'fulfilled') {
+          const counts = new Map(
+            audit.value.rows.map(({ event, count }) => [event, Number(count)])
+          );
+          for (const event of securityAuditEvents)
+            this.securityAuditCounts.set({ event }, counts.get(event) ?? 0);
+          this.securityAuditAvailable.set(1);
+        }
       } catch {
-        // Optional AI telemetry must leave core database samples available.
+        // Optional telemetry must leave core database samples available.
         this.aiModelHealth.reset();
         this.aiModelMonthlySpend.reset();
         this.aiModelMonthlyBudgetUsage.reset();
+        this.securityAuditCounts.reset();
+        this.securityAuditAvailable.set(0);
       }
     } catch {
       this.clearDatabaseMetrics();
