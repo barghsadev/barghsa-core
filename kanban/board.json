@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:28:48+00:00",
+  "updated": "2026-11-11T22:39:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10412,7 +10412,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10424,7 +10425,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10545,6 +10546,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -15592,7 +15601,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15604,7 +15614,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15656,6 +15666,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -15710,7 +15728,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15722,7 +15741,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15774,6 +15793,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -24366,7 +24393,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-maintenance-health",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24387,7 +24415,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -24573,6 +24601,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -25905,7 +25941,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -25933,7 +25970,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             }
           ],
           "checks": [
@@ -25988,6 +26025,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -560096,7 +560141,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -560118,7 +560164,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -560278,6 +560324,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -560377,7 +560431,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-maintenance-health",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -560388,7 +560443,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -560484,6 +560539,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -564389,7 +564452,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-maintenance-health",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564413,11 +564477,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+              "sha256": "a1656e57569f5f94603899c2c22002ea137deba32a117d1a54b08310ff00f34c"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -564465,6 +564529,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope. Adds a distinct protected synthetic mode. The rollout mode reuses the original customer and fixture checks through extracted functions and preserves its CLI and metrics contract. All nine existing rollout observer cases and six new synthetic cases passed."
             }
           ]
         }
@@ -570200,7 +570273,8 @@
           "deploy/production/test_rollout_observer.py"
         ],
         "batches": [
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -570248,11 +570322,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+              "sha256": "a1656e57569f5f94603899c2c22002ea137deba32a117d1a54b08310ff00f34c"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
@@ -570266,6 +570340,17 @@
           "checks": [
             "The compiled API passed all three capability maintenance integration cases with isolated migrated PostgreSQL. During electricity checkout maintenance, the guarded submit returned the typed 503, unrelated saving remained reachable, unauthenticated liveness and readiness both returned 200 and PostgreSQL remained healthy. The existing test verified resumption after clearing the flag. Wallet isolation, validation, staff authority, step-up, versioning and audit cases still passed.",
             "Nine read-only rollout observer tests passed. The smoke reads exact public release and health metadata before using the protected synthetic account, then checks owned dashboard, wallet and all four service reads. A readiness HTTP 503 from the isolated fixture made the observer fail before sending any credential. The operator documentation describes the write-pause behavior."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope. Adds a distinct protected synthetic mode. The rollout mode reuses the original customer and fixture checks through extracted functions and preserves its CLI and metrics contract. All nine existing rollout observer cases and six new synthetic cases passed."
+            }
           ]
         }
       }
@@ -570511,7 +570596,8 @@
           "release-0.6-first-launch-promotion-check",
           "release-0.6-public-registration-privacy",
           "release-0.6-edge-tls-and-hsts",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-synthetic-probe"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -570559,7 +570645,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "0ada4027a2765188c5193502191fc50e90f5fd442c244f75977f87fbc6dfcacc"
+              "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -570654,6 +570740,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-synthetic-probe",
+              "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the independent synthetic service setup and privacy boundaries to the existing probe documentation. Release, approval and rollout instructions retain their scope."
             }
           ]
         }
@@ -570670,18 +570764,27 @@
         "story": "06-security-testing-observability.md#spec-e0acbf77e4ef"
       },
       "requirement": "| T-06.17.03.02 | Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider) | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Install the validated probe and timer on the approved independent monitoring host. Verify live public and authenticated runs, its private metrics scrape, timer scheduling and the exact reported target.",
+        "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/monitoring/systemd/barghsa-synthetic.service",
+          "deploy/monitoring/systemd/barghsa-synthetic.timer",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_synthetic_probe.py"
+        ],
+        "batches": [
+          "release-0.6-synthetic-probe"
+        ],
         "current_acceptance": null
       }
     },
@@ -570696,18 +570799,26 @@
         "story": "06-security-testing-observability.md#spec-e0acbf77e4ef"
       },
       "requirement": "| T-06.17.03.03 | Ensure synthetic checks use isolated test accounts and never create real orders/payments | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the target environment uses a dedicated non-staff fixture profile and its four existing records. Retain the live identity, read-only requests and logout receipt without exposing credentials or fixture data."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/monitoring/systemd/barghsa-synthetic.service",
+          "deploy/monitoring/systemd/barghsa-synthetic.timer",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_synthetic_probe.py"
+        ],
+        "batches": [
+          "release-0.6-synthetic-probe"
+        ],
         "current_acceptance": null
       }
     },
@@ -570733,7 +570844,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-synthetic-probe"
+        ],
         "current_acceptance": null
       }
     },
@@ -862827,7 +862940,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-sentry-version-tag-coverage",
           "release-0.6-quarterly-storage-recovery",
-          "release-0.6-journey-slo-burn"
+          "release-0.6-journey-slo-burn",
+          "release-0.6-synthetic-probe"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -990616,6 +990730,92 @@
           "sha256": "bd49569236b219b39c20eb260907f142555ca172fdd3a335216a849652940239"
         }
       ]
+    },
+    "release-0.6-synthetic-probe": {
+      "batch": "release-0.6-synthetic-probe",
+      "base_commit": "6e76b83923602030682511544fa0debf4a0093cb",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.03",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/systemd/barghsa-synthetic.service",
+          "sha256": "1eb790c36bd371c871d97f1a4a6110d407204defd6ea323e416d19fc427ec63b"
+        },
+        {
+          "path": "deploy/monitoring/systemd/barghsa-synthetic.timer",
+          "sha256": "e9b9bae049dca516109916393f94aa7ab24f11960c519b66f66cc00d1aec0992"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "da8502ea4bc76ed52b2261953a97e1f93854bbdf13bbdcc0f15e8e7f6b6d601a"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "a1656e57569f5f94603899c2c22002ea137deba32a117d1a54b08310ff00f34c"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "d7a4982a6580df9a374cc8f54aec37e19f5f7415e61dabcb32e630b9185f3f9a"
+        }
+      ],
+      "checks": [
+        "The standalone synthetic mode probes public liveness and readiness without cookies. It then obtains the normal pre-authentication CSRF token and signs in with the dedicated fixture. A normal OTP challenge uses a fresh CSRF token and the protected reader. The probe verifies the configured non-staff user and active profile, reads four existing fixture records with GET, and logs out an issued session even after a later failure.",
+        "Six loopback HTTP tests passed, covering the trusted device and OTP paths, explicit request methods, foreign identity and profile refusal, missing fixtures, redirect refusal, protected config permissions, logout and secret-free outputs. The existing nine rollout observer cases passed.",
+        "Linux systemd-analyze confirmed the next four calendar occurrences are five minutes apart. Unit wiring, README links, Promtool textfile validation, formatter and whitespace checks passed. The public report holds fixed outcomes, measured duration and validated correlation IDs. Metrics represent executed checks and a completion timestamp."
+      ],
+      "limitations": [
+        "The new command ran against controlled HTTP fixtures, with no real recipient, customer account or deployed monitor. The timer and service were not installed. Dedicated credentials, the protected OTP reader or enrolled device, an approved independent host, live private scrape and delivery receipts remain open.",
+        "Synthetic results have separate metric names. They do not establish collection of actual eligible authenticated journey attempts or v0.6.0 release acceptance."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-probe",
+      "execution_receipts": [
+        {
+          "file": "probe-tests.log",
+          "sha256": "8323001fa5129d8ab241ebc7c6995fccd9096ac9559820e97212653311e86153"
+        },
+        {
+          "file": "observer-tests.log",
+          "sha256": "9584360a591ae30a9dfa84ed3d6187692418af594c67fee04e00ee4e5414713e"
+        },
+        {
+          "file": "timer-calendar.log",
+          "sha256": "9bac609e2b1c326287c8e189e8bbc68be9a352392d964a4369e3abc9aab1fa3a"
+        },
+        {
+          "file": "verify-probe-config.py",
+          "sha256": "79dd05cdd1b0c0116e55390d9bf857b4944c1856f2f03d11c6d33531f3d8108e"
+        },
+        {
+          "file": "config.log",
+          "sha256": "81b85b5109fbfb54d27b4c488cced86fbf45cbf0ba0f2ca72c0ad84d643fbf6d"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "e727a475cb92ad2b2d8595ff7c0e4f253beb338cd97aa72d0a7928dc09e56ede"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -990661,11 +990861,12 @@
       "release-readiness#R-05.02",
       "06-security-testing-observability.md#T-06.11.04.05",
       "06-security-testing-observability.md#T-06.15.02.02",
-      "06-security-testing-observability.md#T-06.15.02.04",
+      "06-security-testing-observability.md#T-06.17.03.02",
+      "06-security-testing-observability.md#T-06.17.03.04",
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Read back the protected preflight, quarterly recovery, native alert and nightly browser evidence while retaining the exact license and operational prerequisites."
+    "goal": "Verify protected preflights and recovery runs, finish synthetic alert delivery and retain the nightly, licensing and operational prerequisites."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

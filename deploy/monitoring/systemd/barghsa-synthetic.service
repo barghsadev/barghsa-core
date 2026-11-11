@@ -1,0 +1,18 @@
+[Unit]
+Description=Barghsa public and authenticated synthetic checks
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=barghsa-synthetic
+Group=barghsa-synthetic
+UMask=0077
+StateDirectory=barghsa-synthetic
+StateDirectoryMode=0755
+ExecStart=/usr/bin/python3 /opt/barghsa/synthetic/rollout-observer.py --synthetic --config /etc/barghsa/synthetic.json --metrics-file /var/lib/barghsa-synthetic/probe.prom
+TimeoutStartSec=2min
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true

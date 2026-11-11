@@ -3,6 +3,7 @@
 
 import argparse
 from datetime import datetime
+from http.cookiejar import Cookie, CookieJar
 import ipaddress
 import json
 import math
@@ -10,10 +11,13 @@ import os
 from pathlib import Path
 import re
 import stat
+import subprocess
 import sys
+import tempfile
 import time
+from urllib.error import HTTPError
 from urllib.parse import urlencode, urlsplit
-from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_opener
+from urllib.request import HTTPCookieProcessor, HTTPRedirectHandler, ProxyHandler, Request, build_opener
 
 
 JOURNEYS = {
@@ -101,6 +105,18 @@ def release_ready(reader, commit):
     return ready.get('status') == 'ok' and ready.get('checks', {}).get('postgresql', {}).get('status') == 'ok'
 
 
+def customer_matches(user, config):
+    return (user.get('userId') == config['user_id'] and user.get('isStaff') is False
+            and user.get('operatingContext') == 'customer'
+            and user.get('navigation', {}).get('profileId') == config['profile_id'])
+
+
+def fixture_present(rows, key, expected):
+    return isinstance(rows, list) and any(
+        isinstance(row, dict) and row.get(key) == expected for row in rows
+    )
+
+
 def smoke(reader, previous, config):
     results = dict.fromkeys(('health', 'dashboard', 'wallet', *JOURNEYS), False)
     results['health'] = (release_ready(reader, config['candidate']['revision']['commit'])
@@ -108,9 +124,7 @@ def smoke(reader, previous, config):
     if not results['health']:
         return results
     user = reader.get('/api/auth/user', authenticated=True)
-    if (user.get('userId') != config['user_id'] or user.get('isStaff') is not False
-            or user.get('operatingContext') != 'customer'
-            or user.get('navigation', {}).get('profileId') != config['profile_id']):
+    if not customer_matches(user, config):
         return results
     dashboard = reader.get('/api/dashboard/context', authenticated=True)
     results['dashboard'] = (dashboard.get('profile', {}).get('id') == config['profile_id']
@@ -122,10 +136,202 @@ def smoke(reader, previous, config):
                              and bool(re.fullmatch(r'0|[1-9][0-9]{0,18}', balance)))
     for name, (path, collection, key) in JOURNEYS.items():
         rows = reader.get(path, {'profileId': config['profile_id']}, authenticated=True).get(collection)
-        results[name] = isinstance(rows, list) and any(
-            isinstance(row, dict) and row.get(key) == config['fixtures'][name] for row in rows
-        )
+        results[name] = fixture_present(rows, key, config['fixtures'][name])
     return results
+
+
+SYNTHETIC_CHECKS = ('liveness', 'readiness', 'login', 'account', *JOURNEYS, 'logout')
+
+
+class SyntheticBrowser:
+    """A dedicated cookie jar for the ordinary customer authentication flow."""
+
+    def __init__(self, base, device):
+        self.base = origin(base)
+        self.cookies = CookieJar()
+        if device:
+            secure = self.base.startswith('https://')
+            self.cookies.set_cookie(Cookie(
+                0, '__Host-barghsa_device' if secure else 'barghsa_device', device, None, False,
+                urlsplit(self.base).hostname, False, False, '/', True, secure, None, True,
+                None, None, {}, False,
+            ))
+        self.opener = build_opener(ProxyHandler({}), NoRedirect(), HTTPCookieProcessor(self.cookies))
+        self.correlation_id = None
+        self.session_csrf = None
+
+    def capture_reference(self, headers):
+        reference = headers.get('X-Correlation-Id', '')
+        self.correlation_id = reference if re.fullmatch(UUID, reference) else None
+
+    def request(self, path, data=None, csrf=None):
+        headers = {
+            'Accept': 'application/json', 'Cache-Control': 'no-cache',
+            'User-Agent': 'BarghsaSynthetic/1.0',
+        }
+        body = None
+        if data is not None:
+            headers.update({
+                'Content-Type': 'application/json', 'Origin': self.base, 'X-CSRF-Token': csrf,
+            })
+            body = json.dumps(data).encode()
+        try:
+            with self.opener.open(Request(self.base + path, data=body, headers=headers), timeout=5) as response:
+                self.capture_reference(response.headers)
+                require(response.status == 200 and response.headers.get_content_type() == 'application/json',
+                        'invalid_http_response')
+                payload = response.read(262145)
+        except HTTPError as error:
+            self.capture_reference(error.headers)
+            error.close()
+            raise
+        require(len(payload) <= 262144, 'http_response_too_large')
+        value = json.loads(payload)
+        require(isinstance(value, dict), 'invalid_http_response')
+        return value
+
+    def csrf_token(self):
+        csrf = self.request('/api/auth/csrf').get('csrfToken')
+        require(isinstance(csrf, str) and re.fullmatch(r'[a-f0-9]{64}', csrf), 'invalid_csrf_acknowledgement')
+        return csrf
+
+    def preauth(self, path, data):
+        return self.request(path, data, self.csrf_token())
+
+    def has_session(self):
+        return any(cookie.name == 'barghsa_session' and not cookie.is_expired() for cookie in self.cookies)
+
+    def login(self, config):
+        started = int(time.time())
+        response = self.preauth('/api/auth/login', {
+            'username': config['username'], 'password': config['password'],
+        })
+        if response.get('requiresOtp') is True:
+            require(response.get('userIsStaff') is not True, 'unexpected_staff_challenge')
+            challenge = response.get('challengeId')
+            require(isinstance(challenge, str) and re.fullmatch(UUID, challenge), 'invalid_login_challenge')
+            otp = synthetic_otp(config.get('otp_reader'), challenge, started)
+            response = self.preauth('/api/auth/login/verify', {
+                'challengeId': challenge, 'otp': otp, 'trustDevice': False,
+            })
+        else:
+            require(response.get('requiresOtp') is False, 'invalid_login_acknowledgement')
+        csrf = response.get('csrfToken')
+        if isinstance(csrf, str) and re.fullmatch(r'[a-f0-9]{64}', csrf):
+            self.session_csrf = csrf
+        require(self.session_csrf and response.get('userId') == config['user_id'] and self.has_session(),
+                'unexpected_session_identity')
+
+    def logout(self):
+        self.request('/api/auth/logout', {}, self.session_csrf or self.csrf_token())
+        require(not any(cookie.name in ('barghsa_session', 'barghsa_refresh') and not cookie.is_expired()
+                        for cookie in self.cookies), 'session_cookies_not_cleared')
+
+
+def synthetic_otp(reader, challenge, started):
+    require(reader is not None, 'fixture_otp_reader_required')
+    value = subprocess.run(
+        [reader], input=json.dumps({'challengeId': challenge, 'requested_at': started}),
+        stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, check=True, text=True, timeout=25,
+    ).stdout.strip()
+    require(bool(re.fullmatch(r'[0-9]{6}', value)), 'invalid_fixture_otp')
+    return value
+
+
+def validate_synthetic(config):
+    require(isinstance(config, dict) and set(config) <= {
+        'origin', 'user_id', 'profile_id', 'fixtures', 'username', 'password', 'device_token', 'otp_reader',
+    }, 'invalid_synthetic_config')
+    origin(config['origin'])
+    require(set(config['fixtures']) == set(JOURNEYS)
+            and all(re.fullmatch(UUID, value) for value in
+                    (config['user_id'], config['profile_id'], *config['fixtures'].values())),
+            'invalid_synthetic_identity')
+    require(isinstance(config['username'], str) and 1 <= len(config['username']) <= 255
+            and isinstance(config['password'], str) and 1 <= len(config['password']) <= 1024,
+            'invalid_synthetic_credentials')
+    device = config.get('device_token')
+    require(device is None or re.fullmatch(r'[a-f0-9]{64}', device), 'invalid_synthetic_device')
+    reader = config.get('otp_reader')
+    require(device or reader, 'synthetic_authentication_method_required')
+    if reader is not None:
+        path = Path(reader)
+        require(path.is_absolute(), 'invalid_otp_reader')
+        info = path.lstat()
+        require(stat.S_ISREG(info.st_mode) and info.st_uid in (0, os.geteuid())
+                and not info.st_mode & 0o022 and os.access(path, os.X_OK), 'unsafe_otp_reader')
+
+
+def synthetic(config):
+    validate_synthetic(config)
+    public = SyntheticBrowser(config['origin'], None)
+    browser = SyntheticBrowser(config['origin'], config.get('device_token'))
+    results = {name: {'status': 'skipped'} for name in SYNTHETIC_CHECKS}
+
+    def check(name, client, operation):
+        started = time.monotonic()
+        client.correlation_id = None
+        outcome = {'status': 'passed'}
+        try:
+            operation()
+        except ObservationError as error:
+            outcome = {'status': 'failed', 'reason': str(error)}
+        except HTTPError as error:
+            outcome = {'status': 'failed', 'reason': 'http_failure', 'http_status': error.code}
+        except subprocess.SubprocessError:
+            outcome = {'status': 'failed', 'reason': 'fixture_otp_reader_failed'}
+        except (OSError, ValueError, KeyError, TypeError, AttributeError, RecursionError):
+            outcome = {'status': 'failed', 'reason': 'probe_unavailable'}
+        results[name] = {
+            **outcome, 'duration_ms': round((time.monotonic() - started) * 1000),
+            'correlation_id': client.correlation_id,
+        }
+        return outcome['status'] == 'passed'
+
+    live = check('liveness', public, lambda: require(
+        public.request('/api/health/live').get('status') == 'ok', 'liveness_failed',
+    ))
+    ready = check('readiness', public, lambda: require(
+        public.request('/api/health/ready').get('status') == 'ok', 'readiness_failed',
+    ))
+    if live and ready:
+        try:
+            login = check('login', browser, lambda: browser.login(config))
+            if login and check('account', browser, lambda: require(
+                customer_matches(browser.request('/api/auth/user'), config), 'unexpected_account_identity',
+            )):
+                for name, (path, collection, key) in JOURNEYS.items():
+                    def read_fixture():
+                        value = browser.request(path + '?' + urlencode({'profileId': config['profile_id']}))
+                        require(fixture_present(value.get(collection), key, config['fixtures'][name]),
+                                'fixture_unavailable')
+                    check(name, browser, read_fixture)
+        finally:
+            if browser.has_session():
+                check('logout', browser, browser.logout)
+    return {'observed_at': int(time.time()), 'checks': results}
+
+
+def synthetic_metrics(path, report):
+    lines = [
+        '# HELP barghsa_synthetic_probe_completed_timestamp_seconds Unix time of the last complete synthetic run.',
+        '# TYPE barghsa_synthetic_probe_completed_timestamp_seconds gauge',
+        f"barghsa_synthetic_probe_completed_timestamp_seconds {report['observed_at']}",
+        '# HELP barghsa_synthetic_probe_success Result of each executed check in the last synthetic run.',
+        '# TYPE barghsa_synthetic_probe_success gauge',
+    ]
+    for name, result in report['checks'].items():
+        if result['status'] != 'skipped':
+            lines.append(f'barghsa_synthetic_probe_success{{check="{name}"}} {int(result["status"] == "passed")}')
+    with tempfile.NamedTemporaryFile(mode='w', dir=path.parent, prefix='.synthetic-', delete=False) as out:
+        staged = Path(out.name)
+        try:
+            out.write('\n'.join(lines) + '\n')
+            out.close()
+            staged.chmod(0o644)
+            staged.replace(path)
+        finally:
+            staged.unlink(missing_ok=True)
 
 
 def parse_series(result, scope, jobs):
@@ -370,10 +576,21 @@ def validate_config(config):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', type=Path, required=True)
-    parser.add_argument('--baseline-seconds', type=int)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--baseline-seconds', type=int)
+    mode.add_argument('--synthetic', action='store_true')
+    parser.add_argument('--metrics-file', type=Path)
     options = parser.parse_args()
+    if options.metrics_file and not options.synthetic:
+        parser.error('--metrics-file requires --synthetic')
     try:
         config = protected_config(options.config)
+        if options.synthetic:
+            result = synthetic(config)
+            if options.metrics_file:
+                synthetic_metrics(options.metrics_file, result)
+            print(json.dumps(result, allow_nan=False))
+            return int(any(check['status'] != 'passed' for check in result['checks'].values()))
         validate_config(config)
         token = config['prometheus_token']
         require(re.fullmatch(r'[!-~]{1,4096}', token), 'invalid_monitoring_credential')
