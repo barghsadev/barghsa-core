@@ -102,6 +102,37 @@ afterAll(async () => {
   await http?.close();
   await new Promise<void>((resolve) => storage?.close(() => resolve()));
 });
+
+async function duringCopy(submit: () => Promise<Response>, check: () => Promise<void>) {
+  let entered!: () => void, release!: () => void;
+  const started = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  onPut = async () => {
+    entered();
+    await gate;
+  };
+  const response = submit();
+  try {
+    await Promise.race([
+      started,
+      response.then(async (result) => {
+        throw new Error(
+          `PUT was never reached: ${result.status} ${await result.text()} ${http.logs()}`
+        );
+      }),
+    ]);
+    await check();
+  } finally {
+    onPut = undefined;
+    release();
+  }
+  return response;
+}
+
 it('seals only owned, verified legal documents and serves the immutable copy to the owner', async () => {
   const profileId = (
     await http.pool.query(
@@ -179,37 +210,40 @@ it('seals only owned, verified legal documents and serves the immutable copy to 
   await http.pool.query(
     "CREATE FUNCTION reject_legal_documents_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'test audit failure'; END $$; CREATE TRIGGER reject_legal_documents_audit BEFORE INSERT ON audit_log FOR EACH ROW WHEN (NEW.event='legal_profile_saved') EXECUTE FUNCTION reject_legal_documents_audit()"
   );
-  let entered!: () => void, release!: () => void;
-  const started = new Promise<void>((resolve) => {
-    entered = resolve;
-  });
-  const gate = new Promise<void>((resolve) => {
-    release = resolve;
-  });
-  onPut = async () => {
-    entered();
-    await gate;
-  };
-  const pendingSubmit = submit();
-  await Promise.race([
-    started,
-    pendingSubmit.then(async (response) => {
-      throw new Error(
-        `PUT was never reached: ${response.status} ${await response.text()} ${http.logs()}`
-      );
-    }),
-  ]);
-  try {
+  const auditFailure = await duringCopy(submit, async () => {
+    expect(
+      (await http.pool.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE NOWAIT', [profileId]))
+        .rows
+    ).toEqual([{ id: profileId }]);
     expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
       deleted: 0,
       failed: 0,
     });
-  } finally {
-    onPut = undefined;
-    release();
-  }
-  expect((await pendingSubmit).status).toBe(500);
+  });
+  expect(auditFailure.status).toBe(500);
+  await http.pool.query('DROP TRIGGER reject_legal_documents_audit ON audit_log');
+  const changedSource = await duringCopy(submit, async () => {
+    expect(
+      (
+        await http.pool.query(
+          'SELECT storage_key FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+          [key]
+        )
+      ).rows
+    ).toEqual([{ storage_key: key }]);
+    await http.pool.query("UPDATE storage_records SET file_name='new.pdf' WHERE storage_key=$1", [
+      key,
+    ]);
+  });
+  expect(changedSource.status).toBe(400);
+  await http.pool.query(
+    "UPDATE storage_records SET file_name='registration.pdf' WHERE storage_key=$1",
+    [key]
+  );
   expect((await http.pool.query('SELECT id FROM legal_profiles')).rows).toHaveLength(0);
+  expect(
+    (await http.pool.query("SELECT 1 FROM audit_log WHERE event='legal_profile_saved'")).rowCount
+  ).toBe(0);
   expect(
     (await http.pool.query("SELECT storage_key FROM storage_records WHERE status='immutable'")).rows
   ).toHaveLength(0);
@@ -218,9 +252,8 @@ it('seals only owned, verified legal documents and serves the immutable copy to 
       "SELECT storage_key FROM storage_records WHERE metadata->>'provisionalCopy'='true'"
     )
   ).rows;
-  expect(abandoned).toHaveLength(1);
-  expect(objects.has(abandoned[0].storage_key)).toBe(true);
-  await http.pool.query('DROP TRIGGER reject_legal_documents_audit ON audit_log');
+  expect(abandoned).toHaveLength(2);
+  for (const { storage_key } of abandoned) expect(objects.has(storage_key)).toBe(true);
   expect((await submit()).status, http.logs()).toBe(200);
   const sealed = (
     await http.pool.query('SELECT documents FROM legal_profiles WHERE id=$1', [profileId])
@@ -229,10 +262,10 @@ it('seals only owned, verified legal documents and serves the immutable copy to 
   expect(sealed[0]).toMatch(/^legal-profile-documents\//);
   await http.pool.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
   expect(await cleanupStorageObjects(http.pool, cleanupProvider)).toEqual({
-    deleted: 1,
+    deleted: 2,
     failed: 0,
   });
-  expect(objects.has(abandoned[0].storage_key)).toBe(false);
+  for (const { storage_key } of abandoned) expect(objects.has(storage_key)).toBe(false);
   expect(objects.has(sealed[0]!)).toBe(true);
   expect(objects.has(key)).toBe(true);
   objects.set(key, Buffer.from('%PDF-1.7\nReplaced original'));

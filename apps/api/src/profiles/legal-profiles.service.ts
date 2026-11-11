@@ -1,5 +1,11 @@
+import type { PoolClient } from 'pg';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import { privateLogId } from '@barghsa/shared/log-privacy';
-import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
+import {
+  VerifiedAttachmentsService,
+  type PreparedAttachmentCopies,
+} from '../storage/verified-attachments.service.js';
 import { z } from 'zod';
 import { requireAddressGeography } from './address-geography.js';
 import { readOnboardingDraftState } from './onboarding-draft-state.js';
@@ -118,7 +124,12 @@ export class LegalProfilesService {
    * @param profileId - The draft profile ID from onboarding start.
    * @param data - Legal profile fields.
    */
-  async saveLegalProfile(userId: string, profileId: string, input: unknown): Promise<ProfileRow> {
+  async saveLegalProfile(
+    userId: string,
+    profileId: string,
+    input: unknown,
+    session?: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<ProfileRow> {
     const pool = getDbPool();
 
     // Validate the profile exists and belongs to the user
@@ -196,33 +207,16 @@ export class LegalProfilesService {
       );
     }
     const data = parsed.data;
-    // Resolve cached settings before holding a transaction connection.
-    const verificationMode = await this.profilesService.getVerificationMode();
-    const client = await pool.connect();
-    try {
-      await client.query('BEGIN');
-
-      // Update the base profile with title from legal name
-      const profileResult = await client.query(
-        `UPDATE profiles
-         SET title = $1, updated_at = NOW()
-         WHERE id = $2 AND user_id = $3 AND profile_type='LEGAL' AND status='DRAFT' AND NOT archived
-         RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
-        [data.legalName, profileId, userId]
-      );
-
-      if (profileResult.rows.length === 0) {
-        await client.query('ROLLBACK');
-        throw new HttpException(
-          {
-            statusCode: 404,
-            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-            message: 'Profile not found',
-          },
-          404
-        );
-      }
-
+    const requireActor = async (client: PoolClient) => {
+      if (!session) return;
+      const account = (
+        await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [userId])
+      ).rows[0];
+      if (session.userId !== userId || !account || account.disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, session);
+    };
+    const validateDraft = async (client: PoolClient) => {
       if (data.draftVersion !== undefined) {
         const draft = await readOnboardingDraftState(client, profileId);
         if (draft.expired || draft.version !== data.draftVersion)
@@ -248,16 +242,72 @@ export class LegalProfilesService {
         data.representativeProvinceId,
         data.representativeCityId
       );
+    };
+    let prepared: PreparedAttachmentCopies | null = null;
+    if (data.documents?.length) {
+      const client = await pool.connect();
+      let plan;
+      try {
+        await client.query('BEGIN');
+        await requireActor(client);
+        const owned = await client.query(
+          "SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type='LEGAL' AND status='DRAFT' AND NOT archived FOR UPDATE",
+          [profileId, userId]
+        );
+        if (!owned.rows.length)
+          throw new HttpException(
+            { error: ErrorCodes.NOT_FOUND_RESOURCE.code, message: 'Profile not found' },
+            404
+          );
+        await validateDraft(client);
+        plan = await this.attachments.plan(
+          client,
+          data.documents,
+          userId,
+          profileId,
+          'legal_profile_document'
+        );
+        if (session) await requireCurrentSession(client, session);
+        await client.query('COMMIT');
+      } catch (error) {
+        await client.query('ROLLBACK').catch(() => {});
+        throw error;
+      } finally {
+        client.release();
+      }
+      prepared = await this.attachments.copy(plan);
+    }
+    // Resolve cached settings before holding a transaction connection.
+    const verificationMode = await this.profilesService.getVerificationMode();
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await requireActor(client);
 
-      const documents = data.documents?.length
-        ? await this.attachments.seal(
-            client,
-            data.documents,
-            userId,
-            profileId,
-            'legal_profile_document'
-          )
-        : [];
+      // Update the base profile with title from legal name
+      const profileResult = await client.query(
+        `UPDATE profiles
+         SET title = $1, updated_at = NOW()
+         WHERE id = $2 AND user_id = $3 AND profile_type='LEGAL' AND status='DRAFT' AND NOT archived
+         RETURNING id, user_id, profile_type, is_default, status, title, first_name, last_name, national_id, created_at, updated_at`,
+        [data.legalName, profileId, userId]
+      );
+
+      if (profileResult.rows.length === 0) {
+        await client.query('ROLLBACK');
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Profile not found',
+          },
+          404
+        );
+      }
+
+      await validateDraft(client);
+
+      const documents = prepared ? await this.attachments.publish(client, prepared) : [];
 
       // Create the legal profile record
       await client.query(
@@ -341,6 +391,7 @@ export class LegalProfilesService {
 
       await client.query('DELETE FROM profile_onboarding_drafts WHERE profile_id=$1', [profileId]);
       const updatedProfile = await this.profilesService.getProfileById(profileId, client);
+      if (session) await requireCurrentSession(client, session);
       await client.query('COMMIT');
 
       this.logger.log(

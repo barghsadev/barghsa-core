@@ -384,7 +384,8 @@ export class OnboardingController {
     const profile = await this.legalProfilesService.saveLegalProfile(
       req.session.userId,
       profileId,
-      body
+      body,
+      req.session
     );
 
     this.logger.log(

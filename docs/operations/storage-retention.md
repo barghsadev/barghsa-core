@@ -154,6 +154,15 @@ older binaries, drain pending operations where possible. Retain the additive
 migration and pending records, and use a worker with this recovery handler to
 finish interrupted operations.
 
+Legal profile documents, branding images and conversation avatars prepare their
+private copies between short authorization and publication transactions. The
+copy reservation commits before upload. The worker and API serialize provider
+operations for the reserved key with the same advisory lock. Publication
+rechecks the upload revision and scan, the caller’s current authority and the
+business revision before recording the immutable copy alongside the business
+change and audit. A rejected or interrupted save leaves its unpublished copy
+eligible for cleanup after the grace period.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

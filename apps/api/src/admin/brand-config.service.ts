@@ -1,9 +1,14 @@
-import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
+import {
+  VerifiedAttachmentsService,
+  type PreparedAttachmentCopies,
+} from '../storage/verified-attachments.service.js';
 import { Injectable, ConflictException, Optional, BadRequestException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import { requireSessionStepUp } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import type { BrandConfigDto } from './admin.controller.js';
 
 /**
@@ -118,38 +123,26 @@ export class BrandConfigService {
   /** Save a new immutable revision. Competing editors must reload before saving. */
   async upsertDraft(
     config: Record<string, unknown>,
-    userId: string,
+    session: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     expectedVersion: number,
     logoUploadKey?: string,
     faviconUploadKey?: string,
     logoDarkUploadKey?: string
   ): Promise<BrandConfigDto> {
-    return this.withHistoryLock(userId, async (client) => {
+    const { userId } = session;
+    const assets = [
+      ['logoUrl', logoUploadKey],
+      ['faviconUrl', faviconUploadKey],
+      ['logoDarkUrl', logoDarkUploadKey],
+    ] as const;
+    const validate = async (client: PoolClient) => {
+      await requireSessionStepUp(client, session);
       const version = await this.currentVersion(client);
       if (version !== expectedVersion || version >= 2147483647)
         throw new ConflictException('Brand configuration changed');
-      const previous = await client.query<{ config: unknown }>(
-        'SELECT config FROM brand_config ORDER BY version DESC LIMIT 1'
-      );
-      const savedConfig = { ...config };
-      for (const [field, uploadKey] of [
-        ['logoUrl', logoUploadKey],
-        ['faviconUrl', faviconUploadKey],
-        ['logoDarkUrl', logoDarkUploadKey],
-      ] as const) {
-        if (uploadKey) {
-          if (!this.attachments)
-            throw new BadRequestException('Brand image storage is unavailable');
-          const [key] = await this.attachments.seal(
-            client,
-            [uploadKey],
-            userId,
-            null,
-            'branding_logo'
-          );
-          savedConfig[field] =
-            `/api/public/branding/assets/${key!.slice('branding-assets/'.length)}`;
-        } else if (
+      for (const [field, uploadKey] of assets) {
+        if (
+          !uploadKey &&
           typeof config[field] === 'string' &&
           config[field].startsWith('/api/public/branding/assets/')
         ) {
@@ -159,6 +152,35 @@ export class BrandConfigService {
           );
           if (!known.rows[0]) throw new BadRequestException('Unknown branding asset');
         }
+      }
+      return version;
+    };
+    const prepared = new Map<(typeof assets)[number][0], PreparedAttachmentCopies>();
+    const attachments = this.attachments;
+    if (assets.some(([, key]) => key)) {
+      if (!attachments) throw new BadRequestException('Brand image storage is unavailable');
+      const plans = await this.withHistoryLock(userId, async (client) => {
+        await validate(client);
+        const result = [];
+        for (const [field, key] of assets)
+          if (key)
+            result.push({
+              field,
+              plan: await attachments.plan(client, [key], userId, null, 'branding_logo'),
+            });
+        return result;
+      });
+      for (const { field, plan } of plans) prepared.set(field, await attachments.copy(plan));
+    }
+    return this.withHistoryLock(userId, async (client) => {
+      const version = await validate(client);
+      const previous = await client.query<{ config: unknown }>(
+        'SELECT config FROM brand_config ORDER BY version DESC LIMIT 1'
+      );
+      const savedConfig = { ...config };
+      for (const [field, copy] of prepared) {
+        const [key] = await attachments!.publish(client, copy);
+        savedConfig[field] = `/api/public/branding/assets/${key!.slice('branding-assets/'.length)}`;
       }
       await client.query("UPDATE brand_config SET status='superseded' WHERE status='draft'");
       const result = await client.query(
@@ -174,6 +196,7 @@ export class BrandConfigService {
         dto,
         previous.rows[0]?.config ?? null
       );
+      await requireSessionStepUp(client, session);
       return dto;
     });
   }

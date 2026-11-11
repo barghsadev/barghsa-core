@@ -100,12 +100,11 @@ export class ConversationIdentityService {
     }
   }
 
-  async update(body: unknown, req: AuthenticatedRequest) {
-    const parsed = input.safeParse(body);
-    if (!parsed.success) throw new BadRequestException('Invalid conversation identity');
-    const { displayName, avatarUploadKey, revision } = parsed.data;
+  private async withIdentityTransaction<T>(
+    req: AuthenticatedRequest,
+    work: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
     const client = await getDbPool().connect();
-    let saved: IdentityRow;
     try {
       await client.query('BEGIN');
       const account = (
@@ -117,6 +116,23 @@ export class ConversationIdentityService {
       if (!account || account.disabled_at || account.activation_token)
         throw new UnauthorizedException();
       await requireCurrentSession(client, req.session);
+      const result = await work(client);
+      await requireCurrentSession(client, req.session);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async update(body: unknown, req: AuthenticatedRequest) {
+    const parsed = input.safeParse(body);
+    if (!parsed.success) throw new BadRequestException('Invalid conversation identity');
+    const { displayName, avatarUploadKey, revision } = parsed.data;
+    const state = async (client: PoolClient) => {
       const previous = await this.row(client, req.session.userId);
       const shareInActivity =
         displayName !== null && (parsed.data.shareInActivity ?? previous.share_in_activity);
@@ -134,71 +150,73 @@ export class ConversationIdentityService {
       // Exact retry after a lost acknowledgement must not copy the photo or audit twice.
       if (previous.revision !== revision && !(previous.revision === revision + 1 && same))
         throw new ConflictException('Conversation identity changed; reload and retry');
-      if (same) saved = previous;
-      else {
-        const avatarKey =
-          avatarUploadKey === undefined
-            ? previous.avatar_key
-            : avatarUploadKey === null
-              ? null
-              : (
-                  await this.attachments.seal(
-                    client,
-                    [avatarUploadKey],
-                    req.session.userId,
-                    null,
-                    'conversation_avatar'
-                  )
-                )[0]!;
-        await client.query(
-          `INSERT INTO conversation_identities(user_id,display_name,avatar_key,revision,share_in_activity,share_in_payment_activity)
+      return { previous, shareInActivity, shareInPaymentActivity, same };
+    };
+    const plan =
+      typeof avatarUploadKey === 'string'
+        ? await this.withIdentityTransaction(req, async (client) => {
+            if ((await state(client)).same) return null;
+            return this.attachments.plan(
+              client,
+              [avatarUploadKey],
+              req.session.userId,
+              null,
+              'conversation_avatar'
+            );
+          })
+        : null;
+    const prepared = plan ? await this.attachments.copy(plan) : null;
+    const saved = await this.withIdentityTransaction(req, async (client) => {
+      const { previous, shareInActivity, shareInPaymentActivity, same } = await state(client);
+      if (same) return previous;
+      let avatarKey = previous.avatar_key;
+      if (avatarUploadKey === null) avatarKey = null;
+      if (typeof avatarUploadKey === 'string') {
+        if (!prepared)
+          throw new ConflictException('Conversation identity changed; reload and retry');
+        avatarKey = (await this.attachments.publish(client, prepared))[0]!;
+      }
+      await client.query(
+        `INSERT INTO conversation_identities(user_id,display_name,avatar_key,revision,share_in_activity,share_in_payment_activity)
           VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT(user_id) DO UPDATE SET display_name=EXCLUDED.display_name,
           avatar_key=EXCLUDED.avatar_key,revision=EXCLUDED.revision,share_in_activity=EXCLUDED.share_in_activity,
           share_in_payment_activity=EXCLUDED.share_in_payment_activity,updated_at=NOW()`,
-          [
-            req.session.userId,
-            displayName,
-            avatarKey,
-            previous.revision + 1,
-            shareInActivity,
-            shareInPaymentActivity,
-          ]
-        );
-        await client.query(
-          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+        [
+          req.session.userId,
+          displayName,
+          avatarKey,
+          previous.revision + 1,
+          shareInActivity,
+          shareInPaymentActivity,
+        ]
+      );
+      await client.query(
+        `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
           VALUES ($1,$2,'conversation_identity_changed',$3::jsonb,$4,$5,NOW())`,
-          [
-            uuidv7(),
-            req.session.userId,
-            JSON.stringify({
-              before: {
-                displayName: previous.display_name,
-                hasPhoto: !!previous.avatar_key,
-                shareInActivity: previous.share_in_activity,
-                shareInPaymentActivity: previous.share_in_payment_activity,
-              },
-              after: {
-                displayName,
-                hasPhoto: !!avatarKey,
-                shareInActivity,
-                shareInPaymentActivity,
-              },
-              revision: previous.revision + 1,
-            }),
-            correlationIdStorage.getStore() ?? uuidv7(),
-            req.ip ?? null,
-          ]
-        );
-        saved = await this.row(client, req.session.userId);
-      }
-      await requireCurrentSession(client, req.session);
-      await client.query('COMMIT');
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+        [
+          uuidv7(),
+          req.session.userId,
+          JSON.stringify({
+            before: {
+              displayName: previous.display_name,
+              hasPhoto: !!previous.avatar_key,
+              shareInActivity: previous.share_in_activity,
+              shareInPaymentActivity: previous.share_in_payment_activity,
+            },
+            after: {
+              displayName,
+              hasPhoto: !!avatarKey,
+              shareInActivity,
+              shareInPaymentActivity,
+            },
+            revision: previous.revision + 1,
+          }),
+          correlationIdStorage.getStore() ?? uuidv7(),
+          req.ip ?? null,
+        ]
+      );
+      return this.row(client, req.session.userId);
+    });
     return this.dto(saved);
   }
 }

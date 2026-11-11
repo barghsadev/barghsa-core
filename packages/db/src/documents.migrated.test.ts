@@ -439,7 +439,7 @@ it('upgrades the actual 139 schema and reruns without fabricating documents or c
     });
     expect(
       (await pool.query("SELECT * FROM storage_records WHERE storage_key='legacy-evidence'")).rows
-    ).toEqual(before);
+    ).toEqual(before.map((row) => ({ ...row, cleanup_operation: null })));
     for (const table of [
       'documents',
       'document_events',

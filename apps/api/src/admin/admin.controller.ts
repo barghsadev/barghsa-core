@@ -1107,7 +1107,7 @@ export class AdminController {
 
     return this.brandConfigService.upsertDraft(
       parsed.data.config,
-      req.session.userId,
+      req.session,
       parsed.data.expectedVersion,
       parsed.data.logoUploadKey,
       parsed.data.faviconUploadKey,
