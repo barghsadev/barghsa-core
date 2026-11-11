@@ -6,6 +6,8 @@ Static analysis, secret scanning and image scanning run independently of the app
 
 Semgrep checks production app, worker and shared source for direct request data in SQL text, outbound URLs and redirects, unsafe HTML, and literal credentials. The SQL rule includes typed Nest request parameters and Drizzle `sql.raw`. Keep values bound through Drizzle's SQL templates or driver placeholders. The rules do not replace review of cross-file data flows or dynamically chosen identifiers.
 
+The shared ESLint configuration requires static SQL text at Drizzle `sql.raw` calls. It recognizes literal text, compositions of literals and local constants, and the direct named and namespace imports used by the project. Bind runtime values with the Drizzle SQL tag. Review the input to identifier builders and existing node-postgres query builders separately.
+
 Gitleaks scans all Git history and verifies its own redaction with a synthetic credential. Its reports must never contain recovered secrets. When changing web build inputs, scan the built frontend separately for unintentionally embedded credentials.
 
 Trivy scans the actual API/worker, web, ClamAV, and PostgreSQL backup images built from the checked source. The reports retain all severities and record the exact local image ID. The same package inventory produces a CycloneDX SBOM for each image; its image ID and checksum are verified before upload. Scanner errors, missing inventory and high or critical vulnerabilities fail the check. Before promoting a release, scan the exact immutable images that will be deployed; a rebuild from the same commit can resolve different base layers.

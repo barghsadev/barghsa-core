@@ -4,6 +4,7 @@ import react from 'eslint-plugin-react';
 import hooks from 'eslint-plugin-react-hooks';
 import a11y from 'eslint-plugin-jsx-a11y';
 import globals from 'globals';
+import noDynamicDrizzleRaw from './no-dynamic-drizzle-raw.mjs';
 import noLiteralColors from './no-literal-colors.mjs';
 
 export default tseslint.config(
@@ -68,6 +69,16 @@ export default tseslint.config(
         },
       ],
     },
+  },
+  {
+    files: [
+      'apps/*/src/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}',
+      'packages/*/src/**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}',
+      'scripts/**/*.{js,mjs,cjs,ts,mts,cts}',
+    ],
+    ignores: ['**/*.{test,spec}.{js,jsx,ts,tsx,mjs,cjs,mts,cts}', '**/src/test/**'],
+    plugins: { 'barghsa-db': { rules: { 'no-dynamic-drizzle-raw': noDynamicDrizzleRaw } } },
+    rules: { 'barghsa-db/no-dynamic-drizzle-raw': 'error' },
   },
   {
     files: ['apps/web/src/**/*.{jsx,tsx}', 'packages/ui/src/**/*.{jsx,tsx}'],

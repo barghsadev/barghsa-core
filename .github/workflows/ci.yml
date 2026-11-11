@@ -150,6 +150,8 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm format:check
       - run: pnpm lint
+      - name: Verify shared lint rules
+        run: node --test packages/eslint-config/*.test.mjs
       - run: pnpm check:suppressed-errors
       - name: Enforce production route budgets
         run: pnpm check:bundle
