@@ -7,7 +7,10 @@ import {
 } from '@nestjs/common';
 import { createHash } from 'node:crypto';
 import { getDbPool, type AccountRecoveryCase } from '@barghsa/db';
-import { idempotencyKeyExpiresAt } from '@barghsa/shared/finance';
+import {
+  idempotencyKeyExpiresAt,
+  isExpiredInFlightIdempotencyClaim,
+} from '@barghsa/shared/finance';
 import { normalizeUsername } from '@barghsa/shared/validation';
 import { v7 as uuidv7 } from 'uuid';
 import type { PoolClient } from 'pg';
@@ -18,6 +21,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { VerificationEvidenceService } from './verification-evidence.service.js';
 import { IdempotencyKeysRepository } from '../idempotency/idempotency-keys.repository.js';
+import { withCopyReplayLock, withCopyTransaction } from '../storage/storage-copy-transaction.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 type SnakeCase<S extends string> = S extends `${infer First}${infer Rest}`
@@ -121,116 +125,146 @@ export class AccountRecoveryService {
   ) {
     const newLogin = normalizeUsername(input.newLogin);
     if (!newLogin) throw new BadRequestException('Invalid new contact');
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
+    const key = input.submissionKey;
+    const id = uuidv7();
+    const authorize = async (client: PoolClient, target?: Row) => {
       const hint = (
         await client.query('SELECT user_id FROM profiles WHERE id=$1', [input.profileId])
       ).rows[0];
       if (!hint) throw new NotFoundException();
+      if (target && target.target_user_id !== hint.user_id)
+        throw new ConflictException('Recovery target changed; recreate and review the case');
       await requireStaffMutationPermission(client, actor.userId, 'crm:edit-identity', hint.user_id);
       await requireSessionStepUp(client, actor);
+      if (target) {
+        await this.currentTarget(client, target, actor);
+        return target;
+      }
       const user = (
         await client.query('SELECT username,auth_version FROM users WHERE user_id=$1', [
           hint.user_id,
         ])
       ).rows[0];
-      const row = {
+      if (!user)
+        throw new ConflictException('Recovery target changed; recreate and review the case');
+      const captured = {
         profile_id: input.profileId,
         target_user_id: hint.user_id,
         old_login: user.username,
         new_login: newLogin,
         auth_version: user.auth_version,
       } as Row;
-      await this.currentTarget(client, row, actor);
-      const id = uuidv7();
-      const key = input.submissionKey;
-      const fingerprint = createHash('sha256')
-        .update(
-          JSON.stringify([
-            actor.userId,
-            hint.user_id,
+      await this.currentTarget(client, captured, actor);
+      return captured;
+    };
+    const replay = async (
+      client: PoolClient,
+      entityId: string | null,
+      response: unknown,
+      fingerprint: string
+    ) => {
+      if (!entityId || (response as { fingerprint?: unknown } | null)?.fingerprint !== fingerprint)
+        throw new ConflictException();
+      await requireSessionStepUp(client, actor);
+      return { id: entityId, state: 'open', submissionKey: key };
+    };
+    return withCopyReplayLock(key ? `${CREATION_ENTITY}:${key}` : null, async (directClient) => {
+      const initial = await withCopyTransaction(async (client) => {
+        const target = await authorize(client);
+        const fingerprint = createHash('sha256')
+          .update(
+            JSON.stringify([
+              actor.userId,
+              target.target_user_id,
+              input.profileId,
+              newLogin,
+              input.supportReference,
+              input.reason,
+              input.evidenceKeys,
+            ])
+          )
+          .digest('hex');
+        if (key) {
+          const prior = await this.idempotency.loadForUpdate(client, key, CREATION_ENTITY);
+          if (prior?.response != null)
+            return { result: await replay(client, prior.entity_id, prior.response, fingerprint) };
+          if (
+            prior &&
+            !isExpiredInFlightIdempotencyClaim({
+              response: prior.response,
+              expiresAt: prior.expires_at,
+              now: new Date(),
+            })
+          )
+            throw new ConflictException();
+        }
+        if (target.old_login === newLogin) throw new BadRequestException('New contact must differ');
+        const plan = await this.evidence.plan(
+          client,
+          input.evidenceKeys,
+          actor.userId,
+          input.profileId
+        );
+        await requireSessionStepUp(client, actor);
+        return { target, fingerprint, plan };
+      }, directClient);
+      if ('result' in initial) return initial.result!;
+      const prepared = await this.evidence.copy(initial.plan, directClient);
+      return withCopyTransaction(async (client) => {
+        const target = await authorize(client, initial.target);
+        const { fingerprint } = initial;
+        if (key) {
+          const now = new Date();
+          const claim = await this.idempotency.claimOrLoad(client, {
+            key,
+            entityType: CREATION_ENTITY,
+            entityId: id,
+            now,
+            expiresAt: idempotencyKeyExpiresAt(now),
+          });
+          if (claim.kind === 'in_flight') throw new ConflictException();
+          if (claim.kind === 'cached')
+            return replay(client, claim.entityId, claim.response, fingerprint);
+        }
+        const evidence = await this.evidence.publish(client, prepared);
+        await client.query(
+          `INSERT INTO account_recovery_cases(id,profile_id,target_user_id,auth_version,old_login,new_login,support_reference,reason,evidence_keys,created_by) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10)`,
+          [
+            id,
             input.profileId,
+            target.target_user_id,
+            target.auth_version,
+            target.old_login,
             newLogin,
             input.supportReference,
             input.reason,
-            input.evidenceKeys,
-          ])
-        )
-        .digest('hex');
-      if (key) {
-        const now = new Date();
-        const claim = await this.idempotency.claimOrLoad(client, {
-          key,
-          entityType: CREATION_ENTITY,
-          entityId: id,
-          now,
-          expiresAt: idempotencyKeyExpiresAt(now),
-        });
-        if (claim.kind === 'in_flight') throw new ConflictException();
-        if (claim.kind === 'cached') {
-          if (
-            !claim.entityId ||
-            (claim.response as { fingerprint?: unknown } | null)?.fingerprint !== fingerprint
-          )
-            throw new ConflictException();
-          await requireSessionStepUp(client, actor);
-          await client.query('COMMIT');
-          return { id: claim.entityId, state: 'open', submissionKey: key };
-        }
-      }
-      if (user.username === newLogin) throw new BadRequestException('New contact must differ');
-      const evidence = await this.evidence.seal(
-        client,
-        input.evidenceKeys,
-        actor.userId,
-        input.profileId
-      );
-      await client.query(
-        `INSERT INTO account_recovery_cases(id,profile_id,target_user_id,auth_version,old_login,new_login,support_reference,reason,evidence_keys,created_by) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9::jsonb,$10)`,
-        [
-          id,
-          input.profileId,
-          hint.user_id,
-          user.auth_version,
-          user.username,
-          newLogin,
-          input.supportReference,
-          input.reason,
-          JSON.stringify(evidence),
+            JSON.stringify(evidence),
+            actor.userId,
+          ]
+        );
+        await this.audit(
+          client,
           actor.userId,
-        ]
-      );
-      await this.audit(
-        client,
-        actor.userId,
-        'account_recovery_created',
-        id,
-        {
-          profileId: input.profileId,
-          targetUserId: hint.user_id,
-          supportReference: input.supportReference,
-        },
-        ip
-      );
-      if (key)
-        await this.idempotency.persistResponse(client, {
-          key,
-          entityType: CREATION_ENTITY,
-          entityId: id,
-          response: { fingerprint },
-        });
-      await requireSessionStepUp(client, actor);
-      await client.query('COMMIT');
-      return { id, state: 'open', ...(key ? { submissionKey: key } : {}) };
-    } catch (e) {
-      await client.query('ROLLBACK').catch(() => {});
-      if (typeof e === 'object' && e !== null && 'code' in e && e.code === '23505')
-        throw new ConflictException('An unresolved recovery or assigned contact already exists');
-      throw e;
-    } finally {
-      client.release();
-    }
+          'account_recovery_created',
+          id,
+          {
+            profileId: input.profileId,
+            targetUserId: target.target_user_id,
+            supportReference: input.supportReference,
+          },
+          ip
+        );
+        if (key)
+          await this.idempotency.persistResponse(client, {
+            key,
+            entityType: CREATION_ENTITY,
+            entityId: id,
+            response: { fingerprint },
+          });
+        await requireSessionStepUp(client, actor);
+        return { id, state: 'open', ...(key ? { submissionKey: key } : {}) };
+      }, directClient);
+    });
   }
   async get(actor: Actor, id: string) {
     const client = await getDbPool().connect();

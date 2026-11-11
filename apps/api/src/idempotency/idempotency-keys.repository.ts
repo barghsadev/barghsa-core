@@ -35,6 +35,12 @@ export type IdempotencyClaimResult =
   | { kind: 'cached'; response: unknown; entityId: string | null }
   | { kind: 'in_flight' };
 
+type IdempotencyReceipt = {
+  entity_id: string | null;
+  response: unknown;
+  expires_at: Date | string | null;
+};
+
 export interface ClaimIdempotencyKeyInput {
   key: string;
   entityType: string;
@@ -56,6 +62,17 @@ export const IDEMPOTENCY_CACHE_PERSIST_FAILED =
 
 @Injectable()
 export class IdempotencyKeysRepository {
+  async loadForUpdate(client: IdempotencyQueryClient, key: string, entityType: string) {
+    const existing = await client.query(
+      `SELECT entity_id, response, expires_at
+         FROM idempotency_keys
+        WHERE idempotency_key = $1 AND entity_type = $2
+        FOR UPDATE`,
+      [key, entityType]
+    );
+    return existing.rows[0] as IdempotencyReceipt | undefined;
+  }
+
   /**
    * Claim `(idempotencyKey, entityType)` or load the cached JSON.
    * INSERT … ON CONFLICT DO NOTHING is serialized by the unique index;
@@ -68,15 +85,7 @@ export class IdempotencyKeysRepository {
     const inserted = await this.insertClaim(client, input);
     if (inserted) return { kind: 'claimed' };
 
-    const existing = await client.query(
-      `SELECT entity_id, response, expires_at
-         FROM idempotency_keys
-        WHERE idempotency_key = $1 AND entity_type = $2
-        FOR UPDATE`,
-      [input.key, input.entityType]
-    );
-    const row = existing.rows[0] as
-      { entity_id: string | null; response: unknown; expires_at: Date | string | null } | undefined;
+    const row = await this.loadForUpdate(client, input.key, input.entityType);
     if (!row) {
       const retried = await this.insertClaim(client, input);
       if (retried) return { kind: 'claimed' };

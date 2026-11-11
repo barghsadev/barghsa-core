@@ -25,6 +25,7 @@ const MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
 export type AttachmentPurpose =
   | 'ticket_attachment'
   | 'ticket_reply_attachment'
+  | 'verification_evidence'
   | 'legal_profile_document'
   | 'branding_logo'
   | 'conversation_avatar';
@@ -58,6 +59,7 @@ export type PreparedAttachmentCopies = {
 function prefix(purpose: AttachmentPurpose) {
   if (purpose === 'conversation_avatar') return 'conversation-avatars/';
   if (purpose === 'branding_logo') return 'branding-assets/';
+  if (purpose === 'verification_evidence') return 'verification-evidence/';
   if (purpose === 'ticket_reply_attachment') return 'ticket-reply-attachments/';
   return purpose === 'ticket_attachment' ? 'ticket-attachments/' : 'legal-profile-documents/';
 }
@@ -121,9 +123,15 @@ export class VerifiedAttachmentsService {
       throw new BadRequestException('One to five distinct attachment files are required');
     this.storageProvider();
     const binding = { actorId, profileId, purpose, ticketId };
-    const sources: AttachmentSource[] = [];
-    for (const key of [...keys].sort()) sources.push(await this.source(client, key, binding));
-    return { binding, sources };
+    const sources = new Map<string, AttachmentSource>();
+    for (const key of [...keys].sort()) sources.set(key, await this.source(client, key, binding));
+    return {
+      binding,
+      sources:
+        purpose === 'verification_evidence'
+          ? keys.map((key) => sources.get(key)!)
+          : [...sources.values()],
+    };
   }
 
   private async readBytes(
@@ -205,7 +213,9 @@ export class VerifiedAttachmentsService {
     client: DualApprovalQueryClient,
     prepared: PreparedAttachmentCopies
   ): Promise<string[]> {
-    for (const copy of prepared.copies) {
+    const bySource = new Map(prepared.copies.map((copy) => [copy.source.key, copy]));
+    for (const sourceKey of [...bySource.keys()].sort()) {
+      const copy = bySource.get(sourceKey)!;
       const current = await this.source(client, copy.source.key, prepared.binding);
       if (current.id !== copy.source.id || current.revision !== copy.source.revision)
         throw new BadRequestException('Attachment changed after verification');

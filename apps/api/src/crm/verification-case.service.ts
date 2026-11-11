@@ -15,7 +15,13 @@ import { getDbPool } from '@barghsa/db';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
-import { idempotentMutation } from '../database/idempotency.js';
+import {
+  idempotentMutation,
+  idempotentMutationLockKey,
+  readIdempotentMutation,
+} from '../database/idempotency.js';
+import { withCopyReplayLock, withCopyTransaction } from '../storage/storage-copy-transaction.js';
+import type { PoolClient } from 'pg';
 import { createHash } from 'node:crypto';
 
 // ── Result types ─────────────────────────────────────────────────────
@@ -117,166 +123,182 @@ export class VerificationCaseService {
     validateIdentityValue(dto.fieldName, dto.requestedValue);
     if (!dto.requestedValue?.trim() || !dto.reason?.trim())
       throw new BadRequestException('Requested value and reason are required');
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      const profileHint = (
-        await client.query('SELECT profile_type FROM profiles WHERE id=$1 AND archived=false', [
+    const kind = 'verification_case_create';
+    const keys = dto.evidenceUrls ?? [];
+    const request = dto.idempotencyKey
+      ? {
+          idempotencyKey: dto.idempotencyKey,
+          requestHash: createHash('sha256')
+            .update(
+              JSON.stringify([
+                profileId,
+                dto.fieldName,
+                dto.requestedValue.trim(),
+                dto.reason.trim(),
+                keys,
+              ])
+            )
+            .digest('hex'),
+        }
+      : null;
+    const lockKey = request
+      ? idempotentMutationLockKey(kind, actorUserId, request.idempotencyKey)
+      : null;
+    const profileHint = async (client: PoolClient) =>
+      (
+        await client.query<{ profile_type: string }>(
+          'SELECT profile_type FROM profiles WHERE id=$1 AND archived=false',
+          [profileId]
+        )
+      ).rows[0];
+    const authorize = async (client: PoolClient) => {
+      await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
+      await requireSessionStepUp(client, actor);
+    };
+    const readTarget = async (client: PoolClient, profileType: string) => {
+      const profile = (
+        await client.query('SELECT * FROM profiles WHERE id=$1 AND archived=false FOR UPDATE', [
           profileId,
         ])
       ).rows[0];
-      if (!profileHint) {
-        await client.query('ROLLBACK');
-        return null;
-      }
-      const create = async (): Promise<CreateVerificationCaseResult> => {
-        const id = uuidv7();
-        const assignment = await this.assignmentService.choose(
-          client,
-          'verification_case',
-          id,
-          actorUserId,
-          ['identity', profileHint.profile_type === 'LEGAL' ? 'legal' : 'individual'],
-          [actorUserId]
-        );
-        await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
-        await requireSessionStepUp(client, actor);
-        // Routing locks teams and accounts first; take the authoritative profile
-        // lock only after those locks and the current actor/session checks.
-        const profile = (
-          await client.query('SELECT * FROM profiles WHERE id=$1 AND archived=false FOR UPDATE', [
-            profileId,
-          ])
-        ).rows[0];
-        if (!profile) return null;
-        if (profile.profile_type !== profileHint.profile_type)
-          throw new ConflictException('Profile type changed; reload and retry');
-        const allowed =
-          profile.profile_type === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL;
-        if (!allowed.includes(dto.fieldName))
-          throw new BadRequestException('Invalid identity field for this profile type');
-        const source =
-          profile.profile_type === 'LEGAL'
-            ? (
-                await client.query('SELECT * FROM legal_profiles WHERE id=$1 FOR UPDATE', [
-                  profileId,
-                ])
-              ).rows[0]
-            : profile;
-        if (!source) throw new ConflictException('Profile identity record is missing');
-        const currentValue = source[dto.fieldName] ?? null;
-        const pending = await client.query(
-          "SELECT id FROM verification_cases WHERE profile_id=$1 AND field_name=$2 AND status IN ('Open','Under Review')",
-          [profileId, dto.fieldName]
-        );
-        if (pending.rows.length)
-          throw new ConflictException('An unresolved correction already exists for this field');
-        const evidenceKeys = await this.evidence.seal(
-          client,
-          dto.evidenceUrls ?? [],
-          actorUserId,
-          profileId
-        );
-        const now = new Date().toISOString();
-        await client.query(
-          `INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at,assigned_to,assigned_team_id)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9,$10,$11)`,
-          [
-            id,
-            profileId,
-            dto.fieldName,
-            currentValue,
-            dto.requestedValue.trim(),
-            JSON.stringify(evidenceKeys),
-            dto.reason.trim(),
-            actorUserId,
-            now,
-            assignment?.userId ?? null,
-            assignment?.teamId ?? null,
-          ]
-        );
-        await client.query(
-          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at) VALUES ($1,$2,'verification_case_created',$3::jsonb,$4,$5,$6)`,
-          [
-            uuidv7(),
-            actorUserId,
-            JSON.stringify({
-              caseId: id,
-              profileId,
-              fieldName: dto.fieldName,
-              currentValue,
-              requestedValue: dto.requestedValue.trim(),
-              reason: dto.reason.trim(),
-            }),
-            uuidv7(),
-            ip,
-            now,
-          ]
-        );
-        if (assignment) {
-          const localizedContent = {
-            fa: {
-              title: t('crm.corrections.assignedNotice', 'fa'),
-              body: t('crm.corrections.assignedBody', 'fa'),
-            },
-            en: {
-              title: t('crm.corrections.assignedNotice', 'en'),
-              body: t('crm.corrections.assignedBody', 'en'),
-            },
-          };
-          await this.notifications.create(
-            {
-              userId: assignment.userId,
-              businessOccurrenceKey: `verification-case:${id}:assigned`,
-              operatingContext: 'staff',
-              type: 'general',
-              title: localizedContent.en.title,
-              body: localizedContent.en.body,
-              localizedContent,
-              link: `/admin/crm/corrections?profileId=${profileId}`,
-            },
-            client
-          );
-        }
-        return { success: true, id, status: 'Open', profileId, createdAt: now };
-      };
-      const result = dto.idempotencyKey
-        ? await idempotentMutation(
+      if (!profile) return null;
+      if (profile.profile_type !== profileType)
+        throw new ConflictException('Profile type changed; reload and retry');
+      const allowed = profileType === 'LEGAL' ? IDENTITY_FIELDS_LEGAL : IDENTITY_FIELDS_INDIVIDUAL;
+      if (!allowed.includes(dto.fieldName))
+        throw new BadRequestException('Invalid identity field for this profile type');
+      const source =
+        profileType === 'LEGAL'
+          ? (await client.query('SELECT * FROM legal_profiles WHERE id=$1 FOR UPDATE', [profileId]))
+              .rows[0]
+          : profile;
+      if (!source) throw new ConflictException('Profile identity record is missing');
+      const pending = await client.query(
+        "SELECT id FROM verification_cases WHERE profile_id=$1 AND field_name=$2 AND status IN ('Open','Under Review')",
+        [profileId, dto.fieldName]
+      );
+      if (pending.rows.length)
+        throw new ConflictException('An unresolved correction already exists for this field');
+      return { profileType, userId: profile.user_id, currentValue: source[dto.fieldName] ?? null };
+    };
+    return withCopyReplayLock(lockKey, async (directClient) => {
+      const initial = await withCopyTransaction(async (client) => {
+        const hint = await profileHint(client);
+        if (!hint) return { result: null };
+        await authorize(client);
+        const prior =
+          request &&
+          (await readIdempotentMutation<CreateVerificationCaseResult>(
             client,
-            'verification_case_create',
-            {
-              idempotencyKey: dto.idempotencyKey,
-              requestHash: createHash('sha256')
-                .update(
-                  JSON.stringify([
-                    profileId,
-                    dto.fieldName,
-                    dto.requestedValue.trim(),
-                    dto.reason.trim(),
-                    dto.evidenceUrls ?? [],
-                  ])
-                )
-                .digest('hex'),
-            },
-            actor,
-            create
+            kind,
+            request,
+            actorUserId
+          ));
+        if (prior) {
+          await requireSessionStepUp(client, actor);
+          return prior;
+        }
+        const target = await readTarget(client, hint.profile_type);
+        if (!target) return { result: null };
+        const plan = await this.evidence.plan(client, keys, actorUserId, profileId);
+        await requireSessionStepUp(client, actor);
+        return { plan, target };
+      }, directClient);
+      if ('result' in initial) return initial.result ?? null;
+      const prepared = await this.evidence.copy(initial.plan, directClient);
+      return withCopyTransaction(async (client) => {
+        if (!(await profileHint(client))) return null;
+        const create = async (): Promise<CreateVerificationCaseResult> => {
+          const id = uuidv7();
+          const assignment = await this.assignmentService.choose(
+            client,
+            'verification_case',
+            id,
+            actorUserId,
+            ['identity', initial.target.profileType === 'LEGAL' ? 'legal' : 'individual'],
+            [actorUserId]
+          );
+          await authorize(client);
+          const target = await readTarget(client, initial.target.profileType);
+          if (
+            !target ||
+            target.userId !== initial.target.userId ||
+            target.currentValue !== initial.target.currentValue
           )
-        : await create();
-      if (!result) {
-        await client.query('ROLLBACK');
-        return null;
-      }
-      if (dto.idempotencyKey)
-        await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
-      await requireSessionStepUp(client, actor);
-      await client.query('COMMIT');
-      return result;
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+            throw new ConflictException('Profile identity changed; reload and retry');
+          const { currentValue } = target;
+          const evidenceKeys = await this.evidence.publish(client, prepared);
+          const now = new Date().toISOString();
+          await client.query(
+            `INSERT INTO verification_cases(id,profile_id,field_name,current_value,requested_value,evidence_urls,reason,status,created_by,created_at,updated_at,assigned_to,assigned_team_id)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,'Open',$8,$9,$9,$10,$11)`,
+            [
+              id,
+              profileId,
+              dto.fieldName,
+              currentValue,
+              dto.requestedValue.trim(),
+              JSON.stringify(evidenceKeys),
+              dto.reason.trim(),
+              actorUserId,
+              now,
+              assignment?.userId ?? null,
+              assignment?.teamId ?? null,
+            ]
+          );
+          await client.query(
+            `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at) VALUES ($1,$2,'verification_case_created',$3::jsonb,$4,$5,$6)`,
+            [
+              uuidv7(),
+              actorUserId,
+              JSON.stringify({
+                caseId: id,
+                profileId,
+                fieldName: dto.fieldName,
+                currentValue,
+                requestedValue: dto.requestedValue.trim(),
+                reason: dto.reason.trim(),
+              }),
+              uuidv7(),
+              ip,
+              now,
+            ]
+          );
+          if (assignment) {
+            const localizedContent = {
+              fa: {
+                title: t('crm.corrections.assignedNotice', 'fa'),
+                body: t('crm.corrections.assignedBody', 'fa'),
+              },
+              en: {
+                title: t('crm.corrections.assignedNotice', 'en'),
+                body: t('crm.corrections.assignedBody', 'en'),
+              },
+            };
+            await this.notifications.create(
+              {
+                userId: assignment.userId,
+                businessOccurrenceKey: `verification-case:${id}:assigned`,
+                operatingContext: 'staff',
+                type: 'general',
+                title: localizedContent.en.title,
+                body: localizedContent.en.body,
+                localizedContent,
+                link: `/admin/crm/corrections?profileId=${profileId}`,
+              },
+              client
+            );
+          }
+          return { success: true, id, status: 'Open', profileId, createdAt: now };
+        };
+        const result = request
+          ? await idempotentMutation(client, kind, request, actor, create)
+          : await create();
+        if (request) await requireStaffMutationPermission(client, actorUserId, 'crm:edit-identity');
+        await requireSessionStepUp(client, actor);
+        return result;
+      }, directClient);
+    });
   }
 
   /**

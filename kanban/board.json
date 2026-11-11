@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T06:04:22+00:00",
+  "updated": "2026-11-11T06:17:58+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21431,8 +21431,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Move verification evidence provider work out of identity correction and lost-contact recovery business transactions. Add committed provisional cleanup and preserve purpose and profile binding, current staff step-up, exact keyed replays and the existing evidence ordering and authority.",
-        "Reconcile direct document, contract and bank receipt copy paths, and approved document destruction. finishDestruction still deletes versions after BEGIN. Preserve monetary and signed-record boundaries, permanent retention, legal holds and approved destruction semantics."
+        "Move direct business document and contract/receipt copy operations outside their business transactions. Reconcile source and state changes with signed versions, audit atomicity, financial provenance, provisional cleanup and exact replay.",
+        "Move approved document destruction provider work out of finishDestruction's transaction. Preserve legal hold races, version-aware approved deletion, permanent financial/contractual retention and truthful durable retry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -21464,6 +21464,12 @@
           "apps/api/src/admin/brand-config.service.ts",
           "apps/api/src/admin/contract-template.service.ts",
           "apps/api/src/contract/contract-pdf.service.ts",
+          "apps/api/src/crm/account-recovery-http.integration.test.ts",
+          "apps/api/src/crm/account-recovery.service.ts",
+          "apps/api/src/crm/crm-v2.service.ts",
+          "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "apps/api/src/crm/verification-case.service.ts",
+          "apps/api/src/crm/verification-evidence.service.ts",
           "apps/api/src/database/idempotency.ts",
           "apps/api/src/documents/document-http.integration.test.ts",
           "apps/api/src/documents/document-storage.service.ts",
@@ -21471,6 +21477,7 @@
           "apps/api/src/documents/document.service.ts",
           "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
           "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+          "apps/api/src/idempotency/idempotency-keys.repository.ts",
           "apps/api/src/profiles/legal-documents-http.integration.test.ts",
           "apps/api/src/profiles/legal-profiles.service.ts",
           "apps/api/src/profiles/onboarding.controller.ts",
@@ -21483,6 +21490,7 @@
           "apps/api/src/provider-config/sms-provider-config.service.test.ts",
           "apps/api/src/provider-config/sms-provider-config.service.ts",
           "apps/api/src/solar/solar-contract-source.service.ts",
+          "apps/api/src/storage/storage-copy-transaction.ts",
           "apps/api/src/storage/storage-record-admin.service.ts",
           "apps/api/src/storage/storage-record-http.integration.test.ts",
           "apps/api/src/storage/verified-attachments.service.ts",
@@ -21530,7 +21538,8 @@
           "release-0.6-committed-storage-cleanup",
           "release-0.6-staff-storage-signing-probe",
           "release-0.6-profile-and-settings-attachment-copy-boundary",
-          "release-0.6-ticket-attachment-copy-boundary"
+          "release-0.6-ticket-attachment-copy-boundary",
+          "release-0.6-verification-evidence-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21560,7 +21569,10 @@
             "Against the compiled API and all 209 production migrations, 97 affected caller and form-authority tests and 6 focused ticket compatibility tests passed. The legal upload race test took profile and source row locks immediately during PUT, proved concurrent cleanup skipped the in-flight copy, rejected the changed source without business or audit writes, and verified deletion of the unpublished copies. Existing audit rollback, access isolation and exact avatar replay assertions passed. The isolated two-CPU run passed 95 cases before two unchanged file-format cases hit the generic five-second harness deadline. Those two alone passed on retry with a 20-second fixture timeout and the same assertions and compiled source. Hosted CI retains its configured timeouts. The minimal test image lacked the PDF renderer, so the one preview case was rerun with Poppler from the accepted staging image and passed against the same compiled API.",
             "Ticket creation and replies authorize and check exact replays before copying. Keyed copies serialize on a direct advisory lock. Their provider writes occur between short transactions. Final publication rechecks live profile/ticket scope, session and source revision and commits attachment, business change, assignment, notification, audit and replay receipts together.",
             "Native PostgreSQL ran all 209 migrations and passed three multipart lock/migration cases. The compiled API passed 120 ticket, form-authority, legal profile and identity cases across the original and focused corrected runs. The first run had 117 passing cases and three test fixture failures. The corrected test file clones diagnostic response bodies and casts the text audit payload to JSONB. All three corrected cases passed with unchanged assertions and the same compiled API. Four existing verification and profile receipt cases passed with the shared idempotency lookup.",
-            "Paused storage writes allow immediate row locks on the ticket/source. A second request with the same key waits for the original receipt. Concurrent create/reply each publish one copy and one result. Reassignment while the copy is pending rejects the reply without creating a comment or audit and leaves the private copy eligible for cleanup."
+            "Paused storage writes allow immediate row locks on the ticket/source. A second request with the same key waits for the original receipt. Concurrent create/reply each publish one copy and one result. Reassignment while the copy is pending rejects the reply without creating a comment or audit and leaves the private copy eligible for cleanup.",
+            "Identity corrections, profile verification and lost-contact recovery prepare exact scanned evidence outside their business transactions. Each provisional copy reserves cleanup before the provider write. Final publication rechecks the target, staff grant and step-up, the current verification policy where applicable, and the exact upload revision and digest. Stored evidence retains its submitted order.",
+            "The native compiled API passed 107 verification, recovery, idempotency and form-authority cases across the original and focused corrected runs. The original run passed 106 and exposed a fixture that tried to write the protected auth_version directly. The corrected case changes the password hash, verifies that the production trigger advances auth_version and confirms that the paused evidence save rejects the stale proposal without creating a case or audit.",
+            "Two other paused-provider cases prove that identity-correction and manual-verification profile rows remain available. Identity change rejects the correction and retains a provisional copy. Manual verification publishes the exact selected bytes in the original typed order. Six targeted ticket, legal document and conversation compatibility cases also passed on the same compiled API."
           ],
           "source_evidence": [
             {
@@ -21653,7 +21665,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -21765,7 +21777,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "packages/db/drizzle/production/0288_storage_cleanup_operation_claim.sql",
@@ -21821,7 +21833,39 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+            },
+            {
+              "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+            },
+            {
+              "path": "apps/api/src/crm/account-recovery.service.ts",
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
+            },
+            {
+              "path": "apps/api/src/crm/crm-v2.service.ts",
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+              "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
+            },
+            {
+              "path": "apps/api/src/crm/verification-case.service.ts",
+              "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
+            },
+            {
+              "path": "apps/api/src/crm/verification-evidence.service.ts",
+              "sha256": "40e0ec0e421b0de8722a2130e7381787588c0994c215197812947b1a6638a7f6"
+            },
+            {
+              "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+              "sha256": "f647ad90ea0c278d0696a77b4fa6c6d164b52c278b270cc66c9b70df8dc7e63a"
+            },
+            {
+              "path": "apps/api/src/storage/storage-copy-transaction.ts",
+              "sha256": "8110e6fd57934a04d78239a0bb862588acc3b8bde4a4897dc67f11f826e17c90"
             }
           ],
           "source_renewals": [
@@ -21882,6 +21926,16 @@
                 "packages/db/src/storage-multipart.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -30590,7 +30644,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -31108,6 +31162,14 @@
                 "apps/api/src/auth/contact-login-http.integration.test.ts"
               ],
               "scope": "AuthService comment only and proof-first caller assertions. Original application AST and consent, ownership, and financial invariants are preserved."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -32928,7 +32990,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -32936,7 +32998,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -33290,6 +33352,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -33950,7 +34021,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -35439,6 +35510,14 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Staff signing read and reauthorization boundary only. All 31 affected storage HTTP cases passed on the migrated database, including concurrency, idempotence and audit rollback. Unrelated runtime and migration sources retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -37643,7 +37722,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -37651,7 +37730,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -38005,6 +38084,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -53735,7 +53823,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -53747,7 +53835,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/e2e/crm-detail-permissions.spec.ts",
@@ -54318,6 +54406,15 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts",
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -54664,7 +54761,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -55725,6 +55822,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -55989,7 +56094,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -56920,6 +57025,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -57209,7 +57322,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -58164,6 +58277,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -58413,7 +58534,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+              "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
@@ -58421,11 +58542,11 @@
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
-              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+              "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
             },
             {
               "path": "apps/api/src/crm/verification-evidence.service.ts",
-              "sha256": "e22bf07addffee055d8c875ffa817bc6b7113143329a0c379760726cf16f8b3f"
+              "sha256": "40e0ec0e421b0de8722a2130e7381787588c0994c215197812947b1a6638a7f6"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -58598,6 +58719,16 @@
                 "apps/api/src/crm/verification-case.controller.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/verification-case-http.integration.test.ts",
+                "apps/api/src/crm/verification-case.service.ts",
+                "apps/api/src/crm/verification-evidence.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -58971,7 +59102,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/profile-archive-acceptance.integration.test.ts",
@@ -59349,6 +59480,14 @@
                 "apps/api/src/database/idempotency.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -66273,7 +66412,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -66776,6 +66915,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -67465,7 +67612,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -68199,6 +68346,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -68637,7 +68792,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -69371,6 +69526,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -69809,7 +69972,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -70543,6 +70706,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -71322,7 +71493,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -72454,6 +72625,14 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Staff signing read and reauthorization boundary only. All 31 affected storage HTTP cases passed on the migrated database, including concurrency, idempotence and audit rollback. Unrelated runtime and migration sources retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -73870,7 +74049,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -74119,6 +74298,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -81210,7 +81397,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -81334,7 +81521,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/session/self-revocation.integration.test.ts",
@@ -83070,6 +83257,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -107093,7 +107289,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -107827,6 +108023,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -108197,7 +108401,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -108931,6 +109135,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -109307,7 +109519,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -110041,6 +110253,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -162035,7 +162255,7 @@
             },
             {
               "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
-              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+              "sha256": "f647ad90ea0c278d0696a77b4fa6c6d164b52c278b270cc66c9b70df8dc7e63a"
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
@@ -162198,6 +162418,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/idempotency/idempotency-keys.repository.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -212634,7 +212862,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -213398,6 +213626,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -213612,7 +213848,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -214376,6 +214612,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -214608,7 +214852,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -215482,6 +215726,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -215799,7 +216051,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -217476,6 +217728,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -217838,7 +218098,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -219515,6 +219775,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -219773,7 +220041,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -220537,6 +220805,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -315379,7 +315655,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -315387,7 +315663,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -315741,6 +316017,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -323410,7 +323695,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -323418,7 +323703,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -323772,6 +324057,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -345230,7 +345524,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -345238,7 +345532,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -345592,6 +345886,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -377342,7 +377645,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.controller.ts",
@@ -377350,7 +377653,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -377704,6 +378007,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -483698,7 +484010,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -483921,6 +484233,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -484120,7 +484440,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -484343,6 +484663,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -484544,7 +484872,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -484788,6 +485116,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -485021,7 +485357,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485327,6 +485663,14 @@
                 "packages/db/src/storage-multipart.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -485526,7 +485870,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485749,6 +486093,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -502429,7 +502781,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -502680,6 +503032,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -502831,7 +503191,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -503106,6 +503466,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -503257,7 +503625,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -503508,6 +503876,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -503660,7 +504036,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -503935,6 +504311,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -505357,7 +505741,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -505415,6 +505799,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -506705,15 +507097,15 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
-              "sha256": "7b967b53342134f25be1244cda23f2de0e33031bf61ef50f76eecaee7115e3a6"
+              "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/session/preauth-csrf-http.integration.test.ts",
@@ -506821,6 +507213,16 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery-http.integration.test.ts",
+                "apps/api/src/crm/account-recovery.service.ts",
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -507242,7 +507644,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -507355,6 +507757,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -507465,7 +507875,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm.service.ts",
@@ -507692,6 +508102,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -507776,7 +508194,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/session/cookie.helper.test.ts",
@@ -507882,6 +508300,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -510611,7 +511037,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -510677,6 +511103,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -512395,15 +512829,15 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+              "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
-              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+              "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
             },
             {
               "path": "apps/api/src/profiles/agent-activity-http.integration.test.ts",
@@ -512475,6 +512909,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts",
+                "apps/api/src/crm/verification-case-http.integration.test.ts",
+                "apps/api/src/crm/verification-case.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -513654,7 +514098,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -513715,6 +514159,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -517552,11 +518004,11 @@
             },
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+              "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
             },
             {
               "path": "apps/api/src/crm/verification-evidence.service.ts",
-              "sha256": "e22bf07addffee055d8c875ffa817bc6b7113143329a0c379760726cf16f8b3f"
+              "sha256": "40e0ec0e421b0de8722a2130e7381787588c0994c215197812947b1a6638a7f6"
             },
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
@@ -517600,7 +518052,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
@@ -517770,6 +518222,16 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/verification-case-http.integration.test.ts",
+                "apps/api/src/crm/verification-evidence.service.ts",
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -518026,7 +518488,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
@@ -518161,6 +518623,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -522248,7 +522718,7 @@
             },
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+              "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
             },
             {
               "path": "apps/api/src/crm/verification-case.service.test.ts",
@@ -522256,7 +522726,7 @@
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
-              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+              "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
             },
             {
               "path": "apps/api/src/documents/document-action-state.test.ts",
@@ -522398,6 +522868,15 @@
                 "packages/db/src/documents.migrated.test.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/verification-case-http.integration.test.ts",
+                "apps/api/src/crm/verification-case.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -522672,7 +523151,7 @@
             },
             {
               "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
-              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+              "sha256": "f647ad90ea0c278d0696a77b4fa6c6d164b52c278b270cc66c9b70df8dc7e63a"
             },
             {
               "path": "apps/api/src/refund/external-refund-http.integration.test.ts",
@@ -522752,6 +523231,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/idempotency/idempotency-keys.repository.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -528492,7 +528979,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -528580,6 +529067,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -535804,7 +536299,7 @@
             },
             {
               "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
-              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+              "sha256": "f647ad90ea0c278d0696a77b4fa6c6d164b52c278b270cc66c9b70df8dc7e63a"
             },
             {
               "path": "apps/api/src/wallet/wallet.service.ts",
@@ -535849,6 +536344,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/idempotency/idempotency-keys.repository.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         }
@@ -590170,7 +590673,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -591048,6 +591551,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -591189,7 +591700,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -592067,6 +592578,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -592208,7 +592727,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -593086,6 +593605,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -593227,7 +593754,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -594105,6 +594632,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -594246,7 +594781,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -595124,6 +595659,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -595265,7 +595808,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -596143,6 +596686,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -596284,7 +596835,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -597162,6 +597713,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -597303,7 +597862,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -598181,6 +598740,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -598322,7 +598889,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -599200,6 +599767,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -599341,7 +599916,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -600219,6 +600794,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -600360,7 +600943,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -601238,6 +601821,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -601379,7 +601970,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -602257,6 +602848,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -602398,7 +602997,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -603276,6 +603875,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -603417,7 +604024,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604295,6 +604902,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -604436,7 +605051,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -605314,6 +605929,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -605455,7 +606078,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -606333,6 +606956,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -606474,7 +607105,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -607352,6 +607983,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -607493,7 +608132,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -608371,6 +609010,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -608512,7 +609159,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -609390,6 +610037,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -609531,7 +610186,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/build.mjs",
@@ -610409,6 +611064,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -731780,7 +732443,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -732261,6 +732924,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -732490,7 +733161,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -732971,6 +733642,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -733200,7 +733879,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -733681,6 +734360,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -733908,7 +734595,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -734389,6 +735076,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -734616,7 +735311,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -735097,6 +735792,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -735326,7 +736029,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -735807,6 +736510,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -736035,7 +736746,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -736516,6 +737227,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -736744,7 +737463,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -737225,6 +737944,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -737453,7 +738180,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -737934,6 +738661,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -738162,7 +738897,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -738643,6 +739378,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -738871,7 +739614,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -739352,6 +740095,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -739580,7 +740331,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
@@ -740061,6 +740812,14 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -757386,7 +758145,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -757729,6 +758488,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -757963,7 +758730,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -758306,6 +759073,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -758544,7 +759319,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -758887,6 +759662,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -759122,7 +759905,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -759465,6 +760248,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -759699,7 +760490,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -760042,6 +760833,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -760278,7 +761077,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -760621,6 +761420,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -786970,7 +787777,7 @@
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
-              "sha256": "0f2f97b3555ba65a9d58435921c60e693bf6a472b1eeb2c365ea72865f1f90e7"
+              "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
             },
             {
               "path": "apps/web/src/pages/AdminBrandingConfig.tsx",
@@ -787218,6 +788025,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/storage/verified-attachments.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -789562,19 +790377,19 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
-              "sha256": "13f1dfdab981a1ac041b666b6ecb22896f7a96c85cc3120eefdc064b8ae2fccd"
+              "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
-              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+              "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
             },
             {
               "path": "apps/api/src/crm/verification-evidence.service.ts",
-              "sha256": "e22bf07addffee055d8c875ffa817bc6b7113143329a0c379760726cf16f8b3f"
+              "sha256": "40e0ec0e421b0de8722a2130e7381787588c0994c215197812947b1a6638a7f6"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -789898,6 +790713,17 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts",
+                "apps/api/src/crm/verification-case-http.integration.test.ts",
+                "apps/api/src/crm/verification-case.service.ts",
+                "apps/api/src/crm/verification-evidence.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -795976,7 +796802,7 @@
             },
             {
               "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
-              "sha256": "e374dd1a2166c843a594418060975674400d5dbcb837234844d5a05569716fa7"
+              "sha256": "f647ad90ea0c278d0696a77b4fa6c6d164b52c278b270cc66c9b70df8dc7e63a"
             },
             {
               "path": "packages/db/drizzle/0073_create_idempotency_keys.sql",
@@ -798880,6 +799706,14 @@
                 "packages/db/src/documents.migrated.test.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/idempotency/idempotency-keys.repository.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -799373,7 +800207,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -803655,6 +804489,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -804529,7 +805371,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -805137,7 +805979,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -806329,7 +807171,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -808007,6 +808849,16 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "presentation_renewals": [
@@ -808828,7 +809680,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-v2.service.ts",
-              "sha256": "12e2388c16aff18e20fad155d6a138bb55b4c0db855d774609d881c301ddc370"
+              "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
@@ -809432,7 +810284,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "7609d20ee190debe6a23a93ea4ac861b5f36466dd2df4ae581e5bde33294680a"
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -810604,7 +811456,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "8342f5aa9268541867dd43c908f4a235b03585c39e3f9c82ac4908a8e7a39ece"
+              "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -812171,6 +813023,16 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket attachment authorization, replay and publication plus shared helper compatibility. The generic idempotency helper preserves the lock key, exact JSONB comparison and persisted response. Shared storage callers retain their default direct-pool path."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/crm-v2.service.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -816075,7 +816937,7 @@
             },
             {
               "path": "apps/api/src/crm/verification-case.service.ts",
-              "sha256": "319132938cc59fe27fb88a3b4a54b67e1a038bb9bf99bf87036ab0fb279874a8"
+              "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
             },
             {
               "path": "apps/web/src/hooks/useProviderCatalogue.ts",
@@ -816111,7 +816973,7 @@
             },
             {
               "path": "apps/api/src/crm/account-recovery.service.ts",
-              "sha256": "3c95563456fc50fda944eceec8a64ba67719084aba6d5764c2645e271bfb55a1"
+              "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
             },
             {
               "path": "apps/api/src/crm/crm.module.ts",
@@ -816464,6 +817326,15 @@
                 "apps/api/src/admin/brand-config.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-verification-evidence-copy-boundary",
+              "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+              "paths": [
+                "apps/api/src/crm/account-recovery.service.ts",
+                "apps/api/src/crm/verification-case.service.ts"
+              ],
+              "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
             }
           ]
         },
@@ -816909,7 +817780,8 @@
           "release-0.6-committed-storage-cleanup",
           "release-0.6-staff-storage-signing-probe",
           "release-0.6-profile-and-settings-attachment-copy-boundary",
-          "release-0.6-ticket-attachment-copy-boundary"
+          "release-0.6-ticket-attachment-copy-boundary",
+          "release-0.6-verification-evidence-copy-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -936148,6 +937020,118 @@
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ]
+    },
+    "release-0.6-verification-evidence-copy-boundary": {
+      "batch": "release-0.6-verification-evidence-copy-boundary",
+      "base_commit": "02d6876622981c4a7799ed4529a2c3a0d2d06aaf",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/crm/account-recovery-http.integration.test.ts",
+        "apps/api/src/crm/account-recovery.service.ts",
+        "apps/api/src/crm/crm-v2.service.ts",
+        "apps/api/src/crm/verification-case-http.integration.test.ts",
+        "apps/api/src/crm/verification-case.service.ts",
+        "apps/api/src/crm/verification-evidence.service.ts",
+        "apps/api/src/idempotency/idempotency-keys.repository.ts",
+        "apps/api/src/storage/storage-copy-transaction.ts",
+        "apps/api/src/storage/verified-attachments.service.ts",
+        "apps/api/src/tickets/tickets.service.ts",
+        "docs/operations/storage-retention.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
+          "sha256": "c584656c515dfd58c76dc23807b5e230abeedca3e189446bfcbb0c966e865a35"
+        },
+        {
+          "path": "apps/api/src/crm/account-recovery.service.ts",
+          "sha256": "748a74565ef3ecc6c6bce96894dcba786326f4e2288bd45a8307b05d72d500a1"
+        },
+        {
+          "path": "apps/api/src/crm/crm-v2.service.ts",
+          "sha256": "8b295d21d426d607c67138d35553ae8954ba2d596408b67ebfc5d79bedf835d8"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
+          "sha256": "334d6e4341e82c3651888f79f400f36b68f5e349bba7e4b009ed4e7c4d17b73e"
+        },
+        {
+          "path": "apps/api/src/crm/verification-case.service.ts",
+          "sha256": "c758d8747c9b21310b8b26a29fbcdad53c69f7fdd802fa13db9d5cdbf5c188b6"
+        },
+        {
+          "path": "apps/api/src/crm/verification-evidence.service.ts",
+          "sha256": "40e0ec0e421b0de8722a2130e7381787588c0994c215197812947b1a6638a7f6"
+        },
+        {
+          "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
+          "sha256": "f647ad90ea0c278d0696a77b4fa6c6d164b52c278b270cc66c9b70df8dc7e63a"
+        },
+        {
+          "path": "apps/api/src/storage/storage-copy-transaction.ts",
+          "sha256": "8110e6fd57934a04d78239a0bb862588acc3b8bde4a4897dc67f11f826e17c90"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "3903f3ca12eadf0f0cc3c11ea4204b09d052cb941371134438b7bc9b633fbfc7"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "8dfc14728ca67a0d8d240f5e1480dc3f2df26080f479d80c392a9a51ede62f0f"
+        }
+      ],
+      "checks": [
+        "Identity corrections, profile verification and lost-contact recovery prepare exact scanned evidence outside their business transactions. Each provisional copy reserves cleanup before the provider write. Final publication rechecks the target, staff grant and step-up, the current verification policy where applicable, and the exact upload revision and digest. Stored evidence retains its submitted order.",
+        "The native compiled API passed 107 verification, recovery, idempotency and form-authority cases across the original and focused corrected runs. The original run passed 106 and exposed a fixture that tried to write the protected auth_version directly. The corrected case changes the password hash, verifies that the production trigger advances auth_version and confirms that the paused evidence save rejects the stale proposal without creating a case or audit.",
+        "Two other paused-provider cases prove that identity-correction and manual-verification profile rows remain available. Identity change rejects the correction and retains a provisional copy. Manual verification publishes the exact selected bytes in the original typed order. Six targeted ticket, legal document and conversation compatibility cases also passed on the same compiled API.",
+        "All 2,097 native input bytes match after the fixture correction. Scoped ESLint, Prettier, API typecheck and whitespace passed. HTTP contracts and SQL migrations did not change."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/native-verification-copy-initial.log",
+          "sha256": "7e1c58b072fb5bae8801b067b080c2fbf7790841fb128194ebeaa5cf10b56f11"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/native-verification-copy.log",
+          "sha256": "8263e9907803bdf1c48a65569b9c07684fcff863fe742f45935706a1d44831d9"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/native-source-initial.sha256",
+          "sha256": "2a1a2a191eb0620a41d0e73da11d9012e671d8ced0563e52683aa667fb4af82b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/native-source.sha256",
+          "sha256": "414404255738901c282724468ddcf02c6899637730cb645f86614bbed0cba5d9"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/final-source-bindings.json",
+          "sha256": "4783e789870c9b2c08665f1fb5e7aac02078c83ed16b4c9de22b82c8b16a16e3"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/eslint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/prettier.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/verification-copy.E4oDAO/whitespace.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -936187,13 +937171,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-verification-evidence-copy-boundary",
+    "id": "release-0.6-direct-document-copy-boundary",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Prepare verification evidence outside business transactions with durable cleanup, and publish only against current correction or lost-contact recovery authority."
+    "goal": "Reconcile direct business-document storage reads and copies with persisted cleanup intent, unlocked provider work and exact authorized document publication."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

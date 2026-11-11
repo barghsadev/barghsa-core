@@ -1,97 +1,31 @@
-import { readCappedBytes } from '../storage/read-capped-bytes.js';
+import { ConflictException, Injectable } from '@nestjs/common';
+import type { PoolClient } from 'pg';
 import {
-  BadRequestException,
-  ConflictException,
-  Inject,
-  Injectable,
-  Optional,
-  ServiceUnavailableException,
-} from '@nestjs/common';
-import { createHash, randomUUID } from 'node:crypto';
-import type { StorageProvider } from '@barghsa/shared/storage';
-import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
-import {
-  pickDetectedContentType,
-  sniffContentTypes,
-  SNIFF_SAMPLE_BYTES,
-} from '../upload/content-type-sniffer.js';
-import { requireCleanUpload } from '../upload/require-clean-upload.js';
+  VerifiedAttachmentsService,
+  type PreparedAttachmentCopies,
+} from '../storage/verified-attachments.service.js';
 import type { DualApprovalQueryClient } from '../admin/dual-approval-resolution.js';
-const MAX_BYTES = 10 * 1024 * 1024;
-const MIME = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp'];
+
 const SEALED_PREFIX = 'verification-evidence/';
+
 @Injectable()
 export class VerificationEvidenceService {
   constructor(
-    @Optional() @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider | null = null
+    private readonly attachments: VerifiedAttachmentsService = new VerifiedAttachmentsService()
   ) {}
-  async seal(
-    client: DualApprovalQueryClient,
-    keys: string[],
-    actorId: string,
-    profileId: string
-  ): Promise<string[]> {
-    if (!keys.length || keys.length > 5 || new Set(keys).size !== keys.length)
-      throw new BadRequestException('One to five distinct evidence files are required');
-    if (!this.storage) throw new ServiceUnavailableException('Evidence storage is unavailable');
-    const sealed: string[] = [];
-    for (const key of keys) {
-      if (!/^uploads\/(document|image)\/[a-f0-9-]+\.(pdf|png|jpe?g|webp)$/i.test(key))
-        throw new BadRequestException('Invalid evidence upload key');
-      const row = (
-        await client.query('SELECT * FROM storage_records WHERE storage_key=$1 FOR UPDATE', [key])
-      ).rows[0] as Record<string, unknown> | undefined;
-      const metadata = row?.metadata as Record<string, unknown> | undefined;
-      if (
-        !row ||
-        row.status !== 'active' ||
-        metadata?.verified !== true ||
-        metadata.uploadedBy !== actorId ||
-        metadata.profileId !== profileId ||
-        metadata.purpose !== 'verification_evidence'
-      )
-        throw new BadRequestException(
-          'Evidence must be a verified upload for this profile by the corrector'
-        );
-      const object = await this.storage.getObject(key);
-      const read = await readCappedBytes(object.body, MAX_BYTES);
-      if (read.truncated) throw new BadRequestException('Evidence file is too large');
-      const bytes = Buffer.from(read.bytes),
-        total = bytes.length;
-      if (!total || String(row.file_size) !== String(total))
-        throw new BadRequestException('Evidence size changed after upload verification');
-      const contentType = pickDetectedContentType(
-        sniffContentTypes(bytes.subarray(0, SNIFF_SAMPLE_BYTES)),
-        MIME
-      );
-      if (!contentType) throw new BadRequestException('Unsupported evidence file content');
-      const digest = createHash('sha256').update(bytes).digest('hex');
-      requireCleanUpload(metadata, digest);
-      const sealedKey = `${SEALED_PREFIX}${randomUUID()}/${digest}`;
-      await this.storage.putObject(sealedKey, bytes, contentType);
-      await client.query(
-        `INSERT INTO storage_records(storage_key,status,metadata,file_size,content_type,category,file_name,signed_at,signed_by)
-        VALUES ($1,'immutable',$2::jsonb,$3,$4,$5,$6,NOW(),$7)`,
-        [
-          sealedKey,
-          JSON.stringify({
-            purpose: 'verification_evidence',
-            profileId,
-            uploadedBy: actorId,
-            sourceKey: key,
-            sha256: digest,
-          }),
-          total,
-          contentType,
-          row.category,
-          row.file_name,
-          actorId,
-        ]
-      );
-      sealed.push(sealedKey);
-    }
-    return sealed;
+
+  plan(client: DualApprovalQueryClient, keys: string[], actorId: string, profileId: string) {
+    return this.attachments.plan(client, keys, actorId, profileId, 'verification_evidence');
   }
+
+  copy(plan: Awaited<ReturnType<VerificationEvidenceService['plan']>>, directClient?: PoolClient) {
+    return this.attachments.copy(plan, directClient);
+  }
+
+  publish(client: DualApprovalQueryClient, prepared: PreparedAttachmentCopies) {
+    return this.attachments.publish(client, prepared);
+  }
+
   async validate(
     client: DualApprovalQueryClient,
     keys: string[],
@@ -119,12 +53,7 @@ export class VerificationEvidenceService {
         throw new ConflictException('Correction evidence is unavailable or unbound');
     }
   }
-  async downloadUrls(keys: string[]): Promise<string[]> {
-    if (!this.storage) return [];
-    return Promise.all(
-      keys
-        .filter((key) => key.startsWith(SEALED_PREFIX))
-        .map((key) => this.storage!.presignedGetUrl(key, 300, 'attachment'))
-    );
+  downloadUrls(keys: string[]): Promise<string[]> {
+    return this.attachments.downloadUrls(keys, 'verification_evidence');
   }
 }

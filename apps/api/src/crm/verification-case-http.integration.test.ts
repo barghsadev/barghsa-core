@@ -5,6 +5,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let storageServer: Server;
 const objects = new Map<string, Buffer>();
+let onEvidencePut: (() => Promise<void>) | undefined;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
   storageServer = createServer(async (req, res) => {
@@ -16,6 +17,7 @@ beforeAll(async () => {
       const chunks: Buffer[] = [];
       for await (const chunk of req) chunks.push(Buffer.from(chunk));
       objects.set(key, Buffer.concat(chunks));
+      if (key.startsWith('verification-evidence/')) await onEvidencePut?.();
       res.setHeader('ETag', '"test-etag"');
       res.end();
       return;
@@ -106,6 +108,121 @@ async function review(id: string, decision: string, user = 'reviewer') {
     body: JSON.stringify({ decision, reviewerNotes: 'Evidence checked' }),
   });
 }
+
+async function duringEvidenceCopy(submit: () => Promise<Response>, check: () => Promise<void>) {
+  let entered!: () => void, release!: () => void;
+  const started = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  onEvidencePut = async () => {
+    entered();
+    await gate;
+  };
+  const response = submit();
+  try {
+    await Promise.race([
+      started,
+      response.then(async (result) => {
+        throw new Error(
+          `Evidence copy was never reached: ${result.status} ${await result.clone().text()} ${http.logs()}`
+        );
+      }),
+    ]);
+    await check();
+  } finally {
+    onEvidencePut = undefined;
+    release();
+  }
+  return response;
+}
+
+it('refuses to publish evidence when the current identity changes during the storage write', async () => {
+  const target = await profile(),
+    key = await evidence(target);
+  const response = await duringEvidenceCopy(
+    () => create(target, { idempotencyKey: randomUUID() }, key),
+    async () => {
+      expect(
+        (await http.pool.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE NOWAIT', [target]))
+          .rows
+      ).toEqual([{ id: target }]);
+      await http.pool.query("UPDATE profiles SET first_name='Concurrent correction' WHERE id=$1", [
+        target,
+      ]);
+    }
+  );
+  expect(response.status, http.logs()).toBe(409);
+  expect(
+    (await http.pool.query('SELECT id FROM verification_cases WHERE profile_id=$1', [target])).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='verification_case_created' AND metadata::jsonb->>'profileId'=$1",
+        [target]
+      )
+    ).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT status, metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+        [key]
+      )
+    ).rows
+  ).toEqual([
+    {
+      status: 'removed',
+      metadata: expect.objectContaining({ provisionalCopy: true, deletionRequested: true }),
+    },
+  ]);
+});
+
+it('publishes manual verification documents in their requested order after an unlocked storage write', async () => {
+  const target = await profile();
+  await http.pool.query("UPDATE profiles SET status='PENDING_VERIFICATION' WHERE id=$1", [target]);
+  const keys = [await evidence(target), await evidence(target)].sort().reverse();
+  const response = await duringEvidenceCopy(
+    () =>
+      fetch(`${http.base}/api/crm/profiles/${target}/verify`, {
+        method: 'POST',
+        headers: headers.creator!,
+        body: JSON.stringify({
+          action: 'verify',
+          evidence: [
+            { type: 'national_id', key: keys[0] },
+            { type: 'birth_certificate', key: keys[1] },
+          ],
+        }),
+      }),
+    async () => {
+      expect(
+        (await http.pool.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE NOWAIT', [target]))
+          .rows
+      ).toEqual([{ id: target }]);
+    }
+  );
+  expect(response.status, http.logs()).toBe(200);
+  const receipt = (
+    await http.pool.query(
+      "SELECT metadata::jsonb->'evidence' AS evidence FROM audit_log WHERE event='verification_change' AND metadata::jsonb->>'profileId'=$1",
+      [target]
+    )
+  ).rows[0].evidence as { type: string; key: string }[];
+  expect(receipt.map(({ type }) => type)).toEqual(['national_id', 'birth_certificate']);
+  const copies = (
+    await http.pool.query(
+      "SELECT storage_key, metadata->>'sourceKey' AS source FROM storage_records WHERE storage_key=ANY($1) AND status='immutable'",
+      [receipt.map(({ key }) => key)]
+    )
+  ).rows;
+  expect(
+    receipt.map(({ key }) => copies.find(({ storage_key }) => storage_key === key)?.source)
+  ).toEqual(keys);
+});
 
 it('replays a keyed creation without resealing evidence or reopening a finished correction', async () => {
   const target = await profile(),

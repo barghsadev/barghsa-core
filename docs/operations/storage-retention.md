@@ -170,6 +170,13 @@ ticket, profile and staff permission locks are acquired again for publication.
 If ownership, assignment or ticket state changes during upload, the next
 transaction applies the current rules and leaves rejected copies for cleanup.
 
+Identity corrections, profile verification and lost-contact recovery use the
+same provisional copy workflow. Publication rechecks the current staff grant
+and step-up, the target identity or recovery authorization, and any applicable
+verification policy. Evidence stays in the submitted order. A rejected save
+keeps its private copies eligible for cleanup and leaves the case and audit
+unchanged.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

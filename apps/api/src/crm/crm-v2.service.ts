@@ -5,13 +5,20 @@ import {
 } from '../admin/verification-policy-config.js';
 import { verificationIsCurrent, type VerificationPolicy } from '@barghsa/shared/verification';
 import { VerificationEvidenceService } from './verification-evidence.service.js';
+import { withCopyTransaction } from '../storage/storage-copy-transaction.js';
 import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { editCrmLegalInfo, readCrmLegalInfo } from './crm-profile-legal.js';
 import { editCrmAddress } from './crm-profile-address.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import { BadRequestException, HttpException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  HttpException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
 import type { CreateNotificationParams } from '../notifications/notifications.service.js';
@@ -629,9 +636,14 @@ export class CrmV2Service {
     const reason = dto.reason?.trim() || null;
     if ((action === 'unverify' || action === 'reverify') && !reason)
       return { error: `Reason is required for '${action}' action` };
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
+    const evidence = dto.evidence ?? [];
+    const newKeys =
+      action === 'verify'
+        ? evidence
+            .filter(({ key }) => !key.startsWith('verification-evidence/'))
+            .map(({ key }) => key)
+        : [];
+    const readVerificationState = async (client: PoolClient) => {
       const profile = (
         await client.query(
           `SELECT p.id,p.user_id,p.status,p.profile_type,p.verified_at,
@@ -642,10 +654,7 @@ export class CrmV2Service {
           [profileId]
         )
       ).rows[0];
-      if (!profile) {
-        await client.query('ROLLBACK');
-        return null;
-      }
+      if (!profile) return { done: true as const, outcome: null };
       await requireStaffMutationPermission(client, actorUserId, 'crm:verify');
       await requireSessionStepUp(client, actor);
       const policy = await lockVerificationPolicy(client);
@@ -662,20 +671,20 @@ export class CrmV2Service {
       };
       if (currentStatus === targetStatus && (action !== 'verify' || stillVerified)) {
         await requireSessionStepUp(client, actor);
-        await client.query('COMMIT');
-        return result;
+        return { done: true as const, outcome: result };
       }
       if (
         !transition.allowedFrom.includes(currentStatus) &&
         !(action === 'verify' && currentStatus === 'VERIFIED' && !stillVerified)
       ) {
         await requireSessionStepUp(client, actor);
-        await client.query('COMMIT');
         return {
-          error: `Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
+          done: true as const,
+          outcome: {
+            error: `Cannot ${action} a profile with status '${currentStatus}'. Allowed source statuses: ${transition.allowedFrom.join(', ')}`,
+          },
         };
       }
-      const evidence = dto.evidence ?? [];
       if (
         new Set(evidence.map((item) => item.type)).size !== evidence.length ||
         new Set(evidence.map((item) => item.key)).size !== evidence.length
@@ -692,15 +701,42 @@ export class CrmV2Service {
           documentTypes: missing,
         });
       }
-      const sealedEvidence: { type: string; key: string }[] = [];
-      if (action === 'verify')
-        for (const item of evidence) {
-          let key = item.key;
+      if (action === 'verify') {
+        for (const { key } of evidence)
           if (key.startsWith('verification-evidence/'))
             await this.evidence.validate(client, [key], profileId);
-          else key = (await this.evidence.seal(client, [key], actorUserId, profileId))[0]!;
-          sealedEvidence.push({ type: item.type, key });
-        }
+      }
+      return { done: false as const, profile, policy, currentStatus, targetStatus, result };
+    };
+    const initial = newKeys.length
+      ? await withCopyTransaction(async (client) => {
+          const state = await readVerificationState(client);
+          if (state.done) return state;
+          const plan = await this.evidence.plan(client, newKeys, actorUserId, profileId);
+          await requireSessionStepUp(client, actor);
+          return { done: false as const, plan, profile: state.profile };
+        })
+      : null;
+    if (initial?.done) return initial.outcome;
+    const prepared = initial ? await this.evidence.copy(initial.plan) : null;
+    return withCopyTransaction(async (client) => {
+      const state = await readVerificationState(client);
+      if (state.done) return state.outcome;
+      const { profile, policy, currentStatus, targetStatus, result } = state;
+      if (
+        initial &&
+        (initial.profile.user_id !== profile.user_id ||
+          initial.profile.profile_type !== profile.profile_type ||
+          initial.profile.status !== profile.status ||
+          String(initial.profile.verified_at) !== String(profile.verified_at))
+      )
+        throw new ConflictException('Profile verification state changed; reload and retry');
+      const sealedKeys = prepared ? await this.evidence.publish(client, prepared) : [];
+      const replacements = new Map(newKeys.map((key, index) => [key, sealedKeys[index]!]));
+      const sealedEvidence =
+        action === 'verify'
+          ? evidence.map(({ type, key }) => ({ type, key: replacements.get(key) ?? key }))
+          : [];
       const now = new Date(),
         correlationId = uuidv7();
       await client.query(
@@ -782,14 +818,8 @@ export class CrmV2Service {
         client
       );
       await requireSessionStepUp(client, actor);
-      await client.query('COMMIT');
       return result;
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    });
   }
 
   private async notifyAccountAction(

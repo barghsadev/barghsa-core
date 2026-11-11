@@ -7,6 +7,7 @@ import { fetchWithPreauth } from '../test/public-auth.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>, storage: Server;
 const objects = new Map<string, Buffer>(),
   headers: Record<string, Record<string, string>> = {};
+let onEvidencePut: (() => Promise<void>) | undefined;
 const digest = (value: string) => createHash('sha256').update(value).digest('hex');
 beforeAll(async () => {
   storage = createServer(async (req, res) => {
@@ -18,6 +19,7 @@ beforeAll(async () => {
       const chunks: Buffer[] = [];
       for await (const c of req) chunks.push(Buffer.from(c));
       objects.set(key, Buffer.concat(chunks));
+      if (key.startsWith('verification-evidence/')) await onEvidencePut?.();
       res.setHeader('ETag', '"fixture"');
       res.end();
       return;
@@ -63,7 +65,7 @@ const post = (path: string, body: unknown = {}, actor = 'recovery-reviewer') =>
     headers: headers[actor]!,
     body: JSON.stringify(body),
   });
-async function create(submissionKey?: string) {
+async function proposal(submissionKey?: string) {
   const user = 'claimant-' + randomUUID(),
     oldLogin = user + '@example.test',
     newLogin = 'new-' + user + '@example.test';
@@ -106,8 +108,12 @@ async function create(submissionKey?: string) {
     evidenceKeys: [key],
     ...(submissionKey ? { submissionKey } : {}),
   };
+  return { user, oldLogin, newLogin, profileId, body };
+}
+async function create(submissionKey?: string) {
+  const draft = await proposal(submissionKey);
   const responses = await Promise.all(
-    Array.from({ length: submissionKey ? 2 : 1 }, () => post('', body, 'recovery-creator'))
+    Array.from({ length: submissionKey ? 2 : 1 }, () => post('', draft.body, 'recovery-creator'))
   );
   const receipts = await Promise.all(
     responses.map(async (response) => {
@@ -117,7 +123,7 @@ async function create(submissionKey?: string) {
   );
   const { id } = receipts[0]!;
   if (submissionKey) expect(receipts).toEqual(Array(2).fill({ id, state: 'open', submissionKey }));
-  return { id, user, oldLogin, newLogin, profileId, body };
+  return { id, ...draft };
 }
 async function approved() {
   const row = await create();
@@ -150,6 +156,75 @@ const verify = (caseId: string, challengeId: string, value = '123456') =>
   });
 const read = (id: string, actor = 'recovery-reviewer') =>
   fetch(http.base + '/api/crm/account-recovery/' + id, { headers: headers[actor]! });
+
+it('rejects recovery evidence after the target authorization changes during the storage write', async () => {
+  const draft = await proposal(randomUUID());
+  const replacementPassword = await argon2.hash('Changed-during-recovery-123!');
+  let entered!: () => void, release!: () => void;
+  const started = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  onEvidencePut = async () => {
+    entered();
+    await gate;
+  };
+  const response = post('', draft.body, 'recovery-creator');
+  try {
+    await Promise.race([
+      started,
+      response.then(async (result) => {
+        throw new Error(
+          `Evidence copy was never reached: ${result.status} ${await result.clone().text()} ${http.logs()}`
+        );
+      }),
+    ]);
+    const previous = await http.pool.query<{ auth_version: number }>(
+      'SELECT auth_version FROM users WHERE user_id=$1 FOR UPDATE NOWAIT',
+      [draft.user]
+    );
+    const changed = await http.pool.query<{ auth_version: number }>(
+      'UPDATE users SET password_hash=$2 WHERE user_id=$1 RETURNING auth_version',
+      [draft.user, replacementPassword]
+    );
+    expect(changed.rows).toEqual([{ auth_version: previous.rows[0]!.auth_version + 1 }]);
+  } finally {
+    onEvidencePut = undefined;
+    release();
+  }
+  expect((await response).status, http.logs()).toBe(409);
+  expect(
+    (
+      await http.pool.query('SELECT id FROM account_recovery_cases WHERE profile_id=$1', [
+        draft.profileId,
+      ])
+    ).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='account_recovery_created' AND metadata::jsonb->>'profileId'=$1",
+        [draft.profileId]
+      )
+    ).rows
+  ).toEqual([]);
+  expect(
+    (
+      await http.pool.query(
+        "SELECT status, metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+        draft.body.evidenceKeys
+      )
+    ).rows
+  ).toEqual([
+    {
+      status: 'removed',
+      metadata: expect.objectContaining({ provisionalCopy: true, deletionRequested: true }),
+    },
+  ]);
+});
+
 it('replays one authorized case creation and refuses a changed proposal or stale code send', async () => {
   const key = randomUUID();
   const row = await create(key);
