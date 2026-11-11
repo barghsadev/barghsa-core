@@ -27,6 +27,7 @@ import {
 import { scanStoredUpload } from './documents/upload-scan-job.js';
 import { collectStorageScanBacklog } from './documents/storage-scan-metrics.js';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE } from '@barghsa/shared/storage';
+import { reportServerError } from '@barghsa/shared/error-reporting';
 import {
   DOCUMENT_DESTRUCTION_JOB_TYPE,
   DOCUMENT_DESTRUCTION_POLL_INTERVAL_MS,
@@ -203,7 +204,10 @@ async function main(): Promise<void> {
     );
   });
 
-  const pollers = new PollerGroup(() => logger.error('Worker job or failure recording failed'));
+  const pollers = new PollerGroup(() => {
+    logger.error('Worker job or failure recording failed');
+    void reportServerError('WORKER_POLLER_FAILED');
+  });
   const asyncJobHandlers = new JobHandlerRegistry();
   asyncJobHandlers.register(PROFILE_EXPORT_JOB_TYPE, generateProfileExport);
   pollers.every(() => runOneAsyncJob(getDbPool(), asyncJobHandlers).then(() => undefined), 1000);
@@ -301,6 +305,7 @@ async function main(): Promise<void> {
 
   process.on('unhandledRejection', () => {
     logger.error('Unhandled rejection');
+    void reportServerError('WORKER_UNHANDLED_REJECTION');
   });
 
   pollers.every(async () => {
@@ -1109,7 +1114,8 @@ async function main(): Promise<void> {
   );
 }
 
-void main().catch(() => {
+void main().catch(async () => {
   logger.error('Fatal worker error');
+  await reportServerError('WORKER_STARTUP_FAILED');
   process.exit(1);
 });

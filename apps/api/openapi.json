@@ -36292,6 +36292,9 @@
           "required": true
         },
         "responses": {
+          "202": {
+            "description": "The production sampling policy omitted the route event."
+          },
           "204": {
             "description": "Sentry acknowledged the matching route error event."
           },

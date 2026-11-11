@@ -69,6 +69,23 @@ threshold, window and cooldown. Private Grafana shows the state per replica and
 the failure share of admitted operations. Saving counts the result after its
 bounded retry. [External Providers dashboard](../deploy/monitoring/grafana-external-providers-dashboard.json).
 
+Set `ROUTE_ERROR_SENTRY_DSN` for browser route failures and
+`SERVER_ERROR_SENTRY_DSN` for API and worker exceptions in the protected
+runtime environment. Use the approved HTTPS project for each environment.
+Each event carries a fixed diagnostic code, process name, deployment environment
+and valid build SHA. API events can include the matched route template. Browser
+events include the generated support reference. Messages, stacks, cookies,
+request values and job payloads stay out of the envelope.
+
+Development and staging sample every eligible event. Production samples 10%
+by default. Set `SENTRY_ERROR_SAMPLE_RATE` to a fraction from 0 to 1 to change
+the production rate. The browser diagnostic endpoint returns 204 for a matching
+receipt, 202 for a sampled-out event and 503 when delivery could not be confirmed.
+Browser and server delivery each allow four concurrent requests per process with
+a three-second deadline. The API returns its error response before sending the
+server event. Operator logs and durable job recovery remain available during a
+receiver outage.
+
 ## Pilot and staging
 
 1. Prepare a dedicated pilot host with Docker Compose 2.24.4 or later, a valid

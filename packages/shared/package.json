@@ -230,6 +230,16 @@
         "default": "./dist/cjs/log-privacy.js"
       }
     },
+    "./error-reporting": {
+      "import": {
+        "types": "./dist/error-reporting.d.ts",
+        "default": "./dist/error-reporting.js"
+      },
+      "require": {
+        "types": "./dist/cjs/error-reporting.d.ts",
+        "default": "./dist/cjs/error-reporting.js"
+      }
+    },
     "./password-policy": {
       "import": {
         "types": "./dist/validation/password-policy.d.ts",

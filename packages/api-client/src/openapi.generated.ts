@@ -30378,6 +30378,13 @@ export interface operations {
             };
         };
         responses: {
+            /** @description The production sampling policy omitted the route event. */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Sentry acknowledged the matching route error event. */
             204: {
                 headers: {

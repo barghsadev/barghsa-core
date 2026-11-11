@@ -10,6 +10,7 @@ import { Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { v7 as uuidv7 } from 'uuid';
 import { privateLogId } from '@barghsa/shared/log-privacy';
+import { reportServerError } from '@barghsa/shared/error-reporting';
 import { DomainErrorCodes } from '@barghsa/shared/errors/domain';
 import { ErrorCodes, defaultErrorCode, errorCodeForHttpStatus } from '@barghsa/shared/errors';
 import type { ErrorCodeDef } from '@barghsa/shared/errors';
@@ -281,6 +282,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
     response.status(httpStatus).json(body);
+    if (httpStatus === HttpStatus.INTERNAL_SERVER_ERROR) {
+      void reportServerError('API_REQUEST_FAILED', request.route?.path);
+    }
   }
 
   /** Resolve HTTP status and a registered public code from the exception. */

@@ -1,4 +1,5 @@
 import { closeDbPools, createDbPool } from '@barghsa/db';
+import { reportServerError } from '@barghsa/shared/error-reporting';
 import { createAiInferenceServer } from './server.js';
 
 async function main(): Promise<void> {
@@ -35,7 +36,8 @@ async function main(): Promise<void> {
   process.on('SIGINT', shutdown);
 }
 
-void main().catch(() => {
+void main().catch(async () => {
   process.stderr.write('AI inference process failed\n');
   process.exitCode = 1;
+  await reportServerError('AI_INFERENCE_STARTUP_FAILED');
 });

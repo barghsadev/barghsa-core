@@ -133,6 +133,7 @@ services:
     env_file: /etc/barghsa/staging/runtime.env
     environment:
       NODE_ENV: production
+      BARGHSA_DEPLOYMENT_ENV: staging
       NODE_OPTIONS: --max-old-space-size=512 --no-deprecation
       WORKER_PORT: '9090'
       DOCUMENT_CLAMAV_HOST: clamav
@@ -165,6 +166,7 @@ services:
     env_file: /etc/barghsa/staging/runtime.env
     environment:
       NODE_ENV: production
+      BARGHSA_DEPLOYMENT_ENV: staging
       NODE_OPTIONS: --max-old-space-size=256 --no-deprecation
       AI_INFERENCE_HOST: '0.0.0.0'
       AI_INFERENCE_PORT: '9091'

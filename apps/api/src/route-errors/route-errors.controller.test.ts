@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { RouteErrorsController } from './route-errors.controller.js';
 
 const dsn = 'https://fixturekey@receiver.example.test/sentry/17';
@@ -8,6 +8,12 @@ const eventId = body.reference.replaceAll('-', '');
 const release = 'a1b2c3d4'.repeat(5);
 const controller = new RouteErrorsController();
 const transport = vi.fn<typeof fetch>();
+const end = vi.fn();
+const status = vi.fn(() => ({ end }));
+
+function report(payload: unknown, incoming: Request) {
+  return controller.report(payload, incoming, { status } as unknown as Response);
+}
 
 function request(headers: Record<string, string> = {}): Request {
   return {
@@ -26,19 +32,24 @@ beforeEach(() => {
   vi.stubEnv('APP_PUBLIC_URL', 'https://app.example.test');
   vi.stubEnv('ROUTE_ERROR_SENTRY_DSN', dsn);
   vi.stubEnv('BARGHSA_RELEASE_SHA', release);
+  vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', 'staging');
   vi.stubGlobal('fetch', transport);
 });
 
 afterEach(() => {
   transport.mockReset();
+  status.mockClear();
+  end.mockClear();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
 });
 
 it('forwards only safe diagnostics and requires the same event receipt', async () => {
   transport.mockResolvedValueOnce(Response.json({ id: eventId }));
-  await expect(controller.report(body, request())).resolves.toBeUndefined();
+  await expect(report(body, request())).resolves.toBeUndefined();
   expect(transport).toHaveBeenCalledOnce();
+  expect(status).toHaveBeenCalledWith(204);
+  expect(end).toHaveBeenCalledOnce();
   const [url, options] = transport.mock.calls[0]!;
   expect(String(url)).toBe('https://receiver.example.test/sentry/api/17/envelope/');
   expect(options).toMatchObject({
@@ -57,9 +68,19 @@ it('forwards only safe diagnostics and requires the same event receipt', async (
     level: 'error',
     message: body.code,
     fingerprint: [body.code],
+    environment: 'staging',
     release,
-    tags: { support_reference: body.reference },
+    tags: { process: 'web', support_reference: body.reference },
   });
+});
+
+it('reports a sampled-out production event without acknowledging delivery', async () => {
+  vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', 'production');
+  vi.stubEnv('SENTRY_ERROR_SAMPLE_RATE', '0');
+  await report(body, request());
+  expect(status).toHaveBeenCalledWith(202);
+  expect(end).toHaveBeenCalledOnce();
+  expect(transport).not.toHaveBeenCalled();
 });
 
 it.each([undefined, 'invalid release metadata'])(
@@ -67,7 +88,7 @@ it.each([undefined, 'invalid release metadata'])(
   async (revision) => {
     vi.stubEnv('BARGHSA_RELEASE_SHA', revision);
     transport.mockResolvedValueOnce(Response.json({ id: eventId }));
-    await expect(controller.report(body, request())).resolves.toBeUndefined();
+    await expect(report(body, request())).resolves.toBeUndefined();
     expect(transport).toHaveBeenCalledOnce();
     const [, options] = transport.mock.calls[0]!;
     expect(JSON.parse(String(options?.body).split('\n')[2]!)).not.toHaveProperty('release');
@@ -80,7 +101,7 @@ it.each([
   { 'sec-fetch-site': 'cross-site' },
   { 'content-type': 'text/plain' },
 ])('refuses cross-origin or non-JSON requests (%j)', async (headers) => {
-  await expect(controller.report(body, request(headers))).rejects.toMatchObject({ status: 403 });
+  await expect(report(body, request(headers))).rejects.toMatchObject({ status: 403 });
   expect(transport).not.toHaveBeenCalled();
 });
 
@@ -90,7 +111,7 @@ it.each([
   { ...body, code: 'private exception' },
   { ...body, reference: 'private profile' },
 ])('rejects input outside the fixed diagnostic schema', async (invalid) => {
-  await expect(controller.report(invalid, request())).rejects.toMatchObject({ status: 400 });
+  await expect(report(invalid, request())).rejects.toMatchObject({ status: 400 });
   expect(transport).not.toHaveBeenCalled();
 });
 
@@ -104,7 +125,7 @@ it.each([
   'https://fixturekey@receiver.example.test/17#private',
 ])('rejects missing or invalid Sentry configuration without egress', async (invalid) => {
   vi.stubEnv('ROUTE_ERROR_SENTRY_DSN', invalid);
-  await expect(controller.report(body, request())).rejects.toMatchObject({ status: 503 });
+  await expect(report(body, request())).rejects.toMatchObject({ status: 503 });
   expect(transport).not.toHaveBeenCalled();
 });
 
@@ -115,7 +136,7 @@ it.each([
   () => new Response(null, { status: 204 }),
 ])('rejects unsuccessful and mismatched provider responses without retrying', async (response) => {
   transport.mockResolvedValueOnce(response());
-  await expect(controller.report(body, request())).rejects.toMatchObject({ status: 503 });
+  await expect(report(body, request())).rejects.toMatchObject({ status: 503 });
   expect(transport).toHaveBeenCalledOnce();
 });
 
@@ -135,7 +156,7 @@ it('uses a bounded deadline and never retries a stalled transport', async () => 
           })
         )
     );
-    const rejected = expect(controller.report(body, request())).rejects.toMatchObject({
+    const rejected = expect(report(body, request())).rejects.toMatchObject({
       status: 503,
     });
     await vi.advanceTimersByTimeAsync(3000);
@@ -159,7 +180,7 @@ it('cancels a streamed oversized Sentry receipt even when the event ID matches',
     cancel,
   });
   transport.mockResolvedValueOnce(new Response(stream));
-  await expect(controller.report(body, request())).rejects.toMatchObject({ status: 503 });
+  await expect(report(body, request())).rejects.toMatchObject({ status: 503 });
   expect(cancel).toHaveBeenCalledOnce();
   expect(transport).toHaveBeenCalledOnce();
 });
