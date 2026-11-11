@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T06:39:36+00:00",
+  "updated": "2026-11-11T12:09:54+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21560,7 +21560,8 @@
           "release-0.6-ticket-attachment-copy-boundary",
           "release-0.6-verification-evidence-copy-boundary",
           "release-0.6-direct-document-copy-boundary",
-          "release-0.6-preflight-authority-fixture-repair"
+          "release-0.6-preflight-authority-fixture-repair",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21829,7 +21830,7 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding.controller.ts",
@@ -21988,6 +21989,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ]
         }
@@ -41360,7 +41369,8 @@
           "release-0.6-first-scheduled-browser-corrections",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-registration-and-onboarding-browser-journeys",
-          "release-0.6-browser-recovery-selection-and-overlay"
+          "release-0.6-browser-recovery-selection-and-overlay",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-profile-onboarding-and-persistent-context",
@@ -41372,11 +41382,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-drafts.service.ts",
@@ -41497,6 +41507,15 @@
                 "apps/api/src/profiles/legal-profiles.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -781577,7 +781596,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -781637,11 +781657,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -782102,6 +782122,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -782294,7 +782323,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -782354,11 +782384,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -782819,6 +782849,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -783011,7 +783050,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -783071,11 +783111,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -783536,6 +783576,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -783729,7 +783778,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -783789,11 +783839,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -784254,6 +784304,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -784446,7 +784505,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -784506,11 +784566,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -784971,6 +785031,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -785163,7 +785232,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -785223,11 +785293,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -785688,6 +785758,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -785880,7 +785959,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -785940,11 +786020,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -786405,6 +786485,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -786598,7 +786687,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -786658,11 +786748,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -787123,6 +787213,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -787315,7 +787414,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -787375,11 +787475,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -787840,6 +787940,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -788032,7 +788141,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-legal-draft-race-response"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -788092,11 +788202,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "f4738a75c9da55f1494c7621b2b147b668a183416df1b57f1b4e94d5baf74ff9"
+              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "507e76f469298e2f9fb449f777da38a25843101bbbce39f23a8a14b4a58aceee"
+              "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -788557,6 +788667,15 @@
                 "apps/api/src/profiles/profile-write-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-legal-draft-race-response",
+              "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
             }
           ],
           "presentation_renewals": [
@@ -819667,7 +819786,8 @@
           "release-0.6-ticket-attachment-copy-boundary",
           "release-0.6-verification-evidence-copy-boundary",
           "release-0.6-direct-document-copy-boundary",
-          "release-0.6-preflight-authority-fixture-repair"
+          "release-0.6-preflight-authority-fixture-repair",
+          "release-0.6-legal-draft-race-response"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -939180,6 +939300,52 @@
         {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/preflight-document.8AZxiG/whitespace.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "release-0.6-legal-draft-race-response": {
+      "batch": "release-0.6-legal-draft-race-response",
+      "base_commit": "9be49af5edc5e445c4be1070d8a743bce888809e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/profiles/legal-profiles.service.test.ts",
+        "apps/api/src/profiles/legal-profiles.service.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
+          "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.ts",
+          "sha256": "4afb3fb3ff852b3d42b8542b108bb214e4a91bafcc5e116c17406f0fd265e692"
+        }
+      ],
+      "checks": [
+        "Hosted run 42974069783 passed 7,958 tests and failed the legal onboarding concurrency case. The losing request could pass the session guard after the winner committed, then receive a 400 from the initial non-draft check. Both missing-draft checks now return the same 404. The two-request lock observation, exactly one successful submission and exactly one address row remain asserted.",
+        "The isolated PostgreSQL runner passed both individual and legal concurrent onboarding cases. The initial profile HTTP invocation later reached its outer timeout. Its individual results are retained. A separate invocation with the same compiled source passed all 13 legal service and legal document HTTP cases in two files.",
+        "The native run matched 2,097 source inputs. Scoped API typecheck, ESLint, Prettier and whitespace checks passed. The cumulative hosted integrity check remains required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/legal-replay.A5R5BT",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/legal-replay.A5R5BT/native-source.sha256",
+          "sha256": "fdbb6a20920ff34cab4005f03e655e29f8207d6db5e6a661c57d7daf3446805f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/legal-replay.A5R5BT/native-source-check.log",
+          "sha256": "a8c4224878e1ce0c640ba1fefbe0ee517b3173cbf6f03178539301d8d7f97e9a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/legal-replay.A5R5BT/native-legal-replay-initial.log",
+          "sha256": "045fc23881213d27db8abac834c3dd5999284d86ca27506dbdc7cc286c0e1a6f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/legal-replay.A5R5BT/native-legal-replay.log",
+          "sha256": "ceab83a8bbe416b07f767ffdef39c721e9d8295720edff008e60c59cd76d10d1"
         }
       ]
     }

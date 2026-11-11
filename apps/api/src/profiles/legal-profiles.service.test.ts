@@ -138,14 +138,15 @@ describe('LegalProfilesService', () => {
       );
     });
 
-    it('rejects when profile is not in DRAFT state', async () => {
+    it('returns the same not-found response for an already submitted draft', async () => {
       mockPool.query.mockResolvedValueOnce({
         rows: [{ ...mockProfileRow, status: 'ACTIVE' }],
       });
 
-      await expect(service.saveLegalProfile('user-1', 'prof-legal-1', validData)).rejects.toThrow(
-        'Profile is not in draft state'
-      );
+      await expect(
+        service.saveLegalProfile('user-1', 'prof-legal-1', validData)
+      ).rejects.toMatchObject({ status: 404, message: 'Profile not found' });
+      expect(mockPool.connect).not.toHaveBeenCalled();
     });
 
     it('rejects invalid national identifier format', async () => {

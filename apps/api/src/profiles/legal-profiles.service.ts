@@ -134,7 +134,12 @@ export class LegalProfilesService {
 
     // Validate the profile exists and belongs to the user
     const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId || profile.profileType !== 'LEGAL') {
+    if (
+      !profile ||
+      profile.userId !== userId ||
+      profile.profileType !== 'LEGAL' ||
+      profile.status !== 'DRAFT'
+    ) {
       throw new HttpException(
         {
           statusCode: 404,
@@ -142,17 +147,6 @@ export class LegalProfilesService {
           message: 'Profile not found',
         },
         404
-      );
-    }
-
-    if (profile.status !== 'DRAFT') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Profile is not in draft state',
-        },
-        400
       );
     }
 
