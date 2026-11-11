@@ -2,19 +2,23 @@
 """Collect read-only verification for a production approval package."""
 
 import argparse
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
 import re
+import runpy
 import subprocess
 import sys
 import tempfile
+import time
 from urllib.request import urlopen
 
 
 ROOT = Path(__file__).resolve().parents[2]
 REPO = 'barghsadev/barghsa-core'
 STAGING = 'https://stg.barghsa.com'
+RELEASE_CHAT_ID = -1004467450624
 OPERATIONAL_RECEIPTS = (
     'authenticated_dast',
     'performance_and_load',
@@ -98,6 +102,15 @@ def verify_staging(version, sha):
         raise ValueError('Staging readiness must be healthy')
 
 
+def receipt_path(directory, name, kind):
+    if not isinstance(name, str) or not name or Path(name).is_absolute():
+        raise ValueError(f'Use a relative receipt path for {kind}')
+    path = (directory / name).resolve()
+    if not path.is_relative_to(directory) or not path.is_file() or path.stat().st_size == 0:
+        raise ValueError(f'Missing or invalid receipt for {kind}')
+    return path
+
+
 def index_receipts(index_path, sha):
     index = json.loads(index_path.read_text())
     receipts = index['receipts']
@@ -105,19 +118,134 @@ def index_receipts(index_path, sha):
             or set(receipts) != set(OPERATIONAL_RECEIPTS)):
         raise ValueError('Receipt index must identify the candidate and every operational receipt')
     directory = index_path.resolve().parent
-    hashes = {}
+    paths, hashes = {}, {}
     for kind, name in receipts.items():
-        if not isinstance(name, str) or not name or Path(name).is_absolute():
-            raise ValueError(f'Use a relative receipt path for {kind}')
-        path = (directory / name).resolve()
-        if not path.is_relative_to(directory) or not path.is_file() or path.stat().st_size == 0:
-            raise ValueError(f'Missing or invalid receipt for {kind}')
+        path = paths[kind] = receipt_path(directory, name, kind)
         digest = hashlib.sha256()
         with path.open('rb') as receipt:
             for block in iter(lambda: receipt.read(1024 * 1024), b''):
                 digest.update(block)
         hashes[kind] = digest.hexdigest()
-    return hashes
+    return paths, hashes
+
+
+def receipt_bundle(index_path, path, fingerprint, required, optional=()):
+    def read(file):
+        with file.open('rb') as source:
+            content = source.read(65537)
+        if len(content) > 65536:
+            raise ValueError('Structured receipt exceeds its size limit')
+        value = json.loads(content)
+        if not isinstance(value, dict):
+            raise ValueError('Structured receipt must be a JSON object')
+        return value, hashlib.sha256(content).hexdigest()
+
+    bundle, digest = read(path)
+    if digest != fingerprint or not set(required).issubset(bundle) or set(bundle) - set(required) - set(optional):
+        raise ValueError('Invalid or changed structured receipt index')
+    directory = index_path.resolve().parent
+    entries = {key: read(receipt_path(directory, name, key)) for key, name in bundle.items()}
+    return ({key: value for key, (value, _) in entries.items()},
+            {key: digest for key, (_, digest) in entries.items()})
+
+
+def epoch(value):
+    try:
+        parsed = datetime.fromisoformat(value.removesuffix('Z') + '+00:00' if value.endswith('Z') else value)
+        if parsed.utcoffset() is not None:
+            return parsed.timestamp()
+    except (AttributeError, TypeError, ValueError, OverflowError, OSError):
+        pass
+    raise ValueError('A structured receipt has an invalid timestamp')
+
+
+def matches(pattern, value):
+    return isinstance(value, str) and bool(re.fullmatch(pattern, value))
+
+
+def verify_backup_receipts(index_path, path, fingerprint, now):
+    data, digests = receipt_bundle(index_path, path, fingerprint,
+                                  ('backup_job', 'backup_manifest', 'restore_manifest', 'restore_report'))
+    job, manifest = data['backup_job'], data['backup_manifest']
+    restored, report = data['restore_manifest'], data['restore_report']
+    for value in (manifest, restored):
+        if (type(value.get('version')) is not int or value['version'] != 1
+                or not matches(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}', value.get('label'))
+                or not matches(r'[0-9]+', value.get('system_id'))
+                or not matches(r'blobs/[a-f0-9]{32}\.tar\.gpg', value.get('blob'))
+                or not matches(r'[a-f0-9]{64}', value.get('sha256'))
+                or type(value.get('size')) is not int or value['size'] <= 0):
+            raise ValueError('Encrypted backup manifest is invalid')
+    completed = epoch(manifest.get('completed_at'))
+    if (job.get('status') != 'passed' or job.get('phase') != 'retention' or job.get('monitoring') == 'failed'
+            or not matches(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z', job.get('backup'))
+            or job['backup'] != manifest.get('label')
+            or not epoch(job.get('started_at')) <= epoch(manifest.get('started_at')) <= completed <= now
+            or now - completed >= 86400):
+        raise ValueError('The latest successful verified backup must be less than 24 hours old')
+    if (report.get('status') != 'passed' or report.get('scope') != 'database_restore'
+            or report.get('backup') != restored['label']
+            or restored['system_id'] != manifest['system_id']
+            or not epoch(restored.get('started_at')) <= epoch(restored.get('completed_at'))
+            <= epoch(report.get('started_at')) <= now
+            or epoch(report.get('replayed_transaction_time')) > now):
+        raise ValueError('Restore report does not verify a backup from the same database system')
+    for field, maximum in (('rpo_seconds', 300), ('database_rto_seconds', 3600)):
+        value = report.get(field)
+        if type(value) not in (int, float) or not 0 <= value <= maximum:
+            raise ValueError('Restore report exceeds the database recovery limits')
+    tables = report.get('tables')
+    if not isinstance(tables, dict) or set(tables) != {'users', 'orders', 'invoices'} or any(
+        not isinstance(table, dict) or type(table.get('count')) is not int or table['count'] < 0
+        or not matches(r'[a-f0-9]{64}', table.get('sha256')) for table in tables.values()
+    ):
+        raise ValueError('Restore report is missing verified table fingerprints')
+    return {'backup_age_seconds': round(now - completed, 3), 'rpo_seconds': report['rpo_seconds'],
+            'database_rto_seconds': report['database_rto_seconds'], 'sha256': digests}
+
+
+def verify_release_receipts(index_path, path, fingerprint, version, sha):
+    data, digests = receipt_bundle(index_path, path, fingerprint, ('deployment', 'summary'), ('album',))
+    job, summary = data['deployment'], data['summary']
+    identity = {'version': version, 'commit': sha}
+    if (job.get('phase') != 'completed' or any(job.get(key) != value for key, value in identity.items())
+            or job.get('live_release') != identity or not 0 < epoch(job.get('completed_at')) <= time.time()):
+        raise ValueError('Deployment receipt does not confirm this staging release')
+    metadata, text = runpy.run_path(str(ROOT / 'deploy/staging/notify-release.py'))['release_details'](ROOT, sha)
+    if metadata != identity:
+        raise ValueError('The release notes checkout does not match the staged receipt')
+
+    def confirmed(receipt):
+        return (receipt.get('status') == 'sent' and receipt.get('chat_id') == RELEASE_CHAT_ID
+                and all(receipt.get(key) == value for key, value in identity.items()))
+
+    message_id = summary.get('message_id')
+    if (not confirmed(summary) or type(message_id) is not int or message_id <= 0
+            or summary.get('text_sha256') != hashlib.sha256(text.encode()).hexdigest()):
+        raise ValueError('Telegram summary receipt does not confirm this release and its exact notes')
+    images = job.get('screenshots')
+    if (not isinstance(images, list) or len(images) > 10
+            or not all(matches(r'[a-f0-9]{64}\.png', name) for name in images) or len(set(images)) != len(images)):
+        raise ValueError('Deployment receipt has an invalid screenshot selection')
+    album = data.get('album')
+    message_ids = []
+    if album is not None:
+        message_ids = album.get('message_ids')
+        group = album.get('media_group_id')
+        if (not images or not confirmed(album) or album.get('photo_sha256') != [name[:-4] for name in images]
+                or not isinstance(message_ids, list) or len(message_ids) != len(images)
+                or any(type(value) is not int or value <= 0 for value in message_ids)
+                or len(set(message_ids)) != len(images) or message_id in message_ids
+                or (len(images) > 1 and (not isinstance(group, str) or not group))):
+            raise ValueError('Telegram image receipt does not confirm one release album')
+    elif images:
+        warning = job.get('screenshot_warning')
+        if (not isinstance(warning, dict) or type(warning.get('exit_code')) is not int
+                or warning['exit_code'] == 0 or not isinstance(warning.get('message'), str)
+                or not warning['message']):
+            raise ValueError('A screenshot receipt is required for the queued images')
+    return {'summary_message_id': message_id, 'image_message_ids': message_ids,
+            'album_unconfirmed': bool(images and not album), 'sha256': digests}
 
 
 def main():
@@ -134,7 +262,7 @@ def main():
         if not re.fullmatch(r'[a-f0-9]{40}', sha) or version != '0.9.0':
             raise ValueError('Use the immutable v0.9.0 first-launch candidate')
         command('Launch board', sys.executable, 'kanban/scripts/board.py', 'ready', '--release', version)
-        hashes = index_receipts(args.receipt_index, sha)
+        paths, hashes = index_receipts(args.receipt_index, sha)
         ci_url = verify_workflow(args.ci_run, '.github/workflows/ci.yml', sha)
         verify_ci_checks(args.ci_run)
         browser_url = verify_workflow(args.browser_run, '.github/workflows/browser-nightly.yml', sha)
@@ -144,6 +272,10 @@ def main():
                     '--promotion', '--report', str(directory / 'quarantine.json'))
             counts = verify_browser_rollup(args.browser_run, directory)
         verify_staging(version, sha)
+        backup = verify_backup_receipts(args.receipt_index, paths['backup_and_restore'],
+                                        hashes['backup_and_restore'], time.time())
+        release = verify_release_receipts(args.receipt_index, paths['staging_and_telegram'],
+                                          hashes['staging_and_telegram'], version, sha)
     except ValueError as error:
         # JSON parse errors can include arbitrary input. Report a fixed failure for them.
         message = ('Invalid verification response or receipt JSON'
@@ -156,7 +288,8 @@ def main():
         return 1
     print(json.dumps({'status': 'ready_for_owner_review', 'version': version, 'candidate_sha': sha,
                       'ci': ci_url, 'browser': browser_url, 'browser_counts': counts,
-                      'operational_receipt_sha256': hashes}, indent=2))
+                      'operational_receipt_sha256': hashes, 'verified_backup': backup,
+                      'verified_staging_and_telegram': release}, indent=2))
     return 0
 
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T23:37:10+00:00",
+  "updated": "2026-11-11T23:45:55+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -6924,7 +6924,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6944,7 +6945,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7064,6 +7065,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -10416,7 +10425,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10428,7 +10438,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10581,6 +10591,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -15633,7 +15651,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15645,7 +15664,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15729,6 +15748,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -15787,7 +15814,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15799,7 +15827,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15883,6 +15911,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -17240,7 +17276,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Bind the checked v0.9.0 receipt index, image and backup readbacks and owner authorization to the approved canary provisioning and ingress adapter. The guarded traffic ramp and operator receipt already pass isolated rehearsals.",
+        "Validate the final v0.9.0 staging, Telegram, daily backup and database exercise receipts with the promotion check. Bind that checked report, actual image and off-server backup readbacks, core-service recovery and owner authorization to the approved canary provisioning and ingress adapter. The guarded traffic ramp and operator receipt already pass isolated rehearsals.",
         "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks."
       ],
       "owner": null,
@@ -17274,10 +17310,13 @@
           "deploy/production/guarded-rollout.py",
           "deploy/production/rollout-observer.py",
           "deploy/production/test_guarded_rollout.py",
-          "deploy/production/test_rollout_observer.py"
+          "deploy/production/test_rollout_observer.py",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py"
         ],
         "batches": [
-          "release-0.6-rollout-latency-and-readonly-smoke"
+          "release-0.6-rollout-latency-and-readonly-smoke",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": null
       }
@@ -24490,7 +24529,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-release-markers",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24511,7 +24551,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -24737,6 +24777,14 @@
                 "docs/operations/backup/postgresql-restore-runbook.md"
               ],
               "scope": "Documents the optional protected textfile exporter integration and live failure receipt. Existing database recovery and retention commands and targets are preserved."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -26100,7 +26148,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -26128,7 +26177,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             }
           ],
           "checks": [
@@ -26216,6 +26265,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -560241,7 +560298,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -560263,11 +560321,11 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "98fe7f515fc7f4ffc4e9129fef0d3a57ba12ed0e72f52a1662ce2ce1838ffdb8"
+              "sha256": "3f9bab7e21af8bebe85157cca7ecfff397eabb817b0c033c2593f7863af791ff"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -560397,6 +560455,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -560689,7 +560756,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -560711,15 +560779,15 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "deploy/production/test_check_promotion.py",
-              "sha256": "98fe7f515fc7f4ffc4e9129fef0d3a57ba12ed0e72f52a1662ce2ce1838ffdb8"
+              "sha256": "3f9bab7e21af8bebe85157cca7ecfff397eabb817b0c033c2593f7863af791ff"
             },
             {
               "path": "kanban/scripts/board.py",
@@ -560903,6 +560971,16 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/check-promotion.py",
+                "deploy/production/test_check_promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -561008,7 +561086,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
           "release-0.6-grafana-release-markers",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -561019,7 +561098,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -561164,6 +561243,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents optional long-term metrics retention and full UTC-month coverage after archive activation. Existing operational targets, alert budgets and primary scrape and rule definitions are preserved. Native Prometheus checks verified scope, historical samples and restart recovery."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -561396,7 +561483,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -561417,7 +561505,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -561544,6 +561632,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -561584,7 +561680,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -561605,7 +561702,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -561732,6 +561829,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -565198,7 +565303,8 @@
           "release-0.6-journey-budget-burndown",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-grafana-release-markers",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565222,7 +565328,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -565336,6 +565442,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents optional long-term metrics retention and full UTC-month coverage after archive activation. Existing operational targets, alert budgets and primary scrape and rule definitions are preserved. Native Prometheus checks verified scope, historical samples and restart recovery."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -571706,7 +571820,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -571754,7 +571869,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -571808,6 +571923,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -572058,7 +572181,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -572106,7 +572230,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -572234,6 +572358,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -572898,7 +573030,8 @@
         "batches": [
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -572918,7 +573051,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -572960,6 +573093,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -573051,7 +573192,8 @@
         "batches": [
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -573071,7 +573213,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -573113,6 +573255,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -573150,7 +573300,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-promotion-receipt-binding"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -573170,7 +573321,7 @@
             },
             {
               "path": "deploy/production/check-promotion.py",
-              "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+              "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
             },
             {
               "path": "docs/security/security-verification.md",
@@ -573212,6 +573363,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-promotion-receipt-binding",
+              "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+              "paths": [
+                "deploy/production/check-promotion.py"
+              ],
+              "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
             }
           ]
         }
@@ -864519,7 +864678,8 @@
           "release-0.6-grafana-release-markers",
           "release-0.6-hosted-quarterly-storage-recovery",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-promotion-receipt-binding"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -864540,7 +864700,10 @@
         },
         "changed_paths": [
           ".github/workflows/ci.yml",
-          "scripts/install-ci-pdf-renderer.sh"
+          "scripts/install-ci-pdf-renderer.sh",
+          "deploy/production/README.md",
+          "deploy/production/check-promotion.py",
+          "deploy/production/test_check_promotion.py"
         ]
       }
     },
@@ -864596,7 +864759,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-prometheus-metric-retention",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-promotion-receipt-binding"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -993411,6 +993575,78 @@
           "sha256": "4f437251d3cd2ef950bb83132d93c21837ac643d6a63327b997ab133ea3bf0f5"
         }
       ]
+    },
+    "release-0.6-promotion-receipt-binding": {
+      "batch": "release-0.6-promotion-receipt-binding",
+      "base_commit": "a3fa304860102ff28087c0345464941d1e002d05",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/check-promotion.py",
+        "deploy/production/test_check_promotion.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "d1574c5df88f6c2371397102812fc5514327509ff798b80056bb3e3fae26aba0"
+        },
+        {
+          "path": "deploy/production/test_check_promotion.py",
+          "sha256": "3f9bab7e21af8bebe85157cca7ecfff397eabb817b0c033c2593f7863af791ff"
+        },
+        {
+          "path": "deploy/staging/notify-release.py",
+          "sha256": "c3c1c6983777d6395cb8ba03fe96aaf9739ea3d6d1ac6abc92239cb9df9ebf46"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "8b320a8c80071becbc69172114dec585ccc2bfdf3fe5c2da7e3e0a9e90612479"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "08e2ba0e74a74111a75c9fff5ec568aa596b1cab14461f4ccb4685c55c4103fd"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "6d58774171678959d71eefdcd36bd42d32ad4911a2d5482c84d551708858fd38"
+        }
+      ],
+      "checks": [
+        "The promotion check now validates the native daily backup and restore exercise results and their encrypted manifests. It enforces a successful backup less than 24 hours old, same-system restore provenance, table fingerprints, 300-second RPO and 3600-second database RTO. It also requires exact completed staging deployment and confirmed Persian summary receipts and validates ordered image hashes and the grouped Telegram message receipt when present.",
+        "Nine focused promotion tests passed. Markdown format and Git whitespace passed. The read-only checker replayed the actual archived v0.5.0 deployment at dae51e34b4e54625dfe8b5d2b9747bc23e5c5b3c, matched Telegram summary 97 and grouped messages 98 and 99, and rehashed both actual queued screenshots.",
+        "Backup receipt checks used fixtures. The prior isolated backup rehearsals remain separately recorded. Final production-equivalent off-server and core-service recovery readbacks, independent receipt review, the exact v0.9.0 candidate, and owner authorization remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-receipt-binding",
+      "historical_release_readback_sha256": "a010c96783c0e7044ca83ae023bf86bccbd3d373ba1516d6803e6ab685e0f146"
     }
   },
   "historical_improvements": [

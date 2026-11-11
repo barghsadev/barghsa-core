@@ -63,12 +63,29 @@ Keep `receipt-index.json` in the protected approval package. Set `candidate_sha`
 | `release_notes_and_on_call`    | Completed release notes, monitoring links and on-call coverage.                            |
 | `staging_and_telegram`         | Exact staging deployment readback and confirmed Telegram release receipts.                 |
 
+Use JSON indexes for `backup_and_restore` and `staging_and_telegram`. The paths
+inside both indexes are relative to the same protected approval package.
+
+- Under `backup_and_restore`, point `backup_job` to the latest successful daily
+  job result, `backup_manifest` to its off-server encrypted manifest,
+  `restore_report` to the verified database exercise result, and `restore_manifest`
+  to the manifest used in that exercise. The check enforces backup age under
+  24 hours, a matching database system, verified table fingerprints, and the
+  measured database RPO and RTO limits. Keep the core-service rehearsal and
+  independent source evidence with the approval package.
+- Under `staging_and_telegram`, point `deployment` to the completed staging
+  queue `job.json`, `summary` to the confirmed release-worker message receipt,
+  and `album` to its image receipt when available. The check matches the exact
+  candidate, channel, Persian notes and queued image hashes. If the queue
+  recorded an optional image failure, keep the warning and resolve any unknown
+  Telegram delivery through the [staging runbook](../staging/README.md).
+
 ```sh
 python3 deploy/production/check-promotion.py --ci-run "$CI_RUN" \
   --browser-run "$BROWSER_RUN" --receipt-index /protected/release-evidence/receipt-index.json
 ```
 
-The report records the SHA-256 of each evidence file. Review the underlying receipts and collect explicit owner authorization for the version, commit and production target before deployment.
+The report records the SHA-256 of each evidence file and the checked backup and Telegram details. Review the underlying receipts and collect explicit owner authorization for the version, commit and production target before deployment.
 
 ## Guarded traffic rollout
 
