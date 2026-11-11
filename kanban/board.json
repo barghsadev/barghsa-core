@@ -9918,7 +9918,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10014,6 +10014,14 @@
                 "deploy/production/compose.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -14606,7 +14614,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -14634,6 +14642,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -14698,7 +14714,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -14726,6 +14742,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -15858,11 +15882,12 @@
         "story": "01-platform-infrastructure.md#spec-67a5e8a8c05f"
       },
       "requirement": "- **T-05.04.02:** Create production promotion workflow with canary/gradual rollout\n  - **Notes:** Trigger: manual approval after staging gate passes. Steps: check backup age (<24h) and restore-test status → run release-candidate E2E across required browsers → run DAST (OWASP ZAP) smoke → performance smoke (compare p95 latency against budget) → verify migration plan → verify rollback/roll-forward plan → verify feature flag/kill-switch exists for high-risk changes → deploy to canary (one replica, no production traffic) → automated smoke test on canary → if canary passes, gradual rollout (10% → 50% → 100%) with SLO/error monitoring → halt/rollback on error spike or reconciliation mismatch.\n  - **Dependencies:** T-05.04.01, S-05.02\n  - **Complexity:** XL",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Bind the checked v0.9.0 receipt index, image and backup readbacks and owner authorization to the approved canary provisioning and ingress adapter. The guarded traffic ramp and operator receipt already pass isolated rehearsals.",
+        "Verify migration, rollback/roll-forward and high-risk controls, run the approved candidate rehearsal against real monitoring, and record live canary and restoration readbacks."
       ],
       "owner": null,
       "depends_on": [],
@@ -15890,9 +15915,16 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "deploy/production/README.md",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_guarded_rollout.py",
+          "deploy/production/test_rollout_observer.py"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-rollout-latency-and-readonly-smoke"
+        ],
         "current_acceptance": null
       }
     },
@@ -15907,11 +15939,12 @@
         "story": "01-platform-infrastructure.md#spec-67a5e8a8c05f"
       },
       "requirement": "- **T-05.04.03:** Implement post-deploy smoke tests and SLO comparison\n  - **Notes:** After production deployment, run a set of non-destructive automated smoke tests: login as test user, view dashboard, check wallet balance (read-only), verify health endpoint. Compare p95 latency, error rate, and SLO burn rate against pre-deployment baseline. Alert if significant degradation detected. Publish comparison report.\n  - **Dependencies:** T-05.04.02\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify a fresh sign-in and rendered dashboard using the authorized synthetic account on the exact candidate. The guarded observer currently accepts an existing protected customer session and verifies dashboard context and wallet reads.",
+        "Provide protected production-equivalent telemetry, approved p95 thresholds and an on-call route. Verify the actual comparison report and alert receipt for a controlled regression on the approved topology."
       ],
       "owner": null,
       "depends_on": [],
@@ -15939,9 +15972,16 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "deploy/production/README.md",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_guarded_rollout.py",
+          "deploy/production/test_rollout_observer.py"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-rollout-latency-and-readonly-smoke"
+        ],
         "current_acceptance": null
       }
     },
@@ -22655,7 +22695,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -22738,6 +22778,14 @@
                 "docker-compose.prod.yml"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -23921,7 +23969,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             }
           ],
           "checks": [
@@ -23960,6 +24008,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -548006,7 +548062,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -548109,6 +548165,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -548216,7 +548280,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -548280,6 +548344,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -555783,7 +555855,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "e4f0bafd799a157779caa62adc72c7fc5153bde78ad4155151b056e88c953bdf"
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -555854,6 +555926,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+              "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
             }
           ]
         }
@@ -843519,7 +843599,8 @@
           "release-0.6-analytics-consent-boundary",
           "release-0.6-environment-indicator",
           "release-0.6-scheduled-browser-fixture-contracts",
-          "release-0.6-dev-restart-and-preflight-refs"
+          "release-0.6-dev-restart-and-preflight-refs",
+          "release-0.6-rollout-latency-and-readonly-smoke"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -966338,6 +966419,95 @@
         "release-readiness#R-03.02",
         "release-readiness#R-04.01",
         "release-readiness#R-04.02"
+      ]
+    },
+    "release-0.6-rollout-latency-and-readonly-smoke": {
+      "batch": "release-0.6-rollout-latency-and-readonly-smoke",
+      "base_commit": "2cdc70c59e671a0f52aa63d410dce6dba030d7fe",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.04.02",
+        "01-platform-infrastructure.md#T-05.04.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_guarded_rollout.py",
+        "deploy/production/test_rollout_observer.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "792048c3612f903532c5ed1d033be96fcfa60c9642f179ed66aa688ac9aff385"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "467cf2db0e9472431e05af30f961d6abccb18e429d3f4500f101a70ada3d4fa9"
+        },
+        {
+          "path": "deploy/production/test_rollout_observer.py",
+          "sha256": "7115397bc929b0a5987ff312171ba8b0966150cbde19f4dd39c606d3c4beac0d"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "5d3321f6c1f9e513be8b4370d32a668d821bf9191be81fb389ce2428b94ac29e"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard.controller.ts",
+          "sha256": "e6cc7add939c33abfd75683fd81ac21d68cb63a1eceeccf938fa572920e2a729"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+        },
+        {
+          "path": "deploy/production/check-promotion.py",
+          "sha256": "509c389f5eac3e9eaef7f1e626785c4506fac67e8640d78a504e575aefaff996"
+        }
+      ],
+      "checks": [
+        "The observer now verifies the authenticated synthetic customer, dashboard context and wallet permission before reading that profile’s IRR balance. The protected receipt stores smoke booleans. It excludes the balance, session, profile response and monitoring credential.",
+        "For the candidate and baseline, the observer uses the same scoped per-target scrape window for API counts, 5xx ratio and cumulative histogram deltas. It requires every configured bucket, matching count and +Inf samples, continuity and monotonic deltas. The percentile is conservatively bounded by the smallest finite bucket containing 95 percent of requests. The guard enforces both the approved absolute limit and the permitted increase over the baseline.",
+        "Twenty-nine rollout and promotion tests passed, including missing and inconsistent histograms, a foreign dashboard profile, invalid wallet data, p95-only halt and rollback, and existing error, security, finance and receipt assertions. The observer’s 11 finite bucket boundaries and both new GET paths match current API source.",
+        "The real observer and guarded-rollout entry points were run together against local HTTP fixtures. The 10→50→100 sequence passed with matching p95, dashboard and wallet evidence. An unbounded candidate p95 after 100 percent triggered the same guard to restore and verify weight 0. The exercise used isolated fixtures and made no deployment or provider request."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rollout-latency.Y1AG8yLs",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rollout-latency.Y1AG8yLs/test.log",
+          "sha256": "3d4234a45bec232f32bc04790533b39211b39023c67490fd990dcf7517ae586f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rollout-latency.Y1AG8yLs/ramp-proof.json",
+          "sha256": "94f6682ad72e9472f759043044465bb6722cf037634bc6bee9af339080fe4cf9"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rollout-latency.Y1AG8yLs/api-contract.log",
+          "sha256": "fca7c6f91aaba7f1c14c44e947d62f371a1c6ba45668810279ea15d060b2ec3f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/rollout-latency.Y1AG8yLs/format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ],
+      "reused_source_bindings": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.17.03.01"
       ]
     }
   },

@@ -31,9 +31,10 @@ def plan(now=100):
             'hook_timeout_seconds': 2, 'baseline_max_age_seconds': 60,
             'observation_max_age_seconds': 10, 'max_http_error_ratio': 0.15,
             'max_http_error_increase': 0.05, 'max_slo_burn': 2,
+            'max_api_p95_seconds': 0.5, 'max_api_p95_increase_seconds': 0.1,
         },
         'baseline': {'scope': SCOPE, 'revision': PREVIOUS, 'observed_at': now - 1,
-                     'window_start': now - 3, 'attempts': 100, 'failures': 2,
+                     'window_start': now - 3, 'attempts': 100, 'failures': 2, 'p95_upper_seconds': 0.25,
                      'journeys': {service: {'attempts': 100, 'failures': 1}
                                   for service in rollout.SERVICES}},
         'route': ['/usr/bin/false'],
@@ -44,8 +45,8 @@ def plan(now=100):
 def sample():
     return {
         'candidate_weight': 5, 'observed_at': 100, 'window_start': 98,
-        'smoke': dict.fromkeys(('health', *rollout.SERVICES), True),
-        'api': {'attempts': 100, 'failures': 2},
+        'smoke': dict.fromkeys(rollout.SMOKE_CHECKS, True),
+        'api': {'attempts': 100, 'failures': 2, 'p95_upper_seconds': 0.25},
         'journeys': {service: {'attempts': 100, 'failures': 0} for service in rollout.SERVICES},
         'critical_wallet_drift': 0, 'security_alerts': 0,
     }
@@ -64,6 +65,8 @@ class ObservationsTest(unittest.TestCase):
         self.assertTrue(ready)
         self.assertEqual(details['api'], {'attempts': 100, 'failures': 2})
         self.assertEqual(details['baseline_http_error_ratio'], 0.02)
+        self.assertEqual(details['baseline_api_p95_upper_seconds'], 0.25)
+        self.assertEqual(details['api_p95_upper_seconds'], 0.25)
         self.assertEqual(details['journey_burn'], dict.fromkeys(rollout.SERVICES, 0))
         self.assertEqual(details['baseline_journey_burn'], dict.fromkeys(rollout.SERVICES, 2))
         self.assertNotIn('SYNTHETIC_SECRET', json.dumps(details))
@@ -98,6 +101,17 @@ class ObservationsTest(unittest.TestCase):
             with self.subTest(reason=reason), self.assertRaisesRegex(rollout.RolloutError, reason):
                 self.evaluate({**sample(), **changes})
 
+    def test_latency_only_failure_blocks_advancement(self):
+        for bound, reason in (
+            (None, 'api_latency_unavailable'),
+            (1, 'api_p95_budget'),
+            (0.5, 'api_p95_increase'),
+        ):
+            value = sample()
+            value['api']['p95_upper_seconds'] = bound
+            with self.subTest(reason=reason), self.assertRaisesRegex(rollout.RolloutError, reason):
+                self.evaluate(value)
+
     def test_each_journey_needs_its_own_volume_and_window(self):
         value = sample()
         value['journeys']['saving']['attempts'] = 9
@@ -117,6 +131,7 @@ class ObservationsTest(unittest.TestCase):
             ({'baseline': {**value['baseline'], 'observed_at': 1}}, 'baseline_unavailable'),
             ({'baseline': {**value['baseline'], 'revision': CANDIDATE}}, 'baseline_unavailable'),
             ({'baseline': {**value['baseline'], 'window_start': 99}}, 'baseline_unavailable'),
+            ({'baseline': {**value['baseline'], 'p95_upper_seconds': None}}, 'baseline_latency_unavailable'),
             ({'baseline': {**value['baseline'], 'journeys': {}}}, 'baseline_journeys_unavailable'),
         ):
             with self.subTest(reason=reason), self.assertRaisesRegex(rollout.RolloutError, reason):
@@ -180,8 +195,8 @@ else:
     weight = request["candidate_weight"]
     assert weight == state["weight"]
     result.update(candidate_weight=weight, observed_at=time.time(), window_start=request["window_start"],
-                  smoke=dict.fromkeys(("health", "electricity", "saving", "solar", "consultation"), True),
-                  api={"attempts": 100, "failures": 2}, critical_wallet_drift=0, security_alerts=0,
+                  smoke=dict.fromkeys(("health", "dashboard", "wallet", "electricity", "saving", "solar", "consultation"), True),
+                  api={"attempts": 100, "failures": 2, "p95_upper_seconds": 0.25}, critical_wallet_drift=0, security_alerts=0,
                   journeys={name: {"attempts": 100, "failures": 0}
                             for name in ("electricity", "saving", "solar", "consultation")})
     if fault == "smoke_before_traffic":
@@ -194,6 +209,8 @@ else:
         result["scope"] = {"environment": "elsewhere", "database": "core"}
     if weight == 100 and fault == "security_at_full_traffic":
         result["security_alerts"] = 1
+    if weight == 100 and fault == "latency_at_full_traffic":
+        result["api"]["p95_upper_seconds"] = 0.5
 print(json.dumps(result))
 '''
 
@@ -234,6 +251,15 @@ class IsolatedRolloutTest(unittest.TestCase):
         self.assertEqual(status, 2)
         self.assertEqual(state, {'weight': 0, 'changes': [5, 100, 0]})
         self.assertEqual(events[-2]['reason'], 'security_alerts')
+        self.assertEqual(events[-1]['event'], 'rolled_back')
+
+    def test_latency_regression_restores_previous_after_full_traffic(self):
+        status, state, events = self.run_fixture('latency_at_full_traffic')
+        self.assertEqual(status, 2)
+        self.assertEqual(state, {'weight': 0, 'changes': [5, 100, 0]})
+        self.assertEqual(events[-2]['reason'], 'api_p95_increase')
+        self.assertEqual(events[-2]['observed'], 0.5)
+        self.assertEqual(events[-2]['baseline'], 0.25)
         self.assertEqual(events[-1]['event'], 'rolled_back')
 
     def test_missing_volume_stops_at_first_stage_deadline(self):

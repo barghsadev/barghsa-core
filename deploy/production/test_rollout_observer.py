@@ -20,6 +20,8 @@ SERVICES = {
     '/api/solar/requests': ('solar', 'requests', 'id'),
     '/api/consultations/requests': ('consultation', 'requests', 'id'),
 }
+BUCKETS = ('0.005', '0.01', '0.025', '0.05', '0.1', '0.25', '0.5', '1', '2', '5', '10', '+Inf')
+WALLET_FIXTURE_BALANCE = '8901234567890123456'
 
 
 def revision(letter):
@@ -65,11 +67,24 @@ class Rehearsal:
                 api_sha = 'c' * 40 if job == 'candidate-api' and self.fault == 'mixed-release' else commit
                 add('barghsa_api_release_info', [1] * 13, revision=api_sha)
                 add('node_process_start_time_seconds', [42] * 13)
-                if self.fault == 'reset':
-                    add('barghsa_http_request_duration_seconds_count', [10] * 12 + [1], status='200')
-                else:
-                    add('barghsa_http_request_duration_seconds_count', range(0, 260, 20), status='200')
-                    add('barghsa_http_request_duration_seconds_count', range(13), status='503')
+                for status, counts, latency in (
+                    ('200', [10] * 12 + [1] if self.fault == 'reset' else range(0, 260, 20), 0.25),
+                    ('503', range(13), 0.5),
+                ):
+                    labels = {'route': '/api/example', 'method': 'GET', 'status': status}
+                    add('barghsa_http_request_duration_seconds_count', counts, **labels)
+                    if 'barghsa_http_request_duration_seconds_bucket' not in query:
+                        continue
+                    for bound in BUCKETS:
+                        if bound == '0.25' and self.fault == 'missing-bucket':
+                            continue
+                        minimum = float('inf') if self.fault == 'tail-latency' else latency
+                        if self.fault == 'nonmonotonic-latency' and bound == '0.05':
+                            minimum = 0
+                        values = counts if float(bound) >= minimum else [0] * 13
+                        if self.fault == 'wrong-total-bucket' and bound == '+Inf':
+                            values = [0] * 13
+                        add('barghsa_http_request_duration_seconds_bucket', values, le=bound, **labels)
             if job.endswith('-probes'):
                 add('process_start_time_seconds', [43] * 13)
                 for service, _, _ in SERVICES.values():
@@ -131,6 +146,12 @@ class Rehearsal:
                     profile = fixture_id(999) if fixture.fault == 'foreign-profile' else fixture.config['profile_id']
                     payload = {'userId': fixture.config['user_id'], 'isStaff': False,
                                'operatingContext': 'customer', 'navigation': {'profileId': profile}}
+                elif path == '/api/dashboard/context':
+                    profile = fixture_id(999) if fixture.fault == 'foreign-dashboard' else fixture.config['profile_id']
+                    payload = {'profile': {'id': profile}, 'access': {'wallet': True}}
+                elif path == '/api/wallet/' + fixture.config['profile_id']:
+                    payload = {'currency': 'IRR',
+                               'balance': 'unavailable' if fixture.fault == 'invalid-wallet' else WALLET_FIXTURE_BALANCE}
                 else:
                     service, collection, key = SERVICES[path]
                     assert params['profileId'] == [fixture.config['profile_id']]
@@ -175,6 +196,7 @@ class ObserverTest(unittest.TestCase):
             args += ['--baseline-seconds', '8']
         result = subprocess.run(args, input=json.dumps(request), text=True, capture_output=True, timeout=10)
         self.assertNotIn('rehearsal-private', result.stdout + result.stderr)
+        self.assertNotIn(WALLET_FIXTURE_BALANCE, result.stdout + result.stderr)
         return result
 
     def test_counts_exact_scoped_scraped_deltas_for_both_releases(self):
@@ -184,7 +206,10 @@ class ObserverTest(unittest.TestCase):
         self.assertEqual(data['scope'], SCOPE)
         self.assertEqual(data['candidate'], revision('a'))
         self.assertTrue(all(data['smoke'].values()))
+        self.assertTrue(data['smoke']['dashboard'])
+        self.assertTrue(data['smoke']['wallet'])
         self.assertEqual(data['api']['attempts'], 21 * data['api']['failures'])
+        self.assertEqual(data['api']['p95_upper_seconds'], 0.25)
         self.assertGreaterEqual(data['api']['failures'], 5)
         self.assertEqual(len(data['journeys']), 4)
         for counts in data['journeys'].values():
@@ -193,6 +218,7 @@ class ObserverTest(unittest.TestCase):
         self.assertEqual(previous.returncode, 0, previous.stderr)
         baseline = json.loads(previous.stdout)
         self.assertEqual(baseline['revision'], revision('b'))
+        self.assertEqual(baseline['p95_upper_seconds'], 0.25)
         self.assertGreaterEqual(baseline['failures'], 5)
         self.assertEqual(set(baseline['journeys']), set(data['journeys']))
 
@@ -202,6 +228,24 @@ class ObserverTest(unittest.TestCase):
                 result = self.observe(fault)
                 self.assertEqual(result.returncode, 0, result.stderr)
                 self.assertFalse(json.loads(result.stdout)['smoke']['saving'])
+
+    def test_dashboard_and_wallet_smoke_are_profile_scoped(self):
+        result = self.observe('foreign-dashboard')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        data = json.loads(result.stdout)
+        self.assertFalse(data['smoke']['dashboard'])
+        self.assertFalse(data['smoke']['wallet'])
+        self.assertFalse(any(path.startswith('/api/wallet/') for _, path, _, _ in self.rehearsal.requests))
+        result = self.observe('invalid-wallet')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        data = json.loads(result.stdout)
+        self.assertTrue(data['smoke']['dashboard'])
+        self.assertFalse(data['smoke']['wallet'])
+
+    def test_tail_latency_has_no_finite_p95_bound(self):
+        result = self.observe('tail-latency')
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIsNone(json.loads(result.stdout)['api']['p95_upper_seconds'])
 
     def test_session_is_never_forwarded_or_sent_to_public_probes(self):
         result = self.observe('redirect')
@@ -214,6 +258,9 @@ class ObserverTest(unittest.TestCase):
         for fault, reason in (
             ('mixed-release', 'monitoring_release_mismatch'),
             ('reset', 'counter_gap_or_reset'),
+            ('missing-bucket', 'incomplete_http_latency_histogram'),
+            ('wrong-total-bucket', 'incomplete_http_latency_histogram'),
+            ('nonmonotonic-latency', 'nonmonotonic_http_latency_histogram'),
             ('missing-solar', 'journey_counters_missing'),
             ('scrape-down', 'incomplete_monitoring_coverage'),
             ('stale-security-rule', 'security_rule_unhealthy'),

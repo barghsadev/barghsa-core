@@ -110,6 +110,11 @@ new receipt path for each invocation. The plan contains these fields.
 Both adapters read a JSON request on stdin and write one JSON object on stdout.
 Use `scope`, `candidate`, `previous` and `candidate_weight` to bind the
 responses to one rollout. Keep credentials in protected configuration.
+The baseline also includes `p95_upper_seconds` from the previous API pool.
+Set the approved absolute budget in `max_api_p95_seconds` and permitted
+increase in `max_api_p95_increase_seconds` in the rollout policy. These
+limits apply to the scoped pool's end-to-end API distribution. The
+operation-specific performance checks use their own [service budgets](../../docs/operations/service-objectives.md).
 
 - The route request includes `action` of `read` or `set` and
   `candidate_weight`. Before `set`, verify readiness of the previous pool.
@@ -121,11 +126,12 @@ responses to one rollout. Keep credentials in protected configuration.
 - The observation request includes `candidate_weight` and `window_start`
   in UTC epoch seconds. Return the actual `window_start`, `observed_at`,
   `smoke`, `api`, `journeys`, `critical_wallet_drift` and `security_alerts`.
-  In `smoke`, return a boolean for `health` and for each of `electricity`,
-  `saving`, `solar` and `consultation`. Check the candidate's release
+  In `smoke`, return a boolean for `health`, `dashboard`, `wallet` and for
+  each of `electricity`, `saving`, `solar` and `consultation`. Check the candidate's release
   identity, liveness and readiness and use authorized synthetic journeys.
-  Count completed candidate API requests and server errors in `api` as
-  `attempts` and `failures`. In `journeys`, return those two counts for
+  Return the completed candidate API requests and server errors as
+  `attempts` and `failures` in `api`, with `p95_upper_seconds` for latency.
+  In `journeys`, return the two counts for
   each service using eligible authenticated attempts, including timeouts and
   dependency failures. Take drift and security counts from their current
   authoritative monitoring sources. During zero-traffic preflight, only
@@ -147,8 +153,11 @@ operator ownership of that JSON file and mode `0600`. It contains:
   `electricity`, `saving`, `solar` and `consultation` to a known order or
   request ID from that synthetic customer profile. Put the fixture on the
   first page returned by each service. Use a current ordinary customer
-  session from the candidate environment. The observer makes read-only
-  calls and checks the active profile and the four expected records.
+  session from the candidate environment. The observer reads the active
+  dashboard context, checks wallet access, validates the profile's IRR
+  balance response and verifies the four expected records. The receipt
+  includes pass or fail signals. Keep the fresh sign-in receipt from the
+  synthetic login journey with the operational evidence.
 - `prometheus_origin`, `prometheus_token` for a read-only bearer credential,
   `wallet_job` for the reconciliation worker and `targets` mapping each of
   the five job names to its full expected list of Prometheus `instance`
@@ -168,7 +177,7 @@ four services and both `success` and `failure`. Feed those counters from
 eligible authenticated attempts on the associated release, including timed
 out or failed critical dependencies. Verify collector coverage against the
 [service objectives](../../docs/operations/service-objectives.md).
-The four read-only smoke calls check the synthetic account independently of
+The authenticated smoke reads check the synthetic account independently of
 that availability input.
 
 The observer computes counter deltas from complete scrapes within the
@@ -176,13 +185,18 @@ window. Restarts, scope or target changes, missing journey series, scrape
 gaps and stale rule evaluations make the observation unavailable. The HTTP
 ratio uses completed API responses and their 5xx subset. A lack of measured
 traffic leaves the ramp waiting for volume.
+The latency comparison uses cumulative bucket deltas over the same measured
+window. The smallest finite bucket containing 95% of the requests bounds the
+p95. Missing buckets or inconsistent counts invalidate the observation. An
+unbounded p95 halts the ramp once the minimum sample count is met.
 
 Before changing traffic, collect the previous release baseline with
 `python3 rollout-observer.py --config /protected/observer.json --baseline-seconds N`.
 Use a comparable workload and enough time to meet the plan's minimum
 observation and sample thresholds. Review the output and put it in the plan's
-`baseline` field. The receipt reports previous and candidate journey burn
-and HTTP error ratios for each measured stage.
+`baseline` field. The receipt reports previous and candidate journey burn,
+HTTP error ratios and p95 upper bounds for each measured stage. A latency
+regression after traffic moves triggers restoration of the previous pool.
 
 The protected JSONL receipt records requested and verified traffic, the
 observation counts and any halt or rollback. Exit status 0 means the final

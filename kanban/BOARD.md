@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1215 | Accepted with unchanged source bindings. |
-| verify | 87 | Existing work may be complete; inspect evidence before building. |
-| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 85 | Existing work may be complete; inspect evidence before building. |
+| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1037,8 +1037,8 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.03.04` | blocked | Earlier deferred | Configure security scans in PR gate |
 | `01-platform-infrastructure.md#T-05.03.05` | done | Earlier deferred | Implement coverage threshold enforcement |
 | `01-platform-infrastructure.md#T-05.04.01` | partial | Earlier deferred | Create staging gate CI workflow |
-| `01-platform-infrastructure.md#T-05.04.02` | verify | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
-| `01-platform-infrastructure.md#T-05.04.03` | verify | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
+| `01-platform-infrastructure.md#T-05.04.02` | partial | Earlier deferred | Create production promotion workflow with canary/gradual rollout |
+| `01-platform-infrastructure.md#T-05.04.03` | partial | Earlier deferred | Implement post-deploy smoke tests and SLO comparison |
 | `01-platform-infrastructure.md#T-05.04.04` | partial | Earlier deferred | Create runbooks for rollback scenarios |
 | `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
 | `01-platform-infrastructure.md#T-05.05.02` | partial | Earlier deferred | Create weekly load/performance regression test |

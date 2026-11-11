@@ -17,6 +17,7 @@ import time
 
 MAX_JSON_BYTES = 65536
 SERVICES = ('electricity', 'saving', 'solar', 'consultation')
+SMOKE_CHECKS = ('health', 'dashboard', 'wallet', *SERVICES)
 ERROR_BUDGET = {'pilot': 0.005, 'commercial': 0.001}
 
 
@@ -102,9 +103,11 @@ def validate_plan(plan, now):
     for field, high in (
         ('max_http_error_ratio', 1),
         ('max_http_error_increase', 1),
+        ('max_api_p95_increase_seconds', 10),
         ('max_slo_burn', 1000),
     ):
         require(finite(policy.get(field), 0, high), 'invalid_' + field)
+    require(finite(policy.get('max_api_p95_seconds'), 0.005, 10), 'invalid_max_api_p95_seconds')
     baseline = plan.get('baseline')
     require(
         traffic_counts(baseline) and baseline.get('revision') == plan['previous']
@@ -115,6 +118,7 @@ def validate_plan(plan, now):
         and baseline['attempts'] >= policy['minimum_api_samples'],
         'baseline_unavailable',
     )
+    require(finite(baseline.get('p95_upper_seconds'), 0.005, 10), 'baseline_latency_unavailable')
     require(journey_counts(baseline.get('journeys')) and all(
         counts['attempts'] >= policy['minimum_journey_samples'] for counts in baseline['journeys'].values()
     ), 'baseline_journeys_unavailable')
@@ -187,7 +191,7 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
     observed_at = sample['observed_at']
     require(finite(sample.get('window_start'), since, observed_at), 'observation_window_mismatch')
     smoke = sample.get('smoke')
-    require(isinstance(smoke, dict) and set(smoke) == {'health', *SERVICES}, 'smoke_unavailable')
+    require(isinstance(smoke, dict) and set(smoke) == set(SMOKE_CHECKS), 'smoke_unavailable')
     for name, passed in smoke.items():
         require(type(passed) is bool, 'smoke_unavailable')
         require(passed, 'smoke_failed_' + name)
@@ -209,6 +213,8 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
     require(traffic_counts(api), 'api_counts_unavailable')
     require(journey_counts(journeys), 'journey_counts_unavailable')
     baseline = plan['baseline']['failures'] / plan['baseline']['attempts']
+    baseline_p95 = plan['baseline']['p95_upper_seconds']
+    candidate_p95 = api.get('p95_upper_seconds')
     error_ratio = api['failures'] / api['attempts'] if api['attempts'] else None
     burn = {}
     api_ready = api['attempts'] >= policy['minimum_api_samples']
@@ -218,6 +224,11 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
                 observed=error_ratio, limit=policy['max_http_error_ratio'])
         require(error_ratio - baseline <= policy['max_http_error_increase'], 'http_error_increase',
                 observed=error_ratio, baseline=baseline, limit=policy['max_http_error_increase'])
+        require(finite(candidate_p95, 0.005, 10), 'api_latency_unavailable')
+        require(candidate_p95 <= policy['max_api_p95_seconds'], 'api_p95_budget',
+                observed=candidate_p95, baseline=baseline_p95, limit=policy['max_api_p95_seconds'])
+        require(candidate_p95 <= baseline_p95 + policy['max_api_p95_increase_seconds'], 'api_p95_increase',
+                observed=candidate_p95, baseline=baseline_p95, limit=policy['max_api_p95_increase_seconds'])
     budget = ERROR_BUDGET[policy['availability_tier']]
     previous_journeys = plan['baseline']['journeys']
     previous_burn = {
@@ -238,6 +249,8 @@ def observe(plan, weight, since, *, preflight=False, timeout=None):
         'api': {'attempts': api['attempts'], 'failures': api['failures']},
         'baseline_http_error_ratio': baseline,
         'http_error_ratio': error_ratio,
+        'baseline_api_p95_upper_seconds': baseline_p95,
+        'api_p95_upper_seconds': candidate_p95 if finite(candidate_p95, 0.005, 10) else None,
         'journeys': {
             service: {'attempts': counts['attempts'], 'failures': counts['failures']}
             for service, counts in journeys.items()

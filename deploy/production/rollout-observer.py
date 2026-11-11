@@ -25,6 +25,9 @@ JOURNEYS = {
 SECURITY_RULES = {'PaymentCallbackAnomaly', 'PaymentIdempotencyConflict'}
 RELEASE = 'barghsa_api_release_info'
 HTTP = 'barghsa_http_request_duration_seconds_count'
+HTTP_BUCKET = 'barghsa_http_request_duration_seconds_bucket'
+# Match the API histogram so incomplete or incompatible scrapes cannot pass.
+HTTP_LIMITS = (0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, math.inf)
 JOURNEY = 'barghsa_rollout_journey_attempts_total'
 DRIFT = 'reconciliation_wallets_critical_drift'
 API_START = 'node_process_start_time_seconds'
@@ -99,7 +102,7 @@ def release_ready(reader, commit):
 
 
 def smoke(reader, previous, config):
-    results = dict.fromkeys(('health', *JOURNEYS), False)
+    results = dict.fromkeys(('health', 'dashboard', 'wallet', *JOURNEYS), False)
     results['health'] = (release_ready(reader, config['candidate']['revision']['commit'])
                          and release_ready(previous, config['previous']['revision']['commit']))
     if not results['health']:
@@ -109,6 +112,14 @@ def smoke(reader, previous, config):
             or user.get('operatingContext') != 'customer'
             or user.get('navigation', {}).get('profileId') != config['profile_id']):
         return results
+    dashboard = reader.get('/api/dashboard/context', authenticated=True)
+    results['dashboard'] = (dashboard.get('profile', {}).get('id') == config['profile_id']
+                            and dashboard.get('access', {}).get('wallet') is True)
+    if results['dashboard']:
+        wallet = reader.get('/api/wallet/' + config['profile_id'], authenticated=True)
+        balance = wallet.get('balance')
+        results['wallet'] = (wallet.get('currency') == 'IRR' and isinstance(balance, str)
+                             and bool(re.fullmatch(r'0|[1-9][0-9]{0,18}', balance)))
     for name, (path, collection, key) in JOURNEYS.items():
         rows = reader.get(path, {'profileId': config['profile_id']}, authenticated=True).get(collection)
         results[name] = isinstance(rows, list) and any(
@@ -179,18 +190,48 @@ def counter(values, times, since, until, *, initialized):
     return int(values[window[-1]] - values.get(window[0], 0))
 
 
+def http_traffic(metrics, times, since, until):
+    histograms = {}
+    for key, values in metrics.get(HTTP_BUCKET, {}).items():
+        labels = dict(key)
+        limit = float(labels.pop('le'))
+        labels['__name__'] = HTTP
+        histogram = histograms.setdefault(tuple(sorted(labels.items())), {})
+        require(limit in HTTP_LIMITS and limit not in histogram, 'invalid_http_latency_bucket')
+        histogram[limit] = values
+
+    counts = metrics.get(HTTP, {})
+    require(counts.keys() == histograms.keys(), 'http_latency_series_mismatch')
+    attempts = failures = 0
+    totals = [0] * len(HTTP_LIMITS)
+    for key, values in counts.items():
+        status = dict(key).get('status', '')
+        require(re.fullmatch(r'[1-5][0-9]{2}', status), 'invalid_http_status_label')
+        count = counter(values, times, since, until, initialized=False)
+        attempts += count
+        if status.startswith('5'):
+            failures += count
+        histogram = histograms[key]
+        require(histogram.keys() == set(HTTP_LIMITS) and histogram[math.inf] == values
+                and all(samples.keys() == values.keys() for samples in histogram.values()),
+                'incomplete_http_latency_histogram')
+        deltas = [counter(histogram[limit], times, since, until, initialized=False)
+                  for limit in HTTP_LIMITS]
+        require(all(a <= b for a, b in zip(deltas, deltas[1:])), 'nonmonotonic_http_latency_histogram')
+        totals = [total + delta for total, delta in zip(totals, deltas)]
+    return attempts, failures, totals
+
+
 def traffic(targets, selected, since, until):
     api = {'attempts': 0, 'failures': 0}
+    histogram = [0] * len(HTTP_LIMITS)
     journeys = {name: {'attempts': 0, 'failures': 0} for name in JOURNEYS}
     for (job, _), (metrics, times) in targets.items():
         if job == selected['api_job']:
-            for key, values in metrics.get(HTTP, {}).items():
-                status = dict(key).get('status', '')
-                require(re.fullmatch(r'[1-5][0-9]{2}', status), 'invalid_http_status_label')
-                count = counter(values, times, since, until, initialized=False)
-                api['attempts'] += count
-                if status.startswith('5'):
-                    api['failures'] += count
+            attempts, failures, buckets = http_traffic(metrics, times, since, until)
+            api['attempts'] += attempts
+            api['failures'] += failures
+            histogram = [total + count for total, count in zip(histogram, buckets)]
         if job == selected['journey_job']:
             stable(metrics, PROBE_START, times)
             expected = {(service, outcome) for service in JOURNEYS for outcome in ('success', 'failure')}
@@ -205,6 +246,12 @@ def traffic(targets, selected, since, until):
                 if outcome == 'failure':
                     journeys[service]['failures'] += count
             require(not expected, 'journey_counters_missing')
+    rank = (95 * api['attempts'] + 99) // 100
+    # A finite upper bucket bounds the percentile without assuming a within-bucket distribution.
+    api['p95_upper_seconds'] = next(
+        (limit for limit, count in zip(HTTP_LIMITS[:-1], histogram) if rank and count >= rank),
+        None,
+    )
     return api, journeys
 
 
@@ -220,6 +267,8 @@ def monitoring(reader, config, selected, since, *, baseline=False, measure=True)
     require(0 <= now - since <= 7200, 'invalid_observation_window')
     selected_jobs = {job: config['targets'][job] for job in jobs}
     names = ('up', RELEASE, HTTP, JOURNEY, DRIFT, API_START, PROBE_START)
+    if measure:
+        names += (HTTP_BUCKET,)
     selectors = [f'{key}={json.dumps(value)}' for key, value in scope.items()]
     selectors += ['job=~' + json.dumps('|'.join(job.replace('.', r'\.') for job in sorted(jobs))),
                   '__name__=~' + json.dumps('|'.join(names))]
