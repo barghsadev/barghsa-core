@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T19:53:08+00:00",
+  "updated": "2026-11-11T20:03:37+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -15451,7 +15451,8 @@
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": null
       }
@@ -305619,7 +305620,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -305671,7 +305673,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -306549,6 +306551,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -306698,7 +306708,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -306750,7 +306761,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -307628,6 +307639,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -307777,7 +307796,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -307829,7 +307849,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -308707,6 +308727,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -308856,7 +308884,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -308908,7 +308937,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -309786,6 +309815,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -309935,7 +309972,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -309987,7 +310025,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -310865,6 +310903,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -311014,7 +311060,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -311066,7 +311113,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -311944,6 +311991,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -312093,7 +312148,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -312145,7 +312201,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -313023,6 +313079,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -313172,7 +313236,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -313224,7 +313289,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -314102,6 +314167,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -314251,7 +314324,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -314303,7 +314377,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -315181,6 +315255,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -315330,7 +315412,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -315382,7 +315465,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -316260,6 +316343,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -316409,7 +316500,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -316461,7 +316553,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -317339,6 +317431,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -317488,7 +317588,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -317540,7 +317641,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -318418,6 +318519,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -318568,7 +318677,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -318620,7 +318730,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -319498,6 +319608,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -319647,7 +319765,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -319699,7 +319818,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -320577,6 +320696,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -320726,7 +320853,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -320778,7 +320906,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -321656,6 +321784,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -321805,7 +321941,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -321857,7 +321994,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -322735,6 +322872,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -322884,7 +323029,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-electricity-foundations-with-approved-settings-reconciliation-and-repaired-safety-precision-gaps",
@@ -322936,7 +323082,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -323814,6 +323960,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -323956,7 +324110,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -323968,7 +324123,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -324739,6 +324894,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -324896,7 +325059,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -324908,7 +325072,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -325679,6 +325843,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -325836,7 +326008,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -325848,7 +326021,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -326619,6 +326792,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -327599,7 +327780,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -327611,7 +327793,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -328382,6 +328564,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -328540,7 +328730,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -328552,7 +328743,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -329323,6 +329514,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -329480,7 +329679,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -329492,7 +329692,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -330263,6 +330463,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -330420,7 +330628,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -330432,7 +330641,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -331203,6 +331412,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -331360,7 +331577,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -331372,7 +331590,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -332143,6 +332361,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -332301,7 +332527,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -332313,7 +332540,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -333084,6 +333311,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -333241,7 +333476,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -333253,7 +333489,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -334024,6 +334260,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -334181,7 +334425,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -334193,7 +334438,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -334964,6 +335209,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -335943,7 +336196,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -335955,7 +336209,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -336726,6 +336980,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -336883,7 +337145,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -336895,7 +337158,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -337666,6 +337929,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -337823,7 +338094,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -337835,7 +338107,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -338606,6 +338878,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -338763,7 +339043,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -338775,7 +339056,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -339546,6 +339827,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -339703,7 +339992,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -339715,7 +340005,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -340486,6 +340776,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -340643,7 +340941,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -340655,7 +340954,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -341426,6 +341725,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -341583,7 +341890,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -341595,7 +341903,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -342366,6 +342674,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -342523,7 +342839,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -342535,7 +342852,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -343306,6 +343623,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -343466,7 +343791,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -343478,7 +343804,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -344249,6 +344575,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -344406,7 +344740,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -344418,7 +344753,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -345189,6 +345524,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -345346,7 +345689,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "verified-existing-simple-electricity-flow-and-repaired-post-provider-authority",
@@ -345358,7 +345702,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data-http.integration.test.ts",
@@ -346129,6 +346473,14 @@
                 "apps/api/src/electricity/electricity-bill-data.service.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -544938,7 +545290,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-bill-electricity-caller"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -544958,7 +545311,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice.service.test.ts",
@@ -545045,6 +545398,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ]
         }
@@ -835835,7 +836196,7 @@
             },
             {
               "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
-              "sha256": "6078f0515256532d412e5c51d277e2d517c3976b114039e6b201326ed9d706dd"
+              "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.test.ts",
@@ -839472,6 +839833,14 @@
                 "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-bill-electricity-caller",
+              "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+              "paths": [
+                "apps/api/src/electricity/electricity-bill-data.test.ts"
+              ],
+              "scope": "The electricity fixture now explicitly configures the previously hardcoded threshold and cooldown and checks the instant before cooldown expiry. All other electricity assertions and application source are unchanged. The native transport test independently checks the five-failure default, rolling window and single admitted probe."
             }
           ],
           "presentation_renewals": [
@@ -839913,7 +840282,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-payment-transport-circuit",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-bill-electricity-caller"
         ]
       }
     },
@@ -978874,6 +979244,112 @@
         {
           "file": "main-rules.json",
           "sha256": "f7ee051384e99e5f7886d9100e0634a0f79d49ee4a71286b4429b68b93da75a8"
+        }
+      ]
+    },
+    "release-0.6-bill-electricity-caller": {
+      "batch": "release-0.6-bill-electricity-caller",
+      "base_commit": "1039f3a6c5bbf5d80eee70351478ba53969ac9dc",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.03",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "03-core-business.md#T-03.05.01.01",
+        "03-core-business.md#T-03.05.01.02",
+        "03-core-business.md#T-03.05.01.03",
+        "03-core-business.md#T-03.05.01.05",
+        "03-core-business.md#T-03.05.01.06",
+        "03-core-business.md#T-03.05.01.07",
+        "03-core-business.md#T-03.05.02.01",
+        "03-core-business.md#T-03.05.02.02",
+        "03-core-business.md#T-03.05.02.03",
+        "03-core-business.md#T-03.05.02.04",
+        "03-core-business.md#T-03.05.03.01",
+        "03-core-business.md#T-03.05.03.03",
+        "03-core-business.md#T-03.05.03.04",
+        "03-core-business.md#T-03.05.03.05",
+        "03-core-business.md#T-03.05.03.06",
+        "03-core-business.md#T-03.05.04.01",
+        "03-core-business.md#T-03.05.04.02",
+        "03-core-business.md#T-03.05.04.03",
+        "03-core-business.md#T-03.05.04.04",
+        "03-core-business.md#T-03.05.04.05",
+        "03-core-business.md#T-03.05.04.06",
+        "03-core-business.md#T-03.05.04.07",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "release-readiness#R-02.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.test.ts",
+          "sha256": "c61f63e6a909d9d4ff2d2ca02d60eee8ab02df1354d327a22675008e6c5a83bd"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
+          "sha256": "2ab1751d88202437bb6a76eecc0dc24b5a1248fb200b3fbc2299b6e75217045a"
+        },
+        {
+          "path": "apps/api/src/provider-config/bill-provider-transport.test.ts",
+          "sha256": "15db288b125048b5aba30e543d2805843913fdef26b03321dae86c0efb060d7f"
+        },
+        {
+          "path": "apps/api/src/provider-config/bill-provider-transport.ts",
+          "sha256": "ce8b23196e93b73adcad69409af049c4abf3c3e2a64db3748eff41544cbb97c7"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.test.ts",
+          "sha256": "b322a3187afd09b8fe82f284b106eee5fb4df147c0b352addb429a20ca7a40af"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.test.ts",
+          "sha256": "da6ffd65839a3df2c85d9060717c73ed5ffedbc26b85f1a1b077856cafa196ff"
+        },
+        {
+          "path": "packages/shared/src/verification/circuit-breaker.ts",
+          "sha256": "dfa81af62c5efe5a04cc0f4a4b371314007f273e1da70186e19ea8922b559377"
+        }
+      ],
+      "checks": [
+        "GitHub preflight 43086513993 at d4ae258e passed 7975 API tests and failed the legacy electricity breaker fixture at its fourth request. The aggregate required check failed. The same assertion failed in the focused local run before the fix.",
+        "The test configures the original three-failure threshold and 30-second cooldown explicitly. It still asserts no request while the circuit is open, now also checks one millisecond before expiry, and asserts the first recovery response and subsequent read.",
+        "116 electricity, bill transport, generic circuit and payment tests passed. The transport suite includes real loopback HTTP and verifies the unchanged five failures in 60 seconds, 120-second cooldown and one admitted recovery probe.",
+        "Changed-file ESLint and Prettier passed. Unit-only verification extended the standard Vitest configuration and omitted the unused build and database startup for these four files."
+      ],
+      "limitations": [
+        "The original failed check remains recorded. Exact-SHA hosted preflight and live provider recovery are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-bill-electricity-caller",
+      "execution_receipts": [
+        {
+          "file": "hosted-43086513993-tests.log",
+          "sha256": "8e85e0413f0249bdbe9f35a1aabf614088d84615133906018d021cf23369b42a"
+        },
+        {
+          "file": "focused-before.log",
+          "sha256": "a034c5d052293d223b27437fabf86ef08898599ceed437aa2f607a9b58c0203a"
+        },
+        {
+          "file": "focused-after.log",
+          "sha256": "da78b5aec6f42e40d2f902c4bccbc6eb4ec58c5bc411409a7da71e6110a36bef"
+        },
+        {
+          "file": "vitest-unit.config.ts",
+          "sha256": "826ac4f97d6fbbdcba3793ae80268d979192808d43d199b172979f3755c5498f"
         }
       ]
     }

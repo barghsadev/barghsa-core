@@ -60,11 +60,14 @@ it('accepts valid hourly provider readings and surfaces authentication failure',
   await expect(provider.getHourlyConsumption('profile-1')).rejects.toThrow('auth_error');
 });
 
-it('fails fast after repeated provider errors and recovers after one successful probe', async () => {
+it('fails fast at the configured threshold and recovers after one successful probe', async () => {
   vi.useFakeTimers();
   vi.setSystemTime(new Date('2026-09-24T12:00:00Z'));
   vi.stubEnv('ELECTRICITY_BILL_DATA_URL', 'https://bills.example.com');
   vi.stubEnv('ELECTRICITY_BILL_DATA_TOKEN', 'test-token');
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_FAILURES', '3');
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_WINDOW_MS', '60000');
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_COOLDOWN_MS', '30000');
   const request = vi
     .fn()
     .mockResolvedValueOnce(new Response('', { status: 503 }))
@@ -87,7 +90,12 @@ it('fails fast after repeated provider errors and recovers after one successful 
   );
   expect(request).toHaveBeenCalledTimes(3);
 
-  vi.advanceTimersByTime(30_000);
+  vi.advanceTimersByTime(29_999);
+  await expect(provider.getHourlyConsumption('profile-1')).rejects.toThrow(
+    'Circuit breaker is OPEN'
+  );
+  expect(request).toHaveBeenCalledTimes(3);
+  vi.advanceTimersByTime(1);
   await expect(provider.getHourlyConsumption('profile-1')).resolves.toEqual([
     { hour: '2026-09-24T11:00:00Z', kwh: 3 },
   ]);
