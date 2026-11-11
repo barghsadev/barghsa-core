@@ -1,0 +1,19 @@
+name: Verify Grafana release annotation
+description: Publish one Grafana marker for a completed guarded rollout and verify its readback.
+inputs:
+  config:
+    description: Absolute path to the runner-owned Grafana annotation configuration.
+    required: true
+  receipt:
+    description: Absolute path to the completed guarded rollout receipt.
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        ANNOTATION_CONFIG: ${{ inputs.config }}
+        ROLLOUT_RECEIPT: ${{ inputs.receipt }}
+      run: |
+        python3 "$GITHUB_ACTION_PATH/../../../deploy/production/record-release-annotation.py" \
+          --config "$ANNOTATION_CONFIG" --receipt "$ROLLOUT_RECEIPT"

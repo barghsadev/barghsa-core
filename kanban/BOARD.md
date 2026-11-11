@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T23:12:41+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T23:20:29+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1230 | Accepted with unchanged source bindings. |
-| verify | 56 | Existing work may be complete; inspect evidence before building. |
-| partial | 74 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 54 | Existing work may be complete; inspect evidence before building. |
+| partial | 76 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1385,7 +1385,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.02.08` | done | Recorded batch work | Create Storage/Uploads dashboard: upload count, size distribution, scan state, malware count |
 | `06-security-testing-observability.md#T-06.14.02.09` | done | Recorded batch work | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate |
 | `06-security-testing-observability.md#T-06.14.02.10` | done | Recorded batch work | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate |
-| `06-security-testing-observability.md#T-06.14.02.11` | verify | Inventory needed | Add production release markers to all dashboards (annotation per deploy) |
+| `06-security-testing-observability.md#T-06.14.02.11` | partial | Recorded batch work | Add production release markers to all dashboards (annotation per deploy) |
 | `06-security-testing-observability.md#T-06.14.03.01` | verify | Inventory needed | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model |
 | `06-security-testing-observability.md#T-06.14.03.02` | verify | Inventory needed | Expose unit-cost metrics: cost per active profile, cost per order |
 | `06-security-testing-observability.md#T-06.14.03.03` | verify | Inventory needed | Configure alert on >20% monthly variance from budget per cost category |
@@ -1442,7 +1442,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.01.03` | verify | Inventory needed | Configure Tempo trace retention: 7 days ordinary, 30 days error/slow |
 | `06-security-testing-observability.md#T-06.18.01.04` | verify | Inventory needed | Ensure audit/security/financial evidence follows legal retention (10 years default) and cannot be shortened via operational settings |
 | `06-security-testing-observability.md#T-06.18.01.05` | verify | Inventory needed | Admin UI: view and change operational retention (with warning about audit retention) |
-| `06-security-testing-observability.md#T-06.18.02.01` | verify | Inventory needed | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |
+| `06-security-testing-observability.md#T-06.18.02.01` | partial | Recorded batch work | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |
 | `06-security-testing-observability.md#T-06.18.02.02` | partial | Recorded batch work | Configure Sentry release tracking: associate commits, tag errors with release version |
 | `06-security-testing-observability.md#T-06.18.02.03` | done | Recorded batch work | Include release marker in structured logs for correlation |
 | `06-security-testing-observability.md#T-06.18.02.04` | partial | Recorded batch work | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |

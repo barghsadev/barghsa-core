@@ -214,6 +214,45 @@ the ingress and reconcile the receipt before attempting another ramp. Use
 current production topology and telemetry in the launch rehearsal. The
 isolated tests use synthetic traffic and metrics.
 
+## Grafana deployment markers
+
+Run the Grafana annotation step after the guarded rollout completes. Check out
+the deployed commit on the approved ingress runner. Use the private Grafana
+organization for the target environment so all ten Barghsa dashboards show
+the same deployment marker. Each marker records the verified 100% traffic
+timestamp, version, commit, named owner, change summary and release notes link.
+
+Keep the annotation configuration owned by the runner with mode `0600`. Set
+`scope` to the rollout's environment and database object, `origin` to the
+private Grafana HTTPS origin, `token` to the organization annotation service
+account token, and `owner` and `summary` to the approved release notes values.
+Grant only the annotation creation and read permissions the Grafana edition
+supports. A loopback HTTP origin is available for an isolated rehearsal or
+an operator's trusted local forwarding session.
+
+```yaml
+- name: Publish and verify the Grafana marker
+  uses: ./.github/actions/grafana-release-annotation
+  with:
+    config: /protected/release-evidence/grafana-annotation.json
+    receipt: /protected/release-evidence/rollout-receipt.jsonl
+```
+
+For an operator-run rollout, execute the same step from the exact checkout.
+
+```sh
+python3 deploy/production/record-release-annotation.py \
+  --config /protected/release-evidence/grafana-annotation.json \
+  --receipt /protected/release-evidence/rollout-receipt.jsonl
+```
+
+Retain the printed annotation ID and the protected attempt state next to the
+rollout receipt. Reuse that directory when reconciling an uncertain outcome.
+The step reads Grafana back before confirming delivery and holds an uncertain
+write for operator review. Reconcile the marker with the Grafana operator
+before authorizing another attempt. An annotation failure needs separate
+monitoring follow-up after the completed rollout. [Grafana annotations API](https://grafana.com/docs/grafana/latest/developer-resources/api-reference/http-api/api-legacy/annotations/).
+
 ## Initial database seed
 
 After the owner approves initial provisioning, use the pinned app image and separate migration principal to migrate and seed a new database before starting the app services. Put only `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` in a root-owned `0600` bootstrap environment file. Keep the direct connection and CA in the existing migration configuration.

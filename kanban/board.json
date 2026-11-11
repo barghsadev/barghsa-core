@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T23:12:41+00:00",
+  "updated": "2026-11-11T23:20:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10415,7 +10415,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "packaged-and-source-seed-entry-with-tls-compose-rehearsal",
@@ -10427,7 +10428,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10572,6 +10573,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -15622,7 +15631,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15634,7 +15644,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15710,6 +15720,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -15767,7 +15785,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15779,7 +15798,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15855,6 +15874,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -24459,7 +24486,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24480,7 +24508,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -24690,6 +24718,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -26043,7 +26079,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -26071,7 +26108,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             }
           ],
           "checks": [
@@ -26151,6 +26188,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -92824,7 +92869,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -92840,7 +92886,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "056d622af91f2fe910f3d015df641b92460fc6acb0537c182b7d0bd95f46ae91"
+              "sha256": "a7a2851dcb47c066462d28be024942740f92582fbf98cddaf5c737a098e64ef3"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -92960,6 +93006,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-notifications-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -560523,7 +560577,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -560545,7 +560600,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -560729,6 +560784,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -560832,7 +560895,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -560843,7 +560907,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -560972,6 +561036,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -564957,7 +565029,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564965,7 +565038,7 @@
           "source_evidence": [
             {
               "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
-              "sha256": "f90eca29a20ad564d542e4502606b1be33511703859c8a641250a202f63f3e49"
+              "sha256": "007bc7bcbd23f6e2382fa41631b38aa18d1ad6252bb0321482f20e5a7bdab06a"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -564981,7 +565054,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -565078,6 +565151,15 @@
                 "deploy/monitoring/staging-dashboards.yml"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-executive-slo-dashboard.json",
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -565118,7 +565200,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -565154,7 +565237,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-api-health-dashboard.json",
-              "sha256": "04ecc1fd6f85b088e01befbf5b52a23d3f8ffe02e9c721604fd597ab22da789e"
+              "sha256": "bdad6bcd53ed25cb34b72c2caf585c91e251b56193c3290fd603f37ff95542ca"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -565273,6 +565356,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-api-health-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -565304,7 +565395,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-pool-dashboard",
@@ -565321,7 +565413,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
-              "sha256": "ff7c8f642d136b3389c175e562bd312bb0ceb1abe89d90673e7deb5b86ece1a1"
+              "sha256": "286ee842692118e57f57721be2726d7219bb0deeac01aac5a1d0998b638a4ccf"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -565376,6 +565468,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-postgresql-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -565413,7 +565513,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -565434,7 +565535,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "056d622af91f2fe910f3d015df641b92460fc6acb0537c182b7d0bd95f46ae91"
+              "sha256": "a7a2851dcb47c066462d28be024942740f92582fbf98cddaf5c737a098e64ef3"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -565558,6 +565659,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-notifications-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -565601,7 +565710,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565641,7 +565751,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-external-providers-dashboard.json",
-              "sha256": "23936116e7a4986b7730cabed87c608c04fc1fdd2e97695c531d71b068d0c38e"
+              "sha256": "2d2f755ea7b06052062a802f821f9834a77dffac78f9ebf8abdca8aca20fcb2a"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -565726,6 +565836,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-external-providers-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -565768,7 +565886,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565816,7 +565935,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-authentication-security-dashboard.json",
-              "sha256": "514570062483935ed8a20396d0407cce2462a9ca7db94229b92fae593a96f178"
+              "sha256": "d9a197f35e4ce996e36f94ee46099dda184ccee4358bb65aa8b0fafe823479db"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -565898,6 +566017,14 @@
                 "deploy/monitoring/staging-dashboards.yml"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-authentication-security-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -565934,7 +566061,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-process-error-reporting",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565962,7 +566090,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-finance-safety-dashboard.json",
-              "sha256": "93343745712ed6893d6dd15f83cc6faa78a5b1bac5acff6cedef503a2b89dbb2"
+              "sha256": "c0c05888e475a78a7db1a48e53751096217a1c3d28d8a79aaed127ce944232f0"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -566039,6 +566167,14 @@
                 "deploy/monitoring/staging-dashboards.yml"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-finance-safety-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -566089,7 +566225,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -566137,7 +566274,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-storage-uploads-dashboard.json",
-              "sha256": "6807ba8545954a45ad1b8244e8334ed491bf9fdd46c85da77cf1e8875e25fadc"
+              "sha256": "88b38d83cb6480d266a369aad27e9b54e98ee20ea7ea9575865bffed5d888ba2"
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
@@ -566269,6 +566406,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-storage-uploads-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -566311,7 +566456,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -566351,7 +566497,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "056d622af91f2fe910f3d015df641b92460fc6acb0537c182b7d0bd95f46ae91"
+              "sha256": "a7a2851dcb47c066462d28be024942740f92582fbf98cddaf5c737a098e64ef3"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -566520,6 +566666,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-notifications-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -566551,7 +566705,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-budget-charge",
@@ -566593,7 +566748,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-ai-usage-dashboard.json",
-              "sha256": "f57551444afabb077e99e8c4ddd9c8c874ccecf4df2d082ca9d5c7ec3e2e764a"
+              "sha256": "752bad36a57bd0680c33880e541b4810b10a1a9adb7e65e477c64c668145b596"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -566654,6 +566809,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-ai-usage-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -566670,18 +566833,31 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.11 | Add production release markers to all dashboards (annotation per deploy) | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Provision the ten exact dashboards with a verified Grafana image in the target organization. Read one verified candidate deployment marker as a named operator in all ten dashboards."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/monitoring/grafana-ai-usage-dashboard.json",
+          "deploy/monitoring/grafana-api-health-dashboard.json",
+          "deploy/monitoring/grafana-authentication-security-dashboard.json",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/grafana-external-providers-dashboard.json",
+          "deploy/monitoring/grafana-finance-safety-dashboard.json",
+          "deploy/monitoring/grafana-notifications-dashboard.json",
+          "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "deploy/monitoring/grafana-storage-uploads-dashboard.json",
+          "deploy/monitoring/grafana-worker-health-dashboard.json"
+        ],
+        "batches": [
+          "release-0.6-grafana-release-markers"
+        ],
         "current_acceptance": null
       }
     },
@@ -571171,7 +571347,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "base_commit": "256a0d1c1a39dd062f03c8da851c88507c4e1d70",
@@ -571219,7 +571396,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -571265,6 +571442,14 @@
                 "deploy/production/test_rollout_observer.py"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope. Accepts native API and journey measurements from the same scrape within one pool and continues to require distinct pool and wallet targets, exact release, uninterrupted measurement and scoped outcomes. Both collector layouts and failure cases passed. Preserves existing assertions and adds same-pool native success, restarted API, missing outcome series and cross-pool job collision tests. All 11 observer tests passed."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -571514,7 +571699,8 @@
           "release-0.6-maintenance-health",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -571562,7 +571748,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "a38da5a19d54c0b1a85cf8bb4ebfe4db67d14f3cd2fc39d0092f6c6dc1de14fa"
+              "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -571682,6 +571868,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ]
         }
@@ -571940,18 +572134,25 @@
         "story": "06-security-testing-observability.md#spec-616d60ba27da"
       },
       "requirement": "| T-06.18.02.01 | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Wire the tested composite action after guarded-rollout success on the approved protected ingress runner. Verify the configured Grafana organization, service account and exact candidate marker receipt in a production-equivalent rehearsal."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          ".github/actions/grafana-release-annotation/action.yml",
+          "deploy/production/README.md",
+          "deploy/production/record-release-annotation.py",
+          "deploy/production/test_release_annotation.py"
+        ],
+        "batches": [
+          "release-0.6-grafana-release-markers"
+        ],
         "current_acceptance": null
       }
     },
@@ -572187,7 +572388,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-release-markers"
         ],
         "current_acceptance": null
       }
@@ -852329,7 +852531,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "056d622af91f2fe910f3d015df641b92460fc6acb0537c182b7d0bd95f46ae91"
+              "sha256": "a7a2851dcb47c066462d28be024942740f92582fbf98cddaf5c737a098e64ef3"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -854394,6 +854596,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-notifications-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ],
           "presentation_renewals": [
@@ -854785,7 +854995,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -856942,7 +857153,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
-              "sha256": "056d622af91f2fe910f3d015df641b92460fc6acb0537c182b7d0bd95f46ae91"
+              "sha256": "a7a2851dcb47c066462d28be024942740f92582fbf98cddaf5c737a098e64ef3"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -858897,6 +859108,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-grafana-release-markers",
+              "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+              "paths": [
+                "deploy/monitoring/grafana-notifications-dashboard.json"
+              ],
+              "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -859305,7 +859524,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-grafana-release-markers"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -863921,7 +864141,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-release-markers"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -992375,6 +992596,151 @@
         {
           "file": "scan-13.2.6/grafana-vulnerabilities.json",
           "sha256": "fb0ac40d2bfe512cd966cf3aa25a96d862acb5f561929fcacecf805307b4bcfe"
+        }
+      ]
+    },
+    "release-0.6-grafana-release-markers": {
+      "batch": "release-0.6-grafana-release-markers",
+      "base_commit": "33b4c22a643cb94c12c14b7489528db846905025",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.07",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.14.02.11",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.18.02.01",
+        "06-security-testing-observability.md#T-06.18.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/actions/grafana-release-annotation/action.yml",
+          "sha256": "1d6f2fbb15c68cac364f437e32db7da7b4d7a4880d4031933351e3e40bd89af0"
+        },
+        {
+          "path": "deploy/monitoring/grafana-ai-usage-dashboard.json",
+          "sha256": "752bad36a57bd0680c33880e541b4810b10a1a9adb7e65e477c64c668145b596"
+        },
+        {
+          "path": "deploy/monitoring/grafana-api-health-dashboard.json",
+          "sha256": "bdad6bcd53ed25cb34b72c2caf585c91e251b56193c3290fd603f37ff95542ca"
+        },
+        {
+          "path": "deploy/monitoring/grafana-authentication-security-dashboard.json",
+          "sha256": "d9a197f35e4ce996e36f94ee46099dda184ccee4358bb65aa8b0fafe823479db"
+        },
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "007bc7bcbd23f6e2382fa41631b38aa18d1ad6252bb0321482f20e5a7bdab06a"
+        },
+        {
+          "path": "deploy/monitoring/grafana-external-providers-dashboard.json",
+          "sha256": "2d2f755ea7b06052062a802f821f9834a77dffac78f9ebf8abdca8aca20fcb2a"
+        },
+        {
+          "path": "deploy/monitoring/grafana-finance-safety-dashboard.json",
+          "sha256": "c0c05888e475a78a7db1a48e53751096217a1c3d28d8a79aaed127ce944232f0"
+        },
+        {
+          "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+          "sha256": "a7a2851dcb47c066462d28be024942740f92582fbf98cddaf5c737a098e64ef3"
+        },
+        {
+          "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "sha256": "286ee842692118e57f57721be2726d7219bb0deeac01aac5a1d0998b638a4ccf"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
+          "sha256": "e3aea8746e93ac5d87433d4431ddd92a1225716139d8f2701e29dbccbc401a2b"
+        },
+        {
+          "path": "deploy/monitoring/grafana-storage-uploads-dashboard.json",
+          "sha256": "88b38d83cb6480d266a369aad27e9b54e98ee20ea7ea9575865bffed5d888ba2"
+        },
+        {
+          "path": "deploy/monitoring/grafana-worker-health-dashboard.json",
+          "sha256": "838c892e77a452fe665ea2d62713a458a23c1ecd3ede0f90e1ff5e5eb1d52feb"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "225b07614c4dc979f2c29ebb61a199d1fab8c2bec7f48bec9521f07fa143957e"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "792048c3612f903532c5ed1d033be96fcfa60c9642f179ed66aa688ac9aff385"
+        },
+        {
+          "path": "deploy/production/record-release-annotation.py",
+          "sha256": "935d20b3c4a2c21150dd5bdf913a51f449dfb74890efab9ce9fe320e5a8bd926"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "467cf2db0e9472431e05af30f961d6abccb18e429d3f4500f101a70ada3d4fa9"
+        },
+        {
+          "path": "deploy/production/test_release_annotation.py",
+          "sha256": "bb78a5057809115d244cba973612a5d27ce89417f295338a3f8bee3a3acdb7b6"
+        }
+      ],
+      "checks": [
+        "The reusable post-rollout CI step checks the exact committed version and notes, binds the scope and SHA to a completed 100% rollout receipt, and uses the verified traffic time. It requires protected files and an authenticated same-origin Grafana connection. Durable attempt state and exact GET readback prevent automatic duplicate posts.",
+        "Six focused loopback cases passed, including rejected incomplete and foreign receipts, protected configuration and no redirect forwarding, repeat delivery, committed response loss and a held unknown outcome. All 15 existing guarded rollout cases passed.",
+        "Native Grafana 13.3.1 with a fixture service account accepted the real CI action shell step after an actual isolated guarded rollout. Two invocations and all ten named Viewer dashboard queries returned the same single annotation ID. Anonymous dashboard reads returned 401. Only the release annotation query was added to each dashboard. Formatting and whitespace passed."
+      ],
+      "limitations": [
+        "The isolated native check does not approve Grafana 13.3.1 for deployment or execute the step on an approved hosted ingress runner. Live operator readback, target credentials and the production promotion wiring still need evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-grafana-release-markers",
+      "execution_receipts": [
+        {
+          "file": "native-proof.py",
+          "sha256": "158d8206d41a497ddcd5a539807286ef4c220e114300582aac3e1ef40b864ba2"
+        },
+        {
+          "file": "dashboard-readback.json",
+          "sha256": "5ef20775380128d48ccd34d8f99c41621c40c651688e07b5cb60020d377a4359"
+        },
+        {
+          "file": "grafana-fixture.log",
+          "sha256": "3a321c0f28deb3fccdd602fb50a88e5a241075ef53bf55cf1554ae1c3269892c"
+        },
+        {
+          "file": "targeted.log",
+          "sha256": "b79846004d11cbbd9a71f4f31e057159462c5523f43a9a4719c0a783bc5c925c"
+        },
+        {
+          "file": "format.log",
+          "sha256": "acca63de70a02470786cd9f5721c6aeee10b039918017f2a1ab9eb406228391f"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "2ac54159faff98ae7205bd74a6a51ec5a9ff2f58ce9046f2c12d794d5d86cc48"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "e88822905b51045c329cf96249d65fd429b93a59b203c4c297d7f11d7849ef97"
         }
       ]
     }

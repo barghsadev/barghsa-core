@@ -1,4 +1,24 @@
 {
+  "annotations": {
+    "list": [
+      {
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": false,
+        "iconColor": "rgba(255, 152, 48, 1)",
+        "name": "Barghsa releases",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": ["barghsa-release"],
+          "type": "tags"
+        }
+      }
+    ]
+  },
   "uid": "barghsa-storage-uploads",
   "title": "Barghsa Storage and Uploads",
   "description": "Verified uploads and scanner activity for the selected environment and database. Counts come from Prometheus observations, not a storage or security audit ledger.",
