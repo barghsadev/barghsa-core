@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:57:38+00:00",
+  "updated": "2026-11-11T23:06:05+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -24759,7 +24759,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-journey-slo-burn",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -24771,7 +24772,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -24899,6 +24900,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -556791,7 +556800,8 @@
           "release-0.6-postgresql-dashboard",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-journey-slo-burn",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "documented-performance-rehearsal-budget",
@@ -556812,7 +556822,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -556875,6 +556885,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -556913,7 +556931,8 @@
           "release-0.6-executive-slo-dashboard",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -556973,7 +556992,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             }
           ],
           "checks": [
@@ -557065,6 +557084,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -560687,7 +560714,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -560706,7 +560734,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -560819,6 +560847,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope. Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -564793,7 +564829,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564801,7 +564838,7 @@
           "source_evidence": [
             {
               "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
-              "sha256": "89d2f9bdd5b409798b5f179b8383029b0184a260491f7aea573c23f16170f393"
+              "sha256": "f90eca29a20ad564d542e4502606b1be33511703859c8a641250a202f63f3e49"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -564825,7 +564862,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             }
           ],
           "checks": [
@@ -564897,6 +564934,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents how to scrape the native counters with one API job per pool and the protected legacy separate collector option. The other deployment, security and recovery instructions retain their scope. Accepts native API and journey measurements from the same scrape within one pool and continues to require distinct pool and wallet targets, exact release, uninterrupted measurement and scoped outcomes. Both collector layouts and failure cases passed. Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "deploy/monitoring/grafana-executive-slo-dashboard.json",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds a per-service burn-down history using fresh paired five-minute samples and the selected UTC period start and target. The seven existing panels, their expressions and dashboard settings are identical. The exact new query passed Promtool and isolated Grafana and Prometheus readback. Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -564936,7 +564982,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -564988,7 +565035,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             }
           ],
           "checks": [
@@ -565083,6 +565130,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification. Adds revision-scoped counters for 33 matched authenticated customer methods and routes. Existing completed response histogram and release gauge assertions are preserved. Actual loopback HTTP requests verified count increments and exclusions. Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests. Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -566558,7 +566613,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -566566,7 +566622,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -566698,6 +566754,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -567091,7 +567155,8 @@
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-journey-slo-burn",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -567099,7 +567164,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "0766b56ce37ca60bb7109c7b1a4201958af6dcf153b3d8f9167e9895d077e577"
+              "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
             },
             {
               "path": "architecture.md",
@@ -567178,6 +567243,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents the exact measured scope, denominator and failures requiring independent evidence. Existing service targets and comparison procedure are preserved."
+            },
+            {
+              "batch": "release-0.6-journey-budget-burndown",
+              "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
             }
           ]
         }
@@ -567241,19 +567314,25 @@
         "story": "06-security-testing-observability.md#spec-f627e75f2527"
       },
       "requirement": "| T-06.15.02.03 | Implement error budget tracking dashboard with consumption rate and burn-down | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The dashboard shows the remaining budget for the selected period and two burn rates. Verify a historical remaining-budget view against the explicit burn-down requirement, then read it back with live candidate data from the native counters."
+        "Use a verified immutable Grafana image in staging and confirm the live panel shows fresh scoped native samples for all four services, correct pilot budget values and gaps in missing coverage.",
+        "Confirm the selected reporting period has retained observations before recording the full UTC-month burn-down. Staging currently retains 15 days."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/test_executive_slo_dashboard.py",
+          "docs/operations/service-objectives.md"
+        ],
         "batches": [
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": null
       }
@@ -571896,7 +571975,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-executive-slo-dashboard"
+          "release-0.6-executive-slo-dashboard",
+          "release-0.6-journey-budget-burndown"
         ],
         "current_acceptance": null
       }
@@ -863611,7 +863691,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-journey-budget-burndown"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -991776,6 +991857,85 @@
         {
           "file": "typecheck.log",
           "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        }
+      ]
+    },
+    "release-0.6-journey-budget-burndown": {
+      "batch": "release-0.6-journey-budget-burndown",
+      "base_commit": "4a70f0facb37a65328c059af8e239e8c2bcc1c3e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.15.02.03",
+        "06-security-testing-observability.md#T-06.18.02.04",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "f90eca29a20ad564d542e4502606b1be33511703859c8a641250a202f63f3e49"
+        },
+        {
+          "path": "deploy/monitoring/test_executive_slo_dashboard.py",
+          "sha256": "1d28fdddaf9d5e13bc5f5c949ffa08c7bccc28a0fd9cac047d9916756b88b74d"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "11ae504dc927bb1ce3f3d8471fc25b8136646c01bc9865627d7720e27b1d3ccb"
+        }
+      ],
+      "checks": [
+        "The new range panel accumulates paired five-minute recorded rates from the selected start for each service. Both recent samples are required. Its plotted points leave missing intervals visible, show a zero threshold and preserve negative exhausted budgets.",
+        "Promtool 3.12.0 passed ten exact query evaluations at both targets, with offset cutoff, missing and stale outcomes, idle or unmatched services, and other scope or recording-window exclusions.",
+        "An isolated Grafana 13.3.1 provisioned the exact eight-panel source and denied anonymous readback. Its native datasource request to the fixture Prometheus returned all five expected values and the missing-outcome gap. The existing seven panels and dashboard settings are identical. Compose verified the exact read-only mount. Formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The isolated Grafana fixture did not approve that image for staging. The live dashboards and native candidate metrics still need verified staging evidence.",
+        "Staging Prometheus retains 15 days. A full monthly reading needs data for that entire selected period. Missing intervals remain outside the observed denominator."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-journey-budget-burndown",
+      "execution_receipts": [
+        {
+          "file": "native-readback.py",
+          "sha256": "0d61726bfc81fd6f788059b4b5080f324dd1a8c88d5fdfaff795c9fefc6af039"
+        },
+        {
+          "file": "readback.json",
+          "sha256": "c3880b1d563f94efffeed087a0fab9559839de4917d4c58f0b2b729a3cdce216"
+        },
+        {
+          "file": "prometheus-fixture.log",
+          "sha256": "155b0c3b724ad82852fcf0456c53bcc8e0611d4a878cef0a55b6905ca5a1cc97"
+        },
+        {
+          "file": "grafana-fixture.log",
+          "sha256": "8890c6988cbc96f2b9456c33c27516aa9ee2b55d57bbc1e50ce48a48ea7fb98e"
+        },
+        {
+          "file": "promql.log",
+          "sha256": "c2c4c2f6f6094c69c5eeb415475976846450e0533f3b64e5537fdad2227e48f6"
+        },
+        {
+          "file": "format.log",
+          "sha256": "d61d464a4b5e5d4e894f3a832abb6d69149aa063245cd5600d5a00be6474fb74"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "abf20181d56685c090bb1bae1965289702a257394f978261de703a60777f021b"
+        },
+        {
+          "file": "compose.log",
+          "sha256": "db0ffade72dffb36eda28e200905acea5802d28fcbe3a07a88b8c14a8e713ced"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "d04be9c973f54335fe597d50567ec8fd190b8977f1111692834882a7072f2c05"
         }
       ]
     }
