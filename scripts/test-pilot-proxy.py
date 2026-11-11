@@ -4,6 +4,7 @@ from pathlib import Path
 import argparse
 import json
 import subprocess
+import sys
 import tempfile
 import time
 import uuid
@@ -20,14 +21,28 @@ def run(*args):
 
 backend='barghsa-proxy-backend-'+uuid.uuid4().hex[:10]
 proxy='barghsa-proxy-'+uuid.uuid4().hex[:10]
+
+def start_proxy(mounts):
+    run('docker','run','--rm',*mounts,'nginx:1.27-alpine','nginx','-t')
+    run('docker','run','-d','--name',proxy,'--network',f'container:{backend}',*mounts,'nginx:1.27-alpine')
+    for _ in range(100):
+        probe=subprocess.run(['docker','exec',backend,'node','-e',
+            "require('net').connect(443,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))"],capture_output=True)
+        if probe.returncode==0: return
+        time.sleep(.1)
+    raise RuntimeError('Proxy did not start')
+
 try:
     with tempfile.TemporaryDirectory(prefix='barghsa-proxy-cert-') as directory:
         cert=Path(directory)
         run('openssl','req','-x509','-newkey','rsa:2048','-nodes','-days','1','-subj','/CN=barghsa.example.com',
+            '-addext','subjectAltName=DNS:barghsa.example.com,DNS:stg.barghsa.com',
             '-keyout',str(cert/'key.pem'),'-out',str(cert/'cert.pem'))
         run('docker','run','-d','--name',backend,'--network','none',
             '-v',f'{root}/scripts/proxy-fixture.mjs:/fixture.mjs:ro',
             '-v',f'{root}/scripts/check-{profile}-proxy.mjs:/check.mjs:ro',
+            '-v',f'{root}/scripts/check-proxy-tls.mjs:/tls-check.mjs:ro',
+            '-v',f'{cert}/cert.pem:/fixture-ca.pem:ro',
             'node:22-bookworm','node','/fixture.mjs')
         for _ in range(100):
             if 'ready' in run('docker','logs',backend): break
@@ -42,15 +57,7 @@ try:
                 '-v',f'{root}/deploy/staging/nginx-s3-proxy.conf:/etc/nginx/snippets/barghsa-s3-proxy.conf:ro',
                 '-v',f'{cert}/cert.pem:/etc/letsencrypt/live/stg.barghsa.com/fullchain.pem:ro',
                 '-v',f'{cert}/key.pem:/etc/letsencrypt/live/stg.barghsa.com/privkey.pem:ro']
-        run('docker','run','--rm',*mounts,'nginx:1.27-alpine','nginx','-t')
-        run('docker','run','-d','--name',proxy,'--network',f'container:{backend}',*mounts,'nginx:1.27-alpine')
-        # A failed config/start remains an error rather than a skipped probe.
-        for _ in range(100):
-            probe=subprocess.run(['docker','exec',backend,'node','-e',
-                "require('net').connect(443,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))"],capture_output=True)
-            if probe.returncode==0: break
-            time.sleep(.1)
-        else: raise RuntimeError('Proxy did not start')
+        start_proxy(mounts)
         print(run('docker','exec',backend,'node','/check.mjs'),end='')
         run('docker', 'exec', backend, 'node', '-e', '''
 const assert = require('node:assert/strict');
@@ -88,6 +95,25 @@ function request(method, extraHeaders) {
         if not {('PATCH', '/api', '200'), ('POST', '/api', '413')} <= outcomes:
             raise RuntimeError('Proxy logs omitted a privacy probe outcome')
         print('PASS private proxy logs retain success and request-rejection outcomes')
+        hostname = 'barghsa.example.com' if profile == 'pilot' else 'stg.barghsa.com'
+        print(run('docker', 'exec', backend, 'node', '/tls-check.mjs', hostname, 'default'), end='')
+        if profile == 'pilot':
+            renderer = [sys.executable, str(root / 'deploy/pilot/render-nginx.py')]
+            default = subprocess.run(renderer, env={}, check=True, capture_output=True).stdout
+            if default != (root / 'deploy/pilot/nginx.conf').read_bytes():
+                raise RuntimeError('Default rendering changed the pilot configuration')
+            environment = {'BARGHSA_PILOT_HSTS': 'true', 'BARGHSA_DEPLOYMENT_ENV': 'staging'}
+            rejected = subprocess.run(renderer, env=environment, capture_output=True)
+            if rejected.returncode != 1 or rejected.stdout or b'requires the production' not in rejected.stderr:
+                raise RuntimeError('Renderer did not reject staging HSTS')
+            environment['BARGHSA_DEPLOYMENT_ENV'] = 'production'
+            rendered = cert / 'nginx-production-test.conf'
+            with rendered.open('wb') as output:
+                subprocess.run(renderer, env=environment, check=True, stdout=output)
+            run('docker', 'rm', '-f', proxy)
+            mounts[1] = f'{rendered}:/etc/nginx/nginx.conf:ro'
+            start_proxy(mounts)
+            print(run('docker', 'exec', backend, 'node', '/tls-check.mjs', hostname, 'hsts'), end='')
 finally:
     for container in [proxy,backend]:
         subprocess.run(['docker','rm','-f',container],capture_output=True)

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T20:40:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T20:54:26+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1225 | Accepted with unchanged source bindings. |
-| verify | 71 | Existing work may be complete; inspect evidence before building. |
-| partial | 64 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 70 | Existing work may be complete; inspect evidence before building. |
+| partial | 65 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1229,7 +1229,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.07.02.08` | partial | Recorded batch work | Create CI gate config: SCA/SAST/secret/container scans on every PR, full scan on main |
 | `06-security-testing-observability.md#T-06.07.03.01` | done | Recorded batch work | Harden Dockerfile: non-root user, read-only rootfs where practical, no inspector, `NODE_OPTIONS=--no-deprecation` |
 | `06-security-testing-observability.md#T-06.07.03.02` | done | Recorded batch work | Disable `insecureHTTPParser`; set explicit request/body/header/time limits at proxy and application level |
-| `06-security-testing-observability.md#T-06.07.03.03` | verify | Inventory needed | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
+| `06-security-testing-observability.md#T-06.07.03.03` | partial | Recorded batch work | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS |
 | `06-security-testing-observability.md#T-06.07.03.04` | done | Recorded batch work | Ensure proxy trust configured to exact hop topology (not `trust proxy` globally) |
 | `06-security-testing-observability.md#T-06.07.03.05` | done | Recorded batch work | Add container security scanning to CI (Trivy, etc.) |
 | `06-security-testing-observability.md#T-06.07.03.06` | done | Recorded batch work | Write container smoke test: non-root user, inspector not available, no unsafe parser |

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T20:40:15+00:00",
+  "updated": "2026-11-11T20:54:26+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14452,7 +14452,8 @@
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-pilot-and-commercial-topology-documentation",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -14460,15 +14461,15 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
+              "sha256": "7d965109a1d3ff76924e9d76bca612bb608ea82146ebdfea261837abe6c82f69"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -14476,11 +14477,24 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
             }
           ],
           "checks": [
             "The selected NGINX pilot configuration routed localhost API and web upstreams under TLS 1.2 and 1.3. The exact isolated fixture passed redirect, forwarded-header overwrite, general body rejection, the larger bounded template upload, gzip, unbuffered SSE and WebSocket upgrade. Actual production TLS and HSTS remain separate launch checks."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/README.md",
+                "deploy/pilot/nginx.conf",
+                "scripts/proxy-fixture.mjs",
+                "scripts/test-pilot-proxy.py"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            }
           ]
         }
       }
@@ -14500,8 +14514,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The exact staged reverse proxy now sends the approved headers on normal API and web responses and the tested error response. Read back the same behavior with the accepted v0.6.0 release SHA.",
-        "Live CSP reporting is verified. Review the required report window and prove enforcement; enable HSTS only after verified production TLS and subdomain review."
+        "Read back the approved headers on the accepted v0.6.0 staging release SHA.",
+        "Review the required live CSP report window and prove enforcement. Verify HSTS at the selected production-equivalent ingress with its approved TLS and subdomain scope."
       ],
       "owner": null,
       "depends_on": [],
@@ -14602,7 +14616,8 @@
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": null
       }
@@ -14685,7 +14700,8 @@
           "release-0.6-browser-and-edge-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-immutable-staging-acceptance",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -14693,11 +14709,11 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -14713,7 +14729,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
             }
           ],
           "checks": [
@@ -14735,6 +14751,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -14828,7 +14854,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-suppress-api-framework-header",
           "release-0.6-staging-pilot-proxy-log-redaction",
-          "release-0.6-mobile-performance-and-hosted-regression-evidence"
+          "release-0.6-mobile-performance-and-hosted-regression-evidence",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -14836,11 +14863,11 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -14878,6 +14905,15 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/README.md",
+                "deploy/pilot/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -14957,7 +14993,8 @@
           "release-0.6-pilot-proxy-and-cache-policy",
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-authorization-denials-and-restricted-dashboard",
-          "release-0.6-suppress-api-framework-header"
+          "release-0.6-suppress-api-framework-header",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "native-proxy-and-authorized-cache-boundaries",
@@ -14989,7 +15026,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
             }
           ],
           "checks": [
@@ -15005,6 +15042,14 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -15257,7 +15302,8 @@
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-production-notes-and-provider-inventory",
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15265,7 +15311,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
             },
             {
               "path": "deploy/production/README.md",
@@ -15305,6 +15351,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -15357,7 +15411,8 @@
           "release-0.6-pilot-and-commercial-topology-documentation",
           "release-0.6-private-session-cutover-and-health-probes",
           "release-0.6-production-notes-and-provider-inventory",
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-bound-documentation-review",
@@ -15365,7 +15420,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
             },
             {
               "path": "deploy/production/README.md",
@@ -15405,6 +15460,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -23718,7 +23781,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23735,7 +23799,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "b197366503d03cc1c93613e3ecc3250c87ba157534b5744e140867d366194287"
+              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
             },
             {
               "path": "deploy/production/README.md",
@@ -23901,6 +23965,14 @@
                 "docs/deployment.md"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -41978,7 +42050,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-registration-pointer-after-strength",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "verified-login-session-recovery-and-staging-edge",
@@ -42050,7 +42123,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -42062,7 +42135,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -42114,11 +42187,11 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
+              "sha256": "7d965109a1d3ff76924e9d76bca612bb608ea82146ebdfea261837abe6c82f69"
             },
             {
               "path": "apps/api/src/auth/password-notifications.ts",
@@ -42598,6 +42671,17 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs",
+                "scripts/test-pilot-proxy.py"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ],
           "presentation_renewals": [
@@ -530351,7 +530435,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-api-and-private-cutover-proof",
@@ -530511,7 +530596,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -530519,7 +530604,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "docs/security/otp.md",
@@ -530669,6 +530754,15 @@
                 "apps/api/src/route-errors/route-errors.controller.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -532342,7 +532436,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -532390,7 +532485,7 @@
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
+              "sha256": "7d965109a1d3ff76924e9d76bca612bb608ea82146ebdfea261837abe6c82f69"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -532480,6 +532575,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "scripts/test-pilot-proxy.py"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -532836,7 +532939,8 @@
           "release-0.6-mobile-performance-and-hosted-regression-evidence",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -532868,7 +532972,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -532880,11 +532984,11 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
-              "sha256": "970d0f0c9d42c6b00b8f4df622e9411f022e84c777adfac23201e61eaecbf876"
+              "sha256": "7d965109a1d3ff76924e9d76bca612bb608ea82146ebdfea261837abe6c82f69"
             }
           ],
           "checks": [
@@ -532920,6 +533024,16 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs",
+                "scripts/test-pilot-proxy.py"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -532940,7 +533054,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "HSTS stays off pending verified production TLS and subdomain coverage. Configure and probe the selected production ingress; the commented pilot directive is not active."
+        "The pilot renderer limits HSTS to explicitly selected production configuration. Verify approved certificates, DNS, HTTPS and subdomain coverage at the selected production-equivalent ingress before enabling and reading back its HSTS policy."
       ],
       "owner": null,
       "depends_on": [],
@@ -532949,7 +533063,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-browser-response-policy",
-          "release-0.6-proxy-security-headers"
+          "release-0.6-proxy-security-headers",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": null
       }
@@ -532991,7 +533106,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -533011,7 +533127,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "docs/security/content-security-policy.md",
@@ -533093,6 +533209,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -533113,7 +533237,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The production build, real browser, and staging proxy integration cases passed. Verify HSTS on the selected production TLS ingress."
+        "Staging and isolated pilot checks cover the response boundary. Verify the complete policy with the accepted staging SHA and the HSTS policy at the selected production-equivalent TLS ingress."
       ],
       "owner": null,
       "depends_on": [],
@@ -533128,7 +533252,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-security-headers",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-suppress-api-framework-header"
+          "release-0.6-suppress-api-framework-header",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": null
       }
@@ -533148,7 +533273,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The existing integrity workflow validates production headers in both CSP modes and checks both proxy profiles. Verify the current hosted check and the selected production-ingress TLS/HSTS gate."
+        "The integrity workflow invokes both updated proxy profiles. Verify its hosted result on the exact candidate and complete the selected production-equivalent ingress TLS/HSTS gate."
       ],
       "owner": null,
       "depends_on": [],
@@ -533159,7 +533284,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-proxy-security-headers",
-          "release-0.6-security-header-ci-and-nonce-evidence"
+          "release-0.6-security-header-ci-and-nonce-evidence",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": null
       }
@@ -539444,7 +539570,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-immutable-staging-acceptance",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-bound-rate-limiter-and-http-proof",
@@ -539452,7 +539579,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/staging/README.md",
@@ -539460,7 +539587,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -539472,7 +539599,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "44b10444a8c51c2afd401002712ab72abf537e259934c128679c9e22b86795dd"
+              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
             }
           ],
           "checks": [
@@ -539495,6 +539622,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -545315,7 +545452,8 @@
           "release-0.6-suppress-api-framework-header",
           "release-0.6-staging-pilot-proxy-log-redaction",
           "release-0.6-pilot-compose-boundary",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -545331,11 +545469,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -545381,6 +545519,15 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -545397,18 +545544,20 @@
         "story": "06-security-testing-observability.md#spec-2b24cec414cb"
       },
       "requirement": "| T-06.07.03.03 | Configure TLS at reverse proxy: modern protocols (TLS 1.2+), secure ciphers, HSTS | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Staging is verified live and the production-mode pilot policy passed in isolation. Prove TLS, approved modern cipher negotiation and HSTS at the selected production-equivalent ingress with its actual hostnames, certificate chain and subdomain scope."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-edge-tls-and-hsts"
+        ],
         "current_acceptance": null
       }
     },
@@ -545438,7 +545587,8 @@
           "release-0.6-layered-rate-limits-and-diagnostic-privacy",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-staging-pilot-proxy-log-redaction"
+          "release-0.6-staging-pilot-proxy-log-redaction",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "compiled-api-and-isolated-native-nginx-boundaries",
@@ -545462,11 +545612,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -545490,6 +545640,15 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -554636,7 +554795,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-matched-database-protection-and-export-lease-cap",
@@ -554722,7 +554882,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "88cafe668941b31a986ee1a8be5ff4d63569fe5b0bc925782ee4f53b7445c063"
+              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -554850,6 +555010,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/pilot/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -560131,7 +560299,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -560163,7 +560332,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -560276,6 +560445,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -561652,7 +561829,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -561700,7 +561878,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -561763,6 +561941,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -567212,7 +567398,8 @@
           "release-0.6-runtime-failure-log-redaction",
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-edge-tls-and-hsts"
         ],
         "current_acceptance": {
           "kind": "source-bound-isolated-http-and-telemetry-proof",
@@ -567268,7 +567455,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "b7ab0030a4846eaea807d976902d45bb641330be197227b34d162d27144d4fd5"
+              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
             },
             {
               "path": "docs/security/session-lifetime.md",
@@ -567339,6 +567526,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-edge-tls-and-hsts",
+              "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
             }
           ]
         }
@@ -984993,6 +985188,132 @@
         {
           "file": "queue-repeat.json",
           "sha256": "0be557192d5e2fa6501dc937881949c34e40f6659bee31a31915d8cee758fd94"
+        }
+      ]
+    },
+    "release-0.6-edge-tls-and-hsts": {
+      "batch": "release-0.6-edge-tls-and-hsts",
+      "base_commit": "9c6d53f00371218d022a544d7e180c0f4549944c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.01",
+        "01-platform-infrastructure.md#T-04.04.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "01-platform-infrastructure.md#T-04.04.05",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-02.04.01",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.02.03.02",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.03",
+        "06-security-testing-observability.md#T-06.07.03.04",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+        },
+        {
+          "path": "deploy/pilot/render-nginx.py",
+          "sha256": "8e128ce4807c142191ea1636303716b2cb02104c1b22ffcb73ae356b19e78c49"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/nginx-s3-proxy.conf",
+          "sha256": "9f1cd69e8b73bdafbf88dfec384820b7e158e3061a21d2bfab9f3fb05c7414ca"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+        },
+        {
+          "path": "scripts/check-proxy-tls.mjs",
+          "sha256": "3e36a1e7f97e824c630f352aee3e6dc98eaef45c357940959ee2c57ef537d1df"
+        },
+        {
+          "path": "scripts/check-staging-proxy.mjs",
+          "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "7d965109a1d3ff76924e9d76bca612bb608ea82146ebdfea261837abe6c82f69"
+        }
+      ],
+      "checks": [
+        "The live staging listener accepted forced TLS 1.2 ECDSA CBC before the change. Both source profiles now allow TLS 1.2 with ECDHE AEAD suites and TLS 1.3. The pilot renderer rejects staging activation and invalid settings, and its default output equals the committed configuration.",
+        "Native Linux NGINX 1.24.0 and Node 24.22.2 ran both existing proxy suites and their private log assertions in an isolated network namespace. Three configurations verified the correct certificate hostname and negotiated TLS 1.2 GCM and TLS 1.3. TLS 1.0/1.1, CBC and static RSA were rejected by the server. The first probe identified the newer OpenSSL label for alert 40. The corrected assertion accepts the two exact names for that same server alert.",
+        "Default pilot, staging and explicit production-mode pilot suppressed upstream HSTS. They checked the configured result on HTTPS success, 413 and local 429, kept the 429 frame protection and omitted HSTS from the plaintext redirect. All original localized quota, cache, forwarding, SSE, WebSocket and private log assertions passed.",
+        "Applied only the verified TLS and HSTS directives to live staging under the release lock, with a protected rollback file, NGINX syntax validation, graceful reload and local verification. The independent EU readback verified certificate/hostname, TLS 1.2 ECDSA GCM and TLS 1.3 AES-GCM, refusal of TLS 1.0/1.1 and the previously accepted CBC suite, HTTPS redirect, both health endpoints and absent HSTS. The running metadata remained v0.5.0 at b0dce58ca8d2ec0bf48dcecb575f54d51cedf916.",
+        "Changed JavaScript/Python syntax, formatting and source whitespace checks passed."
+      ],
+      "limitations": [
+        "The local Docker daemon did not respond. Native isolated tests ran the same proxy assertions and exact source with disposable certificate, log and process paths. The hosted container wrapper and production-equivalent ingress are still pending.",
+        "The staging ingress maintenance left the application and its release record on the previous staging preview. Production activation requires the selected environment and explicit authorization."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-edge-tls-and-hsts",
+      "execution_receipts": [
+        {
+          "file": "native-fixture-node24-alert.log",
+          "sha256": "3774b826be240d50d65d4751033e1b4c36e53f5de8aaee58a7d27c2ec3e02172"
+        },
+        {
+          "file": "native-fixture.log",
+          "sha256": "06db72b1af4df4f01da847b47f24aad32ef7f3903f6936361f2e05a076454574"
+        },
+        {
+          "file": "run-native.sh",
+          "sha256": "51ed16bd17196a9fc41ce8cbb568067724c366147d48d33e899154d53409dffa"
+        },
+        {
+          "file": "verify-native.sh",
+          "sha256": "60e230e3e14af88f0691d9a2cf92a5e165b9dcab21867acfe297a36bdc7fcca3"
+        },
+        {
+          "file": "apply-staging-edge.sh",
+          "sha256": "dabab3b392f404211718b54e85d23692e54e995d3ac4f5a7585edfc61b591821"
+        },
+        {
+          "file": "readback-live.py",
+          "sha256": "92430985ab7798772b9ac9e4a917a9e281a88205d5a80fe93cd98be771a0d004"
+        },
+        {
+          "file": "live-apply.log",
+          "sha256": "8f95fe27bc3f6e4fb72bd58817b542bedd53ee165ed17deffcfe9fe66f21bbd2"
+        },
+        {
+          "file": "live-eu-readback.log",
+          "sha256": "57eb6d65e091e624d7543aa971c5b874f5bb9482dbc739c3a30b54049565b878"
+        },
+        {
+          "file": "source-checks.log",
+          "sha256": "d267d2b212a4504994596c971aa6dd2ccb60a6137a15819bfd9d0515a6d0fdd9"
         }
       ]
     }

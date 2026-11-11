@@ -11,11 +11,21 @@ Before rollout:
 - Replace `barghsa.example.com` with the intended public host and supply `/etc/ssl/certs/barghsa.pem` plus `/etc/ssl/private/barghsa.key`. Keep certificate private keys outside Git.
 - Set `API_TRUSTED_PROXY_IPS` in the external runtime environment to the immediate proxy's exact socket address as observed by the API. Host-to-container traffic usually arrives through a Docker bridge gateway; inspect that deployment rather than assuming loopback. A native API beside NGINX can use `127.0.0.1,::1`. Empty means no proxy trust. Wildcards, hop counts, hostnames and CIDRs are rejected.
 - Keep the API inaccessible through a public alternative route. NGINX replaces inbound forwarded-address headers. If adding another proxy/load balancer, review that topology and configure its trusted chain explicitly; do not turn on blanket trust.
-- Validate TLS and affected subdomains before enabling the commented HSTS directive. CSP remains Report-Only pending its separate rollout. Certificate renewal, public DNS and production topology remain operational responsibilities.
+- Verify TLS, certificate renewal and HTTPS on every affected subdomain before approving HSTS on the production host. Staging and the default pilot configuration suppress upstream HSTS. CSP has its own Report-Only rollout.
+
+For an authorized production rollout, render the pilot configuration to a protected file and validate it before switching the active configuration:
+
+```sh
+BARGHSA_DEPLOYMENT_ENV=production BARGHSA_PILOT_HSTS=true \
+  python3 deploy/pilot/render-nginx.py > /protected/barghsa-pilot-nginx.conf
+nginx -t -c /protected/barghsa-pilot-nginx.conf
+```
+
+Apply the intended public hostname to the rendered file before validation. The renderer requires explicit production selection to emit the one-year HSTS policy with subdomains. The header is sent on HTTPS only, including locally generated errors.
 
 `python3 scripts/test-pilot-proxy.py` validates the actual NGINX configuration, then boots it in an isolated container network namespace with test-only certificates and echo/streaming upstreams. It opens no host ports and removes its containers and certificate files on exit. It requires local Docker, OpenSSL, `nginx:1.27-alpine` and `node:22-bookworm`; Node is only the HTTP fixture, not a production application image.
 
-The check covers TLS 1.2/1.3, redirects, routing, response headers, a 10 MiB body boundary rejection, forwarded-header overwrite, unbuffered SSE, WebSocket upgrade and fa/en 429 behavior on the specified auth/upload/AI quotas. Real API tests separately cover exact proxy trust and PostgreSQL destination quotas across client addresses. These local checks do not constitute a production TLS deployment or HA acceptance.
+The check verifies certificate hostname, TLS 1.2 ECDHE AEAD and TLS 1.3 handshakes, and rejection of legacy TLS, CBC and static RSA. It checks the HSTS policy on HTTPS success, oversized requests and local 429 responses, and checks that redirects omit it. It also covers routing, response headers, a 10 MiB body boundary rejection, forwarded-header overwrite, unbuffered SSE, WebSocket upgrade and fa/en 429 behavior on auth/upload/AI quotas. API tests separately cover exact proxy trust and PostgreSQL destination quotas across client addresses.
 
 Cache policy comes from the web server after it resolves a real file. Hashed
 assets, including the separate auth entry, receive one year and immutable;
