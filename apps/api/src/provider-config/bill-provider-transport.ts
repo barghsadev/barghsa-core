@@ -1,6 +1,46 @@
+import promClient from 'prom-client';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
+import { CircuitBreaker, resolveCircuitBreakerConfig } from '../verification/circuit-breaker.js';
 
 const MAX_BILL_RESPONSE_BYTES = 2 * 1024 * 1024;
+
+const circuitState = new promClient.Gauge({
+  name: 'bill_provider_circuit_state',
+  help: 'Bill provider circuit state (0 closed, 1 open, 2 half-open)',
+  labelNames: ['service'] as const,
+});
+const operations = new promClient.Counter({
+  name: 'bill_provider_operations_total',
+  help: 'Admitted bill provider operations by outcome after any retries',
+  labelNames: ['service', 'outcome'] as const,
+});
+
+export function createBillProviderCircuit(service: 'electricity' | 'saving') {
+  const breaker = new CircuitBreaker(resolveCircuitBreakerConfig('BILL_PROVIDER'));
+  operations.inc({ service, outcome: 'responded' }, 0);
+  operations.inc({ service, outcome: 'failed' }, 0);
+  const observeState = () => {
+    const state = breaker.getState();
+    circuitState.set({ service }, state === 'CLOSED' ? 0 : state === 'OPEN' ? 1 : 2);
+  };
+  return async <T>(operation: () => Promise<T>): Promise<T> => {
+    try {
+      return await breaker.call(async () => {
+        observeState();
+        try {
+          const result = await operation();
+          operations.inc({ service, outcome: 'responded' });
+          return result;
+        } catch (error) {
+          operations.inc({ service, outcome: 'failed' });
+          throw error;
+        }
+      });
+    } finally {
+      observeState();
+    }
+  };
+}
 
 export async function fetchBillProviderJson(
   url: URL,

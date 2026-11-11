@@ -1,7 +1,9 @@
-import { createServer, type RequestListener, type Server } from 'node:http';
+import { createServer, type RequestListener, type Server, type ServerResponse } from 'node:http';
 import { afterEach, expect, it, vi } from 'vitest';
+import promClient from 'prom-client';
 import { HttpBillDataProvider } from '../electricity/electricity-bill-data.service.js';
 import { BillVerificationProvider } from '../saving/bill-verification.provider.js';
+import { CircuitOpenError } from '../verification/circuit-breaker.js';
 
 async function listen(server: Server): Promise<string> {
   await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
@@ -35,7 +37,10 @@ async function withBillProvider(handler: RequestListener, run: () => Promise<voi
   }
 }
 
-afterEach(() => vi.unstubAllEnvs());
+afterEach(() => {
+  vi.unstubAllEnvs();
+  vi.useRealTimers();
+});
 
 it('accepts a full year of electricity readings and a valid saving verification', async () => {
   const year = Array.from({ length: 8_760 }, (_, index) => ({
@@ -115,4 +120,74 @@ it('refuses an oversized streamed bill response without retrying invalid saving 
     });
   });
   expect(origin).toHaveBeenCalledTimes(2);
+});
+
+it('isolates bill circuits and permits one recovery request after the default cooldown', async () => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_FAILURES', undefined);
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_WINDOW_MS', undefined);
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_COOLDOWN_MS', undefined);
+  const privateIdentifier = 'private-fixture-profile';
+  const failed = async () =>
+    Number(
+      (await promClient.register.metrics()).match(
+        /bill_provider_operations_total\{service="electricity",outcome="failed"\} (\d+)/
+      )?.[1] ?? 0
+    );
+  const initial = await failed();
+  let recover = false;
+  let requests = 0;
+  let admitProbe!: (response: ServerResponse) => void;
+  const admitted = new Promise<ServerResponse>((resolve) => {
+    admitProbe = resolve;
+  });
+  await withBillProvider(
+    (request, response) => {
+      if (request.url?.startsWith('/bills/')) {
+        response.end(JSON.stringify({ verified: true }));
+        return;
+      }
+      requests++;
+      if (recover) admitProbe(response);
+      else response.writeHead(401).end('{}');
+    },
+    async () => {
+      const provider = new HttpBillDataProvider();
+      const get = () => provider.getHourlyConsumption(privateIdentifier);
+      await expect(get()).rejects.toThrow('auth_error');
+      vi.setSystemTime(Date.now() + 60_001);
+      for (let attempt = 0; attempt < 5; attempt++)
+        await expect(get()).rejects.toThrow('auth_error');
+      await expect(get()).rejects.toBeInstanceOf(CircuitOpenError);
+      expect(requests).toBe(6);
+      expect(await failed()).toBe(initial + 6);
+      expect(await promClient.register.metrics()).toContain(
+        'bill_provider_circuit_state{service="electricity"} 1\n'
+      );
+      await expect(new BillVerificationProvider().verify('1234567890123')).resolves.toMatchObject({
+        status: 'verified',
+      });
+
+      vi.setSystemTime(Date.now() + 119_999);
+      await expect(get()).rejects.toBeInstanceOf(CircuitOpenError);
+      vi.setSystemTime(Date.now() + 1);
+      recover = true;
+      const probe = get();
+      const response = await admitted;
+      try {
+        await expect(get()).rejects.toBeInstanceOf(CircuitOpenError);
+        expect(await promClient.register.metrics()).toContain(
+          'bill_provider_circuit_state{service="electricity"} 2\n'
+        );
+      } finally {
+        response.end(JSON.stringify([{ hour: '2026-09-01T00:00:00Z', kwh: 2 }]));
+      }
+      await expect(probe).resolves.toEqual([{ hour: '2026-09-01T00:00:00Z', kwh: 2 }]);
+      expect(requests).toBe(7);
+      const metrics = await promClient.register.metrics();
+      expect(metrics).toContain('bill_provider_circuit_state{service="electricity"} 0\n');
+      expect(metrics).not.toContain(privateIdentifier);
+      expect(metrics).not.toContain('electricity-fixture-token');
+    }
+  );
 });

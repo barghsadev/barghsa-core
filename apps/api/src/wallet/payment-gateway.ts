@@ -2,7 +2,12 @@ import { createHash } from 'node:crypto';
 import { isIP } from 'node:net';
 import promClient from 'prom-client';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
-import { CircuitBreaker, CircuitOpenError } from '../verification/circuit-breaker.js';
+import {
+  CircuitBreaker,
+  CircuitOpenError,
+  resolveCircuitBreakerConfig,
+  type CircuitBreakerConfig,
+} from '../verification/circuit-breaker.js';
 
 /**
  * Payment gateway port used by online wallet top-up initiation
@@ -159,11 +164,6 @@ export type PaymentGatewayFetch = (
 const MAX_GATEWAY_RESPONSE_BYTES = 10 * 1024 * 1024;
 
 type GatewayOperation = 'start' | 'inquiry' | 'verify';
-type GatewayCircuitConfig = {
-  failureThreshold: number;
-  failureWindowMs: number;
-  resetTimeoutMs: number;
-};
 
 const gatewayCircuitState = new promClient.Gauge({
   name: 'payment_gateway_circuit_state',
@@ -184,12 +184,12 @@ class GatewayTransportFailure extends Error {
 
 function withPaymentCircuit(
   adapter: Exclude<PaymentGatewayAdapterName, 'redirect'>,
-  config: GatewayCircuitConfig | undefined,
+  config: CircuitBreakerConfig | undefined,
   fetchImpl: PaymentGatewayFetch
 ): Record<GatewayOperation, PaymentGatewayFetch> {
   const guarded = (operation: GatewayOperation): PaymentGatewayFetch => {
     if (!config) return fetchImpl;
-    const breaker = new CircuitBreaker({ ...config, halfOpenMaxProbes: 1 });
+    const breaker = new CircuitBreaker(config);
     const labels = { adapter, operation };
     gatewayCircuitState.set(labels, 0);
     gatewayTransportAttempts.inc({ ...labels, outcome: 'responded' }, 0);
@@ -436,23 +436,6 @@ function resolveTimeoutMs(env: NodeJS.ProcessEnv): number {
   return parsed;
 }
 
-function paymentCircuitConfig(env: NodeJS.ProcessEnv): GatewayCircuitConfig {
-  const positiveInteger = (name: string, fallback: number, maximum: number): number => {
-    const value = env[name]?.trim();
-    if (!value) return fallback;
-    const parsed = Number(value);
-    if (!/^\d+$/.test(value) || !Number.isSafeInteger(parsed) || parsed < 1 || parsed > maximum) {
-      throw new Error(`${name} must be a positive integer no greater than ${maximum}`);
-    }
-    return parsed;
-  };
-  return {
-    failureThreshold: positiveInteger('PAYMENT_GATEWAY_CIRCUIT_FAILURES', 5, 100),
-    failureWindowMs: positiveInteger('PAYMENT_GATEWAY_CIRCUIT_WINDOW_MS', 60_000, 600_000),
-    resetTimeoutMs: positiveInteger('PAYMENT_GATEWAY_CIRCUIT_COOLDOWN_MS', 120_000, 600_000),
-  };
-}
-
 function isDefiniteHttpClientRejection(status: number): boolean {
   return status >= 400 && status < 500 && status !== 408 && status !== 429;
 }
@@ -602,7 +585,7 @@ export function createHttpPaymentGateway(options: {
   timeoutMs?: number;
   fetchImpl?: PaymentGatewayFetch;
   allowedHosts?: readonly string[];
-  circuit?: GatewayCircuitConfig;
+  circuit?: CircuitBreakerConfig;
 }): PaymentGateway {
   const transport = withPaymentCircuit(
     'http',
@@ -816,7 +799,7 @@ export function createZarinpalPaymentGateway(options: {
   timeoutMs?: number;
   fetchImpl?: PaymentGatewayFetch;
   allowedHosts?: readonly string[];
-  circuit?: GatewayCircuitConfig;
+  circuit?: CircuitBreakerConfig;
 }): PaymentGateway {
   const transport = withPaymentCircuit(
     'zarinpal',
@@ -1079,7 +1062,7 @@ export function createPaymentGatewayFromEnv(
     return createZarinpalPaymentGateway({
       merchantId,
       timeoutMs,
-      circuit: paymentCircuitConfig(env),
+      circuit: resolveCircuitBreakerConfig('PAYMENT_GATEWAY', env),
       allowedHosts,
       ...(zarinpalRequestUrl ? { requestUrl: zarinpalRequestUrl } : {}),
       ...(startPayUrl ? { startPayUrl } : {}),
@@ -1109,7 +1092,7 @@ export function createPaymentGatewayFromEnv(
     requestUrl,
     apiKey,
     timeoutMs,
-    circuit: paymentCircuitConfig(env),
+    circuit: resolveCircuitBreakerConfig('PAYMENT_GATEWAY', env),
     allowedHosts,
     ...(startUrl ? { startUrl } : {}),
     ...(inquiryUrl ? { inquiryUrl } : {}),

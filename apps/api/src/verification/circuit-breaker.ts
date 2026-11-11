@@ -1,15 +1,33 @@
-/**
- * A simple circuit breaker implementation for protecting external API calls.
- *
- * States:
- * - CLOSED: Normal operation — calls pass through.
- * - OPEN: Too many failures — calls are rejected immediately.
- * - HALF_OPEN: After the reset timeout, a single probe is allowed through
- *   to test if the service has recovered.
- *
- * Thread-safety note: This is designed for a single-threaded Node.js
- * event-loop context. No locking is needed.
- */
+export interface CircuitBreakerConfig {
+  failureThreshold: number;
+  resetTimeoutMs: number;
+  halfOpenMaxProbes: number;
+  failureWindowMs?: number;
+}
+
+export function resolveCircuitBreakerConfig(
+  provider: 'PAYMENT_GATEWAY' | 'BILL_PROVIDER',
+  env: NodeJS.ProcessEnv = process.env
+): CircuitBreakerConfig {
+  const positiveInteger = (setting: string, fallback: number, maximum: number): number => {
+    const name = `${provider}_CIRCUIT_${setting}`;
+    const value = env[name]?.trim();
+    if (!value) return fallback;
+    const parsed = Number(value);
+    if (!/^\d+$/.test(value) || !Number.isSafeInteger(parsed) || parsed < 1 || parsed > maximum) {
+      throw new Error(`${name} must be a positive integer no greater than ${maximum}`);
+    }
+    return parsed;
+  };
+  return {
+    failureThreshold: positiveInteger('FAILURES', 5, 100),
+    failureWindowMs: positiveInteger('WINDOW_MS', 60_000, 600_000),
+    resetTimeoutMs: positiveInteger('COOLDOWN_MS', 120_000, 600_000),
+    halfOpenMaxProbes: 1,
+  };
+}
+
+/** In-process breaker. Open circuits reject until the cooldown admits recovery probes. */
 export class CircuitBreaker {
   private state: 'CLOSED' | 'OPEN' | 'HALF_OPEN' = 'CLOSED';
   private failureCount = 0;
@@ -18,14 +36,7 @@ export class CircuitBreaker {
   private halfOpenProbes = 0;
   private generation = 0;
 
-  constructor(
-    private readonly config: {
-      failureThreshold: number;
-      resetTimeoutMs: number;
-      halfOpenMaxProbes: number;
-      failureWindowMs?: number;
-    }
-  ) {}
+  constructor(private readonly config: CircuitBreakerConfig) {}
 
   /**
    * Execute a call through the circuit breaker.

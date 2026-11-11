@@ -36,10 +36,20 @@ beforeAll(async () => {
   if (!address || typeof address === 'string') throw new Error('Provider port unavailable');
   vi.stubEnv('SAVING_BILL_VERIFICATION_URL', `http://127.0.0.1:${address.port}`);
   vi.stubEnv('SAVING_BILL_VERIFICATION_TOKEN', 'test-provider-token');
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_FAILURES', undefined);
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_WINDOW_MS', undefined);
+  vi.stubEnv('BILL_PROVIDER_CIRCUIT_COOLDOWN_MS', undefined);
+  await restartApi();
+}, 40000);
+
+async function restartApi() {
+  const previous = closeHttp;
+  closeHttp = undefined;
+  await previous?.();
   http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
   closeHttp = http.close;
   await seedAuthority();
-}, 40000);
+}
 
 async function seedAuthority() {
   await http.pool.query(
@@ -155,25 +165,33 @@ it.each(['timeout', 'auth_error', 'invalid_data'] as const)(
   10000
 );
 
-it('opens the circuit after repeated failures without calling the provider again', async () => {
-  mode = 'success';
-  const before = calls.length;
-  const response = await verify();
-  expect(response.status, http.logs()).toBe(201);
-  expect(await response.json()).toMatchObject({ status: 'unavailable', reason: 'circuit_open' });
-  expect(calls).toHaveLength(before);
+describe('saving bill-provider circuit', () => {
+  beforeAll(restartApi, 40000);
+
+  it('opens the circuit after five failures without calling the provider again', async () => {
+    mode = 'auth_error';
+    const before = calls.length;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const response = await verify();
+      expect(response.status, http.logs()).toBe(201);
+      expect(await response.json()).toMatchObject({ status: 'unavailable', reason: 'auth_error' });
+    }
+    mode = 'success';
+    const response = await verify();
+    expect(response.status, http.logs()).toBe(201);
+    expect(await response.json()).toMatchObject({ status: 'unavailable', reason: 'circuit_open' });
+    expect(calls).toHaveLength(before + 5);
+    const metrics = await (await fetch(`${http.base}/metrics`)).text();
+    expect(metrics).toContain('bill_provider_circuit_state{service="saving"} 1\n');
+    expect(metrics).toContain(
+      'bill_provider_operations_total{service="saving",outcome="failed"} 5\n'
+    );
+    expect(metrics).not.toContain(profileId);
+  });
 });
 
 describe('saving submission during a provider outage', () => {
-  beforeAll(async () => {
-    // The circuit tests can leave the shared API instance open.
-    const previous = closeHttp;
-    closeHttp = undefined;
-    await previous?.();
-    http = await startHttpFixture(process.env.TEST_DATABASE_URL!);
-    closeHttp = http.close;
-    await seedAuthority();
-  }, 40000);
+  beforeAll(restartApi, 40000);
 
   it('persists provider failure only through an explicit staff-review submission and preserves its receipt', async () => {
     const hardware = (

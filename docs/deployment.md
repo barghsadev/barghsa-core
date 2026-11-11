@@ -61,6 +61,14 @@ and protected tokens. Both adapters refuse redirects and reject response bodies
 larger than 2 MiB. Saving can fall back to staff review. Electricity keeps
 manual entry available when the provider fails.
 
+Each bill adapter keeps its own circuit on each API replica. Five failed
+operations within 60 seconds open the circuit by default. After 120 seconds
+the adapter allows one recovery operation under its existing request timeout.
+Use the `BILL_PROVIDER_CIRCUIT_*` settings in `.env.example` to change the
+threshold, window and cooldown. Private Grafana shows the state per replica and
+the failure share of admitted operations. Saving counts the result after its
+bounded retry. [External Providers dashboard](../deploy/monitoring/grafana-external-providers-dashboard.json).
+
 ## Pilot and staging
 
 1. Prepare a dedicated pilot host with Docker Compose 2.24.4 or later, a valid

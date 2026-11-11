@@ -2,8 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import type { ValidatedSession } from '../session/session.service.js';
 import { OrdersService } from '../orders/orders.service.js';
-import { fetchBillProviderJson } from '../provider-config/bill-provider-transport.js';
-import { CircuitBreaker, CircuitOpenError } from '../verification/circuit-breaker.js';
+import {
+  createBillProviderCircuit,
+  fetchBillProviderJson,
+} from '../provider-config/bill-provider-transport.js';
+import { CircuitOpenError } from '../verification/circuit-breaker.js';
 import { calculateDuration } from './electricity-calculation.js';
 import {
   getCurrentJalaliMonthRange,
@@ -26,11 +29,7 @@ export interface BillDataProvider {
 /** The deployment supplies a trusted origin and token; an absent provider leaves manual entry available. */
 export class HttpBillDataProvider implements BillDataProvider {
   readonly source = 'configured_bill_provider';
-  private readonly breaker = new CircuitBreaker({
-    failureThreshold: 3,
-    resetTimeoutMs: 30_000,
-    halfOpenMaxProbes: 1,
-  });
+  private readonly withCircuit = createBillProviderCircuit('electricity');
 
   async getHourlyConsumption(profileId: string): Promise<HourlyBillReading[]> {
     const base = process.env.ELECTRICITY_BILL_DATA_URL;
@@ -40,7 +39,7 @@ export class HttpBillDataProvider implements BillDataProvider {
     if (process.env.NODE_ENV === 'production' && url.protocol !== 'https:') {
       throw new Error('unconfigured');
     }
-    return this.breaker.call(async () => {
+    return this.withCircuit(async () => {
       const payload = await fetchBillProviderJson(url, token, 3_000);
       if (!Array.isArray(payload)) throw new Error('invalid_data');
       return payload

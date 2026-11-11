@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { fetchBillProviderJson } from '../provider-config/bill-provider-transport.js';
-import { CircuitBreaker } from '../verification/circuit-breaker.js';
+import {
+  createBillProviderCircuit,
+  fetchBillProviderJson,
+} from '../provider-config/bill-provider-transport.js';
+import { CircuitOpenError } from '../verification/circuit-breaker.js';
 
 export interface BillVerificationResult {
   source: string;
@@ -13,11 +16,7 @@ export interface BillVerificationResult {
 /** Deployment-owned adapter. Verification is advisory; an unavailable provider routes to staff. */
 @Injectable()
 export class BillVerificationProvider {
-  private readonly breaker = new CircuitBreaker({
-    failureThreshold: 3,
-    resetTimeoutMs: 30_000,
-    halfOpenMaxProbes: 1,
-  });
+  private readonly withCircuit = createBillProviderCircuit('saving');
 
   async verify(billIdentifier: string): Promise<BillVerificationResult> {
     const attemptedAt = new Date().toISOString();
@@ -43,7 +42,7 @@ export class BillVerificationProvider {
       };
     }
     try {
-      return await this.breaker.call(async () => {
+      return await this.withCircuit(async () => {
         for (let attempt = 0; attempt < 2; attempt++) {
           try {
             const payload = await fetchBillProviderJson(url, token, 2_500);
@@ -83,7 +82,7 @@ export class BillVerificationProvider {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'provider_error';
       const reason =
-        this.breaker.isOpen && message.includes('OPEN')
+        error instanceof CircuitOpenError
           ? 'circuit_open'
           : error instanceof Error && error.name === 'TimeoutError'
             ? 'timeout'
