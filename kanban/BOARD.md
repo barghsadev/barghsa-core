@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T13:13:56+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T13:25:25+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Prepare solar contract source reads and attachments outside the business transaction and publish only with the exact current financial review and durable source, contract, invoice and audit.
+Move version-aware deletion out of the business transaction after committing approved destruction intent. Preserve legal holds, permanent retention, exact-key deletion and durable recovery.
 
 - `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance

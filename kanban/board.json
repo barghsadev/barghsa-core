@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T13:13:56+00:00",
+  "updated": "2026-11-11T13:25:25+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21485,7 +21485,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Move solar contract source and attachment provider work outside business transactions. Preserve exact reviews, atomic contracts and invoices, immutable files, scan workflows and current authority.",
         "Reconcile approved document destruction. Preserve signed contracts, legal hold races, version-aware approved deletion, permanent financial and contractual retention and durable retry receipts."
       ],
       "owner": null,
@@ -21518,6 +21517,7 @@
           "apps/api/src/admin/brand-config.service.ts",
           "apps/api/src/admin/contract-template.service.ts",
           "apps/api/src/contract/contract-pdf.service.ts",
+          "apps/api/src/contract/contract.service.ts",
           "apps/api/src/crm/account-recovery-http.integration.test.ts",
           "apps/api/src/crm/account-recovery.service.ts",
           "apps/api/src/crm/crm-v2.service.ts",
@@ -21548,7 +21548,9 @@
           "apps/api/src/provider-config/provider-self-test.integration.test.ts",
           "apps/api/src/provider-config/sms-provider-config.service.test.ts",
           "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "apps/api/src/solar/solar-contract-authority.test.ts",
           "apps/api/src/solar/solar-contract-source.service.ts",
+          "apps/api/src/solar/solar-postal.integration.test.ts",
           "apps/api/src/storage/reserve-storage-copy.ts",
           "apps/api/src/storage/storage-copy-transaction.ts",
           "apps/api/src/storage/storage-record-admin.service.ts",
@@ -21605,7 +21607,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
-          "release-0.6-electricity-contract-pdf-boundary"
+          "release-0.6-electricity-contract-pdf-boundary",
+          "release-0.6-solar-contract-source-boundary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21734,7 +21737,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -21838,7 +21841,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
@@ -22070,6 +22073,15 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "docs/operations/storage-retention.md",
+                "apps/api/src/solar/solar-contract-source.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ]
         }
@@ -47348,7 +47360,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -48130,6 +48142,14 @@
                 "apps/api/src/electricity/electricity-order.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -59287,7 +59307,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/crm/crm-v2.controller.ts",
@@ -59351,7 +59371,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-status-notifications.integration.test.ts",
@@ -59689,6 +59709,15 @@
                 "apps/api/src/electricity/electricity-order.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -81508,7 +81537,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -81524,7 +81553,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -81692,7 +81721,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "packages/i18n/src/documents.ts",
@@ -83536,6 +83565,16 @@
                 "apps/api/src/electricity/electricity-contract-template.integration.test.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -182906,7 +182945,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -183729,6 +183768,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -183950,7 +183997,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -184773,6 +184820,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -184997,7 +185052,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -185820,6 +185875,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -186042,7 +186105,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -186865,6 +186928,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -187086,7 +187157,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -187909,6 +187980,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -188130,7 +188209,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -188953,6 +189032,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -189173,7 +189260,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -189996,6 +190083,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -190219,7 +190314,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -191042,6 +191137,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -191263,7 +191366,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -192086,6 +192189,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -192307,7 +192418,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -193130,6 +193241,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -193352,7 +193471,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -194175,6 +194294,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -194396,7 +194523,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -195219,6 +195346,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -195439,7 +195574,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -196262,6 +196397,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -196483,7 +196626,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -197306,6 +197449,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -418776,7 +418927,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -419415,6 +419566,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -419578,7 +419737,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -420217,6 +420376,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -420380,7 +420547,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -421019,6 +421186,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -421184,7 +421359,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -421823,6 +421998,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -421992,7 +422175,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -422512,6 +422695,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -422677,7 +422868,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/finance/review-snapshot.service.ts",
@@ -423197,6 +423388,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -423355,7 +423554,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -423994,6 +424193,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -424157,7 +424364,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -424796,6 +425003,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -424959,7 +425174,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -425598,6 +425813,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -425762,7 +425985,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -426401,6 +426624,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -426565,7 +426796,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -427204,6 +427435,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -427369,7 +427608,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -428008,6 +428247,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -428177,7 +428424,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -428816,6 +429063,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -428979,7 +429234,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -429618,6 +429873,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -429782,7 +430045,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -430422,6 +430685,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -436993,7 +437264,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -437029,7 +437300,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -437097,7 +437368,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -438045,6 +438316,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -438415,7 +438696,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -438451,7 +438732,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -438519,7 +438800,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -439467,6 +439748,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -439838,7 +440129,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -439874,7 +440165,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -439942,7 +440233,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -440890,6 +441181,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -441260,7 +441561,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -441296,7 +441597,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -441364,7 +441665,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -442312,6 +442613,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -442682,7 +442993,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -442718,7 +443029,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -442786,7 +443097,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -443734,6 +444045,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -444105,7 +444426,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -444141,7 +444462,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -444209,7 +444530,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -445157,6 +445478,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -445529,7 +445860,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -445565,7 +445896,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -445633,7 +445964,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -446581,6 +446912,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -446953,7 +447294,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -446969,7 +447310,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -446981,7 +447322,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/solar/solar-contract.validation.ts",
@@ -447041,7 +447382,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -448032,6 +448373,17 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -448371,7 +448723,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -448407,7 +448759,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -448475,7 +448827,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -449423,6 +449775,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -449792,7 +450154,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -449828,7 +450190,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -449896,7 +450258,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -450844,6 +451206,16 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -451213,7 +451585,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -451229,7 +451601,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -451241,7 +451613,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/solar/solar-contract.validation.ts",
@@ -451301,7 +451673,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -452292,6 +452664,17 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -452628,7 +453011,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -452644,7 +453027,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -452656,7 +453039,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/solar/solar-contract.validation.ts",
@@ -452716,7 +453099,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -453707,6 +454090,17 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -454043,7 +454437,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/documents/document-notifications.ts",
@@ -454059,7 +454453,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -454071,7 +454465,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/solar/solar-contract.validation.ts",
@@ -454131,7 +454525,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -455122,6 +455516,17 @@
                 "apps/api/src/contract/contract-pdf.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -457894,7 +458299,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "packages/db/drizzle/production/0250_contract_system_audit.sql",
@@ -457958,7 +458363,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -459377,6 +459782,15 @@
                 "apps/api/src/electricity/electricity-order.service.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -486567,7 +486981,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -486839,6 +487253,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -487040,7 +487462,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -487312,6 +487734,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -487515,7 +487945,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -487808,6 +488238,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -488043,7 +488481,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -488399,6 +488837,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -488600,7 +489046,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -488872,6 +489318,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -796317,7 +796771,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -797308,6 +797762,14 @@
                 "apps/web/e2e/saving-journey.spec.ts"
               ],
               "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -798488,7 +798950,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-request.integration.test.ts",
@@ -799471,6 +799933,14 @@
                 "apps/web/e2e/saving-journey.spec.ts"
               ],
               "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -801419,7 +801889,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/web/e2e/contract-activation.spec.ts",
@@ -803840,6 +804310,14 @@
                 "apps/api/src/electricity/electricity-contract-template.test.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -805998,7 +806476,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -806194,7 +806672,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
@@ -806226,7 +806704,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-authority.test.ts",
-              "sha256": "4670f518af81d94b2ff7278ec6d89456cf8dcc4e90cbc77065783c074a24a66d"
+              "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
             },
             {
               "path": "apps/api/src/solar/solar-contract-input-fields.test.ts",
@@ -806410,7 +806888,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/storage/read-capped-bytes.ts",
@@ -808670,6 +809148,17 @@
                 "apps/api/src/electricity/electricity-contract-template.test.ts"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/solar/solar-postal.integration.test.ts",
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-authority.test.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -809538,7 +810027,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -810010,7 +810499,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -810026,7 +810515,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -811346,7 +811835,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -813091,6 +813580,17 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -813907,7 +814407,7 @@
             },
             {
               "path": "apps/api/src/contract/contract.service.ts",
-              "sha256": "b3f8170e9b3d343dbc43033c84e537b5391b011e8b7846ddd08d9fb86f2474e5"
+              "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
             },
             {
               "path": "apps/api/src/crm/crm-session-permission-http.integration.test.ts",
@@ -814375,7 +814875,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
-              "sha256": "eb30d6f016cc97bbe4afb7b8944356bf02edc51889a2df9c07c2470d48021e25"
+              "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
             },
             {
               "path": "apps/api/src/solar/solar-documents.integration.test.ts",
@@ -814391,7 +814891,7 @@
             },
             {
               "path": "apps/api/src/solar/solar-postal.integration.test.ts",
-              "sha256": "9c5533eabcbf41c24a29a6f41124bb1701f546306a40840492eb6f01af0d7962"
+              "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
             },
             {
               "path": "apps/api/src/solar/solar-postal.service.ts",
@@ -815691,7 +816191,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "cbc9f7726cf921ad0d88a9c802293ef090783c8a12fc10a0a9d1dcbed9fb8b4d"
+              "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -817325,6 +817825,17 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Scoped source renewal for electricity template reads and initial contract PDF preparation. The review and native tests covered current authority, exact replay, financial publication, document and audit atomicity and failed storage recovery. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-solar-contract-source-boundary",
+              "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+              "paths": [
+                "apps/api/src/contract/contract.service.ts",
+                "apps/api/src/solar/solar-contract-source.service.ts",
+                "apps/api/src/solar/solar-postal.integration.test.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Scoped source renewal for solar contract reads and private attachments. The review and native tests covered authority, financial confirmation, concurrent exact replay, atomic issuance, immutable source provenance, failed publication and scanner state. Unchanged behavior retains its prior evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -822090,7 +822601,8 @@
           "release-0.6-legal-draft-race-response",
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-contract-template-copy-boundary",
-          "release-0.6-electricity-contract-pdf-boundary"
+          "release-0.6-electricity-contract-pdf-boundary",
+          "release-0.6-solar-contract-source-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -942003,6 +942515,68 @@
           "sha256": "d1ee4eaf91a098d802890c4cd0c9d5c627a3481db03dbdeedaa559f812e19e39"
         }
       ]
+    },
+    "release-0.6-solar-contract-source-boundary": {
+      "batch": "release-0.6-solar-contract-source-boundary",
+      "base_commit": "39efa7145daab9ee11ea6826662bcafea513e010",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/contract/contract.service.ts",
+        "apps/api/src/solar/solar-contract-authority.test.ts",
+        "apps/api/src/solar/solar-contract-source.service.ts",
+        "apps/api/src/solar/solar-postal.integration.test.ts",
+        "docs/operations/storage-retention.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/contract/contract.service.ts",
+          "sha256": "bc76118c7b8e4646d3dbf36e9510b656044650673d21ef15c7f5777106c07e14"
+        },
+        {
+          "path": "apps/api/src/solar/solar-contract-authority.test.ts",
+          "sha256": "a437f09f01548b9f5c61d11e79b66c29f9cd37d7b61846495958337a31edee62"
+        },
+        {
+          "path": "apps/api/src/solar/solar-contract-source.service.ts",
+          "sha256": "86270a67f2ea5aefac84eb367243f6feda13c955782cd34831344336eff7ae18"
+        },
+        {
+          "path": "apps/api/src/solar/solar-postal.integration.test.ts",
+          "sha256": "5245cba9d458efae8bcbdd390c6bf63cce17cde890b0c57210d270a0e7ce34ac"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "6fd966d12cb27f0b6d53aa5da9a040237211d0185d4836f10bc573a9ff3784ca"
+        }
+      ],
+      "checks": [
+        "Solar review and issuance fetch the selected template or uploaded bytes after the source transaction commits. Publication revalidates current authority, request eligibility, source provenance, financial review and exact storage reservations.",
+        "The initial file and immutable copy are prepared under committed cleanup reservations before business publication. The contract, invoice, document, scan job or review transition, request status, audit and receipt still publish atomically.",
+        "All 19 tests in two PostgreSQL and MinIO suites passed. The tests verified concurrent exact retries with one pair of provider writes, rejection after an invoice due rule changed during upload, unlocked profile and request rows, immutable selected documents, audit rollback and the durable scan job.",
+        "The native fixture matched 2,097 inputs. API typecheck, scoped ESLint, Prettier and whitespace passed. Approved document destruction remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/solar-contract-source-boundary.2Qb3b5",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/solar-contract-source-boundary.2Qb3b5/native-solar-contract-source-boundary.log",
+          "sha256": "39bddc0947001e6d7b4beab42ca43f4be319dfca96982a09b677226fb7d4cb7b"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/solar-contract-source-boundary.2Qb3b5/native-source.sha256",
+          "sha256": "ca3e58af24b180972244eebf41f383f6626e020d7cb3f968474e9e032c32494f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/solar-contract-source-boundary.2Qb3b5/native-source-check.log",
+          "sha256": "a8c4224878e1ce0c640ba1fefbe0ee517b3173cbf6f03178539301d8d7f97e9a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/solar-contract-source-boundary.2Qb3b5/changed-native-files",
+          "sha256": "1b86879f6630e5ec36037a0cb3df79f8e35453b8b033fb18668433b78a09ed92"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -942042,13 +942616,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-solar-contract-source-boundary",
+    "id": "release-0.6-approved-document-destruction-boundary",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Prepare solar contract source reads and attachments outside the business transaction and publish only with the exact current financial review and durable source, contract, invoice and audit."
+    "goal": "Move version-aware deletion out of the business transaction after committing approved destruction intent. Preserve legal holds, permanent retention, exact-key deletion and durable recovery."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

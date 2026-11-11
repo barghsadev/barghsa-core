@@ -6,6 +6,8 @@ import {
   expectSolarAuditRollback,
 } from '../test/solar-audit.js';
 import { createHash, randomUUID } from 'node:crypto';
+import { once } from 'node:events';
+import { createServer, request as forwardHttp, type Server } from 'node:http';
 import {
   expectSolarStatusDeliveries,
   expectSolarStatusRollback,
@@ -39,7 +41,18 @@ const image = Buffer.from(
   '89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b49444154789c636000020000050001a5f645400000000049454e44ae426082',
   'hex'
 );
+
+class LoopbackMinio extends GenericContainer {
+  constructor() {
+    super('pgsty/minio@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372');
+    this.withExposedPorts(9000);
+    this.hostConfig.PortBindings = { '9000/tcp': [{ HostIp: '127.0.0.1', HostPort: '0' }] };
+  }
+}
+
 let minio: StartedTestContainer;
+let storageProxy: Server;
+let observeStorage: ((method: string, path: string) => Promise<void>) | undefined;
 let s3: InstanceType<typeof S3Client>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let profileId: string;
@@ -185,12 +198,9 @@ async function uploadReceipt() {
 }
 
 beforeAll(async () => {
-  minio = await new GenericContainer(
-    'pgsty/minio@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372'
-  )
+  minio = await new LoopbackMinio()
     .withEnvironment({ MINIO_ROOT_USER: 'test-only-key', MINIO_ROOT_PASSWORD: 'test-only-secret' })
     .withCommand(['server', '/data'])
-    .withExposedPorts(9000)
     .withWaitStrategy(Wait.forHttp('/minio/health/ready', 9000))
     .start();
   const endpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
@@ -201,7 +211,30 @@ beforeAll(async () => {
     credentials: { accessKeyId: 'test-only-key', secretAccessKey: 'test-only-secret' },
   });
   await s3.send(new CreateBucketCommand({ Bucket: 'test-evidence' }));
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
+  storageProxy = createServer((incoming, outgoing) => {
+    const url = new URL(incoming.url!, endpoint);
+    const upstream = forwardHttp(
+      url,
+      { method: incoming.method, headers: incoming.headers },
+      (response) => {
+        void (async () => {
+          await observeStorage?.(incoming.method!, url.pathname);
+          outgoing.writeHead(response.statusCode!, response.headers);
+          response.pipe(outgoing);
+        })().catch((error: Error) => {
+          response.destroy();
+          outgoing.destroy(error);
+        });
+      }
+    );
+    upstream.on('error', (error) => outgoing.destroy(error));
+    incoming.on('error', (error) => upstream.destroy(error));
+    incoming.pipe(upstream);
+  });
+  storageProxy.listen(0, '127.0.0.1');
+  await once(storageProxy, 'listening');
+  const { port } = storageProxy.address() as { port: number };
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, `http://127.0.0.1:${port}`);
   await http.pool.query(
     `INSERT INTO staff_roles(role_id,name,description,permissions)
      VALUES('postal-review-staff','Postal reviewer','Test reviewer','["orders:read","orders:write","contracts:write","contracts:read","invoices:write","admin:catalogue:edit"]')`
@@ -946,6 +979,37 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       ContentType: 'text/plain',
     })
   );
+  const beforeChangedReview = await solarContractEffects();
+  let changedDueRule = false;
+  observeStorage = async (method, path) => {
+    if (method !== 'PUT' || !path.startsWith('/test-evidence/uploads/contract/')) return;
+    observeStorage = undefined;
+    expect(
+      await http.pool.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE NOWAIT', [profileId])
+    ).toMatchObject({ rowCount: 1 });
+    expect(
+      await http.pool.query(
+        'SELECT id FROM solar_construction_requests WHERE id=$1 FOR UPDATE NOWAIT',
+        [id]
+      )
+    ).toMatchObject({ rowCount: 1 });
+    await http.pool.query('UPDATE service_due_periods SET default_days=8 WHERE id=$1', [
+      duePeriodId,
+    ]);
+    changedDueRule = true;
+  };
+  try {
+    const rejected = await send('postal-reviewer', contractBase, 'POST', command);
+    expect(changedDueRule).toBe(true);
+    expect(rejected.status, http.logs()).toBe(409);
+    expect(await solarContractEffects()).toEqual(beforeChangedReview);
+  } finally {
+    observeStorage = undefined;
+    if (changedDueRule)
+      await http.pool.query('UPDATE service_due_periods SET default_days=7 WHERE id=$1', [
+        duePeriodId,
+      ]);
+  }
   await expectSolarStatusRollback(
     http.pool,
     id,
@@ -953,12 +1017,16 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     () => send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command),
     true
   );
-  const contract = await send(
-    'postal-reviewer',
-    `admin/solar/requests/${id}/create-contract`,
-    'POST',
-    command
-  );
+  let contractPuts = 0;
+  observeStorage = async (method) => {
+    if (method === 'PUT') contractPuts++;
+  };
+  const [contract, concurrent] = await Promise.all([
+    send('postal-reviewer', contractBase, 'POST', command),
+    send('postal-reviewer', contractBase, 'POST', command),
+  ]).finally(() => {
+    observeStorage = undefined;
+  });
   expect(contract.status, http.logs()).toBe(200);
   const result = (await contract.json()) as {
     contractId: string;
@@ -966,6 +1034,9 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
     status: string;
   };
   expect(result.status).toBe('contract_created');
+  expect(concurrent.status, http.logs()).toBe(200);
+  expect(await concurrent.json()).toEqual(result);
+  expect(contractPuts).toBe(2);
   await expectSolarStatusDeliveries(http.pool, id, 'postal-buyer', [
     'documents_under_review',
     'waiting_for_postal_submission',
@@ -1233,6 +1304,7 @@ afterAll(async () => {
   try {
     await http?.close();
   } finally {
+    if (storageProxy) await new Promise<void>((done) => storageProxy.close(() => done()));
     s3?.destroy();
     await minio?.stop();
   }

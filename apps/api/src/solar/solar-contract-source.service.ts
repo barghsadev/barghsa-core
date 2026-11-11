@@ -3,8 +3,9 @@ import { createHash, randomUUID } from 'node:crypto';
 import type { PoolClient } from 'pg';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN } from '@barghsa/shared/admin';
-import { contractDocuments, createDbClient, documents, eq } from '@barghsa/db';
-import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
+import { contractDocuments, createDbClient, createDirectDbPool, documents, eq } from '@barghsa/db';
+import { withMultipartUploadLock } from '@barghsa/db/storage-multipart';
+import { writeProvisionalStorageCopy } from '../storage/reserve-storage-copy.js';
 import { reserveUpload } from '../upload/upload-reservations.js';
 import { recordEvent } from '../documents/document.service.js';
 import { notifyDocumentReview, notifyDocumentUpload } from '../documents/document-notifications.js';
@@ -17,7 +18,7 @@ import type { SolarContractReviewInput } from './solar-contract.validation.js';
 export class SolarContractSourceService {
   constructor(@Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider) {}
 
-  async resolve(client: PoolClient, input: SolarContractReviewInput, amount: bigint) {
+  async inspect(client: PoolClient, input: SolarContractReviewInput) {
     const template = input.source.kind === 'template';
     const source = template
       ? (
@@ -48,51 +49,61 @@ export class SolarContractSourceService {
         ).rows[0];
     if (!source) throw new ConflictException('Select an available contract source');
     const limit = (template ? 10 : 50) * 1024 * 1024;
-    if (
-      !Number.isSafeInteger(Number(source.file_size)) ||
-      Number(source.file_size) <= 0 ||
-      Number(source.file_size) > limit
-    )
+    const size = Number(source.file_size);
+    if (!Number.isSafeInteger(size) || size <= 0 || size > limit)
       throw new ConflictException('Contract source size is invalid');
+    const profile = template
+      ? (
+          await client.query<{ customer_name: string }>(
+            `SELECT COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),
+           NULLIF(p.title,''),p.id::text) AS customer_name FROM profiles p
+           LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
+            [input.profileId]
+          )
+        ).rows[0]
+      : null;
+    if (template && !profile) throw new ConflictException('Contract customer is unavailable');
+    return { ...source, size, limit, template, customerName: profile?.customer_name };
+  }
+
+  async fetch(source: Awaited<ReturnType<SolarContractSourceService['inspect']>>) {
     let bytes: Buffer;
     try {
       const object = await this.storage.getObject(source.storage_key);
-      const read = await readCappedBytes(object.body, limit);
-      if (read.truncated || read.bytes.length !== Number(source.file_size)) throw new Error('size');
+      const read = await readCappedBytes(object.body, source.limit);
+      if (read.truncated || read.bytes.length !== source.size) throw new Error('size');
       bytes = Buffer.from(read.bytes);
     } catch {
       throw new ServiceUnavailableException('Contract source could not be read');
     }
     const checksum = createHash('sha256').update(bytes).digest('hex');
-    if (!template && checksum !== source.checksum)
+    if (!source.template && checksum !== source.checksum)
       throw new ConflictException('Contract source checksum changed');
+    const templateText = source.template ? this.decodeTemplate(bytes) : null;
+    return { bytes, checksum, templateText };
+  }
+
+  describe(
+    input: SolarContractReviewInput,
+    source: Awaited<ReturnType<SolarContractSourceService['inspect']>>,
+    { bytes, checksum, templateText }: Awaited<ReturnType<SolarContractSourceService['fetch']>>,
+    amount: bigint
+  ) {
     let rendered: { name: string; text: string } | null = null;
-    if (template) {
-      const profile = (
-        await client.query<{ customer_name: string }>(
-          `SELECT COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),
-         NULLIF(p.title,''),p.id::text) AS customer_name FROM profiles p
-         LEFT JOIN legal_profiles lp ON lp.id=p.id WHERE p.id=$1`,
-          [input.profileId]
-        )
-      ).rows[0];
-      if (!profile) throw new ConflictException('Contract customer is unavailable');
-      let text: string;
-      try {
-        text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
-      } catch {
-        throw new ConflictException('Contract template must contain UTF-8 text');
-      }
+    if (templateText !== null) {
       const values: Record<string, string> = {
         date: new Date().toISOString().slice(0, 10),
-        customerName: profile.customer_name,
+        customerName: source.customerName!,
         amount: amount.toString(),
       };
-      text = text.replace(CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN, (_token, name: string) => {
-        if (!Object.hasOwn(values, name))
-          throw new ConflictException('Unsupported contract template placeholder');
-        return values[name]!;
-      });
+      const text = templateText.replace(
+        CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN,
+        (_token, name: string) => {
+          if (!Object.hasOwn(values, name))
+            throw new ConflictException('Unsupported contract template placeholder');
+          return values[name]!;
+        }
+      );
       if (!text.trim()) throw new ConflictException('Contract template is empty');
       rendered = { name: source.label, text: `${text.trim()}\n\n${input.text}` };
     }
@@ -112,38 +123,58 @@ export class SolarContractSourceService {
     };
   }
 
-  async attach(
-    client: PoolClient,
-    source: Awaited<ReturnType<SolarContractSourceService['resolve']>>,
-    contractId: string,
-    versionId: string,
+  private decodeTemplate(bytes: Buffer) {
+    try {
+      return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    } catch {
+      throw new ConflictException('Contract template must contain UTF-8 text');
+    }
+  }
+
+  async prepareAttachment(
+    source: ReturnType<SolarContractSourceService['describe']>,
     profileId: string,
     actorId: string,
-    ip: string
+    directClient?: PoolClient
   ) {
-    const contract = (
-      await client.query<{ contract_number: string; created_at: Date }>(
-        'SELECT contract_number,created_at FROM contracts WHERE id=$1 AND profile_id=$2',
-        [contractId, profileId]
+    const { contractNumber } = (
+      await (directClient ?? createDirectDbPool()).query<{ contractNumber: string }>(
+        `SELECT nextval('contract_number_seq'::regclass)::text AS "contractNumber"`
       )
-    ).rows[0];
-    if (!contract) throw new ConflictException('Contract is unavailable');
+    ).rows[0]!;
+    const createdAt = new Date();
     const bytes = source.rendered
       ? await renderContractPdf({
-          contractNumber: contract.contract_number,
+          contractNumber,
           versionNumber: 1,
           templateName: source.rendered.name,
           text: source.rendered.text,
-          createdAt: contract.created_at,
+          createdAt,
         })
       : source.bytes;
     const mime = source.rendered ? 'application/pdf' : source.snapshot.contentType;
     const fileName = source.rendered
-      ? `contract-${contract.contract_number}-v1.pdf`
+      ? `contract-${contractNumber}-v1.pdf`
       : source.snapshot.fileName;
     const checksum = createHash('sha256').update(bytes).digest('hex');
     const uploadKey = `uploads/contract/${randomUUID()}`;
     const storageKey = `business-documents/${randomUUID()}/${checksum}`;
+    const uploadContext = { profileId, purpose: '' };
+    const uploadMetadata = {
+      uploadedBy: actorId,
+      uploadContext,
+      provisionalUpload: true,
+      deletionRequested: true,
+    };
+    const metadata = {
+      purpose: 'solar_contract_source',
+      profileId,
+      uploadedBy: actorId,
+      sourceKey: uploadKey,
+      selectedSourceKey: source.storageKey,
+      selectedSource: source.snapshot,
+      sha256: checksum,
+    };
     await reserveUpload({
       key: uploadKey,
       userId: actorId,
@@ -152,10 +183,69 @@ export class SolarContractSourceService {
       fileSize: bytes.length,
       category: 'contract',
       expiresIn: 900,
-      context: { profileId, purpose: '' },
+      context: uploadContext,
       independent: true,
     });
-    await this.storage.putObject(uploadKey, bytes, mime);
+    const uploaded = await withMultipartUploadLock(
+      directClient ?? createDirectDbPool(),
+      uploadKey,
+      async (client) => {
+        const reserved = await client.query(
+          `SELECT storage_key FROM storage_records WHERE storage_key=$1
+           AND status='removed' AND signed_at IS NULL AND cleanup_operation IS NULL
+           AND metadata @> $2::jsonb
+           AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
+          [uploadKey, JSON.stringify(uploadMetadata)]
+        );
+        if (reserved.rowCount !== 1) return false;
+        await this.storage.putObject(uploadKey, bytes, mime);
+        return true;
+      }
+    );
+    if (!uploaded.acquired || !uploaded.value)
+      throw new ConflictException('Contract upload reservation expired');
+    const copied = await writeProvisionalStorageCopy(
+      storageKey,
+      metadata,
+      () => this.storage.putObject(storageKey, bytes, mime),
+      directClient
+    );
+    if (!copied) throw new ConflictException('Contract copy reservation expired');
+    return {
+      contractNumber,
+      createdAt,
+      profileId,
+      actorId,
+      mime,
+      fileName,
+      fileSize: bytes.length,
+      checksum,
+      uploadKey,
+      uploadMetadata,
+      storageKey,
+      metadata,
+    };
+  }
+
+  async attach(
+    client: PoolClient,
+    prepared: Awaited<ReturnType<SolarContractSourceService['prepareAttachment']>>,
+    contractId: string,
+    versionId: string,
+    ip: string
+  ) {
+    const {
+      profileId,
+      actorId,
+      mime,
+      fileName,
+      fileSize,
+      checksum,
+      uploadKey,
+      uploadMetadata,
+      storageKey,
+      metadata,
+    } = prepared;
     const db = createDbClient(client);
     const created = (
       await db
@@ -167,7 +257,7 @@ export class SolarContractSourceService {
           category: 'contract',
           uploadKey,
           originalName: fileName,
-          sizeBytes: bytes.length,
+          sizeBytes: fileSize,
           uploadedBy: actorId,
           uploadedByType: 'system',
         })
@@ -188,46 +278,43 @@ export class SolarContractSourceService {
         .returning()
     )[0]!;
     await recordEvent(client, pending, 'Uploading', { userId: actorId }, ip);
-    const metadata = {
-      purpose: 'solar_contract_source',
-      profileId,
-      uploadedBy: actorId,
-      sourceKey: uploadKey,
-      selectedSourceKey: source.storageKey,
-      selectedSource: source.snapshot,
-      sha256: checksum,
-    };
-    await reserveStorageCopy(storageKey, metadata);
-    const reservation = await client.query(
-      `SELECT storage_key FROM storage_records WHERE storage_key=$1
-      AND status='removed' AND cleanup_operation IS NULL AND metadata->>'provisionalCopy'='true'
-      AND metadata->>'deletionRequested'='true' FOR UPDATE`,
-      [storageKey]
-    );
-    if (reservation.rowCount !== 1)
-      throw new ConflictException('Contract copy reservation expired');
-    await this.storage.putObject(storageKey, bytes, mime);
-    await client.query(
+    const copied = await client.query(
       `UPDATE storage_records SET status='immutable',signed_at=NOW(),signed_by=$2,
       content_type=$3,file_size=$4,category='contract',file_name=$5,metadata=$6::jsonb,
-      removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
-      [storageKey, actorId, mime, bytes.length, fileName, JSON.stringify(metadata)]
+      removed_at=NULL,updated_at=NOW() WHERE storage_key=$1 AND status='removed'
+        AND signed_at IS NULL AND cleanup_operation IS NULL AND metadata @> $7::jsonb
+        RETURNING storage_key`,
+      [
+        storageKey,
+        actorId,
+        mime,
+        fileSize,
+        fileName,
+        JSON.stringify(metadata),
+        JSON.stringify({ ...metadata, provisionalCopy: true, deletionRequested: true }),
+      ]
     );
+    if (copied.rowCount !== 1) throw new ConflictException('Contract copy reservation expired');
     const scan = Boolean(process.env['DOCUMENT_CLAMAV_HOST']?.trim());
-    await client.query(
+    const uploaded = await client.query(
       `UPDATE storage_records SET status='active',content_type=$2,file_size=$3,
       metadata=(metadata-'provisionalUpload'-'deletionRequested'-'uploadExpiresAt')
       ||jsonb_build_object('scanState',$4::text,'scanSkippedReason',$5::text,'sha256',$6::text),
-      removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
+      removed_at=NULL,updated_at=NOW() WHERE storage_key=$1 AND status='removed'
+        AND signed_at IS NULL AND cleanup_operation IS NULL AND file_size=$3
+        AND metadata @> $7::jsonb AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
+        RETURNING storage_key`,
       [
         uploadKey,
         mime,
-        bytes.length,
+        fileSize,
         scan ? 'Pending' : 'Available',
         scan ? null : 'not_configured',
         checksum,
+        JSON.stringify(uploadMetadata),
       ]
     );
+    if (uploaded.rowCount !== 1) throw new ConflictException('Contract upload reservation expired');
     const available = (
       await db
         .update(documents)

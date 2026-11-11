@@ -205,6 +205,13 @@ The final transaction checks current authority, pricing and template terms
 again, then records the order, contract, invoice, PDF and scan state together.
 An exact retry returns the recorded order without copying the PDF again.
 
+Solar contract reviews fetch the selected template or uploaded document after
+committing the source lookup. Issuance prepares the original and immutable copy
+under committed cleanup reservations. The final transaction checks staff
+authority, the selected source and the confirmed financial review again before
+publishing the contract, invoice, document, scan state and audit together.
+Exact retries reuse the recorded receipt.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

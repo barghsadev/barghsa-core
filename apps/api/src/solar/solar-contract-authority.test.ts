@@ -5,6 +5,7 @@ import { ContractService } from '../contract/contract.service.js';
 
 const h = vi.hoisted(() => ({
   connect: vi.fn(),
+  directConnect: vi.fn(),
   permission: vi.fn(),
   current: vi.fn(),
   stepUp: vi.fn(),
@@ -12,6 +13,7 @@ const h = vi.hoisted(() => ({
 vi.mock('@barghsa/db', async (importOriginal) => ({
   ...(await importOriginal<typeof DbModule>()),
   getDbPool: () => ({ connect: h.connect }),
+  createDirectDbPool: () => ({ connect: h.directConnect }),
 }));
 vi.mock('../admin/staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: h.permission,
@@ -57,6 +59,11 @@ function fixture() {
     release: vi.fn(),
   };
   h.connect.mockResolvedValue(client);
+  const directClient = {
+    query: vi.fn().mockResolvedValue({ rows: [{ released: true }] }),
+    release: vi.fn(),
+  };
+  h.directConnect.mockResolvedValue(directClient);
   h.permission.mockImplementation(async (_client, _actor, grant) => {
     order.push(grant);
   });
@@ -73,7 +80,7 @@ function fixture() {
     { resolve } as never,
     {} as never
   );
-  return { state, order, client, service, createManualInvoice, resolve };
+  return { state, order, client, directClient, service, createManualInvoice, resolve };
 }
 function noEffects(f: ReturnType<typeof fixture>) {
   expect(f.createManualInvoice).not.toHaveBeenCalled();
@@ -194,6 +201,11 @@ it('returns the original actor-key/full-command receipt before new eligibility w
     sql.includes("response->'request'") ? { rows: [{ matches, result }] } : query(sql, values)
   );
   expect(await f.service.createSolar(input, actor, '127.0.0.1')).toBe(result);
+  expect(f.directClient.query).toHaveBeenCalledWith(
+    'SELECT pg_advisory_lock(hashtextextended($1,0))',
+    [`solar-contract-source:solar_contract_create:${actor.userId}:${id}`]
+  );
+  expect(f.directClient.release).toHaveBeenCalledWith(false);
   expect(f.client.query).toHaveBeenCalledWith(
     'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',
     [`solar_contract_create:${actor.userId}:${id}`]

@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { isDeepStrictEqual } from 'node:util';
 import { duePeriodTypeForManual } from '@barghsa/shared/finance';
 import { notifySolarStatus } from '../solar/solar-status-notifications.js';
 import {
@@ -47,6 +48,18 @@ import type {
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { SolarContractSourceService } from '../solar/solar-contract-source.service.js';
+import { idempotentMutationLockKey, readIdempotentMutation } from '../database/idempotency.js';
+import { withCopyReplayLock } from '../storage/storage-copy-transaction.js';
+
+type SolarAttachment = Awaited<ReturnType<SolarContractSourceService['prepareAttachment']>>;
+type SolarContractReceipt = { status: string; contractId: string; invoiceIds: string[] };
+type SolarReviewSource = {
+  selection: Awaited<ReturnType<SolarContractSourceService['inspect']>>;
+  fetched: Awaited<ReturnType<SolarContractSourceService['fetch']>>;
+  calculation: ReturnType<typeof calculateManualInvoice>;
+};
+const solarContractMutationKind = 'solar_contract_create';
+
 const versionDto = (row: typeof contractVersions.$inferSelect) => ({
   ...row,
   createdAt: row.createdAt.toISOString(),
@@ -409,19 +422,29 @@ export class ContractService {
     });
   }
 
-  private async solarContractReview(client: PoolClient, input: SolarContractReviewInput) {
+  private async inspectSolarContract(
+    client: PoolClient,
+    input: SolarContractReviewInput,
+    archived: boolean,
+    lock: 'UPDATE' | 'SHARE' = 'SHARE'
+  ) {
+    if (archived) throw new ConflictException('Profile is archived');
     const request = (
-      await client.query<{ status: string; contract_id: string | null }>(
-        'SELECT status,contract_id FROM solar_construction_requests WHERE id=$1 AND profile_id=$2 FOR SHARE',
+      await client.query<{ status: string; submitted_by: string; contract_id: string | null }>(
+        `SELECT status,submitted_by,contract_id FROM solar_construction_requests
+         WHERE id=$1 AND profile_id=$2 FOR ${lock}`,
         [input.requestId, input.profileId]
       )
     ).rows[0];
     if (!request) throw new NotFoundException('Solar request not found');
     if (request.status !== 'approved' || request.contract_id)
       throw new ConflictException('Solar request is not awaiting a contract');
-    let calculation: ReturnType<typeof calculateManualInvoice>;
+    return { request, selection: await this.solarSources.inspect(client, input) };
+  }
+
+  private solarInvoiceCalculation(input: SolarContractReviewInput) {
     try {
-      calculation = calculateManualInvoice(
+      const calculation = calculateManualInvoice(
         input.invoiceLines.map((line) => ({
           ...line,
           unitPrice: BigInt(line.unitPrice),
@@ -429,11 +452,24 @@ export class ContractService {
       );
       if (calculation.totalAmount > 9_223_372_036_854_775_807n)
         throw new RangeError('Invoice total exceeds the supported int8 IRR amount');
+      return calculation;
     } catch (error) {
       if (error instanceof RangeError) throw new BadRequestException(error.message);
       throw error;
     }
-    const source = await this.solarSources.resolve(client, input, calculation.totalAmount);
+  }
+
+  private async solarContractReview(
+    client: PoolClient,
+    input: SolarContractReviewInput,
+    archived: boolean,
+    { selection, fetched, calculation }: SolarReviewSource,
+    lock: 'UPDATE' | 'SHARE' = 'SHARE'
+  ) {
+    const current = await this.inspectSolarContract(client, input, archived, lock);
+    if (!isDeepStrictEqual(current.selection, selection))
+      throw new ConflictException('Contract source changed since the solar contract review');
+    const source = this.solarSources.describe(input, selection, fetched, calculation.totalAmount);
     const content = {
       title: input.title,
       text: input.text,
@@ -470,7 +506,7 @@ export class ContractService {
       },
       {
         requestId: input.requestId,
-        requestStatus: request.status,
+        requestStatus: current.request.status,
         title: input.title,
         text: input.text,
         changeDescription: input.changeDescription,
@@ -502,7 +538,7 @@ export class ContractService {
         outcome: 'draft_contract_and_unpaid_invoice' as const,
       }
     );
-    return { review, source, content };
+    return { review, source, content, request: current.request };
   }
 
   async assertCanEditSolarContract(
@@ -533,46 +569,106 @@ export class ContractService {
   }
 
   async reviewSolar(input: SolarContractReviewInput, actor: Actor) {
+    const { selection } = await staffContractFinancialReview(
+      input.profileId,
+      actor,
+      (client, archived) => this.inspectSolarContract(client, input, archived)
+    );
+    const calculation = this.solarInvoiceCalculation(input);
+    const fetched = await this.solarSources.fetch(selection);
     return staffContractFinancialReview(input.profileId, actor, async (client, archived) => {
-      if (archived) throw new ConflictException('Profile is archived');
-      return (await this.solarContractReview(client, input)).review;
+      return (
+        await this.solarContractReview(client, input, archived, {
+          selection,
+          fetched,
+          calculation,
+        })
+      ).review;
     });
   }
 
   async createSolar(input: SolarContractInput, actor: Actor, ip: string) {
+    const { expectedReviewHash, ...reviewInput } = input;
+    const replayKey = idempotentMutationLockKey(
+      solarContractMutationKind,
+      actor.userId,
+      input.idempotencyKey
+    );
+    return withCopyReplayLock(`solar-contract-source:${replayKey}`, async (directClient) => {
+      const preflight = await staffContractMutation(
+        input.profileId,
+        actor,
+        async (client, archived) => {
+          await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [replayKey]);
+          const prior = await readIdempotentMutation<SolarContractReceipt>(
+            client,
+            solarContractMutationKind,
+            input,
+            actor.userId
+          );
+          if (prior) return { replay: prior.result };
+          await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+          const { selection } = await this.inspectSolarContract(client, reviewInput, archived);
+          return { selection };
+        },
+        { financialReview: true }
+      );
+      if (preflight.replay) return preflight.replay;
+      const { selection } = preflight;
+      const calculation = this.solarInvoiceCalculation(reviewInput);
+      const fetched = await this.solarSources.fetch(selection);
+      const reviewSource = { selection, fetched, calculation };
+      const source = await staffContractMutation(
+        input.profileId,
+        actor,
+        async (client, archived) => {
+          await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
+          const reviewed = await this.solarContractReview(
+            client,
+            reviewInput,
+            archived,
+            reviewSource
+          );
+          this.solarReviews.assertConfirmed(reviewed.review, expectedReviewHash);
+          return reviewed.source;
+        },
+        { financialReview: true }
+      );
+      const attachment = await this.solarSources.prepareAttachment(
+        source,
+        input.profileId,
+        actor.userId,
+        directClient
+      );
+      return this.publishSolar(input, actor, ip, reviewSource, attachment);
+    });
+  }
+
+  private async publishSolar(
+    input: SolarContractInput,
+    actor: Actor,
+    ip: string,
+    reviewSource: SolarReviewSource,
+    attachment: SolarAttachment
+  ) {
     return staffContractMutation(
       input.profileId,
       actor,
       async (client, archived) => {
-        return contractIdempotency(client, 'solar_contract_create', input, actor, async () => {
-          if (archived) throw new ConflictException('Profile is archived');
-          const request = (
-            await client.query<{
-              status: string;
-              submitted_by: string;
-              contract_id: string | null;
-            }>(
-              `SELECT status,submitted_by,contract_id FROM solar_construction_requests
-           WHERE id=$1 AND profile_id=$2 FOR UPDATE`,
-              [input.requestId, input.profileId]
-            )
-          ).rows[0];
-          if (!request) throw new NotFoundException('Solar request not found');
-          if (request.status !== 'approved' || request.contract_id)
-            throw new ConflictException('Solar request is not awaiting a contract');
+        return contractIdempotency(client, solarContractMutationKind, input, actor, async () => {
           const { expectedReviewHash, ...reviewInput } = input;
           const {
             review: financialReview,
-            source,
             content,
-          } = await this.solarContractReview(client, reviewInput);
+            request,
+          } = await this.solarContractReview(client, reviewInput, archived, reviewSource, 'UPDATE');
           this.solarReviews.assertConfirmed(financialReview, expectedReviewHash);
           const id = uuidv7(),
             versionId = uuidv7();
           await client.query(
-            `INSERT INTO contracts(id,profile_id,service_type,current_version_id)
-           VALUES($1,$2,'solar',$3)`,
-            [id, input.profileId, versionId]
+            `INSERT INTO contracts(id,profile_id,service_type,current_version_id,contract_number,created_at)
+           VALUES($1,$2,'solar',$3,$4,$5)`,
+            [id, input.profileId, versionId, attachment.contractNumber, attachment.createdAt]
           );
           await this.insertVersion(
             client,
@@ -585,15 +681,7 @@ export class ContractService {
             },
             actor
           );
-          await this.solarSources.attach(
-            client,
-            source,
-            id,
-            versionId,
-            input.profileId,
-            actor.userId,
-            ip
-          );
+          await this.solarSources.attach(client, attachment, id, versionId, ip);
           await auditContract(client, id, versionId, 'contract.created', actor, ip, {
             entity: 'contract',
             entityId: id,
