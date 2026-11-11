@@ -25,7 +25,12 @@ import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { UploadService } from '../upload/upload.service.js';
-import { idempotentMutation } from '../database/idempotency.js';
+import {
+  idempotentMutation,
+  idempotentMutationLockKey,
+  readIdempotentMutation,
+} from '../database/idempotency.js';
+import { withCopyReplayLock } from '../storage/storage-copy-transaction.js';
 import {
   documentAccess,
   staffDocumentRead,
@@ -783,78 +788,116 @@ export class DocumentService {
       },
       context.businessRecordId ?? undefined
     );
-    return documentAccess(
-      actor,
-      context.kind,
-      true,
-      staff,
-      context.profileId,
-      async (client, profileId) => {
-        const initial = await load(client, id, profileId, staff);
-        if (initial.document.uploadedBy !== actor.userId)
-          throw new ConflictException('Upload belongs to another actor');
-        return idempotentMutation(client, 'document_confirm', command, actor, async () => {
-          await this.mutableContract(client, initial, staff);
-          const row = await load(client, id, profileId, staff, true);
-          if (row.document.revision !== pending.revision || row.document.state !== 'PendingScan')
-            throw new ConflictException('Document changed during confirmation');
-          const previous = row.document.supersedesDocumentId
-            ? await load(client, row.document.supersedesDocumentId, profileId, staff, true)
-            : null;
-          if (
-            previous &&
-            ![
-              'Available',
-              'Approved',
-              'Rejected',
-              ...(context.kind === 'solar_request' ? ['SubmittedForReview'] : []),
-              ...(staff && context.kind === 'contract' && row.contractRole === 'original'
-                ? ['Quarantined']
-                : []),
-            ].includes(previous.document.state)
-          )
-            throw new ConflictException(
-              'Another replacement already changed the previous document'
-            );
-          await this.uploads.recordUpload(row.document.uploadKey, {}, request);
-          const copy = await this.storage.seal(
-            client,
-            row.document.uploadKey,
-            actor.userId,
-            profileId,
-            staff
+    const kind = 'document_confirm';
+    const businessId = context.businessRecordId ?? undefined;
+    const requireUploader = async (client: PoolClient, profileId: string) => {
+      const row = await load(client, id, profileId, staff);
+      if (row.document.uploadedBy !== actor.userId)
+        throw new ConflictException('Upload belongs to another actor');
+      return row;
+    };
+    const requireConfirmable = async (
+      client: PoolClient,
+      profileId: string,
+      initial: LinkedDocument
+    ) => {
+      await this.mutableContract(client, initial, staff);
+      const row = await load(client, id, profileId, staff, true);
+      if (row.document.revision !== pending.revision || row.document.state !== 'PendingScan')
+        throw new ConflictException('Document changed during confirmation');
+      const previous = row.document.supersedesDocumentId
+        ? await load(client, row.document.supersedesDocumentId, profileId, staff, true)
+        : null;
+      if (
+        previous &&
+        ![
+          'Available',
+          'Approved',
+          'Rejected',
+          ...(context.kind === 'solar_request' ? ['SubmittedForReview'] : []),
+          ...(staff && context.kind === 'contract' && row.contractRole === 'original'
+            ? ['Quarantined']
+            : []),
+        ].includes(previous.document.state)
+      )
+        throw new ConflictException('Another replacement already changed the previous document');
+      return { row, previous };
+    };
+    return withCopyReplayLock(
+      idempotentMutationLockKey(kind, actor.userId, command.idempotencyKey),
+      async (directClient) => {
+        const access = <T>(work: (client: PoolClient, profileId: string) => Promise<T>) =>
+          documentAccess(
+            actor,
+            context.kind,
+            true,
+            staff,
+            context.profileId,
+            work,
+            businessId,
+            directClient
           );
-          const scannerConfigured = Boolean(process.env['DOCUMENT_CLAMAV_HOST']?.trim());
-          const changed = (
-            await createDbClient(client)
-              .update(documents)
-              .set({
-                state: scannerConfigured ? 'PendingScan' : 'Available',
-                scanState: scannerConfigured ? 'Pending' : 'Available',
-                scanSkippedReason: scannerConfigured ? null : 'not_configured',
-                ...copy,
-              })
-              .where(eq(documents.id, id))
-              .returning()
-          )[0]!;
-          await recordEvent(client, changed, 'PendingScan', actor, ip);
-          await notifyDocumentUpload(client, changed);
-          if (scannerConfigured) {
-            await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [id]);
-          } else if (changed.supersedesDocumentId) {
-            const replaced = (
+        const initial = await access(async (client, profileId) => {
+          const owned = await requireUploader(client, profileId);
+          const prior = await readIdempotentMutation<ReturnType<typeof dto>>(
+            client,
+            kind,
+            command,
+            actor.userId
+          );
+          if (prior) return prior;
+          const { row } = await requireConfirmable(client, profileId, owned);
+          return { uploadKey: row.document.uploadKey };
+        });
+        if ('result' in initial) return initial.result;
+        // Inspection and the durable private copy run after the authorization transaction.
+        await this.uploads.recordUpload(initial.uploadKey, {}, request);
+        const plan = await access(async (client, profileId) => {
+          const owned = await requireUploader(client, profileId);
+          const { row } = await requireConfirmable(client, profileId, owned);
+          if (row.document.uploadKey !== initial.uploadKey)
+            throw new ConflictException('Document upload changed during confirmation');
+          return this.storage.plan(client, initial.uploadKey, actor.userId, profileId, staff);
+        });
+        const prepared = await this.storage.copy(plan, directClient);
+        return access(async (client, profileId) => {
+          const owned = await requireUploader(client, profileId);
+          return idempotentMutation(client, kind, command, actor, async () => {
+            const { row, previous } = await requireConfirmable(client, profileId, owned);
+            if (row.document.uploadKey !== prepared.source.key)
+              throw new ConflictException('Document upload changed during confirmation');
+            const copy = await this.storage.publish(client, prepared);
+            const scannerConfigured = Boolean(process.env['DOCUMENT_CLAMAV_HOST']?.trim());
+            const changed = (
               await createDbClient(client)
                 .update(documents)
-                .set({ state: 'Superseded' })
-                .where(eq(documents.id, previous!.document.id))
+                .set({
+                  state: scannerConfigured ? 'PendingScan' : 'Available',
+                  scanState: scannerConfigured ? 'Pending' : 'Available',
+                  scanSkippedReason: scannerConfigured ? null : 'not_configured',
+                  ...copy,
+                })
+                .where(eq(documents.id, id))
                 .returning()
             )[0]!;
-            await recordEvent(client, replaced, previous!.document.state, actor, ip);
-          }
-          return dto({ ...row, document: changed });
+            await recordEvent(client, changed, 'PendingScan', actor, ip);
+            await notifyDocumentUpload(client, changed);
+            if (scannerConfigured) {
+              await client.query('INSERT INTO document_scan_jobs(document_id) VALUES($1)', [id]);
+            } else if (changed.supersedesDocumentId) {
+              const replaced = (
+                await createDbClient(client)
+                  .update(documents)
+                  .set({ state: 'Superseded' })
+                  .where(eq(documents.id, previous!.document.id))
+                  .returning()
+              )[0]!;
+              await recordEvent(client, replaced, previous!.document.state, actor, ip);
+            }
+            return dto({ ...row, document: changed });
+          });
         });
-      },
-      context.businessRecordId ?? undefined
+      }
     );
   }
 

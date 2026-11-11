@@ -177,6 +177,14 @@ verification policy. Evidence stays in the submitted order. A rejected save
 keeps its private copies eligible for cleanup and leaves the case and audit
 unchanged.
 
+Business document confirmation commits `PendingScan` before inspecting the
+upload. A keyed retry can resume the same confirmation. The provider copy
+runs outside the document transaction. Publication rechecks the original
+uploader, current profile and contract authority, the document and source
+revisions, and any predecessor before it records the immutable object and
+queues a configured document scan. A failed confirmation leaves `PendingScan` and
+its cleanup receipt available for recovery.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

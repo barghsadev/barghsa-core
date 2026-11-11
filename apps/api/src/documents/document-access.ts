@@ -93,9 +93,10 @@ export async function documentAccess<T>(
   staff: boolean,
   requestedProfile: string | undefined,
   work: (client: PoolClient, profileId: string) => Promise<T>,
-  businessRecordId?: string
+  businessRecordId?: string,
+  directClient?: PoolClient
 ) {
-  const client = await getDbPool().connect();
+  const client = directClient ?? (await getDbPool().connect());
   try {
     await client.query('BEGIN');
     const permission = customerDocumentPermission(kind, write);
@@ -155,7 +156,7 @@ export async function documentAccess<T>(
       throw new ConflictException('Document changed or the action is no longer permitted');
     throw error;
   } finally {
-    client.release();
+    if (!directClient) client.release();
   }
 }
 

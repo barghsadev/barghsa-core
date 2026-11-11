@@ -1,7 +1,5 @@
 import { readCappedBytes } from './read-capped-bytes.js';
-import { reserveStorageCopy } from './reserve-storage-copy.js';
-import { createDirectDbPool } from '@barghsa/db';
-import { withMultipartUploadLock } from '@barghsa/db/storage-multipart';
+import { writeProvisionalStorageCopy } from './reserve-storage-copy.js';
 import type { PoolClient } from 'pg';
 import {
   BadRequestException,
@@ -181,28 +179,15 @@ export class VerifiedAttachmentsService {
       const { bytes, contentType, digest } = await this.readBytes(storage, source, binding.purpose);
       const key = `${prefix(binding.purpose)}${randomUUID()}/${digest}`;
       const metadata = this.copyMetadata(binding, source, digest);
-      await reserveStorageCopy(key, metadata);
-      const outcome = await withMultipartUploadLock(
-        directClient ?? createDirectDbPool(),
-        key,
-        async (client) => {
-          const ready = await client.query(
-            `SELECT 1 FROM storage_records WHERE storage_key=$1 AND status='removed'
-           AND cleanup_operation IS NULL AND metadata @> $2::jsonb`,
-            [key, JSON.stringify({ ...metadata, provisionalCopy: true, deletionRequested: true })]
-          );
-          if (!ready.rows[0]) throw this.copyExpired();
-          await storage.putObject(key, bytes, contentType);
-          // Give the publication transaction a fresh cleanup grace period after a slow upload.
-          const refreshed = await client.query(
-            `UPDATE storage_records SET updated_at=NOW() WHERE storage_key=$1
-           AND status='removed' AND cleanup_operation IS NULL`,
-            [key]
-          );
-          if (refreshed.rowCount !== 1) throw this.copyExpired();
-        }
-      );
-      if (!outcome.acquired) throw this.copyExpired();
+      if (
+        !(await writeProvisionalStorageCopy(
+          key,
+          metadata,
+          () => storage.putObject(key, bytes, contentType),
+          directClient
+        ))
+      )
+        throw this.copyExpired();
       copies.push({ source, key, digest, size: bytes.length, contentType });
     }
     return { binding, copies };

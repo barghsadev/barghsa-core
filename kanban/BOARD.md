@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T06:17:58+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T06:28:37+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Reconcile direct business-document storage reads and copies with persisted cleanup intent, unlocked provider work and exact authorized document publication.
+Move invoice and wallet bank receipt storage copies outside their financial transactions and publish with exact current provenance, review and attachment claims.
 
 - `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance

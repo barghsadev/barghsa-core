@@ -13,6 +13,7 @@ import { expectDocumentAuditHistory } from '../test/core-audit.js';
 import { contractReviewConfirmation } from '../test/contract-review-confirmation.js';
 import { createHash, randomUUID } from 'node:crypto';
 import { createServer } from 'node:net';
+import { createServer as createHttpServer, request as forwardHttp } from 'node:http';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
@@ -82,15 +83,21 @@ beforeAll(async () => {
   pdfDocument.text('Document fixture');
   pdfDocument.end();
   pdf = await complete;
-  minio = await new GenericContainer(
-    'pgsty/minio@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372'
-  )
-    .withEnvironment({ MINIO_ROOT_USER: 'test-only-key', MINIO_ROOT_PASSWORD: 'test-only-secret' })
-    .withCommand(['server', '/data'])
-    .withExposedPorts(9000)
-    .withWaitStrategy(Wait.forHttp('/minio/health/ready', 9000))
-    .start();
-  const endpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
+  let endpoint = process.env['BARGHSA_TEST_MINIO_URL'];
+  if (!endpoint) {
+    minio = await new GenericContainer(
+      'pgsty/minio@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372'
+    )
+      .withEnvironment({
+        MINIO_ROOT_USER: 'test-only-key',
+        MINIO_ROOT_PASSWORD: 'test-only-secret',
+      })
+      .withCommand(['server', '/data'])
+      .withExposedPorts(9000)
+      .withWaitStrategy(Wait.forHttp('/minio/health/ready', 9000))
+      .start();
+    endpoint = `http://${minio.getHost()}:${minio.getMappedPort(9000)}`;
+  }
   storageEndpoint = endpoint;
   s3 = new S3Client({
     endpoint,
@@ -2305,6 +2312,108 @@ it('rechecks original profile access before returning a cached confirmation', as
   ]);
   expect((await send(path, agent.user, 'POST', request)).status).toBe(404);
 });
+
+it('rechecks document step-up after the immutable copy reaches storage', async () => {
+  let entered!: () => void, release!: () => void;
+  const started = new Promise<void>((resolve) => {
+    entered = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const proxy = createHttpServer(async (req, res) => {
+    const destination = new URL(req.url!, storageEndpoint);
+    if (
+      req.method === 'PUT' &&
+      destination.pathname.startsWith('/test-evidence/business-documents/')
+    ) {
+      entered();
+      await gate;
+    }
+    const upstream = forwardHttp(
+      destination,
+      { method: req.method, headers: req.headers },
+      (reply) => {
+        res.writeHead(reply.statusCode ?? 502, reply.headers);
+        reply.pipe(res);
+      }
+    );
+    upstream.on('error', () => res.destroy());
+    req.pipe(upstream);
+  });
+  await new Promise<void>((resolve) => proxy.listen(0, '127.0.0.1', resolve));
+  let fixture: Awaited<ReturnType<typeof startHttpFixture>> | undefined;
+  let response: Promise<Response> | undefined;
+  try {
+    fixture = await startHttpFixture(
+      process.env.TEST_DATABASE_URL!,
+      `http://127.0.0.1:${(proxy.address() as { port: number }).port}`
+    );
+    const f = await owner(fixture),
+      created = await create(f.user, {}, false, fixture);
+    await upload(created);
+    response = send(
+      `documents/${created.document.id}/confirm`,
+      f.user,
+      'POST',
+      command(1),
+      fixture
+    );
+    await Promise.race([
+      started,
+      response.then(async (reply) => {
+        throw new Error(
+          `Document copy was never reached: ${reply.status} ${await reply.clone().text()}`
+        );
+      }),
+    ]);
+    expect(
+      (
+        await fixture.pool.query('SELECT id FROM documents WHERE id=$1 FOR UPDATE NOWAIT', [
+          created.document.id,
+        ])
+      ).rows
+    ).toEqual([{ id: created.document.id }]);
+    expect(
+      (
+        await fixture.pool.query(
+          'SELECT storage_key FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+          [created.upload.key]
+        )
+      ).rows
+    ).toEqual([{ storage_key: created.upload.key }]);
+    await fixture.pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE user_id=$1', [
+      f.user,
+    ]);
+    release();
+    expect((await response).status, fixture.logs()).toBe(403);
+    expect(
+      (
+        await fixture.pool.query('SELECT state,storage_key FROM documents WHERE id=$1', [
+          created.document.id,
+        ])
+      ).rows
+    ).toEqual([{ state: 'PendingScan', storage_key: null }]);
+    expect(
+      (
+        await fixture.pool.query(
+          "SELECT status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+          [created.upload.key]
+        )
+      ).rows
+    ).toEqual([
+      {
+        status: 'removed',
+        metadata: expect.objectContaining({ provisionalCopy: true, deletionRequested: true }),
+      },
+    ]);
+  } finally {
+    release();
+    await response?.catch(() => {});
+    await fixture?.close();
+    await new Promise<void>((resolve) => proxy.close(() => resolve()));
+  }
+}, 30_000);
 
 it('permits only one verified successor when different authorized uploaders race replacements', async () => {
   const f = await owner(),
