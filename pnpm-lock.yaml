@@ -57,6 +57,9 @@ patchedDependencies:
   nodemon@3.1.14:
     hash: b2939beef73b52c91982aea76a7e7742fe6341b2780bca270c50d761a3dba87f
     path: patches/nodemon@3.1.14.patch
+  pstree.remy@1.1.8:
+    hash: 9d1e8cc8757a39d435dcc1773db1e89a063539b1f4d4a5e654a35db0697debe0
+    path: patches/pstree.remy@1.1.8.patch
   vite@6.4.4:
     hash: 25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739
     path: patches/vite@6.4.4.patch
@@ -14455,7 +14458,7 @@ snapshots:
       debug: 4.4.3(supports-color@5.5.0)
       ignore-by-default: 1.0.1
       minimatch: 10.2.6
-      pstree.remy: 1.1.8
+      pstree.remy: 1.1.8(patch_hash=9d1e8cc8757a39d435dcc1773db1e89a063539b1f4d4a5e654a35db0697debe0)
       semver: 7.8.5
       simple-update-notifier: 2.0.0
       supports-color: 5.5.0
@@ -14918,7 +14921,7 @@ snapshots:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
 
-  pstree.remy@1.1.8: {}
+  pstree.remy@1.1.8(patch_hash=9d1e8cc8757a39d435dcc1773db1e89a063539b1f4d4a5e654a35db0697debe0): {}
 
   pump@3.0.4:
     dependencies:

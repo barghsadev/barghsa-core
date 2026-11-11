@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { on } from 'node:events';
+import { spawn } from 'node:child_process';
+import { on, once } from 'node:events';
 import { mkdtemp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
@@ -13,6 +14,35 @@ const { rulesToMonitor } = require('nodemon/lib/monitor/match');
 const { watch, resetWatchers } = require('nodemon/lib/monitor/watch');
 const { bus } = require('nodemon/lib/utils');
 const projectConfig = JSON.parse(await readFile(new URL('../nodemon.json', import.meta.url)));
+
+test(
+  'nodemon can find a dev subprocess without a controlling terminal',
+  { skip: process.platform === 'win32' },
+  async () => {
+    const processTree = require.resolve('pstree.remy', { paths: [require.resolve('nodemon')] });
+    const probe = `
+      const assert = require('node:assert/strict');
+      const { spawn } = require('node:child_process');
+      const find = require(process.argv[1]);
+      const worker = spawn(process.execPath, ['-e', 'setTimeout(() => {}, 3000)']);
+      // Let the dependency's asynchronous ps capability probe finish.
+      setTimeout(() => find(process.pid, (error, children) => {
+        worker.kill();
+        assert.ifError(error);
+        assert.ok(find.hasPS && children.includes(worker.pid));
+      }), 100);
+    `;
+    const detached = spawn(process.execPath, ['-e', probe, processTree], {
+      detached: true,
+      stdio: ['ignore', 'ignore', 'pipe'],
+      signal: AbortSignal.timeout(5000),
+    });
+    let errors = '';
+    detached.stderr.setEncoding('utf8').on('data', (chunk) => (errors += chunk));
+    const [code] = await once(detached, 'close');
+    assert.equal(code, 0, errors);
+  }
+);
 
 async function restartFor(file) {
   // Native filesystems may emit more than one event for an earlier write.

@@ -49,6 +49,8 @@ Do not wait for or continuously poll hosted CI. The staging worker is independen
 
 Explicitly stage reviewed implementation and board changes, verify the staged diff, commit conventionally, normally push main and read back its exact remote SHA with `gh`. Never force-push. Hosted CI runs independently. Investigate failures, but do not wait for hosted CI to deploy this test environment. Continue the next batch. Do not increment versions, deploy or announce each batch.
 
+The `main` ruleset requires GitHub Actions’ `Verify monorepo integrity` on the exact candidate SHA. Create a new `codex/preflight/...` ref directly at that SHA in one push. The first preflight compares affected packages with the candidate’s common ancestor on `main`. Seeding a new ref at an older candidate starts a second run on that SHA, and a cancelled duplicate can leave a failed required result. Push the verified SHA directly to `main` after the check passes.
+
 ## Finish a release
 
 Run `python3 kanban/scripts/board.py ready --release <version>` to list the unresolved count. Accept all assigned launch-required tasks and prerequisite releases. Pass the milestone goal and its gates on the final candidate. Review and run combined acceptance once at this boundary. Fix critical/major issues before acceptance. Record exact checks and source bindings; a prose approval or CLI exit code alone is insufficient.

@@ -3,7 +3,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    # Seed a preflight branch at current main, then push the exact candidate for required checks.
+    # Create a preflight branch directly at the immutable candidate SHA.
     branches: [main, 'codex/preflight/**']
   workflow_dispatch:
 
@@ -324,6 +324,9 @@ jobs:
           if [ "$FULL_CI" != "true" ]; then
             if [ "${{ github.event_name }}" = "push" ]; then
               filters=()
+              if [ "${{ github.event.created }}" = "true" ] && [[ "$GITHUB_REF" == refs/heads/codex/preflight/* ]]; then
+                PUSH_TEST_BASE=$(git merge-base HEAD origin/main 2>/dev/null) || PUSH_TEST_BASE=''
+              fi
               if git cat-file -e "$PUSH_TEST_BASE^{commit}" 2>/dev/null; then
                 filters+=(--filter="...[$PUSH_TEST_BASE]")
               fi
