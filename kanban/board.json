@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T20:03:37+00:00",
+  "updated": "2026-11-11T20:09:06+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -539183,22 +539183,14 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The isolated exact source and reviewed real ClamAV image have persisted clean and EICAR quarantine verdicts and passed a real scheduled retry, including denial before availability. Activate the recurring private feed and repeat the exact application upload probes on the accepted deployed staging release."
+        "On the exact accepted v0.6.0 deployment, verify the immutable scanner image and current signature version. Exercise sealed application uploads for clean and EICAR verdicts and repeat the unavailable-scanner recovery with pending documents denied until scanning passes."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
-          "apps/api/src/documents/document-http.integration.test.ts",
-          "apps/api/src/documents/document-validation.ts",
-          "apps/api/src/upload/upload-admission.test.ts",
-          "apps/api/src/upload/upload.types.ts",
-          "apps/web/src/components/DocumentUpload.test.tsx",
-          "apps/web/src/components/DocumentUpload.tsx",
-          "apps/worker/src/documents/clamav.test.ts",
-          "apps/worker/src/documents/scan-runner.ts",
-          "docs/operations/document-scanning.md"
+          "docs/operations/clamav-signatures.md"
         ],
         "batches": [
           "release-0.6-verify-upload-key-and-scanner-tests",
@@ -539210,7 +539202,8 @@
           "release-0.6-official-clamav-feed-recheck",
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-isolated-live-scanner-and-safari-recovery"
+          "release-0.6-isolated-live-scanner-and-safari-recovery",
+          "release-0.6-live-clamav-mirror"
         ],
         "current_acceptance": null
       }
@@ -979350,6 +979343,92 @@
         {
           "file": "vitest-unit.config.ts",
           "sha256": "826ac4f97d6fbbdcba3793ae80268d979192808d43d199b172979f3755c5498f"
+        }
+      ]
+    },
+    "release-0.6-live-clamav-mirror": {
+      "batch": "release-0.6-live-clamav-mirror",
+      "base_commit": "1a79c8583168a47bab4fb4a8e4b866e3af6eb835",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "63b4ff30da26cbffcc18e650d5e21513a7884a8797fce8415733d8f5d22a31ac"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "395edc58ba478570ea685c9cef6855581a9d9bb4a5aa764b22e76a002f28f53a"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+        },
+        {
+          "path": "deploy/staging/barghsa-clamav-mirror-tunnel.service",
+          "sha256": "1290394f2022c9839fe3191df72e2f45b2e1e98fe9f08e16d7b907c1f11ff82d"
+        },
+        {
+          "path": "deploy/staging/clamav-mirror-tunnel.sh",
+          "sha256": "e0bc95b1c1d5c6904b8eb55e8dc242fee73bea5c07c3d92a13f852ef078468cc"
+        }
+      ],
+      "checks": [
+        "Before maintenance, the existing staging ClamAV 1.5.4 daemon loaded daily 28179 with no running FreshClam process. EU offered 28180. A delta-generated CLD passed the native database test and refreshed the daemon, but lacked a detached signature for independent verification. The configuration change stopped at that check.",
+        "EU FreshClam fetched and tested the full official daily CVD and its detached signature. The protected EU updater now uses complete archives. The loopback mirror returned a 512-byte range and byte-matching detached signatures for daily, main and bytecode, and refused POST and the unsigned CLD route. The first reload receipt was rolled back after an early HTTP 404. A bounded readiness check after reload passed.",
+        "Staging received the EU daily archive and signature over the pinned private tunnel, matched their SHA-256 hashes, and independently verified daily 28180, main 63 and bytecode 339 against ClamAV_datafiles_release signatures. The previous signature volume archive checksum was verified. Only the scanner settings and container changed. The running image remains sha256:28dd474051a0a39d0df15c5441fcbe81bdbdb8c1843cdf8c281e5301f777c74b.",
+        "The active scanner loaded daily 28180. Both FreshClam daemons checked all three current archives. The staging daemon runs six checks per day from a read-only private configuration. Scanner-native clean input returned OK and EICAR returned FOUND. Staging v0.5.0 QA revision b0dce58ca8d2ec0bf48dcecb575f54d51cedf916 and its liveness and readiness were verified before and after."
+      ],
+      "limitations": [
+        "This maintenance proves the recurring feed and current scanner on the existing v0.5.0 QA revision. It does not establish the exact v0.6.0 deployment, target scanner image or application-path acceptance.",
+        "The initial recurring checks were observed with already current archives. A later newly published vendor version has not yet been observed arriving through the scheduled staging daemon."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-live-clamav-mirror",
+      "execution_receipts": [
+        {
+          "file": "activate-scanner-mirror.sh",
+          "sha256": "06ff11d52d2443e5b5aebb873e67dd06eaa796ec41c20649c6c0f2c00fdbf2f5"
+        },
+        {
+          "file": "activate-signed-eu-feed.sh",
+          "sha256": "d84c63b534fdefd45d7df7395dd427637204f07ae913ab413d92a7b7b48ebff9"
+        },
+        {
+          "file": "first-plan-validation.log",
+          "sha256": "2229f5bc78beabca7ea93f7fa312c2b21ee4009a4950604c394f2ae3e5455847"
+        },
+        {
+          "file": "initial-cld-verification.log",
+          "sha256": "0b6b295661610e81e270d7790439866011ae88df642561dd0d5c1bfc7c787e16"
+        },
+        {
+          "file": "eu-signed-daily-probe.log",
+          "sha256": "090def8e6703e7648496d68156cc6b8c4dc0f32838d5bed2ee35e0fa13da3c71"
+        },
+        {
+          "file": "eu-signed-daily-probe-permitted.log",
+          "sha256": "bf2d17d58b6726e31ed92cdc977db7942b8520ada30d4699a91fdd4e3a4bef72"
+        },
+        {
+          "file": "eu-signed-feed-first.log",
+          "sha256": "9f7f085b27307ca4cb39922bdbc06aa41b4a1595ade44cce9981adc398366add"
+        },
+        {
+          "file": "eu-signed-feed.log",
+          "sha256": "678e0ab9e77f27cabaea55d30af9e9f0dde4a62361e4298dbd6c024dae56f44a"
+        },
+        {
+          "file": "activation.log",
+          "sha256": "76fe89a6202bdb0b33e6cb1726ca0045a87ab3eed51aaa1229970c1fd7938957"
+        },
+        {
+          "file": "staging-recurring-readback.log",
+          "sha256": "55d8b712acf3e22cff69e49fa28b6122770a98e37d75b2934d5191c5008b7aaf"
+        },
+        {
+          "file": "eu-recurring-readback.log",
+          "sha256": "fbc5c3ab31205413a910e83f8d773b2234bf84e9d884456b47ade652479308ce"
         }
       ]
     }
