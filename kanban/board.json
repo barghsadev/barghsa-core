@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T20:29:05+00:00",
+  "updated": "2026-11-11T20:40:15+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20441,7 +20441,8 @@
           "release-0.6-shared-catalogue-wcag22",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -20507,7 +20508,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "packages/ui/.ladle/components.tsx",
@@ -20957,6 +20958,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -48845,7 +48854,8 @@
           "release-0.6-simple-electricity-wallet-funding-browser-journey",
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-account-preferences-and-timestamp-consumers",
@@ -48897,7 +48907,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -49642,6 +49652,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -79401,7 +79419,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "accepted-native-brand-theme-application",
@@ -79457,7 +79476,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -79870,6 +79889,14 @@
                 "apps/worker/src/auth-delivery/runner.integration.test.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -91402,7 +91429,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "status": "done",
@@ -91418,7 +91446,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -91624,6 +91652,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -119073,7 +119109,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -119137,7 +119174,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
@@ -119149,7 +119186,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -119410,6 +119447,15 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -119502,7 +119548,8 @@
           "release-0.6-provider-timeout-and-redis-recovery",
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-worker-structured-credential-redaction",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-operational-queues-and-worker-exhaustion",
@@ -119566,7 +119613,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
@@ -119578,7 +119625,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/OperationalQueueTable.tsx",
@@ -119839,6 +119886,15 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -534961,7 +535017,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-authorization-audit-and-dashboard",
@@ -535021,7 +535078,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+              "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
             },
             {
               "path": "packages/shared/src/admin/config-audit.ts",
@@ -535106,6 +535163,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -553029,10 +553094,16 @@
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "apps/web/e2e/failed-notifications.spec.ts",
+          "apps/web/src/components/DeadLetterPanel.tsx",
+          "docs/design/accessibility.md",
+          "packages/i18n/src/workspace-admin-messages.ts"
+        ],
         "batches": [
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-shared-catalogue-wcag22"
+          "release-0.6-shared-catalogue-wcag22",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": null
       }
@@ -553073,7 +553144,8 @@
           "release-0.6-shared-catalogue-wcag22",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -553139,7 +553211,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "packages/ui/package.json",
@@ -553229,6 +553301,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -553268,7 +553348,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -553304,7 +553385,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/login-ui.spec.ts",
@@ -553332,7 +553413,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -553412,6 +553493,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -553438,7 +553528,8 @@
         "historical_acceptance": null,
         "changed_paths": [],
         "batches": [
-          "release-0.6-accessibility-impact-and-manual-review"
+          "release-0.6-accessibility-impact-and-manual-review",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -553450,7 +553541,17 @@
           "source_evidence": [
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -583636,7 +583737,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -583696,7 +583798,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -584652,6 +584754,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -585509,7 +585619,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -585601,7 +585712,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -585941,7 +586052,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+              "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -586648,6 +586759,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx",
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -590721,7 +590841,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "source-bound-query-provider-and-devtools",
@@ -590813,7 +590934,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -591153,7 +591274,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+              "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
             },
             {
               "path": "packages/i18n/src/workspace-admin.ts",
@@ -591860,6 +591981,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx",
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -607379,7 +607509,8 @@
           "release-0.6-consultation-paid-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-solar-request-touch-target",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -607471,7 +607602,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -608012,6 +608143,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -611558,7 +611697,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611746,7 +611886,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -611986,6 +612126,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -612066,7 +612214,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612202,7 +612351,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -612499,6 +612648,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -612579,7 +612736,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -612715,7 +612873,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -613012,6 +613170,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -613084,7 +613250,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -613272,7 +613439,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -613512,6 +613679,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -613639,7 +613814,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "integrated-qa-preview-journeys",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -613851,7 +614027,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/finance-list-query.spec.ts",
@@ -614279,7 +614455,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -614943,7 +615119,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -615261,6 +615437,16 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "apps/web/src/components/DeadLetterPanel.tsx",
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -615346,7 +615532,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-protected-storage-origins",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -615562,7 +615749,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -615870,6 +616057,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -616327,7 +616522,8 @@
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-browser-stable-native-feedback",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -616391,7 +616587,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -616457,6 +616653,14 @@
                 "apps/web/e2e/consumer-theme.spec.ts"
               ],
               "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -616536,7 +616740,8 @@
           "release-0.6-wallet-receipt-native-viewport",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
           "release-0.6-wallet-keyboard-before-responsive-probe",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -616672,7 +616877,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -616969,6 +617174,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -617054,7 +617267,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-protected-storage-origins",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -617270,7 +617484,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -617578,6 +617792,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -617710,7 +617932,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -617834,7 +618057,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -618122,7 +618345,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -618613,6 +618836,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -618745,7 +618977,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -618869,7 +619102,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -619157,7 +619390,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -619648,6 +619881,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -619733,7 +619975,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-protected-storage-origins",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -619949,7 +620192,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -620257,6 +620500,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -620389,7 +620640,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620513,7 +620765,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -620801,7 +621053,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "94d7f923f2da0c76b0b150ae88d631527d9ca13c009654aabad79d265846222b"
+              "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -621292,6 +621544,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow retains all existing jobs, license conditions, test modes and fail-closed checks. The required aggregate job reports the unchanged inputs to the Actions summary. Exact step checks and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "docs/design/accessibility.md"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -649227,7 +649488,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -649355,7 +649617,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -651027,6 +651289,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -651218,7 +651488,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -651346,7 +651617,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -653018,6 +653289,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -653210,7 +653489,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -653338,7 +653618,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -655010,6 +655290,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -655171,7 +655459,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -655299,7 +655588,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -656971,6 +657260,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -657158,7 +657455,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -657286,7 +657584,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -658958,6 +659256,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -659154,7 +659460,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -659282,7 +659589,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -660954,6 +661261,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -661123,7 +661438,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -661251,7 +661567,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -662923,6 +663239,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -663056,7 +663380,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -663184,7 +663509,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -664856,6 +665181,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -664989,7 +665322,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -665117,7 +665451,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -666789,6 +667123,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -666923,7 +667265,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -667051,7 +667394,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -668723,6 +669066,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -668856,7 +669207,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -668984,7 +669336,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -670656,6 +671008,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -670785,7 +671145,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -670909,7 +671270,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -672723,6 +673084,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -672846,7 +673215,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -672970,7 +673340,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -674784,6 +675154,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -674956,7 +675334,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "integrated-qa-preview-journeys",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -675256,7 +675635,7 @@
             },
             {
               "path": "apps/web/e2e/failed-notifications.spec.ts",
-              "sha256": "f958980c3dcbaf02cc621fe150abb4602e7fdce039a93287ed7938d956f9309b"
+              "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
             },
             {
               "path": "apps/web/e2e/feedback.spec.ts",
@@ -675784,7 +676163,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeadlineForms.test.tsx",
@@ -677953,6 +678332,15 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/e2e/failed-notifications.spec.ts",
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -678076,7 +678464,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -678212,7 +678601,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -680027,6 +680416,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -680150,7 +680547,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -680274,7 +680672,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -682088,6 +682486,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -682211,7 +682617,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -682335,7 +682742,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -684149,6 +684556,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -684272,7 +684687,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -684396,7 +684812,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -686210,6 +686626,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -686333,7 +686757,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -686457,7 +686882,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -688271,6 +688696,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -688394,7 +688827,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -688518,7 +688952,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -690332,6 +690766,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -690455,7 +690897,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -690579,7 +691022,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -692393,6 +692836,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -692516,7 +692967,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -692640,7 +693092,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -694454,6 +694906,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -694577,7 +695037,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -694701,7 +695162,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -696515,6 +696976,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -696638,7 +697107,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -696762,7 +697232,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -698576,6 +699046,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -698699,7 +699177,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -698823,7 +699302,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -700637,6 +701116,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -701563,7 +702050,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -701687,7 +702175,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -703501,6 +703989,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -703624,7 +704120,8 @@
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
           "release-0.6-optional-maintenance-notice",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -703748,7 +704245,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
@@ -705562,6 +706059,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         }
@@ -707224,7 +707729,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -707352,7 +707858,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -709024,6 +709530,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -709153,7 +709667,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -709281,7 +709796,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -710953,6 +711468,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -711082,7 +711605,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -711210,7 +711734,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -712882,6 +713406,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -713011,7 +713543,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -713139,7 +713672,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -714811,6 +715344,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -714940,7 +715481,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -715068,7 +715610,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -716740,6 +717282,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -716869,7 +717419,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -716997,7 +717548,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -718669,6 +719220,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -718798,7 +719357,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -718926,7 +719486,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DocumentDestructionQueue.tsx",
@@ -720598,6 +721158,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -750460,7 +751028,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -750560,7 +751129,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -751335,6 +751904,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -751680,7 +752257,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -751780,7 +752358,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -752555,6 +753133,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -752900,7 +753486,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -753000,7 +753587,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -753775,6 +754362,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -754123,7 +754718,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -754223,7 +754819,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -754998,6 +755594,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -755346,7 +755950,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -755446,7 +756051,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -756221,6 +756826,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -756596,7 +757209,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -756696,7 +757310,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -757471,6 +758085,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -757815,7 +758437,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -757915,7 +758538,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -758690,6 +759313,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -759034,7 +759665,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -759134,7 +759766,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -759909,6 +760541,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -760254,7 +760894,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -760354,7 +760995,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -761129,6 +761770,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -761492,7 +762141,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -761592,7 +762242,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -762367,6 +763017,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -762713,7 +763371,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -762813,7 +763472,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -763588,6 +764247,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -799099,7 +799766,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -799199,7 +799867,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -799974,6 +800642,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -800317,7 +800993,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -800417,7 +801094,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -801192,6 +801869,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -801535,7 +802220,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -801635,7 +802321,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -802410,6 +803096,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -802753,7 +803447,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-csp-and-combobox-recovery",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "current-list-query-filter-table-and-recovery-journeys",
@@ -802853,7 +803548,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DeliveryProviderTable.tsx",
@@ -803628,6 +804323,14 @@
                 "packages/shared/package.json"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -827509,7 +828212,8 @@
           "release-0.5-ai-tab-intrinsic-widths",
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-route-budget-and-upgrade-fixture-repair",
-          "release-0.6-staff-and-inbox-browser-verification"
+          "release-0.6-staff-and-inbox-browser-verification",
+          "release-0.6-notification-contrast"
         ],
         "current_acceptance": {
           "kind": "accepted-admin-communications-ai-ui",
@@ -827589,7 +828293,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+              "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
             },
             {
               "path": "packages/ui/src/components/ui/scrollable-tabs-list.tsx",
@@ -827622,6 +828326,14 @@
                 "/Users/majid/.local/state/barghsa-manual-batches/release-0.5-ai-chat-journeys/acceptance-proof.json"
               ],
               "scope": "Changed-file renewal only: two additive dictionary values, exact retained JSON handler/security engine, added SSE transport and extended retained tests, explicit OpenAPI content documentation, safe inactive-selector options. Current native/UI/browser checks and exact scope proofs apply. Unmet criteria, task/release status and independent live/Telegram gates unchanged."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ],
           "presentation_renewals": [
@@ -853607,7 +854319,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -854803,7 +855515,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+              "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
             },
             {
               "path": "packages/ui/src/components/ui/button.tsx",
@@ -854876,6 +855588,15 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx",
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -855136,7 +855857,8 @@
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-public-registration-privacy",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ]
       }
     },
@@ -855368,7 +856090,7 @@
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
-              "sha256": "a343dadf6020b374b6ed67953947fc5c66f8809cdf8d812a099076004332b379"
+              "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
             },
             {
               "path": "apps/web/src/components/DefaultProfileModal.tsx",
@@ -856868,7 +857590,7 @@
             },
             {
               "path": "packages/i18n/src/workspace-admin-messages.ts",
-              "sha256": "82ad0b844ac3ead149d7e362511e02758d0af035c9b6db29604268b63a1c8837"
+              "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
             },
             {
               "path": "apps/api/src/crm/verification-case.controller.ts",
@@ -857378,6 +858100,15 @@
                 "apps/api/src/route-errors/route-errors.controller.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-notification-contrast",
+              "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+              "paths": [
+                "apps/web/src/components/DeadLetterPanel.tsx",
+                "packages/i18n/src/workspace-admin-messages.ts"
+              ],
+              "scope": "The localized page indicator preserves the existing offset, authority, and recovery behavior. English and Persian triage, existing command and history recovery, responsive layout and browser contrast passed. The dictionary adds the existing page wording to the workspace bundle and the checklist adds the measured advisory procedure."
             }
           ]
         },
@@ -857527,7 +858258,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-required-check-summary",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-notification-contrast"
         ]
       }
     },
@@ -857880,7 +858612,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-webkit-contrast-readback",
           "release-0.6-pdf-preflight-and-license-readback",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-notification-contrast"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -984039,6 +984772,227 @@
         {
           "file": "staging-sentry-config.log",
           "sha256": "7bcfdaf62405e7108de148a379c639ac1ca84e269a59e3a8e28690852b983b5b"
+        }
+      ]
+    },
+    "release-0.6-notification-contrast": {
+      "batch": "release-0.6-notification-contrast",
+      "base_commit": "c17ee7bdff8437a516bd7a1c1d58c603247cfd64",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-06.03.03",
+        "02-auth-users-admin.md#T-03.03.06",
+        "02-auth-users-admin.md#T-09.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "06-security-testing-observability.md#T-06.03.01.10",
+        "06-security-testing-observability.md#T-06.11.01.01",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.01.04",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.04.01",
+        "07-ui-ux-design.md#T-07.01.04.06",
+        "07-ui-ux-design.md#T-07.04.01.05",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "07-ui-ux-design.md#T-07.18.01.01",
+        "07-ui-ux-design.md#T-07.18.01.02",
+        "07-ui-ux-design.md#T-07.18.01.03",
+        "07-ui-ux-design.md#T-07.18.01.04",
+        "07-ui-ux-design.md#T-07.18.01.05",
+        "07-ui-ux-design.md#T-07.18.01.06",
+        "07-ui-ux-design.md#T-07.18.02.01",
+        "07-ui-ux-design.md#T-07.18.02.02",
+        "07-ui-ux-design.md#T-07.18.02.03",
+        "07-ui-ux-design.md#T-07.18.02.04",
+        "07-ui-ux-design.md#T-07.18.02.05",
+        "07-ui-ux-design.md#T-07.24.01.01",
+        "07-ui-ux-design.md#T-07.24.01.02",
+        "07-ui-ux-design.md#T-07.24.01.03",
+        "07-ui-ux-design.md#T-07.24.01.04",
+        "07-ui-ux-design.md#T-07.30.02.08",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/control-contrast.ts",
+          "sha256": "86da99d6e70a98e7085ed785c3a4dc7b7d7018074f64a29b2e70ca23cdd599b2"
+        },
+        {
+          "path": "apps/web/e2e/critical-accessibility.ts",
+          "sha256": "e5e0cd207f38580c01fe13c3305d29b005bae7987ff0071644f6c35b27498db3"
+        },
+        {
+          "path": "apps/web/e2e/failed-notifications.spec.ts",
+          "sha256": "98fc7258574cf5b4c79262790b2180dd2403e9105c6c685c7c8146ed1b2b9fd0"
+        },
+        {
+          "path": "apps/web/e2e/operational-queue-recovery.spec.ts",
+          "sha256": "4db48d3b5ac60fcee1d0bd02e81359266c6b69ca0c4bef3abe913137ece381f7"
+        },
+        {
+          "path": "apps/web/e2e/route-presentation.ts",
+          "sha256": "3b8b1e8ea1c428bea8034336170811dd33171a51c028ece2fbabe6b2484f259b"
+        },
+        {
+          "path": "apps/web/src/components/CustomerCorrectionsPanel.test.tsx",
+          "sha256": "7932aca4304cef4a7328703e0fc5be02caaadd27e99d6f6b36f8e47d5700dc6a"
+        },
+        {
+          "path": "apps/web/src/components/CustomerCorrectionsPanel.tsx",
+          "sha256": "d6e984a1741fae3ff2ad67a49f573910ee45e01d16f3df1f1dbb676e55259902"
+        },
+        {
+          "path": "apps/web/src/components/DeadLetterPanel.tsx",
+          "sha256": "52dd7d6e6488f6fa8de4f0f73708714a5c6cfff298d53ff308e42c1aa867d04c"
+        },
+        {
+          "path": "apps/web/src/pages/notification-forms.test.tsx",
+          "sha256": "fd9d523258748005538f07f5d06a3859259e8ba66c6dbe1629679a506932d0e0"
+        },
+        {
+          "path": "apps/web/src/pages/operational-queue-recovery.test.tsx",
+          "sha256": "fcc3c32dfaf3e95fc39408c6cf58c5cadc90d3a1f884eb10713be4fda26650ed"
+        },
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "f702ad8dcee0bf09df945d07b3b3fad4600e185f01bd8cd3d9682d7bcd31c5a1"
+        },
+        {
+          "path": "packages/i18n/src/admin-ui.test.ts",
+          "sha256": "0bd5b549d08fded0d18bb0195eab54e725eeb9f76c91693b7c8dd4ead8b2598e"
+        },
+        {
+          "path": "packages/i18n/src/workspace-admin-messages.ts",
+          "sha256": "efefbbc610f4c43c1fe5b22bb254840d4868ebe9e50fe255c7de2207ae6db42a"
+        },
+        {
+          "path": "packages/i18n/src/workspace.test.ts",
+          "sha256": "1bdf28375794939f4109670860c983af24e3e4827a66ec9e56aa8db0bb0e2ad0"
+        },
+        {
+          "path": "scripts/run-production-browser.mjs",
+          "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+        }
+      ],
+      "checks": [
+        "Reproduced hosted 43093006080 advisory targets in the exact-current local Chromium journey. The unlabelled numeral was classified shortTextContent in both locales. The English corrections disclosure was classified elmPartiallyObscured while it was below the viewport. The full-page advisory scan had no confirmed violations.",
+        "The pager now shows the localized current page with aria-current and uses wrapping layout. English and Persian cases verify the initial page, empty next page, and successful return. All existing permission, step-up and delivery-recovery checks remain in the journey.",
+        "All ten locale and browser combinations passed across five Playwright projects. After scrolling each target into view and hit-testing text against solid surfaces, 40 light/dark measurements ranged from 11.955931:1 to 14.156630:1. The full-page scans reported no violations. Remaining incomplete results concerned only the same two measured targets.",
+        "35 web and 4 dictionary tests, package typechecks, changed lint and formatting, and all 102 route budgets passed. The first caller run passed 15 notification recovery cases and reported a missing Playwright trace during teardown of one case while two runs shared the default artifact directory. The exact case passed with an isolated output directory, original assertions and retries disabled."
+      ],
+      "limitations": [
+        "This disposes only the two notification-triage advisory targets measured in the synthetic fixture. It leaves the full-page advisory scanner enabled. The final release candidate still needs the complete critical accessibility and scheduled browser gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-notification-contrast",
+      "execution_receipts": [
+        {
+          "file": "baseline.log",
+          "sha256": "03249af1bd73360e8a0876977deb39af3b699e8ffc56f8391426312008358db6"
+        },
+        {
+          "file": "baseline.json",
+          "sha256": "a886299d68055e3c30dde40f65e0612df9fdea99d58f5d73ec24a0620d930021"
+        },
+        {
+          "file": "browser-build-sources.sha256",
+          "sha256": "50d13be822d08d15a27965af482fdc4ccbfa7c6f686c444893668a3da0189073"
+        },
+        {
+          "file": "chromium.json",
+          "sha256": "21c15c86bfb9a589ac670b0d746206c55c72867e9e99d30ad83ff8009799b114"
+        },
+        {
+          "file": "other-browsers.json",
+          "sha256": "25648a7a9acd19c0c9c76e85a181a19e596ea1229504e266b12c65e48b253e2d"
+        },
+        {
+          "file": "contrast-readback.json",
+          "sha256": "b534164458a64c898047e50a86d481a3ef99c1c5b85040a8c7670f912cf5947c"
+        },
+        {
+          "file": "read-contrast.py",
+          "sha256": "f69698b59178008ebe9ca806289ee4a0437399e61abd4febb9fe0dd111d87716"
+        },
+        {
+          "file": "web-unit.log",
+          "sha256": "24f8da2917b532746a5c07ff83df2e738d09ca3c3494a31d5198feea70cc4ddc"
+        },
+        {
+          "file": "i18n-unit.log",
+          "sha256": "524afbcd998d7e2b19d7d15ac39b4ad3cde67abb0ec890e2a9d0a009f8f826d6"
+        },
+        {
+          "file": "bundle.log",
+          "sha256": "2bda07ae7b2d8ba660f90702a916e804ebe363878cca41ed069a3dee249efc96"
+        },
+        {
+          "file": "source-checks.log",
+          "sha256": "044e86e1951e29c92079a2a144c96e35b40990c0a99817d391d1a5a5c62ab229"
+        },
+        {
+          "file": "queue-regression.log",
+          "sha256": "2e28c4ce620d1b5c06efa86fb576fe27ef0ccbc902841ca98ac5726c3c9fcc07"
+        },
+        {
+          "file": "queue-repeat.log",
+          "sha256": "19c498e867ac749ec15dbc58c81fbd0e33f4b46595cbfd2fd41840076990449c"
+        },
+        {
+          "file": "queue-regression.json",
+          "sha256": "7dacd233f762cb55165c1ad10cc401583919e20aa8029d3489a1c788ca1d083e"
+        },
+        {
+          "file": "queue-repeat.json",
+          "sha256": "0be557192d5e2fa6501dc937881949c34e40f6659bee31a31915d8cee758fd94"
         }
       ]
     }

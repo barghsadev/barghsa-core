@@ -1,10 +1,14 @@
 import { checkRoutePresentation } from './route-presentation';
+import { measureControlContrast } from './control-contrast';
 import { t } from '@barghsa/i18n/admin-ui';
+import { tWorkspace } from '@barghsa/i18n/workspace-admin';
 import { crmShell } from './crm-shell-fixture';
 import { formatBrowserDate } from './browser-date';
 import { test, expect } from './coverage-fixture';
 import { ErrorCodes } from '@barghsa/shared/errors';
+
 test.use({ viewport: { width: 390, height: 844 } });
+
 for (const locale of ['en', 'fa'])
   test(`notification triage handles permissions, paging and step-up failures (${locale})`, async ({
     page,
@@ -80,6 +84,67 @@ for (const locale of ['en', 'fa'])
       )
     ).toHaveCount(25);
     await checkRoutePresentation(page, test.info(), locale);
+    const currentPage = page
+      .getByRole('navigation', {
+        name: tWorkspace('admin.notifications.deadLetter.pagination', locale),
+        exact: true,
+      })
+      .locator('[aria-current="page"]');
+    const pageLabel = (value: number) =>
+      t('admin.jobs.page', locale).replace('{page}', new Intl.NumberFormat(locale).format(value));
+    await expect(currentPage).toHaveText(pageLabel(1));
+    const corrections = page.getByText(
+      tWorkspace('admin.notifications.corrections.title', locale),
+      {
+        exact: true,
+      }
+    );
+    const initialScheme = await page.evaluate(() =>
+      matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    );
+    const contrast = [];
+    try {
+      for (const colorScheme of ['light', 'dark'] as const) {
+        await page.emulateMedia({ colorScheme });
+        await expect
+          .poll(() => page.locator('html').evaluate((root) => root.classList.contains('dark')))
+          .toBe(colorScheme === 'dark');
+        for (const [control, target] of [
+          ['current page', currentPage],
+          ['corrections disclosure', corrections],
+        ] as const) {
+          await target.scrollIntoViewIfNeeded();
+          await expect(target).toBeInViewport({ ratio: 1 });
+          const visibleText = await target.evaluate((node) => {
+            for (let layer: Element | null = node; layer; layer = layer.parentElement) {
+              const style = getComputedStyle(layer);
+              if (style.opacity !== '1' || style.backgroundImage !== 'none') return false;
+            }
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            const rects = Array.from(range.getClientRects());
+            return (
+              rects.length > 0 &&
+              rects.every((rect) =>
+                node.contains(
+                  document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)
+                )
+              )
+            );
+          });
+          expect(visibleText, `${control} has unobscured text on a solid surface`).toBe(true);
+          const ratio = await measureControlContrast(target, 'text');
+          expect(ratio, `${control} in the ${colorScheme} theme`).toBeGreaterThanOrEqual(4.5);
+          contrast.push({ colorScheme, control, ratio });
+        }
+      }
+    } finally {
+      await page.emulateMedia({ colorScheme: initialScheme });
+    }
+    await test.info().attach('notification-triage-text-contrast', {
+      body: JSON.stringify({ locale, contrast }),
+      contentType: 'application/json',
+    });
     if (await page.evaluate(() => matchMedia('(pointer: coarse)').matches)) {
       const controls = page.locator('main').locator('select, summary').filter({ visible: true });
       const sizes = await controls.evaluateAll((elements) =>
@@ -122,12 +187,14 @@ for (const locale of ['en', 'fa'])
       )
     ).toHaveCount(0);
     await expect.poll(() => queries.at(-1)?.get('offset')).toBe('25');
+    await expect(currentPage).toHaveText(pageLabel(2));
     await page.getByRole('button', { name: fa ? 'قبلی' : 'Previous', exact: true }).click();
     await expect(
       page.locator(
         'table:visible > tbody > tr:has(th[scope=row]), ol[role=list]:visible > li:has(h2, h3)'
       )
     ).toHaveCount(25);
+    await expect(currentPage).toHaveText(pageLabel(1));
     await page.getByLabel(fa ? 'کانال' : 'Channel', { exact: true }).selectOption('sms');
     await expect.poll(() => queries.at(-1)?.get('channel')).toBe('sms');
     await page.getByLabel(fa ? 'شدت' : 'Severity', { exact: true }).selectOption('critical');

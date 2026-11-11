@@ -614,7 +614,7 @@ export default function DeadLetterPanel({
           )}
         </ListPage.Content>
         {queue.canView && (
-          <nav aria-label={label('pagination')} className="flex items-center gap-3">
+          <nav aria-label={label('pagination')} className="flex flex-wrap items-center gap-3">
             <Button
               variant="outline"
               disabled={locked || !queue.canView || loading || error || offset === 0}
@@ -626,7 +626,12 @@ export default function DeadLetterPanel({
             >
               {t('admin.jobs.previous', uiLocale)}
             </Button>
-            <span>{numbers.number((queue.data?.offset ?? offset) / 25 + 1)}</span>
+            <span aria-current="page">
+              {t('admin.jobs.page', uiLocale).replace(
+                '{page}',
+                numbers.number((queue.data?.offset ?? offset) / 25 + 1)
+              )}
+            </span>
             <Button
               variant="outline"
               disabled={

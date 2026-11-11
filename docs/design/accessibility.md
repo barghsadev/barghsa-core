@@ -28,6 +28,12 @@ Fix confirmed defects. Where automation cannot evaluate the result, record
 the manual check and its result, for example the contrast of text over a
 gradient. An exception needs a specific rule, scope, reason and owner approval.
 
+The failed-notifications journey checks the current-page label and customer
+corrections disclosure after scrolling each into view. It verifies that the
+text is unobscured and records its contrast against the actual canvas in both
+themes and languages. This covers controls that the full-page Axe scan can
+flag for manual review when they sit below the queue.
+
 ## Manual keyboard and screen-reader review
 
 Use an isolated staging candidate with synthetic identities, documents and
