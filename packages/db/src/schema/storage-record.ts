@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { bigint, index, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { bigint, check, index, jsonb, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
 import { baseColumns } from '../base-table';
 import { domainChecks } from '../domain-checks';
 
@@ -69,9 +69,17 @@ export const storageRecords = pgTable(
 
     /** When the record was soft-deleted. */
     removedAt: timestamp('removed_at', { withTimezone: true, mode: 'date' }),
+
+    /** Once claimed for cleanup, this key cannot be promoted or signed. */
+    cleanupOperation: text('cleanup_operation', { enum: ['delete', 'expire'] }),
   },
   (table) => [
     ...domainChecks('storage_records'),
+    check(
+      'storage_records_cleanup_operation_check',
+      sql`${table.cleanupOperation} IS NULL OR
+        (${table.cleanupOperation} IN ('delete','expire') AND ${table.status}='removed' AND ${table.signedAt} IS NULL)`
+    ),
     index('storage_records_multipart_pending_idx').on(table.updatedAt, table.storageKey)
       .where(sql`${table.status}='removed' AND ${table.signedAt} IS NULL
         AND ${table.metadata}->'multipart'->>'status' IN ('completing','aborting')`),
@@ -98,6 +106,10 @@ export const createStorageRecordsTable = sql`
     signed_at TIMESTAMPTZ,
     signed_by TEXT,
     removed_at TIMESTAMPTZ,
+    cleanup_operation TEXT CONSTRAINT storage_records_cleanup_operation_check CHECK (
+      cleanup_operation IS NULL OR
+      (cleanup_operation IN ('delete','expire') AND status='removed' AND signed_at IS NULL)
+    ),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   );

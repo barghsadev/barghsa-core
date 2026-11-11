@@ -17,7 +17,7 @@ export class DocumentStorageService {
   async seal(client: PoolClient, key: string, actorId: string, profileId: string, staff: boolean) {
     const source = (
       await client.query(
-        'SELECT storage_key FROM storage_records WHERE storage_key=$1 FOR UPDATE',
+        'SELECT storage_key FROM storage_records WHERE storage_key=$1 AND cleanup_operation IS NULL FOR UPDATE',
         [key]
       )
     ).rows[0];
@@ -41,7 +41,7 @@ export class DocumentStorageService {
     });
     const reserved = (
       await client.query(
-        `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed'
+        `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND cleanup_operation IS NULL
        AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' FOR UPDATE`,
         [storageKey]
       )

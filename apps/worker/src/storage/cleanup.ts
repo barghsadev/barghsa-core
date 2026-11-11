@@ -1,10 +1,13 @@
 import { loadStoredStorageConfiguration } from '@barghsa/db';
+import { withMultipartUploadLock } from '@barghsa/db/storage-multipart';
 import type { Pool } from 'pg';
 import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
 
 export function cleanupStorageProvider(): StorageProvider {
   return runtimeStorageProvider(loadStoredStorageConfiguration);
 }
+
+type CleanupOperation = 'delete' | 'expire';
 const pending = `status='removed' AND signed_at IS NULL AND metadata->>'deletionRequested'='true'
   AND COALESCE(metadata->'multipart'->>'status','completed') NOT IN ('completing','aborting')
   AND (storage_key NOT LIKE 'uploads/%' OR removed_at<=NOW()-INTERVAL '65 minutes')
@@ -24,55 +27,60 @@ export async function cleanupStorageObjects(pool: Pool, storage: StorageProvider
   };
   if (!candidates.length) return result;
   if (!storage) throw new Error('Storage cleanup is configured without an available provider');
-  for (const candidate of candidates) {
-    const client = await pool.connect();
+  for (const { storage_key: key } of candidates) {
     try {
-      await client.query('BEGIN');
-      const found = await client.query(
-        `SELECT storage_key,metadata FROM storage_records WHERE storage_key=$1 AND ${pending} FOR UPDATE SKIP LOCKED`,
-        [candidate.storage_key]
-      );
-      if (!found.rows.length) {
-        await client.query('ROLLBACK');
-        continue;
-      }
-      // Unclaimed browser uploads expire through the one-day bucket policy.
-      // The row lock and expired URL prevent promotion/reuse after classification.
-      const abandonedUpload =
-        candidate.storage_key.startsWith('uploads/') &&
-        found.rows[0].metadata?.provisionalUpload === true;
-      if (abandonedUpload) {
-        if (!storage.scheduleExpiration) throw new Error('Storage retention is unavailable');
-        const versions = await storage.scheduleExpiration(candidate.storage_key);
-        await client.query(
-          `UPDATE storage_records SET metadata=metadata||jsonb_build_object(
-            'deletionRequested',false,'expirationScheduledAt',NOW(),
-            'expirationEligibleVersions',$2::int,'retainedHeldVersions',$3::int),updated_at=NOW()
-            WHERE storage_key=$1`,
-          [candidate.storage_key, versions.eligibleVersions, versions.heldVersions]
+      // The same direct-session lock also serializes multipart provider operations on this key.
+      const completed = await withMultipartUploadLock(pool, key, async (client) => {
+        const claimed = await client.query<{ cleanup_operation: CleanupOperation }>(
+          `WITH eligible AS (
+             SELECT storage_key FROM storage_records WHERE storage_key=$1 AND ${pending}
+             FOR UPDATE SKIP LOCKED
+           )
+           UPDATE storage_records s SET cleanup_operation=COALESCE(s.cleanup_operation,
+             CASE WHEN s.storage_key LIKE 'uploads/%' AND s.metadata->>'provisionalUpload'='true'
+                  THEN 'expire' ELSE 'delete' END),updated_at=NOW()
+           FROM eligible WHERE s.storage_key=eligible.storage_key RETURNING s.cleanup_operation`,
+          [key]
         );
-        await client.query('COMMIT');
+        const operation = claimed.rows[0]?.cleanup_operation;
+        if (!operation) return null;
+
+        // The claim has committed. The database fences promotion while the provider is contacted.
+        try {
+          let versions: { eligibleVersions: number; heldVersions: number } | undefined;
+          if (operation === 'expire') {
+            if (!storage.scheduleExpiration) throw new Error('Storage retention is unavailable');
+            versions = await storage.scheduleExpiration(key);
+          } else {
+            await storage.deleteObject(key);
+          }
+          const receipt = await client.query(
+            `UPDATE storage_records SET metadata=metadata||jsonb_build_object('deletionRequested',false)
+             || CASE WHEN $2='expire' THEN jsonb_build_object(
+                  'expirationScheduledAt',NOW(),'expirationEligibleVersions',$3::int,'retainedHeldVersions',$4::int)
+                ELSE jsonb_build_object('deletionCompletedAt',NOW()) END,updated_at=NOW()
+             WHERE storage_key=$1 AND cleanup_operation=$2 AND status='removed' AND signed_at IS NULL
+               AND metadata->>'deletionRequested'='true'`,
+            [key, operation, versions?.eligibleVersions ?? null, versions?.heldVersions ?? null]
+          );
+          if (receipt.rowCount !== 1) throw new Error('Storage cleanup claim changed');
+          return operation;
+        } catch (error) {
+          // Keep the operation and back off from the last failure, including a lost receipt.
+          await client.query(
+            `UPDATE storage_records SET updated_at=NOW() WHERE storage_key=$1 AND cleanup_operation=$2
+             AND status='removed' AND signed_at IS NULL AND metadata->>'deletionRequested'='true'`,
+            [key, operation]
+          );
+          throw error;
+        }
+      });
+      if (!completed.acquired) continue;
+      if (completed.value === 'delete') result.deleted++;
+      if (completed.value === 'expire')
         result.expirationScheduled = (result.expirationScheduled ?? 0) + 1;
-        continue;
-      }
-      await storage.deleteObject(candidate.storage_key);
-      await client.query(
-        `UPDATE storage_records SET metadata=metadata||jsonb_build_object('deletionRequested',false,'deletionCompletedAt',NOW()),updated_at=NOW() WHERE storage_key=$1`,
-        [candidate.storage_key]
-      );
-      await client.query('COMMIT');
-      result.deleted++;
     } catch {
-      await client.query('ROLLBACK');
-      // Back off after transport/commit failure; deleting an already absent object is idempotent.
-      await client.query(
-        `UPDATE storage_records SET updated_at=NOW() WHERE storage_key=$1
-        AND status='removed' AND signed_at IS NULL AND metadata->>'deletionRequested'='true'`,
-        [candidate.storage_key]
-      );
       result.failed++;
-    } finally {
-      client.release();
     }
   }
   return result;

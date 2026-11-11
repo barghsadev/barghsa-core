@@ -27,6 +27,7 @@ interface RecordRow {
   signed_at: Date | null;
   signed_by: string | null;
   removed_at: Date | null;
+  cleanup_operation: 'delete' | 'expire' | null;
   metadata: Record<string, unknown> | null;
 }
 function response(row: RecordRow) {
@@ -108,7 +109,10 @@ export class StorageRecordAdminService {
           [key, actorId]
         );
       } else {
-        const pendingUpload = row.status === 'removed' && row.metadata?.provisionalUpload === true;
+        const pendingUpload =
+          row.status === 'removed' &&
+          !row.cleanup_operation &&
+          row.metadata?.provisionalUpload === true;
         if (row.status === 'removed' && !pendingUpload) {
           await requireSessionStepUp(client, session);
           await client.query('COMMIT');

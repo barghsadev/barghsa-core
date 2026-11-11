@@ -1457,6 +1457,13 @@
       "when": 1794353693330,
       "tag": "0287_multipart_operation_recovery",
       "breakpoints": true
+    },
+    {
+      "idx": 288,
+      "version": "7",
+      "when": 1794369661824,
+      "tag": "0288_storage_cleanup_operation_claim",
+      "breakpoints": true
     }
   ]
 }

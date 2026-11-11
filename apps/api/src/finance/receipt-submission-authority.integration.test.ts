@@ -324,8 +324,8 @@ for (const flow of ['wallet', 'invoice'] as const) {
 }
 
 for (const flow of ['wallet', 'invoice'] as const) {
-  for (const cleaned of [false, true])
-    it(`${flow} handles a failed copy with cleanup ${cleaned ? 'completed' : 'pending'}`, async () => {
+  for (const cleanup of ['pending', 'claimed', 'completed'] as const)
+    it(`${flow} handles a failed copy with cleanup ${cleanup}`, async () => {
       const input = await seed();
       const put = storage.putObject;
       storage.putObject = async (key, body, contentType) => {
@@ -348,15 +348,32 @@ for (const flow of ['wallet', 'invoice'] as const) {
         status: 'removed',
         metadata: { provisionalCopy: true, deletionRequested: true },
       });
-      if (cleaned) {
+      if (cleanup !== 'pending') {
         await db.pool.query(
           "UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes' WHERE storage_key=$1",
           [copies[0].storage_key]
         );
-        await cleanupStorageObjects(db.pool, storage);
-        expect(objects.has(copies[0].storage_key)).toBe(false);
-        await expect(submit(flow, input)).rejects.toMatchObject({ status: 409 });
-        expect(objects.has(copies[0].storage_key)).toBe(false);
+        const provider =
+          cleanup === 'completed'
+            ? storage
+            : {
+                ...storage,
+                deleteObject: async () => {
+                  throw new Error('Fixture cleanup response lost');
+                },
+              };
+        expect(await cleanupStorageObjects(db.pool, provider)).toEqual(
+          cleanup === 'completed' ? { deleted: 1, failed: 0 } : { deleted: 0, failed: 1 }
+        );
+        expect(objects.has(copies[0].storage_key)).toBe(cleanup === 'claimed');
+        const put = vi.spyOn(storage, 'putObject');
+        try {
+          await expect(submit(flow, input)).rejects.toMatchObject({ status: 409 });
+          expect(put).not.toHaveBeenCalled();
+        } finally {
+          put.mockRestore();
+        }
+        expect(objects.has(copies[0].storage_key)).toBe(cleanup === 'claimed');
         return;
       }
       const result = await submit(flow, input);

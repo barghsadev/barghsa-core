@@ -27,12 +27,27 @@ relying on this protection. Policy changes also require provider propagation.
 Do not bulk-tag existing uploads as disposable. Some recorded uploads remain
 business files at their original keys. The worker classifies only unclaimed
 upload reservations after their URL expires and the 65-minute safety window
-passes. It locks the removed, unsigned record, tags eligible versions and
-records the result before clearing cleanup intent. Objects then expire by
-bucket age, rather than being deleted at classification time. A failed tagging
-or database completion keeps retryable intent. Active uploads, signed records
-and held versions are excluded. Missing tags are treated as unclassified until
-this trusted workflow explicitly opts a version into expiry.
+passes. The worker commits `cleanup_operation='expire'` on the removed,
+unsigned record before tagging eligible versions. Explicit removal of other
+eligible objects commits `cleanup_operation='delete'` before requesting a
+delete marker. The worker holds the same per-key advisory lock used for
+multipart operations. Provider I/O runs after the row transaction commits.
+
+The database keeps a claimed key removed and unsigned, including after the
+worker records success. A copy must have an unclaimed reservation before it
+writes bytes. A provider failure or lost completion receipt keeps the original
+operation eligible for retry after the existing one-minute backoff. Expired
+upload versions follow the bucket age rule. Active uploads, signed records and
+held versions are excluded. Missing tags remain unclassified until this
+workflow marks an eligible version.
+
+Apply migration `0288_storage_cleanup_operation_claim` before starting the
+updated API and worker. Keep the migration applied when reverting binaries.
+Drain the existing cleanup worker before switching versions. Older workers
+use row locks and cannot coordinate with the per-key advisory lock. Before
+restarting an older worker or upload promotion code, reconcile rows with a
+`cleanup_operation` and `metadata.deletionRequested=true` using the updated
+worker. Keep their claims as the record of the cleanup decision.
 
 The provider enumerates exact-key versions, preserves other tags, and retains
 any existing legal-hold value other than false. Preview generation and document

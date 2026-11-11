@@ -128,6 +128,7 @@ describe('historical multipart cleanup upgrade', () => {
   let connection: { pgdirectUrl: string };
   let history: object[];
   let prior: object[];
+  let priorStorage: object[];
   beforeAll(async () => {
     await db.pool.query(`CREATE DATABASE "${name}"`);
     const url = new URL(db.connectionString);
@@ -142,6 +143,12 @@ describe('historical multipart cleanup upgrade', () => {
         [status, status]
       );
     prior = (await pool.query('SELECT * FROM upload_cleanup_log ORDER BY storage_key')).rows;
+    await pool.query(
+      `INSERT INTO storage_records(storage_key,status,signed_at,metadata)
+       VALUES('historical-signed','immutable',NOW(),'{"retained":true}'),
+         ('historical-removed','removed',NULL,'{"deletionRequested":true}')`
+    );
+    priorStorage = (await pool.query('SELECT * FROM storage_records ORDER BY storage_key')).rows;
     history = (await pool.query('SELECT * FROM drizzle.__drizzle_migrations ORDER BY id')).rows;
   }, 120_000);
   afterAll(async () => {
@@ -151,7 +158,7 @@ describe('historical multipart cleanup upgrade', () => {
   it('preserves old receipts and the journal while allowing durable pending intent', async () => {
     expect(await runMigrations({ connection })).toEqual({
       ok: true,
-      applied: ['0287_multipart_operation_recovery'],
+      applied: ['0287_multipart_operation_recovery', '0288_storage_cleanup_operation_claim'],
     });
     expect(
       (await pool.query('SELECT * FROM upload_cleanup_log ORDER BY storage_key')).rows
@@ -162,6 +169,28 @@ describe('historical multipart cleanup upgrade', () => {
         history.length
       )
     ).toEqual(history);
+    expect((await pool.query('SELECT * FROM storage_records ORDER BY storage_key')).rows).toEqual(
+      priorStorage.map((row) => ({ ...row, cleanup_operation: null }))
+    );
+    await expect(
+      pool.query(
+        "UPDATE storage_records SET cleanup_operation='delete' WHERE storage_key='historical-signed'"
+      )
+    ).rejects.toMatchObject({
+      code: '23514',
+      constraint: 'storage_records_cleanup_operation_check',
+    });
+    await pool.query(
+      "UPDATE storage_records SET cleanup_operation='delete' WHERE storage_key='historical-removed'"
+    );
+    await expect(
+      pool.query(
+        "UPDATE storage_records SET status='active' WHERE storage_key='historical-removed'"
+      )
+    ).rejects.toMatchObject({
+      code: '23514',
+      constraint: 'storage_records_cleanup_operation_check',
+    });
     await pool.query(
       `INSERT INTO upload_cleanup_log(storage_key,provider_upload_id,initiated_at,status) VALUES('pending','pending',NOW(),'pending')`
     );

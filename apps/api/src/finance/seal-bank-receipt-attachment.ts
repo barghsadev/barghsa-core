@@ -104,7 +104,7 @@ export async function sealBankReceiptAttachment(
     if ((error as { code?: string }).code !== '23505') throw error;
   }
   const reservation = await client.query(
-    `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
+    `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL AND cleanup_operation IS NULL
        AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' AND metadata->>'sourceKey'=$2
        AND metadata->>'uploadedBy'=$3 FOR UPDATE`,
     [sealedKey, attachmentKey, actorId]

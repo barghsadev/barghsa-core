@@ -90,12 +90,54 @@ it('serializes simultaneous workers without duplicate deletion', async () => {
   const first = cleanupStorageObjects(pool, storage);
   await started;
   try {
+    const lock = await pool.query(
+      `SELECT a.state,a.xact_start FROM pg_locks l JOIN pg_stat_activity a USING(pid)
+       WHERE l.locktype='advisory' AND l.granted AND a.datname=current_database()`
+    );
+    expect(lock.rows).toEqual([{ state: 'idle', xact_start: null }]);
+    const observer = await pool.connect();
+    try {
+      await observer.query('BEGIN');
+      expect(
+        (
+          await observer.query(
+            "SELECT cleanup_operation FROM storage_records WHERE storage_key='parallel' FOR UPDATE NOWAIT"
+          )
+        ).rows
+      ).toEqual([{ cleanup_operation: 'delete' }]);
+      // Keep the row eligible to prove the second worker is excluded by the session lock.
+      await observer.query(
+        "UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes' WHERE storage_key='parallel'"
+      );
+      await observer.query('COMMIT');
+    } finally {
+      await observer.query('ROLLBACK');
+      observer.release();
+    }
+    await expect(
+      pool.query("UPDATE storage_records SET status='active' WHERE storage_key='parallel'")
+    ).rejects.toMatchObject({
+      code: '23514',
+      constraint: 'storage_records_cleanup_operation_check',
+    });
+    await expect(
+      pool.query(
+        "UPDATE storage_records SET status='immutable',signed_at=NOW() WHERE storage_key='parallel'"
+      )
+    ).rejects.toMatchObject({
+      code: '23514',
+      constraint: 'storage_records_cleanup_operation_check',
+    });
     expect(await cleanupStorageObjects(pool, storage)).toEqual({ deleted: 0, failed: 0 });
   } finally {
     release();
   }
   expect(await first).toEqual({ deleted: 1, failed: 0 });
   expect(deleteObject).toHaveBeenCalledTimes(1);
+  expect(
+    (await pool.query("SELECT cleanup_operation FROM storage_records WHERE storage_key='parallel'"))
+      .rows
+  ).toEqual([{ cleanup_operation: 'delete' }]);
 });
 it('keeps a durable request when database completion fails after object deletion', async () => {
   await seed('commit-failure');
@@ -176,7 +218,13 @@ it('retains classification intent on provider failure and retries without physic
     failed: 1,
   });
   expect(await pending('uploads/document/retry.pdf')).toBe(true);
-  await pool.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
+  expect((await pool.query('SELECT cleanup_operation FROM storage_records')).rows).toEqual([
+    { cleanup_operation: 'expire' },
+  ]);
+  // Even if older code changed the provisional flag, the committed operation still expires.
+  await pool.query(
+    "UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes',metadata=metadata-'provisionalUpload'"
+  );
   expect(await cleanupStorageObjects(pool, { ...storage, scheduleExpiration })).toEqual({
     deleted: 0,
     failed: 0,

@@ -320,7 +320,7 @@ async function main(): Promise<void> {
   }
   pollers.every(async () => {
     try {
-      const result = await cleanupStorageObjects(getDbPool(), cleanupProvider);
+      const result = await cleanupStorageObjects(createDirectDbPool(), cleanupProvider);
       if (result.failed)
         await recordJobFailure({
           jobType: 'storage_cleanup',
