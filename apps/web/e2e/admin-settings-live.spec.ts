@@ -742,9 +742,10 @@ for (const locale of ['en', 'fa'])
     expect(policies.map((policy) => policy.maxSizeBytes)).toEqual([2 * 1024 * 1024, 1024 * 1024]);
   });
 
-for (const locale of ['en', 'fa'])
+for (const locale of ['en', 'fa'] as const)
   test(`storage configuration persists through the real API (${locale})`, async ({ page }) => {
     const fa = locale === 'fa';
+    const status = page.getByRole('main').getByRole('status');
     await page.addInitScript((value) => localStorage.setItem('barghsa.locale', value), locale);
     await page.route('**/api/**', async (route) => {
       const request = route.request(),
@@ -778,9 +779,8 @@ for (const locale of ['en', 'fa'])
       .getByRole('button', { name: fa ? 'تأیید' : 'Confirm', exact: true })
       .click();
     await expect(page.getByRole('dialog')).toHaveCount(0);
-    await expect(page.getByRole('main').getByRole('status')).toContainText(
-      fa ? 'ذخیره نشده' : 'not been saved'
-    );
+    const tested = adminText('admin.storage.tested', locale);
+    await expect(status.filter({ hasText: tested })).toHaveText(tested);
     await page
       .getByRole('button', { name: fa ? 'ذخیره و فعال‌سازی' : 'Save and activate', exact: true })
       .click();
@@ -792,9 +792,8 @@ for (const locale of ['en', 'fa'])
     await expect(page.getByLabel(fa ? 'کلید محرمانه' : 'Secret key', { exact: true })).toHaveValue(
       ''
     );
-    await expect(page.getByRole('main').getByRole('status')).toContainText(
-      fa ? 'ذخیره و فعال' : 'saved and active'
-    );
+    const activated = adminText('admin.storage.saved', locale);
+    await expect(status.filter({ hasText: activated })).toHaveText(activated);
     await settleLiveRequests();
     await page.reload();
     await expect(page.getByLabel(fa ? 'کلید دسترسی' : 'Access key', { exact: true })).toHaveValue(

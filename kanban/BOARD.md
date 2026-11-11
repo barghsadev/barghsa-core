@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T01:51:18+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T02:42:46+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Fix the ambiguous storage settings browser receipt locator with current English and Persian native evidence. Reconcile exact scheduled and full-coverage receipts at the candidate boundary.
+Separate explicit email and SMS provider tests from the provider-family SQL transaction, preserving authorized recipients, fresh session authority, one current breaker probe and committed exact-config delivery evidence.
 
-- `06-security-testing-observability.md#T-06.12.03.01`: Implement main-branch CI workflow: full test suites, E2E, accessibility, container build+scan, SBOM
+- `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys

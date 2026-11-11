@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T01:51:18+00:00",
+  "updated": "2026-11-11T02:42:46+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -33770,7 +33770,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -35013,6 +35013,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -48025,7 +48033,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -49097,6 +49105,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -49469,7 +49485,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -50541,6 +50557,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -50921,7 +50945,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/registration-consent.spec.ts",
@@ -51993,6 +52017,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -66816,7 +66848,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -67520,6 +67552,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -67962,7 +68002,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -68666,6 +68706,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -69108,7 +69156,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -69812,6 +69860,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -70671,7 +70727,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -71677,6 +71733,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -73125,7 +73189,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -73307,6 +73371,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -74673,7 +74745,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -75043,6 +75115,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -75402,7 +75482,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -75772,6 +75852,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -76131,7 +76219,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -76502,6 +76590,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -76859,7 +76955,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/content-forms.spec.ts",
@@ -77229,6 +77325,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -105760,7 +105864,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -106464,6 +106568,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -106838,7 +106950,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -107542,6 +107654,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -107922,7 +108042,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -108626,6 +108746,14 @@
                 "apps/worker/src/service-targets/escalation-scanner.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -109265,7 +109393,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -109809,6 +109937,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -111020,7 +111156,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -111297,6 +111433,14 @@
                 "apps/api/src/admin/failed-notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ]
         }
@@ -111441,7 +111585,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/failed-jobs.spec.ts",
@@ -111718,6 +111862,14 @@
                 "apps/api/src/admin/failed-notifications.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ]
         }
@@ -113377,7 +113529,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -113946,6 +114098,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -114284,7 +114444,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -114853,6 +115013,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -119358,7 +119526,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -119684,6 +119852,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -120145,7 +120321,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -120470,6 +120646,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -120989,7 +121173,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/gift-code-forms.spec.ts",
@@ -121625,6 +121809,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -121944,7 +122136,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/contract-templates.spec.ts",
@@ -122513,6 +122705,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -122910,7 +123110,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/catalogue.spec.ts",
@@ -123235,6 +123435,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -519982,7 +520190,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/coverage-fixture.ts",
@@ -520022,6 +520230,16 @@
             "The scheduled run used 40 separate shard jobs. Six Persian and English Mobile Safari storage, provider and AI configuration cases passed against the migrated real API in job 129738700024. The stricter current loopback fixture was verified separately in the provider-isolation batch. The prior full run failed overall and the exact candidate matrix remains open.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open.",
             "Renewed the affected migrated-API test binding after two Firefox reconciliation journeys and four related native filter/draft tests passed. The application and original financial assertions are unchanged."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            }
           ]
         }
       }
@@ -521308,7 +521526,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/auth-entry-session.spec.ts",
@@ -521384,6 +521602,14 @@
                 "apps/web/e2e/customer-service-history-views.spec.ts"
               ],
               "scope": "Add source-backed route checks to existing synthetic journeys and the nightly navigation step. The application, prior tests, strict rollup, evidence artifact contracts and browser matrix behavior are preserved. The navigation script and 26 affected browser cases passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ]
         }
@@ -524577,7 +524803,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. Run 42902282297 failed the license gate, hit a branding fixture timeout since fixed under coverage, and had one flaky Persian storage settings status selector (2,920 passed and two declared skips). Diagnose and repair the selector before the next candidate rollup."
+        "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. The previous full workflow failed the image license gate; its branding setup and Persian storage receipt fixtures now have focused passing checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -524591,7 +524817,8 @@
           "release-0.6-workspace-test-and-coverage-configuration",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-durable-multipart-operations"
+          "release-0.6-durable-multipart-operations",
+          "release-0.6-exact-storage-receipt-locator"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -580672,7 +580899,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -581487,6 +581714,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ]
         }
@@ -581637,7 +581872,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -582452,6 +582687,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ]
         }
@@ -583176,7 +583419,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -583991,6 +584234,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ]
         }
@@ -780308,7 +780559,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -780489,6 +780740,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -792559,7 +792818,7 @@
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
-              "sha256": "439f85819711859dfda5354b9ec499f320bd377b4aa209f06b127f373e301385"
+              "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
             },
             {
               "path": "apps/web/e2e/consultation-assignment-context.spec.ts",
@@ -796791,6 +797050,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-exact-storage-receipt-locator",
+              "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+              "paths": [
+                "apps/web/e2e/admin-settings-live.spec.ts"
+              ],
+              "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
             }
           ],
           "presentation_renewals": [
@@ -809739,7 +810006,7 @@
       "remaining": [
         "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
-        "Reconcile full hosted native and combined coverage. Run 42902282297 failed the license gate, hit a fresh branding setup timeout since corrected under coverage, and rejected one flaky Persian storage settings assertion (2,920 passed and two declared skips). Require the final immutable candidate's full evidence.",
+        "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
       ],
       "owner": null,
@@ -809916,7 +810183,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-durable-multipart-operations"
+          "release-0.6-durable-multipart-operations",
+          "release-0.6-exact-storage-receipt-locator"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -928577,6 +928845,64 @@
           "sha256": "8193449ef0845f753d60801c253d8400d407d9a724aa66309cde56a6fa633787"
         }
       ]
+    },
+    "release-0.6-exact-storage-receipt-locator": {
+      "batch": "release-0.6-exact-storage-receipt-locator",
+      "base_commit": "f4d47d8e0023b4f19bb8064bbbbea9b2c1dd0bb6",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/admin-settings-live.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/admin-settings-live.spec.ts",
+          "sha256": "94e9a8429849fabf88a281684b582aaca64be145a374f6058c896de9801033e2"
+        }
+      ],
+      "checks": [
+        "Old full workflow 42902282297 captured both the successful Persian receipt and loading state under main's role=status. Scope the test-only locators to the exact localized test and activation receipts, with exact text assertions. Keep the real API reload, credential redaction and cleanup setting readbacks.",
+        "English and Persian storage settings cases passed with no retries against the built web app, compiled API and disposable PostgreSQL on one isolated host. Playwright 1.65.0 ran on verified Node 24.11.1. The same 208 SQL migrations and 443 test/fixture source files were verified. Final release coverage remains required. The setup-only adapter uses the disposable database; all browser assertions ran as written.",
+        "An earlier local run timed out on fresh setup; a migrated template then exposed 9–12 second remote-database API latency before the first browser check. A colocated Node 26 run passed Persian and reached both English receipt assertions before an API connection reset during reload. The final Node 24 run passed both cases without retries, retaining the original assertion timeouts. Scoped ESLint, Prettier and whitespace checks passed.",
+        "This test-only batch is not a release, broad coverage pass, scheduled nightly receipt or staging deployment."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/remote-receipt.txt",
+          "sha256": "9c66af0a72ca830a2590129ed43d1c6d675cdf49824bb2348ff15ed5826ba35a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/remote-chromium.log",
+          "sha256": "3a058a85bf0cb6a27446101213a7668b08fa4bfb2f6f29a52fa5b69d67efa696"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/remote-chromium-result.json",
+          "sha256": "44c27ee78dd7b3d5e9c0b44c7c4a532c77ae05cd73be8be39276c870fb3a2501"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/remote-browser-source.sha256",
+          "sha256": "604c6ff962be26beb2996caeb4521f59c4dfd175e2d4b02836229c03bf7efa6f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/template-migrations.sha256",
+          "sha256": "54411f88896eb3c9c23468a8db8c687e77cfd7f45c732a37f423fd031f52b076"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/browser-source.sha256",
+          "sha256": "45a08ad12cbcdff4d00fd44e4673328ca860ac7edbe4b6edd86842b84c8d6a58"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/node24-linux/node.sha256",
+          "sha256": "2efd013186c9a9829584cb58d0f9b2c5b70fb8bb556e63fb40143e653de35727"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/remote-node26-chromium-result.json",
+          "sha256": "296b9243aa7ebefa064294c3ab36b0383bc2f72060075195c8eb8b9e38914d49"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -928616,13 +928942,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-storage-browser-coverage-reconciliation",
+    "id": "release-0.6-provider-test-operation-boundary",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.12.03.01",
+      "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Fix the ambiguous storage settings browser receipt locator with current English and Persian native evidence. Reconcile exact scheduled and full-coverage receipts at the candidate boundary."
+    "goal": "Separate explicit email and SMS provider tests from the provider-family SQL transaction, preserving authorized recipients, fresh session authority, one current breaker probe and committed exact-config delivery evidence."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
