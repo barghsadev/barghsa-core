@@ -75,10 +75,11 @@ UID only. Use the admin account to provision named operator accounts.
 
 Grafana listens on the staging host's loopback port 3009. Authorized operators
 forward local port 3009 to that port over SSH, then sign in. The overlay
-provisions the notifications, finance safety, AI usage, worker health and
-[Storage and Uploads](../../deploy/monitoring/grafana-storage-uploads-dashboard.json)
-dashboards with the private Prometheus source. Select the environment and
-database in the storage dashboard. Upload counts and size buckets come from
+provisions ten dashboards in Barghsa Operations with the private Prometheus
+source. These include Executive SLO, API Health, PostgreSQL and Connection Pool,
+Worker Health, External Providers, Authentication and Security, Finance Safety,
+Storage and Uploads, Notifications, and AI Usage. Select the environment and
+database in Storage and Uploads. Upload counts and size buckets come from
 verified object bytes. The malware panel counts committed infected verdicts.
 The queue panel reads active jobs and combines duplicate database observations
 from worker replicas. The overlay sets

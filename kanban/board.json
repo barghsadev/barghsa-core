@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T23:06:05+00:00",
+  "updated": "2026-11-11T23:12:41+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -86798,7 +86798,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -87642,7 +87643,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -89312,6 +89313,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -92412,7 +92421,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92440,7 +92450,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -92678,6 +92688,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -92805,7 +92823,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -92825,7 +92844,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             }
           ],
           "checks": [
@@ -92933,6 +92952,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -101896,7 +101923,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -102092,7 +102120,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -102612,6 +102640,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -103029,7 +103065,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -103225,7 +103262,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -103745,6 +103782,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -104162,7 +104207,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -104358,7 +104404,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -104878,6 +104924,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -105296,7 +105350,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -105492,7 +105547,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -106012,6 +106067,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -106429,7 +106492,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -106625,7 +106689,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -107145,6 +107209,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -107571,7 +107643,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107707,7 +107780,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -108120,6 +108193,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -108535,7 +108616,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "done",
@@ -108695,7 +108777,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -109051,6 +109133,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -109336,7 +109426,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -109532,7 +109623,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -110052,6 +110143,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -489986,7 +490085,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490206,7 +490306,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -490643,6 +490743,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -492172,7 +492280,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492328,7 +492437,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -492862,6 +492971,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -563915,7 +564032,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -563963,7 +564081,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -564141,6 +564259,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -564830,7 +564956,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564850,7 +564977,7 @@
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
-              "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+              "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
             },
             {
               "path": "deploy/production/README.md",
@@ -564943,6 +565070,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Adds a per-service burn-down history using fresh paired five-minute samples and the selected UTC period start and target. The seven existing panels, their expressions and dashboard settings are identical. The exact new query passed Promtool and isolated Grafana and Prometheus readback. Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "deploy/monitoring/staging-dashboards.yml"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -565277,7 +565412,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -565310,7 +565446,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             }
           ],
           "source_renewals": [
@@ -565414,6 +565550,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -565456,7 +565600,8 @@
           "release-0.6-bill-provider-circuits",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565508,11 +565653,11 @@
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
-              "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+              "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -565572,6 +565717,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "deploy/monitoring/staging-dashboards.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -565613,7 +565767,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565669,7 +565824,7 @@
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
-              "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+              "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -565735,6 +565890,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds revision-scoped counters for 33 matched authenticated customer methods and routes. Existing completed response histogram and release gauge assertions are preserved. Actual loopback HTTP requests verified count increments and exclusions. Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "deploy/monitoring/staging-dashboards.yml"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -565770,7 +565933,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565806,7 +565970,7 @@
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
-              "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+              "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -565867,6 +566031,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "deploy/monitoring/staging-dashboards.yml"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -565916,7 +566088,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565968,7 +566141,7 @@
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
-              "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+              "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -565976,7 +566149,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -566087,6 +566260,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "deploy/monitoring/staging-dashboards.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -566128,7 +566310,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -566172,7 +566355,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -566329,6 +566512,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -566614,7 +566805,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-native-journey-availability",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -566634,7 +566826,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             }
           ],
           "checks": [
@@ -566762,6 +566954,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Explains the plot window, missing measurements, zero budget and the 15-day staging retention. The SLO targets, alert policy and recovery procedures retain their scope."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -566909,7 +567109,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -566949,7 +567150,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             }
           ],
           "checks": [
@@ -567045,6 +567246,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed. Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ]
         }
@@ -567091,7 +567300,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Select and scan a patched immutable Grafana image. The official 13.3.1 Linux/amd64 manifest 1c88285f1dd391a62232c010e6c224846e6a73bdc583b3365be2eba614b7919e has 20 high-severity scan findings. The required Prometheus binary contains the four affected GO-2026-6860 functions and links x/net v0.61.0. The current official Prometheus 13.2.5 catalog entry reports the same source revision. Staging retains its existing healthy monitoring stack.",
+        "Select a patched immutable Grafana image that passes the image gate. The official Linux/amd64 13.1.10, 13.2.6 and 13.3.1 images had 3, 19 and 20 high findings, respectively. 13.1.10 flags Tempo in the core binary and x/net in Zipkin. The required Prometheus backend in 13.2.6 and 13.3.1 ships x/net v0.61.0. Staging remains healthy on its existing monitoring stack.",
         "With the approved Grafana digest and the accepted link-capable application image, verify named operator access to the dashboards and open the dashboard and runbook URLs from fresh Alertmanager and staff inbox receipts. Verify authorized email delivery for outage notices where enabled."
       ],
       "owner": null,
@@ -567122,7 +567331,8 @@
           "release-0.6-alert-dashboards",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": null
       }
@@ -567332,7 +567542,8 @@
         ],
         "batches": [
           "release-0.6-native-journey-availability",
-          "release-0.6-journey-budget-burndown"
+          "release-0.6-journey-budget-burndown",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_acceptance": null
       }
@@ -852178,7 +852389,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -854175,6 +854386,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "presentation_renewals": [
@@ -854565,7 +854784,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -856782,7 +857002,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "e87c964d088fde2ff446a0c6d8e4f230cd213f1241a62b46e5a0d24e61fa7113"
+              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -858669,6 +858889,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-grafana-supported-images-and-provisioning",
+              "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -859076,7 +859304,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -863766,7 +863995,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-staging-favicon-publication-prep",
           "release-0.6-staging-scanner-ceiling",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-grafana-supported-images-and-provisioning"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -863791,6 +864021,12 @@
             "file": "staging-cache-recovery.log",
             "sha256": "7b522b251975fcb23729af70bbb6619390d66c51f2314a9e860da9232e4400a1"
           }
+        },
+        "grafana_staging_gate": {
+          "status": "no_verified_image",
+          "review_batch": "release-0.6-grafana-supported-images-and-provisioning",
+          "provisioned_in_fixture": 10,
+          "live_operator_receipt": null
         }
       },
       "blocker": "Production-equivalent host, separate TLS PostgreSQL/pooler, off-server backup storage and payment sandbox protected configuration are not available in the known workspace. The public domain serves legacy WordPress; the accessible app host is disposable staging. Owner access/provisioning direction and SMS.ir live verification status requested together on 2026-11-09. Isolated recovery tests and staging monitoring checks can continue."
@@ -991936,6 +992172,209 @@
         {
           "file": "source.sha256",
           "sha256": "d04be9c973f54335fe597d50567ec8fd190b8977f1111692834882a7072f2c05"
+        }
+      ]
+    },
+    "release-0.6-grafana-supported-images-and-provisioning": {
+      "batch": "release-0.6-grafana-supported-images-and-provisioning",
+      "base_commit": "a070f21ec912d913ab82c1efc79307862779047f",
+      "task_keys": [
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.07",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "06-security-testing-observability.md#T-06.15.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/grafana-ai-usage-dashboard.json",
+          "sha256": "f57551444afabb077e99e8c4ddd9c8c874ccecf4df2d082ca9d5c7ec3e2e764a"
+        },
+        {
+          "path": "deploy/monitoring/grafana-api-health-dashboard.json",
+          "sha256": "04ecc1fd6f85b088e01befbf5b52a23d3f8ffe02e9c721604fd597ab22da789e"
+        },
+        {
+          "path": "deploy/monitoring/grafana-authentication-security-dashboard.json",
+          "sha256": "514570062483935ed8a20396d0407cce2462a9ca7db94229b92fae593a96f178"
+        },
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "f90eca29a20ad564d542e4502606b1be33511703859c8a641250a202f63f3e49"
+        },
+        {
+          "path": "deploy/monitoring/grafana-external-providers-dashboard.json",
+          "sha256": "23936116e7a4986b7730cabed87c608c04fc1fdd2e97695c531d71b068d0c38e"
+        },
+        {
+          "path": "deploy/monitoring/grafana-finance-safety-dashboard.json",
+          "sha256": "93343745712ed6893d6dd15f83cc6faa78a5b1bac5acff6cedef503a2b89dbb2"
+        },
+        {
+          "path": "deploy/monitoring/grafana-notifications-dashboard.json",
+          "sha256": "056d622af91f2fe910f3d015df641b92460fc6acb0537c182b7d0bd95f46ae91"
+        },
+        {
+          "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "sha256": "ff7c8f642d136b3389c175e562bd312bb0ceb1abe89d90673e7deb5b86ece1a1"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
+          "sha256": "e3aea8746e93ac5d87433d4431ddd92a1225716139d8f2701e29dbccbc401a2b"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+          "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+        },
+        {
+          "path": "deploy/monitoring/grafana-storage-uploads-dashboard.json",
+          "sha256": "6807ba8545954a45ad1b8244e8334ed491bf9fdd46c85da77cf1e8875e25fadc"
+        },
+        {
+          "path": "deploy/monitoring/grafana-worker-health-dashboard.json",
+          "sha256": "23df35b0fafa2594da5ff281dcac6892225134431af6cb2372eee3fb5e5e8a9c"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+        }
+      ],
+      "checks": [
+        "Verified registry manifest and config digests for official Grafana 13.1.10 and 13.2.6. Checksum-verified Trivy 0.76.2 scanned each immutable Linux/amd64 image with a refreshed database, recorded all severities and produced the CycloneDX inventory.",
+        "Grafana 13.1.10 has three high findings in core Tempo and bundled Zipkin. Grafana 13.2.6 has nineteen high findings, including x/net v0.61.0 in the bundled Prometheus backend. Neither passes the current image gate. The older source branches and catalog source provide comparison only.",
+        "The normalized staging overlay binds all ten dashboards read-only and exposes Grafana on loopback only. Isolated native Grafana read back all ten exact panel sets to an authenticated Viewer and returned HTTP 401 for every anonymous read. Formatting and whitespace passed. Staging application metadata and readiness remained healthy."
+      ],
+      "limitations": [
+        "Neither scanned image was pulled onto staging or activated. The local fixture only verified provisioning. Actual staging operator, data-source, alert and dashboard receipts require an image that passes the gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-live-grafana-supported",
+      "execution_receipts": [
+        {
+          "file": "oci-13.1.10.json",
+          "sha256": "c58bc5dd121f2f661267cdb21776a4a0516a3604bf834b9a684a8022d78ad8c9"
+        },
+        {
+          "file": "oci-13.2.6.json",
+          "sha256": "db3bbc04cbf3d94d498d5011df2a99b56367b98fc2ea1f9ad57d6c637fff7afe"
+        },
+        {
+          "file": "catalog-prometheus-13.2.6.json",
+          "sha256": "3128157dafffccd59dc346c109075ac3068bcd2a5d78db896b1e311f5a66c176"
+        },
+        {
+          "file": "scan-13.1.10.sh",
+          "sha256": "2dd1edff2eaf4382e605c7a7f0a26fce9a1625afb27cbc9d056d025370fb70d8"
+        },
+        {
+          "file": "scan-13.1.10.log",
+          "sha256": "5c7eea6405b2ced16c20e6032bef94e48c98d1d7c731348874bc056a690acc1b"
+        },
+        {
+          "file": "scan-13.2.6.sh",
+          "sha256": "715fcb03cf6ae648436c61dfa7ba99be4bdf8dcb9fb7c820b2bc499ce6238dad"
+        },
+        {
+          "file": "scan-13.2.6.log",
+          "sha256": "cfc40ba8d8f9996a9d409b8c451f814b5baf3a2681a2920be61e0449dc38d85d"
+        },
+        {
+          "file": "high-findings.json",
+          "sha256": "11f49a617f8de316b5529b5f63c3c896fbf8f7d108e455f9a84acdc39651dc08"
+        },
+        {
+          "file": "upstream-12.4.15-go.mod",
+          "sha256": "a11bd2e43a68fea88bbc01e8522036727429d34efc52394798bf40e58fb380bc"
+        },
+        {
+          "file": "upstream-13.0.13-go.mod",
+          "sha256": "b616947ba74a67a963de839a79328546588fcaf35583b3b7f74f0a4ad426f98d"
+        },
+        {
+          "file": "upstream-13.1.10-go.mod",
+          "sha256": "ca97bd3bf46e802b85746ac26778ee27f87a410da08b476b6e0fa955a1198a3b"
+        },
+        {
+          "file": "upstream-13.2.6-go.mod",
+          "sha256": "373eb729e75b1c6e42c408b7d404d484e0d1a94ebc1a0e66d43821b2be3642ff"
+        },
+        {
+          "file": "upstream-13.3.1-go.mod",
+          "sha256": "15571f3e3aef5040edd52cdd0f0866ccde874c03a2cf1367a95ccd8ecc935b3f"
+        },
+        {
+          "file": "verify-dashboards.py",
+          "sha256": "a0353b5154ab22f6ca54e6f501ae07c6120a5ef72ce591b6ec32d2e0384c0d16"
+        },
+        {
+          "file": "dashboard-readback.json",
+          "sha256": "293c4436c1a86ea30a5eedfd6da88e16a80974cfb7c415e5deb7ed4e099ab641"
+        },
+        {
+          "file": "grafana-fixture.log",
+          "sha256": "995630cb8cabe7107343958839aa4c4d6e5313c734d439d8ed66d70bc22e10e3"
+        },
+        {
+          "file": "staging-health.json",
+          "sha256": "0967da24275f98bd958566767207e1b7228ca4fb6abcfcfe8b7069f3d297c0ed"
+        },
+        {
+          "file": "source-checks.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "scan-13.1.10/grafana-provenance.json",
+          "sha256": "cf5c0a1362e3069f136d50034ea79edfd3f911aac6e3c3a6bd5a14d59223db68"
+        },
+        {
+          "file": "scan-13.1.10/grafana-sbom.cdx.json",
+          "sha256": "1e3d7ee31fd33980bf0d2df2bdbdbfc1f0c4cebb851a13632313b09f2c834c7b"
+        },
+        {
+          "file": "scan-13.1.10/grafana-vulnerabilities.json",
+          "sha256": "46f2b62563274b4804f60f6f2630389ce1201661e3e82e3593096daa207d8eb6"
+        },
+        {
+          "file": "scan-13.2.6/grafana-provenance.json",
+          "sha256": "3e588c38f521a2639b5e64667e05bc002cc80c57ec196009089ccc3b6d436fec"
+        },
+        {
+          "file": "scan-13.2.6/grafana-sbom.cdx.json",
+          "sha256": "24ed4256124358b236a829160f78bdee7991e068688eda23f526f6cb7f1d5544"
+        },
+        {
+          "file": "scan-13.2.6/grafana-vulnerabilities.json",
+          "sha256": "fb0ac40d2bfe512cd966cf3aa25a96d862acb5f561929fcacecf805307b4bcfe"
         }
       ]
     }

@@ -26,6 +26,8 @@ services:
       - ./grafana-worker-health-dashboard.json:/var/lib/grafana/operations/worker.json:ro
       - ./grafana-storage-uploads-dashboard.json:/var/lib/grafana/operations/storage.json:ro
       - ./grafana-executive-slo-dashboard.json:/var/lib/grafana/operations/executive-slo.json:ro
+      - ./grafana-api-health-dashboard.json:/var/lib/grafana/operations/api-health.json:ro
+      - ./grafana-postgresql-dashboard.json:/var/lib/grafana/operations/postgresql.json:ro
       - ./grafana-external-providers-dashboard.json:/var/lib/grafana/operations/external-providers.json:ro
       - ./grafana-authentication-security-dashboard.json:/var/lib/grafana/operations/authentication-security.json:ro
       - ${BARGHSA_GRAFANA_ADMIN_PASSWORD_FILE:-/etc/barghsa/staging/grafana-admin-password}:/run/secrets/grafana-admin-password:ro
