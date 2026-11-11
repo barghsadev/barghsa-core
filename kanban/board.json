@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T17:49:15+00:00",
+  "updated": "2026-11-11T18:00:09+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16411,7 +16411,7 @@
       "remaining": [
         "Read back a successful 02:00 UTC scheduled run on current release source and its seven-day history, preserving the six unavailable historical detailed receipts as gaps. The same workflow passed by manual dispatch at f0f9434c.",
         "Verify actual result delivery to the authorized dedicated receiver and repeat invalidated checks for the exact accepted candidate.",
-        "Reconcile scheduled run 42990347003 on the final candidate. The provider, ownership and registration fixture corrections and the WebKit branding transport repair have focused evidence. Verify the remaining transient contrast measurement and a clean scheduled 40-shard rollup."
+        "Reconcile scheduled run 42990347003 on the final candidate. Current exact-source proof covers the provider, ownership and registration fixture corrections, the WebKit branding transport repair and eight retry-disabled repeats of the transient contrast case. Retain the original failed measurement and verify a clean scheduled 40-shard rollup."
       ],
       "owner": null,
       "depends_on": [],
@@ -16485,7 +16485,8 @@
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-scheduled-browser-fixture-contracts",
-          "release-0.6-webkit-fixture-idle-connection"
+          "release-0.6-webkit-fixture-idle-connection",
+          "release-0.6-webkit-contrast-readback"
         ],
         "current_acceptance": null
       }
@@ -23320,7 +23321,8 @@
           "release-0.6-incident-runbook-criteria",
           "release-0.6-security-incident-and-review-prerequisites",
           "release-0.6-latency-rehearsal-budgets",
-          "release-0.6-alert-runbook-references-and-review"
+          "release-0.6-alert-runbook-references-and-review",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -23332,7 +23334,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -23420,6 +23422,14 @@
                 "docs/runbooks/bad-deployment.md"
               ],
               "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -547432,7 +547442,8 @@
         "batches": [
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-database-protection-export-leases",
-          "release-0.6-postgresql-dashboard"
+          "release-0.6-postgresql-dashboard",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "documented-performance-rehearsal-budget",
@@ -547453,7 +547464,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -547492,6 +547503,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -547526,7 +547545,8 @@
         "batches": [
           "release-0.6-weekly-isolated-load-scenarios",
           "release-0.6-load-client-address-fixture",
-          "release-0.6-load-regression-and-durable-count-receipt"
+          "release-0.6-load-regression-and-durable-count-receipt",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -547586,7 +547606,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             }
           ],
           "checks": [
@@ -547645,6 +547665,14 @@
                 "apps/api/scripts/http-test-server.cjs"
               ],
               "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -550641,7 +550669,8 @@
         ],
         "batches": [
           "release-0.6-production-notes-and-provider-inventory",
-          "release-0.6-first-launch-promotion-check"
+          "release-0.6-first-launch-promotion-check",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -550660,7 +550689,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -550724,6 +550753,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Readme edits are confined to the rollout observer contract. Seed and synthetic login guidance are byte-identical. Observer and guard additions extend smoke and telemetry requirements. All related promotion and rollback tests passed."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -554192,19 +554229,65 @@
         "story": "06-security-testing-observability.md#spec-487bc630b048"
       },
       "requirement": "| T-06.14.02.01 | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/staging-dashboards.yml",
+          "docs/operations/service-objectives.md"
+        ],
+        "batches": [
+          "release-0.6-executive-slo-dashboard"
+        ],
+        "current_acceptance": {
+          "kind": "acceptance_verified",
+          "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+          "source_evidence": [
+            {
+              "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+              "sha256": "0f3eabc9197e4af85245e0de66ee64b06e1946d8fb0501fb3f60d439a90d6936"
+            },
+            {
+              "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
+              "sha256": "e3aea8746e93ac5d87433d4431ddd92a1225716139d8f2701e29dbccbc401a2b"
+            },
+            {
+              "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+              "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+            },
+            {
+              "path": "deploy/monitoring/staging-dashboards.yml",
+              "sha256": "7fd2caceb7add0e1e8b803493d745482ceb7ae89fa2f048d5bb502bfc8d4928d"
+            },
+            {
+              "path": "deploy/production/README.md",
+              "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+            },
+            {
+              "path": "deploy/production/rollout-observer.py",
+              "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+            },
+            {
+              "path": "docs/operations/service-objectives.md",
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+            }
+          ],
+          "checks": [
+            "The private Grafana overlay mounts the exact dashboard read-only. It provides UTC month-to-date per-service observed availability and remaining budget, both documented availability tiers, 5-minute and 1-hour burn, completed API p95 and p99 by method, and observed outcome volumes. Idle and unmeasured services remain gaps. The service objectives describe scope, probe coverage and how to compare releases.",
+            "Prometheus 3.12.0 promtool executed 17 expectations from the exact seven panel expressions against scoped fixture counter and histogram samples. It verified availability, unused and exceeded budgets at both tiers, both burn windows, p95 and p99, counts, idle and absent-outcome gaps, and exclusion of another environment. The downloaded archive matched its publisher digest.",
+            "Native Grafana OSS 13.3.1 loaded the dashboard with the existing provisioning layout and a private fixture database. Authenticated API readback confirmed all five panels, seven exact expressions, UID and time bounds. Unauthenticated read returned HTTP 401. Compose normalization confirmed the exact read-only bind. The Grafana archive matched its publisher digest. Format and diff checks passed."
+          ],
+          "limitations": [
+            "Creation of the provisioned dashboard is verified in isolated native fixtures. Production and staging require separately measured, scoped journey collector coverage and operator readback. A populated fixture dashboard is not a production SLO receipt.",
+            "The actual before-and-after rollout comparison and associated release annotations remain separate criteria."
+          ]
+        }
       }
     },
     {
@@ -554234,7 +554317,8 @@
         ],
         "batches": [
           "release-0.6-api-health-by-build-revision",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -554286,7 +554370,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             }
           ],
           "checks": [
@@ -554319,6 +554403,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -554590,7 +554682,8 @@
           "docs/operations/notification-monitoring.md"
         ],
         "batches": [
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -554642,7 +554735,7 @@
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
-              "sha256": "21a96e990e44c52dfd24a3dff81129f64ba3b42208142f871808e69a3cafec1c"
+              "sha256": "7fd2caceb7add0e1e8b803493d745482ceb7ae89fa2f048d5bb502bfc8d4928d"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -554670,6 +554763,16 @@
           "limitations": [
             "Metrics are operator observations since scrape startup and can miss unsampled increments during a crash. The dashboard has no customer, object, file or provider-response labels. Audit and quarantine records remain the authoritative security history.",
             "The native runtime and authenticated dashboard were disposable fixtures. The live staging and production monitoring deployment and end-to-end release receipts remain separate."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "deploy/monitoring/staging-dashboards.yml"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
+            }
           ]
         }
       }
@@ -555075,7 +555178,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-worker-outbox-dashboard",
           "release-0.6-notification-bounce-dashboard",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -555083,7 +555187,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -555166,6 +555270,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -555503,7 +555615,8 @@
         "batches": [
           "release-0.6-service-objectives-and-priorities",
           "release-0.6-incident-response-and-runbooks",
-          "release-0.6-latency-rehearsal-budgets"
+          "release-0.6-latency-rehearsal-budgets",
+          "release-0.6-executive-slo-dashboard"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -555511,7 +555624,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "14fde4c6a81c7ca5988cb334230d8e9f7d5d11f0c18db8b35f3a43acd9b4895b"
+              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
             },
             {
               "path": "architecture.md",
@@ -555566,6 +555679,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
+            },
+            {
+              "batch": "release-0.6-executive-slo-dashboard",
+              "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
             }
           ]
         }
@@ -558942,18 +559063,20 @@
         "story": "06-security-testing-observability.md#spec-616d60ba27da"
       },
       "requirement": "| T-06.18.02.04 | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment | S |\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "After the accepted candidate is deployed, verify measured scope and sufficient traffic for the previous and current windows. Retain the Grafana before-and-after comparisons for completed API 5xx ratio and p95/p99 latency, and each launch service SLO burn, with the guarded rollout receipt and exact deployment time and SHA."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-executive-slo-dashboard"
+        ],
         "current_acceptance": null
       }
     },
@@ -846510,7 +846633,8 @@
           "release-0.6-dev-restart-and-preflight-refs",
           "release-0.6-rollout-latency-and-readonly-smoke",
           "release-0.6-webkit-fixture-idle-connection",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-webkit-contrast-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -970132,6 +970256,148 @@
         {
           "file": "native-json-log-details.log",
           "sha256": "2aaeea71aec598785d873b6f9f0800c7c73ec52219d31a316a6e7adedc583c95"
+        }
+      ]
+    },
+    "release-0.6-executive-slo-dashboard": {
+      "batch": "release-0.6-executive-slo-dashboard",
+      "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.18.02.04",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.02.01"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "0f3eabc9197e4af85245e0de66ee64b06e1946d8fb0501fb3f60d439a90d6936"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
+          "sha256": "e3aea8746e93ac5d87433d4431ddd92a1225716139d8f2701e29dbccbc401a2b"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+          "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "7fd2caceb7add0e1e8b803493d745482ceb7ae89fa2f048d5bb502bfc8d4928d"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "9ce61b7c6af8eb28beec0eb39c96e98fc7c1153de495337e1bb87eae52def010"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "fe2d6fe96d0f3637f3fd7ff89dd67bf12b3db65552f53fc369b39a19cdeb6003"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+        }
+      ],
+      "checks": [
+        "The private Grafana overlay mounts the exact dashboard read-only. It provides UTC month-to-date per-service observed availability and remaining budget, both documented availability tiers, 5-minute and 1-hour burn, completed API p95 and p99 by method, and observed outcome volumes. Idle and unmeasured services remain gaps. The service objectives describe scope, probe coverage and how to compare releases.",
+        "Prometheus 3.12.0 promtool executed 17 expectations from the exact seven panel expressions against scoped fixture counter and histogram samples. It verified availability, unused and exceeded budgets at both tiers, both burn windows, p95 and p99, counts, idle and absent-outcome gaps, and exclusion of another environment. The downloaded archive matched its publisher digest.",
+        "Native Grafana OSS 13.3.1 loaded the dashboard with the existing provisioning layout and a private fixture database. Authenticated API readback confirmed all five panels, seven exact expressions, UID and time bounds. Unauthenticated read returned HTTP 401. Compose normalization confirmed the exact read-only bind. The Grafana archive matched its publisher digest. Format and diff checks passed."
+      ],
+      "limitations": [
+        "Creation of the provisioned dashboard is verified in isolated native fixtures. Production and staging require separately measured, scoped journey collector coverage and operator readback. A populated fixture dashboard is not a production SLO receipt.",
+        "The actual before-and-after rollout comparison and associated release annotations remain separate criteria."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-executive-slo-dashboard",
+      "execution_receipts": [
+        {
+          "file": "dashboard-promql-fixture.yml",
+          "sha256": "c63a3947f4a6fc0c47ff045e41bd77b604ef7d466f93e10306f443344d628f99"
+        },
+        {
+          "file": "dashboard-promql-fixture.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "grafana-readback.json",
+          "sha256": "9bdc58f7a85becfbdae37f03e2953a45bce4e4020a8b93a91c38ffa29ff1e242"
+        }
+      ]
+    },
+    "release-0.6-webkit-contrast-readback": {
+      "batch": "release-0.6-webkit-contrast-readback",
+      "base_commit": "9f1b6e499a2886bb8ffd02b55c04434ad7257685",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+        },
+        {
+          "path": "apps/web/build.mjs",
+          "sha256": "faf67d198f475cd57d4f1750eb0d766428cdcd71ae06db8e289397a49efebe6e"
+        },
+        {
+          "path": "apps/web/e2e/consumer-theme.spec.ts",
+          "sha256": "7115bb2dda02c23e1021384e2171140dda2aa763a895f0f17380d0ceb87151ec"
+        },
+        {
+          "path": "apps/web/e2e/control-contrast.ts",
+          "sha256": "86da99d6e70a98e7085ed785c3a4dc7b7d7018074f64a29b2e70ca23cdd599b2"
+        },
+        {
+          "path": "apps/web/playwright.config.ts",
+          "sha256": "3b484e904f53a2d21d1b2dd54ae3c87ed68ca500b76565ba3fc762dc1ecc5cf5"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "8d10b12b183af27f897447622d84b86dbc2c47ea041a570500dd175a0ed82395"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsPage.tsx",
+          "sha256": "0244f792736bce09305f03fe0db628b7c9d96762418cd2883af1a6a9b6a7317b"
+        },
+        {
+          "path": "apps/web/vite.config.ts",
+          "sha256": "1100f74cb4a4e1aa28c41b155e6290a51fabef546bbc016a9a4b12e0d7de5e8e"
+        },
+        {
+          "path": "packages/ui/src/styles.css",
+          "sha256": "6934971e0de9d57aa8b85644cb45668e7618f96bc1d51716d0c04d740a2834d2"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        }
+      ],
+      "checks": [
+        "GitHub still reports scheduled run 42990347003 failed at da81eebf and the last full manual run 42894685607 succeeded at f0f9434c. The existing schedule is daily at 02:00 UTC.",
+        "Built both production web shells at 9f1b6e49 and read its full SHA from the actual loopback static server. Playwright 1.65.0 WebKit English light mode passed the saving and email-provider contrast scenario eight times in two workers with retries disabled. The original 4.5 contrast floor and behavior assertions ran unchanged."
+      ],
+      "limitations": [
+        "Focused proof with mocked provider and order responses. The earlier transient ratio of 1 was not reproduced. No contrast failure or assertion was removed. The scheduled final-candidate rollup, seven-day report and actual result receiver remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-webkit-contrast-readback",
+      "execution_receipts": [
+        {
+          "file": "live-release.json",
+          "sha256": "dcfcbd5f54c283396e342f8b064129cde843c55fa6edf48fd353b0c038c3c56a"
+        },
+        {
+          "file": "web-build.log",
+          "sha256": "367b445a8c9678047701b3f79ff3a2a482a00c9d5d941b5ea34cdb5cc082a389"
+        },
+        {
+          "file": "webkit-english-light.log",
+          "sha256": "1f2bf0f9213640aa8249cb5c3f014e7afbeb30491926e58645b21d5852cdd50a"
         }
       ]
     }

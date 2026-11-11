@@ -13,6 +13,12 @@ The [architecture reliability targets](../../architecture.md#reliability-targets
 
 Exclude rejected invalid input and expected authorization denials from availability. Count a denial of an authorized critical action caused by a service failure as a failure. Report raw request, journey and job counts with the indicators. Keep unobserved periods visible.
 
+## Executive SLO dashboard
+
+Select the environment, database and applicable availability target in private Grafana. The dashboard opens at the start of the current UTC month. The availability and remaining budget panels use the selected period and display electricity, saving, solar and consultation separately. Burn rate compares five-minute and one-hour failure ratios with the selected tier's allowed failure fraction. A burn rate of 1 uses the budget at the allowed pace. The latency panel uses completed API responses by method.
+
+Check the observed attempt counts against the journey collector's coverage before interpreting availability. Scrape the collector and initialize both outcomes for all four services as described in the rollout observer setup. A service without measured attempts has no availability or burn value. When comparing releases, select comparable periods before and after the verified deployment time and retain the guarded rollout receipt with the dashboard comparison. [Executive SLO dashboard](../../deploy/monitoring/grafana-executive-slo-dashboard.json) · [Rollout observation setup](../../deploy/production/README.md#configure-the-observation-hook).
+
 ## API health dashboard
 
 Import the API Health dashboard into private Grafana and select the Prometheus

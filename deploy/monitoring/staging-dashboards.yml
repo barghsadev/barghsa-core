@@ -25,6 +25,7 @@ services:
       - ./grafana-ai-usage-dashboard.json:/var/lib/grafana/operations/ai.json:ro
       - ./grafana-worker-health-dashboard.json:/var/lib/grafana/operations/worker.json:ro
       - ./grafana-storage-uploads-dashboard.json:/var/lib/grafana/operations/storage.json:ro
+      - ./grafana-executive-slo-dashboard.json:/var/lib/grafana/operations/executive-slo.json:ro
       - ${BARGHSA_GRAFANA_ADMIN_PASSWORD_FILE:-/etc/barghsa/staging/grafana-admin-password}:/run/secrets/grafana-admin-password:ro
     ports: ['127.0.0.1:3009:3000']
     read_only: true

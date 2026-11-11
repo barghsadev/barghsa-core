@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T17:49:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T18:00:09+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1219 | Accepted with unchanged source bindings. |
-| verify | 81 | Existing work may be complete; inspect evidence before building. |
-| partial | 60 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1220 | Accepted with unchanged source bindings. |
+| verify | 79 | Existing work may be complete; inspect evidence before building. |
+| partial | 61 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1371,7 +1371,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.01.06` | done | Recorded batch work | Instrument business safety metrics: unresolved refund count, reconciliation mismatch count, outbox backlog age |
 | `06-security-testing-observability.md#T-06.14.01.07` | done | Recorded batch work | Instrument worker metrics: job processing rate, lease expiry, retry count, dead-letter count |
 | `06-security-testing-observability.md#T-06.14.01.08` | done | Recorded batch work | Instrument AI metrics: request count, token usage, latency, cost per model, concurrency |
-| `06-security-testing-observability.md#T-06.14.02.01` | verify | Inventory needed | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate |
+| `06-security-testing-observability.md#T-06.14.02.01` | done | Recorded batch work | Create Executive SLO dashboard: availability, latency (p95/p99), error budget, burn rate |
 | `06-security-testing-observability.md#T-06.14.02.02` | done | Recorded batch work | Create API Health dashboard: RED metrics, top slow routes, error breakdown by status, correlation with deploys |
 | `06-security-testing-observability.md#T-06.14.02.03` | done | Recorded batch work | Create PostgreSQL/Pool dashboard: connection pool, query throughput, slow queries, replication lag, cache hit ratio |
 | `06-security-testing-observability.md#T-06.14.02.04` | done | Recorded batch work | Create Worker/Outbox dashboard: queue depth, oldest age, processing rate, retries, dead-letter count |
@@ -1441,7 +1441,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.02.01` | verify | Inventory needed | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |
 | `06-security-testing-observability.md#T-06.18.02.02` | verify | Inventory needed | Configure Sentry release tracking: associate commits, tag errors with release version |
 | `06-security-testing-observability.md#T-06.18.02.03` | done | Recorded batch work | Include release marker in structured logs for correlation |
-| `06-security-testing-observability.md#T-06.18.02.04` | verify | Inventory needed | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |
+| `06-security-testing-observability.md#T-06.18.02.04` | partial | Recorded batch work | Post-deploy dashboard comparison: error rate, latency, SLO burn before/after deployment |
 | `06-security-testing-observability.md#T-06.19.01.01` | done | Recorded batch work | Create DoD PR checklist template (5 categories, 25+ items) with checkboxes |
 | `06-security-testing-observability.md#T-06.19.01.02` | done | Recorded batch work | Integrate DoD checklist into ticket system (Linear / GitHub Issues) as issue template |
 | `06-security-testing-observability.md#T-06.19.01.03` | verify | Inventory needed | Add CI check: PR description must contain completed DoD checklist or link to exception record |

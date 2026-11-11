@@ -1,0 +1,296 @@
+{
+  "uid": "barghsa-executive-slo",
+  "title": "Barghsa Executive SLO",
+  "description": "Availability, error budget and end-to-end API latency for a selected environment and database.",
+  "tags": ["barghsa", "operations", "slo"],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "refresh": "1m",
+  "timezone": "utc",
+  "time": {
+    "from": "now/M",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "refresh": 1
+      },
+      {
+        "name": "environment",
+        "label": "Environment",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "query": "label_values(barghsa_http_request_duration_seconds_count, environment)",
+        "refresh": 1
+      },
+      {
+        "name": "database",
+        "label": "Database",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "query": "label_values(barghsa_http_request_duration_seconds_count{environment=\"$environment\"}, database)",
+        "refresh": 1
+      },
+      {
+        "name": "error_budget",
+        "label": "Availability target",
+        "type": "custom",
+        "query": "Pilot 99.5% : 0.005,Commercial HA 99.9% : 0.001",
+        "current": {
+          "selected": true,
+          "text": "Pilot 99.5%",
+          "value": "0.005"
+        },
+        "options": [
+          {
+            "selected": true,
+            "text": "Pilot 99.5%",
+            "value": "0.005"
+          },
+          {
+            "selected": false,
+            "text": "Commercial HA 99.9%",
+            "value": "0.001"
+          }
+        ]
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Observed journey availability",
+      "description": "Successful eligible attempts divided by all observed eligible attempts in the selected period. Timeouts and critical dependency failures are recorded by the journey collector. No data appears without both outcomes and observed attempts.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 5
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "No observations",
+          "decimals": 3
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "1 - (sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[$__range])) / ((sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"success\"}[$__range])) + sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[$__range]))) > 0))",
+          "legendFormat": "{{service}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Remaining journey error budget",
+      "description": "Fraction of the allowed failure budget left in the selected period at the chosen availability target. A negative result means the service exceeded its budget.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 5
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "noValue": "No observations",
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "1 - (sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[$__range])) / ((sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"success\"}[$__range])) + sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[$__range]))) > 0)) / ${error_budget:raw}",
+          "legendFormat": "{{service}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Journey error-budget burn rate",
+      "description": "Observed failure fraction divided by the allowed error fraction, per service. A rate of 1 consumes the budget at the allowed pace. Gaps indicate insufficient observations.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "No observations",
+          "decimals": 2,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "(sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[5m])) / ((sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"success\"}[5m])) + sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[5m]))) > 0)) / ${error_budget:raw}",
+          "legendFormat": "{{service}} \u00b7 5m",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        },
+        {
+          "expr": "(sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[1h])) / ((sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"success\"}[1h])) + sum by (service) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=\"failure\"}[1h]))) > 0)) / ${error_budget:raw}",
+          "legendFormat": "{{service}} \u00b7 1h",
+          "refId": "B",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "API latency",
+      "description": "End-to-end p95 and p99 for completed responses by HTTP method. Journey availability includes timeouts and failures that never produce a response.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 5,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "No observations",
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (method, le) (rate(barghsa_http_request_duration_seconds_bucket{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))) and on (method) (sum by (method) (rate(barghsa_http_request_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)",
+          "legendFormat": "{{method}} \u00b7 p95",
+          "refId": "A",
+          "instant": false,
+          "range": true
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (method, le) (rate(barghsa_http_request_duration_seconds_bucket{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))) and on (method) (sum by (method) (rate(barghsa_http_request_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)",
+          "legendFormat": "{{method}} \u00b7 p99",
+          "refId": "B",
+          "instant": false,
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "stat",
+      "title": "Observed journey attempts",
+      "description": "Success and failure volumes over the selected period. Check that all four services and both outcomes have coverage before using the availability or budget figures.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 13,
+        "w": 24,
+        "h": 5
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "noValue": "No observations",
+          "decimals": 0
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "sum by (service, outcome) (increase(barghsa_rollout_journey_attempts_total{environment=\"$environment\",database=\"$database\",service=~\"electricity|saving|solar|consultation\",outcome=~\"success|failure\"}[$__range]))",
+          "legendFormat": "{{service}} \u00b7 {{outcome}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
+    }
+  ]
+}
