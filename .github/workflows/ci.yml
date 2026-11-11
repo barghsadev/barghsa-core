@@ -278,7 +278,7 @@ jobs:
 
   integrity:
     name: Verify monorepo integrity
-    needs: [sast, secrets, images, quality, test]
+    needs: [sast, secrets, images, quality, test, coverage]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     permissions:
@@ -291,6 +291,7 @@ jobs:
           IMAGE_SCAN_RESULT: ${{ needs.images.result }}
           QUALITY_RESULT: ${{ needs.quality.result }}
           TEST_RESULT: ${{ needs.test.result }}
+          COVERAGE_RESULT: ${{ needs.coverage.result }}
         run: |
           if [ "$FULL_CI" = true ]; then
             test_mode=full
@@ -311,12 +312,14 @@ jobs:
             printf '| Runtime images | %s |\n' "$IMAGE_SCAN_RESULT"
             printf '| Build and application integrity | %s |\n' "$QUALITY_RESULT"
             printf '| Tests | %s |\n' "$TEST_RESULT"
+            printf '| Source coverage | %s |\n' "$COVERAGE_RESULT"
           } >> "$GITHUB_STEP_SUMMARY"
           test "$SAST_RESULT" = success
           test "$SECRET_SCAN_RESULT" = success
           test "$IMAGE_SCAN_RESULT" = success
           test "$QUALITY_RESULT" = success
           test "$TEST_RESULT" = success
+          test "$COVERAGE_RESULT" = success
 
   test:
     name: Run tests
@@ -394,7 +397,7 @@ jobs:
 
   coverage:
     name: Verify combined source coverage
-    needs: [test, integrity]
+    needs: [test, quality]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -402,11 +405,11 @@ jobs:
         if: env.FULL_CI != 'true'
         env:
           TEST_RESULT: ${{ needs.test.result }}
-          INTEGRITY_RESULT: ${{ needs.integrity.result }}
+          QUALITY_RESULT: ${{ needs.quality.result }}
         run: |
           echo "Fast mode runs critical accessibility, affected tests and integrity checks. Dispatch CI for a full release check or set CI_FULL_CHECKS=true for pushes." >> "$GITHUB_STEP_SUMMARY"
           test "$TEST_RESULT" = success
-          test "$INTEGRITY_RESULT" = success
+          test "$QUALITY_RESULT" = success
       - uses: actions/checkout@v4
         if: env.FULL_CI == 'true'
         with:
@@ -444,6 +447,7 @@ jobs:
         if: env.FULL_CI == 'true'
         env:
           COVERAGE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          PREFLIGHT_REF_CREATED: ${{ github.event.created }}
         run: |
           if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
             COVERAGE_BASE=$(python3 - <<'PY'
@@ -455,6 +459,8 @@ jobs:
           print(previous['published_commit'])
           PY
             )
+          elif [ "$GITHUB_EVENT_NAME" = push ] && [ "$PREFLIGHT_REF_CREATED" = true ] && [[ "$GITHUB_REF" == refs/heads/codex/preflight/* ]]; then
+            COVERAGE_BASE=$(git merge-base HEAD origin/main)
           fi
           python3 scripts/check-changed-coverage.py --base "$COVERAGE_BASE" --report "$RUNNER_TEMP/changed-coverage.json"
       - name: Upload changed coverage results

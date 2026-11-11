@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:04:44+00:00",
+  "updated": "2026-11-11T22:09:11+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4107,7 +4107,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4135,7 +4136,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             }
           ],
           "checks": [
@@ -4216,6 +4217,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -4584,7 +4593,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "root-workspace-production-build-and-typecheck",
@@ -4600,7 +4610,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4692,6 +4702,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -4886,7 +4904,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -4910,7 +4929,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             }
           ],
           "checks": [
@@ -5023,6 +5042,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -5310,7 +5337,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "production-build-and-asset-policy",
@@ -5318,7 +5346,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".size-limit.json",
@@ -5426,6 +5454,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -5637,7 +5673,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5677,7 +5714,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5768,6 +5805,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -5838,7 +5883,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -5878,7 +5924,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5969,6 +6015,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -6301,7 +6355,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6313,7 +6368,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6486,6 +6541,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -6606,7 +6669,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "workspace-runner-and-full-release-coverage-configuration",
@@ -6646,7 +6710,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6737,6 +6801,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -6851,7 +6923,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -6863,7 +6936,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6983,6 +7056,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -9892,7 +9973,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "current-migration-source-and-native-postgresql-receipts",
@@ -9912,7 +9994,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             }
           ],
           "checks": [
@@ -9999,6 +10081,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -16083,7 +16173,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16091,11 +16182,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "AGENTS.md",
@@ -16197,6 +16288,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -16261,7 +16361,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16269,7 +16370,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -16398,6 +16499,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -16468,7 +16577,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16476,7 +16586,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "package.json",
@@ -16609,6 +16719,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -16826,7 +16944,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-ci-implementation-and-targeted-controls",
@@ -16834,7 +16953,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -16932,6 +17051,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -20822,7 +20949,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -20836,7 +20964,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -21362,6 +21490,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -23314,7 +23450,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -23327,11 +23464,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "eslint.config.mjs",
@@ -23433,6 +23570,15 @@
                 "packages/eslint-config/index.mjs"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed. Registered the Drizzle raw SQL rule for production source. Shared rule tests and full root lint passed with zero warnings. Existing rules retain their configuration."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -23494,7 +23640,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verification",
@@ -23510,7 +23657,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".prettierignore",
@@ -23603,6 +23750,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -23668,7 +23823,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23686,7 +23842,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".husky/commit-msg",
@@ -23710,7 +23866,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "eslint.config.mjs",
@@ -23820,6 +23976,15 @@
                 "packages/eslint-config/index.mjs"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed. Registered the Drizzle raw SQL rule for production source. Shared rule tests and full root lint passed with zero warnings. Existing rules retain their configuration."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -24734,7 +24899,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24779,7 +24945,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -25389,6 +25555,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -25456,7 +25630,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -25471,7 +25646,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".prettierignore",
@@ -25487,7 +25662,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "package.json",
@@ -25640,6 +25815,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -25831,7 +26015,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -25856,7 +26041,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -25879,6 +26064,14 @@
                 "kanban/WORKFLOW.md"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -491048,7 +491241,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491056,7 +491250,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -491508,6 +491702,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -491652,7 +491854,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491660,7 +491863,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -492318,6 +492521,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -492462,7 +492673,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492470,7 +492682,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -492908,6 +493120,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -493018,7 +493238,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "status": "done",
@@ -493026,7 +493247,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -493464,6 +493685,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -493574,7 +493803,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "status": "done",
@@ -493582,7 +493812,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -494020,6 +494250,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -533047,7 +533285,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -533055,7 +533294,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "Dockerfile.web",
@@ -533200,6 +533439,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -533422,7 +533669,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "production-browser-nonce-and-exact-stylesheet-hash-verification",
@@ -533466,7 +533714,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -533584,6 +533832,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -533635,7 +533891,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "built_web_and_isolated_tls_proxy",
@@ -533643,7 +533900,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "Dockerfile.web",
@@ -533788,6 +534045,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -534128,7 +534393,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "production-csp-cross-origin-browser-and-first-party-control",
@@ -534156,7 +534422,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             }
           ],
           "checks": [
@@ -534254,6 +534520,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -538774,7 +539048,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -538782,7 +539057,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -538879,6 +539154,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -543596,7 +543879,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-staging-scanner-ceiling",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -543605,7 +543889,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -543872,6 +544156,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -544940,7 +545232,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -544952,7 +545245,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".gitignore",
@@ -544968,7 +545261,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "414f857b139c295258b2229c77c19853b5bb96fc662e46c04c8095129bc5a8a7"
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545116,6 +545409,15 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed. Added guidance about the verified Drizzle rule and the remaining node-postgres review. The previously accepted supply-chain controls retain their wording and behavior."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
             }
           ]
         }
@@ -545166,7 +545468,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -545178,7 +545481,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".gitignore",
@@ -545326,6 +545629,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         },
@@ -545439,7 +545750,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -545447,7 +545759,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545538,6 +545850,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         },
@@ -545635,7 +545955,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -545643,7 +545964,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -545740,6 +546061,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -545789,7 +546118,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "pinned_trivy_and_exact_image_inventory",
@@ -545797,7 +546127,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "Dockerfile.base",
@@ -545813,7 +546143,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "414f857b139c295258b2229c77c19853b5bb96fc662e46c04c8095129bc5a8a7"
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -545927,6 +546257,15 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed. Added guidance about the verified Drizzle rule and the remaining node-postgres review. The previously accepted supply-chain controls retain their wording and behavior."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
             }
           ]
         }
@@ -545977,7 +546316,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -545989,7 +546329,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".gitignore",
@@ -546137,6 +546477,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         },
@@ -546232,7 +546580,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "current-supply-chain-triage-policy",
@@ -546240,11 +546589,11 @@
           "source_evidence": [
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "414f857b139c295258b2229c77c19853b5bb96fc662e46c04c8095129bc5a8a7"
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -546330,6 +546679,15 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed. Added guidance about the verified Drizzle rule and the remaining node-postgres review. The previously accepted supply-chain controls retain their wording and behavior."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
             }
           ]
         }
@@ -547029,7 +547387,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "actual_hosted_image_blocking_evidence",
@@ -547053,7 +547412,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -547159,6 +547518,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -547751,7 +548118,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "defined-staging-penetration-review-scope",
@@ -547763,7 +548131,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "414f857b139c295258b2229c77c19853b5bb96fc662e46c04c8095129bc5a8a7"
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
             }
           ],
           "checks": [
@@ -547821,6 +548189,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Added guidance about the verified Drizzle rule and the remaining node-postgres review. The previously accepted supply-chain controls retain their wording and behavior."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
             }
           ]
         }
@@ -547934,7 +548310,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "defined-penetration-risk-disposition",
@@ -547946,7 +548323,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "414f857b139c295258b2229c77c19853b5bb96fc662e46c04c8095129bc5a8a7"
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
             }
           ],
           "checks": [
@@ -548004,6 +548381,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Added guidance about the verified Drizzle rule and the remaining node-postgres review. The previously accepted supply-chain controls retain their wording and behavior."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
             }
           ]
         }
@@ -548669,7 +549054,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-shared-vitest-configuration-and-reporters",
@@ -548677,7 +549063,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "vitest.config.ts",
@@ -548729,7 +549115,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -548815,6 +549201,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -548850,7 +549245,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-bill-electricity-caller",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -548862,7 +549258,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -548981,6 +549377,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -549015,7 +549419,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -549027,7 +549432,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -549134,6 +549539,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -551246,7 +551659,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-real-nestjs-and-migrated-test-fixture",
@@ -551254,7 +551668,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -551299,6 +551713,14 @@
                 "apps/api/scripts/http-test-server.cjs"
               ],
               "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -551336,7 +551758,8 @@
           "release-0.6-browser-provider-loopback-boundary",
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-parallel-postgres-isolation",
@@ -551344,7 +551767,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -551389,6 +551812,14 @@
                 "apps/api/scripts/http-test-server.cjs"
               ],
               "scope": "The disposable loopback browser fixture retains idle connections until shutdown. The ordinary HTTP fixture retained its measured idle policy. Unchanged product behavior and other source-bound tests retain their prior evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -551437,7 +551868,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -551469,7 +551901,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -551579,6 +552011,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -552848,7 +553288,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -552880,7 +553321,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -552991,6 +553432,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -553023,7 +553472,8 @@
           "release-0.6-playwright-fixtures-and-ci-matrix-configuration",
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -553071,7 +553521,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -553096,6 +553546,14 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -554254,7 +554712,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-playwright-and-ci-configuration",
@@ -554266,7 +554725,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -554274,7 +554733,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -554390,6 +554849,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -554434,7 +554902,8 @@
           "release-0.6-primary-mobile-paint-observation",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-native-auth-and-wallet-interaction-readiness",
-          "release-0.6-reconciliation-accepted-filter-page"
+          "release-0.6-reconciliation-accepted-filter-page",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-browser-provider-loopback-boundary",
@@ -554514,7 +554983,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -554546,6 +555015,14 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ]
         }
@@ -554799,7 +555276,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-shared-component-accessibility",
@@ -554813,7 +555291,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -554979,6 +555457,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -555021,7 +555507,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-accessibility-ci-and-review-scope",
@@ -555037,7 +555524,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -555190,6 +555677,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -555662,7 +556157,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -555670,7 +556166,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -555767,6 +556263,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -555810,7 +556314,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -555818,7 +556323,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -555830,7 +556335,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "414f857b139c295258b2229c77c19853b5bb96fc662e46c04c8095129bc5a8a7"
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
             },
             {
               "path": "scripts/check-sast.py",
@@ -555922,6 +556427,15 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed. Added guidance about the verified Drizzle rule and the remaining node-postgres review. The previously accepted supply-chain controls retain their wording and behavior."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
             }
           ]
         }
@@ -556646,7 +557160,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "exact-hosted-mobile-performance-gate",
@@ -556661,7 +557176,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".size-limit.json",
@@ -556838,6 +557353,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -557669,7 +558192,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -557682,7 +558206,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -557813,6 +558337,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -557848,7 +558380,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -557860,7 +558393,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -557991,6 +558524,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -558026,7 +558567,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -558040,7 +558582,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -558171,6 +558713,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -558206,7 +558756,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -558217,7 +558768,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -558348,6 +558899,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -558375,7 +558934,9 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [],
-        "batches": [],
+        "batches": [
+          "release-0.6-coverage-required-check"
+        ],
         "current_acceptance": null
       }
     },
@@ -558390,19 +558951,45 @@
         "story": "06-security-testing-observability.md#spec-ab5e488f2a6f"
       },
       "requirement": "| T-06.12.02.02 | Configure step dependencies: lint → typecheck → unit → integration → migration → OpenAPI → build → coverage → security scans → review | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          ".github/workflows/ci.yml",
+          "docs/development/ci.md",
+          "docs/security/supply-chain.md"
+        ],
+        "batches": [
+          "release-0.6-coverage-required-check"
+        ],
+        "current_acceptance": {
+          "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+          "kind": "native_verification",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+            },
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+            }
+          ],
+          "checks": [
+            "The implemented job order follows the data dependencies. Compiled API and browser fixtures require a build before integration. The native and browser coverage outputs precede source coverage enforcement. Scanners run independently and the protected required check waits for all results. This retains parallel independent checks requested by the release workflow.",
+            "GitHub readback verified active branch ruleset 26844024 requires the GitHub Actions Verify monorepo integrity context. The new aggregate summary contains six outcomes and fails if any required result is failed, cancelled or skipped.",
+            "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+          ]
+        }
       }
     },
     {
@@ -558433,7 +559020,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-native-clean-and-upgrade-migrations",
@@ -558445,7 +559033,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -558568,6 +559156,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -558605,7 +559201,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "reconciled-existing",
@@ -558616,7 +559213,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/openapi.json",
@@ -558756,6 +559353,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -558802,7 +559407,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back the five-job Actions summary on an exact-source hosted push preflight. Verify full tests and enforced image license policy in the summary on the frozen release candidate."
+        "Read back the six-job Actions summary on an exact-source hosted push preflight. Verify full coverage enforcement and the enforced license mode in the summary on the frozen release candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -558813,7 +559418,8 @@
           "docs/security/supply-chain.md"
         ],
         "batches": [
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": null
       }
@@ -558929,7 +559535,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-critical-defect-and-flake-gate",
@@ -558947,7 +559554,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -559077,6 +559684,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -559114,7 +559729,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -559123,7 +559739,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -559316,6 +559932,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -559355,7 +559979,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-maintenance-health",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-first-launch-promotion-check",
@@ -559373,7 +559998,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/README.md",
@@ -559529,6 +560154,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -559957,7 +560590,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -559974,7 +560608,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -560097,6 +560731,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -560136,7 +560778,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarantine-coverage-and-reporting",
@@ -560153,7 +560796,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -560276,6 +560919,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -567792,7 +568443,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-sentry-envelope-integration-test",
@@ -567800,7 +568452,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "Dockerfile.base",
@@ -567991,6 +568643,14 @@
                 "packages/shared/src/error-reporting.ts"
               ],
               "scope": "The Sentry event may include a validated root package version for a valid existing build SHA. Endpoint, authentication boundaries, privacy filtering, sampling, acknowledgement and existing error recovery retain their behavior. Thirty focused reporter and API-controller cases and the compiled CJS and ESM envelope verification passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -569900,7 +570560,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -569908,7 +570569,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "Dockerfile.base",
@@ -570005,6 +570666,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -570167,7 +570836,8 @@
         ],
         "batches": [
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -570183,7 +570853,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -570221,6 +570891,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -570311,7 +570989,8 @@
         ],
         "batches": [
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -570327,7 +571006,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -570365,6 +571044,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -570401,7 +571088,8 @@
         "batches": [
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "base_commit": "1c6b3d3ebe55d9fc504373577eace1933961f37f",
@@ -570417,7 +571105,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -570455,6 +571143,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -620578,7 +621274,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -620586,7 +621283,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".size-limit.json",
@@ -621506,6 +622203,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -621641,7 +622346,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -621649,7 +622355,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".size-limit.json",
@@ -622569,6 +623275,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -623322,7 +624036,8 @@
           "release-0.6-required-check-summary",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -623330,7 +624045,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".size-limit.json",
@@ -624250,6 +624965,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -624313,7 +625036,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-required-check-summary",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "active_github_required_check",
@@ -624332,7 +625056,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -624454,6 +625178,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         }
@@ -821631,7 +822363,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -821995,7 +822728,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -822189,6 +822922,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -822382,7 +823123,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -822746,7 +823488,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -822940,6 +823682,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -823133,7 +823883,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -823497,7 +824248,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -823691,6 +824442,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -823885,7 +824644,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -824249,7 +825009,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -824443,6 +825203,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -824636,7 +825404,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -825000,7 +825769,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -825194,6 +825963,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -825387,7 +826164,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -825751,7 +826529,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -825945,6 +826723,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -826138,7 +826924,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -826502,7 +827289,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -826696,6 +827483,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -826890,7 +827685,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -827254,7 +828050,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -827448,6 +828244,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -827641,7 +828445,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -828005,7 +828810,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -828199,6 +829004,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -828392,7 +829205,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-team-native-cancel-and-session-revocation-fixtures",
           "release-0.6-browser-keyboard-and-mobile-touch",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-coverage-required-check"
         ],
         "current_acceptance": {
           "kind": "verified-customer-onboarding-and-delegation-journeys",
@@ -828756,7 +829570,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "955b550f3c02d5a662966e6cfb70a7014e71e6a22db719b1251db4a18dc40f59"
+              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -828950,6 +829764,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
             }
           ],
           "presentation_renewals": [
@@ -847878,7 +848700,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/openapi.json",
@@ -852071,6 +852893,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "presentation_renewals": [
@@ -852460,7 +853290,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -852513,7 +853344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": "apps/api/openapi.json",
@@ -856556,6 +857387,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -856962,7 +857801,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -858810,7 +859650,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "3586ee2880f6ccedb801cc2c9ed10edc7ed85438ac9ae2d38250df2ecae72af2"
+              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
             },
             {
               "path": ".size-limit.json",
@@ -861049,6 +861889,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Added execution of the shared lint rule tests to the existing quality job. The workflow retains the prior checks, test selection and gate conditions. Actionlint passed."
+            },
+            {
+              "batch": "release-0.6-coverage-required-check",
+              "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
             }
           ]
         },
@@ -861201,7 +862049,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-notification-contrast",
           "release-0.6-definition-of-done-enforcement",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-coverage-required-check"
         ]
       }
     },
@@ -861561,7 +862410,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
-          "release-0.6-sentry-version-tag"
+          "release-0.6-sentry-version-tag",
+          "release-0.6-coverage-required-check"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -988919,6 +989769,161 @@
         {
           "file": "source.sha256",
           "sha256": "6c7d0a46a76cfb9643936c54cd235fab50159888cbbd98386b8296cd8ecd89ad"
+        }
+      ]
+    },
+    "release-0.6-coverage-required-check": {
+      "batch": "release-0.6-coverage-required-check",
+      "base_commit": "9e93443f607b5d3274140fbb0dac210e49de1cc7",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.02.06",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+        },
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+        }
+      ],
+      "checks": [
+        "The implemented job order follows the data dependencies. Compiled API and browser fixtures require a build before integration. The native and browser coverage outputs precede source coverage enforcement. Scanners run independently and the protected required check waits for all results. This retains parallel independent checks requested by the release workflow.",
+        "GitHub readback verified active branch ruleset 26844024 requires the GitHub Actions Verify monorepo integrity context. The new aggregate summary contains six outcomes and fails if any required result is failed, cancelled or skipped.",
+        "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed.",
+        "Changed-file Prettier and whitespace checks passed."
+      ],
+      "limitations": [
+        "Fast mode records its existing coverage exemption. Full manual release acceptance still requires actual enforced coverage, exact license dispositions, the scheduled browser rollup and the protected operational gates.",
+        "Local validation executed the workflow shell with fixture statuses and a real temporary Git history. Exact hosted execution of the changed required check remains pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-coverage-required-check",
+      "execution_receipts": [
+        {
+          "file": "verify-coverage-gate.py",
+          "sha256": "91792aedbdd828b20bea004f17d7f2528305ded8f6b3ddb1931cf93519f8f2ec"
+        },
+        {
+          "file": "gate-scenarios.log",
+          "sha256": "dc938514dbb62860c047ac5759e1835aa7311c8423f82f77a0a15c8d23d5357c"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "04075897c6027dbac3ffecde24d32d4210d64dcec635056384a6d8e0e33279b0"
+        },
+        {
+          "file": "active-ruleset.json",
+          "sha256": "6abccbcaf47414ebcbb52d7a1e587efc5f2398a767d467a55a50ebb3fc1b6f92"
         }
       ]
     }

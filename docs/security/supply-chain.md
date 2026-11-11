@@ -1,6 +1,6 @@
 # Supply-chain checks
 
-The required GitHub check is `Verify monorepo integrity`. It requires successful build and application checks, tests, static analysis, secret scanning and runtime image scanning. A cancelled, skipped or failed job blocks the check. The Actions run summary shows all five results with the source SHA, test mode and license enforcement mode. The application checks also validate the dependency audit report and refuse high or critical advisories. Keep the lockfile frozen and use the scan artifacts when diagnosing a failure.
+The required GitHub check is `Verify monorepo integrity`. It requires successful build and application checks, tests, static analysis, secret scanning, runtime image scanning and the coverage job. A cancelled, skipped or failed job blocks the check. The Actions run summary shows all six results with the source SHA, test mode and license enforcement mode. Full CI enforces combined source coverage, and fast CI records its limited scope. The application checks also validate the dependency audit report and refuse high or critical advisories. Keep the lockfile frozen and use the scan artifacts when diagnosing a failure.
 
 Static analysis, secret scanning and image scanning run independently of the application checks and tests. The API integration and browser fixtures use compiled outputs, so their builds run before those suites. Required source coverage and the complete browser matrix are verified for the frozen release candidate. Domain review and package-specific approval remain part of release acceptance.
 
