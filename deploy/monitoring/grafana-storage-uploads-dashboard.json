@@ -4,7 +4,7 @@
   "description": "Verified uploads and scanner activity for the selected environment and database. Counts come from Prometheus observations, not a storage or security audit ledger.",
   "tags": ["barghsa", "operations", "storage"],
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "editable": true,
   "refresh": "30s",
   "time": { "from": "now-6h", "to": "now" },
@@ -119,6 +119,68 @@
           "range": true,
           "legendFormat": "{{source}} · {{outcome}}",
           "expr": "sum by (source, outcome) (increase(barghsa_storage_scan_outcomes_total{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "Object storage circuits",
+      "description": "Clients observed in each state by API or worker target. Configuration probes are excluded.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 21,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "legendFormat": "{{job}} · {{state}}",
+          "expr": "sum by (job, state) (barghsa_storage_provider_circuits{environment=\"$environment\",database=\"$database\"})"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Object storage transport failure share",
+      "description": "Failed wire attempts divided by admitted wire attempts, including SDK retries. An idle target has a gap.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 21,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "legendFormat": "{{job}}",
+          "expr": "sum by (job) (rate(barghsa_storage_provider_requests_total{environment=\"$environment\",database=\"$database\",outcome=\"failed\"}[$__rate_interval])) / (sum by (job) (rate(barghsa_storage_provider_requests_total{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)"
         }
       ]
     }

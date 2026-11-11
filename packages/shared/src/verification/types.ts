@@ -61,6 +61,8 @@ export interface CircuitBreakerConfig {
   resetTimeoutMs: number;
   /** Maximum number of half-open probes before deciding. */
   halfOpenMaxProbes: number;
+  /** When set, only failures in this rolling window count toward the threshold. */
+  failureWindowMs?: number;
 }
 
 /**

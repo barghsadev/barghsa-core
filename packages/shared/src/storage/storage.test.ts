@@ -1,7 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
+import { createServer, type ServerResponse } from 'node:http';
+import { once } from 'node:events';
 import { StorageObjectNotFound, StorageProviderError } from './storage-provider.js';
 import { S3StorageProvider, type S3StorageProviderConfig } from './s3-storage-provider.js';
 import { createStorageProvider } from './storage-factory.js';
+import { storageCircuitMetrics } from './storage-circuit.js';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -34,6 +37,131 @@ function createMockedProvider(
   (provider as unknown as { client: { send: ReturnType<typeof vi.fn> } }).client.send = send;
   return [provider, send];
 }
+
+it('guards S3 requests without turning storage outages into missing objects', async () => {
+  let calls = 0;
+  let status = 404;
+  let errorCode = 'NoSuchBucket';
+  let hold = false;
+  let acceptProbe!: (response: ServerResponse) => void;
+  const probeEntered = new Promise<ServerResponse>((resolve) => {
+    acceptProbe = resolve;
+  });
+  const server = createServer((request, response) => {
+    calls++;
+    if (hold) {
+      acceptProbe(response);
+      return;
+    }
+    response.writeHead(status, { 'content-type': 'application/xml' });
+    response.end(
+      request.method === 'HEAD' ? undefined : `<Error><Code>${errorCode}</Code></Error>`
+    );
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Storage fixture did not start');
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.stubEnv('STORAGE_PROVIDER_CIRCUIT_FAILURES', undefined);
+  vi.stubEnv('STORAGE_PROVIDER_CIRCUIT_WINDOW_MS', undefined);
+  vi.stubEnv('STORAGE_PROVIDER_CIRCUIT_COOLDOWN_MS', undefined);
+  const timeout = vi.spyOn(AbortSignal, 'timeout');
+  const before = storageCircuitMetrics();
+  const provider = new S3StorageProvider(
+    makeConfig({
+      endpoint: `http://127.0.0.1:${address.port}`,
+      maxRetries: 1,
+      requestTimeoutMs: 3_000,
+    })
+  );
+  try {
+    await expect(provider.getObject('fixture-object')).rejects.toBeInstanceOf(StorageProviderError);
+    errorCode = 'NoSuchKey';
+    await expect(provider.getObject('fixture-object')).rejects.toBeInstanceOf(
+      StorageObjectNotFound
+    );
+    status = 503;
+    errorCode = 'ServiceUnavailable';
+    for (let attempt = 0; attempt < 5; attempt++) {
+      await expect(provider.objectExists('fixture-object')).rejects.toBeInstanceOf(
+        StorageProviderError
+      );
+    }
+    const opened = storageCircuitMetrics();
+    expect(opened.states.OPEN).toBe(before.states.OPEN + 1);
+    expect(opened.requests.failed).toBe(before.requests.failed + 5);
+    expect(opened.requests.responded).toBe(before.requests.responded + 2);
+    await expect(provider.getObject('fixture-object')).rejects.toThrow(
+      'Object storage is temporarily unavailable'
+    );
+    expect(calls).toBe(7);
+    await expect(provider.presignedGetUrl('fixture-object')).resolves.toContain('X-Amz-Signature');
+    expect(calls).toBe(7);
+
+    vi.setSystemTime(Date.now() + 119_999);
+    await expect(provider.objectExists('fixture-object')).rejects.toBeInstanceOf(
+      StorageProviderError
+    );
+    vi.setSystemTime(Date.now() + 1);
+    hold = true;
+    const probe = provider.objectExists('fixture-object');
+    const response = await probeEntered;
+    try {
+      expect(storageCircuitMetrics().states.HALF_OPEN).toBe(before.states.HALF_OPEN + 1);
+      await expect(provider.objectExists('fixture-object')).rejects.toBeInstanceOf(
+        StorageProviderError
+      );
+      expect(timeout).toHaveBeenCalledWith(30_000);
+      expect(calls).toBe(8);
+    } finally {
+      response.writeHead(200).end();
+    }
+    await expect(probe).resolves.toBe(true);
+    expect(storageCircuitMetrics().states.OPEN).toBe(before.states.OPEN);
+  } finally {
+    provider.destroy();
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+    vi.useRealTimers();
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
+
+it('stops SDK retries once the actual S3 failure threshold is reached', async () => {
+  let attempts = 0;
+  const server = createServer((_request, response) => {
+    attempts++;
+    response.writeHead(503).end();
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Storage fixture did not start');
+  vi.stubEnv('STORAGE_PROVIDER_CIRCUIT_FAILURES', '2');
+  const provider = new S3StorageProvider(
+    makeConfig({
+      endpoint: `http://127.0.0.1:${address.port}`,
+      maxRetries: 3,
+      requestTimeoutMs: 3_000,
+    })
+  );
+  try {
+    await expect(provider.objectExists('fixture-object')).rejects.toBeInstanceOf(
+      StorageProviderError
+    );
+    await expect(provider.objectExists('fixture-object')).rejects.toBeInstanceOf(
+      StorageProviderError
+    );
+    expect(attempts).toBe(2);
+  } finally {
+    provider.destroy();
+    vi.unstubAllEnvs();
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
 
 // ---------------------------------------------------------------------------
 // StorageObjectNotFound

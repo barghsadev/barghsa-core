@@ -32,6 +32,7 @@ export type {
 } from './immutable-storage.js';
 export { ImmutableStorageRecordService, ImmutableRecordDeleteError } from './immutable-storage.js';
 export * from './runtime-config.js';
+export { storageCircuitMetrics } from './storage-circuit.js';
 export { scanUploadWithClamAv, scanWithClamAv } from './clamav.js';
 export type { ScannerEndpoint, ScanVerdict } from './clamav.js';
 export { readCappedBytes, readCappedJson } from './read-capped-bytes.js';

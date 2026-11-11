@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T19:33:07+00:00",
+  "updated": "2026-11-11T19:46:56+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10977,7 +10977,8 @@
           "release-0.6-local-compose-storage",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -10989,7 +10990,7 @@
             },
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": "postgres-config/barghsa-postgres.conf",
@@ -11001,7 +11002,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -11050,6 +11051,15 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -11121,7 +11131,8 @@
           "release-0.6-local-compose-storage",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-development-configuration-and-behavior",
@@ -11129,7 +11140,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": "docker-compose.yml",
@@ -11221,6 +11232,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -11749,7 +11768,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-api-and-worker-process-verification",
@@ -11813,7 +11833,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -11903,6 +11923,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -13428,7 +13456,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -13448,11 +13477,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -13464,7 +13493,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -13493,6 +13522,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -13619,7 +13658,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -13679,11 +13719,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -13695,7 +13735,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -13776,6 +13816,16 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -13967,7 +14017,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-encryption-key-overlap-and-versioned-envelopes",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "renewed-matching-storage-api-and-browser-proof",
@@ -13975,7 +14026,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -14023,11 +14074,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -14039,7 +14090,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -14070,6 +14121,17 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -15250,8 +15312,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the parent commercial HA story’s application-level storage circuit criterion with current object-provider protection. Preserve authorization, upload staging, quarantine and immutable-object controls.",
-        "Verify scoped payment, bill and notification-provider circuit metrics and recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior in the configured rehearsal."
+        "Verify scoped payment, bill, notification and storage circuit metrics and controlled recovery on the exact staged candidate. The current staging API uses the HTTP payment adapter and has neither optional bill provider configured. Preserve manual-entry and staff-review behavior during the rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -15280,21 +15341,27 @@
         },
         "changed_paths": [
           ".env.example",
-          "apps/api/src/provider-config/email-circuit-breaker.service.test.ts",
-          "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
-          "apps/worker/src/auth-delivery/runner.integration.test.ts",
-          "deploy/monitoring/notification-alerts.test.yml",
-          "deploy/monitoring/notification-alerts.yml",
-          "docs/operations/notification-monitoring.md",
-          "packages/shared/src/notification-delivery/email-breaker.ts",
-          "packages/shared/src/notification-delivery/email.ts",
-          "packages/shared/src/notification-delivery/sms.ts"
+          "apps/api/src/metrics/storage-upload-metrics.ts",
+          "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "apps/api/src/verification/circuit-breaker.ts",
+          "apps/worker/src/notifications/worker-metrics.ts",
+          "deploy/monitoring/grafana-storage-uploads-dashboard.json",
+          "docs/operations/storage-configuration.md",
+          "packages/shared/src/storage/index.ts",
+          "packages/shared/src/storage/runtime-config.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts",
+          "packages/shared/src/storage/storage-circuit.ts",
+          "packages/shared/src/storage/storage.test.ts",
+          "packages/shared/src/verification/circuit-breaker.ts",
+          "packages/shared/src/verification/index.ts",
+          "packages/shared/src/verification/types.ts"
         ],
         "batches": [
           "2026-09-24-electricity-bill-provider-recovery",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": null
       }
@@ -21628,7 +21695,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -21694,7 +21762,7 @@
             },
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": "nodemon.json",
@@ -21757,6 +21825,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -22189,7 +22265,8 @@
           "release-0.6-existing-config-store-and-secret-service",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-platform-secret-service",
@@ -22232,7 +22309,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             }
           ],
           "source_renewals": [
@@ -22268,6 +22345,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Preserve the existing security guide verbatim and the original migration and threat-review instructions. The additive checklist and exception fields do not certify unrelated criteria."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -22331,7 +22416,8 @@
         ],
         "batches": [
           "release-0.6-explicit-provider-test-recipient",
-          "release-0.6-local-compose-storage"
+          "release-0.6-local-compose-storage",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -22427,7 +22513,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -22447,6 +22533,14 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -23301,7 +23395,8 @@
           "release-0.6-optional-maintenance-notice",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23314,7 +23409,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -23466,6 +23561,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -23797,7 +23900,8 @@
           "release-0.6-approved-document-destruction-boundary",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-bounded-pdf-renderer-setup",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23966,7 +24070,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "64ff59ea43275ac4cae45e6e979f482d46d78ebbc4901b3006b2e13439fe0e33"
+              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
             },
             {
               "path": "packages/shared/src/storage/multipart-upload.test.ts",
@@ -24412,6 +24516,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -36867,7 +36979,8 @@
           "release-0.6-public-registration-privacy",
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-step-up-and-sensitive-action-boundaries",
@@ -37075,7 +37188,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -38457,6 +38570,14 @@
                 "apps/api/src/auth/login-device-notifications-http.integration.test.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -75388,7 +75509,8 @@
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "accepted-manual-verification-notices-with-owner-deferred-live-sms-provisioning",
@@ -75464,7 +75586,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -76586,6 +76708,14 @@
                 "apps/api/src/auth/login-device-notifications-http.integration.test.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -85156,7 +85286,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -85964,7 +86095,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -87618,6 +87749,14 @@
                 "packages/shared/src/notification-delivery/email-breaker.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -90712,7 +90851,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -90752,7 +90892,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.ts",
@@ -90926,6 +91066,14 @@
                 "packages/shared/src/notification-delivery/email-breaker.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -91051,7 +91199,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "unchanged-audit-bindings",
@@ -91059,7 +91208,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.test.ts",
@@ -91163,6 +91312,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -105724,7 +105881,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -105956,7 +106114,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -106229,6 +106387,14 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -108428,7 +108594,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -108544,7 +108711,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -108955,6 +109122,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -116135,7 +116310,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -116143,7 +116319,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": "apps/api/openapi.json",
@@ -117124,6 +117300,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -484610,7 +484794,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -484726,7 +484911,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -485135,6 +485320,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -485250,7 +485443,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -485366,7 +485560,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -485775,6 +485969,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -485889,7 +486091,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -486005,7 +486208,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -486416,6 +486619,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -486532,7 +486743,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -486648,7 +486860,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -487137,6 +487349,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -487278,7 +487498,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -487422,7 +487643,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -487904,6 +488125,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -488603,7 +488832,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -488823,7 +489053,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -489229,6 +489459,14 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -490935,7 +491173,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490947,15 +491186,15 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "64ff59ea43275ac4cae45e6e979f482d46d78ebbc4901b3006b2e13439fe0e33"
+              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -490971,7 +491210,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -490983,7 +491222,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -491133,6 +491372,18 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/index.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -491193,7 +491444,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491205,15 +491457,15 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "64ff59ea43275ac4cae45e6e979f482d46d78ebbc4901b3006b2e13439fe0e33"
+              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -491229,7 +491481,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -491241,7 +491493,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -491391,6 +491643,18 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/index.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -491460,7 +491724,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491480,7 +491745,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -491500,11 +491765,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -491512,7 +491777,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -491764,6 +492029,17 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -491847,7 +492123,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -491867,7 +492144,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -491887,11 +492164,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -491899,7 +492176,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -492122,6 +492399,17 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -501905,7 +502193,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -501985,7 +502274,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -502324,6 +502613,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -502432,7 +502729,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -502512,7 +502810,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -502851,6 +503149,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -502961,7 +503267,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -503041,7 +503348,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -503401,6 +503708,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -503543,7 +503858,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -503623,7 +503939,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -503755,7 +504071,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "64ff59ea43275ac4cae45e6e979f482d46d78ebbc4901b3006b2e13439fe0e33"
+              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
             },
             {
               "path": "packages/shared/src/storage/multipart-upload.test.ts",
@@ -504057,6 +504373,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/index.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -504165,7 +504490,8 @@
           "release-0.6-contract-template-copy-boundary",
           "release-0.6-local-compose-storage",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "done",
@@ -504245,7 +504571,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -504584,6 +504910,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -525470,7 +525804,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -525478,7 +525813,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -525532,6 +525867,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -538294,7 +538637,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -538374,11 +538718,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -538461,6 +538805,15 @@
                 "apps/api/src/upload/upload-reservations.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -538499,7 +538852,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-upload-key-and-scanner-tests",
@@ -538523,7 +538877,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -538584,6 +538938,14 @@
                 "apps/api/src/upload/upload-reservations.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -538853,7 +539215,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-original-download-and-raster-preview",
@@ -538985,7 +539348,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -538993,7 +539356,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -539143,6 +539506,15 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -539185,7 +539557,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-private-upload-boundaries",
@@ -539265,11 +539638,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -539351,6 +539724,15 @@
                 "apps/api/src/upload/upload-reservations.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -539407,7 +539789,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -539488,11 +539871,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
@@ -539650,6 +540033,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -540483,7 +540875,8 @@
           "release-0.6-native-credential-and-migration-acceptance",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-protected-storage-origins",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-encryption-overlap-native",
@@ -540515,7 +540908,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -540547,7 +540940,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             }
           ],
           "source_renewals": [
@@ -540608,6 +541001,15 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "packages/shared/src/storage/runtime-config.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -540658,7 +541060,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -540666,7 +541069,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -540792,6 +541195,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -540837,7 +541248,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -540845,7 +541257,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -540957,6 +541369,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         },
@@ -541520,7 +541940,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -541528,7 +541949,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "98987162013b45423e64f118770d206230f6dd20e10a6c7ee923336cf46b4120"
+              "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -541640,6 +542061,14 @@
                 ".env.example"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         },
@@ -545178,7 +545607,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-payment-transport-circuit",
-          "release-0.6-bill-provider-circuits"
+          "release-0.6-bill-provider-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-domain-unit-tests",
@@ -545262,7 +545692,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545307,6 +545737,14 @@
                 "apps/api/src/wallet/payment-gateway.ts"
               ],
               "scope": "The existing provider request, scope, timeout, size, retry and financial boundaries retain their proof. Circuit configuration and metrics are covered by the focused native and transport tests. The external provider dashboard preserves its six previous panels and adds two verified panels."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -553858,7 +554296,8 @@
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-payment-transport-circuit",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -553903,7 +554342,7 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -553911,7 +554350,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/read-capped-bytes.ts",
@@ -554019,6 +554458,15 @@
                 "packages/shared/src/notification-delivery/email.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -556721,7 +557169,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -556741,7 +557190,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
@@ -556849,6 +557298,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -557076,7 +557533,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -557084,7 +557542,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -557223,6 +557681,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -557264,7 +557730,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -557316,7 +557783,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -557458,6 +557925,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -557518,7 +557993,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -557566,7 +558042,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
@@ -557697,6 +558173,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -557738,7 +558222,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -557746,7 +558231,7 @@
           "source_evidence": [
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -557885,6 +558370,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -558380,7 +558873,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -558397,7 +558891,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/grafana-notifications-dashboard.json",
@@ -558477,6 +558971,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -558517,7 +559019,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-bill-provider-circuits",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -558553,7 +559056,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/grafana-external-providers-dashboard.json",
@@ -558617,6 +559120,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -558654,7 +559165,8 @@
         ],
         "batches": [
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -558698,7 +559210,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/grafana-authentication-security-dashboard.json",
@@ -558743,6 +559255,14 @@
                 "apps/worker/src/auth-delivery/runner.integration.test.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -558909,7 +559429,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -558917,7 +559438,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/metrics/storage-upload-metrics.ts",
-              "sha256": "8dd0687cd577388027015b0a2a032592a0311315bbb315844984edb934c7b8f5"
+              "sha256": "9f44aaff863cfdb7778f4482c2d86027ea9122b43c5f2cc7b937dac23352c4d2"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
@@ -558957,7 +559478,7 @@
             },
             {
               "path": "deploy/monitoring/grafana-storage-uploads-dashboard.json",
-              "sha256": "1f021cec717ba5cfbf7cbbcfdb52426a7c1ff042a8aff1bcd71038da5c786500"
+              "sha256": "6807ba8545954a45ad1b8244e8334ed491bf9fdd46c85da77cf1e8875e25fadc"
             },
             {
               "path": "deploy/monitoring/staging-dashboards.yml",
@@ -559031,6 +559552,15 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/metrics/storage-upload-metrics.ts",
+                "deploy/monitoring/grafana-storage-uploads-dashboard.json"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -559069,7 +559599,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -559101,7 +559632,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/vitest.config.ts",
@@ -559246,6 +559777,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -560204,7 +560743,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -560244,7 +560784,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -560368,6 +560908,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -560426,7 +560974,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -560474,7 +561023,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/wallet/reconciliation-scanner.ts",
@@ -560605,6 +561154,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -560662,7 +561219,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -560674,7 +561232,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
@@ -560815,6 +561373,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -561054,7 +561620,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-payment-transport-circuit",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -561126,7 +561693,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -561217,6 +561784,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/worker/src/notifications/worker-metrics.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -609565,7 +610140,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "integrated-qa-preview-journeys",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -610929,7 +611505,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/ui/package.json",
@@ -611179,6 +611755,14 @@
                 "apps/web/src/pages/AdminMaintenancePage.tsx"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -611263,7 +611847,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-protected-storage-origins",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -611499,7 +612084,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/ui/package.json",
@@ -611779,6 +612364,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -612962,7 +613555,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-protected-storage-origins",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -613198,7 +613792,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/ui/package.json",
@@ -613478,6 +614072,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -615614,7 +616216,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-protected-storage-origins",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -615850,7 +616453,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/ui/package.json",
@@ -616130,6 +616733,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ]
         }
@@ -823507,7 +824118,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_acceptance": {
           "kind": "enforced-expanded-verification-settings",
@@ -823751,7 +824363,7 @@
             },
             {
               "path": "packages/shared/src/verification/index.ts",
-              "sha256": "79a548502ae9d25aa436a06b00af75d3f15ced922e33a8fa6cfca8b736982303"
+              "sha256": "6217cff7a56e1851be33209946506de648a367a845e6ddf7ae23f1ba8d0af307"
             },
             {
               "path": "packages/shared/src/verification/policy.test.ts",
@@ -823955,6 +824567,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "packages/shared/src/verification/index.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -839637,7 +840257,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -840809,7 +841429,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -841577,7 +842197,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "64ff59ea43275ac4cae45e6e979f482d46d78ebbc4901b3006b2e13439fe0e33"
+              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -841585,11 +842205,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -841605,7 +842225,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -842844,6 +843464,19 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "packages/shared/src/storage/index.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "presentation_renewals": [
@@ -843227,7 +843860,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -844188,7 +844822,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
-              "sha256": "5257884d47214e3c7c258fe9ac0936e15a4f653fc48bbe16fd9a6305931be7ca"
+              "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
             },
             {
               "path": "apps/api/src/storage/storage-config.service.ts",
@@ -845340,7 +845974,7 @@
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
-              "sha256": "e10ba12ec21521b2c215065c26266642ce23122ae1eed61aafa7b1087561488f"
+              "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
@@ -846104,7 +846738,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "64ff59ea43275ac4cae45e6e979f482d46d78ebbc4901b3006b2e13439fe0e33"
+              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -846112,11 +846746,11 @@
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
-              "sha256": "f9de2c36dffccb2948dab29490fd3d80823ee825e70da0923e877a7a0fe8bb27"
+              "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "25b9add3437b6d3991a366a3079555abb13d88b0214a61fac2fa051f9d48fac1"
+              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -846132,7 +846766,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "21b826d2961f1eb0e87f10745d71a8f8b1df0eafa243bceeca526732fecdba49"
+              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -847265,6 +847899,19 @@
                 "packages/shared/src/notification-delivery/sms.ts"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-storage-provider-circuit",
+              "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+              "paths": [
+                "apps/api/src/storage/storage-config-http.integration.test.ts",
+                "apps/worker/src/notifications/worker-metrics.ts",
+                "packages/shared/src/storage/index.ts",
+                "packages/shared/src/storage/runtime-config.ts",
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -847665,7 +848312,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-storage-provider-circuit"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -977251,6 +977899,215 @@
         {
           "file": "prometheus-rules.log",
           "sha256": "390275f2b3371862554d45da9d4ca07ddbd986726415e6748c414de40ae9132a"
+        }
+      ]
+    },
+    "release-0.6-storage-provider-circuit": {
+      "batch": "release-0.6-storage-provider-circuit",
+      "base_commit": "7e5347303f0c4bb10c89da61b2adebcab3ee684f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.03",
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-03.02.02",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.02.04",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "02-auth-users-admin.md#T-09.06.02",
+        "02-auth-users-admin.md#T-09.09.01",
+        "05-notifications-documents-ai.md#T-05.07.01",
+        "05-notifications-documents-ai.md#T-05.07.02",
+        "05-notifications-documents-ai.md#T-05.07.03",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.07.05",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.01.02.08",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.04",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "8c48faea259806b73d03ed87ae6efaef80472a29d903f8a1162fc38aae9b3a09"
+        },
+        {
+          "path": "apps/api/src/metrics/storage-upload-metrics.ts",
+          "sha256": "9f44aaff863cfdb7778f4482c2d86027ea9122b43c5f2cc7b937dac23352c4d2"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.test.ts",
+          "sha256": "b322a3187afd09b8fe82f284b106eee5fb4df147c0b352addb429a20ca7a40af"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.ts",
+          "sha256": "233a5c78e091c41296009fc7e02136b23669f2381771ad6d69de085bcb3dd39e"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.test.ts",
+          "sha256": "1a9355bb50f9b9fca514c89c20c4858e0a87c714fc27571262dd20c1a148db19"
+        },
+        {
+          "path": "apps/worker/src/notifications/worker-metrics.ts",
+          "sha256": "9ed6b98bf19aea863598636c9231631d51ecade29bddf6a9ef94cbf9cc54a894"
+        },
+        {
+          "path": "deploy/monitoring/grafana-storage-uploads-dashboard.json",
+          "sha256": "6807ba8545954a45ad1b8244e8334ed491bf9fdd46c85da77cf1e8875e25fadc"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "8e6e8ac0b82fc7a27c97517b23fe972889d076bcd16f0a3f22a5570b3187963f"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+        },
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "138e6d5a3f28fc46548de9c215a78a5a4c2b26b141a924c12241a37a335d64cd"
+        },
+        {
+          "path": "packages/shared/src/storage/index.ts",
+          "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-circuit.ts",
+          "sha256": "92237c99423125832f2ba0ce5c033fe423b089d406c0c72be5b14f4d3181b087"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+        },
+        {
+          "path": "packages/shared/src/verification/circuit-breaker.ts",
+          "sha256": "dfa81af62c5efe5a04cc0f4a4b371314007f273e1da70186e19ea8922b559377"
+        },
+        {
+          "path": "packages/shared/src/verification/index.ts",
+          "sha256": "6217cff7a56e1851be33209946506de648a367a845e6ddf7ae23f1ba8d0af307"
+        },
+        {
+          "path": "packages/shared/src/verification/types.ts",
+          "sha256": "3c66fd7acdcb8ae5116c9f516985e4d16cf06c69ed42a3aba601a14bdcb11a6a"
+        }
+      ],
+      "checks": [
+        "The S3 adapter protects admitted SDK transport attempts, including multipart operations and retries. The default permits five failures in a rolling 60 seconds before a 120-second cooldown. Only one actual transport probe is admitted after the cooldown and its signal is bounded by 30 seconds. The existing application circuit is shared by storage, payment and bill callers.",
+        "Presigning remains local and retains its endpoint, expiry, authorization and reservation controls. The SDK still owns HTTP interpretation and response bodies. The open-circuit error does not become object absence. Named missing-bucket errors remain provider failures. Loopback tests checked real 404 responses, 503 attempts, retry interruption and single-probe recovery.",
+        "71 shared storage tests, 129 affected API circuit, payment, bill and verification tests, and 7 worker metrics tests passed. The first native PostgreSQL run passed 32 storage-record and 24 storage-config cases and stopped the second-process readback case at its outer test timeout. Moving that process lifecycle into fixture hooks preserved the test body limit and assertions. Both the encrypted save prerequisite and second-process readback passed together.",
+        "Both compiled metrics exporters exposed one open circuit and two actual attempts with no object, bucket or credential labels. Two exact Prometheus expressions passed environment/database and idle/active checks. Isolated Grafana 13.3.1 provisioned the seven exact panels and required authentication. Shared, API and worker build and typecheck, web typecheck, changed-file lint, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "Circuits are per S3 client and process. Counters observe admitted transport attempts, including failures before a response, rather than completed object writes. Separate temporary configuration probes do not contribute runtime health samples.",
+        "Loopback S3 responses, production-migrated disposable PostgreSQL and isolated Grafana prove these repository paths. Exact staging recovery and production operational readback remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-provider-circuit",
+      "execution_receipts": [
+        {
+          "file": "shared-unit.log",
+          "sha256": "6f897d5086069b3b0a9adc45108aeb655af04e025cccdd34f5a54cdcd7292505"
+        },
+        {
+          "file": "affected-api-unit.log",
+          "sha256": "088218713b776ac556efdf16c93d01ae73db84a7ecb57f5d6029d9a9b7281f93"
+        },
+        {
+          "file": "worker-metrics-unit.log",
+          "sha256": "bc3412a19a4d7d4d2388cb892f82795a36a412bf27f2c892cd9c9e66ccfa8f94"
+        },
+        {
+          "file": "native-postgres-first-run.log",
+          "sha256": "46eadedc3a3b9b08be6356e0989645b830fd3a711543b389e8f9a981948585bf"
+        },
+        {
+          "file": "native-postgres.log",
+          "sha256": "97abf39f957c03eaf5aef67972218fcc980b2ee65dc8d81a616922b7c93a0757"
+        },
+        {
+          "file": "compiled-metrics.log",
+          "sha256": "66721fd3f6ff2391e9e22250c77293ad387ec722ab46904a10edacfe1134f424"
+        },
+        {
+          "file": "dashboard-promql.yml",
+          "sha256": "48af0a7c4046aa0992de4ab0def3c166b2186b4f34a21dab59dba794bff974e1"
+        },
+        {
+          "file": "dashboard-promql.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "dashboard-mount.json",
+          "sha256": "15c974aa9f7552a9db8619790941f4678f21192645ea05ad2ba32f8a2e999ea8"
+        },
+        {
+          "file": "grafana-readback.json",
+          "sha256": "e895665c567d1ca28f6601f265b4a0bd7948878a266bfb7b8029032f3169f347"
         }
       ]
     }

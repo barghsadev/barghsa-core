@@ -1,8 +1,8 @@
 import { createServer, type Server } from 'node:http';
 import { randomUUID } from 'node:crypto';
-import { fork } from 'node:child_process';
+import { fork, type ChildProcess } from 'node:child_process';
 import { resolve } from 'node:path';
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -350,46 +350,67 @@ it('rejects a revoked editor after the connection probe without persisting a rev
   ).toHaveLength(1);
 });
 
-it('loads the durable configuration in another API process without S3 environment settings', async () => {
-  const child = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
-    silent: true,
-    env: {
-      ...process.env,
-      NODE_ENV: 'test',
-      DATABASE_URL: http.pool.options.connectionString!,
-      PGDIRECT_URL: http.pool.options.connectionString!,
-      AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
-      STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
-      S3_BUCKET: '',
-      S3_REGION: '',
-      S3_ENDPOINT: '',
-      S3_PRIVATE_ENDPOINT: '',
-      S3_PUBLIC_ENDPOINT: '',
-      S3_ALLOWED_ENDPOINT_ORIGINS: endpoint,
-      S3_ACCESS_KEY_ID: '',
-      S3_SECRET_ACCESS_KEY: '',
-      REDIS_URL: '',
-      REDIS_HOST: '',
-    },
-  });
-  child.stdout?.resume();
-  child.stderr?.resume();
-  try {
-    const port = await new Promise<number>((done, reject) => {
+describe('storage configuration shared across API processes', () => {
+  let child: ChildProcess | undefined;
+  let port: number;
+
+  beforeAll(async () => {
+    const started = fork(resolve(__dirname, '../../scripts/http-test-server.cjs'), [], {
+      silent: true,
+      env: {
+        ...process.env,
+        NODE_ENV: 'test',
+        DATABASE_URL: http.pool.options.connectionString!,
+        PGDIRECT_URL: http.pool.options.connectionString!,
+        AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
+        STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
+        S3_BUCKET: '',
+        S3_REGION: '',
+        S3_ENDPOINT: '',
+        S3_PRIVATE_ENDPOINT: '',
+        S3_PUBLIC_ENDPOINT: '',
+        S3_ALLOWED_ENDPOINT_ORIGINS: endpoint,
+        S3_ACCESS_KEY_ID: '',
+        S3_SECRET_ACCESS_KEY: '',
+        REDIS_URL: '',
+        REDIS_HOST: '',
+      },
+    });
+    child = started;
+    started.stdout?.resume();
+    started.stderr?.resume();
+    port = await new Promise<number>((done, reject) => {
       const timeout = setTimeout(() => reject(new Error('Second API startup timed out')), 20000);
-      child.once('message', (message: { port: number }) => {
+      started.once('message', (message: { port: number }) => {
         clearTimeout(timeout);
         done(message.port);
       });
-      child.once('error', (error) => {
+      started.once('error', (error) => {
         clearTimeout(timeout);
         reject(error);
       });
-      child.once('exit', () => {
+      started.once('exit', () => {
         clearTimeout(timeout);
         reject(new Error('Second API exited'));
       });
     });
+  }, 25_000);
+
+  afterAll(async () => {
+    const started = child;
+    if (started && started.exitCode === null && started.signalCode === null)
+      await new Promise<void>((done) => {
+        const timeout = setTimeout(() => started.kill('SIGKILL'), 5000);
+        started.once('exit', () => {
+          clearTimeout(timeout);
+          done();
+        });
+        if (started.connected) started.send('stop');
+        else started.kill('SIGTERM');
+      });
+  }, 10_000);
+
+  it('loads the durable configuration in another API process without S3 environment settings', async () => {
     const config = await fetch(`http://127.0.0.1:${port}/api/admin/storage/config`, { headers });
     expect(config.status).toBe(200);
     expect(await config.json()).toMatchObject({
@@ -409,18 +430,7 @@ it('loads the durable configuration in another API process without S3 environmen
     });
     expect(signed.status).toBe(200);
     expect(JSON.stringify(await signed.json())).toContain('new-access-key');
-  } finally {
-    if (child.exitCode === null && child.signalCode === null)
-      await new Promise<void>((done) => {
-        const timeout = setTimeout(() => child.kill('SIGKILL'), 5000);
-        child.once('exit', () => {
-          clearTimeout(timeout);
-          done();
-        });
-        if (child.connected) child.send('stop');
-        else child.kill('SIGTERM');
-      });
-  }
+  });
 });
 
 for (const operation of ['save', 'test'] as const) {

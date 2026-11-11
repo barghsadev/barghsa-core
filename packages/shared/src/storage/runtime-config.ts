@@ -115,7 +115,7 @@ export function configuredStorageProviders(
       bucket: config.bucket,
       region: config.region,
       forcePathStyle: config.forcePathStyle,
-      ...(probe ? { requestTimeoutMs: 5000, maxRetries: 1 } : {}),
+      ...(probe ? { requestTimeoutMs: 5000, maxRetries: 1, observeCircuit: false } : {}),
       ...(endpoint ? { endpoint, approvedEndpointOrigins: approved } : {}),
       ...(config.accessKeyId ? { accessKeyId: config.accessKeyId } : {}),
       ...(config.secretAccessKey ? { secretAccessKey: config.secretAccessKey } : {}),

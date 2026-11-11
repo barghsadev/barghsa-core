@@ -1,6 +1,7 @@
 import { Registry, Counter, Gauge, Histogram } from 'prom-client';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
 import type { DeliveryExecutor } from '@barghsa/shared/notification-delivery';
+import { storageCircuitMetrics } from '@barghsa/shared/storage';
 
 /**
  * Notification observability metrics (E-05, T-05.01.07).
@@ -36,6 +37,29 @@ import type { DeliveryExecutor } from '@barghsa/shared/notification-delivery';
  * imported into one bundle.
  */
 const registry = new Registry();
+
+new Gauge({
+  name: 'barghsa_storage_provider_circuits',
+  help: 'Observed object-storage clients by circuit state',
+  labelNames: ['state'] as const,
+  registers: [registry],
+  collect() {
+    for (const [state, count] of Object.entries(storageCircuitMetrics().states))
+      this.set({ state }, count);
+  },
+});
+
+new Counter({
+  name: 'barghsa_storage_provider_requests_total',
+  help: 'Actual object-storage transport attempts by availability outcome',
+  labelNames: ['outcome'] as const,
+  registers: [registry],
+  collect() {
+    this.reset();
+    for (const [outcome, count] of Object.entries(storageCircuitMetrics().requests))
+      this.inc({ outcome }, count);
+  },
+});
 
 const authOtpSent = new Counter({
   name: 'auth_otp_deliveries_sent_total',

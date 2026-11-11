@@ -26,6 +26,7 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { NoSuchKey } from '@aws-sdk/client-s3';
 import { Readable } from 'node:stream';
 import type { ReadableStream as NodeReadableStream } from 'node:stream/web';
+import { protectStorageTransport } from './storage-circuit.js';
 
 import type {
   IFileStorageProvider,
@@ -67,6 +68,8 @@ export interface S3StorageProviderConfig extends StorageProviderConfig {
   maxRetries?: number;
   /** Request timeout in milliseconds. */
   requestTimeoutMs?: number;
+  /** Exclude temporary configuration probes from runtime health measurements. */
+  observeCircuit?: boolean;
 }
 
 const DEFAULT_EXPIRES_IN = 900; // 15 minutes
@@ -92,6 +95,7 @@ export class S3StorageProvider implements IFileStorageProvider {
   private readonly bucket: string;
   private readonly prefix: string;
   private readonly logger: Logger | undefined;
+  private readonly removeCircuitMetrics: () => void;
 
   constructor(config: S3StorageProviderConfig, logger?: Logger) {
     this.bucket = config.bucket;
@@ -119,6 +123,10 @@ export class S3StorageProvider implements IFileStorageProvider {
     }
 
     this.client = new S3Client(clientConfig);
+    this.removeCircuitMetrics = protectStorageTransport(
+      this.client,
+      config.observeCircuit !== false
+    );
     const approved = config.approvedEndpointOrigins;
     if (approved) {
       this.client.middlewareStack.add(
@@ -139,6 +147,7 @@ export class S3StorageProvider implements IFileStorageProvider {
   }
 
   destroy(): void {
+    this.removeCircuitMetrics();
     this.client.destroy();
   }
 
@@ -625,7 +634,8 @@ export class S3StorageProvider implements IFileStorageProvider {
       if (
         err instanceof NoSuchKey ||
         (err as { name?: string }).name === 'NoSuchKey' ||
-        (err as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode === 404
+        ((err as { name?: string }).name !== 'NoSuchBucket' &&
+          (err as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode === 404)
       ) {
         throw new StorageObjectNotFound(key);
       }

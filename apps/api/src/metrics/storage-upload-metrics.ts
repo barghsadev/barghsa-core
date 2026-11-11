@@ -1,4 +1,26 @@
 import promClient from 'prom-client';
+import { storageCircuitMetrics } from '@barghsa/shared/storage';
+
+new promClient.Gauge({
+  name: 'barghsa_storage_provider_circuits',
+  help: 'Observed object-storage clients by circuit state',
+  labelNames: ['state'] as const,
+  collect() {
+    for (const [state, count] of Object.entries(storageCircuitMetrics().states))
+      this.set({ state }, count);
+  },
+});
+
+new promClient.Counter({
+  name: 'barghsa_storage_provider_requests_total',
+  help: 'Actual object-storage transport attempts by availability outcome',
+  labelNames: ['outcome'] as const,
+  collect() {
+    this.reset();
+    for (const [outcome, count] of Object.entries(storageCircuitMetrics().requests))
+      this.inc({ outcome }, count);
+  },
+});
 
 const verifiedUploadBytes = new promClient.Histogram({
   name: 'barghsa_storage_verified_upload_bytes',
