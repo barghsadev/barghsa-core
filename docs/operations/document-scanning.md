@@ -34,7 +34,7 @@ worker configuration aligned so confirmed documents have a running consumer.
 Configure clamd's stream size limit to at least 100 MiB, matching the largest
 allowed upload. A scanner with a smaller limit leaves larger documents pending.
 
-The production Compose overlay builds the official ClamAV 1.5 Debian image
+The production Compose overlay builds the official ClamAV 1.5 Alpine image
 with a 100 MiB stream limit and `AlertExceedsMax` enabled. It keeps signature
 updates in the `clamav-db` volume, publishes no scanner port to the host, and
 starts the API and worker only after ClamAV is healthy. The overlay sets

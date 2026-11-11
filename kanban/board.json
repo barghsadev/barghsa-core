@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T21:03:13+00:00",
+  "updated": "2026-11-11T21:16:07+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -541249,7 +541249,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "On the exact accepted v0.6.0 deployment, verify the immutable scanner image and current signature version. Exercise sealed application uploads for clean and EICAR verdicts and repeat the unavailable-scanner recovery with pending documents denied until scanning passes."
+        "The reviewed staging scanner now loads current signed databases and accepts clean, EICAR and 100 MiB streams through the running worker library. In the immutable v0.6.0 rehearsal, repeat sealed application uploads with durable clean/quarantined state and unavailable-scanner retry. Verify pending download denial until a clean verdict. Read back the image ID and loaded signatures on the v0.6.0 deployment."
       ],
       "owner": null,
       "depends_on": [],
@@ -541269,7 +541269,8 @@
           "release-0.6-private-clamav-signature-mirror",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-isolated-live-scanner-and-safari-recovery",
-          "release-0.6-live-clamav-mirror"
+          "release-0.6-live-clamav-mirror",
+          "release-0.6-staging-scanner-ceiling"
         ],
         "current_acceptance": null
       }
@@ -541679,7 +541680,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-structured-release-log-marker",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-staging-scanner-ceiling"
         ],
         "current_acceptance": {
           "kind": "reviewed_current_source",
@@ -542491,7 +542493,8 @@
           "release-0.6-storage-upload-dashboard",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-required-check-summary"
+          "release-0.6-required-check-summary",
+          "release-0.6-staging-scanner-ceiling"
         ],
         "current_acceptance": {
           "kind": "hosted-native-upload-regression-test-verification",
@@ -858995,7 +858998,8 @@
           "release-0.6-pdf-preflight-and-license-readback",
           "release-0.6-optional-maintenance-notice",
           "release-0.6-notification-contrast",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-staging-scanner-ceiling"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -859040,10 +859044,9 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "The EU private feed, current signatures and live staging daemon clean/EICAR verdicts are verified. Verify current signed updates and application upload receipts on the final operational topology.",
         "The live staging CSP reports and public branding response identify the cross-origin favicon. An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation. Complete the full reviewed observation window before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
-        "The active staging scanner retains its 50M image and now loads signed daily 28179 from the EU mirror. The isolated source-matching 100M image passed current clean/EICAR and full 100 MiB tests. Roll out the reviewed 100M scanner and recurring private feed while preserving rollback."
+        "Staging runs the reviewed 100 MiB scanner sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c with recurring private-mirror checks and signed daily 28180. Live worker clean, standard EICAR and full-size streams passed. Verify signature freshness, sealed-upload receipts and outage recovery on the final operational topology and immutable application candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -859068,7 +859071,8 @@
           "release-0.6-video-upload-policy-ceiling",
           "release-0.6-official-clamav-feed-recheck",
           "release-0.6-private-clamav-signature-mirror",
-          "release-0.6-staging-favicon-publication-prep"
+          "release-0.6-staging-favicon-publication-prep",
+          "release-0.6-staging-scanner-ceiling"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -985619,6 +985623,101 @@
         {
           "file": "source-checks.log",
           "sha256": "88b46f076327acf000919c46dbde3fa7e87c5acbd6e8cbb48eb6f34fd08196ac"
+        }
+      ]
+    },
+    "release-0.6-staging-scanner-ceiling": {
+      "batch": "release-0.6-staging-scanner-ceiling",
+      "base_commit": "d1b580ddb14dac056f9ac9d8df8bb05a68371270",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.06.01.01",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "deploy/clamav/healthcheck.sh",
+          "sha256": "23bf1005115c965d5584ce4cd4aee7b7e645e0e71f334141109c5c8a00760229"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "4d0a4d05925520ae0356457d6d4864ded07db432fb834064dc70bcdb6e28849e"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "7ba145e0c0effd228d0222a1ce06ceb03a6eb9b956e13fe28f715720925f890c"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+        },
+        {
+          "path": "docs/operations/clamav-signatures.md",
+          "sha256": "ac9e6e8aa5580f84d742a921839a01524542f68f1ba96b185b4b53986494c490"
+        },
+        {
+          "path": "docs/operations/document-scanning.md",
+          "sha256": "90cc454a1e378c60bf29ffda4738957126f737867fefd81784a482235276b6b6"
+        },
+        {
+          "path": "packages/shared/src/storage/clamav.ts",
+          "sha256": "08c4e76a5afc3d8018fb47e384a9b33833804e38980b2823b1dacea90dca0c62"
+        }
+      ],
+      "checks": [
+        "The staging 50 MiB image already loaded daily 28180. Took a protected checksum-verified signature snapshot and rollback manifest. All three 512-byte archive headers matched the current restricted EU feed. Native sigtool validated the vendor detached signatures for main 63, daily 28180 and bytecode 339.",
+        "The first disposable direct clamd process failed to open the database because the original volume was mode 0700 owned by 1000:1000. No active container changed. On a disposable copy, normal startup moved ownership to 100:101, loaded 28180 and scanned a full 100 MiB stream. Normal startup of the previous image reclaimed ownership and passed a clean scan.",
+        "The resolved protected Compose models differed only in the scanner image. Recreated just the scanner under the release lock and promoted the protected manifest after image, loaded signatures, first FreshClam check and all worker probes passed. The live image sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c uses Alpine 3.24, enforces 100M streams and checks the private mirror six times per day.",
+        "The active worker package verified clean, EICAR and 100 MiB streams and all three byte hashes over the private scanner socket. The remaining service container and image IDs, public health and v0.5.0 preview b0dce58ca8d2ec0bf48dcecb575f54d51cedf916 were verified. Independent external probes confirmed healthy liveness/readiness.",
+        "Bash and Node syntax, ShellCheck, source provenance, documentation formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The worker probes used in-memory fixtures and exercised the real running client and daemon. The live probes created no application upload, object, database job or quarantine record. Existing isolated end-to-end receipts cover upload state and recovery on their bound source.",
+        "This scanner maintenance preserved the staging application release. The immutable v0.6.0 upload rehearsal, production topology and release worker receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-scanner-ceiling",
+      "execution_receipts": [
+        {
+          "file": "upgrade-scanner-first-plan.sh",
+          "sha256": "155ffef1e048f5b515e3df584c38e6086c9d04c578c92885eb6b190272ba0706"
+        },
+        {
+          "file": "fixture-first-startup.log",
+          "sha256": "6b45d080b8995158fbc4184ef045da9de5ba0a992820181bd10f6d6039f1b7d2"
+        },
+        {
+          "file": "fixture-startup-diagnostic.log",
+          "sha256": "0af0594d83217b39d4bfa39a43ea4eabc6875e0260930d6f79e283faf55205f0"
+        },
+        {
+          "file": "upgrade-scanner.sh",
+          "sha256": "50fa8ca89c2302686a3c40e87097fb8f4ab42ccf8a3406726059ea7383b0bd16"
+        },
+        {
+          "file": "worker-scan-proof.cjs",
+          "sha256": "b5db32cf0c23ee12c8816c7fc2d3f30b493664cca162da0b6dd75e932d2e25fe"
+        },
+        {
+          "file": "upgrade.log",
+          "sha256": "a5454667b7c64ea15fa7de858ea151a51a3f61a91d5b33fe934e776872def939"
+        },
+        {
+          "file": "independent-readback.log",
+          "sha256": "c69d0dd2c4ab9d8615b53efb73dca7be7951c15c80e11e9b644e2af8435b3535"
+        },
+        {
+          "file": "source-checks.log",
+          "sha256": "d1c84ec192f295766a43b7feb7aa5234bf6cbb1fd1f6ed80bb289a0c43037990"
+        },
+        {
+          "file": "docs-checks.log",
+          "sha256": "61b36b75a1b031f9923b98c7ce41fa8128be0dc85c24f2d355918a3b26650047"
         }
       ]
     }
