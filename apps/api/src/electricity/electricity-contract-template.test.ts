@@ -1,7 +1,28 @@
 import { expect, it } from 'vitest';
 import type { PoolClient } from 'pg';
 import type { StorageProvider } from '@barghsa/shared/storage';
-import { electricityContractTemplateSnapshot } from './electricity-contract-template.js';
+import {
+  fetchElectricityContractTemplate,
+  readElectricityContractTemplate,
+  renderElectricityContractTemplate,
+} from './electricity-contract-template.js';
+
+async function snapshot(
+  client: Pick<PoolClient, 'query'>,
+  storage: StorageProvider | null,
+  profileId: string,
+  amount: bigint,
+  now: Date
+) {
+  const source = await readElectricityContractTemplate(client, profileId);
+  if (!source) return null;
+  return renderElectricityContractTemplate(
+    source,
+    await fetchElectricityContractTemplate(storage, source),
+    amount,
+    now
+  );
+}
 
 function fixture(value: unknown, source: string, placeholders: string[]) {
   const client = {
@@ -44,14 +65,14 @@ it('renders the selected immutable version with the order customer, date and IRR
     'Dear {{ customerName }}, {{amount}} IRR on {{date}}.',
     ['customerName', 'amount', 'date']
   );
-  const snapshot = await electricityContractTemplateSnapshot(
+  const result = await snapshot(
     client,
     storage,
     'profile-1',
     123456n,
     new Date('2026-09-23T10:30:00Z')
   );
-  expect(snapshot).toEqual({
+  expect(result).toEqual({
     templateId: 'template-1',
     versionId: 'version-1',
     versionNumber: 2,
@@ -62,14 +83,12 @@ it('renders the selected immutable version with the order customer, date and IRR
 
 it('rejects an unsupported placeholder instead of saving an incomplete contract', async () => {
   const { client, storage } = fixture('version-1', 'Dear {{unknown}}', []);
-  await expect(
-    electricityContractTemplateSnapshot(client, storage, 'profile-1', 1n, new Date())
-  ).rejects.toThrow('Unsupported contract template placeholder');
+  await expect(snapshot(client, storage, 'profile-1', 1n, new Date())).rejects.toThrow(
+    'Unsupported contract template placeholder'
+  );
 });
 
 it('keeps existing order submission available while no template is selected', async () => {
   const { client } = fixture(null, '', []);
-  await expect(
-    electricityContractTemplateSnapshot(client, null, 'profile-1', 1n, new Date())
-  ).resolves.toBeNull();
+  await expect(snapshot(client, null, 'profile-1', 1n, new Date())).resolves.toBeNull();
 });

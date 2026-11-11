@@ -1,7 +1,7 @@
 import { expectPrivateDocumentDelivery } from '../test/private-document-notification-proof.js';
 import { createServer, type Server } from 'node:http';
 import { once } from 'node:events';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture.js';
 
@@ -15,6 +15,27 @@ let cityId: string;
 const storageRequests: string[] = [];
 const storedObjects = new Map<string, Buffer>();
 let rejectGeneratedPuts = false;
+let pauseTemplateRead: (() => Promise<void>) | undefined;
+let pauseGeneratedPut: (() => Promise<void>) | undefined;
+
+function storagePause() {
+  let resume!: () => void;
+  let enter!: () => void;
+  const entered = new Promise<void>((resolve) => {
+    enter = resolve;
+  });
+  const released = new Promise<void>((resolve) => {
+    resume = resolve;
+  });
+  return {
+    entered,
+    resume,
+    pause: () => {
+      enter();
+      return released;
+    },
+  };
+}
 
 beforeAll(async () => {
   storage = createServer((request, response) => {
@@ -30,18 +51,22 @@ beforeAll(async () => {
         const chunks: Buffer[] = [];
         for await (const chunk of request) chunks.push(Buffer.from(chunk));
         storedObjects.set(path, Buffer.concat(chunks));
+        await pauseGeneratedPut?.();
         response.writeHead(200).end();
       })();
       return;
     }
     if (request.method === 'GET' && path.endsWith('/electricity-agreement.txt')) {
-      const text = 'Agreement for {{ customerName }}: {{amount}} IRR on {{date}}.';
-      response
-        .writeHead(200, {
-          'Content-Type': 'text/plain',
-          'Content-Length': Buffer.byteLength(text),
-        })
-        .end(text);
+      void (async () => {
+        await pauseTemplateRead?.();
+        const text = 'Agreement for {{ customerName }}: {{amount}} IRR on {{date}}.';
+        response
+          .writeHead(200, {
+            'Content-Type': 'text/plain',
+            'Content-Length': Buffer.byteLength(text),
+          })
+          .end(text);
+      })();
       return;
     }
     const stored = storedObjects.get(path);
@@ -196,16 +221,24 @@ it('embeds the selected template version and rendered text in a new preliminary 
   });
   expect(staleSubmission.status, await staleSubmission.clone().text()).toBe(409);
   expect((await switchTemplate(versionId)).status).toBe(200);
-  const submitted = await fetch(`${http.base}/api/electricity/orders/simple`, {
-    method: 'POST',
-    headers: buyerHeaders,
-    body: JSON.stringify(submissionInput),
-  });
+  const putsBefore = storageRequests.filter((request) => request.startsWith('PUT ')).length;
+  const submit = () =>
+    fetch(`${http.base}/api/electricity/orders/simple`, {
+      method: 'POST',
+      headers: buyerHeaders,
+      body: JSON.stringify(submissionInput),
+    });
+  const [submitted, concurrentRetry] = await Promise.all([submit(), submit()]);
   expect(
     submitted.status,
     JSON.stringify({ storageRequests, response: await submitted.clone().json() })
   ).toBe(201);
   const { contractId } = (await submitted.json()) as { contractId: string };
+  expect(concurrentRetry.status, await concurrentRetry.clone().text()).toBe(201);
+  expect(await concurrentRetry.json()).toMatchObject({ contractId });
+  expect(storageRequests.filter((request) => request.startsWith('PUT '))).toHaveLength(
+    putsBefore + 2
+  );
   const content = (
     await http.pool.query<{
       content: {
@@ -225,10 +258,12 @@ it('embeds the selected template version and rendered text in a new preliminary 
     revision: number;
     uploaded_by_type: string;
     storage_key: string;
+    original_name: string;
+    checksum: string;
     role: string;
     contract_version_id: string;
   }>(
-    `SELECT d.id,d.state,d.revision,d.uploaded_by_type,d.storage_key,cd.role,cd.contract_version_id
+    `SELECT d.id,d.state,d.revision,d.uploaded_by_type,d.storage_key,d.original_name,d.checksum,cd.role,cd.contract_version_id
      FROM documents d JOIN contract_documents cd ON cd.document_id=d.id
      WHERE cd.contract_id=$1`,
     [contractId]
@@ -260,6 +295,14 @@ it('embeds the selected template version and rendered text in a new preliminary 
   const pdfBytes = [...storedObjects].find(([path]) => path.endsWith(document.storage_key))?.[1];
   expect(pdfBytes?.subarray(0, 5).toString()).toBe('%PDF-');
   expect(pdfBytes?.length).toBeGreaterThan(1000);
+  expect(document.checksum).toBe(createHash('sha256').update(pdfBytes!).digest('hex'));
+  const number = (
+    await http.pool.query<{ contract_number: string }>(
+      'SELECT contract_number::text FROM contracts WHERE id=$1',
+      [contractId]
+    )
+  ).rows[0]!.contract_number;
+  expect(document.original_name).toBe(`contract-${number}-v1.pdf`);
   const events = await http.pool.query<{ state: string }>(
     'SELECT state FROM document_events WHERE document_id=$1 ORDER BY revision',
     [document.id]
@@ -398,3 +441,91 @@ it('rolls back an order when automatic PDF storage fails and succeeds on retry',
     ).rows
   ).toHaveLength(1);
 });
+
+it('rechecks customer details after a template read without holding the profile lock', async () => {
+  const gate = storagePause();
+  pauseTemplateRead = gate.pause;
+  const pending = fetch(`${http.base}/api/electricity/preview/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body: JSON.stringify({ profileId, period: 'next_week', totalKwh: '10' }),
+  });
+  try {
+    await gate.entered;
+    await expect(
+      http.pool.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE NOWAIT', [profileId])
+    ).resolves.toMatchObject({ rowCount: 1 });
+    await http.pool.query("UPDATE profiles SET first_name='Changed' WHERE id=$1", [profileId]);
+    gate.resume();
+    const response = await pending;
+    expect(response.status, await response.clone().text()).toBe(409);
+  } finally {
+    gate.resume();
+    await pending.catch(() => {});
+    pauseTemplateRead = undefined;
+    await http.pool.query("UPDATE profiles SET first_name='Ada' WHERE id=$1", [profileId]);
+  }
+}, 15000);
+
+it('rejects a changed quote after preparing the PDF without holding account or price locks', async () => {
+  const preview = await fetch(`${http.base}/api/electricity/preview/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body: JSON.stringify({ profileId, period: 'next_week', totalKwh: '10' }),
+  });
+  expect(preview.status, await preview.clone().text()).toBe(200);
+  const quote = (await preview.json()) as { reviewDigest: string };
+  const idempotencyKey = randomUUID();
+  const financialRows = async () =>
+    (
+      await http.pool.query(
+        `SELECT (SELECT count(*) FROM orders WHERE profile_id=$1) AS orders,
+         (SELECT count(*) FROM contracts WHERE profile_id=$1) AS contracts,
+         (SELECT count(*) FROM invoices WHERE profile_id=$1) AS invoices,
+         (SELECT count(*) FROM documents WHERE profile_id=$1) AS documents`,
+        [profileId]
+      )
+    ).rows[0];
+  const before = await financialRows();
+  const gate = storagePause();
+  pauseGeneratedPut = gate.pause;
+  const pending = fetch(`${http.base}/api/electricity/orders/simple`, {
+    method: 'POST',
+    headers: buyerHeaders,
+    body: JSON.stringify({
+      profileId,
+      period: 'next_week',
+      totalKwh: '10',
+      idempotencyKey,
+      expectedQuoteDigest: quote.reviewDigest,
+      address: { provinceId, cityId, fullAddress: 'Test Street', postalCode: '1234567890' },
+    }),
+  });
+  try {
+    await gate.entered;
+    await expect(
+      http.pool.query("SELECT user_id FROM users WHERE user_id='buyer' FOR UPDATE NOWAIT")
+    ).resolves.toMatchObject({ rowCount: 1 });
+    await expect(
+      http.pool.query("SELECT id FROM products WHERE system_key='thermal' FOR UPDATE NOWAIT")
+    ).resolves.toMatchObject({ rowCount: 1 });
+    await http.pool.query("UPDATE products SET price=100001 WHERE system_key='thermal'");
+    gate.resume();
+    const response = await pending;
+    expect(response.status, await response.clone().text()).toBe(409);
+    expect(await financialRows()).toEqual(before);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT order_id FROM electricity_order_submissions WHERE user_id='buyer' AND idempotency_key=$1",
+          [idempotencyKey]
+        )
+      ).rows
+    ).toEqual([]);
+  } finally {
+    gate.resume();
+    await pending.catch(() => {});
+    pauseGeneratedPut = undefined;
+    await http.pool.query("UPDATE products SET price=100000 WHERE system_key='thermal'");
+  }
+}, 15000);

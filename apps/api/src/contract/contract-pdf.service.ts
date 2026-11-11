@@ -1,6 +1,14 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { createHash, randomUUID } from 'node:crypto';
-import { contractDocuments, createDbClient, documents, eq, getDbPool } from '@barghsa/db';
+import {
+  contractDocuments,
+  createDbClient,
+  createDirectDbPool,
+  documents,
+  eq,
+  getDbPool,
+} from '@barghsa/db';
+import { withMultipartUploadLock } from '@barghsa/db/storage-multipart';
 import { StorageObjectNotFound, type StorageProvider } from '@barghsa/shared/storage';
 import type { PoolClient } from 'pg';
 import { DocumentService, recordEvent } from '../documents/document.service.js';
@@ -8,7 +16,7 @@ import { notifyDocumentReview, notifyDocumentUpload } from '../documents/documen
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
-import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
+import { writeProvisionalStorageCopy } from '../storage/reserve-storage-copy.js';
 import { reserveUpload } from '../upload/upload-reservations.js';
 import { renderContractPdf } from './contract-pdf.js';
 
@@ -38,41 +46,46 @@ export class ContractPdfService {
     @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider
   ) {}
 
-  /** Generate the order's initial PDF inside its creation transaction. */
-  async generateInitial(
-    client: PoolClient,
-    contractId: string,
-    versionId: string,
+  /** Reserve both objects and render the initial PDF before the order transaction. */
+  async prepareInitial(
+    template: { name: string; text: string },
     profileId: string,
     actorUserId: string,
-    ip: string
+    directClient?: PoolClient
   ) {
-    const row = (
-      await client.query<
-        Pick<VersionRow, 'contract_number' | 'version_number' | 'content' | 'created_at'>
-      >(
-        `SELECT c.contract_number,v.version_number,v.content,v.created_at
-         FROM contracts c JOIN contract_versions v ON v.contract_id=c.id
-         WHERE c.id=$1 AND v.id=$2 AND c.profile_id=$3 AND c.service_type='electricity'
-           AND c.current_version_id=v.id`,
-        [contractId, versionId, profileId]
+    if (!template.text.trim())
+      throw new ConflictException('Initial contract has no saved template');
+    const { contractNumber } = (
+      await (directClient ?? getDbPool()).query<{ contractNumber: string }>(
+        `SELECT nextval('contract_number_seq'::regclass)::text AS "contractNumber"`
       )
-    ).rows[0];
-    if (!row) throw new NotFoundException();
-    const template = savedTemplate(row.content);
-    if (!template) throw new ConflictException('Initial contract has no saved template');
+    ).rows[0]!;
+    const createdAt = new Date();
     const bytes = await renderContractPdf({
-      contractNumber: row.contract_number,
-      versionNumber: row.version_number,
+      contractNumber,
+      versionNumber: 1,
       templateName: template.name,
       text: template.text,
-      createdAt: row.created_at,
+      createdAt,
     });
     const checksum = createHash('sha256').update(bytes).digest('hex');
-    const fileName = `contract-${row.contract_number}-v${row.version_number}.pdf`;
+    const fileName = `contract-${contractNumber}-v1.pdf`;
     const uploadKey = `uploads/contract/${randomUUID()}.pdf`;
     const storageKey = `business-documents/${randomUUID()}/${checksum}`;
-    // Both reservations commit independently. A failed order leaves cleanup intent for its objects.
+    const uploadContext = { profileId, purpose: '' };
+    const uploadMetadata = {
+      uploadedBy: actorUserId,
+      uploadContext,
+      provisionalUpload: true,
+      deletionRequested: true,
+    };
+    const copyMetadata = {
+      purpose: 'system_contract_pdf',
+      profileId,
+      uploadedBy: actorUserId,
+      sourceKey: uploadKey,
+    };
+
     await reserveUpload({
       key: uploadKey,
       userId: actorUserId,
@@ -81,10 +94,68 @@ export class ContractPdfService {
       fileSize: bytes.length,
       category: 'contract',
       expiresIn: 900,
-      context: { profileId, purpose: '' },
+      context: uploadContext,
       independent: true,
     });
-    await this.storage.putObject(uploadKey, bytes, 'application/pdf');
+    const uploaded = await withMultipartUploadLock(
+      directClient ?? createDirectDbPool(),
+      uploadKey,
+      async (client) => {
+        const reserved = await client.query(
+          `SELECT storage_key FROM storage_records
+           WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
+             AND cleanup_operation IS NULL AND metadata @> $2::jsonb
+             AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
+          [uploadKey, JSON.stringify(uploadMetadata)]
+        );
+        if (reserved.rowCount !== 1) return false;
+        await this.storage.putObject(uploadKey, bytes, 'application/pdf');
+        return true;
+      }
+    );
+    if (!uploaded.acquired || !uploaded.value)
+      throw new ConflictException('Generated PDF upload reservation expired');
+    const copied = await writeProvisionalStorageCopy(
+      storageKey,
+      copyMetadata,
+      () => this.storage.putObject(storageKey, bytes, 'application/pdf'),
+      directClient
+    );
+    if (!copied) throw new ConflictException('Generated PDF copy reservation expired');
+    return {
+      contractNumber,
+      createdAt,
+      profileId,
+      actorUserId,
+      fileName,
+      fileSize: bytes.length,
+      checksum,
+      uploadKey,
+      uploadMetadata,
+      storageKey,
+      copyMetadata,
+    };
+  }
+
+  /** Publish the exact prepared PDF together with its contract and document events. */
+  async publishInitial(
+    client: PoolClient,
+    contractId: string,
+    versionId: string,
+    prepared: Awaited<ReturnType<ContractPdfService['prepareInitial']>>,
+    ip: string
+  ) {
+    const {
+      profileId,
+      actorUserId,
+      fileName,
+      fileSize,
+      checksum,
+      uploadKey,
+      uploadMetadata,
+      storageKey,
+      copyMetadata,
+    } = prepared;
     const db = createDbClient(client);
     const created = (
       await db
@@ -96,7 +167,7 @@ export class ContractPdfService {
           category: 'contract',
           uploadKey,
           originalName: fileName,
-          sizeBytes: bytes.length,
+          sizeBytes: fileSize,
           uploadedBy: actorUserId,
           uploadedByType: 'system',
         })
@@ -118,52 +189,43 @@ export class ContractPdfService {
         .returning()
     )[0]!;
     await recordEvent(client, pending, 'Uploading', actor, ip);
-    await reserveStorageCopy(storageKey, {
-      purpose: 'system_contract_pdf',
-      profileId,
-      uploadedBy: actorUserId,
-      sourceKey: uploadKey,
-    });
-    const reserved = await client.query(
-      `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND cleanup_operation IS NULL
-       AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' FOR UPDATE`,
-      [storageKey]
-    );
-    if (reserved.rowCount !== 1)
-      throw new ConflictException('Generated PDF copy reservation expired');
-    await this.storage.putObject(storageKey, bytes, 'application/pdf');
-    await client.query(
+    const copied = await client.query(
       `UPDATE storage_records SET status='immutable',signed_at=NOW(),signed_by=$2,
        content_type='application/pdf',file_size=$3,category='contract',file_name=$4,
-       metadata=$5::jsonb,removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
+       metadata=$5::jsonb,removed_at=NULL,updated_at=NOW()
+       WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
+         AND cleanup_operation IS NULL AND metadata @> $6::jsonb RETURNING storage_key`,
       [
         storageKey,
         actorUserId,
-        bytes.length,
+        fileSize,
         fileName,
-        JSON.stringify({
-          purpose: 'system_contract_pdf',
-          profileId,
-          uploadedBy: actorUserId,
-          sourceKey: uploadKey,
-          sha256: checksum,
-        }),
+        JSON.stringify({ ...copyMetadata, sha256: checksum }),
+        JSON.stringify({ ...copyMetadata, provisionalCopy: true, deletionRequested: true }),
       ]
     );
+    if (copied.rowCount !== 1)
+      throw new ConflictException('Generated PDF copy reservation expired');
     const scannerConfigured = Boolean(process.env['DOCUMENT_CLAMAV_HOST']?.trim());
-    await client.query(
+    const uploaded = await client.query(
       `UPDATE storage_records SET status='active',content_type='application/pdf',file_size=$2,
        metadata=(metadata-'provisionalUpload'-'deletionRequested'-'uploadExpiresAt')
          ||jsonb_build_object('scanState',$4::text,'scanSkippedReason',$5::text,'sha256',$3::text),
-       removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
+       removed_at=NULL,updated_at=NOW()
+       WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
+         AND cleanup_operation IS NULL AND file_size=$2 AND metadata @> $6::jsonb
+         AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp() RETURNING storage_key`,
       [
         uploadKey,
-        bytes.length,
+        fileSize,
         checksum,
         scannerConfigured ? 'Pending' : 'Available',
         scannerConfigured ? null : 'not_configured',
+        JSON.stringify(uploadMetadata),
       ]
     );
+    if (uploaded.rowCount !== 1)
+      throw new ConflictException('Generated PDF upload reservation expired');
     const available = (
       await db
         .update(documents)

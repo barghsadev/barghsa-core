@@ -198,6 +198,13 @@ Publication checks current staff authority and step-up, then locks the template
 to allocate the next version. The immutable file, version and audit commit
 together. A failed publication leaves its private reservation for cleanup.
 
+Electricity order reviews read template bytes after committing the source
+lookup. When an order uses a template, the API reserves the contract number
+from the existing sequence and prepares both PDF objects before publication.
+The final transaction checks current authority, pricing and template terms
+again, then records the order, contract, invoice, PDF and scan state together.
+An exact retry returns the recorded order without copying the PDF again.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

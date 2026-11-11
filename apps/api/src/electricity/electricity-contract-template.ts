@@ -15,14 +15,12 @@ export interface ElectricityContractTemplateSnapshot {
   text: string;
 }
 
-/** Read an immutable template version and embed its rendered text in the contract snapshot. */
-export async function electricityContractTemplateSnapshot(
+/** Bind the selection and customer name before fetching the immutable source. */
+export async function readElectricityContractTemplate(
   client: Pick<PoolClient, 'query'>,
-  storage: StorageProvider | null,
-  profileId: string,
-  amountIrR: bigint,
-  now: Date
-): Promise<ElectricityContractTemplateSnapshot | null> {
+  profileId: string
+) {
+  await client.query('LOCK TABLE app_config IN SHARE MODE');
   const setting = (
     await client.query<{ value: unknown }>(
       "SELECT value FROM app_config WHERE key='electricity.contract_template_version_id'"
@@ -43,13 +41,12 @@ export async function electricityContractTemplateSnapshot(
     }>(
       `SELECT v.id,v.template_id,v.version_number,t.name,v.storage_key,v.file_size,v.placeholders
        FROM contract_template_versions v JOIN contract_templates t ON t.id=v.template_id
-       WHERE v.id=$1::uuid`,
+       WHERE v.id=$1::uuid FOR SHARE OF v,t`,
       [setting]
     )
   ).rows[0];
   if (
     !version ||
-    !storage ||
     !version.placeholders.every((name) =>
       PLACEHOLDERS.includes(name as (typeof PLACEHOLDERS)[number])
     )
@@ -69,18 +66,37 @@ export async function electricityContractTemplateSnapshot(
     )
   ).rows[0];
   if (!profile) throw new ServiceUnavailableException('Contract customer is unavailable');
-  let source: string;
+  return { ...version, customerName: profile.customer_name };
+}
+
+export type ElectricityContractTemplateSource = NonNullable<
+  Awaited<ReturnType<typeof readElectricityContractTemplate>>
+>;
+
+export async function fetchElectricityContractTemplate(
+  storage: StorageProvider | null,
+  source: ElectricityContractTemplateSource
+): Promise<string> {
+  if (!storage) throw new ServiceUnavailableException('Selected contract template is unavailable');
   try {
-    const object = await storage.getObject(version.storage_key);
+    const object = await storage.getObject(source.storage_key);
     const { bytes, truncated } = await readCappedBytes(object.body, MAX_TEMPLATE_BYTES);
     if (truncated) throw new Error('Template exceeds size limit');
-    source = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+    return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
   } catch {
     throw new ServiceUnavailableException('Selected contract template could not be read');
   }
+}
+
+export function renderElectricityContractTemplate(
+  version: ElectricityContractTemplateSource,
+  source: string,
+  amountIrR: bigint,
+  now: Date
+): ElectricityContractTemplateSnapshot {
   const values: Record<(typeof PLACEHOLDERS)[number], string> = {
     date: now.toISOString().slice(0, 10),
-    customerName: profile.customer_name,
+    customerName: version.customerName,
     amount: amountIrR.toString(),
   };
   const text = source.replace(CONTRACT_TEMPLATE_PLACEHOLDER_PATTERN, (_token, name: string) => {
