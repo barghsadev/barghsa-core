@@ -1,9 +1,14 @@
-import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
-import { requireSessionOtpStepUp } from '../session/session-step-up.js';
+import {
+  mutateProvider,
+  testProvider,
+  type ProviderMutationSession,
+  type ProviderTestPlan,
+  type ProviderTestOutcome,
+} from './provider-mutation.js';
 import { resolveProviderTestRecipient } from './provider-test-recipient.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
-import { getDbPool } from '@barghsa/db';
+import { createDirectDbPool, getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { collectVariables } from '@barghsa/shared/notifications';
 import { parseSmsirConfig } from './smsir-config.schema';
@@ -13,7 +18,7 @@ import {
   type ProviderMaskedConfig,
   type ProviderTransport,
 } from './provider-secrets.service';
-import { PROVIDER_CONFIG_POOL, type ProviderPool } from './provider-config.di';
+import { PROVIDER_CONFIG_POOL, type ProviderPool, type PoolClient } from './provider-config.di';
 import { readProviderHealthMetrics, type ProviderHealthMetrics } from './provider-health-metrics';
 import { readProviderAlertHistory, type ProviderAlertEvent } from './provider-alert-history';
 
@@ -629,54 +634,46 @@ export class SmsProviderConfigService {
     error: string | null;
     result: SmsProviderConfigResult;
   }> {
-    return testProvider(this.db, actorUserId, session, 'sms', (client) =>
-      this.testOnClient(id, recipient, eventKey, client, session)
+    return testProvider(
+      this.injectedPool ?? createDirectDbPool(),
+      actorUserId,
+      session,
+      'sms',
+      id,
+      (client) => this.prepareConnectionTest(id, recipient, eventKey, client, session),
+      (client, _plan, outcome) =>
+        this.recordTest(
+          id,
+          {
+            passed: outcome.ok,
+            deliveryVerified: outcome.ok,
+            ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+          },
+          client
+        )
     );
   }
 
-  private async testOnClient(
+  private async prepareConnectionTest(
     id: string,
     recipient: string | undefined,
     eventKey: string | undefined,
-    client: Pick<ProviderPool, 'query'>,
+    client: PoolClient,
     session: ProviderMutationSession
-  ): Promise<{ ok: boolean; error: string | null; result: SmsProviderConfigResult }> {
+  ): Promise<ProviderTestPlan> {
     const existing = await this.findById(id, client, true);
     if (!existing) throw new HttpException(SmsProviderErrors.notFound(), 404);
-    if (existing.status !== 'draft') {
-      throw new HttpException(SmsProviderErrors.notEditable(), 409);
+    if (existing.status !== 'draft') throw new HttpException(SmsProviderErrors.notEditable(), 409);
+    const tester = this.smsirTester;
+    if (!tester) {
+      return { run: async () => ({ ok: false, error: 'SMS connection tester is not available' }) };
     }
-
-    if (!this.smsirTester) {
-      const recorded = await this.recordTest(
-        id,
-        {
-          passed: false,
-          error: 'SMS connection tester is not available',
-        },
-        client
-      );
-      return { ok: false, error: 'SMS connection tester is not available', result: recorded };
-    }
-
-    const saved = await this.readConfig(id, client);
-    const parsed = parseSmsirConfig(saved);
+    const parsed = parseSmsirConfig(await this.readConfig(id, client));
     if (!parsed.ok) {
-      const recorded = await this.recordTest(
-        id,
-        {
-          passed: false,
-          error: `Invalid SMS.ir configuration: ${parsed.error}`,
-        },
-        client
-      );
       return {
-        ok: false,
-        error: `Invalid SMS.ir configuration: ${parsed.error}`,
-        result: recorded,
+        run: async () => ({ ok: false, error: `Invalid SMS.ir configuration: ${parsed.error}` }),
       };
     }
-
     const target = await resolveProviderTestRecipient(client, session, 'sms', recipient);
     await this.validateTemplateMappings(id, client);
     const mappings = [...(parsed.config.template_mappings ?? [])];
@@ -688,29 +685,24 @@ export class SmsProviderConfigService {
     }
     // A selected event controls order only; activation requires every mapping.
     mappings.sort((a, b) => Number(b.event_key === eventKey) - Number(a.event_key === eventKey));
-    await requireSessionOtpStepUp(client, session);
-    let outcome: { ok: boolean; error?: string } = { ok: true };
-    for (const mapping of mappings) {
-      outcome = await this.smsirTester.test(
-        { ...parsed.config, template_mappings: [mapping] },
-        target,
-        mapping.event_key,
-        async () => {
-          await requireSessionOtpStepUp(client, session);
+    return {
+      recipient: target,
+      verify: (query) => this.validateTemplateMappings(id, query),
+      run: async (authorize) => {
+        let outcome: ProviderTestOutcome = { ok: true };
+        for (const mapping of mappings) {
+          await authorize();
+          outcome = await tester.test(
+            { ...parsed.config, template_mappings: [mapping] },
+            target,
+            mapping.event_key,
+            authorize
+          );
+          if (!outcome.ok) break;
         }
-      );
-      if (!outcome.ok) break;
-    }
-    const recorded = await this.recordTest(
-      id,
-      {
-        passed: outcome.ok,
-        deliveryVerified: outcome.ok,
-        ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+        return outcome;
       },
-      client
-    );
-    return { ok: outcome.ok, error: outcome.error ?? null, result: recorded };
+    };
   }
 
   /* ------------------------- Transaction + helpers ----------------------- */

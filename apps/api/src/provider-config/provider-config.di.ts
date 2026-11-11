@@ -22,7 +22,7 @@ export interface PoolClient {
     text: string,
     params?: unknown[]
   ) => Promise<{ rows: QueryResultRow[]; rowCount?: number | null }>;
-  release: () => void;
+  release: (error?: Error) => void;
 }
 
 export interface ProviderPool {

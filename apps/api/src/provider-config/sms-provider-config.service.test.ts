@@ -140,6 +140,14 @@ function buildHarness() {
       return { rows: [] };
     }
 
+    if (lower.includes(' as hash from sms_provider_configs')) {
+      const row = rows.get(idParam());
+      return {
+        rows:
+          row?.status === 'draft' ? [{ hash: JSON.stringify([row.transport, row.config]) }] : [],
+      };
+    }
+
     // SELECT ... FROM sms_provider_configs WHERE id = $1  (get / findById / readConfig)
     if (lower.includes('select') && lower.includes('from sms_provider_configs')) {
       const r = rows.get(idParam());

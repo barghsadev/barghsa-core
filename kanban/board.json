@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T02:42:46+00:00",
+  "updated": "2026-11-11T03:32:49+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11045,7 +11045,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -11068,6 +11068,14 @@
                 "apps/api/src/provider-config/sms-provider-config.service.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -19991,6 +19999,7 @@
           "apps/api/src/provider-config/email-provider-config.controller.ts",
           "apps/api/src/provider-config/email-provider-config.service.test.ts",
           "apps/api/src/provider-config/email-provider-config.service.ts",
+          "apps/api/src/provider-config/provider-config.di.ts",
           "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
           "apps/api/src/provider-config/provider-mutation.ts",
           "apps/api/src/provider-config/provider-self-test.integration.test.ts",
@@ -20005,13 +20014,15 @@
           "apps/web/src/lib/sms-providers-api.ts",
           "apps/web/src/pages/AdminEmailProvidersPage.tsx",
           "apps/web/src/pages/AdminSmsProvidersPage.tsx",
+          "docs/operations/notification-delivery-recovery.md",
           "docs/operations/notification-monitoring.md",
           "packages/api-client/src/openapi.generated.ts",
           "packages/i18n/src/provider-forms.ts",
           "packages/i18n/src/providers.ts"
         ],
         "batches": [
-          "release-0.6-provider-restore-as-draft"
+          "release-0.6-provider-restore-as-draft",
+          "release-0.6-provider-tests-outside-transactions"
         ],
         "current_acceptance": {
           "kind": "source-bound-provider-restore-scope",
@@ -20031,23 +20042,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -20059,11 +20070,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -20124,6 +20135,14 @@
             {
               "path": "packages/i18n/src/providers.ts",
               "sha256": "b9d24d740a843ec96f7447a4f19695383d3871fe92206864b431e3f3cd47a01b"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-config.di.ts",
+              "sha256": "51d719b053fa7d0495149d7430faafc7c39e83f13ce1bdcf3eb6ed194570afd6"
+            },
+            {
+              "path": "docs/operations/notification-delivery-recovery.md",
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             }
           ],
           "checks": [
@@ -20131,7 +20150,27 @@
             "The independent delivery test still enforces the current verified staff contact, transport checks and all SMS mapping checks. Only an explicit activation with fresh proof replaces the active provider and sets the predecessor link. A failed retest keeps its diagnostic on the draft. The original version and existing delivery receipts are preserved.",
             "The production-compiled Linux API passed 244 tests across seven provider suites with all 207 migrations. These cover SMTP, Resend and SMS restoration; prior proof exclusion; successful and failed retests; current permission and step-up; encryption/masking; and atomic audit failures. Source digests matched on Linux. No external provider traffic was sent.",
             "The production web build passed 27 Chromium cases and five cases each on Mobile Chrome, Mobile Safari and pinned Firefox revision 1575 with retries disabled. The test now uses actionable touch gestures on mobile. The local desktop WebKit mouse injection failed before the changed flow; the next exact hosted desktop WebKit result remains required. The role-filtered notice assertion and all prior OTP, request, acknowledgement, retry and activation assertions were preserved.",
-            "Thirty-four web client tests, API and web TypeScript, changed-file ESLint, formatting and all 102 bundle budgets passed. Generated OpenAPI and API-client checks passed. The generated contract diff contains exactly two changed summaries for the existing rollback operations. Existing app_config keys without historical draft/restore semantics and separate provider test transaction handling remain open."
+            "Thirty-four web client tests, API and web TypeScript, changed-file ESLint, formatting and all 102 bundle budgets passed. Generated OpenAPI and API-client checks passed. The generated contract diff contains exactly two changed summaries for the existing rollback operations. Existing app_config keys without historical draft/restore semantics and separate provider test transaction handling remain open.",
+            "SMTP, Resend and SMS.ir explicit staff tests prepare under short SQL transactions, contact providers after commit, and commit exact draft proof and the audit event together. The provider-family advisory lock uses a direct PostgreSQL connection and maintains serialization with edit and activation.",
+            "Short transactions recheck live staff permissions, session and OTP, verified recipient and exact transport/config digest before the probe, before each test send, and before the result. SMS mappings are revalidated; email half-open probe ownership is checked and a changed claim cannot be reset. A lost cleanup response leaves the bounded probe lease.",
+            "Native PostgreSQL proved no open transaction or held staff/session/role/draft row locks during provider I/O. It also proved committed revocation before dispatch, verified contact replacement, stale stored configuration rejection, probe replacement ownership, concurrent edit serialization, and audit failure rollback.",
+            "The affected API passed 113 service, controller and transport unit cases, and 190 compiled API integration cases across provider mutations, self tests and circuit breakers. The isolated fixture applied all 208 production migrations and verified 1,954 inputs. The only subsequent native input change removed an unused import, with a byte-level delta proof."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
+            }
           ]
         }
       }
@@ -21278,8 +21317,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Separate explicit email and SMS delivery tests from the open provider-family transaction. Preserve current staff/contact authority, test serialization, breaker/probe ownership, and an exact saved-config proof on commit.",
-        "Move ordinary object-retention tag/delete provider calls out of the row transaction in apps/worker/src/storage/cleanup.ts. Preserve legal holds, signed and contractual bytes, provisional upload protection and idempotent audited retries."
+        "Move ordinary object-retention tag/delete provider calls out of the row transaction in apps/worker/src/storage/cleanup.ts. Preserve legal holds, signed and contractual bytes, provisional upload protection and idempotent audited retries.",
+        "Check the adjacent storage signing and sealing transaction boundaries when claiming cleanup. StorageRecordAdminService.mutate calls getObject after BEGIN and VerifiedAttachmentsService calls putObject while its caller holds the provisional-copy row lock."
       ],
       "owner": null,
       "depends_on": [],
@@ -21309,6 +21348,14 @@
         "changed_paths": [
           "apps/api/src/documents/document-http.integration.test.ts",
           "apps/api/src/documents/document.service.ts",
+          "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "apps/api/src/provider-config/email-provider-config.service.ts",
+          "apps/api/src/provider-config/provider-config.di.ts",
+          "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "apps/api/src/provider-config/provider-mutation.ts",
+          "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "apps/api/src/provider-config/sms-provider-config.service.ts",
           "apps/api/src/upload/multipart-http.integration.test.ts",
           "apps/api/src/upload/upload-reservations.ts",
           "apps/api/src/upload/upload.service.ts",
@@ -21322,6 +21369,7 @@
           "apps/worker/src/storage/multipart-cleanup.ts",
           "apps/worker/src/storage/multipart-recovery.ts",
           "audit/skipped-work-handoff.md",
+          "docs/operations/notification-delivery-recovery.md",
           "docs/operations/storage-retention.md",
           "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
           "packages/db/drizzle/production/meta/0287_snapshot.json",
@@ -21340,7 +21388,8 @@
           "release-0.6-upload-preflight-reservation-assertions",
           "release-0.6-provider-restore-as-draft",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-durable-multipart-operations"
+          "release-0.6-durable-multipart-operations",
+          "release-0.6-provider-tests-outside-transactions"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21354,7 +21403,11 @@
             "Kept ownership and operating-context checks, exact part layout, receipt recovery, scan/seal gates and signed-record protection. An owner can discard an interrupted completion after its reservation expires. Recovery is bounded; older protected cleanup failures cannot starve an eligible retry.",
             "Isolated native PostgreSQL/MinIO: 3 DB cases, 11 HTTP multipart/admission cases, 9 ordinary storage-cleanup cases, 12 final multipart worker cases and 9 selected document cases passed. The selected document run skipped 36 out-of-scope cases. The earlier interrupted full document invocation is not a passing result.",
             "Shared multipart 8 cases, web document transport/progress 22 cases and shared packaging 34 cases passed. Worker typecheck, scoped ESLint, database snapshot/migration drift and the rebuilt API contract check passed.",
-            "Migration 0287 appends one journal entry, changes two retry indexes and widens the cleanup status check. The historical upgrade passed without changing prior data or any of the 207 historical SQL files. Formatting the journal adds only a final newline relative to the native run."
+            "Migration 0287 appends one journal entry, changes two retry indexes and widens the cleanup status check. The historical upgrade passed without changing prior data or any of the 207 historical SQL files. Formatting the journal adds only a final newline relative to the native run.",
+            "SMTP, Resend and SMS.ir explicit staff tests prepare under short SQL transactions, contact providers after commit, and commit exact draft proof and the audit event together. The provider-family advisory lock uses a direct PostgreSQL connection and maintains serialization with edit and activation.",
+            "Short transactions recheck live staff permissions, session and OTP, verified recipient and exact transport/config digest before the probe, before each test send, and before the result. SMS mappings are revalidated; email half-open probe ownership is checked and a changed claim cannot be reset. A lost cleanup response leaves the bounded probe lease.",
+            "Native PostgreSQL proved no open transaction or held staff/session/role/draft row locks during provider I/O. It also proved committed revocation before dispatch, verified contact replacement, stale stored configuration rejection, probe replacement ownership, concurrent edit serialization, and audit failure rollback.",
+            "The affected API passed 113 service, controller and transport unit cases, and 190 compiled API integration cases across provider mutations, self tests and circuit breakers. The isolated fixture applied all 208 production migrations and verified 1,954 inputs. The only subsequent native input change removed an unused import, with a byte-level delta proof."
           ],
           "source_evidence": [
             {
@@ -21379,7 +21432,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "scripts/check-sast.py",
@@ -21492,6 +21545,38 @@
             {
               "path": "packages/shared/src/storage/multipart-upload.ts",
               "sha256": "06d027131a2ed20958733296eeecdd7648cd4c4e7cd27c035d2900e92a06e592"
+            },
+            {
+              "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
+            },
+            {
+              "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-config.di.ts",
+              "sha256": "51d719b053fa7d0495149d7430faafc7c39e83f13ce1bdcf3eb6ed194570afd6"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-mutation.ts",
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
+            },
+            {
+              "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
+            },
+            {
+              "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             }
           ],
           "source_renewals": [
@@ -21502,6 +21587,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -33614,23 +33707,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -35021,6 +35114,18 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -70683,23 +70788,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/storage/storage-admin.controller.ts",
@@ -71741,6 +71846,18 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -77634,23 +77751,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -77987,6 +78104,18 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -89072,23 +89201,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -89425,6 +89554,18 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -89701,23 +89842,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -90054,6 +90195,18 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -90497,23 +90650,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -90850,6 +91003,18 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -91123,23 +91288,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -91476,6 +91641,18 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -91752,23 +91929,23 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -92105,6 +92282,18 @@
                 "packages/db/package.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -94136,19 +94325,19 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -94160,7 +94349,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -94256,7 +94445,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -94684,6 +94873,19 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -95169,19 +95371,19 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -95193,7 +95395,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -95289,7 +95491,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -95717,6 +95919,19 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -96202,19 +96417,19 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -96226,7 +96441,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -96322,7 +96537,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -96750,6 +96965,19 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -97236,19 +97464,19 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -97260,7 +97488,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -97356,7 +97584,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -97784,6 +98012,19 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -98269,19 +98510,19 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -98293,7 +98534,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -98389,7 +98630,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -98817,6 +99058,19 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -99285,11 +99539,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -99301,7 +99555,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -99365,7 +99619,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -99637,6 +99891,17 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -100112,11 +100377,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -100128,7 +100393,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-recipient.ts",
@@ -100204,7 +100469,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -100481,6 +100746,17 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -100834,19 +101110,19 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -100858,7 +101134,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -100954,7 +101230,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -101382,6 +101658,19 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -101678,15 +101967,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -101710,11 +101999,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -102087,6 +102376,18 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -146525,11 +146826,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/browser-date.ts",
@@ -146657,7 +146958,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "packages/db/drizzle/production/0080_complete_schema.sql",
@@ -147289,6 +147590,16 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -148878,11 +149189,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/browser-date.ts",
@@ -149010,7 +149321,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "packages/db/drizzle/production/0080_complete_schema.sql",
@@ -149642,6 +149953,16 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -157117,7 +157438,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "packages/db/src/schema/wallets.ts",
@@ -157413,6 +157734,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -158462,7 +158791,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
@@ -158811,6 +159140,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -164407,7 +164744,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -164743,6 +165080,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -451345,11 +451690,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/test/audit-window.ts",
@@ -452888,6 +453233,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -463751,15 +464105,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -463783,11 +464137,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -464158,6 +464512,18 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -464284,15 +464650,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -464316,11 +464682,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -464691,6 +465057,18 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -464816,15 +465194,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -464848,11 +465226,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -465225,6 +465603,18 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -465351,15 +465741,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -465383,11 +465773,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -465824,6 +466214,18 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -465980,15 +466382,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -466012,11 +466414,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -466483,6 +466885,18 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -466631,7 +467045,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-alert-history.ts",
@@ -466643,11 +467057,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -466655,7 +467069,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -466954,6 +467368,17 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -467116,15 +467541,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -467212,7 +467637,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -467591,6 +468016,17 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -467749,7 +468185,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-alert-history.ts",
@@ -467761,11 +468197,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -467773,7 +468209,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -468075,6 +468511,17 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -468199,7 +468646,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-alert-history.ts",
@@ -468211,11 +468658,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -468223,7 +468670,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -468525,6 +468972,17 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -468649,7 +469107,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-alert-history.ts",
@@ -468661,11 +469119,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-circuit-breaker.integration.test.ts",
@@ -468673,7 +469131,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/email-provider-settings.spec.ts",
@@ -468975,6 +469433,17 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -505818,7 +506287,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.controller.ts",
@@ -505929,6 +506398,14 @@
                 "apps/api/src/provider-config/sms-provider-config.controller.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -513650,7 +514127,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -513739,6 +514216,14 @@
                 "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -516132,7 +516617,7 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -516140,7 +516625,7 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smtp-connection-tester.service.ts",
@@ -516215,6 +516700,15 @@
                 "apps/api/src/provider-config/sms-provider-config.service.ts"
               ],
               "scope": "Restore historical provider settings as a new untested draft, with the same permission, step-up, immutable history, credential masking and separately tested activation. Targeted native and browser lifecycle, retry and authority assertions passed. The operations documentation adds the explicit restore sequence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -528005,15 +528499,15 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/test/http-fixture.ts",
@@ -528112,6 +528606,16 @@
                 "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts"
               ],
               "scope": "Only the isolated fixture table setup changed to support the new metric query. All original assertions and SMS-credit execution retain their bytes. Four native SMS-credit cases and seven metric cases passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -530564,7 +531068,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -530629,6 +531133,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -530688,7 +531200,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -530753,6 +531265,14 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The generated contract change is limited to the two provider restore operation summaries. Paths, schemas and types retain their exact shape. Regeneration and drift checks passed."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ]
         }
@@ -788988,11 +789508,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/web/e2e/sms-provider-settings.spec.ts",
@@ -789012,7 +789532,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "packages/i18n/src/providers.ts",
@@ -792321,6 +792841,16 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -795174,11 +795704,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/test/audit-window.ts",
@@ -797058,6 +797588,15 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -798240,11 +798779,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-alert-history.ts",
@@ -798256,11 +798795,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -798272,7 +798811,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -798304,11 +798843,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -799720,7 +800259,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -801353,6 +801892,21 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "presentation_renewals": [
@@ -802482,11 +803036,11 @@
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
-              "sha256": "d760cbdd64f92a2371225dd4361100b7a621d5c0f99905f51bb4a9dee45ddf02"
+              "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.service.ts",
-              "sha256": "5d29862a217d5f795ff5627288800885e949c121cf1ee20ec53f3db3e7fe2913"
+              "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
             },
             {
               "path": "apps/api/src/provider-config/provider-alert-history.ts",
@@ -802498,11 +803052,11 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
-              "sha256": "f6d13fc4bedd8123955fc05a4790a9196ca3984854673d1a93c2717cca16912a"
+              "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
             },
             {
               "path": "apps/api/src/provider-config/provider-mutation.ts",
-              "sha256": "2243f5d43cf8243ecd40eaaf390cc07ada5aca691d3eff70b4064c76b644d3ca"
+              "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
             },
             {
               "path": "apps/api/src/provider-config/provider-secrets.service.test.ts",
@@ -802514,7 +803068,7 @@
             },
             {
               "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
-              "sha256": "ef7d54479a41074cf2bb44d0fd1196290ca4bbdb84f4ffad033c7cb46a4e5cac"
+              "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
             },
             {
               "path": "apps/api/src/provider-config/provider-test-http.integration.test.ts",
@@ -802546,11 +803100,11 @@
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
-              "sha256": "b5b3b2b61042373bf3dbd579224e9bd73a82dad435fa034d87fdb731522debb6"
+              "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
             },
             {
               "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
-              "sha256": "b15fce4d4e0fc18e3ed3a67311bd9873d567864175176c50def94c91ead7c8a8"
+              "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
             },
             {
               "path": "apps/api/src/provider-config/smsir-connection-tester.service.test.ts",
@@ -803938,7 +804492,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "70359fe84680fabdf147cb356b64e6e9d6e63dd05958eae4b503ea3aca57feed"
+              "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -805460,6 +806014,21 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-provider-tests-outside-transactions",
+              "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+              "paths": [
+                "apps/api/src/provider-config/email-provider-config.service.test.ts",
+                "apps/api/src/provider-config/email-provider-config.service.ts",
+                "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+                "apps/api/src/provider-config/provider-mutation.ts",
+                "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+                "apps/api/src/provider-config/sms-provider-config.service.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -810184,7 +810753,8 @@
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-integrity-requires-tests",
           "release-0.6-durable-multipart-operations",
-          "release-0.6-exact-storage-receipt-locator"
+          "release-0.6-exact-storage-receipt-locator",
+          "release-0.6-provider-tests-outside-transactions"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -928902,6 +929472,111 @@
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/storage-browser-receipt.wofXpq/remote-node26-chromium-result.json",
           "sha256": "296b9243aa7ebefa064294c3ab36b0383bc2f72060075195c8eb8b9e38914d49"
         }
+      ],
+      "verified_main": {
+        "sha": "1230408e267a7e69246dce524287508cd57be658",
+        "required_check": "Verify monorepo integrity",
+        "workflow_run": 42948130577
+      }
+    },
+    "release-0.6-provider-tests-outside-transactions": {
+      "batch": "release-0.6-provider-tests-outside-transactions",
+      "base_commit": "1230408e267a7e69246dce524287508cd57be658",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.02.03",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/provider-config/email-provider-config.service.test.ts",
+        "apps/api/src/provider-config/email-provider-config.service.ts",
+        "apps/api/src/provider-config/provider-config.di.ts",
+        "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+        "apps/api/src/provider-config/provider-mutation.ts",
+        "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+        "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+        "apps/api/src/provider-config/sms-provider-config.service.ts",
+        "docs/operations/notification-delivery-recovery.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.test.ts",
+          "sha256": "c47c8d4b14f4f68bfbc46440daa9ffecf901cc20d97fcac695c4c294d358761d"
+        },
+        {
+          "path": "apps/api/src/provider-config/email-provider-config.service.ts",
+          "sha256": "ad8de5946d69c67adaa35496fbfd1fb2c816afe30e9e2475c7576592a3cd64d2"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-config.di.ts",
+          "sha256": "51d719b053fa7d0495149d7430faafc7c39e83f13ce1bdcf3eb6ed194570afd6"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation-http.integration.test.ts",
+          "sha256": "16b1d2c8899cccc4eaf2dc893039ac84adafc00179b0f6b9457dd571decb50cb"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-mutation.ts",
+          "sha256": "f44cdfc8f27fdc571823090dcbb5ff606edfa1f579db849b28b50a93c02f427d"
+        },
+        {
+          "path": "apps/api/src/provider-config/provider-self-test.integration.test.ts",
+          "sha256": "e57a8ab1616f2509a9abf37c5a31f7d574a17fb250147e7d4a91002814507962"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.test.ts",
+          "sha256": "596d82cae134fb48105520f20bf05e29f59c85e35ce2be57ed2ab43b73775c59"
+        },
+        {
+          "path": "apps/api/src/provider-config/sms-provider-config.service.ts",
+          "sha256": "9de612bfad9725fcfeb8a10ce5230bfb6d2f83e21d907adf1a943952b9041502"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "1e852d23b46d4caf4ca91c46e59b8f44e8016dad1e79eeebd3e91e1bc34ed244"
+        }
+      ],
+      "checks": [
+        "SMTP, Resend and SMS.ir explicit staff tests prepare under short SQL transactions, contact providers after commit, and commit exact draft proof and the audit event together. The provider-family advisory lock uses a direct PostgreSQL connection and maintains serialization with edit and activation.",
+        "Short transactions recheck live staff permissions, session and OTP, verified recipient and exact transport/config digest before the probe, before each test send, and before the result. SMS mappings are revalidated; email half-open probe ownership is checked and a changed claim cannot be reset. A lost cleanup response leaves the bounded probe lease.",
+        "Native PostgreSQL proved no open transaction or held staff/session/role/draft row locks during provider I/O. It also proved committed revocation before dispatch, verified contact replacement, stale stored configuration rejection, probe replacement ownership, concurrent edit serialization, and audit failure rollback.",
+        "The affected API passed 113 service, controller and transport unit cases, and 190 compiled API integration cases across provider mutations, self tests and circuit breakers. The isolated fixture applied all 208 production migrations and verified 1,954 inputs. The only subsequent native input change removed an unused import, with a byte-level delta proof.",
+        "Scoped ESLint, Prettier, API typecheck and whitespace checks passed. No schema, API contract or live provider delivery changed. Ordinary object retention remains open for T-07.05.01."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/native-provider.log",
+          "sha256": "35f9e134f6cde771b72ec798ad75893f9a755c095cb5489376ae36f9d2b9885c"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/native-provider-receipt.txt",
+          "sha256": "9c66af0a72ca830a2590129ed43d1c6d675cdf49824bb2348ff15ed5826ba35a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/native-provider-source.sha256",
+          "sha256": "7a7d5169c69020f736809aa82109715c7f0927e9d6f0a7b159dcff9ab30b399f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/final-provider-source-scope.json",
+          "sha256": "394784ff6b738bcc826ec2d66493a13f755d60de60d613dc690999cd8a9c0cb0"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/units-final.log",
+          "sha256": "06bac2a17f4aade284ef300d9296bcb5aada649871dd3bb15e7d407726e963cf"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/eslint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/prettier.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/provider-test-boundary.EOs1TQ/typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        }
       ]
     }
   },
@@ -928942,13 +929617,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-provider-test-operation-boundary",
+    "id": "release-0.6-storage-retention-operation-boundary",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Separate explicit email and SMS provider tests from the provider-family SQL transaction, preserving authorized recipients, fresh session authority, one current breaker probe and committed exact-config delivery evidence."
+    "goal": "Move ordinary storage deletion and expiration scheduling outside the SQL row transaction with a committed cleanup claim. Preserve immutable and held objects, safe retries and expired-upload protection."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

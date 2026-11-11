@@ -225,7 +225,7 @@ for (const channel of ['email', 'sms']) {
                 Number(
                   (
                     await http.pool.query(
-                      "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND $1=ANY(pg_blocking_pids(pid)) AND query LIKE 'SELECT pg_advisory_xact_lock%'",
+                      "SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock' AND $1=ANY(pg_blocking_pids(pid)) AND query ~ '^SELECT pg_advisory_(xact_)?lock'",
                       [pid]
                     )
                   ).rows[0].count
@@ -433,7 +433,7 @@ for (const channel of ['email', 'sms']) {
 
 for (const channel of ['email', 'sms']) {
   for (const concurrent of ['edit', 'revoke', 'audit-failure']) {
-    it(`${channel} server test: holds authority and settings through ${concurrent}`, async () => {
+    it(`${channel} server test: releases row locks and preserves current authority through ${concurrent}`, async () => {
       const id = randomUUID(),
         table = `${channel}_provider_configs`;
       const config =
@@ -474,22 +474,47 @@ for (const channel of ['email', 'sms']) {
       });
       const smtp = new SmtpConnectionTesterService(),
         sms = new SmsirConnectionTesterService();
-      const send = vi.fn(async () => {
-        await held;
-        return { ok: true };
-      });
+      const dispatch = vi.fn();
+      const send = vi.fn(
+        async (
+          _config: unknown,
+          _recipient?: string,
+          eventOrAuthorize?: string | (() => Promise<void>),
+          beforeSend?: () => Promise<void>
+        ) => {
+          await held;
+          const authorize = typeof eventOrAuthorize === 'function' ? eventOrAuthorize : beforeSend;
+          if (!authorize) throw new Error('Missing send authorization callback');
+          try {
+            await authorize();
+          } catch {
+            return { ok: false, error: 'Fixture transport caught the authorization failure' };
+          }
+          dispatch();
+          return { ok: true };
+        }
+      );
       vi.spyOn(smtp, 'test').mockImplementation(send);
       vi.spyOn(sms, 'test').mockImplementation(send);
+      let testPid: number | undefined;
+      const providerPool = {
+        query: http.pool.query.bind(http.pool),
+        connect: async () => {
+          const client = await http.pool.connect();
+          testPid ??= (await client.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+          return client;
+        },
+      };
       const service =
         channel === 'email'
           ? new EmailProviderConfigService(
-              http.pool,
+              providerPool,
               smtp,
               undefined,
               secrets,
               new EmailCircuitBreakerService(http.pool)
             )
-          : new SmsProviderConfigService(http.pool, sms, secrets);
+          : new SmsProviderConfigService(providerPool, sms, secrets);
       if (concurrent === 'audit-failure')
         await http.pool.query(
           "CREATE OR REPLACE FUNCTION reject_provider_audit() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'fixture audit failure'; END $$; CREATE TRIGGER reject_provider_audit BEFORE INSERT ON audit_log FOR EACH ROW EXECUTE FUNCTION reject_provider_audit()"
@@ -505,6 +530,28 @@ for (const channel of ['email', 'sms']) {
       let writing: Promise<unknown> | undefined;
       try {
         await expect.poll(() => send.mock.calls.length, { timeout: 3000 }).toBe(1);
+        expect(
+          (await http.pool.query('SELECT xact_start FROM pg_stat_activity WHERE pid=$1', [testPid]))
+            .rows
+        ).toEqual([{ xact_start: null }]);
+        const unlocked = await http.pool.connect();
+        try {
+          await unlocked.query('BEGIN');
+          await unlocked.query(`SELECT id FROM ${table} WHERE id=$1 FOR UPDATE NOWAIT`, [id]);
+          await unlocked.query(
+            "SELECT user_id FROM users WHERE user_id='provider-writer' FOR UPDATE NOWAIT"
+          );
+          await unlocked.query(
+            'SELECT session_id FROM sessions WHERE session_id=$1 FOR UPDATE NOWAIT',
+            [session]
+          );
+          await unlocked.query(
+            "SELECT role_id FROM staff_roles WHERE role_id='provider-writer' FOR UPDATE NOWAIT"
+          );
+        } finally {
+          await unlocked.query('ROLLBACK');
+          unlocked.release();
+        }
         if (concurrent === 'edit')
           writing = service.update(
             id,
@@ -519,14 +566,22 @@ for (const channel of ['email', 'sms']) {
           writing = http.pool.query(
             "UPDATE staff_roles SET permissions='[]' WHERE role_id='provider-writer'"
           );
-        if (writing) await waitForLock();
+        if (concurrent === 'edit') await waitForLock();
+        if (concurrent === 'revoke') await writing;
         expect((await snapshot(table)).providers[0].last_test_status).toBe('pending');
         release();
         const finished = await observed;
         await writing;
-        if (concurrent === 'audit-failure') {
+        expect(dispatch).toHaveBeenCalledTimes(concurrent === 'revoke' ? 0 : 1);
+        if (concurrent === 'audit-failure' || concurrent === 'revoke') {
           expect(finished.error).toBeDefined();
           expect(await snapshot(table)).toEqual(before);
+          if (concurrent === 'revoke') {
+            expect(finished.error).toMatchObject({ status: 403 });
+            await expect(
+              service.update(id, { label: 'Denied' }, 'provider-writer', actor)
+            ).rejects.toMatchObject({ status: 403 });
+          }
         } else {
           expect(finished.error).toBeUndefined();
           expect(finished.value).toMatchObject({ ok: true, result: { lastTestStatus: 'passed' } });
@@ -543,10 +598,6 @@ for (const channel of ['email', 'sms']) {
             lastTestStatus: 'passed',
           });
           if (channel === 'email') expect(state.providers[0].consecutive_failures).toBe(0);
-          if (concurrent === 'revoke')
-            await expect(
-              service.update(id, { label: 'Denied' }, 'provider-writer', actor)
-            ).rejects.toMatchObject({ status: 403 });
         }
       } finally {
         release();

@@ -3,6 +3,7 @@ import { beforeAll, afterAll, beforeEach, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { EmailProviderConfigService } from './email-provider-config.service.js';
+import { EmailCircuitBreakerService } from './email-circuit-breaker.service.js';
 import { SmsProviderConfigService } from './sms-provider-config.service.js';
 import { SmtpConnectionTesterService } from './smtp-connection-tester.service.js';
 import { ResendConnectionTesterService } from './resend-connection-tester.service.js';
@@ -134,7 +135,7 @@ it('reports one-hour provider attempts and channel backlog without assigning old
 
 for (const transport of ['smtp', 'resend', 'smsir'] as const) {
   const channel = transport === 'smsir' ? 'sms' : 'email';
-  async function fixture() {
+  async function fixture(withBreaker = false) {
     const probe = vi.fn(async () => {}),
       dispatch = vi.fn();
     const send = vi.fn(
@@ -162,7 +163,13 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
     const service =
       transport === 'smsir'
         ? new SmsProviderConfigService(http.pool, sms, secrets)
-        : new EmailProviderConfigService(http.pool, smtp, resend, secrets);
+        : new EmailProviderConfigService(
+            http.pool,
+            smtp,
+            resend,
+            secrets,
+            withBreaker ? new EmailCircuitBreakerService(http.pool) : undefined
+          );
     const config =
       transport === 'smtp'
         ? { host: 'smtp.example.test', from_email: 'sender@example.test' }
@@ -569,6 +576,85 @@ for (const transport of ['smtp', 'resend', 'smsir'] as const) {
     expect(dispatch).not.toHaveBeenCalled();
     expect(await snapshot()).toEqual(before);
   });
+  it(`${transport}: rechecks the verified contact after the provider probe`, async () => {
+    const { test, probe, dispatch, snapshot } = await fixture();
+    const before = await snapshot();
+    probe.mockImplementation(async () => {
+      await http.pool.query('UPDATE users SET username=$2,email=$2,mobile=$3 WHERE user_id=$1', [
+        actor.userId,
+        'changed@example.test',
+        '+989129999999',
+      ]);
+    });
+    await expect(test()).rejects.toMatchObject({ status: 403 });
+    expect(probe).toHaveBeenCalledOnce();
+    expect(dispatch).not.toHaveBeenCalled();
+    expect(await snapshot()).toEqual(before);
+  });
+  it(`${transport}: never certifies a different stored configuration after delivery`, async () => {
+    const { test, send, dispatch, row, snapshot } = await fixture();
+    const before = await snapshot();
+    send.mockImplementationOnce(async (_config, _recipient, eventOrAuthorize, beforeSend) => {
+      const authorize = typeof eventOrAuthorize === 'function' ? eventOrAuthorize : beforeSend;
+      if (!authorize) throw new Error('Missing send authorization callback');
+      await authorize();
+      dispatch();
+      await http.pool.query(
+        `UPDATE ${channel}_provider_configs SET config=config||$2::jsonb WHERE id=$1`,
+        [
+          row.id,
+          JSON.stringify(
+            channel === 'email'
+              ? { from_email: 'different@example.test' }
+              : { sender: '9830000001' }
+          ),
+        ]
+      );
+      return { ok: true };
+    });
+    await expect(test()).rejects.toMatchObject({ status: 409 });
+    expect(dispatch).toHaveBeenCalledOnce();
+    const after = await snapshot();
+    expect(after.provider[0]).toMatchObject({
+      last_test_status: 'pending',
+      delivery_config_hash: null,
+      delivery_verified_at: null,
+    });
+    expect(after.provider[0].config).not.toEqual(before.provider[0].config);
+    expect(after.audit).toEqual(before.audit);
+  });
+  if (transport === 'smtp') {
+    it('SMTP test commits the half-open claim and preserves a replacement claim', async () => {
+      const { test, probe, dispatch, row, snapshot } = await fixture(true);
+      await http.pool.query(
+        `UPDATE email_provider_configs SET degraded=true,degraded_reason='Fixture degradation',
+          cooldown_until=clock_timestamp()-INTERVAL '1 minute' WHERE id=$1`,
+        [row.id]
+      );
+      const before = await snapshot();
+      const replacement = new Date(Date.now() + 30 * 60_000);
+      probe.mockImplementation(async () => {
+        const { rows } = await http.pool.query(
+          'SELECT cooldown_until>clock_timestamp() AS claimed FROM email_provider_configs WHERE id=$1',
+          [row.id]
+        );
+        expect(rows[0]?.claimed).toBe(true);
+        await http.pool.query('UPDATE email_provider_configs SET cooldown_until=$2 WHERE id=$1', [
+          row.id,
+          replacement,
+        ]);
+      });
+      await expect(test()).rejects.toMatchObject({ status: 409 });
+      expect(dispatch).not.toHaveBeenCalled();
+      const after = await snapshot();
+      expect(after.provider[0]).toMatchObject({
+        degraded: true,
+        cooldown_until: replacement,
+        delivery_config_hash: null,
+      });
+      expect(after.audit).toEqual(before.audit);
+    });
+  }
   it(`${transport}: rejects a foreign test recipient before dispatch`, async () => {
     const { test, send, snapshot } = await fixture(),
       before = await snapshot();

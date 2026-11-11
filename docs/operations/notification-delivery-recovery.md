@@ -158,6 +158,21 @@ provider-side exactly-once delivery or eventual delivery.
 Authentication delivery and provider self-tests use separate workflows. This
 notification receipt table does not certify their crash recovery.
 
+## Staff provider tests
+
+Email and SMS configuration tests hold the provider family's advisory lock on a
+direct PostgreSQL connection. The test commits its preparation before contacting
+the provider. Before the provider probe and again before sending, the test
+checks staff permission, the session's OTP proof, the verified recipient and
+the saved configuration. It checks these again before committing the result
+and audit event together. Email tests also check ownership of any half-open
+circuit breaker probe.
+
+If permission, verified contact or configuration changes during the test, the
+result cannot authorize activation. A provider may already have accepted a test
+message before a final check or audit write fails. Staff should verify the test
+result and configuration before requesting another send.
+
 ## Durable attempt history rollout
 
 Deploy the API and web status readers before enabling migration0128 and the updated worker. Drain every older notification worker first; older senders do not write the new durable history. Migration0128 expands the existing log and snapshots retained receipts without deleting legacy processing rows. It cannot reconstruct attempts already missing before migration. Do not add legacy processing rows and receipt snapshots to infer a physical-send total.

@@ -1,10 +1,14 @@
 import { validateEmailConfigPatch } from './provider-input-fields';
-import { mutateProvider, testProvider, type ProviderMutationSession } from './provider-mutation.js';
-import { requireSessionOtpStepUp } from '../session/session-step-up.js';
+import {
+  mutateProvider,
+  testProvider,
+  type ProviderMutationSession,
+  type ProviderTestPlan,
+} from './provider-mutation.js';
 import { resolveProviderTestRecipient } from './provider-test-recipient.js';
 import { Injectable, Logger, HttpException, Inject, Optional } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
-import { getDbPool } from '@barghsa/db';
+import { createDirectDbPool, getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { parseSmtpConfig } from './smtp-config.schema';
 import { SmtpConnectionTesterService } from './smtp-connection-tester.service';
@@ -565,30 +569,49 @@ export class EmailProviderConfigService {
     error: string | null;
     result: EmailProviderConfigResult;
   }> {
-    return testProvider(this.db, actorUserId, session, 'email', (client) =>
-      this.testOnClient(id, recipient, client, session)
+    return testProvider(
+      this.injectedPool ?? createDirectDbPool(),
+      actorUserId,
+      session,
+      'email',
+      id,
+      (client) => this.prepareConnectionTest(id, recipient, client, session),
+      async (client, plan, outcome) => {
+        await this.recordTest(
+          id,
+          {
+            passed: outcome.ok,
+            deliveryVerified: outcome.ok,
+            ...(outcome.error !== undefined ? { error: outcome.error } : {}),
+          },
+          client
+        );
+        if (this.circuitBreaker) {
+          await this.circuitBreaker.using(client).recordOutcome(id, {
+            ok: outcome.ok,
+            transient: outcome.transient ?? false,
+            ...(outcome.error ? { cause: outcome.error } : {}),
+            ...(plan.probeToken ? { probeToken: plan.probeToken } : {}),
+          });
+        }
+        const result = await this.findById(id, client);
+        if (!result) throw new HttpException(ProviderErrors.notFound(), 404);
+        return result;
+      }
     );
   }
 
-  private async testOnClient(
+  private async prepareConnectionTest(
     id: string,
     recipient: string | undefined,
-    client: Pick<ProviderPool, 'query'>,
+    client: PoolClient,
     session: ProviderMutationSession
-  ): Promise<{ ok: boolean; error: string | null; result: EmailProviderConfigResult }> {
+  ): Promise<ProviderTestPlan & { probeToken?: string }> {
     const existing = await this.findById(id, client, true);
     if (!existing) throw new HttpException(ProviderErrors.notFound(), 404);
-    if (existing.status !== 'draft') {
-      throw new HttpException(ProviderErrors.notEditable(), 409);
-    }
+    if (existing.status !== 'draft') throw new HttpException(ProviderErrors.notEditable(), 409);
 
-    // T-05.06.06 — while the circuit breaker is OPEN (degraded, cooldown not
-    // elapsed), no test-send is allowed through this provider. After the
-    // cooldown the breaker allows exactly one half-open probe, which is what
-    // this connection test performs; its outcome is fed back via
-    // recordBreakerOutcome and a success resets the breaker.
-    const boundBreaker = this.circuitBreaker?.using(client);
-    const breaker = await this.breakerDecision(existing.id, boundBreaker);
+    const breaker = await this.breakerDecision(id, this.circuitBreaker?.using(client));
     if (!breaker.allow) {
       throw new HttpException(
         errBody(
@@ -601,18 +624,13 @@ export class EmailProviderConfigService {
         409
       );
     }
-
-    if (existing.transport === 'resend') {
-      const outcome = await this.testResendConnection(existing.id, recipient, client, session);
-      return this.recordBreakerOutcome(
-        existing.id,
-        outcome,
-        breaker.probeToken,
-        client,
-        boundBreaker
-      );
-    }
-    if (existing.transport !== 'smtp') {
+    const plan =
+      existing.transport === 'resend'
+        ? await this.prepareResendTest(id, recipient, client, session)
+        : existing.transport === 'smtp'
+          ? await this.prepareSmtpTest(id, recipient, client, session)
+          : null;
+    if (!plan) {
       throw new HttpException(
         errBody(
           400,
@@ -622,71 +640,59 @@ export class EmailProviderConfigService {
         400
       );
     }
-    const outcome = await this.testSmtpConnection(existing.id, recipient, client, session);
-    return this.recordBreakerOutcome(
-      existing.id,
-      outcome,
-      breaker.probeToken,
-      client,
-      boundBreaker
-    );
+    if (!this.circuitBreaker) return plan;
+    const probeToken = breaker.probeToken;
+    return {
+      ...plan,
+      ...(probeToken ? { probeToken } : {}),
+      verify: async (query) => {
+        const state = await query.query(
+          `SELECT degraded_reason IS DISTINCT FROM 'provider_configuration_pause' AND
+             ((NOT degraded AND $2::timestamptz IS NULL) OR
+              (degraded AND cooldown_until=$2::timestamptz AND cooldown_until>clock_timestamp())) AS owned
+           FROM email_provider_configs WHERE id=$1 FOR UPDATE`,
+          [id, probeToken ?? null]
+        );
+        if (!state.rows[0]?.owned) {
+          throw new HttpException(
+            errBody(
+              409,
+              ErrorCodes.CONFLICT_STATE.code,
+              'Email provider test no longer owns the breaker probe'
+            ),
+            409
+          );
+        }
+      },
+      ...(probeToken
+        ? {
+            releaseProbe: async (query: PoolClient) => {
+              await query.query(
+                `UPDATE email_provider_configs SET cooldown_until=$3::timestamptz
+             WHERE id=$1 AND degraded=true AND cooldown_until=$2::timestamptz
+               AND degraded_reason IS NOT DISTINCT FROM $4::text`,
+                [id, probeToken, existing.breakerCooldownUntil, existing.degradedReason]
+              );
+            },
+          }
+        : {}),
+    };
   }
 
-  /**
-   * Feed a connection-test outcome to the circuit breaker (T-05.06.06) and
-   * re-read the row so `degraded` / breaker fields in the result are fresh.
-   * A failing test on a non-degraded provider accumulates toward the trip
-   * threshold; a failing test while degraded extends the cooldown (failed
-   * probe); a passing test while degraded is the half-open probe that resets
-   * the breaker.
-   */
-  private async recordBreakerOutcome(
-    id: string,
-    outcome: { ok: boolean; error: string | null; transient?: boolean },
-    probeToken?: string,
-    query: Pick<ProviderPool, 'query'> = this.db,
-    breaker = this.circuitBreaker
-  ): Promise<{ ok: boolean; error: string | null; result: EmailProviderConfigResult }> {
-    if (breaker) {
-      await breaker.recordOutcome(id, {
-        ok: outcome.ok,
-        transient: outcome.transient ?? false,
-        ...(outcome.error ? { cause: outcome.error } : {}),
-        ...(probeToken ? { probeToken } : {}),
-      });
-    }
-    const result = await this.findById(id, query);
-    if (!result) throw new HttpException(ProviderErrors.notFound(), 404);
-    return { ok: outcome.ok, error: outcome.error, result };
-  }
-
-  /** SMTP connection and verified-contact delivery test. */
-  private async testSmtpConnection(
+  private async prepareSmtpTest(
     id: string,
     recipient: string | undefined,
-    query: Pick<ProviderPool, 'query'>,
+    query: PoolClient,
     session: ProviderMutationSession
-  ): Promise<{
-    ok: boolean;
-    error: string | null;
-    result: EmailProviderConfigResult;
-    transient?: boolean;
-  }> {
-    const saved = await this.readConfig(id, query);
-    const parsed = parseSmtpConfig(saved);
+  ): Promise<ProviderTestPlan> {
+    const parsed = parseSmtpConfig(await this.readConfig(id, query));
     if (!parsed.ok) {
-      const recorded = await this.recordTest(
-        id,
-        {
-          passed: false,
-          error: `Invalid SMTP configuration: ${parsed.error}`,
-        },
-        query
-      );
-      return { ok: false, error: `Invalid SMTP configuration: ${parsed.error}`, result: recorded };
+      return {
+        run: async () => ({ ok: false, error: `Invalid SMTP configuration: ${parsed.error}` }),
+      };
     }
-
-    if (!this.smtpTester) {
+    const tester = this.smtpTester;
+    if (!tester) {
       throw new HttpException(
         errBody(
           500,
@@ -696,62 +702,31 @@ export class EmailProviderConfigService {
         500
       );
     }
-
     const target = await resolveProviderTestRecipient(query, session, 'email', recipient);
-    await requireSessionOtpStepUp(query, session);
-    const outcome = await this.smtpTester.test(parsed.config, target, async () => {
-      await requireSessionOtpStepUp(query, session);
-    });
-    const recorded = await this.recordTest(
-      id,
-      {
-        passed: outcome.ok,
-        deliveryVerified: outcome.ok,
-        ...(outcome.error !== undefined ? { error: outcome.error } : {}),
-      },
-      query
-    );
     return {
-      ok: outcome.ok,
-      error: outcome.error ?? null,
-      result: recorded,
-      transient: outcome.transient ?? false,
+      recipient: target,
+      run: async (authorize) => {
+        await authorize();
+        return tester.test(parsed.config, target, authorize);
+      },
     };
   }
 
-  /** Resend domain-verification + test-send to the admin's email (T-05.06.03). */
-  private async testResendConnection(
+  private async prepareResendTest(
     id: string,
     recipient: string | undefined,
-    query: Pick<ProviderPool, 'query'>,
+    query: PoolClient,
     session: ProviderMutationSession
-  ): Promise<{
-    ok: boolean;
-    error: string | null;
-    result: EmailProviderConfigResult;
-    transient?: boolean;
-  }> {
+  ): Promise<ProviderTestPlan> {
     const target = await resolveProviderTestRecipient(query, session, 'email', recipient);
-
-    const saved = await this.readConfig(id, query);
-    const parsed = parseResendConfig(saved);
+    const parsed = parseResendConfig(await this.readConfig(id, query));
     if (!parsed.ok) {
-      const recorded = await this.recordTest(
-        id,
-        {
-          passed: false,
-          error: `Invalid Resend configuration: ${parsed.error}`,
-        },
-        query
-      );
       return {
-        ok: false,
-        error: `Invalid Resend configuration: ${parsed.error}`,
-        result: recorded,
+        run: async () => ({ ok: false, error: `Invalid Resend configuration: ${parsed.error}` }),
       };
     }
-
-    if (!this.resendTester) {
+    const tester = this.resendTester;
+    if (!tester) {
       throw new HttpException(
         errBody(
           500,
@@ -761,25 +736,12 @@ export class EmailProviderConfigService {
         500
       );
     }
-
-    await requireSessionOtpStepUp(query, session);
-    const outcome = await this.resendTester.test(parsed.config, target, async () => {
-      await requireSessionOtpStepUp(query, session);
-    });
-    const recorded = await this.recordTest(
-      id,
-      {
-        passed: outcome.ok,
-        deliveryVerified: outcome.ok,
-        ...(outcome.error !== undefined ? { error: outcome.error } : {}),
-      },
-      query
-    );
     return {
-      ok: outcome.ok,
-      error: outcome.error ?? null,
-      result: recorded,
-      transient: outcome.transient ?? false,
+      recipient: target,
+      run: async (authorize) => {
+        await authorize();
+        return tester.test(parsed.config, target, authorize);
+      },
     };
   }
 

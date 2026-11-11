@@ -161,6 +161,14 @@ function buildHarness() {
       return { rows: [], rowCount: r ? 1 : 0 };
     }
 
+    if (lower.includes(' as hash from email_provider_configs')) {
+      const row = rows.get(idParam());
+      return {
+        rows:
+          row?.status === 'draft' ? [{ hash: JSON.stringify([row.transport, row.config]) }] : [],
+      };
+    }
+
     // Read config blob (send-boundary / rollback path): SELECT config, transport
     if (lower.includes('select config') && lower.includes('from email_provider_configs')) {
       const r = rows.get(idParam());
