@@ -43,6 +43,24 @@ export async function claimBankReceiptAttachment(
      ON CONFLICT (storage_key) DO NOTHING`,
     [storageKey, claimType]
   );
+  await assertCompatibleClaim(client, storageKey, claimType, false);
+}
+
+/** Check a potential receipt before provider I/O while holding the attachment advisory lock. */
+export function checkBankReceiptAttachmentClaim(
+  client: QueryClient,
+  storageKey: string,
+  claimType: BankReceiptAttachmentClaimType
+) {
+  return assertCompatibleClaim(client, storageKey, claimType, true);
+}
+
+async function assertCompatibleClaim(
+  client: QueryClient,
+  storageKey: string,
+  claimType: BankReceiptAttachmentClaimType,
+  allowMissing: boolean
+) {
   const existing = await client.query(
     `SELECT claim_type
        FROM bank_receipt_attachment_claims
@@ -51,6 +69,7 @@ export async function claimBankReceiptAttachment(
     [storageKey]
   );
   const row = existing.rows[0] as { claim_type: string } | undefined;
+  if (!row && allowMissing) return;
   const verdict = evaluateBankReceiptAttachmentClaim(row?.claim_type, claimType);
   if (!verdict.ok) {
     throw new ConflictException('This bank receipt attachment has already been submitted');

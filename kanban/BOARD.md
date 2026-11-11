@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T12:49:03+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T12:59:31+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -39,7 +39,7 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Move invoice and wallet bank receipt storage copies outside their financial transactions and publish with exact current provenance, review and attachment claims.
+Commit private contract template uploads outside database transactions, then publish after current staff authority, version allocation and cleanup checks.
 
 - `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
 - `release-readiness#R-05.02`: Renew security and operational task acceptance

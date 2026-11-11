@@ -22,3 +22,15 @@ export async function enforceProfileFinancialRateLimit(
     );
   }
 }
+
+/** Reject exhausted quotas before storage work. The financial write charges the actual attempt. */
+export async function checkProfileFinancialRateLimit(
+  client: Parameters<typeof enforceProfileFinancialRateLimit>[0],
+  action: Parameters<typeof enforceProfileFinancialRateLimit>[1],
+  profileId: string
+): Promise<void> {
+  await client.query('SAVEPOINT receipt_rate_limit', []);
+  await enforceProfileFinancialRateLimit(client, action, profileId);
+  await client.query('ROLLBACK TO SAVEPOINT receipt_rate_limit', []);
+  await client.query('RELEASE SAVEPOINT receipt_rate_limit', []);
+}

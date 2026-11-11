@@ -1,4 +1,5 @@
-vi.mock('../storage/reserve-storage-copy.js', () => ({
+vi.mock('../storage/reserve-storage-copy.js', async (original) => ({
+  ...(await original<typeof import('../storage/reserve-storage-copy.js')>()),
   reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
 }));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -90,7 +91,9 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql.includes('rate_limit_rolling')) {
       return { rows: [{ count: opts.paymentCount ?? 1, reset_ms: '42000', limit_value: 10 }] };
     }
-    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+    if (sql.includes('pg_try_advisory_lock')) return { rows: [{ acquired: true }] };
+    if (sql.includes('pg_advisory_unlock')) return { rows: [{ released: true }] };
+    if (sql.includes('pg_advisory_lock')) {
       return { rows: [] };
     }
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
@@ -123,6 +126,8 @@ function scriptClient(opts: ScriptOptions = {}) {
       return {
         rows: [
           {
+            storage_id: ATTACHMENT,
+            storage_revision: '10',
             status: opts.storageStatus ?? 'active',
             metadata:
               opts.storageMetadata === undefined ? VALID_STORAGE_METADATA : opts.storageMetadata,

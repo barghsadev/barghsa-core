@@ -324,6 +324,86 @@ for (const flow of ['wallet', 'invoice'] as const) {
 }
 
 for (const flow of ['wallet', 'invoice'] as const) {
+  for (const change of ['session', 'source', ...(flow === 'invoice' ? ['review'] : [])])
+    it(`${flow} rechecks ${change} after an unlocked receipt copy`, async () => {
+      const input = await seed();
+      const put = storage.putObject;
+      let entered!: () => void, release!: () => void;
+      const copying = new Promise<void>((resolve) => {
+        entered = resolve;
+      });
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      storage.putObject = async (key, body, contentType) => {
+        await put(key, body, contentType);
+        entered();
+        await gate;
+      };
+      const outcome = submit(flow, input).then(
+        (value) => ({ value, error: undefined }),
+        (error: unknown) => ({ error })
+      );
+      try {
+        await Promise.race([
+          copying,
+          outcome.then(({ error }) => {
+            throw new Error('Receipt copy never started', { cause: error });
+          }),
+        ]);
+        expect(
+          (
+            await db.pool.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE NOWAIT', [
+              input.profileId,
+            ])
+          ).rows
+        ).toEqual([{ id: input.profileId }]);
+        expect(
+          (
+            await db.pool.query(
+              'SELECT storage_key FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+              [input.attachmentKey]
+            )
+          ).rows
+        ).toEqual([{ storage_key: input.attachmentKey }]);
+        if (change === 'session') {
+          await db.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [
+            input.sessionId,
+          ]);
+        } else if (change === 'source') {
+          await db.pool.query(
+            'UPDATE storage_records SET metadata=metadata||\'{"changed":true}\'::jsonb WHERE storage_key=$1',
+            [input.attachmentKey]
+          );
+        } else {
+          await db.pool.query('UPDATE invoices SET paid_amount=100 WHERE id=$1', [input.invoiceId]);
+        }
+        release();
+        expect((await outcome).error).toMatchObject({ status: change === 'session' ? 401 : 409 });
+        await unchanged(input);
+        expect(
+          (await db.pool.query('SELECT id FROM audit_log WHERE user_id=$1', [input.userId])).rows
+        ).toEqual([]);
+        expect(
+          (
+            await db.pool.query(
+              "SELECT status,metadata FROM storage_records WHERE metadata->>'sourceKey'=$1",
+              [input.attachmentKey]
+            )
+          ).rows
+        ).toEqual([
+          {
+            status: 'removed',
+            metadata: expect.objectContaining({ provisionalCopy: true, deletionRequested: true }),
+          },
+        ]);
+      } finally {
+        release();
+        storage.putObject = put;
+        await outcome;
+      }
+    });
+
   for (const cleanup of ['pending', 'claimed', 'completed'] as const)
     it(`${flow} handles a failed copy with cleanup ${cleanup}`, async () => {
       const input = await seed();

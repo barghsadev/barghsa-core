@@ -1,9 +1,12 @@
+import type { PoolClient } from 'pg';
+import { withCopyTransaction } from '../storage/storage-copy-transaction.js';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 import {
-  sealBankReceiptAttachment,
+  prepareBankReceiptAttachment,
   persistSealedBankReceipt,
   type StorageLockRow,
+  type ReceiptSourceSnapshot,
 } from '../finance/seal-bank-receipt-attachment.js';
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
@@ -41,9 +44,13 @@ import {
 import {
   bankReceiptAttachmentAdvisoryLockKeys,
   claimBankReceiptAttachment,
+  checkBankReceiptAttachmentClaim,
 } from '../finance/claim-bank-receipt-attachment.js';
 import { WalletService, type TransactionRow } from './wallet.service.js';
-import { enforceProfileFinancialRateLimit } from '../finance/profile-financial-rate-limit.js';
+import {
+  checkProfileFinancialRateLimit,
+  enforceProfileFinancialRateLimit,
+} from '../finance/profile-financial-rate-limit.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 
 const PG_UNIQUE_VIOLATION = '23505';
@@ -90,23 +97,11 @@ interface QueryClient {
 /**
  * Bank-receipt wallet top-up submission (T-04.2.02.03 / S-04.2.02).
  *
- * Order of operations:
- *   1. Validate amount, payment date, payer reference, attachment key,
- *      and optional note. Amount has **no configured maximum**.
- *   2. Lock the current account/session/profile authority and create any
- *      missing wallet inside the receipt transaction.
- *   3. Lock the `storage_records` row in the same DB transaction
- *      (shared attachment lock with invoice upload), require a
- *      verified receipt owned by the actor (or bound to the
- *      accessible profile), and transition an `active` object to
- *      `immutable` so the evidence cannot be physically deleted after
- *      the Pending ledger row is committed.
- *   4. Claim the storage key as `wallet_topup`. An invoice-receipt
- *      claim is rejected; same-flow retries continue.
- *   5. Read, validate and seal receipt bytes under a server-only key.
- *      Retries retain their first committed copy.
- *   6. Insert a Pending `topup` ledger row (does not change balances)
- *      with a uniquely constrained `receipt_attachment_key`.
+ * Under the shared attachment and idempotency locks, validate current authority,
+ * provenance and review, then read and copy the bytes between transactions.
+ * The final transaction rechecks the source and atomically creates any missing
+ * wallet, claims the attachment and records a Pending ledger row and audit.
+ * A matching retry keeps its first committed copy.
  *
  * Wallet credit is deferred to staff confirmation (T-04.2.02.04).
  * Rejected submissions never increase posted or reserved balance.
@@ -266,6 +261,7 @@ export class BankReceiptTopUpService {
     const attachmentLockKeys = bankReceiptAttachmentAdvisoryLockKeys(parsed.receipt.attachmentKey);
     const idempotencyLockKeys = bankReceiptTopUpAdvisoryLockKeys(idempotencyKey);
     const client = await pool.connect();
+    let discard = false;
     try {
       // Attachment first, then idempotency, so concurrent different-key
       // submissions of the same file cannot deadlock.
@@ -305,8 +301,11 @@ export class BankReceiptTopUpService {
       } finally {
         await client.query('SELECT pg_advisory_unlock($1, $2)', attachmentLockKeys);
       }
+    } catch (error) {
+      discard = true;
+      throw error;
     } finally {
-      client.release();
+      client.release(discard);
     }
   }
 
@@ -316,9 +315,9 @@ export class BankReceiptTopUpService {
     attachmentKey: string,
     actorId: string,
     profileId: string
-  ): Promise<StorageLockRow> {
+  ): Promise<ReceiptSourceSnapshot> {
     const result = await client.query(
-      `SELECT status, metadata, file_size, content_type, category, file_name FROM storage_records WHERE storage_key = $1 FOR UPDATE`,
+      `SELECT status, metadata, file_size, content_type, category, file_name, id AS storage_id, xmin::text AS storage_revision FROM storage_records WHERE storage_key = $1 FOR UPDATE`,
       [attachmentKey]
     );
     if (result.rows.length === 0) {
@@ -327,7 +326,7 @@ export class BankReceiptTopUpService {
         'Bank receipt attachment has not been uploaded and recorded'
       );
     }
-    const row = result.rows[0] as unknown as StorageLockRow;
+    const row = result.rows[0] as unknown as ReceiptSourceSnapshot;
     if (row.status === 'removed') {
       throw httpError(
         ErrorCodes.VALIDATION_INPUT_INVALID,
@@ -357,7 +356,7 @@ export class BankReceiptTopUpService {
   }
 
   private async insertOrReusePending(
-    client: QueryClient,
+    client: PoolClient,
     profileId: string,
     amountIrR: bigint,
     idempotencyKey: string,
@@ -365,125 +364,128 @@ export class BankReceiptTopUpService {
     expectedReviewHash: string | undefined,
     actor: ReceiptSubmissionActor
   ): Promise<TransactionRow> {
-    let canonicalWalletId: string | undefined;
-    try {
-      await client.query('BEGIN');
-      await lockReceiptSubmissionActor(client, actor, profileId);
-      await this.walletService.createWallet(profileId, client);
-
-      const walletResult = await client.query(
-        `SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE`,
-        [profileId]
+    const findPending = async (walletId: string) => {
+      const idem = await client.query(
+        'SELECT * FROM wallet_transactions WHERE idempotency_key = $1 FOR UPDATE',
+        [idempotencyKey]
       );
-      if (walletResult.rows.length === 0) {
-        throw new NotFoundException(`Wallet not found: ${profileId}`);
+      const existing = idem.rows[0];
+      if (!existing) return null;
+      assertMatchingPendingBankReceipt(
+        existing as Parameters<typeof assertMatchingPendingBankReceipt>[0],
+        walletId,
+        amountIrR,
+        receipt
+      );
+      const pending = mapTransaction(existing as Parameters<typeof mapTransaction>[0]);
+      this.assertStoredReview(pending, profileId, expectedReviewHash);
+      return pending;
+    };
+    const inspect = async (publishing: boolean) => {
+      await lockReceiptSubmissionActor(client, actor, profileId);
+      let canonicalWalletId = profileId.toLowerCase();
+      if (publishing) {
+        await this.walletService.createWallet(profileId, client);
+        const wallet = (
+          await client.query<{ profile_id: string }>(
+            'SELECT profile_id FROM wallets WHERE profile_id = $1 FOR UPDATE',
+            [profileId]
+          )
+        ).rows[0];
+        if (!wallet) throw new NotFoundException(`Wallet not found: ${profileId}`);
+        canonicalWalletId = wallet.profile_id;
       }
-      canonicalWalletId = (walletResult.rows[0] as { profile_id: string }).profile_id;
-
       const storageRow = await this.lockAttachmentProvenance(
         client,
         receipt.attachmentKey,
         actor.userId,
         profileId
       );
-      await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
+      if (publishing)
+        await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
+      else await checkBankReceiptAttachmentClaim(client, receipt.attachmentKey, 'wallet_topup');
 
-      const idemResult = await client.query(
-        `SELECT * FROM wallet_transactions WHERE idempotency_key = $1 FOR UPDATE`,
-        [idempotencyKey]
-      );
-      if (idemResult.rows.length > 0) {
-        const existing = idemResult.rows[0]!;
-        assertMatchingPendingBankReceipt(
-          existing as Parameters<typeof assertMatchingPendingBankReceipt>[0],
-          canonicalWalletId,
-          amountIrR,
-          receipt
-        );
-        const pending = mapTransaction(existing as Parameters<typeof mapTransaction>[0]);
-        this.assertStoredReview(pending, profileId, expectedReviewHash);
+      const existing = await findPending(canonicalWalletId);
+      if (existing) {
+        if (!publishing)
+          await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
         await requireCurrentSession(client, actor);
-        await client.query('COMMIT');
-        return pending;
+        return { existing };
       }
-
       const attachmentResult = await client.query(
-        `SELECT * FROM wallet_transactions WHERE receipt_attachment_key = ANY($1::text[]) FOR UPDATE`,
+        'SELECT * FROM wallet_transactions WHERE receipt_attachment_key = ANY($1::text[]) FOR UPDATE',
         [invoiceBankReceiptLookupKeys(receipt.attachmentKey)]
       );
-      if (attachmentResult.rows.length > 0) {
+      if (attachmentResult.rows.length)
         throw new ConflictException('This bank receipt attachment has already been submitted');
-      }
-
       const review = this.financialReview(profileId, amountIrR, receipt, storageRow);
       if (expectedReviewHash) this.reviews.assertConfirmed(review, expectedReviewHash);
-      await enforceProfileFinancialRateLimit(client, 'top-up', canonicalWalletId);
-
-      const sealed = await sealBankReceiptAttachment(
+      if (!publishing) await checkProfileFinancialRateLimit(client, 'top-up', canonicalWalletId);
+      await requireCurrentSession(client, actor);
+      return { canonicalWalletId, storageRow, review };
+    };
+    try {
+      const initial = await withCopyTransaction(() => inspect(false), client);
+      if (initial.existing) return initial.existing;
+      const sealed = await prepareBankReceiptAttachment(
         client,
         this.storage,
         actor.userId,
         receipt.attachmentKey,
-        storageRow
+        initial.storageRow
       );
-      await persistSealedBankReceipt(
-        client,
-        actor.userId,
-        receipt.attachmentKey,
-        storageRow,
-        sealed
-      );
-      const sealedReceipt = { ...receipt, attachmentKey: sealed.sealedKey };
+      return await withCopyTransaction(async () => {
+        const current = await inspect(true);
+        if (current.existing) return current.existing;
+        const { canonicalWalletId, storageRow, review } = current;
+        if (
+          storageRow.storage_id !== initial.storageRow.storage_id ||
+          storageRow.storage_revision !== initial.storageRow.storage_revision
+        )
+          throw new ConflictException('Bank receipt upload changed; review it again');
+        this.reviews.assertConfirmed(review, initial.review.hash);
+        await enforceProfileFinancialRateLimit(client, 'top-up', canonicalWalletId);
+        await persistSealedBankReceipt(
+          client,
+          actor.userId,
+          receipt.attachmentKey,
+          storageRow,
+          sealed
+        );
+        const sealedReceipt = { ...receipt, attachmentKey: sealed.sealedKey };
 
-      const txResult = await client.query(
-        `INSERT INTO wallet_transactions
-           (wallet_id, type, amount, state, idempotency_key, description, metadata, receipt_attachment_key)
-         VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb, $6)
-         RETURNING *`,
-        [
-          canonicalWalletId,
-          amountIrR.toString(),
-          idempotencyKey,
-          BANK_RECEIPT_TOPUP_DESCRIPTION,
-          JSON.stringify({
-            ...bankReceiptTopUpMetadata(sealedReceipt),
-            ...(expectedReviewHash ? { financialReview: review } : {}),
-          }),
-          sealed.sealedKey,
-        ]
-      );
+        const txResult = await client.query(
+          `INSERT INTO wallet_transactions
+             (wallet_id, type, amount, state, idempotency_key, description, metadata, receipt_attachment_key)
+           VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb, $6)
+           RETURNING *`,
+          [
+            canonicalWalletId,
+            amountIrR.toString(),
+            idempotencyKey,
+            BANK_RECEIPT_TOPUP_DESCRIPTION,
+            JSON.stringify({
+              ...bankReceiptTopUpMetadata(sealedReceipt),
+              ...(expectedReviewHash ? { financialReview: review } : {}),
+            }),
+            sealed.sealedKey,
+          ]
+        );
 
-      await auditReceiptSubmission(
-        client,
-        actor,
-        profileId,
-        String(txResult.rows[0]!.id),
-        'wallet',
-        expectedReviewHash ? review : undefined
-      );
-      await requireCurrentSession(client, actor);
-      await client.query('COMMIT');
-      return mapTransaction(txResult.rows[0] as Parameters<typeof mapTransaction>[0]);
+        await auditReceiptSubmission(
+          client,
+          actor,
+          profileId,
+          String(txResult.rows[0]!.id),
+          'wallet',
+          expectedReviewHash ? review : undefined
+        );
+        await requireCurrentSession(client, actor);
+        return mapTransaction(txResult.rows[0] as Parameters<typeof mapTransaction>[0]);
+      }, client);
     } catch (error) {
-      await client.query('ROLLBACK');
       if (isPgUniqueViolation(error, WALLET_TX_IDEMPOTENCY_CONSTRAINT)) {
-        const existing = await client.query(
-          `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-          [idempotencyKey]
-        );
-        if (existing.rows.length === 0 || canonicalWalletId === undefined) {
-          throw new ConflictException('Idempotency key already used');
-        }
-        const committed = existing.rows[0]!;
-        assertMatchingPendingBankReceipt(
-          committed as Parameters<typeof assertMatchingPendingBankReceipt>[0],
-          canonicalWalletId,
-          amountIrR,
-          receipt
-        );
-        const pending = mapTransaction(committed as Parameters<typeof mapTransaction>[0]);
-        await client.query('BEGIN');
-        try {
+        return withCopyTransaction(async () => {
           await lockReceiptSubmissionActor(client, actor, profileId);
           await this.lockAttachmentProvenance(
             client,
@@ -492,18 +494,14 @@ export class BankReceiptTopUpService {
             profileId
           );
           await claimBankReceiptAttachment(client, receipt.attachmentKey, 'wallet_topup');
-          this.assertStoredReview(pending, profileId, expectedReviewHash);
+          const pending = await findPending(profileId.toLowerCase());
+          if (!pending) throw new ConflictException('Idempotency key already used');
           await requireCurrentSession(client, actor);
-          await client.query('COMMIT');
-        } catch (protectError) {
-          await client.query('ROLLBACK');
-          throw protectError;
-        }
-        return pending;
+          return pending;
+        }, client);
       }
-      if (isPgUniqueViolation(error, WALLET_TX_RECEIPT_ATTACHMENT_CONSTRAINT)) {
+      if (isPgUniqueViolation(error, WALLET_TX_RECEIPT_ATTACHMENT_CONSTRAINT))
         throw new ConflictException('This bank receipt attachment has already been submitted');
-      }
       throw error;
     }
   }

@@ -185,6 +185,13 @@ revisions, and any predecessor before it records the immutable object and
 queues a configured document scan. A failed confirmation leaves `PendingScan` and
 its cleanup receipt available for recovery.
 
+Invoice and wallet bank receipts share an attachment advisory lock. They check
+the current upload, review and available quota before reading storage. The
+final transaction checks them again and charges the quota when it records the
+receipt, attachment claim and audit. A retry of a committed receipt returns
+its original copy. An interrupted copy remains private and may be reused until
+cleanup claims it.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider

@@ -1,6 +1,7 @@
 import { sealedInvoiceBankReceiptAttachmentKey } from '@barghsa/shared/finance';
 import { pdfBytes, memoryStorage } from '../test/receipt-storage.js';
-vi.mock('../storage/reserve-storage-copy.js', () => ({
+vi.mock('../storage/reserve-storage-copy.js', async (original) => ({
+  ...(await original<typeof import('../storage/reserve-storage-copy.js')>()),
   reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
 }));
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -92,7 +93,9 @@ function scriptClient(opts: ScriptOptions = {}) {
     if (sql.includes('rate_limit_rolling')) {
       return { rows: [{ count: opts.topUpCount ?? 1, reset_ms: '42000', limit_value: 10 }] };
     }
-    if (sql.includes('pg_advisory_lock') || sql.includes('pg_advisory_unlock')) {
+    if (sql.includes('pg_try_advisory_lock')) return { rows: [{ acquired: true }] };
+    if (sql.includes('pg_advisory_unlock')) return { rows: [{ released: true }] };
+    if (sql.includes('pg_advisory_lock')) {
       return { rows: [] };
     }
     if (sql === 'BEGIN' || sql === 'COMMIT' || sql === 'ROLLBACK') {
@@ -107,6 +110,8 @@ function scriptClient(opts: ScriptOptions = {}) {
       return {
         rows: [
           {
+            storage_id: ATTACHMENT,
+            storage_revision: '10',
             status: opts.storageStatus ?? 'active',
             file_size: 4096,
             content_type: 'application/pdf',
@@ -333,7 +338,7 @@ describe('BankReceiptTopUpService (T-04.2.02.03)', () => {
       receipt: { ...RECEIPT, attachmentKey: sealedInvoiceBankReceiptAttachmentKey(ATTACHMENT) },
     });
     const protect = mockClient.query.mock.calls.find(([sql]) =>
-      String(sql).includes('UPDATE storage_records')
+      String(sql).includes("AND status IN ('active', 'immutable')")
     );
     expect(protect?.[1]?.slice(0, 2)).toEqual([ATTACHMENT, ACTOR_ID]);
   });

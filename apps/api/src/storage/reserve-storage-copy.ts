@@ -26,12 +26,22 @@ export async function writeProvisionalStorageCopy(
   directClient?: PoolClient
 ): Promise<boolean> {
   await reserveStorageCopy(key, metadata);
+  return writeReservedStorageCopy(key, metadata, write, directClient);
+}
+
+/** Retry an existing reservation only while its original provenance is still eligible. */
+export async function writeReservedStorageCopy(
+  key: string,
+  metadata: Record<string, unknown>,
+  write: () => Promise<unknown>,
+  directClient?: PoolClient
+): Promise<boolean> {
   const outcome = await withMultipartUploadLock(
     directClient ?? createDirectDbPool(),
     key,
     async (client) => {
       const ready = await client.query(
-        `SELECT 1 FROM storage_records WHERE storage_key=$1 AND status='removed'
+        `SELECT 1 FROM storage_records WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
          AND cleanup_operation IS NULL AND metadata @> $2::jsonb`,
         [key, JSON.stringify({ ...metadata, provisionalCopy: true, deletionRequested: true })]
       );
@@ -40,7 +50,7 @@ export async function writeProvisionalStorageCopy(
       // Give publication a fresh cleanup grace period after a slow provider write.
       const refreshed = await client.query(
         `UPDATE storage_records SET updated_at=NOW() WHERE storage_key=$1
-         AND status='removed' AND cleanup_operation IS NULL`,
+         AND status='removed' AND signed_at IS NULL AND cleanup_operation IS NULL`,
         [key]
       );
       return refreshed.rowCount === 1;

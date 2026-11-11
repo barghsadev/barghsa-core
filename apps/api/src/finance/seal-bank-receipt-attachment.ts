@@ -11,7 +11,8 @@ import {
   type InvoiceBankReceiptFileCategory,
 } from '@barghsa/shared/finance';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
-import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
+import { reserveStorageCopy, writeReservedStorageCopy } from '../storage/reserve-storage-copy.js';
+import type { PoolClient } from 'pg';
 import {
   pickDetectedContentType,
   sniffContentTypes,
@@ -27,6 +28,10 @@ export interface StorageLockRow {
   category: string | null;
   file_name: string | null;
 }
+export interface ReceiptSourceSnapshot extends StorageLockRow {
+  storage_id: string;
+  storage_revision: string;
+}
 interface SealedAttachment {
   sealedKey: string;
   bytes: Uint8Array;
@@ -40,8 +45,8 @@ const FILE_REJECTION_MESSAGE = {
   size_unverified: 'Bank receipt file size could not be verified from storage',
   size_mismatch: 'Bank receipt file size does not match the uploaded object',
 } as const;
-export async function sealBankReceiptAttachment(
-  client: WalletQueryClient,
+export async function prepareBankReceiptAttachment(
+  directClient: PoolClient,
   storage: StorageProvider | null,
   actorId: string,
   attachmentKey: string,
@@ -97,21 +102,20 @@ export async function sealBankReceiptAttachment(
     throw httpError(ErrorCodes.VALIDATION_INPUT_INVALID, FILE_REJECTION_MESSAGE.size_unverified);
   }
   requireCleanUpload(row.metadata, createHash('sha256').update(read.bytes).digest('hex'));
+  const metadata = { sourceKey: attachmentKey, uploadedBy: actorId };
   try {
-    await reserveStorageCopy(sealedKey, { sourceKey: attachmentKey, uploadedBy: actorId });
+    await reserveStorageCopy(sealedKey, metadata);
   } catch (error) {
     // A failed prior transaction may have left its independently committed cleanup intent.
     if ((error as { code?: string }).code !== '23505') throw error;
   }
-  const reservation = await client.query(
-    `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL AND cleanup_operation IS NULL
-       AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' AND metadata->>'sourceKey'=$2
-       AND metadata->>'uploadedBy'=$3 FOR UPDATE`,
-    [sealedKey, attachmentKey, actorId]
+  const ready = await writeReservedStorageCopy(
+    sealedKey,
+    metadata,
+    () => storage.putObject(sealedKey, read.bytes, detected),
+    directClient
   );
-  if (!reservation.rows.length)
-    throw new ConflictException('Receipt copy changed; retry the upload');
-  await storage.putObject(sealedKey, read.bytes, detected);
+  if (!ready) throw new ConflictException('Receipt copy changed; retry the upload');
 
   return {
     sealedKey,
@@ -156,22 +160,12 @@ export async function persistSealedBankReceipt(
     );
   }
 
-  await client.query(
-    `INSERT INTO storage_records
-         (storage_key, status, metadata, file_size, content_type, category, file_name,
-          signed_at, signed_by, updated_at)
-       VALUES ($1, 'immutable', $2::jsonb, $3, $4, $5, $6, NOW(), $7, NOW())
-       ON CONFLICT (storage_key) DO UPDATE
-          SET status = 'immutable',
-              metadata = EXCLUDED.metadata,
-              file_size = EXCLUDED.file_size,
-              content_type = EXCLUDED.content_type,
-              category = EXCLUDED.category,
-              file_name = EXCLUDED.file_name,
-              signed_at = NOW(),
-              signed_by = EXCLUDED.signed_by,
-              removed_at = NULL,
-              updated_at = NOW()`,
+  const published = await client.query(
+    `UPDATE storage_records
+        SET status='immutable', metadata=$2::jsonb, file_size=$3, content_type=$4,
+            category=$5, file_name=$6, signed_at=NOW(), signed_by=$7, removed_at=NULL, updated_at=NOW()
+      WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL AND cleanup_operation IS NULL
+        AND metadata @> $8::jsonb RETURNING storage_key`,
     [
       sealed.sealedKey,
       JSON.stringify({
@@ -184,8 +178,16 @@ export async function persistSealedBankReceipt(
       sealed.category,
       original.file_name,
       actorId,
+      JSON.stringify({
+        sourceKey: originalKey,
+        uploadedBy: actorId,
+        provisionalCopy: true,
+        deletionRequested: true,
+      }),
     ]
   );
+  if ((published.rowCount ?? 0) !== 1)
+    throw new ConflictException('Receipt copy changed; retry the upload');
 }
 async function readObjectBytesCapped(
   storage: StorageProvider | null,

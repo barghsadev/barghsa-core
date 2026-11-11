@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T12:49:03+00:00",
+  "updated": "2026-11-11T12:59:31+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21477,7 +21477,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Move customer bank receipt attachment provider work out of invoice and wallet submission transactions. Preserve shared attachment claims, provenance, financial review hashes, budgets, exact replay and atomic receipt/audit.",
         "Reconcile document template and contract PDF/source provider boundaries and approved document destruction. Preserve signed contracts, legal hold races, version-aware approved deletion, permanent financial and contractual retention and durable retry receipts."
       ],
       "owner": null,
@@ -21590,7 +21589,8 @@
           "release-0.6-verification-evidence-copy-boundary",
           "release-0.6-direct-document-copy-boundary",
           "release-0.6-preflight-authority-fixture-repair",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21719,7 +21719,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -21815,11 +21815,11 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
-              "sha256": "7656a46e9f4d4a88b5281fd1f301db0200188e818eed19f2291e82323444401c"
+              "sha256": "007ecf7c7bc79753daae892cfa2a92415d8a3b83dabfb4dd2cfa43be7f0d7058"
             },
             {
               "path": "apps/api/src/solar/solar-contract-source.service.ts",
@@ -21927,7 +21927,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             }
           ],
           "source_renewals": [
@@ -22026,6 +22026,17 @@
                 "apps/api/src/profiles/legal-profiles.service.ts"
               ],
               "scope": "Legal onboarding now returns the same 404 for a previously submitted draft at the initial read and guarded write. Native concurrency, legal service and document checks cover the affected behavior."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "docs/operations/storage-retention.md",
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ]
         }
@@ -115089,7 +115100,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -115233,7 +115245,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -115841,6 +115853,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -116031,7 +116051,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -116175,7 +116196,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -116783,6 +116804,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -123791,7 +123820,8 @@
           "release-0.6-reconciliation-accepted-filter-page",
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -123935,7 +123965,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -124543,6 +124573,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -158670,7 +158708,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -158678,7 +158717,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
-              "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+              "sha256": "1b8bf47fb8087d89b182aa4cd0f2bb03cafae48f8994dc8bc289199cbe368932"
             },
             {
               "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -158690,11 +158729,11 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
-              "sha256": "7656a46e9f4d4a88b5281fd1f301db0200188e818eed19f2291e82323444401c"
+              "sha256": "007ecf7c7bc79753daae892cfa2a92415d8a3b83dabfb4dd2cfa43be7f0d7058"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.integration.test.ts",
@@ -158702,7 +158741,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "862d06ef765bb3b39bc344c84586c209b68c510d256b5e54192ed5e0f305e59e"
+              "sha256": "7db1e1c777951721dfc66cf9082cd92ebeaddb10023188aa3615597210bcd73b"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -158889,6 +158928,17 @@
                 "apps/api/src/finance/seal-bank-receipt-attachment.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+                "apps/api/src/wallet/bank-receipt-topup.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -164459,7 +164509,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -164467,7 +164518,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -164511,11 +164562,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -164836,6 +164887,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -165060,7 +165121,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -165068,7 +165130,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
-              "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+              "sha256": "1b8bf47fb8087d89b182aa4cd0f2bb03cafae48f8994dc8bc289199cbe368932"
             },
             {
               "path": "apps/api/src/finance/financial-submission-actor.ts",
@@ -165080,11 +165142,11 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
-              "sha256": "7656a46e9f4d4a88b5281fd1f301db0200188e818eed19f2291e82323444401c"
+              "sha256": "007ecf7c7bc79753daae892cfa2a92415d8a3b83dabfb4dd2cfa43be7f0d7058"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -165132,11 +165194,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -165481,6 +165543,18 @@
                 "apps/api/src/finance/seal-bank-receipt-attachment.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -165706,7 +165780,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -165742,7 +165817,7 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -165786,11 +165861,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -166130,6 +166205,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -166386,7 +166471,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-receipt-filter-mobile-viewport",
-          "release-0.6-upload-storage-scope-quotas"
+          "release-0.6-upload-storage-scope-quotas",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -166422,7 +166508,7 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -166466,11 +166552,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -166955,6 +167041,16 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -167178,7 +167274,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -167214,7 +167311,7 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -167258,11 +167355,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -167602,6 +167699,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -167740,7 +167847,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -167748,7 +167856,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -167792,11 +167900,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -168113,6 +168221,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -168251,7 +168369,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -168259,7 +168378,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -168303,11 +168422,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -168624,6 +168743,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -168763,7 +168892,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -168771,7 +168901,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -168815,11 +168945,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -169136,6 +169266,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -169276,7 +169416,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -169284,7 +169425,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -169328,11 +169469,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -169649,6 +169790,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -169797,7 +169948,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -169805,7 +169957,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -169849,11 +170001,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -170170,6 +170322,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -170310,7 +170472,8 @@
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-receipt-filter-mobile-viewport"
+          "release-0.6-receipt-filter-mobile-viewport",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-bank-receipt-and-profile-financial-history-verification",
@@ -170318,7 +170481,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
@@ -170362,11 +170525,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/invoice/invoice-state-machine.service.ts",
@@ -170683,6 +170846,16 @@
                 "apps/api/src/finance/receipt-submission-authority.integration.test.ts"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -445534,7 +445707,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -445854,7 +446028,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -446777,6 +446951,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -449761,7 +449943,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -450081,7 +450264,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -451004,6 +451187,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -451159,7 +451350,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -451479,7 +451671,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -452402,6 +452594,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -452557,7 +452757,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-rate-limit-and-registration-contract"
+          "release-0.6-rate-limit-and-registration-contract",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "current-solar-contract-source-and-general-lifecycle-acceptance",
@@ -452877,7 +453078,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -453800,6 +454001,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -475677,7 +475886,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -475717,7 +475927,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -475890,6 +476100,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -475987,7 +476205,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476027,7 +476246,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -476200,6 +476419,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -476299,7 +476526,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476339,7 +476567,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -476512,6 +476740,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -476609,7 +476845,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476649,7 +476886,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -476822,6 +477059,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -476920,7 +477165,8 @@
           "release-0.6-generated-openapi-client-contracts",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-cancellation-recovery-and-otp-browser-fixes"
+          "release-0.6-cancellation-recovery-and-otp-browser-fixes",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -476960,7 +477206,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -477133,6 +477379,14 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Direct business document confirmation and private-copy helper compatibility only. Current authority, immutable copy, rollback, contract and scanner behavior were checked using exact API source and the pinned MinIO fixture."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -484932,7 +485186,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -485028,7 +485283,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485276,6 +485531,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -485379,7 +485642,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -485475,7 +485739,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485723,6 +485987,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -485828,7 +486100,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -485924,7 +486197,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -486193,6 +486466,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -486330,7 +486611,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-durable-multipart-operations"
+          "release-0.6-durable-multipart-operations",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -486426,7 +486708,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -486758,6 +487040,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -486861,7 +487151,8 @@
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -486957,7 +487248,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -487205,6 +487496,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -537613,7 +537912,8 @@
           "release-0.6-wallet-profile-topup-admission",
           "release-0.6-profile-payment-refund-admission",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -537629,7 +537929,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "862d06ef765bb3b39bc344c84586c209b68c510d256b5e54192ed5e0f305e59e"
+              "sha256": "7db1e1c777951721dfc66cf9082cd92ebeaddb10023188aa3615597210bcd73b"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.ts",
@@ -537641,7 +537941,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.test.ts",
-              "sha256": "c9d8d4932664f1feb4870d79f742d3b077c6ef88b7096bb8fbc910c0068f003d"
+              "sha256": "b8c27f8fc53460c8361958b975ad7c0e51445022c43aff99cfe1068b8616af5d"
             },
             {
               "path": "apps/api/src/wallet/pay-invoice-with-wallet.service.test.ts",
@@ -537722,6 +538022,15 @@
                 "apps/api/src/idempotency/idempotency-keys.repository.ts"
               ],
               "scope": "Verification evidence preparation, publication and replay only. The broader CRM service change is isolated to verifyProfile. The repository uses the same locked receipt query and keeps its claim/expiry behavior. Ticket copy transaction helpers retain their existing logic."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/wallet/bank-receipt-topup.service.ts",
+                "apps/api/src/wallet/bank-receipt-topup.service.test.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ]
         }
@@ -798810,7 +799119,7 @@
             },
             {
               "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
-              "sha256": "82ff9b681d861edb3359874b7a2406e15d34a96f62c79e83ddfe617e7c48b635"
+              "sha256": "1b8bf47fb8087d89b182aa4cd0f2bb03cafae48f8994dc8bc289199cbe368932"
             },
             {
               "path": "apps/api/src/finance/receipt-submission-actor.ts",
@@ -798818,11 +799127,11 @@
             },
             {
               "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
-              "sha256": "59e8a0cbf8ecbc7cad2fe290449dd45a9c25e02c6da9ff49d43839731f2ecb6b"
+              "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
             },
             {
               "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
-              "sha256": "7656a46e9f4d4a88b5281fd1f301db0200188e818eed19f2291e82323444401c"
+              "sha256": "007ecf7c7bc79753daae892cfa2a92415d8a3b83dabfb4dd2cfa43be7f0d7058"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.integration.test.ts",
@@ -798830,7 +799139,7 @@
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
-              "sha256": "862d06ef765bb3b39bc344c84586c209b68c510d256b5e54192ed5e0f305e59e"
+              "sha256": "7db1e1c777951721dfc66cf9082cd92ebeaddb10023188aa3615597210bcd73b"
             },
             {
               "path": "apps/web/e2e/customer-receipts.spec.ts",
@@ -799146,11 +799455,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
-              "sha256": "187dda9e00344168499b92f6173d5ce337ce8a54f2832b63ea22080e0b4136fb"
+              "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
-              "sha256": "4b2c99d450b8804757851262cccd24980e579d849207b539896abfe54d926a0c"
+              "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -801979,6 +802288,19 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+                "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+                "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+                "apps/api/src/wallet/bank-receipt-topup.service.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -802292,7 +802614,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-electricity-quote-vat-batch",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-bank-receipt-copy-boundary"
         ]
       }
     },
@@ -804556,7 +804879,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -806789,6 +807112,14 @@
                 "apps/web/e2e/saving-journey.spec.ts"
               ],
               "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -807224,7 +807555,8 @@
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-bank-receipt-copy-boundary"
         ]
       }
     },
@@ -808172,7 +808504,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
@@ -809464,7 +809796,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -811181,6 +811513,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "presentation_renewals": [
@@ -811554,7 +811895,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-integrity-requires-tests",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -812507,7 +812849,7 @@
             },
             {
               "path": "apps/api/src/storage/reserve-storage-copy.ts",
-              "sha256": "76b37cb09173f4ead746cbeb7e9174ab89c7857f5a87b0b7473e584e705dfad7"
+              "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
             },
             {
               "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
@@ -813779,7 +814121,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "64fef243858ea3d19ed3bf26792055acfc57daea818a783adb0ab8431b2a2a7a"
+              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -815385,6 +815727,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
+            },
+            {
+              "batch": "release-0.6-bank-receipt-copy-boundary",
+              "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+              "paths": [
+                "apps/api/src/storage/reserve-storage-copy.ts",
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -815775,7 +816126,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-integrity-requires-tests",
-          "integrated-qa-preview-deployment"
+          "integrated-qa-preview-deployment",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -820137,7 +820489,8 @@
           "release-0.6-verification-evidence-copy-boundary",
           "release-0.6-direct-document-copy-boundary",
           "release-0.6-preflight-authority-fixture-repair",
-          "release-0.6-legal-draft-race-response"
+          "release-0.6-legal-draft-race-response",
+          "release-0.6-bank-receipt-copy-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -939834,6 +940187,98 @@
           "sha256": "9c51099b04333cad42dba9cca6100da881c2454498dbc0674d4f4617524e599a"
         }
       ]
+    },
+    "release-0.6-bank-receipt-copy-boundary": {
+      "batch": "release-0.6-bank-receipt-copy-boundary",
+      "base_commit": "28a62a71178c5bf7544a4f82eb8e5e2dd1f9bbef",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+        "apps/api/src/finance/profile-financial-rate-limit.ts",
+        "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+        "apps/api/src/finance/seal-bank-receipt-attachment.test.ts",
+        "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+        "apps/api/src/storage/reserve-storage-copy.ts",
+        "apps/api/src/wallet/bank-receipt-topup.service.test.ts",
+        "apps/api/src/wallet/bank-receipt-topup.service.ts",
+        "docs/operations/storage-retention.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/finance/claim-bank-receipt-attachment.ts",
+          "sha256": "1b8bf47fb8087d89b182aa4cd0f2bb03cafae48f8994dc8bc289199cbe368932"
+        },
+        {
+          "path": "apps/api/src/finance/profile-financial-rate-limit.ts",
+          "sha256": "fd713d1c3662c35fca84eaf89ebaa7baf9bac54bb1c22cee9f804d67539bf96f"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+          "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
+        },
+        {
+          "path": "apps/api/src/finance/seal-bank-receipt-attachment.test.ts",
+          "sha256": "61246154cc1ff8c3d8205b15df569ed93a34a9e7f038fc00013196c66d34d53c"
+        },
+        {
+          "path": "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+          "sha256": "007ecf7c7bc79753daae892cfa2a92415d8a3b83dabfb4dd2cfa43be7f0d7058"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.test.ts",
+          "sha256": "137c729fa808d2e276a37dd8c00e42fa2d7e875a3c4814fb00dad799118e1e3f"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
+        },
+        {
+          "path": "apps/api/src/storage/reserve-storage-copy.ts",
+          "sha256": "bd3ae66bcdfe5d073077daa0f512c4e74a222c871fbfabfdab6ca48fce91b329"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.test.ts",
+          "sha256": "b8c27f8fc53460c8361958b975ad7c0e51445022c43aff99cfe1068b8616af5d"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "sha256": "7db1e1c777951721dfc66cf9082cd92ebeaddb10023188aa3615597210bcd73b"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+        }
+      ],
+      "checks": [
+        "Wallet top-up and invoice submission now commit the initial authorization, provenance, review and non-charging quota checks before reading or writing object storage. A session advisory lock preserves the shared attachment claim and exact retry serialization. Storage copies remain private until the final database transaction rechecks current authority, exact source ID and revision, review hash and quota.",
+        "Final publication guards the still-provisional storage record and commits the immutable receipt, claim and audit together. A successful request charges the quota once. Replays return the stored receipt without storage I/O. Abandoned provisional bytes retain durable cleanup intent.",
+        "All 118 cases in seven exact-source native suites passed. Cases include real PostgreSQL invoice and wallet HTTP and cross-flow boundaries, same-attachment replay, immutable original bytes, session and authority changes, source changes and invoice review changes during an unlocked PUT, cleanup claim races and audit failure rollback.",
+        "The native fixture matched 2,097 inputs, including the revised source and tests. API typecheck, scoped ESLint, Prettier and whitespace passed. The bank-receipt changes are a v0.6.0 implementation batch. Contract template, contract PDF/source and approved document destruction criteria remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/receipt-boundary.ZaqMkm",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/receipt-boundary.ZaqMkm/native-receipt-boundary.log",
+          "sha256": "da5bbd5e138a81afe39e6ae9d318356305e6d5e17945e355a710c7ebab8e5f85"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/receipt-boundary.ZaqMkm/native-source.sha256",
+          "sha256": "d70cc7e5cc5b760e9b74aca055514f0a8c3b378cfb0570554e974f3143c0b82d"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/receipt-boundary.ZaqMkm/native-source-check.log",
+          "sha256": "a8c4224878e1ce0c640ba1fefbe0ee517b3173cbf6f03178539301d8d7f97e9a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/receipt-boundary.ZaqMkm/changed-native-files",
+          "sha256": "0957606a0c6bca8de5aac554ab557808a20e05571173935a32eef00898009ccc"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -939873,13 +940318,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-bank-receipt-copy-boundary",
+    "id": "release-0.6-contract-template-copy-boundary",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Move invoice and wallet bank receipt storage copies outside their financial transactions and publish with exact current provenance, review and attachment claims."
+    "goal": "Commit private contract template uploads outside database transactions, then publish after current staff authority, version allocation and cleanup checks."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",
