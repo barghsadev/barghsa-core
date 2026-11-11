@@ -1,5 +1,6 @@
 import type { Pool, PoolClient } from 'pg';
 import type { StorageProvider } from '@barghsa/shared/storage';
+import { withMultipartUploadLock } from '@barghsa/db/storage-multipart';
 
 export const DOCUMENT_DESTRUCTION_JOB_TYPE = 'document_destruction';
 export const DOCUMENT_DESTRUCTION_POLL_INTERVAL_MS = 60 * 60 * 1000;
@@ -88,6 +89,12 @@ export async function planDocumentDestruction(pool: Pool, limit = 25) {
 
 async function lockedItem(client: PoolClient, candidate: Item) {
   await client.query('SELECT id FROM profiles WHERE id=$1 FOR UPDATE', [candidate.profile_id]);
+  // Solar contract issuance locks the profile, request and then document sources.
+  await client.query(
+    `SELECT r.id FROM documents d JOIN solar_construction_requests r ON r.id=d.business_record_id
+     WHERE d.id=$1 AND d.business_record_type='solar_request' FOR UPDATE OF r`,
+    [candidate.document_id]
+  );
   const document = (
     await client.query<DocumentRow>(
       `SELECT id,profile_id,business_record_type,storage_key,upload_key,state,uploaded_by,
@@ -120,24 +127,34 @@ async function cancelDestruction(
   await audit(client, document.uploaded_by, 'document_destruction_cancelled', item.id, document.id);
 }
 
-async function beginDestruction(pool: Pool, candidate: Item) {
-  const client = await pool.connect();
+function matchesDocument(document: DocumentRow, item: Item) {
+  return (
+    document.state === 'Removed' &&
+    document.profile_id === item.profile_id &&
+    document.storage_key === item.storage_key &&
+    document.upload_key === item.upload_key
+  );
+}
+
+async function beginDestruction(client: PoolClient, candidate: Item): Promise<Item | null> {
   try {
     await client.query('BEGIN');
     const { document, item } = await lockedItem(client, candidate);
     if (!document || !item || !['approved', 'destroying'].includes(item.status)) {
       await client.query('ROLLBACK');
-      return false;
+      return null;
     }
     // Recheck even a started legacy manifest before any provider retry.
     if (document.permanently_retained) {
       await cancelDestruction(client, document, item, 'permanent_retention');
       await client.query('COMMIT');
-      return false;
+      return null;
     }
     if (item.status === 'destroying') {
+      if (!matchesDocument(document, item))
+        throw new Error('Document changed after destruction started');
       await client.query('COMMIT');
-      return true;
+      return item;
     }
     await client.query(
       "SELECT pg_advisory_xact_lock(hashtext('document_retention_policy:' || $1))",
@@ -150,10 +167,7 @@ async function beginDestruction(pool: Pool, candidate: Item) {
       )
     ).rows[0];
     const valid =
-      document.state === 'Removed' &&
-      document.profile_id === item.profile_id &&
-      document.storage_key === item.storage_key &&
-      document.upload_key === item.upload_key &&
+      matchesDocument(document, item) &&
       eligibility?.policy_id === item.policy_id &&
       eligibility?.retention_deadline?.getTime() === item.retention_deadline.getTime() &&
       eligibility?.retention_deadline !== null &&
@@ -164,7 +178,7 @@ async function beginDestruction(pool: Pool, candidate: Item) {
     if (!valid) {
       await cancelDestruction(client, document, item, 'eligibility_changed');
       await client.query('COMMIT');
-      return false;
+      return null;
     }
     await client.query(
       `UPDATE document_destruction_items SET status='destroying',
@@ -173,17 +187,14 @@ async function beginDestruction(pool: Pool, candidate: Item) {
     );
     await audit(client, document.uploaded_by, 'document_destruction_started', item.id, document.id);
     await client.query('COMMIT');
-    return true;
+    return item;
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
-  } finally {
-    client.release();
   }
 }
 
-async function finishDestruction(pool: Pool, candidate: Item, storage: StorageProvider) {
-  const client = await pool.connect();
+async function finishDestruction(client: PoolClient, candidate: Item) {
   try {
     await client.query('BEGIN');
     const { document, item } = await lockedItem(client, candidate);
@@ -191,21 +202,13 @@ async function finishDestruction(pool: Pool, candidate: Item, storage: StoragePr
       await client.query('ROLLBACK');
       return false;
     }
-    if (document.permanently_retained) {
-      await cancelDestruction(client, document, item, 'permanent_retention');
-      await client.query('COMMIT');
-      return false;
-    }
     if (
-      document.state !== 'Removed' ||
-      document.storage_key !== item.storage_key ||
-      document.upload_key !== item.upload_key
+      document.permanently_retained ||
+      !matchesDocument(document, item) ||
+      item.storage_key !== candidate.storage_key ||
+      item.upload_key !== candidate.upload_key
     )
       throw new Error('Document changed after destruction started');
-    if (!storage.deleteObjectVersions)
-      throw new Error('Version-aware document deletion is unavailable');
-    await storage.deleteObjectVersions(item.storage_key);
-    if (item.upload_key !== item.storage_key) await storage.deleteObjectVersions(item.upload_key);
     const changed = await client.query<{ revision: number }>(
       `UPDATE documents SET storage_key=NULL,original_name='[destroyed]',
         detected_mime=NULL,checksum=NULL,rejection_reason=NULL,review_comment=NULL,
@@ -241,15 +244,31 @@ async function finishDestruction(pool: Pool, candidate: Item, storage: StoragePr
     return true;
   } catch (error) {
     await client.query('ROLLBACK');
-    await pool.query(
+    throw error;
+  }
+}
+
+async function destroyApprovedDocument(
+  client: PoolClient,
+  candidate: Item,
+  storage: StorageProvider
+) {
+  try {
+    const item = await beginDestruction(client, candidate);
+    if (!item) return false;
+    if (!storage.deleteObjectVersions)
+      throw new Error('Version-aware document deletion is unavailable');
+    await storage.deleteObjectVersions(item.storage_key);
+    if (item.upload_key !== item.storage_key) await storage.deleteObjectVersions(item.upload_key);
+    return await finishDestruction(client, item);
+  } catch (error) {
+    await client.query(
       `UPDATE document_destruction_items SET attempts=attempts+1,
         last_error='destruction_retry_required',updated_at=NOW()
        WHERE id=$1 AND status='destroying'`,
       [candidate.id]
     );
     throw error;
-  } finally {
-    client.release();
   }
 }
 
@@ -268,11 +287,13 @@ export async function runDocumentDestruction(pool: Pool, storage: StorageProvide
     throw new Error('Document destruction requires an available storage provider');
   for (const candidate of candidates) {
     try {
-      if (!(await beginDestruction(pool, candidate))) {
-        result.cancelled++;
-        continue;
-      }
-      if (await finishDestruction(pool, candidate, storage!)) result.destroyed++;
+      const completed = await withMultipartUploadLock(
+        pool,
+        `document-destruction:${candidate.id}`,
+        (client) => destroyApprovedDocument(client, candidate, storage!)
+      );
+      if (!completed.acquired) continue;
+      if (completed.value) result.destroyed++;
       else result.cancelled++;
     } catch {
       result.failed++;

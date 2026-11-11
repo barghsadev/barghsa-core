@@ -91,6 +91,50 @@ async function approve(id: string) {
   );
 }
 
+async function solarDestructionFixture() {
+  const requestId = randomUUID();
+  await pool.query(
+    `INSERT INTO solar_construction_requests
+      (id,profile_id,submitted_by,submission_key,status,status_reason,support_path,
+       building_type,grid_type,property_form,structural_frame,building_completion_date,
+       agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at,updated_at)
+     VALUES($1,$2,$3,uuid_generate_v7(),'rejected','Closed request','/help',
+       'building_apartment','off_grid','villa','steel','2010-01-01',
+       true,'fixture','Accepted terms',NOW()-INTERVAL '6 years',NOW()-INTERVAL '6 years')`,
+    [requestId, profile, user]
+  );
+  const contractId = randomUUID();
+  const versionId = randomUUID();
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(
+      "INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,'solar',$3)",
+      [contractId, profile, versionId]
+    );
+    await client.query(
+      `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+       VALUES($1,$2,1,'{"text":"Solar terms"}','Initial',$3)`,
+      [versionId, contractId, user]
+    );
+    await client.query('COMMIT');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release();
+  }
+  const doc = await document(6, requestId, 'solar_request');
+  expect(await planDocumentDestruction(pool)).toBe(1);
+  await approve(doc.id);
+  const link = () =>
+    pool.query('UPDATE solar_construction_requests SET contract_id=$2 WHERE id=$1', [
+      requestId,
+      contractId,
+    ]);
+  return { doc, requestId, link };
+}
+
 it('plans only expired documents and destroys approved exact-key versions with an audit trail', async () => {
   const old = await document();
   const recent = await document(1);
@@ -296,6 +340,86 @@ it('cancels approval when a legal hold arrives before destruction', async () => 
       ])
     ).rows[0].status
   ).toBe('cancelled');
+});
+
+it('cancels an approved solar destruction if a contract was linked first', async () => {
+  const { doc, link } = await solarDestructionFixture();
+  await link();
+  expect(await runDocumentDestruction(pool, storage)).toMatchObject({
+    destroyed: 0,
+    cancelled: 1,
+    failed: 0,
+  });
+  expect(deleteObjectVersions).not.toHaveBeenCalled();
+  expect(
+    (await pool.query('SELECT storage_key FROM documents WHERE id=$1', [doc.id])).rows[0]
+  ).toEqual({ storage_key: doc.storageKey });
+});
+
+it('deletes outside row locks while committed intent excludes holds, links and duplicate work', async () => {
+  const { doc, requestId, link } = await solarDestructionFixture();
+  let enter!: () => void;
+  let resume!: () => void;
+  const entered = new Promise<void>((resolve) => {
+    enter = resolve;
+  });
+  const released = new Promise<void>((resolve) => {
+    resume = resolve;
+  });
+  deleteObjectVersions.mockImplementationOnce(async () => {
+    enter();
+    await released;
+    return 1;
+  });
+
+  const running = runDocumentDestruction(pool, storage);
+  try {
+    await Promise.race([
+      entered,
+      running.then(() => {
+        throw new Error('Destruction finished before the first provider call');
+      }),
+    ]);
+    for (const [table, id] of [
+      ['profiles', profile],
+      ['solar_construction_requests', requestId],
+      ['documents', doc.id],
+    ] as const) {
+      expect(
+        await pool.query(`SELECT id FROM ${table} WHERE id=$1 FOR UPDATE NOWAIT`, [id])
+      ).toMatchObject({ rowCount: 1 });
+    }
+    await expect(
+      pool.query(
+        "INSERT INTO document_legal_holds(document_id,reason,initiated_by) VALUES($1,'Late hold',$2)",
+        [doc.id, user]
+      )
+    ).rejects.toThrow('Document destruction already started');
+    await expect(
+      pool.query(
+        "INSERT INTO document_legal_holds(profile_id,reason,initiated_by) VALUES($1,'Late hold',$2)",
+        [profile, user]
+      )
+    ).rejects.toThrow('Profile document destruction already started');
+    await expect(link()).rejects.toThrow(
+      'Solar contract cannot be linked after document destruction starts'
+    );
+    expect(await runDocumentDestruction(pool, storage)).toEqual({
+      planned: 0,
+      destroyed: 0,
+      failed: 0,
+      cancelled: 0,
+    });
+    expect(deleteObjectVersions.mock.calls).toEqual([[doc.storageKey]]);
+  } finally {
+    resume();
+    await running;
+  }
+  expect(await running).toMatchObject({ destroyed: 1, failed: 0 });
+  expect(deleteObjectVersions.mock.calls).toEqual([[doc.storageKey], [doc.uploadKey]]);
+  await expect(link()).rejects.toThrow(
+    'Solar contract cannot be linked after document destruction starts'
+  );
 });
 
 it('retries a partially completed provider deletion without losing the approval manifest', async () => {

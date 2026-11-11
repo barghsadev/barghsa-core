@@ -1464,6 +1464,13 @@
       "when": 1794369661824,
       "tag": "0288_storage_cleanup_operation_claim",
       "breakpoints": true
+    },
+    {
+      "idx": 289,
+      "version": "7",
+      "when": 1794403744949,
+      "tag": "0289_solar_document_destruction_guard",
+      "breakpoints": true
     }
   ]
 }

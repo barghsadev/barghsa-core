@@ -63,8 +63,8 @@ document consumers are separate from the retention policy described below.
 
 An object tag is an application retention signal, not S3 Object Lock. Tagging
 is a read/modify/write operation: independent manual hold changes must not race
-the worker. The approved destruction worker checks database holds under profile
-and document locks before deletion. Use provider Object Lock when an independent
+the worker. The approved destruction worker checks database holds under row
+locks before committing destruction intent. Use provider Object Lock when an independent
 legal-hold authority needs to prevent physical deletion. Direct delete
 permissions and immutable business copies remain separate controls. A
 bucket-wide custom expiry can defeat these
@@ -259,25 +259,23 @@ approval state and retry status. A later nightly pass handles up to 25 approved
 items; a newly active hold or changed policy cancels an unstarted approval and
 requires a fresh manifest.
 
-Retention starts at the later of document removal and parent closure. Current
-closure signals are completed/cancelled/rejected contracts, paid/cancelled/refunded
-invoices, terminal electricity or saving orders, cancelled generic orders,
-rejected/cancelled solar requests and solar requests whose linked contract has
-completed or been cancelled. Standalone uploads start at removal. Other parent
-states have no destruction deadline and are retained. The current policy version supplies the retention years; a
-policy change invalidates an unstarted approval.
+Standalone retention starts at removal. For unlinked, rejected or cancelled
+solar requests it starts at the later of removal and request closure. The
+current policy version supplies the retention years. A policy change
+invalidates an unstarted approval.
 
-The worker records `destroying` before touching storage. New direct/profile
+The worker commits `destroying` before touching storage. New direct and profile
 holds and policy changes for that record type are rejected while destruction
-is in progress; they cannot restore an already deleted version. With the
-profile and document locked, the worker removes every exact-key version and
-delete marker for the sealed copy and the original upload. A provider-held
-version blocks the operation. Missing versions are safe to retry. On success,
-the worker clears file names, MIME types, checksums and storage metadata, keeps
-the document identity and history as a minimal audit trail, and records a
-destruction event. It retries partially completed storage work from the
-durable manifest. Direct S3 deletes outside this workflow remain a separate
-administrative control.
+is in progress. A solar request cannot gain a contract link once destruction
+of one of its documents starts. A session advisory lock on the manifest keeps
+workers from processing it concurrently. With the database transaction
+closed, the worker removes exact-key versions and delete markers for the sealed
+copy and the original upload. A provider-held version blocks deletion. Missing
+versions are safe to retry. A final transaction verifies the manifest and
+clears file names, MIME types, checksums and storage metadata. It keeps the
+document identity and history and records a destruction event. The worker
+retries partially completed storage work from the durable manifest. Direct S3
+deletes outside this workflow remain a separate administrative control.
 
 ## Upload association
 

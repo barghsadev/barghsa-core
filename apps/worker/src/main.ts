@@ -366,7 +366,7 @@ async function main(): Promise<void> {
   pollers.every(async () => {
     if (draining || new Date().getUTCHours() !== 2) return;
     try {
-      const result = await runDocumentDestruction(getDbPool(), cleanupProvider);
+      const result = await runDocumentDestruction(createDirectDbPool(), cleanupProvider);
       if (result.failed)
         await recordJobFailure({
           jobType: DOCUMENT_DESTRUCTION_JOB_TYPE,

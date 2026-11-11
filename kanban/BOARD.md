@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T13:25:25+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T13:35:28+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1210 | Accepted with unchanged source bindings. |
+| done | 1211 | Accepted with unchanged source bindings. |
 | verify | 93 | Existing work may be complete; inspect evidence before building. |
-| partial | 57 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Move version-aware deletion out of the business transaction after committing approved destruction intent. Preserve legal holds, permanent retention, exact-key deletion and durable recovery.
+Give each operator alert a dashboard for its configured metrics and retain evidence that the operator can follow its dashboard and runbook links.
 
-- `01-platform-infrastructure.md#T-07.05.01`: Enforce “no external call inside a database transaction”
+- `06-security-testing-observability.md#T-06.15.01.08`: Every alert links to its dashboard and runbook
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -1078,7 +1078,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-07.04.02` | done | Earlier deferred | Create initial ADRs |
 | `01-platform-infrastructure.md#T-07.04.03` | done | Earlier deferred | Create deployment guide |
 | `01-platform-infrastructure.md#T-07.04.04` | done | Earlier deferred | Create incident response plan |
-| `01-platform-infrastructure.md#T-07.05.01` | partial | Earlier deferred | Enforce “no external call inside a database transaction” |
+| `01-platform-infrastructure.md#T-07.05.01` | done | Earlier deferred | Enforce “no external call inside a database transaction” |
 | `01-platform-infrastructure.md#T-07.05.02` | done | Earlier deferred | Generate and verify TypeScript API client contracts from OpenAPI |
 | `01-platform-infrastructure.md#T-07.05.03` | done | Earlier deferred | Verify health-endpoint middleware exclusions |
 | `01-platform-infrastructure.md#T-07.05.04` | done | Earlier deferred | Document and gate module extraction criteria |
