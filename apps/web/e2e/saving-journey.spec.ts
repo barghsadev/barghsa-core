@@ -1044,9 +1044,10 @@ for (const locale of ['en', 'fa'] as const)
       page.getByRole('link', { name: savingCopy('action.payInvoice', locale) })
     ).toHaveAttribute('href', `/invoices/${invoiceId}`);
     await page.goto(`/savings/orders/${savingOrderId}`);
-    const payLink = page
-      .getByRole('region', { name: appCopy('workflow.summary', locale) })
-      .getByRole('link', { name: savingCopy('action.payInvoice', locale) });
+    const orderSummary = page.getByRole('region', { name: appCopy('workflow.summary', locale) });
+    const payLink = orderSummary.getByRole('link', {
+      name: savingCopy('action.payInvoice', locale),
+    });
     await expect(payLink).toHaveAttribute('href', `/invoices/${invoiceId}`);
     await expect(
       page.getByText(savingCopy('PartiallyFunded', locale), { exact: true })
@@ -1083,6 +1084,7 @@ for (const locale of ['en', 'fa'] as const)
       .getByRole('link', { name: appCopy('invoices.details.backToSavingOrder', locale) })
       .click();
     await expect(page).toHaveURL(new RegExp(`/savings/orders/${savingOrderId}$`));
+    await expect(orderSummary).toBeVisible();
     await expect(payLink).toHaveCount(0);
     await expect(page.getByText(savingCopy('Paid', locale), { exact: true })).toBeVisible();
 

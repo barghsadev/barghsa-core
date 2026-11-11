@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T12:09:54+00:00",
+  "updated": "2026-11-11T12:30:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -5827,7 +5827,8 @@
           "release-0.6-report-mounted-emergency-recovery",
           "release-0.6-logout-probe-auth-bootstrap",
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "source-bound-clean-hosted-browser-rollup",
@@ -5875,7 +5876,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/solar-construction-progress.spec.ts",
@@ -5939,6 +5940,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ]
         }
@@ -47226,7 +47235,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-electricity-saving-solar-address-flow",
@@ -47286,7 +47296,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/service-wizard-navigation.spec.ts",
@@ -48024,6 +48034,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -378938,7 +378956,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -378982,7 +379001,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -379815,6 +379834,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -379974,7 +380001,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -380018,7 +380046,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -380851,6 +380879,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -381012,7 +381048,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -381056,7 +381093,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -381889,6 +381926,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -382048,7 +382093,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -382092,7 +382138,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -382925,6 +382971,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -383084,7 +383138,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -383128,7 +383183,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -383961,6 +384016,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -384120,7 +384183,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -384164,7 +384228,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -384997,6 +385061,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -385157,7 +385229,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -385201,7 +385274,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -386034,6 +386107,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -386193,7 +386274,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -386237,7 +386319,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -387070,6 +387152,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -387229,7 +387319,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -387273,7 +387364,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -388106,6 +388197,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -388265,7 +388364,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -388309,7 +388409,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -389142,6 +389242,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -389307,7 +389415,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-installation-address-selection",
@@ -389323,7 +389432,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -389901,6 +390010,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -390075,7 +390192,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -390119,7 +390237,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -390952,6 +391070,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -391117,7 +391243,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-saving-address-deadline-fixture"
+          "release-0.6-saving-address-deadline-fixture",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-authoritative-final-review",
@@ -391134,7 +391261,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "packages/i18n/src/saving.ts",
@@ -391724,6 +391851,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -391899,7 +392034,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -391943,7 +392079,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -392776,6 +392912,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -392935,7 +393079,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -392979,7 +393124,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -393812,6 +393957,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -393971,7 +394124,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -394015,7 +394169,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -394848,6 +395002,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -395009,7 +395171,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -395053,7 +395216,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -395886,6 +396049,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -396045,7 +396216,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -396089,7 +396261,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -396922,6 +397094,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -397086,7 +397266,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -397130,7 +397311,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -397963,6 +398144,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -398131,7 +398320,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -398175,7 +398365,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -399008,6 +399198,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -399176,7 +399374,8 @@
           "release-0.6-saving-paid-fulfillment-browser-journey",
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -399220,7 +399419,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -400053,6 +400252,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -527810,7 +528017,8 @@
         "batches": [
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-firefox-runtime-and-loading-motion"
+          "release-0.6-firefox-runtime-and-loading-motion",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "source-bound-saving-paid-fulfillment-browser-journey",
@@ -527822,7 +528030,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -527883,6 +528091,16 @@
             "Before payment the staff delivery transition stays disabled. After the paid readback, staff obtains an exact stage review, acknowledges the financial confirmation and submits one product-delivery completion with the expected stage status, explanation, review hash and idempotency key. The same customer order then shows installation and document upload as the current stage.",
             "The production browser suite passed the expanded saving journey in Persian and English on Firefox, Mobile Chrome and Mobile Safari without retries. Fixtures remain local and deterministic. Focused lint, formatting and diff checks passed. The exact full candidate and deployed payment and operational gates remain separate.",
             "Renewed binding for the limited nightly Firefox runtime, CI note or reduced-motion fixture change. Static workflow checks and related focused browser assertions passed. Full exact matrix remains separately open."
+          ],
+          "source_renewals": [
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            }
           ]
         }
       }
@@ -582171,7 +582389,8 @@
           "release-0.5-saving-conditional-agreement",
           "release-0.6-saving-agreement-and-ticket-browser-corrections",
           "release-0.6-saving-paid-fulfillment-browser-journey",
-          "release-0.6-dashboard-grid-after-entrance"
+          "release-0.6-dashboard-grid-after-entrance",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "populated-canonical-viewport-matrix",
@@ -582191,7 +582410,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingsOrderPage.tsx",
@@ -582284,6 +582503,14 @@
                 "apps/web/e2e/dashboard-widget-loading.spec.ts"
               ],
               "scope": "Wait for finite card entrance animation before reading both grid rectangles. The same precision and existing behavior assertions passed in both languages."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ]
         }
@@ -584361,7 +584588,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-browser-navigation-query-and-resting-states",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -584733,7 +584961,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
@@ -585922,6 +586150,14 @@
                 "apps/api/src/user-settings/conversation-identity.service.ts"
               ],
               "scope": "Shared attachment copy preparation, final publication and directly affected callers only. The broad admin and onboarding controller edits only pass the validated session to the affected save methods. Related native tests passed. The historical migration test requires all prior storage fields plus the new null cleanup claim."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ]
         }
@@ -586936,7 +587172,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-delivery-window-feedback-overlay",
           "release-0.6-browser-recovery-selection-and-overlay",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -586976,7 +587213,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/theme-components.spec.ts",
@@ -587049,6 +587286,16 @@
           "scope_dispositions": [
             "This task accepts measured text and visual cue contrast in supported UI themes and user settings. Conditional form semantics, command feedback, recovery and broader UI adoption remain separate.",
             "An active saving notice may temporarily cover passive step labels. The step text ratios were measured after normal notice dismissal. The order heading and return link retain their clear placement."
+          ],
+          "source_renewals": [
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            }
           ]
         }
       }
@@ -643449,7 +643696,8 @@
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "integrated-qa-preview-journeys"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643925,7 +644173,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/saving-staff-operation-form-fixture.ts",
@@ -646391,6 +646639,14 @@
                 "apps/web/src/lib/documents.ts"
               ],
               "scope": "Append-only migration; no historical SQL changes. Shared exports are additive and worker startup changes only the multipart timer pool. Upload/document changes are limited to multipart reservation, recovery and trust checks. Native PostgreSQL and object-storage tests, document transport, and API contract evidence are recorded in this batch; unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ]
         }
@@ -794219,7 +794475,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -795158,6 +795414,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -795422,7 +795686,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "integrated-qa-preview-journeys"
         ],
         "inspection": {
           "wallet_history": "R-01.02 accepted separately.",
@@ -796381,7 +796646,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/e2e/solar-journey.spec.ts",
@@ -797312,6 +797577,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Additive storage cleanup operation and check, append-only migration journal, and pre-PUT copy reservation fence. Exact native worker and affected API checks cover the behavior; 208 historical SQL files and unrelated source retain their bytes."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -797572,7 +797845,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
-          "release-0.6-browser-stable-native-feedback"
+          "release-0.6-browser-stable-native-feedback",
+          "integrated-qa-preview-journeys"
         ]
       }
     },
@@ -803457,7 +803731,7 @@
             },
             {
               "path": "apps/web/e2e/saving-journey.spec.ts",
-              "sha256": "3b8b2bc10a99ebfa55a7d47b974419ddf2a5ee28f47b9ab55c3b03d0c0e9b0ea"
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
             },
             {
               "path": "apps/web/src/pages/SavingOrderDetailPage.tsx",
@@ -806458,6 +806732,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "integrated-qa-preview-journeys",
+              "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+              "paths": [
+                "apps/web/e2e/saving-journey.spec.ts"
+              ],
+              "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
             }
           ],
           "presentation_renewals": [
@@ -806892,7 +807174,8 @@
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "integrated-qa-preview-journeys"
         ]
       }
     },
@@ -819900,7 +820183,9 @@
       "depends_on": [],
       "evidence": {
         "current_acceptance": null,
-        "batches": []
+        "batches": [
+          "integrated-qa-preview-journeys"
+        ]
       }
     },
     {
@@ -819927,7 +820212,9 @@
       "depends_on": [],
       "evidence": {
         "current_acceptance": null,
-        "batches": []
+        "batches": [
+          "integrated-qa-preview-journeys"
+        ]
       }
     },
     {
@@ -939346,6 +939633,55 @@
         {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/legal-replay.A5R5BT/native-legal-replay.log",
           "sha256": "ceab83a8bbe416b07f767ffdef39c721e9d8295720edff008e60c59cd76d10d1"
+        }
+      ]
+    },
+    "integrated-qa-preview-journeys": {
+      "batch": "integrated-qa-preview-journeys",
+      "base_commit": "b0dce58ca8d2ec0bf48dcecb575f54d51cedf916",
+      "task_keys": [
+        "release-readiness#R-06.01",
+        "release-readiness#R-06.02"
+      ],
+      "changed_paths": [
+        "apps/web/e2e/saving-journey.spec.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
+        }
+      ],
+      "checks": [
+        "The owner prioritized an integrated QA staging preview ahead of formal acceptance and Telegram delivery. The preview uses the same four service implementations and keeps the formal v0.6.0 and v0.9.0 gates open.",
+        "The candidate production web build passed 21 Chromium cases. Two saving cases initially matched multiple paid labels on the outgoing invoice screen. The test now waits for the returned order summary before requiring that the payment action is absent and the order shows its paid state. Both localized saving cases then passed on the same web build with all financial and fulfillment assertions retained.",
+        "Ten selected electricity, saving, solar and consultation PostgreSQL cases passed across four files. The runner intentionally selected 10 of the 119 cases and matched 2,097 source inputs. The browser fixtures and isolated PostgreSQL checks do not certify live provider or launch gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/web-build.log",
+          "sha256": "e22f83b1b5b5b853baac306fafd7f5be16eb1566ce1aa1f4b235f1027cac42d5"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/browser.log",
+          "sha256": "dc0ff38a602f566dcc31fb1a7b59e177e6d43055d0a363b8a756dc4bf1348d88"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/browser-saving-recheck.log",
+          "sha256": "6596e0a868b07fdf3e2f1f597f30506393dcf10849b97d62bd47b2ac00b02323"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa.ONEQpc/saving-test.sha256",
+          "sha256": "a75b999b4fecb8b79efe520b9fd29ec39b8937b9411a733cb96ec17ef1b9b8ee"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa-api.UwN3f7/native-source.sha256",
+          "sha256": "fdbb6a20920ff34cab4005f03e655e29f8207d6db5e6a661c57d7daf3446805f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/integrated-qa-api.UwN3f7/native-integrated-qa-api.log",
+          "sha256": "e2416bf42c6987712b8343fae571b67b20d41f64af81269165cc7e105884fd2e"
         }
       ]
     }

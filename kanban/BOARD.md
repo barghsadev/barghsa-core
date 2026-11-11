@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T12:09:54+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T12:30:29+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -1454,8 +1454,8 @@ A frozen candidate proves all four services from a clean deployment through oper
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-06.01` | todo | Inventory needed | Run frozen all-service launch-candidate acceptance |
-| `release-readiness#R-06.02` | todo | Inventory needed | Approve launch operations and rollback rehearsal |
+| `release-readiness#R-06.01` | todo | Recorded batch work | Run frozen all-service launch-candidate acceptance |
+| `release-readiness#R-06.02` | todo | Recorded batch work | Approve launch operations and rollback rehearsal |
 
 ## v1.0.0: First production launch
 
