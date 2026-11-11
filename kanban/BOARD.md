@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T22:20:57+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T22:28:48+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1230 | Accepted with unchanged source bindings. |
-| verify | 62 | Existing work may be complete; inspect evidence before building. |
-| partial | 68 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 60 | Existing work may be complete; inspect evidence before building. |
+| partial | 70 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,10 +39,12 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify exact protected-main preflights and quarterly storage workflow, reconcile scheduled browser evidence, and continue the package review.
+Read back the protected preflight, quarterly recovery, native alert and nightly browser evidence while retaining the exact license and operational prerequisites.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 - `06-security-testing-observability.md#T-06.11.04.05`: Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection
+- `06-security-testing-observability.md#T-06.15.02.02`: Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2
+- `06-security-testing-observability.md#T-06.15.02.04`: Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection
 - `01-platform-infrastructure.md#T-05.05.01`: Create nightly CI schedule
 - `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
 
@@ -1395,9 +1397,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.01.07` | verify | Inventory needed | Set up dead-man check / watchdog for alert delivery pipeline |
 | `06-security-testing-observability.md#T-06.15.01.08` | partial | Recorded batch work | Every alert links to its dashboard and runbook |
 | `06-security-testing-observability.md#T-06.15.02.01` | done | Recorded batch work | Define SLOs with SLIs: availability, API latency (p95), core page LCP (p75), job start time (p99), RPO, RTO |
-| `06-security-testing-observability.md#T-06.15.02.02` | verify | Inventory needed | Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2 |
+| `06-security-testing-observability.md#T-06.15.02.02` | partial | Recorded batch work | Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2 |
 | `06-security-testing-observability.md#T-06.15.02.03` | verify | Inventory needed | Implement error budget tracking dashboard with consumption rate and burn-down |
-| `06-security-testing-observability.md#T-06.15.02.04` | verify | Inventory needed | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection |
+| `06-security-testing-observability.md#T-06.15.02.04` | partial | Recorded batch work | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection |
 | `06-security-testing-observability.md#T-06.15.02.05` | verify | Inventory needed | Ensure outbox backlog, refund mismatch, and provider health alerts have SLO-linked burn budgets |
 | `06-security-testing-observability.md#T-06.15.03.01` | done | Recorded batch work | Configure unresolved refund obligation alert: count > 0 for > 1 hour → P2 |
 | `06-security-testing-observability.md#T-06.15.03.02` | done | Recorded batch work | Configure reconciliation mismatch alert: wallet/cached balance drift > threshold → P1 |

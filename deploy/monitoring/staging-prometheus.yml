@@ -4,7 +4,10 @@ global:
   external_labels:
     environment: staging
     database: core
-rule_files: [/etc/prometheus/notification-alerts.yml, /etc/prometheus/staging-worker-alerts.yml]
+rule_files:
+  - /etc/prometheus/notification-alerts.yml
+  - /etc/prometheus/staging-worker-alerts.yml
+  - /etc/prometheus/journey-slo-alerts.yml
 alerting:
   alertmanagers:
     - static_configs:

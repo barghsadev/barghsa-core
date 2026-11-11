@@ -22,6 +22,15 @@ const labels: Record<string, string> = {
   PaymentIdempotencyConflict: 'مغایرت در تلاش دوباره پرداخت / Payment retry data mismatch',
   AiModelCircuitOpen: 'مدل هوش مصنوعی در دسترس نیست / AI model unavailable',
   WorkerUnavailable: 'پردازشگر پس‌زمینه در دسترس نیست / Background worker unavailable',
+  JourneyErrorBudgetFastBurn: 'افت سریع دسترس‌پذیری خدمت / Rapid loss of service availability',
+  JourneyErrorBudgetSlowBurn:
+    'افت پایدار دسترس‌پذیری خدمت / Sustained loss of service availability',
+};
+const journeyNames: Record<string, string> = {
+  electricity: 'برق / Electricity',
+  saving: 'صرفه‌جویی / Energy saving',
+  solar: 'خورشیدی / Solar',
+  consultation: 'مشاوره / Consultation',
 };
 const criticalAlerts = new Set([
   'NotificationDeadLettersAccumulating',
@@ -30,6 +39,7 @@ const criticalAlerts = new Set([
   'PaymentCallbackAnomaly',
   'PaymentIdempotencyConflict',
   'WorkerUnavailable',
+  'JourneyErrorBudgetFastBurn',
 ]);
 const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['SmsProviderLowCredit', 'P2'],
@@ -39,6 +49,8 @@ const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['WalletReconciliationCritical', 'P1'],
   ['PaymentCallbackAnomaly', 'P1'],
   ['PaymentIdempotencyConflict', 'P1'],
+  ['JourneyErrorBudgetFastBurn', 'P1'],
+  ['JourneyErrorBudgetSlowBurn', 'P2'],
 ]);
 type Alert = {
   name: string;
@@ -49,6 +61,7 @@ type Alert = {
   database: string;
   severity: 'warning' | 'critical';
   priority: 'P1' | 'P2' | null;
+  service?: string;
 };
 
 export function parseOperationsAlerts(
@@ -71,6 +84,9 @@ export function parseOperationsAlerts(
     const source = item.labels as Record<string, unknown> | undefined;
     const name = source?.alertname;
     const priority = typeof name === 'string' ? (alertPriorities.get(name) ?? null) : null;
+    const journeyBurn =
+      name === 'JourneyErrorBudgetFastBurn' || name === 'JourneyErrorBudgetSlowBurn';
+    const service = journeyBurn ? source?.service : undefined;
     if (
       !source ||
       typeof name !== 'string' ||
@@ -79,6 +95,11 @@ export function parseOperationsAlerts(
       source.database !== database ||
       source.severity !== (criticalAlerts.has(name) ? 'critical' : 'warning') ||
       (priority !== null && source.priority !== priority) ||
+      (journeyBurn &&
+        (typeof service !== 'string' ||
+          !Object.hasOwn(journeyNames, service) ||
+          (source.availability_tier !== 'pilot' && source.availability_tier !== 'commercial') ||
+          source.window !== (name === 'JourneyErrorBudgetFastBurn' ? '1h' : '24h'))) ||
       (item.status !== 'firing' && item.status !== 'resolved') ||
       typeof item.fingerprint !== 'string' ||
       !/^[a-f0-9]{16,128}$/.test(item.fingerprint) ||
@@ -97,6 +118,7 @@ export function parseOperationsAlerts(
       database,
       severity: source.severity as 'warning' | 'critical',
       priority,
+      ...(typeof service === 'string' ? { service } : {}),
     };
   });
 }
@@ -167,7 +189,7 @@ export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
         operationsAlertName: alert.name,
         operationsDashboardOrigin: dashboardOrigin,
         priority: alert.priority,
-        details: `${labels[alert.name]}: ${alert.status === 'firing' ? 'هشدار مشاهده شد / Firing' : 'رفع هشدار مشاهده شد / Resolved'}`,
+        details: `${labels[alert.name]}${alert.service ? ` (${journeyNames[alert.service]})` : ''}: ${alert.status === 'firing' ? 'هشدار مشاهده شد / Firing' : 'رفع هشدار مشاهده شد / Resolved'}`,
         eta:
           alert.status === 'resolved'
             ? 'بازیابی مشاهده شد / Recovery observed'

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T22:20:57+00:00",
+  "updated": "2026-11-11T22:28:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -24640,7 +24640,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-executive-slo-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-quarterly-storage-recovery"
+          "release-0.6-quarterly-storage-recovery",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-operations-documentation",
@@ -24652,7 +24653,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -24764,6 +24765,14 @@
                 "docs/runbooks/storage-outage.md"
               ],
               "scope": "Added the quarterly checks and off-server exercise to the storage runbook. Existing escalation, recovery, policy, alert links and response instructions retain their bytes. Formatting and links passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -86623,7 +86632,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -87423,7 +87433,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -87447,11 +87457,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -89109,6 +89119,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ],
           "presentation_renewals": [
@@ -92206,7 +92226,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-notification-contrast",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92238,7 +92259,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -92258,11 +92279,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -92444,6 +92465,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ],
           "presentation_renewals": [
@@ -107334,7 +107365,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107558,7 +107590,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -107578,11 +107610,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -107855,6 +107887,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ],
           "presentation_renewals": [
@@ -489718,7 +489760,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "status": "done",
@@ -489910,7 +489953,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -489926,11 +489969,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -490347,6 +490390,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ],
           "presentation_renewals": [
@@ -491874,7 +491927,8 @@
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492098,7 +492152,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -492548,6 +492602,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
             }
           ],
           "presentation_renewals": [
@@ -556484,7 +556546,8 @@
           "release-0.6-latency-rehearsal-budgets",
           "release-0.6-database-protection-export-leases",
           "release-0.6-postgresql-dashboard",
-          "release-0.6-executive-slo-dashboard"
+          "release-0.6-executive-slo-dashboard",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "documented-performance-rehearsal-budget",
@@ -556505,7 +556568,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -556552,6 +556615,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -556587,7 +556658,8 @@
           "release-0.6-weekly-isolated-load-scenarios",
           "release-0.6-load-client-address-fixture",
           "release-0.6-load-regression-and-durable-count-receipt",
-          "release-0.6-executive-slo-dashboard"
+          "release-0.6-executive-slo-dashboard",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -556643,11 +556715,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             }
           ],
           "checks": [
@@ -556714,6 +556786,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -558069,7 +558150,8 @@
         "batches": [
           "release-0.6-reconciliation-failure-injection",
           "release-0.6-alert-runbook-references-and-review",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-reconciliation-recovery-tests",
@@ -558103,11 +558185,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -558182,6 +558264,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
             }
           ]
         }
@@ -560285,7 +560376,8 @@
           "release-0.6-production-notes-and-provider-inventory",
           "release-0.6-first-launch-promotion-check",
           "release-0.6-executive-slo-dashboard",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-production-release-notes-template",
@@ -560304,7 +560396,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -560384,6 +560476,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -562797,7 +562897,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -562821,7 +562922,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -562833,7 +562934,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             }
           ],
           "checks": [
@@ -562950,6 +563051,15 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -563179,7 +563289,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -563203,7 +563314,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -563342,6 +563453,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending."
             }
           ]
         }
@@ -563385,7 +563504,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -563445,7 +563565,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -563595,6 +563715,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending."
             }
           ]
         }
@@ -563657,7 +563785,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -563673,11 +563802,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -563852,6 +563981,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
             }
           ]
         }
@@ -563895,7 +564033,8 @@
           "release-0.6-finance-activity-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -563919,7 +564058,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -564058,6 +564197,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending."
             }
           ]
         }
@@ -564241,7 +564388,8 @@
           "release-0.6-executive-slo-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-maintenance-health"
+          "release-0.6-maintenance-health",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564273,7 +564421,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             }
           ],
           "checks": [
@@ -564309,6 +564457,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The API maintenance test adds readiness and PostgreSQL assertions while retaining its previous cases. The observer tests add a real readiness failure case. The deployment instructions describe existing read-only smoke behavior and retain all prior deployment procedures."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -564345,7 +564501,8 @@
           "release-0.6-executive-slo-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -564385,7 +564542,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -564397,7 +564554,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             }
           ],
           "checks": [
@@ -564464,6 +564621,15 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules. Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -564492,7 +564658,8 @@
         "batches": [
           "release-0.6-postgresql-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-pool-dashboard",
@@ -564513,7 +564680,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -564540,6 +564707,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -564573,7 +564748,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -564602,7 +564778,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -564686,6 +564862,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -564882,7 +565066,8 @@
         "batches": [
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -564942,7 +565127,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -564979,6 +565164,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -565157,7 +565350,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -565213,7 +565407,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -565304,6 +565498,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -565574,7 +565776,8 @@
         "batches": [
           "release-0.6-ai-usage-and-cost-dashboard",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-budget-charge",
@@ -565620,7 +565823,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -565653,6 +565856,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -565801,7 +566012,8 @@
           "release-0.6-executive-slo-dashboard",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -565809,7 +566021,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -565925,6 +566137,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -566070,7 +566290,8 @@
           "release-0.6-structured-release-log-marker",
           "release-0.6-external-provider-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -566082,7 +566303,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -566090,11 +566311,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -566186,6 +566407,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed."
             }
           ]
         }
@@ -566261,7 +566492,8 @@
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-alert-dashboards",
-          "release-0.6-grafana-image-review-and-staging-capacity"
+          "release-0.6-grafana-image-review-and-staging-capacity",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": null
       }
@@ -566292,7 +566524,8 @@
           "release-0.6-service-objectives-and-priorities",
           "release-0.6-incident-response-and-runbooks",
           "release-0.6-latency-rehearsal-budgets",
-          "release-0.6-executive-slo-dashboard"
+          "release-0.6-executive-slo-dashboard",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -566300,7 +566533,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "09bf530d29342c2a8891b006a0f0416e9a3e37c55deccdb5649bf120aa501a82"
+              "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
             },
             {
               "path": "architecture.md",
@@ -566363,6 +566596,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "The Grafana overlay adds only a read-only mount for the executive dashboard. The documentation adds operating instructions for that view and retains its existing SLO thresholds and procedures. Exact Compose normalization and isolated Grafana provisioning passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Documents the two monthly burn policies, collector tier label and operational receipt requirements. Prior budgets, thresholds and dashboard instructions retain their wording."
             }
           ]
         }
@@ -566379,18 +566620,32 @@
         "story": "06-security-testing-observability.md#spec-f627e75f2527"
       },
       "requirement": "| T-06.15.02.02 | Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2 | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the approved authenticated journey collector feeds fresh scoped success and failure counters with one availability tier per environment and database. Read back both rule evaluations and the corresponding firing and resolved alerts in the target environment.",
+        "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/journey-alerts.test.ts",
+          "deploy/monitoring/journey-slo-alerts.test.yml",
+          "deploy/monitoring/journey-slo-alerts.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "docs/operations/service-objectives.md",
+          "docs/runbooks/journey-availability.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
+        "batches": [
+          "release-0.6-journey-slo-burn"
+        ],
         "current_acceptance": null
       }
     },
@@ -566431,18 +566686,32 @@
         "story": "06-security-testing-observability.md#spec-f627e75f2527"
       },
       "requirement": "| T-06.15.02.04 | Configure multi-window, multi-burn-rate alert (MWMBR) for accurate detection | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the approved authenticated journey collector feeds fresh scoped success and failure counters with one availability tier per environment and database. Read back both rule evaluations and the corresponding firing and resolved alerts in the target environment.",
+        "Verify the database-backed worker receipt cases on the exact candidate and retain approved P1 pager and P2 team routing receipts. Existing in-app delivery, Prometheus fixtures and parser checks do not establish those external receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/journey-alerts.test.ts",
+          "deploy/monitoring/journey-slo-alerts.test.yml",
+          "deploy/monitoring/journey-slo-alerts.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "docs/operations/service-objectives.md",
+          "docs/runbooks/journey-availability.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
+        "batches": [
+          "release-0.6-journey-slo-burn"
+        ],
         "current_acceptance": null
       }
     },
@@ -566526,7 +566795,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -566542,11 +566812,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -566706,6 +566976,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
             }
           ]
         }
@@ -566766,7 +567045,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
-          "release-0.6-process-error-reporting"
+          "release-0.6-process-error-reporting",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -566782,11 +567062,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -566961,6 +567241,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
             }
           ]
         }
@@ -567019,7 +567308,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -567035,11 +567325,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -567180,6 +567470,15 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed."
             }
           ]
         }
@@ -567218,7 +567517,8 @@
           "release-0.6-external-provider-dashboard",
           "release-0.6-authentication-security-dashboard",
           "release-0.6-payment-transport-circuit",
-          "release-0.6-notification-recovery-circuits"
+          "release-0.6-notification-recovery-circuits",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -567254,11 +567554,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -567290,7 +567590,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -567378,6 +567678,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "The transport keeps its current validated recipients, provider identities, idempotency, protected configuration pause and receipt state. This batch adjusts configurable circuit timing and bounds recovery I/O to the existing persisted lease. Related transport, native provider, worker receipt and alert cases passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -567420,7 +567730,8 @@
           "release-0.6-authentication-security-dashboard",
           "release-0.6-payment-transport-circuit",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-storage-provider-circuit"
+          "release-0.6-storage-provider-circuit",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -567448,11 +567759,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c363742293640f86dea2225ba6cf219fb384b450e2f1da6c29c30ad4a5f7e2ec"
+              "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "9e4c9bba9146a690b2f3ca962127d3ac0d1ba2991aa1d7ab5592647d4e36d691"
+              "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -567496,7 +567807,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -567591,6 +567902,16 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds journey priority and service evidence to the existing parameterized receipt checks. Earlier test assertions retain their behavior. Execution of the expanded native suite remains pending. Adds two journey alert names, their fixed service labels and scoped validation. Existing alert types, transactions, recipient checks and delivery rules are retained. Nine focused worker cases passed. Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -569106,7 +569427,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-finance-activity-dashboard",
           "release-0.6-notification-recovery-circuits",
-          "release-0.6-quarterly-storage-recovery"
+          "release-0.6-quarterly-storage-recovery",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -569128,7 +569450,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "98db4a684f1f989dffc8f2b24d8602f5ac694dc026fc0a5f3c90b3779806384c"
+              "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -569208,6 +569530,14 @@
                 "docs/runbooks/storage-outage.md"
               ],
               "scope": "Added the quarterly checks and off-server exercise to the storage runbook. Existing escalation, recovery, policy, alert links and response instructions retain their bytes. Formatting and links passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the additional journey rules. Existing scrapes, labels and rules remain intact. Prometheus validated the rendered config with all mounted rules."
             }
           ]
         }
@@ -570635,7 +570965,8 @@
           "release-0.6-process-error-reporting",
           "release-0.6-definition-of-done-enforcement",
           "release-0.6-raw-sql-lint",
-          "release-0.6-coverage-required-check"
+          "release-0.6-coverage-required-check",
+          "release-0.6-journey-slo-burn"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -570655,7 +570986,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "375b0ce0bd02e78a7eb61369afb6b320a4c184acecddb3f2b586827bb72203df"
+              "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -570748,6 +571079,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-journey-slo-burn",
+              "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds one read-only journey rule mount. Existing services, image and alert configuration retain their settings. Compose config rendering and Prometheus config validation passed."
             }
           ]
         }
@@ -862487,7 +862826,8 @@
           "release-0.6-sentry-version-tag",
           "release-0.6-coverage-required-check",
           "release-0.6-sentry-version-tag-coverage",
-          "release-0.6-quarterly-storage-recovery"
+          "release-0.6-quarterly-storage-recovery",
+          "release-0.6-journey-slo-burn"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -990136,6 +990476,146 @@
           "sha256": "2d9b85e823b677c24cb7c37ff46de4271cc9a7a9df8f61dae38ec7f8dd9b7a68"
         }
       ]
+    },
+    "release-0.6-journey-slo-burn": {
+      "batch": "release-0.6-journey-slo-burn",
+      "base_commit": "b736738cec3a9947527f0025fd785621b7b4280a",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.04.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.15.02.02",
+        "06-security-testing-observability.md#T-06.15.02.04",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "a290b6f88787f5ee9b656d52cd876f42c9a61efcb0a6257a518cda71ba46e355"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "79c48ced55ad7c6375124b69adad3f04d6a28b803671ff472f7792930fdea940"
+        },
+        {
+          "path": "apps/worker/src/operations/journey-alerts.test.ts",
+          "sha256": "22f99c2fdab83a14fb405dfe2efc47d3e836411976561be9e399c67325bcda55"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.test.yml",
+          "sha256": "9289579d0f066af97bc4f4f1cb539f1c14019e088ab58a1dbd4f4b5c5c52f40e"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.yml",
+          "sha256": "5c40106ee5dbe1a7a8ea401e8858632c59c40aee0af9c4a10a081f8364efd8c2"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "69acf13718cb97b91bc87de655a5a2cc0d448db038e65dd3814257d68d21549c"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "2b6863bdc0848adc3c7c514669698095187b352d7ee07c1b928b20a201e499e0"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "7b54b1d5dc19a115418291248ef91387585a1ef91b96b0fa4d08c09bc7dc31ce"
+        },
+        {
+          "path": "docs/runbooks/journey-availability.md",
+          "sha256": "06224c0bd456f7bfc7fb73342b3c93c18baccdcda859ba3de9d051de99b586b2"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "9a35c5860e7aa5fc6a931763d1417d90828005a70ffd7e9a21701645f1f71593"
+        }
+      ],
+      "checks": [
+        "Prometheus normalizes the eligible failure fraction by the 99.5% or 99.9% tier budget for each environment, database and service. P1 requires 5% monthly budget per hour in both one-hour and five-minute windows. P2 requires 2% per day in both 24-hour and two-hour windows and is suppressed for the same scope while P1 fires. Thresholds use the number of days in the current UTC month.",
+        "Promtool checked nine rules and four rule scenarios with ten assertions covering firing, recovery, priority suppression, per-service scope, missing outcome series, idle traffic, invalid tiers and the 31-day threshold. Docker Compose rendered the read-only mount and Promtool checked the full local configuration.",
+        "The worker validates the priority, service, tier and expected window, uses bilingual service labels and resolves only the allowlisted dashboard and runbook links. Nine focused cases passed. The worker and dependent packages built, both typechecks and focused lint passed, and all changed files passed formatting and whitespace checks."
+      ],
+      "limitations": [
+        "No staging reload or collector provisioning was performed. Config rendering and promtool fixtures do not establish a live metric, a fired/resolved receiver receipt, a pager delivery or a team task.",
+        "The expanded native worker alert test needs disposable PostgreSQL and awaits hosted verification. The local focused worker tests used the original alert parser and shared links with no database setup."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-journey-slo-burn",
+      "execution_receipts": [
+        {
+          "file": "promtool-rules.log",
+          "sha256": "90067bf1e2c358c68f9de7d73b9a71f13610c9f88c7fdae8a437008293d7276f"
+        },
+        {
+          "file": "promtool-tests.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "verify-config.py",
+          "sha256": "0ac05d7bc71f0baeb505fbd7a31ac00961793f03645ee34c3f9fb53b40281d79"
+        },
+        {
+          "file": "config.log",
+          "sha256": "57a6f807bf525cab10870ea6fcd195c9537efc795af7ec9eed22c13046d5ceee"
+        },
+        {
+          "file": "worker-unit.config.mjs",
+          "sha256": "9b952e6605140772d2e93409c8c2abfb701f041091efcb70a3779c9b36fd41f7"
+        },
+        {
+          "file": "worker-unit.log",
+          "sha256": "81743c19d639ae14ad9e97d313820c5acca6e05eb4d9115e9cf121e54e8ffabb"
+        },
+        {
+          "file": "worker-typecheck.log",
+          "sha256": "a5450d3a60d0337acd177be8175e7d4422c1659bf1fae6a297ab5798a8d1275e"
+        },
+        {
+          "file": "shared-typecheck.log",
+          "sha256": "7322c734289ff113df6088664ed36260c93498110f430ea4d2695a98f495ae7c"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "diff.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "bd49569236b219b39c20eb260907f142555ca172fdd3a335216a849652940239"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -990175,15 +990655,17 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-protected-tooling-and-recovery",
+    "id": "release-0.6-recovery-and-monitoring-receipts",
     "release": "0.6.0",
     "task_keys": [
       "release-readiness#R-05.02",
       "06-security-testing-observability.md#T-06.11.04.05",
+      "06-security-testing-observability.md#T-06.15.02.02",
+      "06-security-testing-observability.md#T-06.15.02.04",
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify exact protected-main preflights and quarterly storage workflow, reconcile scheduled browser evidence, and continue the package review."
+    "goal": "Read back the protected preflight, quarterly recovery, native alert and nightly browser evidence while retaining the exact license and operational prerequisites."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

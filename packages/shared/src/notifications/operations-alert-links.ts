@@ -14,6 +14,8 @@ const alertResources = {
   PaymentIdempotencyConflict: ['barghsa-finance-safety', 'payment-wallet-mismatch'],
   AiModelCircuitOpen: ['barghsa-ai-usage', 'ai-provider-outage'],
   WorkerUnavailable: ['barghsa-worker-health', 'notification-outage'],
+  JourneyErrorBudgetFastBurn: ['barghsa-executive-slo', 'journey-availability'],
+  JourneyErrorBudgetSlowBurn: ['barghsa-executive-slo', 'journey-availability'],
 } as const;
 
 export function operationsDashboardOrigin(value: unknown): string | null {

@@ -1,0 +1,74 @@
+groups:
+  - name: barghsa-journey-slo
+    rules:
+      - record: barghsa:journey_attempts:rate
+        labels: { window: 5m }
+        expr: |
+          sum by (environment, database, availability_tier, service, outcome) (
+            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[5m])
+          )
+      - record: barghsa:journey_attempts:rate
+        labels: { window: 1h }
+        expr: |
+          sum by (environment, database, availability_tier, service, outcome) (
+            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[1h])
+          )
+      - record: barghsa:journey_attempts:rate
+        labels: { window: 2h }
+        expr: |
+          sum by (environment, database, availability_tier, service, outcome) (
+            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[2h])
+          )
+      - record: barghsa:journey_attempts:rate
+        labels: { window: 24h }
+        expr: |
+          sum by (environment, database, availability_tier, service, outcome) (
+            rate(barghsa_rollout_journey_attempts_total{environment!="",database!="",availability_tier=~"pilot|commercial",service=~"electricity|saving|solar|consultation",outcome=~"success|failure"}[24h])
+          )
+      - record: barghsa:journey_budget:error_ratio
+        labels: { availability_tier: pilot }
+        expr: vector(0.005)
+      - record: barghsa:journey_budget:error_ratio
+        labels: { availability_tier: commercial }
+        expr: vector(0.001)
+      - record: barghsa:journey:burn_rate
+        expr: |
+          (
+            barghsa:journey_attempts:rate{outcome="failure"}
+            / ignoring (outcome) (
+              (
+                barghsa:journey_attempts:rate{outcome="failure"}
+                + ignoring (outcome) barghsa:journey_attempts:rate{outcome="success"}
+              ) > 0
+            )
+          ) / on (availability_tier) group_left barghsa:journey_budget:error_ratio
+      - alert: JourneyErrorBudgetFastBurn
+        expr: |
+          (barghsa:journey:burn_rate{window="1h"} >= (0.05 * scalar(days_in_month()) * 24))
+          and ignoring (window)
+          (barghsa:journey:burn_rate{window="5m"} >= (0.05 * scalar(days_in_month()) * 24))
+        labels:
+          severity: critical
+          priority: P1
+        annotations:
+          summary: '{{ $labels.service }} is consuming its availability budget quickly'
+          dashboard_uid: barghsa-executive-slo
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - alert: JourneyErrorBudgetSlowBurn
+        expr: |
+          (
+            (barghsa:journey:burn_rate{window="24h"} >= (0.02 * scalar(days_in_month())))
+            and ignoring (window)
+            (barghsa:journey:burn_rate{window="2h"} >= (0.02 * scalar(days_in_month())))
+          ) unless ignoring (window) (
+            (barghsa:journey:burn_rate{window="1h"} >= (0.05 * scalar(days_in_month()) * 24))
+            and ignoring (window)
+            (barghsa:journey:burn_rate{window="5m"} >= (0.05 * scalar(days_in_month()) * 24))
+          )
+        labels:
+          severity: warning
+          priority: P2
+        annotations:
+          summary: '{{ $labels.service }} has sustained availability budget consumption'
+          dashboard_uid: barghsa-executive-slo
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md

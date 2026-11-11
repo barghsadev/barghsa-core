@@ -263,6 +263,22 @@ it.each([
   { alertname: 'WalletReconciliationCritical', severity: 'critical', priority: 'P1' },
   { alertname: 'PaymentCallbackAnomaly', severity: 'critical', priority: 'P1' },
   { alertname: 'PaymentIdempotencyConflict', severity: 'critical', priority: 'P1' },
+  {
+    alertname: 'JourneyErrorBudgetFastBurn',
+    severity: 'critical',
+    priority: 'P1',
+    service: 'solar',
+    availability_tier: 'pilot',
+    window: '1h',
+  },
+  {
+    alertname: 'JourneyErrorBudgetSlowBurn',
+    severity: 'warning',
+    priority: 'P2',
+    service: 'solar',
+    availability_tier: 'commercial',
+    window: '24h',
+  },
 ])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);
@@ -289,7 +305,10 @@ it.each([
     {
       event_key: 'admin.operations_alert',
       channels: ['in_app'],
-      payload: { priority: labels.priority },
+      payload: {
+        priority: labels.priority,
+        ...('service' in labels ? { details: expect.stringContaining('خورشیدی / Solar') } : {}),
+      },
     },
   ]);
 });

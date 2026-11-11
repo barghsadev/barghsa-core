@@ -19,6 +19,12 @@ Select the environment, database and applicable availability target in private G
 
 Check the observed attempt counts against the journey collector's coverage before interpreting availability. Scrape the collector and initialize both outcomes for all four services as described in the rollout observer setup. A service without measured attempts has no availability or burn value. When comparing releases, select comparable periods before and after the verified deployment time and retain the guarded rollout receipt with the dashboard comparison. [Executive SLO dashboard](../../deploy/monitoring/grafana-executive-slo-dashboard.json) · [Rollout observation setup](../../deploy/production/README.md#configure-the-observation-hook).
 
+### Journey burn alerts
+
+Give the protected collector target one `availability_tier` label per environment and database. Use `pilot` for the 99.5% objective or `commercial` for 99.9%. The rules compare the failure fraction with that tier's budget for each service. They require both outcome series and measured attempts. Check collector health separately when those measurements are missing.
+
+The P1 rule requires 5% of the current UTC month's budget per hour over both the one-hour and five-minute windows. The P2 rule requires 2% per day over both the 24-hour and two-hour windows. A firing P1 suppresses the P2 for the same service and scope. The private inbox preserves the alert priority and the affected service. Verify collector ingestion, firing and resolved receipts, and approved pager and team routing in the target environment. [Prometheus rules](../../deploy/monitoring/journey-slo-alerts.yml) · [Journey runbook](../runbooks/journey-availability.md) · [Multi-window alerting](https://sre.google/workbook/alerting-on-slos/).
+
 ## API health dashboard
 
 Import the API Health dashboard into private Grafana and select the Prometheus

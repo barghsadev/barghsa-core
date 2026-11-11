@@ -1,0 +1,101 @@
+rule_files: [journey-slo-alerts.yml]
+evaluation_interval: 1m
+tests:
+  - name: A pilot P1 fires on both windows and clears once the short window recovers
+    interval: 1m
+    input_series:
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="electricity",outcome="success",revision="a"}'
+        values: '0+80x70 5700+100x140'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="electricity",outcome="failure",revision="a"}'
+        values: '0+20x70 1400+0x140'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="solar",outcome="success",revision="a"}'
+        values: '0+100x211'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="solar",outcome="failure",revision="a"}'
+        values: '0+0x211'
+    alert_rule_test:
+      - eval_time: 1h
+        alertname: JourneyErrorBudgetFastBurn
+        exp_alerts:
+          - exp_labels:
+              environment: staging
+              database: core
+              availability_tier: pilot
+              service: electricity
+              window: 1h
+              severity: critical
+              priority: P1
+            exp_annotations:
+              summary: electricity is consuming its availability budget quickly
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 1h
+        alertname: JourneyErrorBudgetSlowBurn
+        exp_alerts: []
+      - eval_time: 1h20m
+        alertname: JourneyErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 3h15m
+        alertname: JourneyErrorBudgetSlowBurn
+        exp_alerts: []
+  - name: Commercial slow burn fires separately and requires the short and long windows
+    interval: 1m
+    input_series:
+      - series: 'barghsa_rollout_journey_attempts_total{environment="production",database="commercial",availability_tier="commercial",service="consultation",outcome="success"}'
+        values: '0+99x1440 142660+100x145'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="production",database="commercial",availability_tier="commercial",service="consultation",outcome="failure"}'
+        values: '0+1x1440 1440+0x145'
+    alert_rule_test:
+      - eval_time: 24h
+        alertname: JourneyErrorBudgetSlowBurn
+        exp_alerts:
+          - exp_labels:
+              environment: production
+              database: commercial
+              availability_tier: commercial
+              service: consultation
+              window: 24h
+              severity: warning
+              priority: P2
+            exp_annotations:
+              summary: consultation has sustained availability budget consumption
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 24h
+        alertname: JourneyErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 26h10m
+        alertname: JourneyErrorBudgetSlowBurn
+        exp_alerts: []
+  - name: Missing outcomes, idle services and unapproved tiers cannot trigger alerts
+    interval: 1m
+    input_series:
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="one",availability_tier="pilot",service="saving",outcome="failure"}'
+        values: '0+100x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="two",availability_tier="pilot",service="saving",outcome="success"}'
+        values: '0+100x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="one",availability_tier="pilot",service="solar",outcome="failure"}'
+        values: '0+0x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="one",availability_tier="pilot",service="solar",outcome="success"}'
+        values: '0+0x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="one",availability_tier="unknown",service="electricity",outcome="failure"}'
+        values: '0+100x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="one",availability_tier="unknown",service="electricity",outcome="success"}'
+        values: '0+0x61'
+    alert_rule_test:
+      - eval_time: 1h
+        alertname: JourneyErrorBudgetFastBurn
+        exp_alerts: []
+      - eval_time: 1h
+        alertname: JourneyErrorBudgetSlowBurn
+        exp_alerts: []
+  - name: January applies its 31-day budget to the one-hour threshold
+    interval: 1m
+    input_series:
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="electricity",outcome="success"}'
+        values: '0+815x61'
+      - series: 'barghsa_rollout_journey_attempts_total{environment="staging",database="core",availability_tier="pilot",service="electricity",outcome="failure"}'
+        values: '0+185x61'
+    alert_rule_test:
+      - eval_time: 1h
+        alertname: JourneyErrorBudgetFastBurn
+        exp_alerts: []

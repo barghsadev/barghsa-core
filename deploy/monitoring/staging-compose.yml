@@ -7,6 +7,7 @@ services:
       - ./staging-prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./notification-alerts.yml:/etc/prometheus/notification-alerts.yml:ro
       - ./staging-worker-alerts.yml:/etc/prometheus/staging-worker-alerts.yml:ro
+      - ./journey-slo-alerts.yml:/etc/prometheus/journey-slo-alerts.yml:ro
       - prometheusdata:/prometheus
     ports: ['127.0.0.1:9095:9090']
     cap_drop: [ALL]
