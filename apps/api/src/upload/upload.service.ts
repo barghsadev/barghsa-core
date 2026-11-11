@@ -16,7 +16,8 @@ import {
   recordUploadInspection,
 } from './upload-reservations.js';
 import { randomUUID } from 'node:crypto';
-import { getDbPool } from '@barghsa/db';
+import { createDirectDbPool, getDbPool } from '@barghsa/db';
+import { withMultipartUploadLock, finishMultipartReservation } from '@barghsa/db/storage-multipart';
 import { rateLimitKey } from '@barghsa/shared/rate-limit';
 import type { PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
@@ -26,6 +27,12 @@ import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { requireUploadContext } from './upload-access.js';
 import { detectDocumentContentType } from './document-content-type.js';
 import type { MultipartPart, StorageProvider } from '@barghsa/shared/storage';
+import {
+  MULTIPART_PART_SIZE,
+  validMultipartParts,
+  finishMultipartUpload,
+  type MultipartUploadState,
+} from '@barghsa/shared/storage';
 import { StorageObjectNotFound, type ImmutableStorageRecordService } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER, IMMUTABLE_STORAGE_SERVICE } from '../storage/index.js';
 import { type AuthenticatedRequest } from '../session/session.guard.js';
@@ -53,7 +60,6 @@ import {
 const UPLOAD_PREFIX = 'uploads/';
 const DEFAULT_EXPIRES_IN = 900; // 15 minutes
 const MULTIPART_EXPIRES_IN = 24 * 3600;
-const MULTIPART_PART_SIZE = 5 * 1024 * 1024;
 const UPLOAD_REQUESTS_PER_MINUTE = 20;
 
 type MultipartRecord = {
@@ -61,7 +67,7 @@ type MultipartRecord = {
   file_size: string;
   content_type: string;
   metadata: {
-    multipart?: { id: string; providerId: string; status: 'in_progress' | 'completed' | 'aborted' };
+    multipart?: MultipartUploadState;
     uploadExpiresAt?: string;
     uploadContext?: { operatingContext?: 'staff' | 'customer' };
   };
@@ -275,24 +281,26 @@ export class UploadService {
     return this.getMultipartUpload(raw, actor);
   }
 
-  async getMultipartUpload(raw: unknown, actor: AuthenticatedRequest) {
+  async getMultipartUpload(
+    raw: unknown,
+    actor: AuthenticatedRequest,
+    options: { initialize?: boolean } = {}
+  ) {
     this.requireMultipartStorage();
     const parsed = PresignedUrlRequestSchema.safeParse(raw);
     if (!parsed.success || parsed.data.fileSize <= MULTIPART_PART_SIZE)
       throw new BadRequestException('Multipart upload requires a file larger than 5 MiB');
     const key = await this.reserveNewUpload(raw, actor, MULTIPART_EXPIRES_IN);
     return {
-      ...(await this.startMultipartForKey(key, actor.session.userId)),
+      ...(await this.startMultipartForKey(key, actor.session.userId, options)),
       expiresIn: MULTIPART_EXPIRES_IN,
     };
   }
 
   /** Reuse an existing owned reservation, including document-specific reservations. */
-  async startMultipartForKey(key: string, userId: string) {
+  async startMultipartForKey(key: string, userId: string, options: { initialize?: boolean } = {}) {
     const storage = this.requireMultipartStorage();
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
+    return this.runMultipartOperation(key, async (client) => {
       const row = (
         await client.query<MultipartRecord>(
           `SELECT storage_key,file_size,content_type,metadata FROM storage_records
@@ -300,7 +308,7 @@ export class UploadService {
              AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
              AND metadata->>'deletionRequested'='true'
              AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
-           FOR UPDATE`,
+           `,
           [key, userId]
         )
       ).rows[0];
@@ -309,17 +317,34 @@ export class UploadService {
         throw new BadRequestException('Multipart upload requires a file larger than 5 MiB');
       let multipart = row.metadata.multipart;
       if (!multipart) {
-        const providerId = await storage.createMultipartUpload!(key, row.content_type);
-        multipart = { id: randomUUID(), providerId, status: 'in_progress' };
-        await client.query(
+        multipart = { id: randomUUID(), status: 'starting' };
+        const claimed = await client.query(
           `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart}',$2::jsonb,true),
-            updated_at=NOW() WHERE storage_key=$1`,
+            updated_at=NOW() WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
+              AND metadata->'multipart' IS NULL
+              AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
           [key, JSON.stringify(multipart)]
         );
+        if (claimed.rowCount !== 1) throw new ConflictException('Upload reservation changed');
       }
-      if (multipart.status !== 'in_progress')
-        throw new ConflictException('Multipart upload is no longer active');
-      await client.query('COMMIT');
+      if (multipart.status === 'starting' && options.initialize !== false) {
+        const providerId = await storage.createMultipartUpload!(key, row.content_type);
+        const selected = await client.query(
+          `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart}',$3::jsonb),
+             updated_at=NOW()
+           WHERE storage_key=$1 AND metadata->'multipart'->>'id'=$2 AND status='removed'
+             AND signed_at IS NULL AND metadata->'multipart'->>'status'='starting'
+             AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
+          [key, multipart.id, JSON.stringify({ ...multipart, providerId, status: 'in_progress' })]
+        );
+        if (selected.rowCount !== 1)
+          throw new ConflictException('Upload reservation changed during initialization');
+        multipart = { ...multipart, providerId, status: 'in_progress' };
+      }
+      const active =
+        multipart.status === 'in_progress' ||
+        (multipart.status === 'starting' && options.initialize === false);
+      if (!active) throw new ConflictException('Multipart upload is no longer active');
       return {
         uploadId: multipart.id,
         key,
@@ -327,12 +352,16 @@ export class UploadService {
         partCount: Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE),
         expiresAt: row.metadata.uploadExpiresAt,
       };
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    });
+  }
+
+  private async runMultipartOperation<T>(
+    key: string,
+    work: (client: PoolClient) => Promise<T>
+  ): Promise<T> {
+    const result = await withMultipartUploadLock(createDirectDbPool(), key, work);
+    if (!result.acquired) throw new ConflictException('Multipart operation is already running');
+    return result.value;
   }
 
   private requireReservationContext(
@@ -350,22 +379,30 @@ export class UploadService {
       throw new ForbiddenException('Upload belongs to another operating context');
   }
 
-  private async ownedMultipart(id: string, actor: AuthenticatedRequest, client?: PoolClient) {
+  private async ownedMultipart(
+    id: string,
+    actor: AuthenticatedRequest,
+    client?: PoolClient,
+    recovering: Array<'completing' | 'aborting'> = []
+  ) {
     const row = (
       await (client ?? getDbPool()).query<MultipartRecord>(
         `SELECT storage_key,file_size,content_type,metadata FROM storage_records
          WHERE metadata->'multipart'->>'id'=$1 AND metadata->>'uploadedBy'=$2
            AND status='removed' AND signed_at IS NULL
-           AND metadata->>'provisionalUpload'='true'
-           AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
-         ${client ? 'FOR UPDATE' : ''}`,
-        [id, actor.session.userId]
+           AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
+           AND ((metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
+                OR metadata->'multipart'->>'status'=ANY($3::text[]))`,
+        [id, actor.session.userId, recovering]
       )
     ).rows[0];
-    if (!row || !row.metadata.multipart)
+    if (!row || !row.metadata.multipart?.providerId)
       throw new ConflictException('Multipart upload not found or expired');
     this.requireReservationContext(row.metadata, actor);
-    return { row, multipart: row.metadata.multipart };
+    return {
+      row,
+      multipart: { ...row.metadata.multipart, providerId: row.metadata.multipart.providerId },
+    };
   }
 
   async presignMultipartPart(id: string, number: number, actor: AuthenticatedRequest) {
@@ -390,7 +427,7 @@ export class UploadService {
     key: string;
     partSize: number;
     partCount: number;
-    status: 'in_progress' | 'completed' | 'aborted';
+    status: 'in_progress' | 'completing' | 'completed' | 'aborting' | 'aborted';
     parts: MultipartPart[];
   }> {
     const storage = this.requireMultipartStorage();
@@ -399,7 +436,7 @@ export class UploadService {
       key: row.storage_key,
       partSize: MULTIPART_PART_SIZE,
       partCount: Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE),
-      status: multipart.status,
+      status: multipart.status === 'starting' ? 'in_progress' : multipart.status,
       parts:
         multipart.status === 'in_progress'
           ? await storage.listMultipartParts!(row.storage_key, multipart.providerId)
@@ -409,19 +446,13 @@ export class UploadService {
 
   async completeMultipart(id: string, actor: AuthenticatedRequest) {
     const storage = this.requireMultipartStorage();
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      const { row, multipart } = await this.ownedMultipart(id, actor, client);
-      if (multipart.status === 'completed') {
-        await client.query('COMMIT');
-        return { key: row.storage_key, status: 'completed' };
-      }
-      if (multipart.status !== 'in_progress')
+    const owned = await this.ownedMultipart(id, actor, undefined, ['completing']);
+    return this.runMultipartOperation(owned.row.storage_key, async (client) => {
+      const { row, multipart } = await this.ownedMultipart(id, actor, client, ['completing']);
+      if (multipart.status === 'completed') return { key: row.storage_key, status: 'completed' };
+      if (!['in_progress', 'completing'].includes(multipart.status))
         throw new ConflictException('Multipart upload was aborted');
-      const count = Math.ceil(Number(row.file_size) / MULTIPART_PART_SIZE);
-      const expectedLast = Number(row.file_size) - (count - 1) * MULTIPART_PART_SIZE;
-      let parts;
+      let parts: MultipartPart[] | undefined;
       try {
         parts = (await storage.listMultipartParts!(row.storage_key, multipart.providerId)).sort(
           (a, b) => a.partNumber - b.partNumber
@@ -429,60 +460,74 @@ export class UploadService {
       } catch (error) {
         // A completed S3 call may have succeeded even if the DB response was lost.
         const object = await storage.getObject(row.storage_key).catch(() => null);
-        if (!object || object.contentLength !== Number(row.file_size)) throw error;
+        if (!object) throw error;
+        const matches = object.contentLength === Number(row.file_size);
         await object.body.cancel();
-        parts = null;
+        if (!matches) throw error;
       }
-      if (parts) {
-        if (
-          parts.length !== count ||
-          parts.some(
-            (part, index) =>
-              part.partNumber !== index + 1 ||
-              part.size !== (index === count - 1 ? expectedLast : MULTIPART_PART_SIZE)
-          )
-        )
-          throw new ConflictException('Multipart parts do not match the authorized file size');
-        await storage.completeMultipartUpload!(row.storage_key, multipart.providerId, parts);
-      }
-      await client.query(
-        `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart,status}',
-          '"completed"'::jsonb),updated_at=NOW() WHERE storage_key=$1`,
-        [row.storage_key]
+      if (parts && !validMultipartParts(parts, Number(row.file_size)))
+        throw new ConflictException('Multipart parts do not match the authorized file size');
+      const claimed = await client.query(
+        `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart}',$3::jsonb),updated_at=NOW()
+         WHERE storage_key=$1 AND metadata->'multipart'->>'id'=$2
+           AND status='removed' AND signed_at IS NULL
+           AND metadata->'multipart'->>'status' IN ('in_progress','completing')
+           AND ((metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
+                OR metadata->'multipart'->>'status'='completing')`,
+        [row.storage_key, id, JSON.stringify({ ...multipart, status: 'completing', parts })]
       );
-      await client.query('COMMIT');
+      if (claimed.rowCount !== 1) throw new ConflictException('Upload reservation changed');
+      await finishMultipartUpload(
+        storage,
+        row.storage_key,
+        multipart.providerId,
+        parts,
+        Number(row.file_size)
+      );
+      if (
+        !(await finishMultipartReservation(
+          client,
+          row.storage_key,
+          multipart.providerId,
+          'completed'
+        ))
+      )
+        throw new ConflictException('Upload reservation changed during completion');
       return { key: row.storage_key, status: 'completed' };
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    });
   }
 
   async abortMultipart(id: string, actor: AuthenticatedRequest) {
     const storage = this.requireMultipartStorage();
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      const { row, multipart } = await this.ownedMultipart(id, actor, client);
+    const owned = await this.ownedMultipart(id, actor, undefined, ['completing', 'aborting']);
+    return this.runMultipartOperation(owned.row.storage_key, async (client) => {
+      const { row, multipart } = await this.ownedMultipart(id, actor, client, [
+        'completing',
+        'aborting',
+      ]);
       if (multipart.status === 'completed')
         throw new ConflictException('Completed upload cannot be aborted');
-      if (multipart.status === 'in_progress')
-        await storage.abortMultipartUpload!(row.storage_key, multipart.providerId);
-      await client.query(
+      if (multipart.status === 'aborted') return { key: row.storage_key, status: 'aborted' };
+      const claimed = await client.query(
         `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart,status}',
-          '"aborted"'::jsonb),updated_at=NOW() WHERE storage_key=$1`,
-        [row.storage_key]
+          '"aborting"'::jsonb),updated_at=NOW() WHERE storage_key=$1
+           AND metadata->'multipart'->>'id'=$2 AND status='removed' AND signed_at IS NULL
+           AND metadata->'multipart'->>'status' IN ('in_progress','completing','aborting')`,
+        [row.storage_key, id]
       );
-      await client.query('COMMIT');
+      if (claimed.rowCount !== 1) throw new ConflictException('Upload reservation changed');
+      await storage.abortMultipartUpload!(row.storage_key, multipart.providerId);
+      if (
+        !(await finishMultipartReservation(
+          client,
+          row.storage_key,
+          multipart.providerId,
+          'aborted'
+        ))
+      )
+        throw new ConflictException('Upload reservation changed during abort');
       return { key: row.storage_key, status: 'aborted' };
-    } catch (error) {
-      await client.query('ROLLBACK');
-      throw error;
-    } finally {
-      client.release();
-    }
+    });
   }
 
   /**

@@ -34,7 +34,7 @@ export async function scanStoredUpload(
        WHERE s.storage_key=$1 AND s.signed_at IS NULL AND (s.status='active' OR
          (s.status='removed' AND s.metadata->>'provisionalUpload'='true'
           AND s.metadata->>'deletionRequested'='true'
-          AND s.metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+          AND COALESCE(s.metadata->'multipart'->>'status','completed') IN ('in_progress','completed')
           AND (s.metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()))`,
       parameters
     )
@@ -66,7 +66,7 @@ export async function scanStoredUpload(
        AND s.metadata->'storageInspection'=$7::jsonb AND (s.status='active' OR
          (s.status='removed' AND s.metadata->>'provisionalUpload'='true'
           AND s.metadata->>'deletionRequested'='true'
-          AND s.metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+          AND COALESCE(s.metadata->'multipart'->>'status','completed') IN ('in_progress','completed')
           AND (s.metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()))`,
     [
       ...parameters,

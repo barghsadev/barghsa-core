@@ -2610,6 +2610,36 @@ it('holds direct uploads until an owner-scoped scan covers the exact stored byte
       );
 
     const clean = await issue();
+    const heldLease = randomUUID();
+    await configured.pool.query(
+      "UPDATE async_jobs SET status='processing',lease_token=$2,lease_until=NOW()+INTERVAL '1 minute' WHERE id=$1",
+      [clean.result.jobId, heldLease]
+    );
+    for (const multipartStatus of ['completing', 'aborting']) {
+      await configured.pool.query(
+        `UPDATE storage_records SET metadata=metadata||jsonb_build_object('multipart',
+           jsonb_build_object('status',$2::text)) WHERE storage_key=$1`,
+        [clean.key, multipartStatus]
+      );
+      await expect(
+        scanStoredUpload(
+          configured.pool,
+          storage,
+          { host: '127.0.0.1', port: address.port },
+          { key: clean.key },
+          { jobId: clean.result.jobId, leaseToken: heldLease, setProgress: async () => {} }
+        )
+      ).rejects.toThrow('Upload scan reservation expired or changed');
+      expect((await read(clean.key)).metadata.scanState).toBe('Pending scan');
+    }
+    await configured.pool.query(
+      "UPDATE storage_records SET metadata=metadata-'multipart' WHERE storage_key=$1",
+      [clean.key]
+    );
+    await configured.pool.query(
+      "UPDATE async_jobs SET status='queued',lease_token=NULL,lease_until=NULL WHERE id=$1",
+      [clean.result.jobId]
+    );
     expect(await (await clean.record()).json()).toEqual(clean.result);
     expect((await clean.record(foreign)).status).toBe(404);
     expect((await status(clean.result.jobId, foreign)).status).toBe(404);

@@ -82,7 +82,7 @@ the browser URL replay path, not provider-level administrative mutation.
 ## Multipart uploads and orphan cleanup
 
 Files larger than 5 MiB use presigned multipart parts. The authenticated API
-reserves a scoped key, starts the provider upload and issues one-hour part URLs.
+reserves a scoped key, starts the provider upload and issues 15-minute part URLs.
 The client can list provider-confirmed parts and resume after an interrupted
 transfer. Completion accepts only the server-listed consecutive parts matching
 the originally authorized file size. The completed object still passes normal
@@ -97,6 +97,41 @@ are stored in `upload_cleanup_log`, and failed provider aborts are retried on a
 later scan. Reapply `pnpm setup:bucket` to install the seven-day S3 fallback
 after reviewing deployed custom rules. MinIO uses its separate stale-upload
 server settings; bucket setup cannot install the S3 abort rule there.
+
+Multipart initialization, completion and abort commit their intent before S3
+requests. A separate direct PostgreSQL pool owns the object’s advisory lock while the
+request runs. The API and cleanup worker use the same lock. Their SQL transactions
+finish before provider I/O. Business-document creation commits the document and
+idempotent upload descriptor before initializing S3.
+
+The reservation keeps `starting`, `completing` or `aborting` until that operation
+finishes. Completion stores consecutive part identities and sizes. A retry can
+refresh that receipt from valid provider parts, or reconcile an object whose
+completion response was lost. Parts reads stay read-only. The client resumes a
+pending completion through POST. Trusted recording requires completed multipart
+state and the usual content, integrity and scan checks.
+
+Cleanup resumes committed completions and aborts, including after the reservation
+expires. Expiry still prevents attaching the file. Object-retention cleanup waits
+for the multipart outcome. Finalization restores the cleanup flag so a later
+completed object receives a fresh lifecycle classification. Provider failures retain the intent and a bounded
+`lastErrorCode` under `storage_records.metadata.multipart`. The
+`multipart_orphan_cleanup` background job records failed passes. Check those
+records when investigating a stalled upload.
+
+Orphan classification writes a `pending` row in `upload_cleanup_log` before
+aborting S3. Pending and failed receipts remain eligible for retry even when the
+provider no longer lists the upload. Signed, active and completed files stay
+protected from orphan classification. A changed age policy applies to new
+classifications. The owner can explicitly discard an interrupted completion
+before trusted recording. This requires the same object lock and commits abort
+intent. A running completion or a finalized completed upload rejects that abort.
+
+Apply migration `0287_multipart_operation_recovery` before starting these
+binaries. It adds pending cleanup status and recovery indexes. Before restoring
+older binaries, drain pending operations where possible. Retain the additive
+migration and pending records, and use a worker with this recovery handler to
+finish interrupted operations.
 
 ## Upload inspection and scan state
 

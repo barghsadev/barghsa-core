@@ -70,7 +70,7 @@ export async function bindUploadProfile(key: string, userId: string, profileId: 
        FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
        AND status='removed' AND signed_at IS NULL AND metadata->>'provisionalUpload'='true'
        AND metadata->>'deletionRequested'='true'
-       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+       AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()
        FOR UPDATE`,
       [key, userId]
@@ -99,7 +99,7 @@ export async function requireOwnedUpload(key: string, userId: string) {
     AND metadata->>'uploadedBy'=$2 AND (status='active' OR
       (status='removed' AND metadata->>'provisionalUpload'='true'
        AND metadata->>'deletionRequested'='true'
-       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+       AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()))`,
       [key, userId]
     )
@@ -127,7 +127,7 @@ export async function recordUploadInspection(
        AND signed_at IS NULL AND metadata->>'scanJobId' IS NULL
        AND metadata->>'provisionalUpload'='true'
        AND metadata->>'deletionRequested'='true'
-       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+       AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,
     [key, userId, JSON.stringify(metadata)]
   );
@@ -137,7 +137,7 @@ export async function recordUploadInspection(
     `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND metadata->>'uploadedBy'=$2
      AND (status='active' OR (status='removed' AND metadata->>'scanJobId' IS NOT NULL
        AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
-       AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+       AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
        AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()))`,
     [key, userId]
   );
@@ -159,7 +159,7 @@ export async function queueUploadScan(input: {
          AND signed_at IS NULL AND metadata->>'scanJobId' IS NULL AND (status='active' OR
            (status='removed' AND metadata->>'provisionalUpload'='true'
             AND metadata->>'deletionRequested'='true'
-            AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+            AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
             AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp())) FOR UPDATE
      ), created AS (
        INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
@@ -205,7 +205,7 @@ export async function completeUpload(options: CreateRecordOptions, scanJobId?: s
     AND ${storageUploadProfileScope} IS NOT DISTINCT FROM lower($7::text)
     AND status='removed' AND signed_at IS NULL
     AND metadata->>'provisionalUpload'='true' AND metadata->>'deletionRequested'='true'
-    AND metadata->'multipart'->>'status' IS DISTINCT FROM 'aborted'
+    AND COALESCE(metadata->'multipart'->>'status','completed')='completed'
     AND ($6::text IS NULL OR (metadata->>'scanJobId'=$6 AND metadata->>'scanState'='Available'
       AND metadata->>'scanSha256' ~ '^[a-f0-9]{64}$'))
     AND (metadata->>'uploadExpiresAt')::timestamptz>clock_timestamp()`,

@@ -72,6 +72,9 @@ export const storageRecords = pgTable(
   },
   (table) => [
     ...domainChecks('storage_records'),
+    index('storage_records_multipart_pending_idx').on(table.updatedAt, table.storageKey)
+      .where(sql`${table.status}='removed' AND ${table.signedAt} IS NULL
+        AND ${table.metadata}->'multipart'->>'status' IN ('completing','aborting')`),
     index('storage_records_upload_profile_idx').on(sql.raw(storageUploadProfileScope)),
     index('storage_records_unscoped_uploader_idx')
       .on(sql`(${table.metadata}->>'uploadedBy')`)

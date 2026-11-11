@@ -57,6 +57,23 @@ it('backs off transport failure and succeeds on a later retry', async () => {
   await pool.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
   expect(await cleanupStorageObjects(pool, storage)).toEqual({ deleted: 1, failed: 0 });
 });
+
+it('retains a pending multipart mutation until its provider outcome is finalized', async () => {
+  await seed('multipart-pending');
+  for (const status of ['completing', 'aborting']) {
+    await pool.query(
+      `UPDATE storage_records SET metadata=metadata||jsonb_build_object('multipart',jsonb_build_object('status',$1::text)),updated_at=NOW()-INTERVAL '2 minutes' WHERE storage_key='multipart-pending'`,
+      [status]
+    );
+    expect(await cleanupStorageObjects(pool, storage)).toEqual({ deleted: 0, failed: 0 });
+    expect(await pending('multipart-pending')).toBe(true);
+  }
+  expect(deleteObject).not.toHaveBeenCalled();
+  await pool.query(
+    `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart,status}','"completed"'::jsonb),updated_at=NOW()-INTERVAL '2 minutes' WHERE storage_key='multipart-pending'`
+  );
+  expect(await cleanupStorageObjects(pool, storage)).toEqual({ deleted: 1, failed: 0 });
+});
 it('serializes simultaneous workers without duplicate deletion', async () => {
   await seed('parallel');
   let entered!: () => void, release!: () => void;

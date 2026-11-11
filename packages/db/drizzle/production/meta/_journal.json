@@ -1450,6 +1450,13 @@
       "when": 1794321194818,
       "tag": "0286_upload_scope_quotas",
       "breakpoints": true
+    },
+    {
+      "idx": 287,
+      "version": "7",
+      "when": 1794353693330,
+      "tag": "0287_multipart_operation_recovery",
+      "breakpoints": true
     }
   ]
 }

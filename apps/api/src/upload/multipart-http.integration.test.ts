@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { resolve } from 'node:path';
+import { createServer, request as forwardRequest } from 'node:http';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { GenericContainer, Wait, type StartedTestContainer } from 'testcontainers';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -13,6 +14,29 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let client: { send(command: object): Promise<unknown>; destroy(): void };
 let actorHeaders: Record<string, string>;
 let otherHeaders: Record<string, string>;
+let storageProxy: ReturnType<typeof createServer>;
+let pausedStorage:
+  | { method: string; query: string; enter(): void; gate: Promise<void>; release(): void }
+  | undefined;
+
+function pauseStorage(method: string, query: string) {
+  let enter!: () => void, unblock!: () => void;
+  const entered = new Promise<void>((resolve) => {
+    enter = resolve;
+  });
+  const gate = new Promise<void>((resolve) => {
+    unblock = resolve;
+  });
+  const pause = { method, query, enter, gate, release: unblock };
+  pausedStorage = pause;
+  return {
+    entered,
+    release() {
+      if (pausedStorage === pause) pausedStorage = undefined;
+      unblock();
+    },
+  };
+}
 
 beforeAll(async () => {
   minio = await new GenericContainer(
@@ -31,7 +55,33 @@ beforeAll(async () => {
     credentials: { accessKeyId: 'test-only-key', secretAccessKey: 'test-only-secret' },
   }) as typeof client;
   await client.send(new sdk['CreateBucketCommand']!({ Bucket: 'test-evidence' }));
-  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, endpoint);
+  storageProxy = createServer(async (req, res) => {
+    const pause = pausedStorage;
+    if (
+      pause &&
+      req.method === pause.method &&
+      new URL(req.url!, 'http://fixture').searchParams.has(pause.query)
+    ) {
+      pause.enter();
+      await pause.gate;
+    }
+    const upstream = forwardRequest(
+      new URL(req.url!, endpoint),
+      { method: req.method, headers: req.headers },
+      (response) => {
+        res.writeHead(response.statusCode!, response.headers);
+        response.pipe(res);
+      }
+    );
+    upstream.on('error', () => {
+      res.destroy();
+    });
+    req.pipe(upstream);
+  });
+  await new Promise<void>((resolve) => storageProxy.listen(0, '127.0.0.1', resolve));
+  const address = storageProxy.address();
+  if (!address || typeof address === 'string') throw new Error('Storage proxy has no TCP address');
+  http = await startHttpFixture(process.env.TEST_DATABASE_URL!, `http://127.0.0.1:${address.port}`);
   for (const name of ['owner', 'other']) {
     const userId = `multipart-${name}`;
     await http.pool.query('INSERT INTO users(user_id,username,password_hash) VALUES($1,$2,$3)', [
@@ -56,7 +106,12 @@ beforeAll(async () => {
   }
 }, 60_000);
 afterAll(async () => {
+  pausedStorage?.release();
   await http?.close();
+  if (storageProxy)
+    await new Promise<void>((resolve, reject) =>
+      storageProxy.close((error) => (error ? reject(error) : resolve()))
+    );
   client?.destroy();
   await minio?.stop();
 });
@@ -134,4 +189,167 @@ it('aborts an owned upload and refuses later part URLs', async () => {
   expect(
     (await api(`/api/v1/files/upload/${upload.uploadId}/part?partNumber=1`, 'PUT')).status
   ).toBe(409);
+});
+
+it('commits the document and its idempotent reservation before initializing S3', async () => {
+  const profile = (
+    await http.pool.query(
+      "INSERT INTO profiles(user_id,profile_type,is_default) VALUES('multipart-owner','LEGAL',true) RETURNING id"
+    )
+  ).rows[0].id;
+  await http.pool.query(
+    "UPDATE sessions SET step_up_verified_at=NOW()-INTERVAL '1 second' WHERE user_id='multipart-owner'"
+  );
+  const body = {
+    profileId: profile,
+    businessRecordType: 'standalone',
+    category: 'document',
+    fileName: 'committed.pdf',
+    contentType: 'application/pdf',
+    fileSize: partSize + 91,
+    idempotencyKey: randomUUID(),
+  };
+  const pause = pauseStorage('POST', 'uploads');
+  const pending = api('/api/documents', 'POST', actorHeaders, body);
+  await Promise.race([
+    pause.entered,
+    pending.then((response) => {
+      throw new Error(`Request completed before S3: ${response.status}`);
+    }),
+  ]);
+  try {
+    const documents = await http.pool.query(
+      "SELECT upload_key FROM documents WHERE profile_id=$1 AND original_name='committed.pdf'",
+      [profile]
+    );
+    expect(documents.rows).toHaveLength(1);
+    expect(
+      (
+        await http.pool.query('SELECT metadata FROM storage_records WHERE storage_key=$1', [
+          documents.rows[0].upload_key,
+        ])
+      ).rows[0].metadata.multipart.status
+    ).toBe('starting');
+  } finally {
+    pause.release();
+  }
+  const created = await pending;
+  expect(created.status, http.logs()).toBe(201);
+  const result = (await created.json()) as {
+    document: { id: string };
+    upload: { uploadId: string; key: string };
+  };
+  const replay = await api('/api/documents', 'POST', actorHeaders, body);
+  expect(replay.status, http.logs()).toBe(201);
+  expect(await replay.json()).toMatchObject({
+    document: { id: result.document.id },
+    upload: result.upload,
+  });
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM documents WHERE profile_id=$1 AND original_name='committed.pdf'",
+        [profile]
+      )
+    ).rows
+  ).toHaveLength(1);
+});
+
+it('commits completion intent without a row lock and rejects a competing abort or premature verification', async () => {
+  const upload = await start();
+  for (let number = 1; number <= 2; number++) {
+    const signed = await api(
+      `/api/v1/files/upload/${upload.uploadId}/part?partNumber=${number}`,
+      'PUT'
+    );
+    expect(signed.status, http.logs()).toBe(200);
+    expect(
+      (
+        await fetch(((await signed.json()) as { url: string }).url, {
+          method: 'PUT',
+          body: Buffer.alloc(number === 1 ? partSize : 91, 65),
+        })
+      ).status
+    ).toBe(200);
+  }
+  const pause = pauseStorage('POST', 'uploadId');
+  const pending = api(`/api/v1/files/upload/${upload.uploadId}/complete`, 'POST');
+  await pause.entered;
+  const observer = await http.pool.connect();
+  try {
+    await observer.query('BEGIN');
+    const state = await observer.query(
+      'SELECT metadata FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+      [upload.key]
+    );
+    expect(state.rows[0].metadata.multipart.status).toBe('completing');
+    await observer.query('COMMIT');
+    expect((await api(`/api/v1/files/upload/${upload.uploadId}/abort`, 'POST')).status).toBe(409);
+    expect((await api(`/api/upload/${encodeURIComponent(upload.key)}/verify`, 'POST')).status).toBe(
+      404
+    );
+    expect(
+      (await api(`/api/v1/files/upload/${upload.uploadId}/complete`, 'POST', otherHeaders)).status
+    ).toBe(409);
+  } finally {
+    await observer.query('ROLLBACK');
+    observer.release();
+    pause.release();
+  }
+  expect((await pending).status, http.logs()).toBe(200);
+  expect((await api(`/api/v1/files/upload/${upload.uploadId}/complete`, 'POST')).status).toBe(200);
+});
+
+it('commits abort intent before S3 and prevents completion from crossing that decision', async () => {
+  const upload = await start();
+  const pause = pauseStorage('DELETE', 'uploadId');
+  const pending = api(`/api/v1/files/upload/${upload.uploadId}/abort`, 'POST');
+  await pause.entered;
+  const observer = await http.pool.connect();
+  try {
+    await observer.query('BEGIN');
+    const state = await observer.query(
+      'SELECT metadata FROM storage_records WHERE storage_key=$1 FOR UPDATE NOWAIT',
+      [upload.key]
+    );
+    expect(state.rows[0].metadata.multipart.status).toBe('aborting');
+    await observer.query('COMMIT');
+    expect((await api(`/api/v1/files/upload/${upload.uploadId}/complete`, 'POST')).status).toBe(
+      409
+    );
+  } finally {
+    await observer.query('ROLLBACK');
+    observer.release();
+    pause.release();
+  }
+  expect((await pending).status, http.logs()).toBe(200);
+  expect(
+    (await api(`/api/v1/files/upload/${upload.uploadId}/part?partNumber=1`, 'PUT')).status
+  ).toBe(409);
+});
+
+it('lets only the owner discard an interrupted completion after its reservation expires', async () => {
+  const upload = await start();
+  await http.pool.query(
+    `UPDATE storage_records SET metadata=jsonb_set(metadata,'{multipart,status}','"completing"'::jsonb)||jsonb_build_object('uploadExpiresAt',NOW()-INTERVAL '1 hour') WHERE storage_key=$1`,
+    [upload.key]
+  );
+  expect(
+    (await api(`/api/v1/files/upload/${upload.uploadId}/abort`, 'POST', otherHeaders)).status
+  ).toBe(409);
+  expect(
+    (await api(`/api/v1/files/upload/${upload.uploadId}/abort`, 'POST')).status,
+    http.logs()
+  ).toBe(200);
+  expect(
+    (
+      await http.pool.query('SELECT metadata FROM storage_records WHERE storage_key=$1', [
+        upload.key,
+      ])
+    ).rows[0].metadata.multipart.status
+  ).toBe('aborted');
+  expect((await api(`/api/v1/files/upload/${upload.uploadId}/complete`, 'POST')).status).toBe(409);
+  expect((await api(`/api/upload/${encodeURIComponent(upload.key)}/verify`, 'POST')).status).toBe(
+    404
+  );
 });

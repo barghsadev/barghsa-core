@@ -6,6 +6,7 @@ export function cleanupStorageProvider(): StorageProvider {
   return runtimeStorageProvider(loadStoredStorageConfiguration);
 }
 const pending = `status='removed' AND signed_at IS NULL AND metadata->>'deletionRequested'='true'
+  AND COALESCE(metadata->'multipart'->>'status','completed') NOT IN ('completing','aborting')
   AND (storage_key NOT LIKE 'uploads/%' OR removed_at<=NOW()-INTERVAL '65 minutes')
   AND (metadata->>'provisionalUpload' IS DISTINCT FROM 'true'
     OR (metadata->>'uploadExpiresAt')::timestamptz<=clock_timestamp())

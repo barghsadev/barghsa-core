@@ -291,7 +291,7 @@ export class DocumentService {
     serverManagedUpload = false
   ) {
     if (staff && !input.profileId) throw new BadRequestException('Profile is required');
-    return documentAccess(
+    const created = await documentAccess(
       request.session,
       input.businessRecordType,
       true,
@@ -397,7 +397,7 @@ export class DocumentService {
             };
             const upload =
               !serverManagedUpload && input.fileSize > 5 * 1024 * 1024
-                ? await this.uploads.getMultipartUpload(uploadInput, request)
+                ? await this.uploads.getMultipartUpload(uploadInput, request, { initialize: false })
                 : await this.uploads.getPresignedUrl(uploadInput, request);
             const document = (
               await createDbClient(client)
@@ -444,6 +444,9 @@ export class DocumentService {
       },
       input.businessRecordId
     );
+    if ('uploadId' in created.upload)
+      await this.uploads.startMultipartForKey(created.upload.key, request.session.userId);
+    return created;
   }
 
   private async permissions(

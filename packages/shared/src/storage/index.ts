@@ -35,5 +35,11 @@ export * from './runtime-config.js';
 export { scanUploadWithClamAv, scanWithClamAv } from './clamav.js';
 export type { ScannerEndpoint, ScanVerdict } from './clamav.js';
 export { readCappedBytes, readCappedJson } from './read-capped-bytes.js';
+export {
+  MULTIPART_PART_SIZE,
+  validMultipartParts,
+  finishMultipartUpload,
+} from './multipart-upload.js';
+export type { MultipartUploadState } from './multipart-upload.js';
 
 export const STORAGE_UPLOAD_SCAN_JOB_TYPE = 'storage-upload-scan';

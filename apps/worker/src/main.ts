@@ -48,7 +48,7 @@ import {
   runOneAsyncJob,
 } from './jobs/async-runner.js';
 import { cleanupExpiredProfileExports, generateProfileExport } from './privacy/profile-export.js';
-import { getDbPool, createDbPool } from '@barghsa/db';
+import { getDbPool, createDbPool, createDirectDbPool } from '@barghsa/db';
 import { createServer } from 'node:http';
 import { runOutboxPoll } from './notifications/outbox-runner.js';
 import { evaluateWalletLowBalanceSignals } from './wallet/low-balance-notifications.js';
@@ -343,7 +343,7 @@ async function main(): Promise<void> {
     async () => {
       if (draining) return;
       try {
-        const result = await cleanupMultipartOrphans(getDbPool(), cleanupProvider);
+        const result = await cleanupMultipartOrphans(createDirectDbPool(), cleanupProvider);
         if (result.failed)
           await recordJobFailure({
             jobType: 'multipart_orphan_cleanup',

@@ -197,6 +197,11 @@ export async function putDocumentFile(
       onProgress?.(file.size, file.size);
       return;
     }
+    if (state.status === 'completing') {
+      await documentRequest(`${path}/complete`, { method: 'POST', signal });
+      onProgress?.(file.size, file.size);
+      return;
+    }
     if (state.status !== 'in_progress') throw new DocumentRequestError(409, null);
     if (!Array.isArray(state.parts)) throw new DocumentRequestError(502, null);
     const completed = new Set<number>();

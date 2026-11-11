@@ -149,3 +149,26 @@ it('rejects an inconsistent multipart layout before signing or transferring part
   ).rejects.toMatchObject({ status: 502 });
   expect(fetcher).not.toHaveBeenCalled();
 });
+
+it('resumes a committed completion through POST without retransferring parts', async () => {
+  const fetcher = vi
+    .fn()
+    .mockResolvedValueOnce(Response.json({ status: 'completing', parts: [] }))
+    .mockResolvedValueOnce(Response.json({ status: 'completed' }));
+  vi.stubGlobal('fetch', fetcher);
+  const progress = vi.fn();
+  await putDocumentFile(
+    { uploadId: 'upload', partSize: 4, partCount: 2 },
+    file,
+    new AbortController().signal,
+    progress
+  );
+  expect(fetcher).toHaveBeenCalledTimes(2);
+  expect(fetcher.mock.calls[0]![0]).toBe('/api/v1/files/upload/upload/parts');
+  expect(fetcher.mock.calls[1]).toEqual([
+    '/api/v1/files/upload/upload/complete',
+    expect.objectContaining({ method: 'POST' }),
+  ]);
+  expect(UploadXHR.instances).toHaveLength(0);
+  expect(progress).toHaveBeenLastCalledWith(file.size, file.size);
+});
