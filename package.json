@@ -12,6 +12,7 @@
     "prepare": "node scripts/install-git-hooks.mjs",
     "dev": "nodemon --config nodemon.json",
     "dev:docker": "WEB_HOST=0.0.0.0 CHOKIDAR_USEPOLLING=true nodemon --legacy-watch --config nodemon.json",
+    "setup:dev": "node scripts/dev-database.mjs setup",
     "build": "turbo build",
     "test": "turbo test",
     "test:coverage": "turbo test:coverage",
@@ -25,8 +26,10 @@
     "contract:update": "pnpm --filter @barghsa/api build && node scripts/check-openapi.mjs --write && pnpm --filter @barghsa/api-client generate",
     "check:bundle": "node --test scripts/check-route-budgets.test.mjs && node scripts/check-route-budgets.mjs",
     "db:seed": "pnpm --filter @barghsa/db db:seed",
+    "db:push": "pnpm --filter @barghsa/db db:push",
     "check:db-snapshot": "node --test packages/db/scripts/check-snapshot.test.mjs && node packages/db/scripts/check-snapshot.mjs",
-    "dev:run": "pnpm exec turbo build --filter=@barghsa/db... && pnpm --filter @barghsa/db db:migrate && pnpm db:seed && turbo dev --filter='./apps/*' --env-mode=loose"
+    "dev:prepare": "pnpm exec turbo build --filter=@barghsa/db... && pnpm --filter @barghsa/db db:migrate && pnpm db:seed",
+    "dev:run": "pnpm dev:prepare && turbo dev --filter='./apps/*' --env-mode=loose"
   },
   "devDependencies": {
     "@barghsa/eslint-config": "workspace:*",
