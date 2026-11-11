@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T23:45:55+00:00",
+  "updated": "2026-11-11T23:48:56+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17755,7 +17755,8 @@
         "batches": [
           "release-0.6-quarterly-database-restore-calendar",
           "release-0.6-quarterly-storage-recovery",
-          "release-0.6-hosted-quarterly-storage-recovery"
+          "release-0.6-hosted-quarterly-storage-recovery",
+          "release-0.6-quarterly-storage-schedule-activation"
         ],
         "current_acceptance": null
       }
@@ -558731,13 +558732,10 @@
         "story": "06-security-testing-observability.md#spec-9df3f15eb1bf"
       },
       "requirement": "| T-06.11.04.05 | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection | M |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Read back the checked quarterly workflow on default main and verify that GitHub schedules it there. Protected preflight run 43115266103 passed all 17 version and policy cases and all 12 orphan recovery cases. The reviewed workflow was not yet on main when verified.",
-        "Keep recovery from approved off-server storage, destination integrity, measured RPO/RTO and critical-journey proof in the separate disaster-recovery exercise."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -558748,9 +558746,47 @@
         ],
         "batches": [
           "release-0.6-quarterly-storage-recovery",
-          "release-0.6-hosted-quarterly-storage-recovery"
+          "release-0.6-hosted-quarterly-storage-recovery",
+          "release-0.6-quarterly-storage-schedule-activation"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "default-branch-schedule-and-exact-hosted-cases",
+          "reviewed_sha": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/storage-recovery-quarterly.yml",
+              "sha256": "b20211822da03d0f9744f715763d75f9e70c6c11dd4eed3457017f6a29494a7e"
+            },
+            {
+              "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
+              "sha256": "92961c892cb0521099719b356892e902257526e9dbce38c8cff9956d9a3065f3"
+            },
+            {
+              "path": "docker-compose.test.yml",
+              "sha256": "a671342cac26b375ea254c6577abac19a05fa25655dc6c30488a37a493ce3d76"
+            },
+            {
+              "path": "docs/runbooks/storage-outage.md",
+              "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
+            },
+            {
+              "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+              "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+            }
+          ],
+          "checks": [
+            "Verified GitHub workflow 415245353 is active, main is the default branch, and remote main 7658409ab0e09a9b87a56408b7298ee34720fafb serves the reviewed workflow bytes with cron 17 4 1 1,4,7,10 *. The schedule runs at 04:17 UTC on the first day of January, April, July and October.",
+            "Reused the exact matching GitHub run 43115266103. All 17 MinIO retained version and lifecycle cases and 12 worker orphan and interrupted upload recovery cases passed. Both archived reports and all current source bindings matched the recorded digests."
+          ],
+          "limitations": [
+            "No calendar-triggered run has occurred yet. The hosted case receipt is for the scoped push event on the exact scheduled source.",
+            "Recovery from the approved off-server destination, measured RPO/RTO, and service recovery remain separate disaster-recovery exercise requirements."
+          ]
+        }
       }
     },
     {
@@ -864679,7 +864715,8 @@
           "release-0.6-hosted-quarterly-storage-recovery",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-quarterly-storage-schedule-activation"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -993647,6 +993684,56 @@
       ],
       "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-promotion-receipt-binding",
       "historical_release_readback_sha256": "a010c96783c0e7044ca83ae023bf86bccbd3d373ba1516d6803e6ab685e0f146"
+    },
+    "release-0.6-quarterly-storage-schedule-activation": {
+      "batch": "release-0.6-quarterly-storage-schedule-activation",
+      "base_commit": "7658409ab0e09a9b87a56408b7298ee34720fafb",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.11.04.05",
+        "01-platform-infrastructure.md#T-05.05.03",
+        "release-readiness#R-05.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/storage-recovery-quarterly.yml",
+          "sha256": "b20211822da03d0f9744f715763d75f9e70c6c11dd4eed3457017f6a29494a7e"
+        },
+        {
+          "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
+          "sha256": "92961c892cb0521099719b356892e902257526e9dbce38c8cff9956d9a3065f3"
+        },
+        {
+          "path": "docker-compose.test.yml",
+          "sha256": "a671342cac26b375ea254c6577abac19a05fa25655dc6c30488a37a493ce3d76"
+        },
+        {
+          "path": "docs/runbooks/storage-outage.md",
+          "sha256": "9f3d2ad07cab7b6e68e6db65b00ff38b3b5182d8223ed3e40f19c43d7236f4b3"
+        },
+        {
+          "path": "packages/shared/scripts/setup-bucket.integration.test.mjs",
+          "sha256": "b773058f781be402f2d3a3a05426df0bab2199d708c3bfb48775711ecfe3c564"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        }
+      ],
+      "checks": [
+        "Verified GitHub workflow 415245353 is active, main is the default branch, and remote main 7658409ab0e09a9b87a56408b7298ee34720fafb serves the reviewed workflow bytes with cron 17 4 1 1,4,7,10 *. The schedule runs at 04:17 UTC on the first day of January, April, July and October.",
+        "Reused the exact matching GitHub run 43115266103. All 17 MinIO retained version and lifecycle cases and 12 worker orphan and interrupted upload recovery cases passed. Both archived reports and all current source bindings matched the recorded digests."
+      ],
+      "limitations": [
+        "No calendar-triggered run has occurred yet. The hosted case receipt is for the scoped push event on the exact scheduled source.",
+        "Recovery from the approved off-server destination, measured RPO/RTO, and service recovery remain separate disaster-recovery exercise requirements."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-quarterly-storage-recovery",
+      "execution_receipts": [
+        {
+          "file": "default-main-activation.json",
+          "sha256": "420cefdcb261c152d8ebe29d4b84060dec341b2e14eb16f9d230f3be6d2796fa"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -993690,14 +993777,13 @@
     "release": "0.6.0",
     "task_keys": [
       "release-readiness#R-05.02",
-      "06-security-testing-observability.md#T-06.11.04.05",
       "06-security-testing-observability.md#T-06.15.02.02",
       "06-security-testing-observability.md#T-06.17.03.02",
       "06-security-testing-observability.md#T-06.17.03.04",
       "01-platform-infrastructure.md#T-05.05.01",
       "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Verify protected preflights and recovery runs, finish synthetic alert delivery and retain the nightly, licensing and operational prerequisites."
+    "goal": "Verify protected preflights and the nightly browser schedule, finish synthetic alert delivery, and retain licensing and operational prerequisites."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

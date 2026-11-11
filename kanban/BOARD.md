@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T23:45:55+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T23:48:56+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1230 | Accepted with unchanged source bindings. |
+| done | 1231 | Accepted with unchanged source bindings. |
 | verify | 52 | Existing work may be complete; inspect evidence before building. |
-| partial | 78 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 77 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,10 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify protected preflights and recovery runs, finish synthetic alert delivery and retain the nightly, licensing and operational prerequisites.
+Verify protected preflights and the nightly browser schedule, finish synthetic alert delivery, and retain licensing and operational prerequisites.
 
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
-- `06-security-testing-observability.md#T-06.11.04.05`: Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection
 - `06-security-testing-observability.md#T-06.15.02.02`: Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2
 - `06-security-testing-observability.md#T-06.17.03.02`: Implement synthetic monitoring configuration (Checkly / Grafana Synthetics / independent provider)
 - `06-security-testing-observability.md#T-06.17.03.04`: Configure alert on synthetic check failure → on-call
@@ -1325,7 +1324,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.11.04.02` | done | Recorded batch work | Write worker reliability tests: crash during job → reprocess or dead-letter; duplicate delivery → idempotency |
 | `06-security-testing-observability.md#T-06.11.04.03` | done | Recorded batch work | Write DB connection exhaustion test: pool full → queue/backpressure → graceful degradation |
 | `06-security-testing-observability.md#T-06.11.04.04` | partial | Recorded batch work | Schedule quarterly PostgreSQL restore test: measure RPO/RTO, document in runbook |
-| `06-security-testing-observability.md#T-06.11.04.05` | partial | Recorded batch work | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |
+| `06-security-testing-observability.md#T-06.11.04.05` | done | Recorded batch work | Schedule quarterly object storage recovery test: version retrieval, policy enforcement, orphan detection |
 | `06-security-testing-observability.md#T-06.11.04.06` | done | Recorded batch work | Write reconciliation tests: deliberately inconsistent fixtures → mismatch alert → finance exception |
 | `06-security-testing-observability.md#T-06.12.01.01` | done | Recorded batch work | Configure Vitest coverage thresholds per package with different target levels for critical vs non-critical |
 | `06-security-testing-observability.md#T-06.12.01.02` | done | Recorded batch work | Define critical domain packages: auth, authorization, payments, wallet, refunds, pricing, contracts, state-machine |
