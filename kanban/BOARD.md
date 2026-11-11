@@ -39,10 +39,10 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Restore hosted integrity checks on the exact v0.6.0 source and capture remaining operational acceptance on the approved topology.
+Verify signed archive acquisition and the required exact integrity check before direct main readback.
 
-- `06-security-testing-observability.md#T-06.12.04.05`: Implement post-deploy smoke tests and SLO/error comparison against previous release
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
+- `01-platform-infrastructure.md#T-05.03.04`: Configure security scans in PR gate
 
 ## v0.2.0: Complete customer journeys
 

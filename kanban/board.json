@@ -4101,7 +4101,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             }
           ],
           "checks": [
@@ -4132,6 +4132,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -4512,7 +4520,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4555,6 +4563,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -4757,7 +4773,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             }
           ],
           "checks": [
@@ -4806,6 +4822,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -5097,7 +5121,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".size-limit.json",
@@ -5148,6 +5172,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -5382,7 +5414,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5424,6 +5456,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -5530,7 +5570,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5572,6 +5612,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -5904,7 +5952,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6020,6 +6068,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -6176,7 +6232,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6218,6 +6274,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -6340,7 +6404,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6412,6 +6476,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -9268,7 +9340,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             }
           ],
           "checks": [
@@ -9306,6 +9378,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -14573,7 +14653,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "docs/development/ci.md",
@@ -14629,6 +14709,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -14697,7 +14785,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -14778,6 +14866,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -14851,7 +14947,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "package.json",
@@ -14919,6 +15015,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -14987,7 +15091,8 @@
           "release-0.6-strict-license-gate-readback",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-license-review-roles",
-          "release-0.6-integrity-requires-tests"
+          "release-0.6-integrity-requires-tests",
+          "release-0.6-hosted-signed-ubuntu-archive-fallback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -15139,7 +15244,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -15189,6 +15294,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -18859,7 +18972,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -19328,6 +19441,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -20863,7 +20984,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "docs/development/ci.md",
@@ -20918,6 +21039,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -20991,7 +21120,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".prettierignore",
@@ -21034,6 +21163,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -21113,7 +21250,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".husky/commit-msg",
@@ -21196,6 +21333,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -21995,7 +22140,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -22513,6 +22658,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -22590,7 +22743,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".prettierignore",
@@ -22691,6 +22844,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -478228,7 +478389,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -478590,6 +478751,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -478732,7 +478901,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -479271,6 +479440,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -479417,7 +479594,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -479774,6 +479951,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -479886,7 +480071,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -480243,6 +480428,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -480355,7 +480548,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -480712,6 +480905,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -517311,7 +517512,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "Dockerfile.web",
@@ -517378,6 +517579,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -517596,7 +517805,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -517649,6 +517858,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -517702,7 +517919,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "Dockerfile.web",
@@ -517769,6 +517986,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -518070,7 +518295,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             }
           ],
           "checks": [
@@ -518104,6 +518329,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -522344,7 +522577,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -522393,6 +522626,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -526725,7 +526966,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -526922,6 +527163,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -527885,7 +528134,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".gitignore",
@@ -527958,6 +528207,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -528011,7 +528268,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".gitignore",
@@ -528071,6 +528328,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         },
@@ -528188,7 +528453,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -528230,6 +528495,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         },
@@ -528331,7 +528604,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -528380,6 +528653,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -528432,7 +528713,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "Dockerfile.base",
@@ -528495,6 +528776,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -528548,7 +528837,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".gitignore",
@@ -528608,6 +528897,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         },
@@ -528711,7 +529008,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -528747,6 +529044,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -529349,7 +529654,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -529390,6 +529695,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -530746,7 +531059,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -530783,6 +531096,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -530825,7 +531146,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -530888,6 +531209,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -530930,7 +531259,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -530989,6 +531318,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -535737,7 +536074,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -535813,6 +536150,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -536205,7 +536550,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -536314,6 +536659,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -536367,7 +536720,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -536462,6 +536815,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -536891,7 +537252,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -536940,6 +537301,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -536987,7 +537356,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -537041,6 +537410,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -537705,7 +538082,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".size-limit.json",
@@ -537816,6 +538193,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -538569,7 +538954,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538652,6 +539037,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -538695,7 +539088,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538778,6 +539171,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -538823,7 +539224,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538906,6 +539307,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -538948,7 +539357,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -539031,6 +539440,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -539124,7 +539541,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -539199,6 +539616,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -539242,7 +539667,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/openapi.json",
@@ -539315,6 +539740,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -539497,7 +539930,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -539576,6 +540009,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -539613,7 +540054,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -539716,6 +540157,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -539768,7 +540217,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "deploy/production/README.md",
@@ -539859,6 +540308,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -540264,7 +540721,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -540339,6 +540796,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -540391,7 +540856,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -540466,6 +540931,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -546048,7 +546521,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "Dockerfile.base",
@@ -546096,6 +546569,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -596277,7 +596758,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".size-limit.json",
@@ -597120,6 +597601,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -597258,7 +597747,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".size-limit.json",
@@ -598101,6 +598590,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -598813,7 +599310,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".size-limit.json",
@@ -599656,6 +600153,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -599734,7 +600239,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -599808,6 +600313,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         }
@@ -816439,7 +816952,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/openapi.json",
@@ -820441,6 +820954,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -820869,7 +821390,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": "apps/api/openapi.json",
@@ -824720,6 +825241,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -826923,7 +827452,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+              "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
             },
             {
               "path": ".size-limit.json",
@@ -829058,6 +829587,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
+            },
+            {
+              "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+              "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact workflow comparison verified only mirror fallback setup was inserted into the two dependency install steps. Existing source-bound assertions and enforcement are preserved. Current hosted execution is tracked under R-05.02."
             }
           ]
         },
@@ -829318,7 +829855,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the required Verify monorepo integrity check at the exact preflight SHA on the pinned Ubuntu runner, then verify the direct push to main.",
+        "Verify signed archive acquisition and the required Verify monorepo integrity check at the exact candidate SHA, then verify direct main readback.",
         "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
@@ -829518,7 +830055,8 @@
           "release-0.6-multipart-upgrade-preflight-fix",
           "release-0.6-launch-halt-and-rollback",
           "release-0.6-post-deploy-observation",
-          "release-0.6-hosted-ubuntu-runner-pin"
+          "release-0.6-hosted-ubuntu-runner-pin",
+          "release-0.6-hosted-signed-ubuntu-archive-fallback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -950029,6 +950567,135 @@
         "release-readiness#R-03.02",
         "release-readiness#R-04.02"
       ]
+    },
+    "release-0.6-hosted-signed-ubuntu-archive-fallback": {
+      "batch": "release-0.6-hosted-signed-ubuntu-archive-fallback",
+      "base_commit": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+      "task_keys": [
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-05.03.04"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "scripts/configure-ci-ubuntu-mirrors.sh"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "9bead10ff18a76a4bd852c56dd018ad1b774aa3f666e698bb2f82d679a894f71"
+        },
+        {
+          "path": "scripts/configure-ci-ubuntu-mirrors.sh",
+          "sha256": "1562c54e677c13a6d3a2feabb81b3042a5ad2de252a451a22059e98b1d5506ae"
+        }
+      ],
+      "checks": [
+        "Hosted preflight 43039453143 at a9521deb used Ubuntu 24.04. Both Poppler and Playwright dependency installation still failed to resolve the runner Ubuntu archive. The required integrity job failed, and the native tests and performance measurements did not run.",
+        "When the runner mirror list exists and its Azure Ubuntu archive DNS lookup fails, both affected jobs add Kernel.org and University of Michigan archive mirrors to the existing list. The original sources, Ubuntu keyring, installation commands, assertions, budgets and required checks are preserved.",
+        "Downloaded the Ubuntu Noble security InRelease metadata from both alternatives and verified both signatures against the existing Ubuntu archive keyring. Isolated script checks passed for missing mirror list, reachable primary and unreachable primary. Actionlint, ShellCheck, Bash syntax, formatting and whitespace checks passed.",
+        "The exact hosted candidate must still verify mirror access, native tests, Chromium measurements and the required integrity status before direct main push. Package-specific license disposition remains a separate release gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo",
+      "reused_source_bindings": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo/hosted-ubuntu24-pdf.log",
+          "sha256": "2a5b136170cd74d8a26678c5ea2dc524c2dc690fb06f4d6c864e403e88577622"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo/hosted-ubuntu24-chromium.log",
+          "sha256": "c3f3072955b98b9494723f0ed9d0bda88a4e6e4647ae1417867229f1374b262a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo/mirror-config-tests.log",
+          "sha256": "d7a114545078dee3bf18fd67408d17258e40016b11624e40b4e16acdacdab74e"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo/kernel-archive-signature.log",
+          "sha256": "277c2f3e865e3b1a3e863d2fd95bf958048e0e7e2ac8a45386cb135bb2dc3562"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo/umich-archive-signature.log",
+          "sha256": "277c2f3e865e3b1a3e863d2fd95bf958048e0e7e2ac8a45386cb135bb2dc3562"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/explicit-provider-test-contact.kddzm_zo/check-mirror-config.py",
+          "sha256": "a06266be079051dfb523e2ff151caec8a04701d3bbd47a793b98bbadf6e0a099"
+        }
+      ],
+      "hosted_preflight": {
+        "failed_sha": "a9521deb6213dd5cb569d3bd0e8f24ba8bb6c4c1",
+        "url": "https://github.com/barghsadev/barghsa-core/actions/runs/43039453143",
+        "next_ref": "refs/heads/codex/preflight/v06-signed-archive-recovery"
+      }
     }
   },
   "historical_improvements": [
@@ -950068,13 +950735,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-hosted-integrity-and-live-observation",
+    "id": "release-0.6-hosted-archive-reachability",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.12.04.05",
-      "release-readiness#R-05.02"
+      "release-readiness#R-05.02",
+      "01-platform-infrastructure.md#T-05.03.04"
     ],
-    "goal": "Restore hosted integrity checks on the exact v0.6.0 source and capture remaining operational acceptance on the approved topology."
+    "goal": "Verify signed archive acquisition and the required exact integrity check before direct main readback."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

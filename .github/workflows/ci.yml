@@ -153,7 +153,9 @@ jobs:
       - run: pnpm check:contract
       - run: pnpm check:db-snapshot
       - name: Install production browser check runtime
-        run: pnpm --filter @barghsa/web exec playwright install --with-deps chromium
+        run: |
+          bash scripts/configure-ci-ubuntu-mirrors.sh
+          pnpm --filter @barghsa/web exec playwright install --with-deps chromium
       - name: Enforce primary mobile page performance
         run: |
           node scripts/run-production-browser.mjs \
@@ -305,6 +307,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Install PDF preview renderer
         run: |
+          bash scripts/configure-ci-ubuntu-mirrors.sh
           sudo apt-get update
           sudo apt-get install --yes --no-install-recommends poppler-utils
           pdftoppm -v
