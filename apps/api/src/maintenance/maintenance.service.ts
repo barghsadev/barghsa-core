@@ -3,6 +3,10 @@ import { getDbPool } from '@barghsa/db';
 import { v7 as uuidv7 } from 'uuid';
 import { z } from 'zod';
 import { ErrorCodes } from '@barghsa/shared/errors';
+import {
+  isStandardMaintenanceNotice,
+  standardMaintenanceNotice,
+} from '@barghsa/i18n/maintenance-public';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
@@ -32,7 +36,10 @@ const settingSchema = z
   })
   .strict();
 export const updateSchema = settingSchema
-  .extend({ expectedVersion: z.number().int().nonnegative() })
+  .extend({
+    expectedVersion: z.number().int().nonnegative(),
+    publishReason: z.boolean().optional(),
+  })
   .superRefine((value, context) => {
     if (!value.active) return;
     for (const field of ['reason', 'owner', 'estimatedUntil'] as const)
@@ -112,7 +119,7 @@ export class MaintenanceService {
     throw new ServiceUnavailableException({
       error: ErrorCodes.MAINTENANCE_ACTIVE.code,
       capability,
-      reason: setting.reason,
+      reason: isStandardMaintenanceNotice(setting.reason) ? null : setting.reason,
       estimatedUntil: setting.estimatedUntil,
       supportUrl: '/tickets',
     });
@@ -142,9 +149,10 @@ export class MaintenanceService {
       );
       if (before.version !== input.expectedVersion)
         throw new ConflictException('Maintenance setting changed. Reload before saving.');
+      const privateReason = input.active && input.publishReason === false ? input.reason : null;
       const value = {
         active: input.active,
-        reason: input.active ? input.reason : null,
+        reason: privateReason ? standardMaintenanceNotice : input.active ? input.reason : null,
         estimatedUntil: input.active ? input.estimatedUntil : null,
         owner: input.active ? input.owner : null,
       };
@@ -167,7 +175,13 @@ export class MaintenanceService {
         [
           uuidv7(),
           actor.userId,
-          JSON.stringify({ key, previous: before, next: after, sessionId: actor.sessionId }),
+          JSON.stringify({
+            key,
+            previous: before,
+            next: after,
+            sessionId: actor.sessionId,
+            ...(privateReason ? { privateReason } : {}),
+          }),
           correlationIdStorage.getStore() ?? uuidv7(),
           ip,
         ]

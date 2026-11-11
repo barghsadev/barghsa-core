@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 import {
   maintenanceDraft,
   maintenanceErrors,
@@ -106,4 +107,23 @@ it('rejects missing, duplicate or malformed saved-status rows', () => {
     [...rows.slice(1), { ...setting, reason: null }],
   ])
     expect(isMaintenanceList(value)).toBe(false);
+});
+
+it('preserves the private notice selection and confirms only the safe public receipt', () => {
+  const draft = maintenanceDraft(setting, zone);
+  expect(draft.publishReason).toBe(true);
+  draft.publishReason = false;
+  const payload = maintenancePayload(draft, zone, 3);
+  expect(payload).toMatchObject({ publishReason: false, reason: setting.reason });
+  const saved = { ...setting, reason: standardMaintenanceNotice, version: 4 };
+  expect(matchesMaintenanceReceipt(saved, setting.capability, payload)).toBe(true);
+  expect(matchesMaintenanceReceipt({ ...setting, version: 4 }, setting.capability, payload)).toBe(
+    false
+  );
+  expect(maintenanceDraft(saved, zone)).toMatchObject({
+    publishReason: false,
+    reasonFa: '',
+    reasonEn: '',
+    owner: setting.owner,
+  });
 });

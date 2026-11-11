@@ -1,5 +1,6 @@
 import { Body, Controller, Get, HttpException, Param, Put, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { isStandardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 import { z } from 'zod';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
@@ -23,7 +24,7 @@ export class PublicMaintenanceController {
         ({ capability, active, reason, estimatedUntil }) => ({
           capability,
           active,
-          reason,
+          reason: isStandardMaintenanceNotice(reason) ? null : reason,
           estimatedUntil,
         })
       ),
@@ -80,7 +81,9 @@ export class AdminMaintenanceController {
       if (
         fields.length &&
         fields.every((field) =>
-          ['active', 'reasonFa', 'reasonEn', 'owner', 'estimatedUntil'].includes(field)
+          ['active', 'reasonFa', 'reasonEn', 'owner', 'estimatedUntil', 'publishReason'].includes(
+            field
+          )
         )
       )
         throw new InputFieldException(fields);

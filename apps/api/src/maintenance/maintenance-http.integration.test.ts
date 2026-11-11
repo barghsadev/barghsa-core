@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
+import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
@@ -172,6 +173,52 @@ it('requires staff authority and step-up, versions changes, and records the audi
     previous: { active: false, version: 0 },
     next: { active: true, version: 1 },
   });
+  const privateReason = { fa: 'دلیل خصوصی آزمایشی', en: 'INTERNAL_MAINTENANCE_REASON' };
+  const privateInput = { ...body, reason: privateReason, publishReason: false, expectedVersion: 1 };
+  const savedPrivate = await put(privateInput);
+  expect(savedPrivate.status, http.logs()).toBe(200);
+  const receipt = await savedPrivate.json();
+  expect(receipt).toMatchObject({ active: true, reason: standardMaintenanceNotice, version: 2 });
+  expect(JSON.stringify(receipt)).not.toContain(privateReason.en);
+  const row = (
+    await http.pool.query("SELECT value FROM app_config WHERE key='maintenance.saving_orders'")
+  ).rows[0]!.value;
+  expect(row).toEqual({
+    active: true,
+    reason: standardMaintenanceNotice,
+    owner: body.owner,
+    estimatedUntil: body.estimatedUntil,
+  });
+  const publicStatus = (await (await fetch(`${http.base}/api/maintenance`)).json()) as {
+    capabilities: unknown[];
+  };
+  expect(publicStatus.capabilities).toContainEqual({
+    capability: 'saving_orders',
+    active: true,
+    reason: null,
+    estimatedUntil: body.estimatedUntil,
+  });
+  expect(JSON.stringify(publicStatus)).not.toContain(privateReason.en);
+  const paused = await fetch(`${http.base}/api/saving/orders`, { method: 'POST' });
+  expect(paused.status, http.logs()).toBe(503);
+  const pausedBody = (await paused.json()) as { error: unknown };
+  expect(pausedBody).toMatchObject({
+    error: { capability: 'saving_orders', supportUrl: '/tickets' },
+  });
+  expect(pausedBody.error).not.toHaveProperty('reason');
+  expect(JSON.stringify(pausedBody)).not.toContain(privateReason.en);
+  const privateAudit = (
+    await http.pool.query(
+      "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'='maintenance.saving_orders' AND metadata::jsonb->'next'->>'version'='2'"
+    )
+  ).rows;
+  expect(privateAudit).toHaveLength(1);
+  expect(privateAudit[0].metadata).toMatchObject({
+    previous: { version: 1 },
+    next: { active: true, version: 2, reason: standardMaintenanceNotice },
+    privateReason,
+  });
+  expect((await put(privateInput)).status).toBe(409);
   await http.pool.query("UPDATE staff_roles SET permissions='[]' WHERE role_id='test-maintenance'");
   const forbidden = await put({ ...body, reason: null });
   expect(forbidden.status).toBe(403);

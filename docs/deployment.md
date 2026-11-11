@@ -134,6 +134,10 @@ recovery, isolate and restore from the verified backup or WAL target and
 reconcile the affected ledgers, records and outbox before resuming service.
 [Application, configuration and data rollback](runbooks/bad-deployment.md) · [Database restore](runbooks/database-restore.md).
 
+## Capability maintenance
+
+Use `/admin/maintenance` to pause new actions in a single capability. Record the owner, future return time, and rationale in Persian and English. Clear **Show the reason to customers** to use the standard notice and retain the rationale in the restricted audit history. When editing an existing pause that uses the standard notice, supply the rationale for the new decision. Existing support and account access remain available.
+
 ## Monitoring and release readback
 
 Configure Prometheus scrapes, Alertmanager routing and the relevant Grafana

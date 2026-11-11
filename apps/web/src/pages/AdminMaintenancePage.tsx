@@ -55,6 +55,7 @@ export default function AdminMaintenancePage() {
       return contentFormSchema<MaintenanceDraft>(
         {
           active: copy('invalidField'),
+          publishReason: copy('invalidField'),
           reasonFa: copy('invalidReason'),
           reasonEn: copy('invalidReason'),
           owner: copy('invalidOwner'),
@@ -192,7 +193,7 @@ export default function AdminMaintenancePage() {
         ? 'invalidDeadline'
         : name === 'owner'
           ? 'invalidOwner'
-          : name === 'active'
+          : name === 'active' || name === 'publishReason'
             ? 'invalidField'
             : 'invalidReason'
     );
@@ -351,16 +352,38 @@ export default function AdminMaintenancePage() {
               />
               {draft.active && (
                 <>
+                  <FormField
+                    control={form.control}
+                    name="publishReason"
+                    render={({ field }) => (
+                      <FormItem>
+                        <label className="touch-label flex items-center gap-2">
+                          <FormControl>
+                            <input
+                              type="checkbox"
+                              name={field.name}
+                              ref={field.ref}
+                              onBlur={field.onBlur}
+                              checked={field.value}
+                              onChange={(event) => field.onChange(event.target.checked)}
+                            />
+                          </FormControl>
+                          {copy('publishReason')}
+                        </label>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormTextarea
                     control={form.control}
                     name="reasonFa"
-                    label={copy('reasonFa')}
+                    label={copy(draft.publishReason ? 'reasonFa' : 'privateReasonFa')}
                     inputProps={{ dir: 'rtl', maxLength: 500, 'aria-required': true }}
                   />
                   <FormTextarea
                     control={form.control}
                     name="reasonEn"
-                    label={copy('reasonEn')}
+                    label={copy(draft.publishReason ? 'reasonEn' : 'privateReasonEn')}
                     inputProps={{ dir: 'ltr', maxLength: 500, 'aria-required': true }}
                   />
                   <FormInput
@@ -446,11 +469,33 @@ export default function AdminMaintenancePage() {
                 {captured.current.body.active && (
                   <>
                     <div>
-                      <dt className="font-medium">{copy('reasonFa')}</dt>
+                      <dt className="font-medium">{copy('publicNotice')}</dt>
+                      <dd>
+                        {copy(
+                          captured.current.body.publishReason === false
+                            ? 'standardNotice'
+                            : 'customNotice'
+                        )}
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">
+                        {copy(
+                          captured.current.body.publishReason === false
+                            ? 'privateReasonFa'
+                            : 'reasonFa'
+                        )}
+                      </dt>
                       <dd dir="rtl">{captured.current.body.reason?.fa}</dd>
                     </div>
                     <div>
-                      <dt className="font-medium">{copy('reasonEn')}</dt>
+                      <dt className="font-medium">
+                        {copy(
+                          captured.current.body.publishReason === false
+                            ? 'privateReasonEn'
+                            : 'reasonEn'
+                        )}
+                      </dt>
                       <dd dir="ltr">{captured.current.body.reason?.en}</dd>
                     </div>
                     <div>
@@ -481,6 +526,7 @@ export default function AdminMaintenancePage() {
           onValidationError={(fields) => {
             const map: Record<string, keyof MaintenanceDraft> = {
               active: 'active',
+              publishReason: 'publishReason',
               reasonFa: 'reasonFa',
               reasonEn: 'reasonEn',
               owner: 'owner',

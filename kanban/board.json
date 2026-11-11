@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T18:13:40+00:00",
+  "updated": "2026-11-11T18:26:25+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14799,7 +14799,8 @@
         ],
         "batches": [
           "release-0.6-pilot-compose-boundary",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -14819,7 +14820,7 @@
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
+              "sha256": "1a0e6881ac714cfc75e2578adc471d72bfa5e7b4e13b2c7d619fee701e37c44d"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -14869,6 +14870,14 @@
                 "scripts/test-container-packaging.py"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "docs/deployment.md"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -15190,7 +15199,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile the platform requirement for an optional customer-facing reason with the existing active-switch requirement for bilingual reason, owner and future deadline. Confirm all unaffected login, support, contracts, invoices and refund routes through the launch rehearsal."
+        "In the launch rehearsal, activate a capability pause and verify normal authenticated login, support/ticketing, contract list, invoice and refund journeys and at least one unrelated new capability. Restore the pause and retain live receipts for the exact deployed candidate."
       ],
       "owner": null,
       "depends_on": [],
@@ -15218,12 +15227,24 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+          "apps/api/src/maintenance/maintenance.controller.ts",
+          "apps/api/src/maintenance/maintenance.service.ts",
+          "apps/web/e2e/maintenance-forms.spec.ts",
+          "apps/web/e2e/maintenance.spec.ts",
+          "apps/web/src/lib/maintenance-form.test.ts",
+          "apps/web/src/lib/maintenance-form.ts",
+          "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "audit/skipped-work-handoff.md",
+          "docs/deployment.md",
+          "packages/i18n/src/maintenance-public.ts",
+          "packages/i18n/src/maintenance.ts"
         ],
         "batches": [
           "release-0.6-capability-and-assistant-maintenance",
           "release-0.6-ai-inference-metrics",
-          "release-0.6-authorization-denials-and-restricted-dashboard"
+          "release-0.6-authorization-denials-and-restricted-dashboard",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -23125,7 +23146,8 @@
           "release-0.6-protected-storage-origins",
           "integrated-qa-preview-deployment",
           "release-0.6-pilot-compose-boundary",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23166,7 +23188,7 @@
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
+              "sha256": "1a0e6881ac714cfc75e2578adc471d72bfa5e7b4e13b2c7d619fee701e37c44d"
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
@@ -23257,6 +23279,14 @@
                 "docs/deployment.md"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "docs/deployment.md"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -529577,7 +529607,8 @@
         ],
         "batches": [
           "release-0.6-reusable-profile-and-staff-capability-scope",
-          "release-0.6-native-provider-fixtures-and-staff-log-assertion"
+          "release-0.6-native-provider-fixtures-and-staff-log-assertion",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "source-bound-profile-and-staff-capability-scope",
@@ -529801,7 +529832,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
-              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+              "sha256": "4503bed7a67222428560df6e7d502d705d3441bc8421f4aa3611d1be2808a84a"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
@@ -529958,6 +529989,14 @@
                 "apps/api/src/provider-config/sms-provider-config.controller.ts"
               ],
               "scope": "The only API contract changes are the two staff provider test request bodies and descriptions. The web changes bind the explicit recipient and preserve guarded provider test, rollback and activation outcomes. Unchanged criteria reuse their existing evidence. See the associated native and Chromium receipts."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/api/src/maintenance/maintenance.controller.ts"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -558482,7 +558521,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -558526,7 +558566,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.service.ts",
-              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+              "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
@@ -558542,7 +558582,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance.spec.ts",
-              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+              "sha256": "12c705e054bb7f32d12327dafc00979ea7b8a44dc74c07a0467c988d403dbb34"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -558554,11 +558594,11 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
-              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+              "sha256": "4503bed7a67222428560df6e7d502d705d3441bc8421f4aa3611d1be2808a84a"
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -558586,7 +558626,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
@@ -558602,7 +558642,7 @@
             },
             {
               "path": "apps/web/src/lib/maintenance-form.ts",
-              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+              "sha256": "d3125eb10f76f595e5a9c01241d26c5fdba4a47a9b57fd8297150a16854c6809"
             }
           ],
           "checks": [
@@ -558629,6 +558669,19 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+                "apps/api/src/maintenance/maintenance.controller.ts",
+                "apps/api/src/maintenance/maintenance.service.ts",
+                "apps/web/e2e/maintenance.spec.ts",
+                "apps/web/src/lib/maintenance-form.ts",
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -558660,7 +558713,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -558704,7 +558758,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.service.ts",
-              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+              "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
@@ -558720,7 +558774,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance.spec.ts",
-              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+              "sha256": "12c705e054bb7f32d12327dafc00979ea7b8a44dc74c07a0467c988d403dbb34"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -558732,11 +558786,11 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
-              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+              "sha256": "4503bed7a67222428560df6e7d502d705d3441bc8421f4aa3611d1be2808a84a"
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -558764,7 +558818,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
@@ -558780,7 +558834,7 @@
             },
             {
               "path": "apps/web/src/lib/maintenance-form.ts",
-              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+              "sha256": "d3125eb10f76f595e5a9c01241d26c5fdba4a47a9b57fd8297150a16854c6809"
             }
           ],
           "checks": [
@@ -558807,6 +558861,19 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+                "apps/api/src/maintenance/maintenance.controller.ts",
+                "apps/api/src/maintenance/maintenance.service.ts",
+                "apps/web/e2e/maintenance.spec.ts",
+                "apps/web/src/lib/maintenance-form.ts",
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -558839,7 +558906,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -558883,7 +558951,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.service.ts",
-              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+              "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
@@ -558899,7 +558967,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance.spec.ts",
-              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+              "sha256": "12c705e054bb7f32d12327dafc00979ea7b8a44dc74c07a0467c988d403dbb34"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -558911,11 +558979,11 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
-              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+              "sha256": "4503bed7a67222428560df6e7d502d705d3441bc8421f4aa3611d1be2808a84a"
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -558943,7 +559011,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
@@ -558959,7 +559027,7 @@
             },
             {
               "path": "apps/web/src/lib/maintenance-form.ts",
-              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+              "sha256": "d3125eb10f76f595e5a9c01241d26c5fdba4a47a9b57fd8297150a16854c6809"
             }
           ],
           "checks": [
@@ -558986,6 +559054,19 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+                "apps/api/src/maintenance/maintenance.controller.ts",
+                "apps/api/src/maintenance/maintenance.service.ts",
+                "apps/web/e2e/maintenance.spec.ts",
+                "apps/web/src/lib/maintenance-form.ts",
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -559044,7 +559125,8 @@
           "release-0.6-authorization-denials-and-restricted-dashboard",
           "release-0.6-ai-quotas-and-budget-evidence",
           "release-0.6-ai-and-payment-transport-boundaries",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "source-bound-capability-switch-api-and-browser",
@@ -559088,7 +559170,7 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.service.ts",
-              "sha256": "0036a1e2be712c1459468cf0a4dc19c8377f04cb4e12e90e896ff061e8219359"
+              "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
             },
             {
               "path": "apps/api/src/telegram/telegram-links-http.integration.test.ts",
@@ -559104,7 +559186,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance.spec.ts",
-              "sha256": "5c3ac6a19d1fe9fae1546556ee0545b60bc29d7cce0ada8ba54641540aabb1da"
+              "sha256": "12c705e054bb7f32d12327dafc00979ea7b8a44dc74c07a0467c988d403dbb34"
             },
             {
               "path": "apps/web/src/pages/AIChat.tsx",
@@ -559116,11 +559198,11 @@
             },
             {
               "path": "apps/api/src/maintenance/maintenance.controller.ts",
-              "sha256": "51dc03ef4757ce40ba61557f31a57c1019316b7d49b96391b61c07522c33ea5a"
+              "sha256": "4503bed7a67222428560df6e7d502d705d3441bc8421f4aa3611d1be2808a84a"
             },
             {
               "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
-              "sha256": "9db8463f440bb41a4f5b6390a19bb1d4e2a6ef5581e1225fddfe28abc17c0d1f"
+              "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.controller.ts",
@@ -559148,7 +559230,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/components/AdminMaintenanceSummary.tsx",
@@ -559164,7 +559246,7 @@
             },
             {
               "path": "apps/web/src/lib/maintenance-form.ts",
-              "sha256": "9373b3851bb38213e30f7c3feba991cd7efc0aa3112da60810fa7d2f6c646d66"
+              "sha256": "d3125eb10f76f595e5a9c01241d26c5fdba4a47a9b57fd8297150a16854c6809"
             }
           ],
           "checks": [
@@ -559191,6 +559273,19 @@
                 "docs/operations/ai-inference.md"
               ],
               "scope": "Publish a private USD counter only after a successful budget commit, document its dashboard, and add exact sample assertions. Existing SQL, amount calculation, admission, serialization, return value, monthly reset, alerts and prior assertions are preserved. Budget, breaker and metrics HTTP cases passed."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+                "apps/api/src/maintenance/maintenance.controller.ts",
+                "apps/api/src/maintenance/maintenance.service.ts",
+                "apps/web/e2e/maintenance.spec.ts",
+                "apps/web/src/lib/maintenance-form.ts",
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -559646,7 +559741,8 @@
           "scripts/test-container-packaging.py"
         ],
         "batches": [
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -559686,7 +559782,7 @@
             },
             {
               "path": "docs/deployment.md",
-              "sha256": "17d3ebbe7dc678c13ef471ffbecf22cf63a2d7e23289b5b81f6ffc460d83158a"
+              "sha256": "1a0e6881ac714cfc75e2578adc471d72bfa5e7b4e13b2c7d619fee701e37c44d"
             },
             {
               "path": "scripts/test-container-packaging.py",
@@ -559701,6 +559797,16 @@
           "limitations": [
             "The native log proof used disposable metadata-only app and web images on the staging host. Check full candidate image identity and Docker log details after the accepted release is deployed.",
             "This criterion covers the image revision in Docker JSON records. Application log schema and aggregation, Sentry deployment events, and dashboard annotations are separate criteria."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "docs/deployment.md"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            }
           ]
         }
       }
@@ -575709,7 +575815,8 @@
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-browser-stable-native-feedback",
-          "release-0.6-versioned-security-rate-limits"
+          "release-0.6-versioned-security-rate-limits",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -576013,7 +576120,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -576717,6 +576824,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -600020,7 +600135,8 @@
           "release-0.6-browser-recovery-selection-and-overlay",
           "release-0.6-consultation-and-threshold-browser-recovery",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-browser-keyboard-and-mobile-touch"
+          "release-0.6-browser-keyboard-and-mobile-touch",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -600304,7 +600420,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -600574,6 +600690,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -605540,7 +605664,8 @@
           "release-0.6-browser-keyboard-and-mobile-touch",
           "release-0.6-browser-navigation-query-and-resting-states",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "status": "accepted",
@@ -605812,7 +605937,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance-forms.spec.ts",
-              "sha256": "6ba52a953a4fc6f0075b58427630b879ab366abd42591cbe7fa9e7d31588920e"
+              "sha256": "d87e6606d53dce74f6af5b1ee377043c32f5202495b76be4cea3e3993ef29373"
             },
             {
               "path": "apps/web/e2e/manual-invoice.spec.ts",
@@ -606644,7 +606769,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -607145,6 +607270,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/e2e/maintenance-forms.spec.ts",
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -640847,7 +640981,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -641355,7 +641490,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -642639,6 +642774,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -642829,7 +642972,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -643337,7 +643481,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -644621,6 +644765,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -644812,7 +644964,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -645320,7 +645473,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -646604,6 +646757,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -646764,7 +646925,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -647272,7 +647434,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -648556,6 +648718,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -648742,7 +648912,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -649250,7 +649421,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -650534,6 +650705,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -650729,7 +650908,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -651237,7 +651417,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -652521,6 +652701,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -652689,7 +652877,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -653197,7 +653386,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -654481,6 +654670,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -654613,7 +654810,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -655121,7 +655319,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -656405,6 +656603,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -656537,7 +656743,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -657045,7 +657252,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -658329,6 +658536,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -658462,7 +658677,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -658970,7 +659186,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -660254,6 +660470,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -660386,7 +660610,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -660894,7 +661119,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -662178,6 +662403,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -662305,7 +662538,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -662841,7 +663075,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -664227,6 +664461,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -664348,7 +664590,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -664884,7 +665127,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -666270,6 +666513,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -666441,7 +666692,8 @@
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -666793,7 +667045,7 @@
             },
             {
               "path": "apps/web/e2e/maintenance-forms.spec.ts",
-              "sha256": "6ba52a953a4fc6f0075b58427630b879ab366abd42591cbe7fa9e7d31588920e"
+              "sha256": "d87e6606d53dce74f6af5b1ee377043c32f5202495b76be4cea3e3993ef29373"
             },
             {
               "path": "apps/web/e2e/manual-external-refund.spec.ts",
@@ -668501,7 +668753,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -669429,6 +669681,15 @@
                 "apps/web/e2e/team.spec.ts"
               ],
               "scope": "Only browser fixtures and readiness assertions changed. Targeted journeys were re-exercised, including repeat cases and the original affected assertions. The accepted application source is unchanged."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/e2e/maintenance-forms.spec.ts",
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -669550,7 +669811,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -670106,7 +670368,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -671485,6 +671747,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -671606,7 +671876,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -672142,7 +672413,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -673528,6 +673799,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -673649,7 +673928,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -674185,7 +674465,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -675571,6 +675851,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -675692,7 +675980,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -676228,7 +676517,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -677614,6 +677903,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -677735,7 +678032,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -678271,7 +678569,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -679657,6 +679955,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -679778,7 +680084,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -680314,7 +680621,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -681700,6 +682007,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -681821,7 +682136,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -682357,7 +682673,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -683743,6 +684059,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -683864,7 +684188,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -684400,7 +684725,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -685786,6 +686111,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -685907,7 +686240,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -686443,7 +686777,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -687829,6 +688163,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -687950,7 +688292,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -688486,7 +688829,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -689872,6 +690215,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -689993,7 +690344,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -690529,7 +690881,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -691915,6 +692267,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -692839,7 +693199,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -693375,7 +693736,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -694761,6 +695122,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -694882,7 +695251,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -695418,7 +695788,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminReconciliationPage.tsx",
@@ -696804,6 +697174,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -697013,7 +697391,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_route_read_state_acceptance",
@@ -697541,7 +697920,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -698213,6 +698592,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         }
@@ -698445,7 +698832,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -698953,7 +699341,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -700237,6 +700625,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -700365,7 +700761,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -700873,7 +701270,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -702157,6 +702554,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -702285,7 +702690,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -702793,7 +703199,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -704077,6 +704483,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -704205,7 +704619,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -704713,7 +705128,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -705997,6 +706412,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -706125,7 +706548,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -706633,7 +707057,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -707917,6 +708341,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -708045,7 +708477,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -708553,7 +708986,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -709837,6 +710270,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -709965,7 +710406,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-saving-address-deadline-fixture",
           "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
-          "release-0.6-admin-settings-role-catalogue-testing-library"
+          "release-0.6-admin-settings-role-catalogue-testing-library",
+          "release-0.6-optional-maintenance-notice"
         ],
         "current_acceptance": {
           "kind": "current_source_bound_batch_acceptance",
@@ -710473,7 +710915,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -711757,6 +712199,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -843800,7 +844250,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -844525,6 +844975,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -844784,7 +845242,8 @@
           "release-0.6-browser-stable-native-feedback",
           "release-0.6-conversation-identity-rtl-native-checkboxes",
           "release-0.6-versioned-security-rate-limits",
-          "release-0.6-public-registration-privacy"
+          "release-0.6-public-registration-privacy",
+          "release-0.6-optional-maintenance-notice"
         ]
       }
     },
@@ -845772,7 +846231,7 @@
             },
             {
               "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
-              "sha256": "4fb3c26bd6b509014cb1c0cca192c258bb2fac841fc3219b65c4a2bff0744439"
+              "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
             },
             {
               "path": "apps/web/src/pages/AdminNotificationsPage.tsx",
@@ -846100,11 +846559,11 @@
             },
             {
               "path": "packages/i18n/src/maintenance-public.ts",
-              "sha256": "ae1de9e47a22f667078f830461fac77367deb6a308c2950037945e00604c67b3"
+              "sha256": "67e608f9ba2efe00b1d5f1aaafc66ff3248a3b685faa9d7f21456a98f321b170"
             },
             {
               "path": "packages/i18n/src/maintenance.ts",
-              "sha256": "8b0cd85c0a91a7c4ca640255072c1014b9aef7c1d426c5e0e3eca24d6ca10559"
+              "sha256": "f464e07a7cc2f0f943e8f6da12f77c37a6e08857422effccbdfe374c067e03d8"
             },
             {
               "path": "packages/i18n/src/notification-feedback.ts",
@@ -847000,6 +847459,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-optional-maintenance-notice",
+              "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+              "paths": [
+                "apps/web/src/pages/AdminMaintenancePage.tsx",
+                "packages/i18n/src/maintenance-public.ts",
+                "packages/i18n/src/maintenance.ts"
+              ],
+              "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
             }
           ]
         },
@@ -847146,7 +847615,8 @@
           "release-0.6-dashboard-grid-after-entrance",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-optional-maintenance-notice"
         ]
       }
     },
@@ -847498,7 +847968,8 @@
           "release-0.6-webkit-fixture-idle-connection",
           "release-0.6-bounded-pdf-renderer-setup",
           "release-0.6-webkit-contrast-readback",
-          "release-0.6-pdf-preflight-and-license-readback"
+          "release-0.6-pdf-preflight-and-license-readback",
+          "release-0.6-optional-maintenance-notice"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -971475,6 +971946,151 @@
         {
           "file": "release-licenses.json",
           "sha256": "e051785ec51445e61f9fb5ba647eacaf5dc3520f1256423c38ab7bd26752a3ae"
+        }
+      ]
+    },
+    "release-0.6-optional-maintenance-notice": {
+      "batch": "release-0.6-optional-maintenance-notice",
+      "base_commit": "c9fac07fd7a86e21185232b8c5dec948527ce000",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.04",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.17.02.01",
+        "06-security-testing-observability.md#T-06.17.02.02",
+        "06-security-testing-observability.md#T-06.17.02.03",
+        "06-security-testing-observability.md#T-06.17.02.05",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.10.01.01",
+        "07-ui-ux-design.md#T-07.10.01.02",
+        "07-ui-ux-design.md#T-07.10.01.03",
+        "07-ui-ux-design.md#T-07.10.01.04",
+        "07-ui-ux-design.md#T-07.10.01.05",
+        "07-ui-ux-design.md#T-07.10.01.06",
+        "07-ui-ux-design.md#T-07.10.02.01",
+        "07-ui-ux-design.md#T-07.10.02.02",
+        "07-ui-ux-design.md#T-07.10.02.03",
+        "07-ui-ux-design.md#T-07.10.02.04",
+        "07-ui-ux-design.md#T-07.10.02.05",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.03",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.12.01.08",
+        "07-ui-ux-design.md#T-07.13.01.01",
+        "07-ui-ux-design.md#T-07.13.01.02",
+        "07-ui-ux-design.md#T-07.13.01.03",
+        "07-ui-ux-design.md#T-07.13.01.04",
+        "07-ui-ux-design.md#T-07.13.01.05",
+        "07-ui-ux-design.md#T-07.13.01.06",
+        "07-ui-ux-design.md#T-07.13.01.07",
+        "release-readiness#R-04.01",
+        "release-readiness#R-04.02"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/common/http-exception.filter.ts",
+          "sha256": "dd093aa1825cc70bd8b778dcf7ec130b3dc40d56865857baadef2f276ef9a6f7"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance-http.integration.test.ts",
+          "sha256": "3366e0bfc17660122633c73c55ccc231a8eac7652f81c02ed65103d2aa6b6516"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.controller.ts",
+          "sha256": "4503bed7a67222428560df6e7d502d705d3441bc8421f4aa3611d1be2808a84a"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.guard.ts",
+          "sha256": "0c0b5660537432f8816947df475c61251ff4a3bb87bb5a55bf27b414128aeda7"
+        },
+        {
+          "path": "apps/api/src/maintenance/maintenance.service.ts",
+          "sha256": "5b7e2f133b959c2fff84033398d42623e4eabe438fd2fe57b5f56488dc5f02bb"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "d87e6606d53dce74f6af5b1ee377043c32f5202495b76be4cea3e3993ef29373"
+        },
+        {
+          "path": "apps/web/e2e/maintenance.spec.ts",
+          "sha256": "12c705e054bb7f32d12327dafc00979ea7b8a44dc74c07a0467c988d403dbb34"
+        },
+        {
+          "path": "apps/web/src/components/MaintenanceNotice.tsx",
+          "sha256": "3a96b04a5d4a296bf79682b8b049ad043d7f88ab79382dd0cfae1c5dcae2feff"
+        },
+        {
+          "path": "apps/web/src/lib/maintenance-form.test.ts",
+          "sha256": "a3a2eed73a57edc250f954d93354d49524f533ca6bb45442a739b50dfa38501b"
+        },
+        {
+          "path": "apps/web/src/lib/maintenance-form.ts",
+          "sha256": "d3125eb10f76f595e5a9c01241d26c5fdba4a47a9b57fd8297150a16854c6809"
+        },
+        {
+          "path": "apps/web/src/pages/AdminMaintenancePage.tsx",
+          "sha256": "51bf803e48b9ac9d44c6d28af77444a06a038a1c61ddd2f5dbfe620648b2b6f6"
+        },
+        {
+          "path": "docs/deployment.md",
+          "sha256": "1a0e6881ac714cfc75e2578adc471d72bfa5e7b4e13b2c7d619fee701e37c44d"
+        },
+        {
+          "path": "packages/i18n/src/maintenance-public.ts",
+          "sha256": "67e608f9ba2efe00b1d5f1aaafc66ff3248a3b685faa9d7f21456a98f321b170"
+        },
+        {
+          "path": "packages/i18n/src/maintenance.ts",
+          "sha256": "f464e07a7cc2f0f943e8f6da12f77c37a6e08857422effccbdfe374c067e03d8"
+        }
+      ],
+      "checks": [
+        "A staff operator can retain the bilingual rationale in the existing restricted audit history and choose the standard customer notice for the paused capability. Default publish behavior, owner, future return time, permission, step-up, stale-version guard and confirmation are retained. Only the safe standard notice is persisted in the legacy-compatible public configuration row.",
+        "Three real HTTP tests passed with the compiled API and isolated PostgreSQL. The private path verified the matching versioned receipt, four-field stored row, one audit record with the private reason, public status without a reason, the write block without private text and stale-write rejection. After transfer, only two test type casts and their grouping parentheses were added. Existing capability and authority assertions ran unchanged.",
+        "Six form tests and 45 Chromium, WebKit and mobile Chromium cases passed on the built web app with retries disabled. English and Persian paths covered keyboard selection, confirmation, safe receipt validation, the generic customer notice and support, and protected drafts across validation and errors. Scoped lint, typechecks, builds, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "Native HTTP checks used an isolated database and browser checks used controlled API fixtures. The exact launch rehearsal must confirm login, support, contracts, invoices and refund access on the deployed candidate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-optional-maintenance-notice",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "d50cdeabc2da839525a24967923cd2222df1ab05101c7dee2ae635f0ad60cb0d"
+        },
+        {
+          "file": "native-postgres.log",
+          "sha256": "bb3a3472a3e859b89c7ba35ea7956fb5c92af3a6690feb81bbf05dd3acb53aa8"
+        },
+        {
+          "file": "native-test-type-only-proof.log",
+          "sha256": "2834e4d0e03a2fe28323591e901e6ba0ba2d76a188fde5b0c7b6975711106367"
+        },
+        {
+          "file": "web-form.log",
+          "sha256": "5d0b80d234b808d69407abc0e7f293daf68b15a004788b9b99ff533ac88476b5"
+        },
+        {
+          "file": "browser.log",
+          "sha256": "6bcce99ce06a9147ddef629fdf768d0da37d174aebea97b336ef6c0954a54475"
         }
       ]
     }

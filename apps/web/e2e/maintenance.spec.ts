@@ -1,5 +1,6 @@
 import { test, expect } from './coverage-fixture';
 import { fullNavigation } from './navigation-fixture';
+import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 
 const settings = [
   {
@@ -56,6 +57,16 @@ test('paused checkout shows a bilingual reason and support while other intake st
   await page.goto('/solar/requests/new');
   await expect(page.getByRole('heading', { name: 'Service temporarily unavailable' })).toHaveCount(
     0
+  );
+  await page.route('**/api/maintenance', (route) =>
+    route.fulfill({ json: { capabilities: [{ ...settings[0], reason: null }] } })
+  );
+  await page.goto('/electricity/order');
+  await expect(page.getByText(standardMaintenanceNotice.en, { exact: true })).toBeVisible();
+  await expect(page.getByText('Checkout is being checked')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Contact support' })).toHaveAttribute(
+    'href',
+    '/tickets'
   );
 });
 

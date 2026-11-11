@@ -1,4 +1,8 @@
 import { datePickerAtTime } from '@barghsa/ui';
+import {
+  isStandardMaintenanceNotice,
+  standardMaintenanceNotice,
+} from '@barghsa/i18n/maintenance-public';
 import type { MaintenanceCapability } from '../hooks/useMaintenance.js';
 
 const capabilities: MaintenanceCapability[] = [
@@ -19,6 +23,7 @@ export interface MaintenanceSetting {
 }
 export interface MaintenanceDraft {
   active: boolean;
+  publishReason: boolean;
   reasonFa: string;
   reasonEn: string;
   owner: string;
@@ -30,10 +35,12 @@ export function maintenanceDraft(
 ): MaintenanceDraft {
   const original = setting?.estimatedUntil ?? null;
   const date = original ? new Date(original) : undefined;
+  const publishReason = !isStandardMaintenanceNotice(setting?.reason ?? null);
   return {
     active: setting?.active ?? false,
-    reasonFa: setting?.reason?.fa ?? '',
-    reasonEn: setting?.reason?.en ?? '',
+    publishReason,
+    reasonFa: publishReason ? (setting?.reason?.fa ?? '') : '',
+    reasonEn: publishReason ? (setting?.reason?.en ?? '') : '',
     owner: setting?.owner ?? '',
     deadline: {
       date,
@@ -83,6 +90,7 @@ export function maintenancePayload(value: MaintenanceDraft, zone: string, expect
     owner: value.active ? value.owner.trim() : null,
     estimatedUntil: value.active ? maintenanceDeadline(value.deadline, zone) : null,
     expectedVersion,
+    ...(value.active && !value.publishReason ? { publishReason: false } : {}),
   };
 }
 export function isMaintenanceSetting(value: unknown): value is MaintenanceSetting {
@@ -121,14 +129,15 @@ export function matchesMaintenanceReceipt(
   body: ReturnType<typeof maintenancePayload>
 ): boolean {
   if (!isMaintenanceSetting(value)) return false;
+  const expectedReason = body.publishReason === false ? standardMaintenanceNotice : body.reason;
   return (
     value.capability === capability &&
     value.version === body.expectedVersion + 1 &&
     value.updatedAt !== null &&
     value.active === body.active &&
     value.owner === body.owner &&
-    value.reason?.fa === body.reason?.fa &&
-    value.reason?.en === body.reason?.en &&
+    value.reason?.fa === expectedReason?.fa &&
+    value.reason?.en === expectedReason?.en &&
     (body.estimatedUntil === null
       ? value.estimatedUntil === null
       : value.estimatedUntil !== null &&

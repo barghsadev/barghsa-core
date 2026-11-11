@@ -3,6 +3,7 @@ import { test, expect, type Page, type TestInfo } from './coverage-fixture';
 import { crmShell } from './crm-shell-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
 import { tMaintenance } from '@barghsa/i18n/maintenance';
+import { standardMaintenanceNotice } from '@barghsa/i18n/maintenance-public';
 import { t } from '@barghsa/i18n/admin-ui';
 import AxeBuilder from '@axe-core/playwright';
 import type { MaintenanceSetting } from '../src/lib/maintenance-form';
@@ -125,6 +126,49 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
   }
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`maintenance can keep the pause rationale private (${locale})`, async ({ page }, info) => {
+    const { word, confirmPause, save, row } = await setup(page, locale);
+    const visibility = page.getByRole('checkbox', { name: word('publishReason'), exact: true });
+    await expect(visibility).toBeChecked();
+    await visibility.focus();
+    await visibility.press('Space');
+    await expect(visibility).not.toBeChecked();
+    const privateReason = { fa: 'دلیل داخلی آزمایشی', en: 'Private fixture rationale' };
+    await page.getByLabel(word('privateReasonFa'), { exact: true }).fill(privateReason.fa);
+    await page.getByLabel(word('privateReasonEn'), { exact: true }).fill(privateReason.en);
+    const writes: unknown[] = [];
+    await page.route('**/api/admin/maintenance/electricity_checkout', async (route) => {
+      writes.push(route.request().postDataJSON());
+      const next = {
+        ...row(),
+        reason: standardMaintenanceNotice,
+        version: 2,
+        updatedAt: '2026-10-05T12:00:00.000Z',
+      };
+      save(next);
+      await route.fulfill({ json: next });
+    });
+    await page.getByRole('button', { name: word('save'), exact: true }).click();
+    const dialog = page.getByRole('dialog');
+    await expect(dialog.getByText(word('standardNotice'), { exact: true })).toBeVisible();
+    await expect(dialog.getByText(privateReason.en, { exact: true })).toBeVisible();
+    await inspect(page, locale, info, 'private-reason-confirmation');
+    await confirmPause();
+    await expect
+      .poll(() => writes)
+      .toMatchObject([
+        { active: true, publishReason: false, reason: privateReason, expectedVersion: 1 },
+      ]);
+    await expect(dialog).toHaveCount(0);
+    await expect(page.getByText(privateReason.en, { exact: true })).toHaveCount(0);
+    await page
+      .getByRole('button', { name: word('manage'), exact: true })
+      .first()
+      .click();
+    await expect(visibility).not.toBeChecked();
+    await expect(page.getByLabel(word('privateReasonEn'), { exact: true })).toHaveValue('');
+  });
+
   test(`maintenance validates raw fields and owns an account-zone save (${locale})`, async ({
     page,
   }, info) => {
