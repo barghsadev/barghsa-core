@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T13:57:30+00:00",
+  "updated": "2026-11-11T14:15:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9551,7 +9551,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -9623,6 +9623,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -13985,7 +13993,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -13996,6 +14004,16 @@
             "Reviewed the pilot runbook and hybrid ADR against the exact source requirements. They document the 99.5% pilot target without an HA commitment, complete single-host failure, encrypted off-server backup and restore, and separate PostgreSQL and versioned object storage before real payments.",
             "Reviewed the commercial topology design for two independent failure domains, N+1 application capacity, managed TLS load balancing, readiness admission, redundant workers, automatic database failover, redundant PgBouncer, private versioned object storage, optional Redis, and rolling rollback boundaries. The documented 99.9% and 60-minute targets require separately measured operational acceptance.",
             "Verified each relative Markdown link and section anchor across the three reviewed documents. Changed-file formatting and git diff --check passed. The changes are documentation only."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            }
           ]
         }
       }
@@ -14059,7 +14077,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -14070,6 +14088,16 @@
             "Reviewed the pilot runbook and hybrid ADR against the exact source requirements. They document the 99.5% pilot target without an HA commitment, complete single-host failure, encrypted off-server backup and restore, and separate PostgreSQL and versioned object storage before real payments.",
             "Reviewed the commercial topology design for two independent failure domains, N+1 application capacity, managed TLS load balancing, readiness admission, redundant workers, automatic database failover, redundant PgBouncer, private versioned object storage, optional Redis, and rolling rollback boundaries. The documented 99.9% and 60-minute targets require separately measured operational acceptance.",
             "Verified each relative Markdown link and section anchor across the three reviewed documents. Changed-file formatting and git diff --check passed. The changes are documentation only."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            }
           ]
         }
       }
@@ -21180,7 +21208,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -21195,6 +21223,16 @@
             "All ten required incident runbooks exist and are indexed. Reviewed documented severity, symptoms and impact, responsible operator, numbered recovery steps, existing protected commands or authorized UI paths, verification, escalation and post-incident evidence. Verified cross-links and exact route or command references without changing live systems.",
             "Reviewed current additions for read-only storage recovery, verified-contact OTP and blameless review. Existing incident documentation criteria and source links still pass.",
             "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            }
           ]
         }
       }
@@ -21362,7 +21400,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -21390,7 +21428,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             }
           ],
           "source_renewals": [
@@ -21417,6 +21455,15 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Add the integrated staging QA handoff and database recovery note. Original release, provider and operational procedures remain byte-identical."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md",
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -21525,7 +21572,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             },
             {
               "path": "docs/runbooks/redis-loss.md",
@@ -21573,6 +21620,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -22524,7 +22579,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             }
           ],
           "checks": [
@@ -22539,6 +22594,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "Publish a validated revision on the existing private registry and add its positive and negative assertions. The existing response observer, readiness, request privacy and HTTP assertions are preserved. All five compiled metrics cases passed."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -530004,7 +530067,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             },
             {
               "path": "docs/runbooks/security-incident.md",
@@ -530014,6 +530077,16 @@
           "checks": [
             "The linked security incident runbook covers detection and scope, containment, eradication, verified recovery and post-incident review. Existing operations severity and ownership procedures remain the authority.",
             "The documentation review validated 22 relative links and all six response sections."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            }
           ]
         }
       },
@@ -539211,7 +539284,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -539274,6 +539347,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -539290,18 +539371,25 @@
         "story": "06-security-testing-observability.md#spec-8b67a7fdcd80"
       },
       "requirement": "| T-06.12.04.02 | Implement automatic canary/gradual rollout for high-risk changes (payment, wallet, auth, contract, pricing) | L |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Provision the approved candidate and previous pools and connect the guarded ramp to the protected production-equivalent ingress. Rehearse the approved high-risk traffic steps and record live image and traffic readbacks."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/production/README.md",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/test_guarded_rollout.py",
+          "docs/runbooks/bad-deployment.md"
+        ],
+        "batches": [
+          "release-0.6-launch-halt-and-rollback"
+        ],
         "current_acceptance": null
       }
     },
@@ -539320,15 +539408,21 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Exact staging error-trap rollback passed in isolated Compose after an induced health failure. Production canary smoke, error rate, SLO burn, reconciliation mismatch and security alert halt/rollback triggers still need acceptance."
+        "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/production/README.md",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/test_guarded_rollout.py",
+          "docs/runbooks/bad-deployment.md"
+        ],
         "batches": [
-          "release-0.6-staging-image-rollback"
+          "release-0.6-staging-image-rollback",
+          "release-0.6-launch-halt-and-rollback"
         ],
         "current_acceptance": null
       }
@@ -539368,7 +539462,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -539380,7 +539474,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             }
           ],
           "source_renewals": [
@@ -539415,6 +539509,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Add a private dashboard operation section only. Existing service objectives, budgets, schedules and alert priorities retain their exact text."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md",
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -539431,18 +539534,25 @@
         "story": "06-security-testing-observability.md#spec-8b67a7fdcd80"
       },
       "requirement": "| T-06.12.04.05 | Implement post-deploy smoke tests and SLO/error comparison against previous release | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Implement and verify the real observation adapter for exact release identity, readiness and authenticated smoke for all four services, candidate-scoped HTTP errors, per-service SLO inputs, reconciliation and security. Compare the previous and candidate observations on the approved topology."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/production/README.md",
+          "deploy/production/guarded-rollout.py",
+          "deploy/production/test_guarded_rollout.py",
+          "docs/runbooks/bad-deployment.md"
+        ],
+        "batches": [
+          "release-0.6-launch-halt-and-rollback"
+        ],
         "current_acceptance": null
       }
     },
@@ -545778,7 +545888,7 @@
           "source_evidence": [
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -545789,6 +545899,16 @@
             "Reviewed image and compatible migration recovery, smoke and reconciliation checks, incident reporting and blameless follow-up.",
             "Checked documentation and existing source-linked recovery paths. No incident was induced or live recovery certified.",
             "The general incident guide gained a link to the dedicated security runbook. Its existing operational procedure and evidence scope were retained."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
+            }
           ]
         }
       }
@@ -545852,7 +545972,7 @@
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
-              "sha256": "6fc4859717556e5ec7e8e6fc079c683c13dcf163e52342e068306d407fc9e2db"
+              "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
             },
             {
               "path": "docs/runbooks/credential-compromise.md",
@@ -545881,6 +546001,16 @@
             {
               "path": "docs/runbooks/storage-outage.md",
               "sha256": "17d1fc6fc38f41034e6d63d1567d14ce4f07d8242fe8b38cb94ac92a125db17f"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "docs/runbooks/bad-deployment.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -546703,7 +546833,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "622f90b854bf4da8b2ede9c5c0b18cacf93b3044740ecbf96dbb6cb2c9f86463"
+              "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -546742,6 +546872,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "Publish a validated revision on the existing private registry and add its positive and negative assertions. The existing response observer, readiness, request privacy and HTTP assertions are preserved. All five compiled metrics cases passed."
+            },
+            {
+              "batch": "release-0.6-launch-halt-and-rollback",
+              "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Scoped documentation renewal for the guarded rollout, operator receipt and verified previous-pool restoration. Existing promotion and incident instructions were preserved and the related production helper tests passed."
             }
           ]
         }
@@ -828772,7 +828910,8 @@
           "release-0.6-solar-contract-source-boundary",
           "release-0.6-approved-document-destruction-boundary",
           "release-0.6-alert-dashboards",
-          "release-0.6-multipart-upgrade-preflight-fix"
+          "release-0.6-multipart-upgrade-preflight-fix",
+          "release-0.6-launch-halt-and-rollback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -949023,7 +949162,83 @@
         "sha": "dc8f3a3f467e4742c152f16203e4aa98c5ae10b9",
         "url": "https://github.com/barghsadev/barghsa-core/actions/runs/43030792920",
         "failed_case": "historical multipart cleanup upgrade preserves old receipts and the journal while allowing durable pending intent"
+      },
+      "hosted_preflight": {
+        "sha": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+        "url": "https://github.com/barghsadev/barghsa-core/actions/runs/43034199544",
+        "attempt_1": "Hosted Ubuntu DNS failed while installing the PDF renderer and Chromium dependencies. The test job did not reach repository tests.",
+        "retry": "GitHub accepted a failed-jobs-only retry on the same SHA. Read back its required check before pushing main.",
+        "logs": [
+          {
+            "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx/preflight-pdf-job.log",
+            "sha256": "db4e24496024fd3d016f45f098457cf444d5e5a019b97e102c313e183a3e0e4a"
+          },
+          {
+            "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx/preflight-integrity-job.log",
+            "sha256": "16ba69ac7c16fb8c7a51478a21254f3826167350d753df7bfa6c333c620d6fa5"
+          }
+        ]
       }
+    },
+    "release-0.6-launch-halt-and-rollback": {
+      "batch": "release-0.6-launch-halt-and-rollback",
+      "base_commit": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "06-security-testing-observability.md#T-06.12.04.02",
+        "06-security-testing-observability.md#T-06.12.04.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "deploy/production/README.md",
+        "deploy/production/guarded-rollout.py",
+        "deploy/production/test_guarded_rollout.py",
+        "docs/runbooks/bad-deployment.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "08f2bced4b5db71b31e474d7e29fcceb3143da1289e3d86e10b58ab678eaabf4"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "741e7829d6573b79146ef23754316288176685286d002fcd3bc02a4e07ef006e"
+        },
+        {
+          "path": "deploy/production/test_guarded_rollout.py",
+          "sha256": "11c30656909aff71d00d64c2b1bbdb2867f62b03afdb25cf1d7b203d6560cc24"
+        },
+        {
+          "path": "docs/runbooks/bad-deployment.md",
+          "sha256": "700f9a904820df803b96f4e6e50b6ad9cb5587e206d14ef381f517aed394208c"
+        }
+      ],
+      "checks": [
+        "The guarded rollout binds the traffic plan and every route and observation response to the candidate and previous commit and image IDs. It checks candidate smoke at zero traffic and requires current per-service evidence before advancing through the configured weights.",
+        "It halts on failed smoke, absolute or increased API error rate, per-service availability burn, critical wallet drift, security alerts, unavailable observations or stage timeout. After an attempted route change it sets candidate traffic to zero and verifies the previous pool. It reports unverified recovery separately.",
+        "Nginx 1.29.8 routed actual loopback HTTP requests to two isolated backends. Healthy observations produced 0%, 10%, and 100% candidate traffic. Five separate injected fault scenarios each produced 0%, 10%, and then 0%, with 20 requests at every readback and all post-rollback requests reaching the previous backend.",
+        "All 19 production helper tests passed. They cover existing promotion checks, all rollout triggers, exact identities, insufficient per-service volume, operator locking, hook timeouts, failed receipt writes and unverified rollback. Python compilation, Prettier and whitespace passed.",
+        "The proof uses isolated ingress and synthetic observations. The protected production-equivalent ingress adapters, candidate and previous pools, authenticated journeys and telemetry still need live rehearsal. No production state was changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx/production-tests.log",
+          "sha256": "b656c058ab5101c8887bb59573649a2181638e2f1b66d04a326f5ae1f41be690"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx/nginx-rehearsal.json",
+          "sha256": "adc82276a7326db20a7ea3794c00f7962973ba68b5ecdc303d35b50b44767184"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx/nginx-rehearsal.log",
+          "sha256": "44445cd0a1b6e853579afbb1bb9a8c2dec829e0590c2c04afb45aa5b9cbb22f7"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/launch-halt-rollback.OUuQnx/nginx-rollout-proof.py",
+          "sha256": "5561bd019e7279bc61ab3005b74ff5b46c229b1b4040b3b659b1a872510d3d61"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -949063,13 +949278,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-launch-halt-and-rollback",
+    "id": "release-0.6-post-deploy-observation",
     "release": "0.6.0",
     "task_keys": [
-      "06-security-testing-observability.md#T-06.12.04.03",
+      "06-security-testing-observability.md#T-06.12.04.05",
       "release-readiness#R-05.02"
     ],
-    "goal": "Verify existing rollout halt and rollback controls in an isolated rehearsal for failed smoke, rising error rate, SLO burn, reconciliation mismatch and security alerts."
+    "goal": "Implement the protected post-deploy observation adapter for exact release identity, authenticated smoke and scoped candidate and baseline telemetry."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

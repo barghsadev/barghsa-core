@@ -8,6 +8,12 @@
 2. The release operator restores the last verified compatible app and web image digests through the deployment tooling. Verify API, worker, inference and web image readback. Keep additive forward-compatible migrations in place. If the schema is incompatible, use a tested roll-forward or the separately authorized migration recovery plan. A reverse migration must be explicitly tested against the current data and shown to preserve accepted writes.
 3. Check `GET /api/health/live`, `GET /api/health/ready`, worker readiness, the affected journey, reconciliation and the post-rollback error baseline before returning traffic. [Staging image restoration](../../deploy/staging/README.md). [Production image verification](../../deploy/production/README.md).
 
+For a guarded rollout, read the last event in the protected JSONL receipt.
+`rolled_back` records verified restoration to the previous pool.
+`rollback_unverified` or an interrupted receipt requires current ingress
+and image readback before retrying. Keep the observation and halt reason with
+the deployment record. [Guarded rollout](../../deploy/production/README.md#guarded-traffic-rollout).
+
 ## Configuration rollback
 
 1. The authorized configuration owner identifies the last safe version and why it remains safe with current data and application versions. Preserve the current version, audit trail and active object location. Keep compromised credentials retired.

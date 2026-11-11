@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T13:57:30+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T14:15:29+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1211 | Accepted with unchanged source bindings. |
-| verify | 93 | Existing work may be complete; inspect evidence before building. |
-| partial | 56 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 91 | Existing work may be complete; inspect evidence before building. |
+| partial | 58 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -39,9 +39,9 @@ These are recorded implementations, not blanket certification of each domain. Fi
 
 ## Next batch
 
-Verify existing rollout halt and rollback controls in an isolated rehearsal for failed smoke, rising error rate, SLO burn, reconciliation mismatch and security alerts.
+Implement the protected post-deploy observation adapter for exact release identity, authenticated smoke and scoped candidate and baseline telemetry.
 
-- `06-security-testing-observability.md#T-06.12.04.03`: Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert
+- `06-security-testing-observability.md#T-06.12.04.05`: Implement post-deploy smoke tests and SLO/error comparison against previous release
 - `release-readiness#R-05.02`: Renew security and operational task acceptance
 
 ## v0.2.0: Complete customer journeys
@@ -1337,10 +1337,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.03.03` | done | Recorded batch work | Implement automatic gate: block RC if P0/P1 defect or unexplained flaky critical test |
 | `06-security-testing-observability.md#T-06.12.03.04` | done | Recorded batch work | Provider contract tests in CI: SMTP fake, SMS.ir fake, payment fake, storage fake |
 | `06-security-testing-observability.md#T-06.12.04.01` | done | Recorded batch work | Define production release checklist and automated gate runner |
-| `06-security-testing-observability.md#T-06.12.04.02` | verify | Inventory needed | Implement automatic canary/gradual rollout for high-risk changes (payment, wallet, auth, contract, pricing) |
+| `06-security-testing-observability.md#T-06.12.04.02` | partial | Recorded batch work | Implement automatic canary/gradual rollout for high-risk changes (payment, wallet, auth, contract, pricing) |
 | `06-security-testing-observability.md#T-06.12.04.03` | partial | Recorded batch work | Implement auto-halt/rollback on: smoke failure, elevated error rate, SLO burn, reconciliation mismatch, security alert |
 | `06-security-testing-observability.md#T-06.12.04.04` | done | Recorded batch work | Create production release notes template: changes, customer/support impact, owner, dashboard links, alert/runbook links, on-call |
-| `06-security-testing-observability.md#T-06.12.04.05` | verify | Inventory needed | Implement post-deploy smoke tests and SLO/error comparison against previous release |
+| `06-security-testing-observability.md#T-06.12.04.05` | partial | Recorded batch work | Implement post-deploy smoke tests and SLO/error comparison against previous release |
 | `06-security-testing-observability.md#T-06.12.05.01` | done | Recorded batch work | Configure nightly CI: cross-browser E2E, full dep + security scan, dead-link check, flaky test report |
 | `06-security-testing-observability.md#T-06.12.05.02` | verify | Inventory needed | Configure weekly CI: load/performance regression, critical-domain mutation testing, dependency update PR |
 | `06-security-testing-observability.md#T-06.12.05.03` | verify | Inventory needed | Configure quarterly manual trigger: PG restore, DR rehearsal, access review, threat-model review, incident runbook exercise |

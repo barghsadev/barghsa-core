@@ -70,6 +70,74 @@ python3 deploy/production/check-promotion.py --ci-run "$CI_RUN" \
 
 The report records the SHA-256 of each evidence file. Review the underlying receipts and collect explicit owner authorization for the version, commit and production target before deployment.
 
+## Guarded traffic rollout
+
+After owner approval, provision the candidate without public traffic and keep
+the previous verified application pool available. Complete the migration
+compatibility rehearsal before starting the ramp. The ingress controls traffic
+between those two pools. The migration and job-worker procedures remain
+separate from traffic switching. Use the [rollback runbook](../../docs/runbooks/bad-deployment.md)
+if traffic cannot be restored and verified.
+
+Use `guarded-rollout.py` on the authorized ingress operator's host. It checks
+candidate smoke at zero traffic, advances through the configured percentages
+and waits for a fresh observation window at each percentage, including 100.
+Smoke failure, elevated API error rate, per-service availability burn, critical
+wallet drift or a security alert halts the ramp. Unavailable evidence halts
+the ramp, and insufficient volume halts it at the observation deadline. After any attempted
+traffic change, a halt requests zero candidate traffic and verifies the
+previous pool's readback.
+
+```sh
+python3 deploy/production/guarded-rollout.py \
+  --plan /protected/release-evidence/rollout-plan.json \
+  --receipt /protected/release-evidence/rollout-receipt.jsonl
+```
+
+Prepare one protected JSON plan for the approved environment. Keep plans for
+the same ingress in the same directory so they share the rollout lock. Use a
+new receipt path for each invocation. The plan contains these fields.
+
+| Field                   | Required contents                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scope`                 | Exact `environment` and `database` labels.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| `candidate`, `previous` | Each has a full `commit` SHA and the verified platform `app_image` and `web_image` IDs, including the `sha256:` prefix.                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `weights`               | Two to ten increasing integer percentages ending at 100. Keep the previous pool available throughout the ramp.                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| `baseline`              | Previous release's `revision`, the same `scope`, UTC `observed_at` in epoch seconds, and completed API `attempts` and server-error `failures` from a comparable pre-ramp window.                                                                                                                                                                                                                                                                                                                                                        |
+| `policy`                | The rollout window and thresholds approved for the environment. Use `availability_tier` of `pilot` or `commercial` for the documented error budgets. Set positive `minimum_api_samples` and `minimum_journey_samples`, `minimum_observation_seconds`, `stage_timeout_seconds`, `poll_seconds`, `hook_timeout_seconds`, `baseline_max_age_seconds` and `observation_max_age_seconds`. Set `max_http_error_ratio`, `max_http_error_increase` over the baseline as fractions, and `max_slo_burn` as a multiple of the tier's error budget. |
+| `route`, `observe`      | Argument arrays starting with an absolute executable. Use operator-controlled adapters that finish synchronously and exit nonzero when readback is unavailable.                                                                                                                                                                                                                                                                                                                                                                         |
+
+Both adapters read a JSON request on stdin and write one JSON object on stdout.
+Read back `scope`, `candidate`, `previous` and `candidate_weight` from the
+selected targets in every response. Keep credentials in protected configuration.
+
+- The route request includes `action` of `read` or `set` and
+  `candidate_weight`. Before `set`, verify readiness of the previous pool.
+  Apply that absolute percentage and read it back before returning. Include
+  `previous_ready` from the compatible pool's current readiness check. On restoration, verify that the ingress
+  sends all traffic to that pool and its running images match the prior release.
+- The observation request includes `candidate_weight` and `window_start`
+  in UTC epoch seconds. Return the actual `window_start`, `observed_at`,
+  `smoke`, `api`, `journeys`, `critical_wallet_drift` and `security_alerts`.
+  In `smoke`, return a boolean for `health` and for each of `electricity`,
+  `saving`, `solar` and `consultation`. Check the candidate's release
+  identity, liveness and readiness and use authorized synthetic journeys.
+  Count completed candidate API requests and server errors in `api` as
+  `attempts` and `failures`. In `journeys`, return those two counts for
+  each service using eligible authenticated attempts, including timeouts and
+  dependency failures. Take drift and security counts from their current
+  authoritative monitoring sources. During zero-traffic preflight, only
+  smoke, drift and security signals are evaluated.
+
+The protected JSONL receipt records requested and verified traffic, the
+observation counts and any halt or rollback. Exit status 0 means the final
+window passed, 1 means the ramp halted before requesting a traffic change,
+2 means previous traffic was restored and verified, and 3 means restoration
+needs operator reconciliation. After an interrupted host or process, read back
+the ingress and reconcile the receipt before attempting another ramp. Use
+current production topology and telemetry in the launch rehearsal. The
+isolated tests use synthetic traffic and metrics.
+
 ## Initial database seed
 
 After the owner approves initial provisioning, use the pinned app image and separate migration principal to migrate and seed a new database before starting the app services. Put only `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` in a root-owned `0600` bootstrap environment file. Keep the direct connection and CA in the existing migration configuration.
