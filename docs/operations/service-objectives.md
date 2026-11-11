@@ -17,11 +17,27 @@ Exclude rejected invalid input and expected authorization denials from availabil
 
 Select the environment, database and applicable availability target in private Grafana. The dashboard opens at the start of the current UTC month. The availability and remaining budget panels use the selected period and display electricity, saving, solar and consultation separately. Burn rate compares five-minute and one-hour failure ratios with the selected tier's allowed failure fraction. A burn rate of 1 uses the budget at the allowed pace. The latency panel uses completed API responses by method.
 
-The burn-down chart accumulates the five-minute recorded success and failure rates from the selected start. The first point needs a full five-minute window. The chart counts windows with both measurements and leaves gaps when either measurement is missing. Zero marks an exhausted budget. The instant remaining-budget figure uses the raw counters for the selected period, so boundary alignment and missing scrapes can make it differ from the final plotted point. Staging retains 15 days of Prometheus history. Select a period with retained measurements before reporting a full-period result.
+The burn-down chart accumulates the five-minute recorded success and failure rates from the selected start. The first point needs a full five-minute window. The chart counts windows with both measurements and leaves gaps when either measurement is missing. Zero marks an exhausted budget. The instant remaining-budget figure uses the raw counters for the selected period, so boundary alignment and missing scrapes can make it differ from the final plotted point. The base staging configuration retains 15 days. The retention overlay extends this to 35 days for a complete UTC month once the data has accumulated. Select a period with retained measurements before reporting a full-period result.
 
 Check the observed attempt counts against the journey collector's coverage before interpreting availability. Verify that both initialized outcomes for all four services appear in the scrape. A service without measured attempts has no availability or burn value. When comparing releases, select comparable periods before and after the verified deployment time and retain the guarded rollout receipt with the dashboard comparison. [Executive SLO dashboard](../../deploy/monitoring/grafana-executive-slo-dashboard.json) · [Rollout observation setup](../../deploy/production/README.md#configure-the-observation-hook).
 
 The API collects both outcomes for each service on an allowlist of customer intake and progress routes. These cover previews or reviews, submissions, lists and details, and the named correction and decision routes. A request needs a validated customer session and a matched route. Completed success responses and cache validation count as success. Server errors, HTTP request timeouts and interrupted responses after authentication count as failures. Expected 4xx rejections are excluded. Authentication failures before a customer session is established, browser and edge failures, shared wallet or contract operations and asynchronous fulfillment need their own evidence. [Measured route list](../../apps/api/src/metrics/http-request-metrics.ts) · [Independent synthetic checks](../../deploy/production/README.md#synthetic-health-probes).
+
+### Metrics retention
+
+Apply the [retention overlay](../../deploy/monitoring/metrics-retention-compose.yml) after the monitoring Compose file when the target has verified capacity. The primary keeps its existing scrape and rule intervals and retains 35 days. A separate Prometheus process samples the scoped metrics and recording rules every five minutes via federation and retains up to 400 days, enough for 13 UTC calendar months. Federation preserves source timestamps, environment, database, job, instance and release labels. Both processes use the approved Prometheus image. The archive has a separate volume and no host port. [Prometheus federation](https://prometheus.io/docs/prometheus/latest/federation/).
+
+Set `BARGHSA_PROMETHEUS_ARCHIVE_SIZE` in the protected Compose environment after checking the expected sample rate, series churn, observed block sizes, WAL and compaction headroom. Size the primary and archive volumes for their time targets. The archive size limit can delete older blocks before 400 days if the budget is too small. Read back the oldest available samples and measure volume growth. Use the archive for historical trends with query windows that cover several five-minute samples. Use the primary for short-lived spikes, rollout gates, alerts and the monthly burn-down. Archive collection starts when enabled, so record any earlier gaps. [Prometheus storage and retention](https://prometheus.io/docs/prometheus/latest/storage/).
+
+Use the existing protected monitoring Compose environment and project to verify the archive after enabling the overlay.
+
+```sh
+docker compose -f staging-compose.yml -f metrics-retention-compose.yml \
+  exec -T prometheus-archive promtool query instant http://127.0.0.1:9090 \
+  'up{job="barghsa-metrics-archive-source"}'
+```
+
+Confirm a successful archive scrape and current scoped API, worker and recording-rule samples. Record the active image, retention flags, separate volume, oldest observed timestamps and unchanged primary alert delivery. Keep both volumes available during monitoring rollback.
 
 ### Journey burn alerts
 

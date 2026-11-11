@@ -1,0 +1,24 @@
+services:
+  prometheus:
+    command: [--config.file=/etc/prometheus/prometheus.yml, --storage.tsdb.retention.time=35d]
+    networks: [metrics-archive]
+  prometheus-archive:
+    image: ${BARGHSA_PROMETHEUS_IMAGE:?Set a verified immutable Prometheus image}
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=400d
+      - --storage.tsdb.retention.size=${BARGHSA_PROMETHEUS_ARCHIVE_SIZE:?Set the verified archive size limit}
+    volumes:
+      - ./prometheus-archive.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheusarchive:/prometheus
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    mem_limit: 256m
+    networks: [metrics-archive]
+networks:
+  metrics-archive:
+    internal: true
+volumes:
+  prometheusarchive:
