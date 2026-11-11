@@ -4101,7 +4101,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             }
           ],
           "checks": [
@@ -4124,6 +4124,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -4504,7 +4512,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4539,6 +4547,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -4741,7 +4757,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             }
           ],
           "checks": [
@@ -4782,6 +4798,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -5073,7 +5097,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".size-limit.json",
@@ -5116,6 +5140,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -5350,7 +5382,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5384,6 +5416,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -5490,7 +5530,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5524,6 +5564,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -5856,7 +5904,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -5964,6 +6012,14 @@
                 "apps/web/e2e/saving-journey.spec.ts"
               ],
               "scope": "Saving browser test now waits for the saving order summary before asserting paid state and absent payment action. Both localized full saving journeys passed with financial and fulfillment assertions intact."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -6120,7 +6176,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6154,6 +6210,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -6276,7 +6340,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -6340,6 +6404,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -9196,7 +9268,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             }
           ],
           "checks": [
@@ -9226,6 +9298,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -14493,7 +14573,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "docs/development/ci.md",
@@ -14541,6 +14621,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -14609,7 +14697,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -14682,6 +14770,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -14755,7 +14851,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "package.json",
@@ -14815,6 +14911,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -15035,7 +15139,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -15077,6 +15181,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -18747,7 +18859,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -19208,6 +19320,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -20743,7 +20863,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "docs/development/ci.md",
@@ -20790,6 +20910,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -20863,7 +20991,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".prettierignore",
@@ -20898,6 +21026,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -20977,7 +21113,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".husky/commit-msg",
@@ -21052,6 +21188,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -21851,7 +21995,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -22361,6 +22505,14 @@
                 "packages/db/src/storage-multipart.migrated.test.ts"
               ],
               "scope": "The exact historical migration sequence includes the additive solar destruction guard. The multipart receipts, journal, rollback and concurrency assertions passed without changes to the migrator or application behavior."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -22438,7 +22590,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".prettierignore",
@@ -22531,6 +22683,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -478068,7 +478228,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -478422,6 +478582,14 @@
                 "apps/api/src/provider-config/sms-provider-config.service.ts"
               ],
               "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -478564,7 +478732,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -479095,6 +479263,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -479241,7 +479417,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -479590,6 +479766,14 @@
                 "apps/api/src/provider-config/sms-provider-config.service.ts"
               ],
               "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -479702,7 +479886,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -480051,6 +480235,14 @@
                 "apps/api/src/provider-config/sms-provider-config.service.ts"
               ],
               "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -480163,7 +480355,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -480512,6 +480704,14 @@
                 "apps/api/src/provider-config/sms-provider-config.service.ts"
               ],
               "scope": "Provider test transaction and concurrency changes covered by the current native mutation, self-test and circuit-breaker suites. Existing authorization, draft activation and audit checks pass. Unrelated behavior retains prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -517111,7 +517311,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "Dockerfile.web",
@@ -517170,6 +517370,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -517388,7 +517596,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -517433,6 +517641,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -517486,7 +517702,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "Dockerfile.web",
@@ -517545,6 +517761,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -517846,7 +518070,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             }
           ],
           "checks": [
@@ -517872,6 +518096,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -522112,7 +522344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -522153,6 +522385,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -526485,7 +526725,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -526674,6 +526914,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -527637,7 +527885,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".gitignore",
@@ -527702,6 +527950,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -527755,7 +528011,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".gitignore",
@@ -527807,6 +528063,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         },
@@ -527924,7 +528188,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -527958,6 +528222,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         },
@@ -528059,7 +528331,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -528100,6 +528372,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -528152,7 +528432,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "Dockerfile.base",
@@ -528207,6 +528487,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -528260,7 +528548,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".gitignore",
@@ -528312,6 +528600,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         },
@@ -528415,7 +528711,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -528443,6 +528739,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -529045,7 +529349,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -529078,6 +529382,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -530434,7 +530746,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -530463,6 +530775,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -530505,7 +530825,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -530560,6 +530880,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -530602,7 +530930,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -530653,6 +530981,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -535401,7 +535737,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -535469,6 +535805,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -535861,7 +536205,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -535962,6 +536306,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -536015,7 +536367,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -536102,6 +536454,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -536531,7 +536891,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -536572,6 +536932,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -536619,7 +536987,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -536665,6 +537033,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -537329,7 +537705,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".size-limit.json",
@@ -537432,6 +537808,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -538185,7 +538569,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538260,6 +538644,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -538303,7 +538695,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538378,6 +538770,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -538423,7 +538823,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538498,6 +538898,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -538540,7 +538948,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -538615,6 +539023,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -538708,7 +539124,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -538775,6 +539191,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Scoped source renewal for approved document destruction. Current holds, permanent retention, exact version-aware provider calls, concurrency, durable retry and solar contract issuance passed the native checks. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -538818,7 +539242,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/openapi.json",
@@ -538883,6 +539307,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -539065,7 +539497,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -539136,6 +539568,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -539173,7 +539613,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -539268,6 +539708,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -539320,7 +539768,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "deploy/production/README.md",
@@ -539403,6 +539851,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Only the guarded rollout section documents the observation adapter, baseline and ingress readbacks. Bootstrap, topology, promotion checklist, release notes and synthetic health probe sections retain their exact text. The additional read-only checks were verified by the batch."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -539808,7 +540264,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -539875,6 +540331,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -539927,7 +540391,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -539994,6 +540458,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -545576,7 +546048,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "Dockerfile.base",
@@ -545616,6 +546088,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -595797,7 +596277,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".size-limit.json",
@@ -596632,6 +597112,14 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -596770,7 +597258,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".size-limit.json",
@@ -597605,6 +598093,14 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -598317,7 +598813,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".size-limit.json",
@@ -599152,6 +599648,14 @@
                 "apps/web/e2e/admin-settings-live.spec.ts"
               ],
               "scope": "Only the two storage settings receipt locators and exact text expectations changed. English and Persian real API checks passed; all other scenarios and runtime source retain their bytes."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -599230,7 +599734,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -599296,6 +599800,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         }
@@ -815927,7 +816439,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/openapi.json",
@@ -819921,6 +820433,14 @@
                 "packages/shared/src/notifications/index.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "presentation_renewals": [
@@ -820349,7 +820869,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": "apps/api/openapi.json",
@@ -824192,6 +824712,14 @@
                 "packages/shared/src/notifications/index.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -826395,7 +826923,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "76771b71c6bd6752e73b8aaeb30863dd77e3ae86d60470b8961ea74f5bfb3be0"
+              "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
             },
             {
               "path": ".size-limit.json",
@@ -828522,6 +829050,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Scoped source renewal for protected operations links. Existing inbox, transport and authorization behavior was reviewed and exercised in the current worker and web suites. Unchanged behavior retains its prior evidence."
+            },
+            {
+              "batch": "release-0.6-hosted-ubuntu-runner-pin",
+              "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Exact comparison verified only the two runner labels and their comments changed. Reuses existing criteria evidence for the retained checks and fixtures. Updated hosted execution is pending on R-05.02."
             }
           ]
         },
@@ -828782,6 +829318,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
+        "Verify the required Verify monorepo integrity check at the exact preflight SHA on the pinned Ubuntu runner, then verify the direct push to main.",
         "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
@@ -828980,7 +829517,8 @@
           "release-0.6-alert-dashboards",
           "release-0.6-multipart-upgrade-preflight-fix",
           "release-0.6-launch-halt-and-rollback",
-          "release-0.6-post-deploy-observation"
+          "release-0.6-post-deploy-observation",
+          "release-0.6-hosted-ubuntu-runner-pin"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -949381,6 +949919,116 @@
         "06-security-testing-observability.md#T-06.12.04.04",
         "06-security-testing-observability.md#T-06.17.03.01"
       ]
+    },
+    "release-0.6-hosted-ubuntu-runner-pin": {
+      "batch": "release-0.6-hosted-ubuntu-runner-pin",
+      "base_commit": "40832e65318cb89795ca14452e377cf08333b25b",
+      "task_keys": [
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "cadc088e50ae82300b42411a4fedc9e554f93335dfaa3de1f52314d8b1889e5f"
+        }
+      ],
+      "checks": [
+        "Two hosted attempts at 366bfa0212f90f38f1944f9e6a05ad2bad8d9a14 stopped in Ubuntu package installation before native tests or Chromium measurements. Attempt 2 used Ubuntu 26.04 and could not resolve azure.archive.ubuntu.com, archive.ubuntu.com or security.ubuntu.com while fetching Poppler packages.",
+        "Only the browser/build quality and native test jobs use the explicit ubuntu-24.04 runner label. The installation commands, required status check, suite assertions, coverage and license gates are preserved.",
+        "Actionlint, Prettier and whitespace checks passed. The exact updated preflight and direct main readback are still required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/hosted-pdf-attempt-2.log",
+          "sha256": "a8152d30649769dcf6ff3d624c1124fa252740c0f3379e44b2f29f26a062cb9f"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/hosted-chromium-attempt-2.log",
+          "sha256": "28bcaabe9f0b60fce89d3ce7f439f6a571bad9402a0b8e5c95389aa36c641b84"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/post-deploy-observation.hex5hu4b/actionlint.log",
+          "sha256": "0f3583bc26344440fbbea1f9ee0670d619ba4052603d8035fdc46c3c82717fb2"
+        }
+      ],
+      "hosted_preflight": {
+        "failed_source": "366bfa0212f90f38f1944f9e6a05ad2bad8d9a14",
+        "url": "https://github.com/barghsadev/barghsa-core/actions/runs/43034199544/attempts/2",
+        "next_ref": "refs/heads/codex/preflight/v06-rollout-observer-ubuntu24"
+      },
+      "reused_source_bindings": [
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ]
     }
   },
   "historical_improvements": [
@@ -949420,7 +950068,7 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-post-deploy-observation",
+    "id": "release-0.6-hosted-integrity-and-live-observation",
     "release": "0.6.0",
     "task_keys": [
       "06-security-testing-observability.md#T-06.12.04.05",

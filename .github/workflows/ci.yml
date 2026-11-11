@@ -106,7 +106,8 @@ jobs:
 
   quality:
     name: Check build and application integrity
-    runs-on: ubuntu-latest
+    # Keep the browser dependency install on a fixed Ubuntu release.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -288,7 +289,8 @@ jobs:
 
   test:
     name: Run tests
-    runs-on: ubuntu-latest
+    # Keep the Poppler dependency install on a fixed Ubuntu release.
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
