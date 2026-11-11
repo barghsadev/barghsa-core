@@ -103,6 +103,45 @@ describe('CircuitBreaker', () => {
     expect(cb.getFailureCount()).toBe(2);
   });
 
+  it('counts only failures inside the rolling failure window', async () => {
+    const cb = new CircuitBreaker({ ...config, failureWindowMs: 1_000 });
+    const fail = vi.fn().mockRejectedValue(new Error('fail'));
+    await expect(cb.call(fail)).rejects.toThrow('fail');
+    vi.advanceTimersByTime(1_001);
+    expect(cb.getFailureCount()).toBe(0);
+    for (let index = 0; index < 2; index++) await expect(cb.call(fail)).rejects.toThrow('fail');
+    expect(cb.getState()).toBe('CLOSED');
+    await expect(cb.call(fail)).rejects.toThrow('fail');
+    expect(cb.getState()).toBe('OPEN');
+  });
+
+  it('ignores the result of an older call while the current recovery probe is held', async () => {
+    const cb = new CircuitBreaker({ ...config, failureThreshold: 1, halfOpenMaxProbes: 1 });
+    let completeOld!: () => void;
+    const old = cb.call(
+      () =>
+        new Promise<void>((resolve) => {
+          completeOld = resolve;
+        })
+    );
+    await expect(cb.call(() => Promise.reject(new Error('fail')))).rejects.toThrow('fail');
+    vi.advanceTimersByTime(config.resetTimeoutMs);
+    let completeProbe!: () => void;
+    const probe = cb.call(
+      () =>
+        new Promise<void>((resolve) => {
+          completeProbe = resolve;
+        })
+    );
+    completeOld();
+    await old;
+    expect(cb.getState()).toBe('HALF_OPEN');
+    await expect(cb.call(() => Promise.resolve())).rejects.toThrow('half-open probes exhausted');
+    completeProbe();
+    await probe;
+    expect(cb.getState()).toBe('CLOSED');
+  });
+
   it('can be manually reset', async () => {
     const cb = new CircuitBreaker(config);
     const fn = vi.fn().mockRejectedValue(new Error('fail'));

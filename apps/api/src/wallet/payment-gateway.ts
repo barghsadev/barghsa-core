@@ -1,6 +1,8 @@
 import { createHash } from 'node:crypto';
 import { isIP } from 'node:net';
+import promClient from 'prom-client';
 import { readCappedBytes } from '../storage/read-capped-bytes.js';
+import { CircuitBreaker, CircuitOpenError } from '../verification/circuit-breaker.js';
 
 /**
  * Payment gateway port used by online wallet top-up initiation
@@ -155,6 +157,102 @@ export type PaymentGatewayFetch = (
 }>;
 
 const MAX_GATEWAY_RESPONSE_BYTES = 10 * 1024 * 1024;
+
+type GatewayOperation = 'start' | 'inquiry' | 'verify';
+type GatewayCircuitConfig = {
+  failureThreshold: number;
+  failureWindowMs: number;
+  resetTimeoutMs: number;
+};
+
+const gatewayCircuitState = new promClient.Gauge({
+  name: 'payment_gateway_circuit_state',
+  help: 'Payment gateway transport circuit state (0 closed, 1 open, 2 half-open)',
+  labelNames: ['adapter', 'operation'] as const,
+});
+const gatewayTransportAttempts = new promClient.Counter({
+  name: 'payment_gateway_transport_attempts_total',
+  help: 'Payment gateway transport attempts by health outcome, excluding blocked calls',
+  labelNames: ['adapter', 'operation', 'outcome'] as const,
+});
+
+class GatewayTransportFailure extends Error {
+  constructor(readonly response: Awaited<ReturnType<PaymentGatewayFetch>>) {
+    super('Payment gateway transport returned a transient HTTP failure');
+  }
+}
+
+function withPaymentCircuit(
+  adapter: Exclude<PaymentGatewayAdapterName, 'redirect'>,
+  config: GatewayCircuitConfig | undefined,
+  fetchImpl: PaymentGatewayFetch
+): Record<GatewayOperation, PaymentGatewayFetch> {
+  const guarded = (operation: GatewayOperation): PaymentGatewayFetch => {
+    if (!config) return fetchImpl;
+    const breaker = new CircuitBreaker({ ...config, halfOpenMaxProbes: 1 });
+    const labels = { adapter, operation };
+    gatewayCircuitState.set(labels, 0);
+    gatewayTransportAttempts.inc({ ...labels, outcome: 'responded' }, 0);
+    gatewayTransportAttempts.inc({ ...labels, outcome: 'failed' }, 0);
+    return async (url, init) => {
+      try {
+        return await breaker.call(async () => {
+          const probe = breaker.getState() === 'HALF_OPEN';
+          if (probe) gatewayCircuitState.set(labels, 2);
+          const signal = probe
+            ? AbortSignal.any([...(init?.signal ? [init.signal] : []), AbortSignal.timeout(30_000)])
+            : init?.signal;
+          try {
+            const response = await fetchImpl(url, { ...init, ...(signal ? { signal } : {}) });
+            const { ok, status } = response;
+            let observed = response;
+            if (
+              adapter !== 'http' ||
+              operation !== 'inquiry' ||
+              (status !== 204 && status !== 404)
+            ) {
+              try {
+                const body = await response.json();
+                observed = { ok, status, json: async () => body };
+              } catch (error) {
+                throw new GatewayTransportFailure({
+                  ok,
+                  status,
+                  json: async () => {
+                    throw error;
+                  },
+                });
+              }
+            }
+            if ([401, 403, 408, 429].includes(status) || status >= 500) {
+              throw new GatewayTransportFailure(observed);
+            }
+            gatewayTransportAttempts.inc({ ...labels, outcome: 'responded' });
+            return observed;
+          } catch (error) {
+            gatewayTransportAttempts.inc({ ...labels, outcome: 'failed' });
+            throw error;
+          }
+        });
+      } catch (error) {
+        // The adapter still parses and classifies the original provider response.
+        if (error instanceof GatewayTransportFailure) return error.response;
+        if (operation === 'start' && error instanceof CircuitOpenError) {
+          // This attempt did not send anything. Release only its fresh initialization claim.
+          throw new PaymentGatewayRejectedError(
+            'Payment gateway initiation is temporarily unavailable',
+            { cause: error }
+          );
+        }
+        throw error;
+      } finally {
+        const state = breaker.getState();
+        gatewayCircuitState.set(labels, state === 'CLOSED' ? 0 : state === 'OPEN' ? 1 : 2);
+      }
+    };
+  };
+  return { start: guarded('start'), inquiry: guarded('inquiry'), verify: guarded('verify') };
+}
 
 const fetchPaymentGateway: PaymentGatewayFetch = async (input, init) => {
   const response = await fetch(input, { ...init, redirect: 'error' });
@@ -338,6 +436,23 @@ function resolveTimeoutMs(env: NodeJS.ProcessEnv): number {
   return parsed;
 }
 
+function paymentCircuitConfig(env: NodeJS.ProcessEnv): GatewayCircuitConfig {
+  const positiveInteger = (name: string, fallback: number, maximum: number): number => {
+    const value = env[name]?.trim();
+    if (!value) return fallback;
+    const parsed = Number(value);
+    if (!/^\d+$/.test(value) || !Number.isSafeInteger(parsed) || parsed < 1 || parsed > maximum) {
+      throw new Error(`${name} must be a positive integer no greater than ${maximum}`);
+    }
+    return parsed;
+  };
+  return {
+    failureThreshold: positiveInteger('PAYMENT_GATEWAY_CIRCUIT_FAILURES', 5, 100),
+    failureWindowMs: positiveInteger('PAYMENT_GATEWAY_CIRCUIT_WINDOW_MS', 60_000, 600_000),
+    resetTimeoutMs: positiveInteger('PAYMENT_GATEWAY_CIRCUIT_COOLDOWN_MS', 120_000, 600_000),
+  };
+}
+
 function isDefiniteHttpClientRejection(status: number): boolean {
   return status >= 400 && status < 500 && status !== 408 && status !== 429;
 }
@@ -487,8 +602,13 @@ export function createHttpPaymentGateway(options: {
   timeoutMs?: number;
   fetchImpl?: PaymentGatewayFetch;
   allowedHosts?: readonly string[];
+  circuit?: GatewayCircuitConfig;
 }): PaymentGateway {
-  const fetchImpl = options.fetchImpl ?? fetchPaymentGateway;
+  const transport = withPaymentCircuit(
+    'http',
+    options.circuit,
+    options.fetchImpl ?? fetchPaymentGateway
+  );
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS;
   const startUrlRaw = options.startUrl ? stripTrailingSlash(options.startUrl) : undefined;
   const allowedHosts =
@@ -553,7 +673,7 @@ export function createHttpPaymentGateway(options: {
       if (cached) return cached;
 
       const amount = requireSafePositiveAmount(request.amountIrR);
-      const res = await fetchImpl(options.requestUrl, {
+      const res = await transport.start(options.requestUrl, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${options.apiKey}`,
@@ -603,7 +723,7 @@ export function createHttpPaymentGateway(options: {
         request.idempotencyKey,
         options.inquiryUrl
       );
-      const res = await fetchImpl(inquiryUrl, {
+      const res = await transport.inquiry(inquiryUrl, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${options.apiKey}`,
@@ -638,7 +758,7 @@ export function createHttpPaymentGateway(options: {
         throw new Error('PAYMENT_GATEWAY_VERIFY_URL is required to confirm payment');
       }
       const amount = requireSafePositiveAmount(request.amountIrR);
-      const res = await fetchImpl(options.verifyUrl, {
+      const res = await transport.verify(options.verifyUrl, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${options.apiKey}`,
@@ -696,8 +816,13 @@ export function createZarinpalPaymentGateway(options: {
   timeoutMs?: number;
   fetchImpl?: PaymentGatewayFetch;
   allowedHosts?: readonly string[];
+  circuit?: GatewayCircuitConfig;
 }): PaymentGateway {
-  const fetchImpl = options.fetchImpl ?? fetchPaymentGateway;
+  const transport = withPaymentCircuit(
+    'zarinpal',
+    options.circuit,
+    options.fetchImpl ?? fetchPaymentGateway
+  );
   const timeoutMs = options.timeoutMs ?? DEFAULT_PAYMENT_GATEWAY_TIMEOUT_MS;
   const requestUrl = options.requestUrl ?? DEFAULT_ZARINPAL_REQUEST_URL;
   const startPayUrlRaw = stripTrailingSlash(options.startPayUrl ?? DEFAULT_ZARINPAL_START_PAY_URL);
@@ -737,7 +862,7 @@ export function createZarinpalPaymentGateway(options: {
       if (cached) return cached;
 
       const amount = requireSafePositiveAmount(request.amountIrR);
-      const res = await fetchImpl(requestUrl, {
+      const res = await transport.start(requestUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -811,7 +936,7 @@ export function createZarinpalPaymentGateway(options: {
       if (cached) return cached;
 
       const amount = requireSafePositiveAmount(request.amountIrR);
-      const res = await fetchImpl(unverifiedUrl, {
+      const res = await transport.inquiry(unverifiedUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -864,7 +989,7 @@ export function createZarinpalPaymentGateway(options: {
     },
     async verifyPayment(request) {
       const amount = requireSafePositiveAmount(request.amountIrR);
-      const res = await fetchImpl(verifyUrl, {
+      const res = await transport.verify(verifyUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -954,6 +1079,7 @@ export function createPaymentGatewayFromEnv(
     return createZarinpalPaymentGateway({
       merchantId,
       timeoutMs,
+      circuit: paymentCircuitConfig(env),
       allowedHosts,
       ...(zarinpalRequestUrl ? { requestUrl: zarinpalRequestUrl } : {}),
       ...(startPayUrl ? { startPayUrl } : {}),
@@ -983,6 +1109,7 @@ export function createPaymentGatewayFromEnv(
     requestUrl,
     apiKey,
     timeoutMs,
+    circuit: paymentCircuitConfig(env),
     allowedHosts,
     ...(startUrl ? { startUrl } : {}),
     ...(inquiryUrl ? { inquiryUrl } : {}),

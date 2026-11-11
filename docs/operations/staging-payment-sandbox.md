@@ -79,6 +79,12 @@ original event settled. Keep uncertain payments in reconciliation and preserve
 their original idempotency keys. Browser confirmation retries and recovery of
 matching in-progress events follow their normal settlement checks.
 
+## Payment transport circuit
+
+Each API replica keeps independent circuits for payment starts, inquiries and confirmations. The default opens a circuit after five transport failures in 60 seconds. After 120 seconds it allows one recovery request with a deadline of at most 30 seconds. Configure the failure count, window and cooldown through the three `PAYMENT_GATEWAY_CIRCUIT_*` variables in `.env.example`. A blocked start releases only the fresh claim that sent nothing. Ambiguous starts keep the original claim for inquiry. A blocked confirmation leaves the payment unconfirmed and eligible for retry.
+
+On the private API scrape, `payment_gateway_circuit_state` uses 0 for closed, 1 for open and 2 for half-open. `payment_gateway_transport_attempts_total` counts transport failures and responses by adapter and operation. Use the failed rate divided by the total attempt rate to see the transport failure share. A valid business rejection can be a healthy transport response. Inspect the protected provider and ledger receipts for settlement outcomes.
+
 ## Conflicting payment retries
 
 `PaymentIdempotencyConflict` raises a P1 when the online top-up, bank-receipt

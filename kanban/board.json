@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T18:55:29+00:00",
+  "updated": "2026-11-11T19:12:59+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10965,7 +10965,8 @@
           "kanban/epics/01-platform-infrastructure.md"
         ],
         "batches": [
-          "release-0.6-local-compose-storage"
+          "release-0.6-local-compose-storage",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -10977,7 +10978,7 @@
             },
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": "postgres-config/barghsa-postgres.conf",
@@ -11013,6 +11014,16 @@
           "limitations": [
             "Local development acceptance. The native Compose proof exercised linux/amd64. OCI linux/arm64 availability was verified through the published index.",
             "Live staging storage, production bucket cleanup configuration, and elapsed-day expiry retain their separate evidence requirements."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
+            }
           ]
         }
       }
@@ -11080,7 +11091,8 @@
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
           "release-0.6-protected-storage-origins",
-          "release-0.6-local-compose-storage"
+          "release-0.6-local-compose-storage",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-development-configuration-and-behavior",
@@ -11088,7 +11100,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": "docker-compose.yml",
@@ -11156,6 +11168,14 @@
                 "docker-compose.yml"
               ],
               "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -15163,11 +15183,13 @@
         "story": "01-platform-infrastructure.md#spec-cdd7dd41709e"
       },
       "requirement": "- **T-05.02.03:** Implement circuit breaker for external providers\n  - **Notes:** Each external provider (payment gateway, SMS.ir, Resend, bill-data API) gets a circuit breaker: configurable failure threshold (default 5 in 60s), half-open timeout (default 30s), and break duration (default 120s). When circuit is open, queue safe async work or show \"Service temporarily unavailable\" — never report false success. Implement with `opossum` or a custom state machine. Metrics: circuit state, failure rate.\n  - **Dependencies:** T-05.02.01\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Complete the bill-data provider failure-window and half-open policy and export circuit and failure-rate telemetry for the electricity and saving adapters while preserving manual entry and staff review.",
+        "Reconcile the persisted SMS.ir and Resend transport recovery policy with the generic defaults. Preserve configuration pauses, durable send reconciliation, retry and single-probe boundaries.",
+        "Verify per-provider readback and compare the production payment circuit and outage handling against authorized provider and rollout rehearsal receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -15195,10 +15217,17 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          ".env.example",
+          "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
+          "apps/api/src/verification/circuit-breaker.test.ts",
+          "apps/api/src/verification/circuit-breaker.ts",
+          "apps/api/src/wallet/payment-gateway.test.ts",
+          "apps/api/src/wallet/payment-gateway.ts",
+          "docs/operations/staging-payment-sandbox.md"
         ],
         "batches": [
-          "2026-09-24-electricity-bill-provider-recovery"
+          "2026-09-24-electricity-bill-provider-recovery",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": null
       }
@@ -21529,7 +21558,8 @@
           "release-0.6-environment-indicator",
           "release-0.6-local-compose-storage",
           "release-0.6-pilot-compose-boundary",
-          "release-0.6-structured-release-log-marker"
+          "release-0.6-structured-release-log-marker",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "source_bound_batch",
@@ -21595,7 +21625,7 @@
             },
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": "nodemon.json",
@@ -21634,6 +21664,14 @@
                 "docker-compose.prod.yml"
               ],
               "scope": "Dockerfile and Compose changes add an OCI revision label, a revision-only Docker JSON log attribute, and the pilot build argument. Source review found no change to the already accepted application behavior, image dependencies, runtime authority, network, state, or health checks. The existing Compose test cases were retained, and affected manifest and native logging checks passed."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -23175,7 +23213,8 @@
           "integrated-qa-preview-deployment",
           "release-0.6-pilot-compose-boundary",
           "release-0.6-structured-release-log-marker",
-          "release-0.6-optional-maintenance-notice"
+          "release-0.6-optional-maintenance-notice",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -23188,7 +23227,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -23315,6 +23354,14 @@
                 "docs/deployment.md"
               ],
               "scope": "One notice visibility choice uses the existing permission, step-up and exact receipt boundary. Existing default texts, confirmation, validation, draft recovery and production behavior retain their prior evidence. Three native API, six form and 45 targeted browser cases passed. Other deployment instructions retain their prior scope."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -115805,7 +115852,8 @@
           "release-0.6-rate-limit-and-registration-contract",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-storage-upload-dashboard",
-          "release-0.6-finance-activity-dashboard"
+          "release-0.6-finance-activity-dashboard",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-v0.3.0-financial-closure",
@@ -115813,7 +115861,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": "apps/api/openapi.json",
@@ -116768,6 +116816,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The worker adds one optional read-only aggregate to its existing private metrics route. Existing transaction writes, job loops, shutdown, safety collectors, alert expressions and operator links retain their prior evidence. Focused native finance and Grafana checks passed."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -164568,7 +164624,8 @@
           "release-0.6-hosted-fixture-regression-corrections",
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
-          "release-0.6-webkit-input-and-focus-accessibility"
+          "release-0.6-webkit-input-and-focus-accessibility",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "current-wallet-ledger-and-topup-verification",
@@ -164596,7 +164653,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "apps/api/src/wallet/profile-lock.ts",
@@ -164763,6 +164820,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -164907,7 +164972,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -164975,7 +165041,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -165033,6 +165099,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         },
@@ -170070,7 +170144,8 @@
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-signed-callback-payload-digests",
           "release-0.6-wallet-profile-topup-admission",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "accepted-owner-reconciled-provider-callbacks",
@@ -170138,7 +170213,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "apps/web/e2e/online-payment-return.spec.ts",
@@ -170196,6 +170271,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         },
@@ -390714,7 +390797,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -390730,7 +390814,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -391623,6 +391707,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -391783,7 +391875,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -391799,7 +391892,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -392692,6 +392785,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -392854,7 +392955,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -392870,7 +392972,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -393763,6 +393865,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -393923,7 +394033,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -393939,7 +394050,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -394832,6 +394943,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -394992,7 +395111,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -395008,7 +395128,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -395901,6 +396021,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -396061,7 +396189,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -396077,7 +396206,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -396970,6 +397099,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -397131,7 +397268,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -397147,7 +397285,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -398040,6 +398178,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -398200,7 +398346,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -398216,7 +398363,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -399109,6 +399256,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -399269,7 +399424,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -399285,7 +399441,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -400178,6 +400334,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -400338,7 +400502,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -400354,7 +400519,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -401247,6 +401412,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -402214,7 +402387,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -402230,7 +402404,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -403123,6 +403297,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -404104,7 +404286,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -404120,7 +404303,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -405013,6 +405196,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -405173,7 +405364,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -405189,7 +405381,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -406082,6 +406274,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -406242,7 +406442,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -406258,7 +406459,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -407151,6 +407352,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -407313,7 +407522,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -407329,7 +407539,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -408222,6 +408432,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -408382,7 +408600,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -408398,7 +408617,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -409291,6 +409510,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -409456,7 +409683,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -409472,7 +409700,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -410365,6 +410593,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -410534,7 +410770,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -410550,7 +410787,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -411443,6 +411680,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -411612,7 +411857,8 @@
           "release-0.6-saving-touch-and-electricity-quote-browser-replay",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-versioned-security-rate-limits",
-          "integrated-qa-preview-journeys"
+          "integrated-qa-preview-journeys",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-saving-ordering-with-renewed-provider-authorization",
@@ -411628,7 +411874,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -412521,6 +412767,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -412689,7 +412943,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -412813,7 +413068,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.test.ts",
@@ -413931,6 +414186,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -414088,7 +414351,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -414212,7 +414476,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.test.ts",
@@ -415330,6 +415594,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -415487,7 +415759,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -415611,7 +415884,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.test.ts",
@@ -416729,6 +417002,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -416886,7 +417167,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -417010,7 +417292,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.test.ts",
@@ -418128,6 +418410,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -418286,7 +418576,8 @@
           "release-0.6-cancellation-recovery-and-otp-browser-fixes",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-rate-limit-and-registration-contract",
-          "release-0.6-cancellation-permission-testing-library-and-browser-rollup"
+          "release-0.6-cancellation-permission-testing-library-and-browser-rollup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "current-saving-cancellation-and-derived-financial-closure-acceptance",
@@ -418410,7 +418701,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.test.ts",
@@ -419528,6 +419819,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -524010,7 +524309,8 @@
         "batches": [
           "release-0.6-otp-issuance-expiry-and-delivery-acceptance",
           "release-0.6-authentication-and-crm-diagnostic-privacy",
-          "release-0.6-protected-storage-origins"
+          "release-0.6-protected-storage-origins",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-otp-runtime-verification",
@@ -524018,7 +524318,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": "apps/api/src/auth/otp.service.spec.ts",
@@ -524048,6 +524348,14 @@
                 "apps/api/src/auth/otp.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -538469,7 +538777,8 @@
           "release-0.6-security-scenario-and-signed-fixture-reconciliation",
           "release-0.6-shared-webhook-signature-verification",
           "release-0.6-signed-callback-payload-digests",
-          "release-0.6-ai-and-payment-transport-boundaries"
+          "release-0.6-ai-and-payment-transport-boundaries",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-payment-signature-merchant-and-server-settlement",
@@ -538509,7 +538818,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             }
           ],
           "checks": [
@@ -538524,6 +538833,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Operator-log argument changes and additive server export only in runtime code. Preserve prior business and authority evidence under the AST scope proof and the final affected checks. Updated financial test fixtures preserve the existing safeguards and assert the configured atomic quota query."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -539126,7 +539443,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -539134,7 +539452,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -539236,6 +539554,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -539278,7 +539604,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -539286,7 +539613,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -539374,6 +539701,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         },
@@ -539934,7 +540269,8 @@
           "release-0.6-protected-storage-origins",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "exact_security_scanners_and_fail_closed_status_gate",
@@ -539942,7 +540278,7 @@
           "source_evidence": [
             {
               "path": ".env.example",
-              "sha256": "d597d7f0123dd5964e379a85c4d7626844c76e0afa69666d10a9000ab21b8218"
+              "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -540030,6 +540366,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                ".env.example"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         },
@@ -543566,7 +543910,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-auth-form-testing-library",
           "release-0.6-webkit-input-and-focus-accessibility",
-          "release-0.6-provider-redirects-and-response-caps"
+          "release-0.6-provider-redirects-and-response-caps",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-domain-unit-tests",
@@ -543618,11 +543963,11 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.test.ts",
-              "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+              "sha256": "da6ffd65839a3df2c85d9060717c73ed5ffedbc26b85f1a1b077856cafa196ff"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "apps/web/package.json",
@@ -543675,6 +544020,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.test.ts",
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -545011,7 +545365,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -545027,11 +545382,11 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.test.ts",
-              "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+              "sha256": "da6ffd65839a3df2c85d9060717c73ed5ffedbc26b85f1a1b077856cafa196ff"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "deploy/staging/payment-sandbox.mjs",
@@ -545127,6 +545482,15 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.test.ts",
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -546384,7 +546748,8 @@
           "release-0.6-firefox-runtime-and-loading-motion",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-storage-upload-dashboard"
+          "release-0.6-storage-upload-dashboard",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-loopback-and-source-matching-provider-tests",
@@ -546400,11 +546765,11 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.test.ts",
-              "sha256": "ad52b2aa1d07f79905aa4dc20c86c3435beaf6ef4f4152847b849a638534b246"
+              "sha256": "da6ffd65839a3df2c85d9060717c73ed5ffedbc26b85f1a1b077856cafa196ff"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "deploy/staging/payment-sandbox.mjs",
@@ -546501,6 +546866,15 @@
                 "apps/api/src/storage/storage-record-http.integration.test.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.test.ts",
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -548802,7 +549176,8 @@
           "release-0.6-worker-structured-credential-redaction",
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-provider-redirects-and-response-caps",
-          "release-0.6-definition-of-done-and-exception-templates"
+          "release-0.6-definition-of-done-and-exception-templates",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-targeted-security-regression-matrix",
@@ -548914,7 +549289,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             }
           ],
           "checks": [
@@ -548976,6 +549351,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "Test-only preflight repair. Updated exact arguments and blocker graph assertions without changing behavior. The document fault matrix retains every original assertion and has a fixture-specific deadline."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -552117,7 +552500,8 @@
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-bounded-pdf-renderer-setup"
+          "release-0.6-bounded-pdf-renderer-setup",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "source-bound-hosted-provider-contract-verification",
@@ -552190,7 +552574,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
@@ -552254,6 +552638,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI workflow comparison isolates the Poppler package setup step. The actual Ubuntu install, renderer, mirror failover and failure cases passed. Existing test selection, assertion, coverage and promotion code retains its source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -558952,7 +559344,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -559004,7 +559397,7 @@
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
-              "sha256": "875888b12de02a783b1b4b0334880608048fda335845bfc7811e3a2a60ba22d0"
+              "sha256": "cf1340398485c9b509012ff394865410edd21b5dc3ebb95eec6e7b0c39d55389"
             },
             {
               "path": "apps/api/src/idempotency/idempotency-keys.repository.ts",
@@ -559095,6 +559488,14 @@
                 "apps/api/src/metrics/metrics.service.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "docs/operations/staging-payment-sandbox.md"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -559134,7 +559535,8 @@
           "release-0.6-notification-bounce-dashboard",
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-external-provider-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-payment-transport-circuit"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -559182,7 +559584,7 @@
             },
             {
               "path": "docs/operations/staging-payment-sandbox.md",
-              "sha256": "875888b12de02a783b1b4b0334880608048fda335845bfc7811e3a2a60ba22d0"
+              "sha256": "cf1340398485c9b509012ff394865410edd21b5dc3ebb95eec6e7b0c39d55389"
             },
             {
               "path": "apps/api/src/wallet/payment-callback-verifier.ts",
@@ -559280,6 +559682,14 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "docs/operations/staging-payment-sandbox.md"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ]
         }
@@ -828039,7 +828449,7 @@
             },
             {
               "path": "apps/api/src/wallet/payment-gateway.ts",
-              "sha256": "19064e0c2a194d1837cc3802548465ffbed37520818ed70acb3f172a1e5205db"
+              "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
             },
             {
               "path": "apps/api/src/wallet/wallet.controller.ts",
@@ -831327,6 +831737,14 @@
                 "apps/api/src/auth/login-device-notifications-http.integration.test.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/wallet/payment-gateway.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -831644,7 +832062,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-payment-transport-circuit"
         ]
       }
     },
@@ -833108,7 +833527,7 @@
             },
             {
               "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
-              "sha256": "83cc42e0f645d0a8bb3c36bd6a8b27e05fba7384c005f1852498913f7728a0fc"
+              "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
             },
             {
               "path": "apps/api/src/saving/saving-calculation.ts",
@@ -836239,6 +836658,14 @@
                 "apps/api/src/auth/login-device-notifications-http.integration.test.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-payment-transport-circuit",
+              "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+              "paths": [
+                "apps/api/src/saving/saving-bill-verification-http.integration.test.ts"
+              ],
+              "scope": "The existing payment gateway validation and settlement boundaries retain their prior proof. Transport admission adds temporary operation-specific gating and exposes aggregate health. Focused adapter, breaker, bill provider, wallet and native callback recovery checks passed."
             }
           ],
           "presentation_renewals": [
@@ -836678,7 +837105,8 @@
           "release-0.6-bank-receipt-copy-boundary",
           "release-0.6-storage-upload-dashboard",
           "release-0.6-finance-activity-dashboard",
-          "release-0.6-authentication-security-dashboard"
+          "release-0.6-authentication-security-dashboard",
+          "release-0.6-payment-transport-circuit"
         ]
       }
     },
@@ -974712,6 +975140,142 @@
         {
           "file": "grafana-readback.json",
           "sha256": "875f111a5ede78c3ec49c1d23993748504de35044e28b605d9f9680f59ccbd2e"
+        }
+      ]
+    },
+    "release-0.6-payment-transport-circuit": {
+      "batch": "release-0.6-payment-transport-circuit",
+      "base_commit": "b20b0a24cfa00c8b79f74895faa7b47de39b2d45",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.02.03",
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-03.02.02",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.09.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "03-core-business.md#T-03.09.01.02",
+        "03-core-business.md#T-03.09.01.03",
+        "03-core-business.md#T-03.09.02.01",
+        "03-core-business.md#T-03.09.02.02",
+        "03-core-business.md#T-03.09.02.03",
+        "03-core-business.md#T-03.09.02.04",
+        "03-core-business.md#T-03.09.02.05",
+        "03-core-business.md#T-03.09.02.06",
+        "03-core-business.md#T-03.09.02.07",
+        "03-core-business.md#T-03.09.02.08",
+        "03-core-business.md#T-03.09.03.02",
+        "03-core-business.md#T-03.09.03.04",
+        "03-core-business.md#T-03.09.03.05",
+        "03-core-business.md#T-03.09.03.06",
+        "03-core-business.md#T-03.09.04.01",
+        "03-core-business.md#T-03.09.04.02",
+        "03-core-business.md#T-03.09.04.03",
+        "03-core-business.md#T-03.09.04.04",
+        "03-core-business.md#T-03.09.04.05",
+        "03-core-business.md#T-03.09.05.01",
+        "03-core-business.md#T-03.09.05.02",
+        "03-core-business.md#T-03.09.05.03",
+        "03-core-business.md#T-03.09.05.04",
+        "03-core-business.md#T-03.09.05.05",
+        "06-security-testing-observability.md#T-06.01.02.08",
+        "06-security-testing-observability.md#T-06.06.02.02",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.11.02.02",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "source_evidence": [
+        {
+          "path": ".env.example",
+          "sha256": "594c3859a997a9047208c70ae9ad4314905d886027a0ff4e5055868615c60d93"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-bill-data.service.ts",
+          "sha256": "7f9740c233d8d309f70e937835ac844add15b3d504f5ef17904de0f7ecddf1c5"
+        },
+        {
+          "path": "apps/api/src/saving/bill-verification.provider.ts",
+          "sha256": "d8f80dbdfb81822f1c744d9363e760bf5abd9b2a0291c0b4d09d49428b7ecbb1"
+        },
+        {
+          "path": "apps/api/src/saving/saving-bill-verification-http.integration.test.ts",
+          "sha256": "2fba0765bf8793dba07b2190af03c2938caddd9ded1927a19346d51a10dc25af"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.test.ts",
+          "sha256": "b322a3187afd09b8fe82f284b106eee5fb4df147c0b352addb429a20ca7a40af"
+        },
+        {
+          "path": "apps/api/src/verification/circuit-breaker.ts",
+          "sha256": "6891b921588f24a739f0c278b70d1098df1f6c382dce76592b9ac14a83d9d0dd"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
+          "sha256": "3444386194784e0983f7f658d97885796dae6fcaddcf25828d500d189e0288ff"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.service.ts",
+          "sha256": "6d2cd924fd8915b6e0f5ab9ca7a528ec66a9004cf1a8246bfd1996526b8c568a"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup.service.ts",
+          "sha256": "de79035948269739df0b8091f059bda6388de19d6fa0c9f1f0ddd142839b738a"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.test.ts",
+          "sha256": "da6ffd65839a3df2c85d9060717c73ed5ffedbc26b85f1a1b077856cafa196ff"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-gateway.ts",
+          "sha256": "f27eb03f573bde0bb9370be8fb812c370ea08f7815dbfe5ce1713178ca74a209"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.module.ts",
+          "sha256": "29aa2576c33b2a0a1139ea97e8d455bc22cdab14add7916a58406c11f8511395"
+        },
+        {
+          "path": "docs/operations/staging-payment-sandbox.md",
+          "sha256": "cf1340398485c9b509012ff394865410edd21b5dc3ebb95eec6e7b0c39d55389"
+        },
+        {
+          "path": "packages/shared/src/notification-delivery/email-breaker.ts",
+          "sha256": "77d78b0e7212a550bc0ecabeeb089aa6c0f3719625d4e7de949f80725871d106"
+        }
+      ],
+      "checks": [
+        "The actual HTTP and ZarinPal gateway factory applies separate process-local transport circuits for start, inquiry and verify. Five failures within 60 seconds open an operation by default. After a 120-second cooldown only one probe is admitted, capped by both the request timeout and 30 seconds. Operator-supplied threshold, window and cooldown values are validated. Stale in-flight results cannot close a new recovery generation.",
+        "The transport tracks network and JSON-read failures and HTTP 401, 403, 408, 429 and 5xx by fixed adapter and operation. It preserves original provider responses and the existing business decisions. Only a blocked start with no dispatch follows the existing definite-no-session claim release. Ambiguous starts retain their claims; inquiry and verification keep independent circuits. An open verification throws for retry and cannot finalize as unpaid or credit a wallet.",
+        "The first local run passed 203 adapter, breaker, verification registry and wallet caller unit tests. The database-backed callback suite stopped in setup because the local unit fixture had no PostgreSQL. Its separate production-migrated disposable PostgreSQL run passed all 15 cases. One focused electricity case passed on the same native fixture. Five focused saving cases passed after moving fresh API startup into the existing fixture setup budget. The initial saving submission test timed out during startup. Its assertions and five-second test body limit are unchanged.",
+        "API build and typecheck, changed-file lint, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "This batch completes the payment transport portion. Shared notification breakers and bill-provider circuits retain their existing policies. Final per-provider defaults, complete circuit and failure observability and protected live provider readback remain open.",
+        "The payment breaker tracks the transport and JSON reading boundary. Existing provider business response validation remains in the adapters. Metrics and circuit state are per API process. Hosted deployment and external PSP behavior were outside these fixtures."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-payment-transport-circuit",
+      "execution_receipts": [
+        {
+          "file": "unit.log",
+          "sha256": "fb9cfdf759fcddeb37eba0712c98f62d9032c4c9b71b63348301a64a35fb2b7f"
+        },
+        {
+          "file": "native-postgres-first-run.log",
+          "sha256": "2ef7153cf6de7763d3c3a65f1914246115c3410f332a70e6b08d748c6fae39ab"
+        },
+        {
+          "file": "native-postgres.log",
+          "sha256": "506483bd9e29f22c5f9e181e772cf5c4cef19822e6ecdc686cf1b5d53e47f834"
         }
       ]
     }

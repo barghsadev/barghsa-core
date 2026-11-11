@@ -13,14 +13,17 @@
 export class CircuitBreaker {
   private state: 'CLOSED' | 'OPEN' | 'HALF_OPEN' = 'CLOSED';
   private failureCount = 0;
+  private recentFailures: number[] = [];
   private lastFailureTime = 0;
   private halfOpenProbes = 0;
+  private generation = 0;
 
   constructor(
     private readonly config: {
       failureThreshold: number;
       resetTimeoutMs: number;
       halfOpenMaxProbes: number;
+      failureWindowMs?: number;
     }
   ) {}
 
@@ -30,12 +33,13 @@ export class CircuitBreaker {
    */
   async call<T>(fn: () => Promise<T>): Promise<T> {
     this.assertClosed();
+    const generation = this.generation;
     try {
       const result = await fn();
-      this.onSuccess();
+      if (generation === this.generation && this.state === 'HALF_OPEN') this.reset();
       return result;
     } catch (error) {
-      this.onFailure();
+      if (generation === this.generation) this.onFailure();
       throw error;
     }
   }
@@ -52,13 +56,19 @@ export class CircuitBreaker {
 
   /** Current failure count. */
   getFailureCount(): number {
+    if (this.state === 'CLOSED' && this.config.failureWindowMs !== undefined) {
+      this.expireFailures(Date.now());
+      return this.recentFailures.length;
+    }
     return this.failureCount;
   }
 
   /** Reset the circuit breaker to its initial closed state. */
   reset(): void {
+    this.generation++;
     this.state = 'CLOSED';
     this.failureCount = 0;
+    this.recentFailures = [];
     this.halfOpenProbes = 0;
   }
 
@@ -85,21 +95,25 @@ export class CircuitBreaker {
     }
   }
 
-  private onSuccess(): void {
-    if (this.state === 'HALF_OPEN') {
-      // A successful probe closes the circuit
-      this.state = 'CLOSED';
-      this.failureCount = 0;
-      this.halfOpenProbes = 0;
-    }
+  private expireFailures(now: number): void {
+    const window = this.config.failureWindowMs;
+    if (window !== undefined)
+      this.recentFailures = this.recentFailures.filter((at) => at >= now - window);
   }
 
   private onFailure(): void {
-    this.failureCount++;
     this.lastFailureTime = Date.now();
+    if (this.config.failureWindowMs !== undefined) {
+      this.expireFailures(this.lastFailureTime);
+      this.recentFailures.push(this.lastFailureTime);
+      this.failureCount = this.recentFailures.length;
+    } else {
+      this.failureCount++;
+    }
 
     if (this.state === 'HALF_OPEN' || this.failureCount >= this.config.failureThreshold) {
       this.state = 'OPEN';
+      this.generation++;
     }
   }
 }

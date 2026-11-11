@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-11T18:55:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-11T19:12:59+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1223 | Accepted with unchanged source bindings. |
-| verify | 76 | Existing work may be complete; inspect evidence before building. |
-| partial | 61 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 75 | Existing work may be complete; inspect evidence before building. |
+| partial | 62 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1030,7 +1030,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.01.03` | done | Earlier deferred | Document explicitly that single-server deployment has lower availability |
 | `01-platform-infrastructure.md#T-05.02.01` | done | Earlier deferred | Design and document commercial HA topology |
 | `01-platform-infrastructure.md#T-05.02.02` | verify | Earlier deferred | Configure rolling/blue-green deployment automation for HA |
-| `01-platform-infrastructure.md#T-05.02.03` | verify | Earlier deferred | Implement circuit breaker for external providers |
+| `01-platform-infrastructure.md#T-05.02.03` | partial | Earlier deferred | Implement circuit breaker for external providers |
 | `01-platform-infrastructure.md#T-05.02.04` | partial | Earlier deferred | Configure maintenance mode per capability, not whole-application |
 | `01-platform-infrastructure.md#T-05.03.01` | done | Earlier deferred | Create CI workflow definition (GitHub Actions, GitLab CI, or equivalent) |
 | `01-platform-infrastructure.md#T-05.03.02` | done | Earlier deferred | Implement migration validation step (two environments) |

@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import promClient from 'prom-client';
 import {
   ONLINE_TOPUP_CALLBACK_PATH,
   ONLINE_TOPUP_CHARGEBACK_PATH,
@@ -748,6 +749,100 @@ describe('createPaymentGatewayFromEnv (T-04.2.02.01)', () => {
     });
     const result = await gateway.startPayment(START_REQUEST);
     expect(result.authority).toBe('A00000000000000000000000000000000002');
+  });
+
+  it('blocks new HTTP starts during cooldown without blocking payment confirmation or inquiry', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      const signalTimeout = vi.spyOn(AbortSignal, 'timeout');
+      const startResponse = vi.fn(async () => ({ status: 503, ok: false, json: async () => ({}) }));
+      const fetchImpl = vi.fn<PaymentGatewayFetch>(async (url) => {
+        if (url.endsWith('/verify')) {
+          return { status: 200, ok: true, json: async () => ({ paid: true, refId: 'receipt' }) };
+        }
+        if (url.includes('/inquiry')) {
+          return { status: 404, ok: false, json: () => Promise.reject(new Error('No body')) };
+        }
+        return startResponse();
+      });
+      const gateway = createPaymentGatewayFromEnv({
+        env: {
+          ...PRODUCTION_CALLBACK_ENV,
+          PAYMENT_GATEWAY_ADAPTER: 'http',
+          PAYMENT_GATEWAY_REQUEST_URL: 'https://psp.test/request',
+          PAYMENT_GATEWAY_INQUIRY_URL: 'https://psp.test/inquiry',
+          PAYMENT_GATEWAY_VERIFY_URL: 'https://psp.test/verify',
+          PAYMENT_GATEWAY_API_KEY: 'fixture-key',
+        },
+        fetchImpl,
+      });
+      for (let index = 0; index < 5; index++) {
+        const failed = await gateway.startPayment(START_REQUEST).catch((error: unknown) => error);
+        expect(failed).toMatchObject({ message: expect.stringContaining('HTTP 503') });
+        expect(failed).not.toBeInstanceOf(PaymentGatewayRejectedError);
+      }
+      const blocked = () =>
+        expect(gateway.startPayment(START_REQUEST)).rejects.toBeInstanceOf(
+          PaymentGatewayRejectedError
+        );
+      await blocked();
+      expect(startResponse).toHaveBeenCalledTimes(5);
+      expect(await promClient.register.metrics()).toContain(
+        'payment_gateway_circuit_state{adapter="http",operation="start"} 1\n'
+      );
+      await expect(gateway.recoverPayment(START_REQUEST)).resolves.toBeNull();
+      await expect(
+        gateway.verifyPayment({ ...START_REQUEST, authority: 'existing' })
+      ).resolves.toEqual({
+        paid: true,
+        providerRefId: 'receipt',
+      });
+
+      vi.setSystemTime(Date.now() + 119_999);
+      await blocked();
+      vi.setSystemTime(Date.now() + 1);
+      const paidSession = { authority: 'new-authority', redirectUrl: 'https://psp.test/pay' };
+      let completeProbe!: (response: Awaited<ReturnType<PaymentGatewayFetch>>) => void;
+      const probeResult = new Promise<Awaited<ReturnType<PaymentGatewayFetch>>>((resolve) => {
+        completeProbe = resolve;
+      });
+      fetchImpl.mockReturnValueOnce(probeResult);
+      const probe = gateway.startPayment(START_REQUEST);
+      await blocked();
+      expect(signalTimeout).toHaveBeenCalledWith(30_000);
+      expect(await promClient.register.metrics()).toContain(
+        'payment_gateway_circuit_state{adapter="http",operation="start"} 2\n'
+      );
+      completeProbe({ status: 200, ok: true, json: async () => paidSession });
+      await expect(probe).resolves.toEqual(paidSession);
+      expect(fetchImpl).toHaveBeenCalledTimes(8);
+      expect(await promClient.register.metrics()).toContain(
+        'payment_gateway_circuit_state{adapter="http",operation="start"} 0\n'
+      );
+    } finally {
+      vi.restoreAllMocks();
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps uncertain ZarinPal verification retryable when its circuit is open', async () => {
+    const fetchImpl = vi.fn<PaymentGatewayFetch>().mockResolvedValue({
+      status: 200,
+      ok: true,
+      json: () => Promise.reject(new SyntaxError('Invalid fixture response')),
+    });
+    const gateway = createPaymentGatewayFromEnv({
+      env: {
+        ...PRODUCTION_CALLBACK_ENV,
+        PAYMENT_GATEWAY_MERCHANT_ID: '11111111-1111-1111-1111-111111111111',
+        PAYMENT_GATEWAY_CIRCUIT_FAILURES: '1',
+      },
+      fetchImpl,
+    });
+    const verify = { ...START_REQUEST, authority: 'existing' };
+    await expect(gateway.verifyPayment(verify)).rejects.toThrow('invalid JSON (HTTP 200)');
+    await expect(gateway.verifyPayment(verify)).rejects.toThrow('Circuit breaker is OPEN');
+    expect(fetchImpl).toHaveBeenCalledOnce();
   });
 
   it('fails production http adapter startup when the start URL is not https', () => {
