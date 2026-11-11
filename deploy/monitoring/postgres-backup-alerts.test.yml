@@ -1,0 +1,84 @@
+rule_files: [postgres-backup-alerts.yml]
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '1+0x8'
+      - series: 'barghsa_postgres_backup_last_job_success{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '1 1 1 0 0 1 1 1 1'
+      - series: 'barghsa_postgres_backup_last_job_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '0 60 60 180 180 300 300 300 300'
+      - series: 'barghsa_postgres_backup_last_verified_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '0 60 60 60 60 300 300 300 300'
+    alert_rule_test:
+      - { eval_time: 2m, alertname: PostgresBackupFailed, exp_alerts: [] }
+      - eval_time: 3m
+        alertname: PostgresBackupFailed
+        exp_alerts:
+          - exp_labels:
+              &backup {
+                job: barghsa-postgres-backup,
+                instance: backup,
+                environment: staging,
+                database: core,
+                severity: critical,
+                priority: P1,
+              }
+            exp_annotations:
+              summary: The last PostgreSQL backup or retention job failed
+              dashboard_uid: barghsa-postgresql
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md
+      - { eval_time: 4m, alertname: PostgresBackupStale, exp_alerts: [] }
+      - { eval_time: 5m, alertname: PostgresBackupFailed, exp_alerts: [] }
+
+  - interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '1 1 1 0 0 0 1 1 1 1 1'
+      - series: 'barghsa_postgres_backup_last_job_success{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '1+0x10'
+      - series: 'barghsa_postgres_backup_last_job_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '60+0x5 540 540 540 540 540'
+      - series: 'barghsa_postgres_backup_last_verified_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '60+0x5 540 540 540 540 540'
+      - series: 'up{job="barghsa-postgres-backup",instance="unscoped"}'
+        values: '0+0x10'
+    alert_rule_test:
+      - { eval_time: 4m, alertname: PostgresBackupMonitoringUnavailable, exp_alerts: [] }
+      - eval_time: 5m
+        alertname: PostgresBackupMonitoringUnavailable
+        exp_alerts:
+          - exp_labels: *backup
+            exp_annotations: &missing
+              summary: The PostgreSQL backup monitoring target has no valid report
+              dashboard_uid: barghsa-postgresql
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md
+      - eval_time: 7m
+        alertname: PostgresBackupMonitoringUnavailable
+        exp_alerts:
+          - { exp_labels: *backup, exp_annotations: *missing }
+      - { eval_time: 9m, alertname: PostgresBackupMonitoringUnavailable, exp_alerts: [] }
+
+  - interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '1+0x1450'
+      - series: 'barghsa_postgres_backup_last_job_success{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '1+0x1450'
+      - series: 'barghsa_postgres_backup_last_job_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '60+0x1443 86640+0x6'
+      - series: 'barghsa_postgres_backup_last_verified_timestamp_seconds{job="barghsa-postgres-backup",instance="backup",environment="staging",database="core"}'
+        values: '60+0x1443 86640+0x6'
+    alert_rule_test:
+      - { eval_time: 24h2m, alertname: PostgresBackupStale, exp_alerts: [] }
+      - eval_time: 24h3m
+        alertname: PostgresBackupStale
+        exp_alerts:
+          - exp_labels: *backup
+            exp_annotations:
+              summary: A verified PostgreSQL backup from the last 24 hours is unavailable
+              dashboard_uid: barghsa-postgresql
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md
+      - { eval_time: 24h4m, alertname: PostgresBackupStale, exp_alerts: [] }

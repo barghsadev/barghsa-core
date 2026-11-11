@@ -27,6 +27,10 @@ const labels: Record<string, string> = {
     'افت پایدار دسترس‌پذیری خدمت / Sustained loss of service availability',
   SyntheticProbeFailed: 'بررسی آزمایشی ناموفق است / Synthetic check failed',
   SyntheticProbeUnavailable: 'گزارش بررسی آزمایشی در دسترس نیست / Synthetic reporting unavailable',
+  PostgresBackupFailed: 'پشتیبان‌گیری پایگاه داده ناموفق است / Database backup failed',
+  PostgresBackupStale: 'پشتیبان تأییدشده اخیر در دسترس نیست / No recent verified database backup',
+  PostgresBackupMonitoringUnavailable:
+    'گزارش پشتیبان‌گیری در دسترس نیست / Database backup monitoring unavailable',
 };
 const journeyNames: Record<string, string> = {
   electricity: 'برق / Electricity',
@@ -52,6 +56,9 @@ const criticalAlerts = new Set([
   'JourneyErrorBudgetFastBurn',
   'SyntheticProbeFailed',
   'SyntheticProbeUnavailable',
+  'PostgresBackupFailed',
+  'PostgresBackupStale',
+  'PostgresBackupMonitoringUnavailable',
 ]);
 const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['SmsProviderLowCredit', 'P2'],
@@ -65,6 +72,9 @@ const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['JourneyErrorBudgetSlowBurn', 'P2'],
   ['SyntheticProbeFailed', 'P1'],
   ['SyntheticProbeUnavailable', 'P1'],
+  ['PostgresBackupFailed', 'P1'],
+  ['PostgresBackupStale', 'P1'],
+  ['PostgresBackupMonitoringUnavailable', 'P1'],
 ]);
 type Alert = {
   name: string;

@@ -9,6 +9,7 @@ services:
       - ./staging-worker-alerts.yml:/etc/prometheus/staging-worker-alerts.yml:ro
       - ./journey-slo-alerts.yml:/etc/prometheus/journey-slo-alerts.yml:ro
       - ./synthetic-probe-alerts.yml:/etc/prometheus/synthetic-probe-alerts.yml:ro
+      - ./postgres-backup-alerts.yml:/etc/prometheus/postgres-backup-alerts.yml:ro
       - prometheusdata:/prometheus
     ports: ['127.0.0.1:9095:9090']
     cap_drop: [ALL]

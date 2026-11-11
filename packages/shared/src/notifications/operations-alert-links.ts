@@ -18,6 +18,9 @@ const alertResources = {
   JourneyErrorBudgetSlowBurn: ['barghsa-executive-slo', 'journey-availability'],
   SyntheticProbeFailed: ['barghsa-executive-slo', 'journey-availability'],
   SyntheticProbeUnavailable: ['barghsa-executive-slo', 'journey-availability'],
+  PostgresBackupFailed: ['barghsa-postgresql', 'postgresql-backup'],
+  PostgresBackupStale: ['barghsa-postgresql', 'postgresql-backup'],
+  PostgresBackupMonitoringUnavailable: ['barghsa-postgresql', 'postgresql-backup'],
 } as const;
 
 export function operationsDashboardOrigin(value: unknown): string | null {

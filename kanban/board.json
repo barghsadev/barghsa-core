@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T23:28:34+00:00",
+  "updated": "2026-11-11T23:37:10+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -12732,7 +12732,7 @@
       "launch_required": true,
       "remaining": [
         "Production secret-manager provisioning, off-server bucket/IAM/version lifecycle, activated daily schedule and continuous14-day full/7-day PITR retention require external evidence. Local current-object pruning does not purge provider versions or prove legal-hold/lifecycle policy.",
-        "Story-level production backup-age/disk alerts and actual backup-failure delivery are operational prerequisites."
+        "Story-level disk alerts, protected backup monitoring host and exporter, real backup failure and stale detection, and verified P1 delivery remain operational prerequisites. The local backup status and alert rules passed focused checks."
       ],
       "owner": null,
       "depends_on": [],
@@ -12809,7 +12809,8 @@
         },
         "changed_paths": [],
         "batches": [
-          "release-0.6-database-clocks-and-recovery-rehearsal"
+          "release-0.6-database-clocks-and-recovery-rehearsal",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -24488,7 +24489,8 @@
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -24533,7 +24535,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "8e57e18c8adf121a34a8f6128a33297a3f05720ec60ecda222600061890738c3"
+              "sha256": "0d17998e7c02bc13b2bce451e989ad3f7735890d8c2157df7baa4741b7eae058"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -24727,6 +24729,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Documents the optional protected textfile exporter integration and live failure receipt. Existing database recovery and retention commands and targets are preserved."
             }
           ]
         }
@@ -86854,7 +86864,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "accepted-durable-native-business-producers",
@@ -87654,7 +87665,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -87678,11 +87689,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -89376,6 +89387,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ],
           "presentation_renewals": [
@@ -92477,7 +92498,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -92509,7 +92531,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -92529,11 +92551,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -92751,6 +92773,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ],
           "presentation_renewals": [
@@ -107708,7 +107740,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -107932,7 +107965,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -107952,11 +107985,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -108265,6 +108298,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ],
           "presentation_renewals": [
@@ -490150,7 +490193,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -490342,7 +490386,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -490358,11 +490402,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -490815,6 +490859,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ],
           "presentation_renewals": [
@@ -492345,7 +492399,8 @@
           "release-0.6-coverage-required-check",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "status": "done",
@@ -492569,7 +492624,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -493043,6 +493098,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ],
           "presentation_renewals": [
@@ -557123,7 +557186,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-compiled-load-scenario-smoke",
@@ -557179,7 +557243,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -557291,6 +557355,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents optional long-term metrics retention and full UTC-month coverage after archive activation. Existing operational targets, alert budgets and primary scrape and rule definitions are preserved. Native Prometheus checks verified scope, historical samples and restart recovery."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ]
         }
@@ -558649,7 +558721,8 @@
           "release-0.6-alert-runbook-references-and-review",
           "release-0.6-notification-recovery-circuits",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-reconciliation-recovery-tests",
@@ -558683,11 +558756,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -558780,6 +558853,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ]
         }
@@ -563498,7 +563580,8 @@
           "release-0.6-edge-tls-and-hsts",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-private-monitoring",
@@ -563522,7 +563605,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -563534,7 +563617,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             }
           ],
           "checks": [
@@ -563677,6 +563760,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -563918,7 +564010,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -563942,7 +564035,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -564097,6 +564190,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution."
             }
           ]
         }
@@ -564143,7 +564244,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-provider-attribution-and-circuit-metrics",
@@ -564203,7 +564305,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -564377,6 +564479,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution."
             }
           ]
         }
@@ -564441,7 +564551,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -564457,11 +564568,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -564654,6 +564765,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ]
         }
@@ -564699,7 +564819,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-outbox-queue-and-worker-processing-metrics",
@@ -564723,7 +564844,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -564878,6 +564999,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution."
             }
           ]
         }
@@ -565249,7 +565378,8 @@
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
           "release-0.6-grafana-release-markers",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-http-metrics",
@@ -565289,7 +565419,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -565420,6 +565550,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents optional long-term metrics retention and full UTC-month coverage after archive activation. Existing operational targets, alert budgets and primary scrape and rule definitions are preserved. Native Prometheus checks verified scope, historical samples and restart recovery."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -565452,7 +565590,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-postgresql-pool-dashboard",
@@ -565469,11 +565608,11 @@
             },
             {
               "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
-              "sha256": "286ee842692118e57f57721be2726d7219bb0deeac01aac5a1d0998b638a4ccf"
+              "sha256": "10f685efc161b6822657a00d523f4307c33c9c64043baba2c54a19f94852c058"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -565532,6 +565671,15 @@
                 "deploy/monitoring/grafana-postgresql-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/grafana-postgresql-dashboard.json",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two backed-up age and latest result panels. Prior panels, annotation queries and settings are identical. Promtool verified eight exact query values and gaps. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -565570,7 +565718,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-worker-outbox-dashboard",
@@ -565599,7 +565748,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -565723,6 +565872,14 @@
                 "deploy/monitoring/grafana-notifications-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -565943,7 +566100,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -566003,7 +566161,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -566081,6 +566239,14 @@
                 "deploy/monitoring/grafana-authentication-security-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -566282,7 +566448,8 @@
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -566338,7 +566505,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -566470,6 +566637,14 @@
                 "deploy/monitoring/grafana-storage-uploads-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -566762,7 +566937,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-native-journey-availability",
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-grafana-queries-and-native-budget-charge",
@@ -566808,7 +566984,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -566873,6 +567049,14 @@
                 "deploy/monitoring/grafana-ai-usage-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -567219,18 +567403,35 @@
         "story": "06-security-testing-observability.md#spec-e681e92bce32"
       },
       "requirement": "| T-06.15.01.02 | Configure P1 alerts: payment/refund duplication risk, ledger mismatch, backup failure, outbox backlog > threshold, elevated auth failures, SLO burn rate | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify exact-candidate firing and recovery for backup failure, a stale verified backup and unavailable backup reports on the approved host, with native PostgreSQL and actual on-call receipts.",
+        "Reconcile elevated authentication failure thresholds and verify the remaining payment, wallet, notification and SLO signals in the target scope."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/journey-alerts.test.ts",
+          "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "deploy/monitoring/postgres-backup-alerts.test.yml",
+          "deploy/monitoring/postgres-backup-alerts.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "docs/operations/backup/postgresql-restore-runbook.md",
+          "docs/runbooks/postgresql-backup.md",
+          "packages/db/scripts/backup/run_backup_job.py",
+          "packages/db/scripts/backup/test_verify_restore.py",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
+        "batches": [
+          "release-0.6-postgres-backup-alerts"
+        ],
         "current_acceptance": null
       }
     },
@@ -567351,7 +567552,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-deployed-alert-config-and-immutable-receipts",
@@ -567363,7 +567565,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -567371,11 +567573,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -567495,6 +567697,16 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack."
             }
           ]
         }
@@ -567573,7 +567785,8 @@
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-grafana-supported-images-and-provisioning"
+          "release-0.6-grafana-supported-images-and-provisioning",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": null
       }
@@ -567608,7 +567821,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-native-journey-availability",
           "release-0.6-journey-budget-burndown",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-operational-design-review",
@@ -567624,7 +567838,7 @@
             },
             {
               "path": "docs/operations/backup/postgresql-restore-runbook.md",
-              "sha256": "8e57e18c8adf121a34a8f6128a33297a3f05720ec60ecda222600061890738c3"
+              "sha256": "0d17998e7c02bc13b2bce451e989ad3f7735890d8c2157df7baa4741b7eae058"
             }
           ],
           "checks": [
@@ -567711,6 +567925,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents optional long-term metrics retention and full UTC-month coverage after archive activation. Existing operational targets, alert budgets and primary scrape and rule definitions are preserved. Native Prometheus checks verified scope, historical samples and restart recovery."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "docs/operations/backup/postgresql-restore-runbook.md"
+              ],
+              "scope": "Documents the optional protected textfile exporter integration and live failure receipt. Existing database recovery and retention commands and targets are preserved."
             }
           ]
         }
@@ -567928,7 +568150,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-refund-overdue-alert-and-native-worker",
@@ -567944,11 +568167,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -568126,6 +568349,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ]
         }
@@ -568188,7 +568420,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-process-error-reporting",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-financial-gauges-and-critical-wallet-alert",
@@ -568204,11 +568437,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -568401,6 +568634,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ]
         }
@@ -568461,7 +568703,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-storage-provider-circuit",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-backlog-metrics-alert-rules-and-receipts",
@@ -568477,11 +568720,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -568640,6 +568883,15 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two P1 synthetic receipt and delivery cases. Existing tests retain their assertions. Execution of the expanded PostgreSQL suite is pending. Adds validated P1 synthetic failure and unavailable types. Existing journey, notification and financial alerts retain their scope and transactions. Fourteen focused receiver and link cases passed."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
             }
           ]
         }
@@ -568681,7 +568933,8 @@
           "release-0.6-notification-recovery-circuits",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-payment-idempotency-conflict-p1",
@@ -568717,11 +568970,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -568753,7 +569006,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -568869,6 +569122,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -568914,7 +569177,8 @@
           "release-0.6-storage-provider-circuit",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "verified-signed-payment-anomaly-rules-and-isolated-receipts",
@@ -568942,11 +569206,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "d5a70c16cc7d1b41a572fd43d073b1697e15d16dd7030bd3a7ef233f4fc7e766"
+              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "222de9ba50057f31bc86e111f4c04d8627b8f968439ed9cb5e3bb2d7af660c42"
+              "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -568990,7 +569254,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -569113,6 +569377,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -570631,7 +570905,8 @@
           "release-0.6-quarterly-storage-recovery",
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
-          "release-0.6-native-journey-availability"
+          "release-0.6-native-journey-availability",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "source-bound-quarterly-incident-runbook-review",
@@ -570653,7 +570928,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "5a9d947ef4946f8ba4bb45b867526de98b63cfbd7ba792c06d0f73f23ff58af1"
+              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -570757,6 +571032,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds the pilot availability tier to the existing staging API target. Promtool validated the full rendered config, all four read-only rule mounts, and the journey and synthetic alert rule tests."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
             }
           ]
         }
@@ -572312,7 +572595,8 @@
           "release-0.6-raw-sql-lint",
           "release-0.6-coverage-required-check",
           "release-0.6-journey-slo-burn",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-postgres-backup-alerts"
         ],
         "current_acceptance": {
           "kind": "acceptance_verified",
@@ -572332,7 +572616,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "46acee845d34b5f22712cc04816113a3dadfc7eaf330360aaa706e64385c8bec"
+              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -572441,6 +572725,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds a read-only synthetic rules mount. Compose and Prometheus validated the full configuration."
+            },
+            {
+              "batch": "release-0.6-postgres-backup-alerts",
+              "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds one read-only backup rules bind. Compose validates the five rules and existing private stack."
             }
           ]
         }
@@ -864226,7 +864518,8 @@
           "release-0.6-journey-budget-burndown",
           "release-0.6-grafana-release-markers",
           "release-0.6-hosted-quarterly-storage-recovery",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-postgres-backup-alerts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -864302,7 +864595,8 @@
           "release-0.6-staging-scanner-ceiling",
           "release-0.6-grafana-image-review-and-staging-capacity",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-prometheus-metric-retention"
+          "release-0.6-prometheus-metric-retention",
+          "release-0.6-postgres-backup-alerts"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -992971,6 +993265,150 @@
         {
           "file": "source.sha256",
           "sha256": "58b73e3d39bbd758587ac0db940521850cf3e709e63b96a1f3e4a9bb552f904e"
+        }
+      ]
+    },
+    "release-0.6-postgres-backup-alerts": {
+      "batch": "release-0.6-postgres-backup-alerts",
+      "base_commit": "44024fdc65d0e866d84b639ac6ef5969b613c1b6",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.02",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "dad9e83b09e8a1c22fca254f99cb46b2f400ecd4c5f1ae9824fb1cf8dec6d0a4"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+        },
+        {
+          "path": "apps/worker/src/operations/journey-alerts.test.ts",
+          "sha256": "307201d1749d5900dd8d8da5ef4d3243dac890ae0a8e9443b94e55fdd808ddaa"
+        },
+        {
+          "path": "deploy/monitoring/grafana-postgresql-dashboard.json",
+          "sha256": "10f685efc161b6822657a00d523f4307c33c9c64043baba2c54a19f94852c058"
+        },
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.test.yml",
+          "sha256": "beda150ca9cafaaecc68abde6566e6d19b3571fe6fe80c8a465a4047c8add6e2"
+        },
+        {
+          "path": "deploy/monitoring/postgres-backup-alerts.yml",
+          "sha256": "6ec23fc1460377e42eec02a6386c1bf950515c1709c398d8455988c131552eb7"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+        },
+        {
+          "path": "docs/operations/backup/postgresql-restore-runbook.md",
+          "sha256": "0d17998e7c02bc13b2bce451e989ad3f7735890d8c2157df7baa4741b7eae058"
+        },
+        {
+          "path": "docs/runbooks/postgresql-backup.md",
+          "sha256": "3edc017352b11e99de9c6285082005671ca169c45a4390a7aa466dd6b3ad38f0"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_backup_job.py",
+          "sha256": "08e2ba0e74a74111a75c9fff5ec568aa596b1cab14461f4ccb4685c55c4103fd"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "4272ed02aadbae40859d3b7367512d0546ea31259e6b2f1cabd7d86c6f8bec21"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "9e05fada92c598c21d06f9f22389c758a7fa2783d1d8d62d891e2f577684b048"
+        }
+      ],
+      "checks": [
+        "The optional protected textfile records the latest job outcome and last verified full backup timestamp. Nine backup/recovery evidence tests passed, including preserved verified age on failed backup, a newer verified timestamp on retention failure, and separate reporting failure handoff.",
+        "Prometheus 3.15.0 validated all five mounted rules files. Eleven exact alert evaluations distinguish failed backups, stale full backups and unavailable reports, including recovery and exclusion of an unscoped target. Eight PostgreSQL dashboard query checks verified exact status, age and gaps.",
+        "The existing private receiver accepts only correct scope, severity and P1 priority for the new alert types. Seventeen focused worker/link cases, shared build and exports, worker and shared typecheck, lint, formatting and whitespace passed."
+      ],
+      "limitations": [
+        "Docker Desktop did not respond to a bounded health probe. The three new PostgreSQL-backed receipt cases require hosted verification. No production backup, exporter, monitoring deployment, on-call delivery or disaster recovery is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-backup-alerts",
+      "execution_receipts": [
+        {
+          "file": "verify-prometheus.py",
+          "sha256": "e211f96c4a0b202e703e49716f82d85213992c91f2d52c622b6b1b3afc523a7f"
+        },
+        {
+          "file": "prometheus.log",
+          "sha256": "dc6974bbe146309006304f557b4aca66b14cfc9f63bc3588b10d956bb0e62aaf"
+        },
+        {
+          "file": "backup-unit.log",
+          "sha256": "42ea26945f4be058edd3942804c93559e8fdb0a12e9f35efa0d8ad55eae3b849"
+        },
+        {
+          "file": "worker-unit.config.mjs",
+          "sha256": "9b952e6605140772d2e93409c8c2abfb701f041091efcb70a3779c9b36fd41f7"
+        },
+        {
+          "file": "worker-unit.log",
+          "sha256": "c79c240d3e3a9026aae7b40c5f2d31b2faee0c558b1056719df31b81f40fd0a6"
+        },
+        {
+          "file": "worker-type.log",
+          "sha256": "220f3d4f787cb8ce0f3df7b84d7f6ef3b22cff104536d877d367d5b8239340bc"
+        },
+        {
+          "file": "shared-type.log",
+          "sha256": "6c05c3bf25eb4c5123e8e15388cc4fb8efd2804fa8c603e6e4a3bdd8608a8270"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "6e4da35164d2d5a7a40f290dcf5cb6263ef698d6480e2ee68350a6a6a38a56ff"
+        },
+        {
+          "file": "format.log",
+          "sha256": "f15e0433e3132ae484faae5b373d1a2f6db6c8401c9fe617cb3741c5c4a3bdca"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "4f437251d3cd2ef950bb83132d93c21837ac643d6a63327b997ab133ea3bf0f5"
         }
       ]
     }

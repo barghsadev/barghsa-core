@@ -9,6 +9,7 @@ rule_files:
   - /etc/prometheus/staging-worker-alerts.yml
   - /etc/prometheus/journey-slo-alerts.yml
   - /etc/prometheus/synthetic-probe-alerts.yml
+  - /etc/prometheus/postgres-backup-alerts.yml
 alerting:
   alertmanagers:
     - static_configs:

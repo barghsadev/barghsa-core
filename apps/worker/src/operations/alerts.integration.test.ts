@@ -286,6 +286,9 @@ it.each([
     check: 'login',
   },
   { alertname: 'SyntheticProbeUnavailable', severity: 'critical', priority: 'P1' },
+  { alertname: 'PostgresBackupFailed', severity: 'critical', priority: 'P1' },
+  { alertname: 'PostgresBackupStale', severity: 'critical', priority: 'P1' },
+  { alertname: 'PostgresBackupMonitoringUnavailable', severity: 'critical', priority: 'P1' },
 ])('records $alertname only with its matching severity and priority', async (labels) => {
   const input = envelope();
   Object.assign(input.alerts[0]!.labels, labels);

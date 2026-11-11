@@ -192,6 +192,26 @@ and sends backup or retention failures to the same configured alert receiver.
 The quarterly job runs at 03:00 UTC on the first Saturday of January, April,
 July and October. Both timers catch up missed executions.
 
+Set `BACKUP_METRICS_PATH=/var/lib/barghsa-backup-metrics/postgres-backup.prom`
+in the protected daily service environment. The job updates that file atomically
+after each completed run. Create the separate directory with mode `2750`, owned
+by the backup account and its monitoring group. The file is group-readable and carries only
+the latest job status, completion time, and last verified full backup time.
+That backup time advances only after native verification and successful storage
+of the encrypted backup and its manifest. A failed attempt preserves the
+previous backup time. A write failure leaves the backup result visible, invokes
+the existing failure handoff and exits the scheduled job unsuccessfully.
+
+On the approved backup host, configure a reviewed Node Exporter with the
+textfile collector pointed at that directory. Bind it to the protected network,
+require verified client and server TLS, and grant the exporter read-only access.
+Configure the private Prometheus target with job name `barghsa-postgres-backup`
+and exact `environment` and `database` labels. Mount
+`deploy/monitoring/postgres-backup-alerts.yml` in the target Prometheus rule set.
+Read back the actual result, verify firing and recovery for failed and stale
+backups and missing reports, and retain the P1 on-call delivery receipts.
+[Node Exporter textfile collector](https://github.com/prometheus/node_exporter#textfile-collector) · [PostgreSQL backup alerts](../../runbooks/postgresql-backup.md).
+
 Install/enable those timers only after checking storage access, source baseline
 preparation, key recovery, failure-alert delivery and disk capacity. No timer is
 installed or enabled by this repository. A stale baseline does not qualify as

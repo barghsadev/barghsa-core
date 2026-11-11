@@ -358,6 +358,95 @@
       ],
       "title": "PostgreSQL statistics collection",
       "type": "timeseries"
+    },
+    {
+      "id": 8,
+      "type": "stat",
+      "title": "Verified backup age",
+      "description": "Age of the most recent verified full backup per monitored target.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 32
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "noValue": "No verified backup"
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "(time() - (barghsa_postgres_backup_last_verified_timestamp_seconds{job=\"barghsa-postgres-backup\"} > 0)) and on (job, instance, environment, database) barghsa:postgres_backup_report:valid",
+          "legendFormat": "{{environment}} / {{database}} / {{instance}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "stat",
+      "title": "Latest backup job",
+      "description": "The outcome of the most recent backup and retention job per monitored target.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 32
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "noValue": "No valid backup report",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Failed",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Passed",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value_and_name"
+      },
+      "targets": [
+        {
+          "expr": "barghsa_postgres_backup_last_job_success{job=\"barghsa-postgres-backup\"} and on (job, instance, environment, database) barghsa:postgres_backup_report:valid",
+          "legendFormat": "{{environment}} / {{database}} / {{instance}}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
     }
   ],
   "refresh": "30s",

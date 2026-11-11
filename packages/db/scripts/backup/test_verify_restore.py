@@ -41,6 +41,52 @@ class RestoreEvidenceTests(unittest.TestCase):
         alert.assert_not_called()
         self.assertEqual(result['status'], 'passed')
 
+    def test_backup_metrics_preserve_verified_time_on_failure_and_advance_on_prune_failure(self):
+        old = '2026-09-13T12:00:00Z'
+        fresh = '2026-09-13T13:00:00Z'
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'postgres-backup.prom'
+            with patch.dict(os.environ, {'BACKUP_METRICS_PATH': str(path)}), patch.object(job, 'Store'), \
+                    patch.object(job, 'alert', return_value='accepted') as send:
+                def payload(completed):
+                    return json.dumps({'label': 'fixture', 'completed_at': completed})
+
+                with patch.object(job, 'backup', side_effect=lambda *_: print(payload(old))), patch.object(job, 'prune'):
+                    self.assertEqual(job.run_job()['monitoring'], 'reported')
+                self.assertIn(f'{job.FULL_TIMESTAMP} {int(backup.timestamp(old).timestamp())}\n', path.read_text())
+                self.assertIn(f'{job.JOB_SUCCESS} 1\n', path.read_text())
+                self.assertEqual(path.stat().st_mode & 0o777, 0o640)
+                send.assert_not_called()
+
+                with patch.object(job, 'backup', side_effect=backup.BackupError('not uploaded')), \
+                        patch.object(job, 'prune') as prune:
+                    self.assertEqual(job.run_job()['monitoring'], 'reported')
+                prune.assert_not_called()
+                self.assertIn(f'{job.FULL_TIMESTAMP} {int(backup.timestamp(old).timestamp())}\n', path.read_text())
+                self.assertIn(f'{job.JOB_SUCCESS} 0\n', path.read_text())
+
+                with patch.object(job, 'backup', side_effect=lambda *_: print(payload(fresh))), \
+                        patch.object(job, 'prune', side_effect=backup.BackupError('retention failed')):
+                    result = job.run_job()
+                self.assertEqual((result['phase'], result['status'], result['monitoring']),
+                                 ('retention', 'failed', 'reported'))
+                self.assertIn(f'{job.FULL_TIMESTAMP} {int(backup.timestamp(fresh).timestamp())}\n', path.read_text())
+                self.assertIn(f'{job.JOB_SUCCESS} 0\n', path.read_text())
+                self.assertEqual(send.call_count, 2)
+                self.assertEqual(list(Path(directory).iterdir()), [path])
+
+    def test_monitoring_write_failure_keeps_backup_result_and_invokes_failure_handoff(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'missing-directory' / 'postgres-backup.prom'
+            full = {'label': 'fixture', 'completed_at': '2026-09-13T12:00:00Z'}
+            with patch.dict(os.environ, {'BACKUP_METRICS_PATH': str(path)}), patch.object(job, 'Store'), \
+                    patch.object(job, 'backup', side_effect=lambda *_: print(json.dumps(full))), \
+                    patch.object(job, 'prune') as prune, patch.object(job, 'alert', return_value='accepted') as send:
+                result = job.run_job()
+        prune.assert_called_once()
+        send.assert_called_once()
+        self.assertEqual((result['status'], result['monitoring'], result['alert']), ('passed', 'failed', 'accepted'))
+
     def test_limits_are_inclusive_and_unknown_is_failure(self):
         reference = '2026-09-13T12:05:00Z'
         self.assertEqual(verify.check_limits('2026-09-13T12:00:00Z', reference, 3600), 300)

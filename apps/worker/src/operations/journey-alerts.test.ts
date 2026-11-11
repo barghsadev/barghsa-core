@@ -90,3 +90,24 @@ it.each(['', '__proto__', 'unlisted'])('rejects an unknown synthetic check %j', 
     })
   ).toThrow('Invalid alert scope or identity');
 });
+
+it.each(['PostgresBackupFailed', 'PostgresBackupStale', 'PostgresBackupMonitoringUnavailable'])(
+  'validates the scoped P1 and recovery links for %s',
+  (alertname) => {
+    const labels = { ...base, alertname, severity: 'critical', priority: 'P1' };
+    expect(parse(labels)).toMatchObject([{ name: alertname, priority: 'P1' }]);
+    expect(() => parse({ ...labels, database: 'other' })).toThrow(
+      'Invalid alert scope or identity'
+    );
+    expect(() => parse({ ...labels, priority: 'P2' })).toThrow('Invalid alert scope or identity');
+    expect(
+      operationsAlertLinks('admin.operations_alert', {
+        operationsAlertName: alertname,
+        operationsDashboardOrigin: 'https://grafana.example.test',
+      }).map(({ href }) => href)
+    ).toEqual([
+      'https://grafana.example.test/d/barghsa-postgresql',
+      'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/postgresql-backup.md',
+    ]);
+  }
+);
