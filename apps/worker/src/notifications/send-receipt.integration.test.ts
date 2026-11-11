@@ -60,6 +60,12 @@ async function queue() {
   return id;
 }
 
+async function providerSends(outcome: 'accepted' | 'error'): Promise<number> {
+  const prefix = `provider_notification_send_duration_seconds_count{provider_id="${provider.id}",transport="smtp",outcome="${outcome}"} `;
+  const sample = (await exportWorkerMetrics()).split('\n').find((line) => line.startsWith(prefix));
+  return sample ? Number(sample.slice(prefix.length)) : 0;
+}
+
 it('counts verified Resend bounce feedback once for each accepted attempt in the cohort', async () => {
   const resend = { ...provider, transport: 'resend' as const };
   async function accept(
@@ -118,6 +124,7 @@ it('holds uncertain legacy sends without deleting their jobs or touching never-a
   ).toEqual({ status: 'retrying', attempts: 1 });
 });
 it('commits a single claim before I/O and recovers acceptance across competing workers', async () => {
+  const before = await providerSends('accepted');
   const id = await queue(),
     execute = durableDelivery(pool, id, 'email', 'occurrence');
   let release!: () => void;
@@ -144,8 +151,10 @@ it('commits a single claim before I/O and recovers acceptance across competing w
     'provider-receipt'
   );
   expect(send).toHaveBeenCalledOnce();
+  expect(await providerSends('accepted')).toBe(before + 1);
 });
 it('keeps an uncertain network outcome held across restarts and administrative retry resets', async () => {
+  const before = await providerSends('error');
   const id = await queue();
   const send = vi.fn(async (): Promise<string> => {
     throw new Error('timeout token=private-secret');
@@ -160,6 +169,7 @@ it('keeps an uncertain network outcome held across restarts and administrative r
     durableDelivery(pool, id, 'email', 'occurrence')(provider, send)
   ).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
   expect(send).toHaveBeenCalledOnce();
+  expect(await providerSends('error')).toBe(before + 1);
   const row = (
     await pool.query(
       'SELECT status,last_error FROM notification_send_receipts WHERE outbox_id=$1',
@@ -245,6 +255,7 @@ it('retries a proven rejection while preserving provider and occurrence identity
 });
 for (const committed of [false, true]) {
   it(`never resends when the receipt write ${committed ? 'commits but its response is lost' : 'fails after provider acceptance'}`, async () => {
+    const before = await providerSends('accepted');
     const id = await queue(),
       send = vi.fn(async () => 'accepted-receipt');
     const unreliable = {
@@ -263,6 +274,7 @@ for (const committed of [false, true]) {
     if (committed) expect(await retry).toBe('accepted-receipt');
     else await expect(retry).rejects.toBeInstanceOf(DeliveryOutcomeUnknown);
     expect(send).toHaveBeenCalledOnce();
+    expect(await providerSends('accepted')).toBe(before + 1);
     expect(
       (
         await pool.query(

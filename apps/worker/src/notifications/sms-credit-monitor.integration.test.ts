@@ -184,10 +184,19 @@ it('keeps the last known balance and retries after a provider failure', async ()
 it('exports low credit only for the current verified active provider and clears stale series', async () => {
   expect(await checkSmsCredit(ctx.pool, creditResponse(50))).toBe('checked');
   await collectNotificationGauges(ctx.pool);
-  expect(await exportWorkerMetrics()).toContain(
-    `provider_sms_credit_low{provider_id="${providerId}"} 1`
+  const observed = await exportWorkerMetrics();
+  expect(observed).toContain(`provider_sms_credit_low{provider_id="${providerId}"} 1`);
+  expect(observed).toContain(`provider_sms_credit_balance{provider_id="${providerId}"} 50\n`);
+  const checkedAt = (await ctx.pool.query('SELECT credit_checked_at FROM sms_provider_configs'))
+    .rows[0].credit_checked_at as Date;
+  const timestamp = observed.match(
+    new RegExp(
+      `^provider_sms_credit_observed_timestamp_seconds\\{provider_id="${providerId}"\\} ([\\d.]+)$`,
+      'm'
+    )
   );
-  expect(await exportWorkerMetrics()).not.toContain('fixture-key');
+  expect(Number(timestamp?.[1])).toBeCloseTo(checkedAt.getTime() / 1000, 2);
+  expect(observed).not.toContain('fixture-key');
 
   for (const [status, proof] of [
     ['draft', 'passed'],
@@ -200,7 +209,9 @@ it('exports low credit only for the current verified active provider and clears 
       proof,
     ]);
     await collectNotificationGauges(ctx.pool);
-    expect(await exportWorkerMetrics()).not.toMatch(/provider_sms_credit_low\{provider_id=/);
+    expect(await exportWorkerMetrics()).not.toMatch(
+      /provider_sms_credit_(?:low|balance|observed_timestamp_seconds)\{provider_id=/
+    );
   }
 
   await ctx.pool.query(
@@ -211,7 +222,12 @@ it('exports low credit only for the current verified active provider and clears 
   expect(await exportWorkerMetrics()).toContain(
     `provider_sms_credit_low{provider_id="${providerId}"} 0`
   );
+  expect(await exportWorkerMetrics()).toContain(
+    `provider_sms_credit_balance{provider_id="${providerId}"} 150\n`
+  );
   await ctx.pool.query('DELETE FROM sms_provider_configs');
   await collectNotificationGauges(ctx.pool);
-  expect(await exportWorkerMetrics()).not.toMatch(/provider_sms_credit_low\{provider_id=/);
+  expect(await exportWorkerMetrics()).not.toMatch(
+    /provider_sms_credit_(?:low|balance|observed_timestamp_seconds)\{provider_id=/
+  );
 });

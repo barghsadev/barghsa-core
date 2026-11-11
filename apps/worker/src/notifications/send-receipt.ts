@@ -7,6 +7,7 @@ import {
 import type { NotificationSendResult } from '@barghsa/shared/notifications';
 import { sanitizeError } from './error-redact.js';
 import { classifyDeliveryError } from './delivery-log.js';
+import { observeProviderSend } from './worker-metrics.js';
 
 export class DeliveryOutcomeUnknown extends Error {
   constructor() {
@@ -77,6 +78,8 @@ export function durableDelivery(
       if (typeof receipt !== 'string' || !receipt.trim() || receipt.length > 512)
         throw new Error('Provider returned an invalid receipt');
     } catch (error) {
+      const durationMs = latency();
+      observeProviderSend(provider, 'error', durationMs);
       const rejected = error instanceof DeliveryRejected;
       const safeError = sanitizeError(error instanceof Error ? error.message : String(error));
       const recorded = await pool.query(
@@ -95,13 +98,15 @@ export function durableDelivery(
           safeError,
           rejected ? 'failed' : 'unknown',
           rejected ? 'permanent' : classifyDeliveryError(safeError),
-          latency(),
+          durationMs,
         ]
       );
       if (recorded.rows[0]?.attempt_token !== token) throw new DeliveryOutcomeUnknown();
       if (rejected) throw error;
       throw new DeliveryOutcomeUnknown();
     }
+    const durationMs = latency();
+    observeProviderSend(provider, 'accepted', durationMs);
     // Keep a failed/ambiguous write as sending, never as safely rejected. If
     // COMMIT succeeded despite a lost response, a later read recovers acceptance.
     const accepted = await pool.query(
@@ -112,7 +117,7 @@ export function durableDelivery(
       UPDATE notification_send_receipts SET status='accepted',provider_ref=$4,accepted_at=NOW(),last_error=NULL,updated_at=NOW()
       WHERE outbox_id=$1 AND channel=$2 AND attempt_token=$3 AND status='sending'
         AND EXISTS (SELECT 1 FROM history) RETURNING provider_ref`,
-      [outboxId, channel, token, receipt, latency()]
+      [outboxId, channel, token, receipt, durationMs]
     );
     if (accepted.rows[0]?.provider_ref !== receipt) throw new DeliveryOutcomeUnknown();
     return receipt;

@@ -26,17 +26,34 @@ it('reports each AI model circuit and current UTC month spend independently', as
   const scrape = async () => (await fetch(`${fixture.base}/metrics`)).text();
   expect(await scrape()).toContain(`ai_model_health{model_id="${modelId}"} 1`);
   await fixture.pool.query(
-    'INSERT INTO ai_model_budgets(model_id,monthly_token_limit,used_cost_micros) VALUES ($1,10000,1234000)',
+    `INSERT INTO ai_model_budgets(model_id,monthly_token_limit,monthly_cost_limit_micros,
+      input_price_per_million_micros,output_price_per_million_micros,
+      used_input_tokens,used_output_tokens,used_cost_micros)
+      VALUES ($1,10000,2468000,1,1,1000,1500,1234000)`,
     [modelId]
   );
-  expect(await scrape()).toContain(`ai_model_monthly_spend_usd{model_id="${modelId}"} 1.234\n`);
+  const current = await scrape();
+  expect(current).toContain(`ai_model_monthly_spend_usd{model_id="${modelId}"} 1.234\n`);
+  expect(current).toContain(
+    `ai_model_monthly_budget_usage_ratio{model_id="${modelId}",unit="tokens"} 0.25\n`
+  );
+  expect(current).toContain(
+    `ai_model_monthly_budget_usage_ratio{model_id="${modelId}",unit="usd"} 0.5\n`
+  );
   await fixture.pool.query(
     `UPDATE ai_model_budgets SET period_start=
        ((date_trunc('month',now() AT TIME ZONE 'UTC') - interval '1 month') AT TIME ZONE 'UTC')
        WHERE model_id=$1`,
     [modelId]
   );
-  expect(await scrape()).toContain(`ai_model_monthly_spend_usd{model_id="${modelId}"} 0\n`);
+  const reset = await scrape();
+  expect(reset).toContain(`ai_model_monthly_spend_usd{model_id="${modelId}"} 0\n`);
+  expect(reset).toContain(
+    `ai_model_monthly_budget_usage_ratio{model_id="${modelId}",unit="tokens"} 0\n`
+  );
+  expect(reset).toContain(
+    `ai_model_monthly_budget_usage_ratio{model_id="${modelId}",unit="usd"} 0\n`
+  );
   expect(
     (
       await fixture.pool.query('SELECT used_cost_micros FROM ai_model_budgets WHERE model_id=$1', [
@@ -89,6 +106,7 @@ it('serves unavailable metrics through a database outage and recovers without st
     expect(failed).not.toMatch(/^pg_cache_hit_ratio /m);
     expect(failed).not.toMatch(/^pg_checkpoints_timed_total /m);
     expect(failed).not.toMatch(/^ai_model_monthly_spend_usd\{/m);
+    expect(failed).not.toMatch(/^ai_model_monthly_budget_usage_ratio\{/m);
     expect(failed).toMatch(/^pg_pool_capacity 7$/m);
   } finally {
     try {

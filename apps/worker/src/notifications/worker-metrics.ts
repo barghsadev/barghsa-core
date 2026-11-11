@@ -1,5 +1,6 @@
 import { Registry, Counter, Gauge, Histogram } from 'prom-client';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
+import type { DeliveryExecutor } from '@barghsa/shared/notification-delivery';
 
 /**
  * Notification observability metrics (E-05, T-05.01.07).
@@ -119,6 +120,39 @@ export const providerSmsCreditLow = new Gauge({
   registers: [registry],
 });
 
+const providerSmsCredit = new Gauge({
+  name: 'provider_sms_credit_balance',
+  help: 'Last observed SMS credit balance for the active verified configuration',
+  labelNames: ['provider_id'] as const,
+  registers: [registry],
+});
+
+const providerSmsCreditObservedAt = new Gauge({
+  name: 'provider_sms_credit_observed_timestamp_seconds',
+  help: 'Unix timestamp of the last successful SMS credit observation',
+  labelNames: ['provider_id'] as const,
+  registers: [registry],
+});
+
+const providerSendDuration = new Histogram({
+  name: 'provider_notification_send_duration_seconds',
+  help: 'Admitted notification provider send duration and result before receipt persistence',
+  labelNames: ['provider_id', 'transport', 'outcome'] as const,
+  buckets: [0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 30, 60],
+  registers: [registry],
+});
+
+export function observeProviderSend(
+  provider: Parameters<DeliveryExecutor>[0],
+  outcome: 'accepted' | 'error',
+  durationMs: number
+): void {
+  providerSendDuration.observe(
+    { provider_id: provider.id, transport: provider.transport, outcome },
+    durationMs / 1000
+  );
+}
+
 /**
  * Record one delivery attempt in the attempts counter. Called by the outbox
  * runner after each channel attempt resolves (success or failure). Pure
@@ -211,12 +245,26 @@ export async function collectNotificationGauges(
   }
 
   const creditRes = await pool.query(
-    `SELECT id, CASE WHEN low_credit_alert_active THEN 1 ELSE 0 END AS low_credit
+    `SELECT id, CASE WHEN low_credit_alert_active THEN 1 ELSE 0 END AS low_credit,
+            low_credit_balance::double precision AS balance,
+            EXTRACT(EPOCH FROM credit_checked_at)::double precision AS observed_at
        FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'`
   );
   providerSmsCreditLow.reset();
-  for (const row of creditRes.rows as Array<{ id: string; low_credit: number }>) {
-    providerSmsCreditLow.set({ provider_id: row.id }, Number(row.low_credit));
+  providerSmsCredit.reset();
+  providerSmsCreditObservedAt.reset();
+  for (const row of creditRes.rows as Array<{
+    id: string;
+    low_credit: number;
+    balance: number | null;
+    observed_at: number | null;
+  }>) {
+    const labels = { provider_id: row.id };
+    providerSmsCreditLow.set(labels, Number(row.low_credit));
+    if (row.balance != null && row.observed_at != null) {
+      providerSmsCredit.set(labels, row.balance);
+      providerSmsCreditObservedAt.set(labels, row.observed_at);
+    }
   }
 }
 

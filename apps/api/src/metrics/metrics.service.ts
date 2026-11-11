@@ -60,6 +60,11 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     help: 'Current UTC month charged model budget usage in USD',
     labelNames: ['model_id'] as const,
   });
+  private readonly aiModelMonthlyBudgetUsage = new promClient.Gauge({
+    name: 'ai_model_monthly_budget_usage_ratio',
+    help: 'Fraction of the configured token or USD limit used in the current UTC month',
+    labelNames: ['model_id', 'unit'] as const,
+  });
   private readonly aiInferenceActive = new promClient.Gauge({
     name: 'ai_inference_active_requests',
     help: 'AI inference requests currently admitted in this API process',
@@ -251,6 +256,7 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
     this.collectionSuccess.set(0);
     this.aiModelHealth.reset();
     this.aiModelMonthlySpend.reset();
+    this.aiModelMonthlyBudgetUsage.reset();
   }
 
   constructor() {
@@ -392,29 +398,51 @@ export class MetricsService implements OnModuleInit, OnModuleDestroy {
       this.collectionSuccess.set(1);
       this.aiModelHealth.reset();
       this.aiModelMonthlySpend.reset();
+      this.aiModelMonthlyBudgetUsage.reset();
       try {
         const pool = getDbPool();
         const [models, budgets] = await Promise.allSettled([
           pool.query<{ id: string; degraded: boolean }>(
             'SELECT id,degraded FROM ai_model_circuit_states'
           ),
-          pool.query<{ model_id: string; usd: number }>(
-            `SELECT model_id,
-               CASE WHEN period_start < (date_trunc('month',now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC')
-                    THEN 0 ELSE used_cost_micros::double precision / 1000000 END AS usd
-               FROM ai_model_budgets`
+          pool.query<{
+            model_id: string;
+            usd: number;
+            token_ratio: number | null;
+            usd_ratio: number | null;
+          }>(
+            `WITH budget AS (
+               SELECT model_id, monthly_token_limit, monthly_cost_limit_micros,
+                 period_start >= (date_trunc('month',now() AT TIME ZONE 'UTC') AT TIME ZONE 'UTC') AS current_period,
+                 used_input_tokens, used_output_tokens, used_cost_micros
+               FROM ai_model_budgets
+             )
+             SELECT model_id,
+               CASE WHEN current_period THEN used_cost_micros::double precision / 1000000 ELSE 0 END AS usd,
+               CASE WHEN monthly_token_limit IS NULL THEN NULL WHEN NOT current_period THEN 0
+                    ELSE (used_input_tokens::double precision + used_output_tokens) / monthly_token_limit END AS token_ratio,
+               CASE WHEN monthly_cost_limit_micros IS NULL THEN NULL WHEN NOT current_period THEN 0
+                    ELSE used_cost_micros::double precision / monthly_cost_limit_micros END AS usd_ratio
+             FROM budget`
           ),
         ]);
         if (models.status === 'fulfilled')
           for (const model of models.value.rows)
             this.aiModelHealth.set({ model_id: model.id }, model.degraded ? 0 : 1);
         if (budgets.status === 'fulfilled')
-          for (const budget of budgets.value.rows)
-            this.aiModelMonthlySpend.set({ model_id: budget.model_id }, budget.usd);
+          for (const budget of budgets.value.rows) {
+            const model_id = budget.model_id;
+            this.aiModelMonthlySpend.set({ model_id }, budget.usd);
+            if (budget.token_ratio != null)
+              this.aiModelMonthlyBudgetUsage.set({ model_id, unit: 'tokens' }, budget.token_ratio);
+            if (budget.usd_ratio != null)
+              this.aiModelMonthlyBudgetUsage.set({ model_id, unit: 'usd' }, budget.usd_ratio);
+          }
       } catch {
         // Optional AI telemetry must leave core database samples available.
         this.aiModelHealth.reset();
         this.aiModelMonthlySpend.reset();
+        this.aiModelMonthlyBudgetUsage.reset();
       }
     } catch {
       this.clearDatabaseMetrics();

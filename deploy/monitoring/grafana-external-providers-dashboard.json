@@ -1,0 +1,349 @@
+{
+  "uid": "barghsa-external-providers",
+  "title": "Barghsa External Providers",
+  "description": "Email, SMS and AI provider activity, circuit health and available quota measurements by environment and database.",
+  "tags": ["barghsa", "operations", "providers"],
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": true,
+  "refresh": "30s",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "templating": {
+    "list": [
+      {
+        "name": "DS_PROMETHEUS",
+        "label": "Prometheus",
+        "type": "datasource",
+        "query": "prometheus",
+        "refresh": 1
+      },
+      {
+        "name": "environment",
+        "label": "Environment",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "query": "label_values(up, environment)",
+        "refresh": 1
+      },
+      {
+        "name": "database",
+        "label": "Database",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "query": "label_values(up{environment=\"$environment\"}, database)",
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Provider p95 send and completion latency",
+      "description": "Time for admitted notification sends through their provider result, and admitted AI completion attempts. Idle providers have a gap.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (transport, provider_id, le) (rate(provider_notification_send_duration_seconds_bucket{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))) and on (transport, provider_id) (sum by (transport, provider_id) (rate(provider_notification_send_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)",
+          "legendFormat": "{{transport}} \u00b7 {{provider_id}}",
+          "refId": "A",
+          "range": true
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (model_id, le) (rate(ai_model_completion_duration_seconds_bucket{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))) and on (model_id) (sum by (model_id) (rate(ai_model_completion_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)",
+          "legendFormat": "AI \u00b7 {{model_id}}",
+          "refId": "B",
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Provider error share",
+      "description": "Share of admitted sends and AI completion attempts that returned an error or uncertain result. Receipt recovery is outside the measured send boundary.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "(sum by (transport, provider_id) (rate(provider_notification_send_duration_seconds_count{environment=\"$environment\",database=\"$database\",outcome=\"error\"}[$__rate_interval])) or 0 * sum by (transport, provider_id) (rate(provider_notification_send_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))) / (sum by (transport, provider_id) (rate(provider_notification_send_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)",
+          "legendFormat": "{{transport}} \u00b7 {{provider_id}}",
+          "refId": "A",
+          "range": true
+        },
+        {
+          "expr": "(sum by (model_id) (rate(ai_model_completion_duration_seconds_count{environment=\"$environment\",database=\"$database\",outcome=\"error\"}[$__rate_interval])) or 0 * sum by (model_id) (rate(ai_model_completion_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval]))) / (sum by (model_id) (rate(ai_model_completion_duration_seconds_count{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)",
+          "legendFormat": "AI \u00b7 {{model_id}}",
+          "refId": "B",
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Circuit health",
+      "description": "1 means healthy or closed. 0 means degraded or open. One degraded replica keeps the signal degraded.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "min by (provider_id) (provider_email_health{environment=\"$environment\",database=\"$database\"})",
+          "legendFormat": "email \u00b7 {{provider_id}}",
+          "refId": "A",
+          "range": true
+        },
+        {
+          "expr": "min by (provider_id) (provider_sms_health{environment=\"$environment\",database=\"$database\"})",
+          "legendFormat": "SMS \u00b7 {{provider_id}}",
+          "refId": "B",
+          "range": true
+        },
+        {
+          "expr": "min by (model_id) (ai_model_health{environment=\"$environment\",database=\"$database\"})",
+          "legendFormat": "AI \u00b7 {{model_id}}",
+          "refId": "C",
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "AI monthly budget used",
+      "description": "Fraction of each configured token or USD limit already used in the UTC month. Unlimited dimensions have no series.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "max by (model_id, unit) (ai_model_monthly_budget_usage_ratio{environment=\"$environment\",database=\"$database\"})",
+          "legendFormat": "{{unit}} \u00b7 {{model_id}}",
+          "refId": "A",
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "SMS credit remaining",
+      "description": "Last successful credit observation for the active verified SMS configuration, by worker replica. Check the observation age.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "provider_sms_credit_balance{environment=\"$environment\",database=\"$database\"}",
+          "legendFormat": "{{provider_id}} \u00b7 {{instance}}",
+          "refId": "A",
+          "range": true
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "SMS credit observation age",
+      "description": "Elapsed time since the last successful credit check. Missing series mean no observed credit sample is available.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "min": 0,
+          "color": {
+            "mode": "palette-classic"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "clamp_min(time() - provider_sms_credit_observed_timestamp_seconds{environment=\"$environment\",database=\"$database\"}, 0)",
+          "legendFormat": "{{provider_id}} \u00b7 {{instance}}",
+          "refId": "A",
+          "range": true
+        }
+      ]
+    }
+  ]
+}

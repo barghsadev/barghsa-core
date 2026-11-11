@@ -122,12 +122,20 @@ it('clears an unavailable model budget view while retaining circuit and database
     if (sql.includes('ai_model_circuit_states'))
       return { rows: [{ id: 'model', degraded: false }] };
     if (!budgetAvailable) throw new Error('budget view unavailable');
-    return { rows: [{ model_id: 'model', usd: 1.234 }] };
+    return { rows: [{ model_id: 'model', usd: 1.234, token_ratio: 0.25, usd_ratio: null }] };
   });
-  expect(await service.collect()).toContain('ai_model_monthly_spend_usd{model_id="model"} 1.234\n');
+  const observed = await service.collect();
+  expect(observed).toContain('ai_model_monthly_spend_usd{model_id="model"} 1.234\n');
+  expect(observed).toContain(
+    'ai_model_monthly_budget_usage_ratio{model_id="model",unit="tokens"} 0.25\n'
+  );
+  expect(observed).not.toContain(
+    'ai_model_monthly_budget_usage_ratio{model_id="model",unit="usd"}'
+  );
   budgetAvailable = false;
   const unavailable = await service.collect();
   expect(unavailable).not.toContain('ai_model_monthly_spend_usd{');
+  expect(unavailable).not.toContain('ai_model_monthly_budget_usage_ratio{');
   expect(unavailable).toContain('ai_model_health{model_id="model"} 1\n');
   expect(unavailable).toMatch(/^pg_metrics_collection_success 1$/m);
 });

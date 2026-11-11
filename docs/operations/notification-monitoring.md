@@ -10,6 +10,16 @@ shared across configurations. The private worker scrape publishes the current
 circuit state for each active configuration. A recovery that reuses an accepted
 receipt produces no new provider latency sample.
 
+The External Providers dashboard combines private worker and API scrapes for
+email, SMS and AI. Worker latency and error share cover admitted durable sends
+through the provider result. A recovered receipt produces no extra sample, and
+a receipt write failure after acceptance leaves the provider result classified
+as accepted. Auth OTP traffic, operator provider tests and downstream delivery
+feedback have their own monitoring paths. The dashboard shows the last observed
+SMS credit and its age, plus the fraction used of each configured AI token and
+USD limit. Missing credit observations and unlimited AI budget dimensions have
+no series. [External Providers dashboard](../../deploy/monitoring/grafana-external-providers-dashboard.json).
+
 Migration0130 adds bounded failure timestamps. Drain older API and email-sending worker instances, apply the migration, then start the updated fleet together. Older writers do not maintain these timestamps. Legacy counters retain their earliest recorded window time conservatively; individual historical failure times cannot be reconstructed. Exact rolling evidence accumulates after rollout. Existing degraded states and probe ownership are preserved.
 
 The circuit counts five consecutive transient provider failures inside a rolling five-minute window. Permanent provider rejections interrupt that sequence. Local ownership/persistence failures do not degrade the provider, and accepted delivery remains a provider success even when saving its receipt subsequently fails. This classification changes provider health only; ambiguous delivery outcomes still require reconciliation before any resend. A failed recovery probe keeps the circuit open, including a permanent failure. One new probe is permitted after the 60-second cooldown.
