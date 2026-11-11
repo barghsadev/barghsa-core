@@ -12,14 +12,17 @@ vi.mock('@barghsa/db', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@barghsa/db')>();
   return {
     ...actual,
-    createDirectDbPool: () => new Pool({ connectionString: state.url, max: 1 }),
+    createDirectDbPool: (...[, options]: Parameters<typeof actual.createDirectDbPool>) =>
+      options?.shared === false ? new Pool({ connectionString: state.url, max: 1 }) : state.pool!,
     getDbPool: () => ({
       connect: async () => {
         const client = await state.pool!.connect();
+        let versionInserted = false;
         return {
           query: async (sql: string, values?: unknown[]) => {
             const result = await client.query(sql, values);
-            if (sql === 'COMMIT' && state.loseCommit) {
+            if (sql.includes('INSERT INTO contract_template_versions')) versionInserted = true;
+            if (sql === 'COMMIT' && state.loseCommit && versionInserted) {
               state.loseCommit = false;
               throw new Error('Fixture lost commit acknowledgement');
             }
@@ -163,7 +166,7 @@ it('retries durable cleanup after a failed delete without retaining a version', 
   expect(await cleanupStorageObjects(state.pool!, storage)).toEqual({ deleted: 1, failed: 0 });
   expect(objects.size).toBe(0);
 });
-it('skips an eligible cleanup request while the upload transaction holds its reservation', async () => {
+it('skips eligible cleanup while writing without holding template or account row locks', async () => {
   await state.pool!.query(
     "CREATE FUNCTION age_template_reservation() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN NEW.updated_at=NOW()-INTERVAL '2 minutes'; RETURN NEW; END $$; CREATE TRIGGER age_template_reservation BEFORE INSERT ON storage_records FOR EACH ROW EXECUTE FUNCTION age_template_reservation()"
   );
@@ -187,6 +190,16 @@ it('skips an eligible cleanup request while the upload transaction holds its res
     ).toHaveLength(1);
     expect(await cleanupStorageObjects(state.pool!, storage)).toEqual({ deleted: 0, failed: 0 });
     expect(objects.size).toBe(1);
+    await expect(
+      state.pool!.query('SELECT id FROM contract_templates WHERE id=$1 FOR UPDATE NOWAIT', [
+        templateId,
+      ])
+    ).resolves.toMatchObject({ rowCount: 1 });
+    await expect(
+      state.pool!.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE NOWAIT', [
+        actor.userId,
+      ])
+    ).resolves.toMatchObject({ rowCount: 1 });
     release();
     await expect(pending).resolves.toMatchObject({ versionNumber: 1 });
     expect(await cleanupStorageObjects(state.pool!, storage)).toEqual({ deleted: 0, failed: 0 });
@@ -195,6 +208,35 @@ it('skips an eligible cleanup request while the upload transaction holds its res
     await pending.catch(() => {});
     put.mockRestore();
     await state.pool!.query('DROP TRIGGER age_template_reservation ON storage_records');
+  }
+});
+it('rechecks current template authority after the private copy finishes', async () => {
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const put = vi.spyOn(storage, 'putObject').mockImplementation(async (key) => {
+    objects.add(key);
+    await gate;
+  });
+  const pending = upload();
+  try {
+    await expect.poll(() => objects.size).toBe(1);
+    await state.pool!.query('UPDATE users SET is_admin=false WHERE user_id=$1', [actor.userId]);
+    release();
+    await expect(pending).rejects.toMatchObject({ status: 403 });
+    expect((await state.pool!.query('SELECT id FROM contract_template_versions')).rows).toEqual([]);
+    expect((await state.pool!.query('SELECT status,signed_at FROM storage_records')).rows).toEqual([
+      { status: 'removed', signed_at: null },
+    ]);
+    await state.pool!.query("UPDATE storage_records SET updated_at=NOW()-INTERVAL '2 minutes'");
+    expect(await cleanupStorageObjects(state.pool!, storage)).toEqual({ deleted: 1, failed: 0 });
+    expect(objects.size).toBe(0);
+  } finally {
+    release();
+    await pending.catch(() => {});
+    put.mockRestore();
+    await state.pool!.query('UPDATE users SET is_admin=true WHERE user_id=$1', [actor.userId]);
   }
 });
 it('retains cleanup intent when storage accepted bytes but the write response failed', async () => {

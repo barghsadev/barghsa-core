@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-11T12:59:31+00:00",
+  "updated": "2026-11-11T13:03:37+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -21477,7 +21477,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Reconcile document template and contract PDF/source provider boundaries and approved document destruction. Preserve signed contracts, legal hold races, version-aware approved deletion, permanent financial and contractual retention and durable retry receipts."
+        "Move electricity contract template reads and initial PDF provider writes, and solar contract source and attachment provider work, outside business transactions. Preserve exact reviews, atomic orders/contracts/invoices, immutable files, scan workflows and current authority.",
+        "Reconcile approved document destruction. Preserve signed contracts, legal hold races, version-aware approved deletion, permanent financial and contractual retention and durable retry receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -21590,7 +21591,8 @@
           "release-0.6-direct-document-copy-boundary",
           "release-0.6-preflight-authority-fixture-repair",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "implemented-and-verified",
@@ -21719,7 +21721,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -21799,7 +21801,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "d88c01bff9d8f3a2237964b4f705883165b6d77f6301d10bfd6ddfa934c5669e"
+              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
             },
             {
               "path": "apps/api/src/contract/contract-pdf.service.ts",
@@ -22037,6 +22039,15 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md",
+                "apps/api/src/admin/contract-template.service.ts"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ]
         }
@@ -115101,7 +115112,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -115117,7 +115129,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
-              "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+              "sha256": "df0bd5caebc5c418aa463b7efe58f0fe3e2962d3cc8e0b93a8a32b36d6a5aff6"
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
@@ -115133,11 +115145,11 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.service.test.ts",
-              "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+              "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "d88c01bff9d8f3a2237964b4f705883165b6d77f6301d10bfd6ddfa934c5669e"
+              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
             },
             {
               "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
@@ -115861,6 +115873,16 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "apps/api/src/admin/contract-template-commit.integration.test.ts",
+                "apps/api/src/admin/contract-template.service.test.ts",
+                "apps/api/src/admin/contract-template.service.ts"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -116052,7 +116074,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -116068,7 +116091,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
-              "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+              "sha256": "df0bd5caebc5c418aa463b7efe58f0fe3e2962d3cc8e0b93a8a32b36d6a5aff6"
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
@@ -116084,11 +116107,11 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.service.test.ts",
-              "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+              "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "d88c01bff9d8f3a2237964b4f705883165b6d77f6301d10bfd6ddfa934c5669e"
+              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
             },
             {
               "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
@@ -116812,6 +116835,16 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "apps/api/src/admin/contract-template-commit.integration.test.ts",
+                "apps/api/src/admin/contract-template.service.test.ts",
+                "apps/api/src/admin/contract-template.service.ts"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -123821,7 +123854,8 @@
           "release-0.6-versioned-security-rate-limits",
           "release-0.6-electricity-quote-vat-batch",
           "release-0.6-admin-settings-role-catalogue-testing-library",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "kind": "verified-green-activation-submission-and-template-consumers",
@@ -123837,7 +123871,7 @@
             },
             {
               "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
-              "sha256": "847dad0492206df5c6f3abc5d55a1333cd327eb62322371f8d3d66f4f07e29ba"
+              "sha256": "df0bd5caebc5c418aa463b7efe58f0fe3e2962d3cc8e0b93a8a32b36d6a5aff6"
             },
             {
               "path": "apps/api/src/admin/contract-template-http.integration.test.ts",
@@ -123853,11 +123887,11 @@
             },
             {
               "path": "apps/api/src/admin/contract-template.service.test.ts",
-              "sha256": "0d715f70aab053fe021c6fd6644a4f08930af97397d72b4a30baaeab9565a0d6"
+              "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
             },
             {
               "path": "apps/api/src/admin/contract-template.service.ts",
-              "sha256": "d88c01bff9d8f3a2237964b4f705883165b6d77f6301d10bfd6ddfa934c5669e"
+              "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
             },
             {
               "path": "apps/api/src/admin/electricity-settings-fields.test.ts",
@@ -124581,6 +124615,16 @@
                 "apps/api/src/storage/reserve-storage-copy.ts"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "apps/api/src/admin/contract-template-commit.integration.test.ts",
+                "apps/api/src/admin/contract-template.service.test.ts",
+                "apps/api/src/admin/contract-template.service.ts"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -485187,7 +485231,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -485283,7 +485328,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485539,6 +485584,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -485643,7 +485696,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -485739,7 +485793,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -485995,6 +486049,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -486101,7 +486163,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "status": "acceptance_verified",
@@ -486197,7 +486260,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -486474,6 +486537,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -486612,7 +486683,8 @@
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
           "release-0.6-durable-multipart-operations",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -486708,7 +486780,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -487048,6 +487120,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -487152,7 +487232,8 @@
           "release-0.6-sealed-document-stream-scan",
           "release-0.6-upload-storage-scope-quotas",
           "release-0.6-protected-storage-origins",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_acceptance": {
           "status": "done",
@@ -487248,7 +487329,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -487504,6 +487585,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -809796,7 +809885,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -811522,6 +811611,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "presentation_renewals": [
@@ -811896,7 +811993,8 @@
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-integrity-requires-tests",
           "integrated-qa-preview-deployment",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "bounded_flash_source_renewal": {
           "proof": "/Users/majid/.local/state/barghsa-manual-batches/release-0.4-closure/bounded-completion-review.json",
@@ -814121,7 +814219,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "84b33f50cd4eef4195f3b8094c37c59dcf57610408fa778134f0b658ce222de8"
+              "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -815736,6 +815834,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Bank receipt authorization, immutable storage copy, exact replay, review and claim revalidation, financial quota and audit boundaries verified in the affected source and PostgreSQL suites. Shared provisional-copy callers retain the existing reservation, advisory lock and cleanup grace semantics."
+            },
+            {
+              "batch": "release-0.6-contract-template-copy-boundary",
+              "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Contract template upload prepares an unpublished copy outside the business transaction. Verified version order, current authority, file and audit atomicity, safe recovery and electricity caller compatibility."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -816127,7 +816233,8 @@
           "release-0.6-notification-metric-caller-fixture",
           "release-0.6-integrity-requires-tests",
           "integrated-qa-preview-deployment",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "current_staging_baseline": {
           "commit": "2ac708c11225a1239156787cddfdd3ab094fb8f8",
@@ -820490,7 +820597,8 @@
           "release-0.6-direct-document-copy-boundary",
           "release-0.6-preflight-authority-fixture-repair",
           "release-0.6-legal-draft-race-response",
-          "release-0.6-bank-receipt-copy-boundary"
+          "release-0.6-bank-receipt-copy-boundary",
+          "release-0.6-contract-template-copy-boundary"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -940279,6 +940387,63 @@
           "sha256": "0957606a0c6bca8de5aac554ab557808a20e05571173935a32eef00898009ccc"
         }
       ]
+    },
+    "release-0.6-contract-template-copy-boundary": {
+      "batch": "release-0.6-contract-template-copy-boundary",
+      "base_commit": "32abf80145b969a264c949cd16c41d7dfb720102",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/contract-template-commit.integration.test.ts",
+        "apps/api/src/admin/contract-template.service.test.ts",
+        "apps/api/src/admin/contract-template.service.ts",
+        "docs/operations/storage-retention.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/contract-template-commit.integration.test.ts",
+          "sha256": "df0bd5caebc5c418aa463b7efe58f0fe3e2962d3cc8e0b93a8a32b36d6a5aff6"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.service.test.ts",
+          "sha256": "bb6e59524df0f5de0bf0fd294b611a8b8e6f032e5276b96e3269520894c69754"
+        },
+        {
+          "path": "apps/api/src/admin/contract-template.service.ts",
+          "sha256": "cc1999a0a91434caf59a2cb50bc7d9e36eadc2817936521cfac41ea3f43e6c2e"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "750f36fee0894a8aea1aa7645c44567c31490f76a81ca4c86744ac94e4fecd6b"
+        }
+      ],
+      "checks": [
+        "Contract template upload now verifies staff authority and template existence before the copy. The provisional reservation commits before provider I/O. A per-key session advisory lock excludes cleanup while the provider writes, with the template and actor row locks released.",
+        "Publication rechecks staff permission and step-up, locks the current template to allocate its next version and requires the exact unclaimed provisional reservation. The immutable file record, appended version and audit commit together. Failed or uncertain writes retain durable cleanup intent.",
+        "All 48 tests in four exact-source native suites passed, including lost commit acknowledgement, stale authority after PUT, unlocked template and account rows, cleanup contention, HTTP limits and downstream electricity template and PDF behavior.",
+        "The native fixture matched 2,097 inputs. API typecheck, scoped ESLint, Prettier and whitespace passed. Electricity initial PDF and source I/O, solar contract source and attachment I/O, and approved document destruction remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/template-boundary.pxD5jH",
+      "proof_logs": [
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/template-boundary.pxD5jH/native-template-boundary.log",
+          "sha256": "5376677e797ab8cf3e70919db969b8b67e4d33afeee54226b272732d97d569de"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/template-boundary.pxD5jH/native-source.sha256",
+          "sha256": "7ffdf1debf08def8e7e4593cbfd0fe657aab4fe6d5ac1d2633cb7fd982f189ed"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/template-boundary.pxD5jH/native-source-check.log",
+          "sha256": "a8c4224878e1ce0c640ba1fefbe0ee517b3173cbf6f03178539301d8d7f97e9a"
+        },
+        {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/chromium-165.cpN5zz/template-boundary.pxD5jH/changed-native-files",
+          "sha256": "e4ab92bfa23087a00dacd5c235a3d4c284ee4fd10c8b4f78a88fd005a4a8426f"
+        }
+      ]
     }
   },
   "historical_improvements": [
@@ -940318,13 +940483,13 @@
     "archive": "/Users/majid/.local/state/barghsa-manual-batches/release-0.2-consultation-reconciliation"
   },
   "next_batch": {
-    "id": "release-0.6-contract-template-copy-boundary",
+    "id": "release-0.6-electricity-contract-pdf-boundary",
     "release": "0.6.0",
     "task_keys": [
       "01-platform-infrastructure.md#T-07.05.01",
       "release-readiness#R-05.02"
     ],
-    "goal": "Commit private contract template uploads outside database transactions, then publish after current staff authority, version allocation and cleanup checks."
+    "goal": "Prepare electricity template snapshots and generated contract PDF bytes outside the order transaction and publish with the exact current review, durable document and audit."
   },
   "launch_forecast": {
     "status": "v0_6_operational_access_and_security_gates_pending",

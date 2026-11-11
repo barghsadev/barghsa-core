@@ -4,7 +4,14 @@ vi.mock('../session/session-step-up.js', () => ({
   requireCurrentSession: vi.fn().mockResolvedValue(undefined),
 }));
 vi.mock('../storage/reserve-storage-copy.js', () => ({
-  reserveStorageCopy: vi.fn().mockResolvedValue(undefined),
+  writeProvisionalStorageCopy: async (
+    _key: string,
+    _metadata: unknown,
+    write: () => Promise<unknown>
+  ) => {
+    await write();
+    return true;
+  },
 }));
 vi.mock('./staff-mutation-permission.js', () => ({
   requireStaffMutationPermission: vi.fn().mockResolvedValue(undefined),
@@ -116,8 +123,9 @@ beforeEach(() => {
   vi.resetModules();
   vi.restoreAllMocks();
   db = makeDb();
-  db.router.on('SELECT storage_key FROM storage_records', () => ({
+  db.router.on('UPDATE storage_records SET status=', () => ({
     rows: [{ storage_key: 'reserved' }],
+    rowCount: 1,
   }));
 });
 

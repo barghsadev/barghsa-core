@@ -1,7 +1,7 @@
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
-import { reserveStorageCopy } from '../storage/reserve-storage-copy.js';
+import { writeProvisionalStorageCopy } from '../storage/reserve-storage-copy.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
 import { Inject, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
@@ -306,45 +306,44 @@ export class ContractTemplateService {
 
     const storage = this.storage;
     const fileSize = Buffer.byteLength(content, 'utf8');
+    const metadata = {
+      purpose: 'contract_template',
+      templateId: id,
+      uploadedBy: input.actor.userId,
+    };
+    await this.withTransaction(input.actor, async (q) => {
+      if (!(await this.findById(q, id))) throw this.notFound(id);
+    });
+    try {
+      const ready = await writeProvisionalStorageCopy(storageKey, metadata, () =>
+        storage.putObject(storageKey, content, effectiveContentType, {
+          fileName: this.asciiMetadataValue(name),
+          templateId: id,
+        })
+      );
+      if (!ready) throw new HttpException('Template reservation expired; retry the upload', 503);
+    } catch (err) {
+      if (err instanceof StorageProviderError)
+        throw new HttpException(
+          {
+            statusCode: 503,
+            error: TEMPLATE_STORAGE_DISABLED,
+            message: 'Object storage write failed',
+          },
+          503
+        );
+      throw err;
+    }
+
     return this.withTransaction(input.actor, async (q) => {
       const current = await this.findById(q, id, true);
       if (!current) throw this.notFound(id);
-      const metadata = {
-        purpose: 'contract_template',
-        templateId: id,
-        uploadedBy: input.actor.userId,
-      };
-      await reserveStorageCopy(storageKey, metadata);
-      const reservation = await q.query(
-        `SELECT storage_key FROM storage_records WHERE storage_key=$1 AND status='removed' AND cleanup_operation IS NULL
-         AND metadata->>'provisionalCopy'='true' AND metadata->>'deletionRequested'='true' FOR UPDATE`,
-        [storageKey]
-      );
-      if (!reservation.rows.length)
-        throw new HttpException('Template reservation expired; retry the upload', 503);
-      // Cleanup skips the locked reservation through PUT and commit. Rollback or
-      // process loss leaves its independently committed deletion request intact.
-      try {
-        await storage.putObject(storageKey, content, effectiveContentType, {
-          fileName: this.asciiMetadataValue(name),
-          templateId: id,
-        });
-      } catch (err) {
-        if (err instanceof StorageProviderError)
-          throw new HttpException(
-            {
-              statusCode: 503,
-              error: TEMPLATE_STORAGE_DISABLED,
-              message: 'Object storage write failed',
-            },
-            503
-          );
-        throw err;
-      }
-      await q.query(
+      const published = await q.query(
         `UPDATE storage_records SET status='immutable',metadata=$2::jsonb,file_size=$3,
          content_type=$4,category='document',file_name=$5,signed_at=NOW(),signed_by=$6,
-         removed_at=NULL,updated_at=NOW() WHERE storage_key=$1`,
+         removed_at=NULL,updated_at=NOW()
+         WHERE storage_key=$1 AND status='removed' AND signed_at IS NULL
+           AND cleanup_operation IS NULL AND metadata @> $7::jsonb RETURNING storage_key`,
         [
           storageKey,
           JSON.stringify(metadata),
@@ -352,8 +351,11 @@ export class ContractTemplateService {
           effectiveContentType,
           name,
           input.actor.userId,
+          JSON.stringify({ ...metadata, provisionalCopy: true, deletionRequested: true }),
         ]
       );
+      if (published.rowCount !== 1)
+        throw new HttpException('Template reservation expired; retry the upload', 503);
 
       // The locked template read serializes version allocation and metadata changes.
       const maxSeq = await q.query<{ n: number }>(

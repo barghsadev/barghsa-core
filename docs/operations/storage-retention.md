@@ -192,6 +192,12 @@ receipt, attachment claim and audit. A retry of a committed receipt returns
 its original copy. An interrupted copy remains private and may be reused until
 cleanup claims it.
 
+Contract template uploads commit the storage reservation before writing bytes.
+The per-key advisory lock keeps cleanup from removing the file during the write.
+Publication checks current staff authority and step-up, then locks the template
+to allocate the next version. The immutable file, version and audit commit
+together. A failed publication leaves its private reservation for cleanup.
+
 ## Upload inspection and scan state
 
 Reservations record `Uploading`. Successful content inspection records provider
