@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T22:36:15+00:00",
+  "updated": "2026-11-12T22:46:08+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17701,12 +17701,10 @@
         "story": "01-platform-infrastructure.md#spec-9399c8e51869"
       },
       "requirement": "- **T-04.03.05:** Enforce immutability for signed contracts and critical records\n  - **Notes:** When a document is signed/approved/immutable, the storage layer prevents `deleteObject` for those keys via a DB check. Soft delete only: marks the record as `Removed` in PostgreSQL but retains object in storage (version history preserved). S3 versioning keeps previous versions even if overwritten accidentally.\n  - **Dependencies:** T-04.03.01\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "PR59/task05 remains partial for whole contract/document integration: future signing/version/supersession/retention consumers must bind business approval to immutable records. Generic wrapper/API and current sealed consumers are verified, not unbuilt contract/order/audit flows."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17771,8 +17769,260 @@
           "apps/api/src/storage/storage-record-http.integration.test.ts",
           "docs/operations/storage-retention.md"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-signed-document-retention-acceptance"
+        ],
+        "current_acceptance": {
+          "batch": "release-0.6-signed-document-retention-acceptance",
+          "checks": [
+            "GitHub run 43315948494 passed 152 cases across eleven relevant suites, including native PostgreSQL migration, contract signature, document HTTP with real object storage, generic signed-record soft removal, storage cleanup and guarded version destruction. One configured real ClamD case was skipped and belongs to the separate scanner requirement. The overall run failed a separate web test. All listed source bindings match the tested commit.",
+            "The signed-copy flow binds the approved original and signed bytes to the exact version, records their append-only locks and protects both after a replacement race or a new amendment. Mounted and migrated fixtures verify approval authority, the sealed-byte boundary, current scope, exact replay, unchanged history and denial of removal and replacement of locked evidence.",
+            "The generic storage remove route keeps signed bytes and records soft removal. Ordinary worker cleanup excludes signed records and serializes claims with promotion. The durable destruction worker and migrated database independently refuse contractual and financial bytes after removal and reject outdated approvals before any provider delete. Eligible nonfinancial destruction follows its separate approval workflow.",
+            "The current staging bucket was read through the application's versioned active config at v0.5.1. S3 versioning is enabled and expiry requires one of four narrow prefixes plus an explicit disposal tag. The five newest noncurrent versions are preserved by each expiry rule. The current staged schema reported all five expected enabled signature and retention triggers and the permanent-retention routine."
+          ],
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+            },
+            {
+              "path": "apps/api/scripts/http-test-server.cjs",
+              "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+              "sha256": "ea9b76f85e3cccda84b074a88897a2322d06519529dd164633261e0570189304"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.controller.ts",
+              "sha256": "73363ba6ab962c7b08cbda89860a378cdbcded1c818eef6eefca622161250b4d"
+            },
+            {
+              "path": "apps/api/src/contract/contract-signature.service.ts",
+              "sha256": "862fd7fb30041d6c11d90fe7f4e2d68b9555016b7c74e5327891938ce541e3e1"
+            },
+            {
+              "path": "apps/api/src/documents/document-http.integration.test.ts",
+              "sha256": "39315428e51aaedb52d760c9e49f987bcce8312daf81cf4496ddceca85eb4c08"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.controller.ts",
+              "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+            },
+            {
+              "path": "apps/api/src/documents/document-retention.service.ts",
+              "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+            },
+            {
+              "path": "apps/api/src/documents/document-storage.service.ts",
+              "sha256": "c23d28447dea435634b825948fb02eb2186c0f4ea2311f877d02d07bf9fcb65a"
+            },
+            {
+              "path": "apps/api/src/documents/document-template.service.ts",
+              "sha256": "f35a0ba354d6c75a7bd47041cd33ca5337c49b426cfb1a9e1232801b5f8d7b98"
+            },
+            {
+              "path": "apps/api/src/documents/document.service.ts",
+              "sha256": "ea5b5aecc37d511e855978db3de21723d8b5d2843b4d8add93aa5ed87d1f1748"
+            },
+            {
+              "path": "apps/api/src/session/session.guard.ts",
+              "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-admin.service.ts",
+              "sha256": "944d26c28d224265516b68e2f0b26d3956814fca28e0115741edbb922b493811"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-db-adapter.ts",
+              "sha256": "e04e1d9f772a48944089a1cf6f3e4f5499c24d0f33f4f7662e4f2e0e015d5013"
+            },
+            {
+              "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
+            },
+            {
+              "path": "apps/api/src/storage/storage-records.controller.ts",
+              "sha256": "594a574726ae97072e435208fcae1a617a55f8b1baa570f2859967ebc1410f79"
+            },
+            {
+              "path": "apps/api/src/storage/storage.module.ts",
+              "sha256": "78d533db0d2e3dfb68edc7f0d02e0df168b65692e9afc1051fa83a1ed0271232"
+            },
+            {
+              "path": "apps/api/src/test/build-http-app.ts",
+              "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+            },
+            {
+              "path": "apps/api/src/test/contract-journey-http-proof.ts",
+              "sha256": "de2f3ab6cc3086cd351b11ee2a918261e0519a2f76925dbfe0271806e165865a"
+            },
+            {
+              "path": "apps/api/src/test/contract-review-confirmation.ts",
+              "sha256": "db845541c716c4ced0a69487748140ae3fd76306f9713eaec83ca9d676196b7b"
+            },
+            {
+              "path": "apps/api/src/test/http-fixture.ts",
+              "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+            },
+            {
+              "path": "apps/api/src/test/postgres-setup.ts",
+              "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+            },
+            {
+              "path": "apps/api/src/upload/upload.service.ts",
+              "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
+            },
+            {
+              "path": "apps/api/vitest.config.ts",
+              "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+            },
+            {
+              "path": "apps/worker/src/documents/destruction-runner.integration.test.ts",
+              "sha256": "2cf4b825412728f98d32651ceec3caee5f212160ba1cdcac2225f1e76d789164"
+            },
+            {
+              "path": "apps/worker/src/documents/destruction-runner.ts",
+              "sha256": "e9baaf56ff30f21b146f2feedc6c312f03d7dbb7a8ff95d11d2b49f8e0a5d20b"
+            },
+            {
+              "path": "apps/worker/src/documents/destruction-storage.integration.test.ts",
+              "sha256": "c3521b237227da536f202819bce7ea53e8e4ac854cc2fcf97e5029f870630fe0"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.integration.test.ts",
+              "sha256": "bbe8d570288c6f70d8052f35eb5c2747c34265143347284930536773c9cf40ba"
+            },
+            {
+              "path": "apps/worker/src/storage/cleanup.ts",
+              "sha256": "99efb1113811be9fdec8f0e0add83686368a913a8173b4656c744971f4db399d"
+            },
+            {
+              "path": "apps/worker/vitest.config.ts",
+              "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+            },
+            {
+              "path": "docker-compose.test.yml",
+              "sha256": "a671342cac26b375ea254c6577abac19a05fa25655dc6c30488a37a493ce3d76"
+            },
+            {
+              "path": "docs/operations/storage-retention.md",
+              "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
+            },
+            {
+              "path": "packages/db/drizzle/production/0140_document_lifecycle.sql",
+              "sha256": "7334c8337f4dce799029dd1fc9a1f00c20063022cfe0dd549f1035b3560a848d"
+            },
+            {
+              "path": "packages/db/drizzle/production/0141_contract_signature_evidence.sql",
+              "sha256": "1eb046c3736dc44a3e8ca5eb3cabf86d3de2bdfa763b34cee0c1a28284ab37d5"
+            },
+            {
+              "path": "packages/db/drizzle/production/0196_pending_amendment_documents.sql",
+              "sha256": "d594b0565cc5858bd1a0703687a42d77b32f9b1863733bd56242c7d23d27685a"
+            },
+            {
+              "path": "packages/db/drizzle/production/0199_quarantined_contract_original_replacement.sql",
+              "sha256": "67889bed57a0facffff1c9ab2d4e263adc90aa3e1885c881d5645f50046d6c7c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0207_document_destruction.sql",
+              "sha256": "9949a62702977d15886b1b12f1d956e7c5ff6e5b0d56adaba0ea3ed7a845625e"
+            },
+            {
+              "path": "packages/db/drizzle/production/0272_permanent_document_retention.sql",
+              "sha256": "0b9da8fcea9d53479d876c2d4f14cc234505bcec057a2e60371753a4a0d9c11c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0289_solar_document_destruction_guard.sql",
+              "sha256": "4e207a567b4a1a704dc77cebb2fd42f08511fe35ce2c313bdc1fa27de2855e84"
+            },
+            {
+              "path": "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
+              "sha256": "974a1448bf3a1e75b1d2789bcb8fe6b45df338d1f717f25ad93a8bf730429893"
+            },
+            {
+              "path": "packages/db/drizzle/production/meta/_journal.json",
+              "sha256": "8bb3c2a236588d643fe6cc9998ec3d91e79a30e887318eb14cce93d1d730e204"
+            },
+            {
+              "path": "packages/db/src/contract-signatures.migrated.test.ts",
+              "sha256": "e250a467748823cdae0dc13de40091373e1b3da446d6754b6ff092ae3104fb60"
+            },
+            {
+              "path": "packages/db/src/documents.migrated.test.ts",
+              "sha256": "1d1eaa9d351fbbbe7dc48c6b9da8c5ae3975d163756e21d0c9ebc967f5e16ae1"
+            },
+            {
+              "path": "packages/db/src/electricity-pre-active-rejection.migrated.test.ts",
+              "sha256": "d36a0a75b3b2e1f1b72a85bf158ca0a15c0fcd78c77e9bd8b0d378c59c5f132f"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
+            },
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "packages/db/src/permanent-document-retention-upgrade.migrated.test.ts",
+              "sha256": "3834f404c8dc154d3e8e8fa7949f169fe355a4a04eb8fca8a2d61a7203b4ad4e"
+            },
+            {
+              "path": "packages/db/src/schema/contract-signatures.ts",
+              "sha256": "9fe0b33dd607c9c60dc7f862a4b6352dc051c7d2806703ad17cbf728684cf523"
+            },
+            {
+              "path": "packages/db/src/schema/document-retention.ts",
+              "sha256": "7b034fc9f0ab2a6f0bfd4d73bd0bb930d41f15bf95cdee655df8f93ba2b353ee"
+            },
+            {
+              "path": "packages/db/src/schema/documents.ts",
+              "sha256": "4328349824236f20d5f0b67abe7941a5a1ea6985cd7e805f258e5a14dd8c5d15"
+            },
+            {
+              "path": "packages/db/src/schema/storage-record.ts",
+              "sha256": "eb1886ce3b3ff7443544b8ba37067301bf4cbc98ca02d50cff9ac39f3407bbc5"
+            },
+            {
+              "path": "packages/db/src/test/globalSetup.ts",
+              "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
+            },
+            {
+              "path": "packages/db/vitest.config.ts",
+              "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+            },
+            {
+              "path": "packages/shared/src/storage/immutable-storage.test.ts",
+              "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+            },
+            {
+              "path": "packages/shared/src/storage/immutable-storage.ts",
+              "sha256": "270cc5e3e30daa3124ea3f275ad695aa9b3531023f2e641d8b093e8f17fbc069"
+            },
+            {
+              "path": "packages/shared/src/storage/runtime-config.ts",
+              "sha256": "9611600ba72ab43666fd88284fa29d1c644b70dae2f173e17e8cc9a1ab80a915"
+            },
+            {
+              "path": "packages/shared/src/storage/s3-storage-provider.ts",
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+            },
+            {
+              "path": "packages/shared/src/storage/setup-bucket.ts",
+              "sha256": "1d051cc0794019bad1cf1845bd6d96af02a0847598dc0f93d86baefbfd1a0801"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "dbebd80473de4a4ab5bb961bf7e8557564efe4c3f4188605065aa0ac64b55938"
+            }
+          ]
+        }
       }
     },
     {
@@ -1190643,6 +1190893,301 @@
         {
           "file": "web-cold-repeat.log",
           "sha256": "af0fb0861054be622008676189c76af25784fece828ac038e2bf5390ef6e440b"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-csp-inline-style/hosted-test-43315948494-failed.log",
+          "sha256": "e72a29b19cfce6ed6c4acd36a45582774ce83711fe536e928412260cd501463a"
+        }
+      ]
+    },
+    "release-0.6-signed-document-retention-acceptance": {
+      "batch": "release-0.6-signed-document-retention-acceptance",
+      "base_commit": "b9e0fa856c2954851f0134ee07bef1233fb980d0",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.05"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "apps/api/scripts/http-test-server.cjs",
+          "sha256": "079bb90a562895114bfa3f34d5d18e39346c5b9af0b0d421159b1a2a93ac9e84"
+        },
+        {
+          "path": "apps/api/src/admin/staff-read-authority.ts",
+          "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature-http.integration.test.ts",
+          "sha256": "ea9b76f85e3cccda84b074a88897a2322d06519529dd164633261e0570189304"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature.controller.ts",
+          "sha256": "73363ba6ab962c7b08cbda89860a378cdbcded1c818eef6eefca622161250b4d"
+        },
+        {
+          "path": "apps/api/src/contract/contract-signature.service.ts",
+          "sha256": "862fd7fb30041d6c11d90fe7f4e2d68b9555016b7c74e5327891938ce541e3e1"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "39315428e51aaedb52d760c9e49f987bcce8312daf81cf4496ddceca85eb4c08"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.controller.ts",
+          "sha256": "5eee3f561abc97452940e2aa506168102fa25438bda2eff5f0002c9028af7808"
+        },
+        {
+          "path": "apps/api/src/documents/document-retention.service.ts",
+          "sha256": "1a88de8e689e3874fe3098416ab3c07297c95002fac4f730659de871c76c6e56"
+        },
+        {
+          "path": "apps/api/src/documents/document-storage.service.ts",
+          "sha256": "c23d28447dea435634b825948fb02eb2186c0f4ea2311f877d02d07bf9fcb65a"
+        },
+        {
+          "path": "apps/api/src/documents/document-template.service.ts",
+          "sha256": "f35a0ba354d6c75a7bd47041cd33ca5337c49b426cfb1a9e1232801b5f8d7b98"
+        },
+        {
+          "path": "apps/api/src/documents/document.service.ts",
+          "sha256": "ea5b5aecc37d511e855978db3de21723d8b5d2843b4d8add93aa5ed87d1f1748"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-admin.service.ts",
+          "sha256": "944d26c28d224265516b68e2f0b26d3956814fca28e0115741edbb922b493811"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-db-adapter.ts",
+          "sha256": "e04e1d9f772a48944089a1cf6f3e4f5499c24d0f33f4f7662e4f2e0e015d5013"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "594a574726ae97072e435208fcae1a617a55f8b1baa570f2859967ebc1410f79"
+        },
+        {
+          "path": "apps/api/src/storage/storage.module.ts",
+          "sha256": "78d533db0d2e3dfb68edc7f0d02e0df168b65692e9afc1051fa83a1ed0271232"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        },
+        {
+          "path": "apps/api/src/test/contract-journey-http-proof.ts",
+          "sha256": "de2f3ab6cc3086cd351b11ee2a918261e0519a2f76925dbfe0271806e165865a"
+        },
+        {
+          "path": "apps/api/src/test/contract-review-confirmation.ts",
+          "sha256": "db845541c716c4ced0a69487748140ae3fd76306f9713eaec83ca9d676196b7b"
+        },
+        {
+          "path": "apps/api/src/test/http-fixture.ts",
+          "sha256": "24087b83990cd22de9ebf4738c00025665ab40631e19f8dd9f5c33803d0f5c4a"
+        },
+        {
+          "path": "apps/api/src/test/postgres-setup.ts",
+          "sha256": "a6203929fcdfceb3371ea2660f15d85a1b13ef13ef75196ffa14c93ab040c793"
+        },
+        {
+          "path": "apps/api/src/upload/upload.service.ts",
+          "sha256": "e8889d6c5dc3d7b24c27f99cb6ed31458d1dd9202845566d323ec60a15c9c27e"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/worker/src/documents/destruction-runner.integration.test.ts",
+          "sha256": "2cf4b825412728f98d32651ceec3caee5f212160ba1cdcac2225f1e76d789164"
+        },
+        {
+          "path": "apps/worker/src/documents/destruction-runner.ts",
+          "sha256": "e9baaf56ff30f21b146f2feedc6c312f03d7dbb7a8ff95d11d2b49f8e0a5d20b"
+        },
+        {
+          "path": "apps/worker/src/documents/destruction-storage.integration.test.ts",
+          "sha256": "c3521b237227da536f202819bce7ea53e8e4ac854cc2fcf97e5029f870630fe0"
+        },
+        {
+          "path": "apps/worker/src/storage/cleanup.integration.test.ts",
+          "sha256": "bbe8d570288c6f70d8052f35eb5c2747c34265143347284930536773c9cf40ba"
+        },
+        {
+          "path": "apps/worker/src/storage/cleanup.ts",
+          "sha256": "99efb1113811be9fdec8f0e0add83686368a913a8173b4656c744971f4db399d"
+        },
+        {
+          "path": "apps/worker/vitest.config.ts",
+          "sha256": "40ac4ece12f113e26e9713ac3e0e8e3bad09b14b5b11f4f50f311a64f87d939a"
+        },
+        {
+          "path": "docker-compose.test.yml",
+          "sha256": "a671342cac26b375ea254c6577abac19a05fa25655dc6c30488a37a493ce3d76"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "ecc266c42898c10caf3e8e9977386cf59cc43aa7daea284bdb907601a743a1dd"
+        },
+        {
+          "path": "packages/db/drizzle/production/0140_document_lifecycle.sql",
+          "sha256": "7334c8337f4dce799029dd1fc9a1f00c20063022cfe0dd549f1035b3560a848d"
+        },
+        {
+          "path": "packages/db/drizzle/production/0141_contract_signature_evidence.sql",
+          "sha256": "1eb046c3736dc44a3e8ca5eb3cabf86d3de2bdfa763b34cee0c1a28284ab37d5"
+        },
+        {
+          "path": "packages/db/drizzle/production/0196_pending_amendment_documents.sql",
+          "sha256": "d594b0565cc5858bd1a0703687a42d77b32f9b1863733bd56242c7d23d27685a"
+        },
+        {
+          "path": "packages/db/drizzle/production/0199_quarantined_contract_original_replacement.sql",
+          "sha256": "67889bed57a0facffff1c9ab2d4e263adc90aa3e1885c881d5645f50046d6c7c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0207_document_destruction.sql",
+          "sha256": "9949a62702977d15886b1b12f1d956e7c5ff6e5b0d56adaba0ea3ed7a845625e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0272_permanent_document_retention.sql",
+          "sha256": "0b9da8fcea9d53479d876c2d4f14cc234505bcec057a2e60371753a4a0d9c11c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0289_solar_document_destruction_guard.sql",
+          "sha256": "4e207a567b4a1a704dc77cebb2fd42f08511fe35ce2c313bdc1fa27de2855e84"
+        },
+        {
+          "path": "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
+          "sha256": "974a1448bf3a1e75b1d2789bcb8fe6b45df338d1f717f25ad93a8bf730429893"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "8bb3c2a236588d643fe6cc9998ec3d91e79a30e887318eb14cce93d1d730e204"
+        },
+        {
+          "path": "packages/db/src/contract-signatures.migrated.test.ts",
+          "sha256": "e250a467748823cdae0dc13de40091373e1b3da446d6754b6ff092ae3104fb60"
+        },
+        {
+          "path": "packages/db/src/documents.migrated.test.ts",
+          "sha256": "1d1eaa9d351fbbbe7dc48c6b9da8c5ae3975d163756e21d0c9ebc967f5e16ae1"
+        },
+        {
+          "path": "packages/db/src/electricity-pre-active-rejection.migrated.test.ts",
+          "sha256": "d36a0a75b3b2e1f1b72a85bf158ca0a15c0fcd78c77e9bd8b0d378c59c5f132f"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/src/permanent-document-retention-upgrade.migrated.test.ts",
+          "sha256": "3834f404c8dc154d3e8e8fa7949f169fe355a4a04eb8fca8a2d61a7203b4ad4e"
+        },
+        {
+          "path": "packages/db/src/schema/contract-signatures.ts",
+          "sha256": "9fe0b33dd607c9c60dc7f862a4b6352dc051c7d2806703ad17cbf728684cf523"
+        },
+        {
+          "path": "packages/db/src/schema/document-retention.ts",
+          "sha256": "7b034fc9f0ab2a6f0bfd4d73bd0bb930d41f15bf95cdee655df8f93ba2b353ee"
+        },
+        {
+          "path": "packages/db/src/schema/documents.ts",
+          "sha256": "4328349824236f20d5f0b67abe7941a5a1ea6985cd7e805f258e5a14dd8c5d15"
+        },
+        {
+          "path": "packages/db/src/schema/storage-record.ts",
+          "sha256": "eb1886ce3b3ff7443544b8ba37067301bf4cbc98ca02d50cff9ac39f3407bbc5"
+        },
+        {
+          "path": "packages/db/src/test/globalSetup.ts",
+          "sha256": "04795ac3b8cbe3f2336619db65e0e78e128c3625b910c6ca645913f13708a79a"
+        },
+        {
+          "path": "packages/db/vitest.config.ts",
+          "sha256": "58b0adf9cde19568d2a87c9298b2936f24622cd1d2a192d4d298e8b92d8d77f0"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.test.ts",
+          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.ts",
+          "sha256": "270cc5e3e30daa3124ea3f275ad695aa9b3531023f2e641d8b093e8f17fbc069"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "9611600ba72ab43666fd88284fa29d1c644b70dae2f173e17e8cc9a1ab80a915"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+        },
+        {
+          "path": "packages/shared/src/storage/setup-bucket.ts",
+          "sha256": "1d051cc0794019bad1cf1845bd6d96af02a0847598dc0f93d86baefbfd1a0801"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "dbebd80473de4a4ab5bb961bf7e8557564efe4c3f4188605065aa0ac64b55938"
+        }
+      ],
+      "checks": [
+        "GitHub run 43315948494 passed 152 cases across eleven relevant suites, including native PostgreSQL migration, contract signature, document HTTP with real object storage, generic signed-record soft removal, storage cleanup and guarded version destruction. One configured real ClamD case was skipped and belongs to the separate scanner requirement. The overall run failed a separate web test. All listed source bindings match the tested commit.",
+        "The signed-copy flow binds the approved original and signed bytes to the exact version, records their append-only locks and protects both after a replacement race or a new amendment. Mounted and migrated fixtures verify approval authority, the sealed-byte boundary, current scope, exact replay, unchanged history and denial of removal and replacement of locked evidence.",
+        "The generic storage remove route keeps signed bytes and records soft removal. Ordinary worker cleanup excludes signed records and serializes claims with promotion. The durable destruction worker and migrated database independently refuse contractual and financial bytes after removal and reject outdated approvals before any provider delete. Eligible nonfinancial destruction follows its separate approval workflow.",
+        "The current staging bucket was read through the application's versioned active config at v0.5.1. S3 versioning is enabled and expiry requires one of four narrow prefixes plus an explicit disposal tag. The five newest noncurrent versions are preserved by each expiry rule. The current staged schema reported all five expected enabled signature and retention triggers and the permanent-retention routine."
+      ],
+      "limitations": [
+        "Provider verification covers the live staging bucket and installed staging guards. The exact v0.6.0 staging rollout and production provider configuration remain separate release requirements.",
+        "The first read-only probe expected a deployment-label variable absent from the staged image. The successful probe validated the staging origin and used the same active storage configuration as the application. No object or bucket mutations were made."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-signed-document-retention",
+      "execution_receipts": [
+        {
+          "file": "hosted-storage-suites.json",
+          "sha256": "5fd46d54a30d04a0a73cd6a965196fed51e9124a6d5376f41b0f593f3957823d"
+        },
+        {
+          "file": "staging-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "staging-release-final.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "staging-storage-readback.json",
+          "sha256": "89257cb07cb6293fef43b4d8dea278b8be855f7d724130546275b5c421f47e86"
+        },
+        {
+          "file": "staging-storage-diagnostics.json",
+          "sha256": "c56887d9ea28d3c0360e3ba76e1261004fdf96025ceca76f69983c0aebd04e58"
+        },
+        {
+          "file": "staging-storage-verified.json",
+          "sha256": "e96efd4bad3abbb08b95209a2396d33611fc6ece2124905d9658b37b42fd6cde"
+        },
+        {
+          "file": "staging-guards-readback.json",
+          "sha256": "f7dd69fbd48d8d3707add4262daed29fe5cf0f3a2c6ced0103703128902fe0b1"
         },
         {
           "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-csp-inline-style/hosted-test-43315948494-failed.log",

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T22:36:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T22:46:08+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1252 | Accepted with unchanged source bindings. |
+| done | 1253 | Accepted with unchanged source bindings. |
 | verify | 3 | Existing work may be complete; inspect evidence before building. |
-| partial | 106 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 105 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1030,7 +1030,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.03.02` | done | Earlier acceptance_verified | Implement presigned URL workflow for direct browser upload/download |
 | `01-platform-infrastructure.md#T-04.03.03` | partial | Earlier partial | Configure bucket versioning and lifecycle policies |
 | `01-platform-infrastructure.md#T-04.03.04` | done | Earlier acceptance_verified | Create admin configuration UI for storage |
-| `01-platform-infrastructure.md#T-04.03.05` | partial | Earlier partial | Enforce immutability for signed contracts and critical records |
+| `01-platform-infrastructure.md#T-04.03.05` | done | Earlier partial | Enforce immutability for signed contracts and critical records |
 | `01-platform-infrastructure.md#T-04.04.01` | done | Earlier acceptance_verified | Create NGINX/Caddy configuration for pilot (single-node) topology |
 | `01-platform-infrastructure.md#T-04.04.02` | partial | Earlier partial | Configure security headers in reverse proxy |
 | `01-platform-infrastructure.md#T-04.04.03` | done | Earlier acceptance_verified | Configure edge rate limiting for auth, upload, and AI endpoints |
