@@ -54,6 +54,44 @@ describe('LegalProfilesService', () => {
     mockPool.connect.mockResolvedValue(mockClient);
   });
 
+  describe('getDocuments', () => {
+    const actor = { userId: 'user-1', sessionId: 'session-1', csrfToken: 'csrf' };
+    const id = '00000000-0000-4000-8000-000000000001';
+    const key = `legal-profile-documents/${id}/${'a'.repeat(64)}`;
+
+    it.each(['expired session', 'changed copy'])(
+      'withholds signed links after a %s',
+      async (reason) => {
+        let active = true;
+        let revision = '1';
+        const attachments = new VerifiedAttachmentsService();
+        const sign = vi.spyOn(attachments, 'downloadUrls').mockImplementation(async () => {
+          if (reason === 'expired session') active = false;
+          else revision = '2';
+          return ['https://fixture.invalid/private'];
+        });
+        service = new LegalProfilesService(profilesService, attachments);
+        mockClient.query.mockImplementation(async (sql: string) => {
+          if (sql.startsWith('SELECT disabled_at FROM users'))
+            return { rows: [{ disabled_at: null }] };
+          if (sql.startsWith('SELECT csrf_token, step_up_verified_at'))
+            return { rows: [{ csrf_token: actor.csrfToken, active }] };
+          if (sql.startsWith('SELECT p.id,l.documents'))
+            return { rows: [{ id, documents: [key] }] };
+          if (sql.startsWith('SELECT storage_key,file_name,xmin'))
+            return { rows: [{ storage_key: key, file_name: 'registration.pdf', revision }] };
+          return { rows: [] };
+        });
+
+        await expect(service.getDocuments(actor, id)).rejects.toMatchObject({
+          status: reason === 'expired session' ? 401 : 503,
+        });
+        expect(sign).toHaveBeenCalledExactlyOnceWith([key], 'legal_profile_document');
+        expect(mockClient.release).toHaveBeenCalledTimes(2);
+      }
+    );
+  });
+
   describe('saveLegalProfile', () => {
     const validData = {
       legalName: 'Barghsa LLC',

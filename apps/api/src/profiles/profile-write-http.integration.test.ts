@@ -225,7 +225,12 @@ for (const type of ['INDIVIDUAL', 'LEGAL']) {
           const queries = await blockedQueries(blockerPid);
           return queries
             .map((query) => {
-              if (query.includes('UPDATE profiles')) return 'profile';
+              if (
+                query.includes('UPDATE profiles') ||
+                (query.includes('SELECT id FROM profiles WHERE id=$1 AND user_id=$2') &&
+                  query.includes('FOR UPDATE'))
+              )
+                return 'profile';
               if (
                 query.includes('FROM users WHERE user_id=$1 FOR UPDATE') ||
                 query.includes('WHERE s.session_id=$1 FOR UPDATE OF u')

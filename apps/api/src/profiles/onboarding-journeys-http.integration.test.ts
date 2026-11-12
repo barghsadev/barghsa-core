@@ -77,6 +77,46 @@ it('starts both profiles in canonical order, sets one initial default, and resum
   expect(await (await read(`journeys/${journey.id}`)).json()).toEqual(journey);
   expect(await counts()).toEqual({ profiles: 2, journeys: 1, audits: 3 });
 });
+
+it.each(['active', 'specific'])(
+  'withholds the %s journey after expiry during the read',
+  async (kind) => {
+    const journey = (await (await start()).json()) as OnboardingJourney;
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response>;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('LOCK TABLE profile_onboarding_journeys IN ACCESS EXCLUSIVE MODE');
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      await http.pool.query(
+        "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
+        [session]
+      );
+      pending = read(`journeys/${kind === 'active' ? 'active' : journey.id}`);
+      await expect
+        .poll(async () => {
+          const { rows } = await http.pool.query(
+            'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+            [pid]
+          );
+          return rows[0].count;
+        })
+        .toBe(1);
+      await http.pool.query(
+        'SELECT pg_sleep(greatest(0,extract(epoch FROM expires_at-clock_timestamp()))) FROM sessions WHERE session_id=$1',
+        [session]
+      );
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+    }
+    const response = await pending;
+    expect(response.status, await response.clone().text()).toBe(401);
+    const body = await response.json();
+    expect(body).not.toHaveProperty('journey');
+    expect(body).not.toHaveProperty('profiles');
+  }
+);
 for (const type of ['INDIVIDUAL', 'LEGAL'])
   it(`starts only the selected ${type} profile`, async () => {
     const response = await start([type]);

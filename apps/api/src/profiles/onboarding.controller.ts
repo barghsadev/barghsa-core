@@ -19,6 +19,7 @@ import {
   Param,
   Query,
   HttpCode,
+  Header,
   HttpException,
   Logger,
   Req,
@@ -100,7 +101,7 @@ export class OnboardingController {
     },
   })
   activeJourney(@Req() req: AuthenticatedRequest) {
-    return this.journeys.active(req.session.userId);
+    return this.journeys.active(req.session);
   }
 
   @Get('journeys/:journeyId')
@@ -111,7 +112,7 @@ export class OnboardingController {
     @Param('journeyId', new ParseUUIDPipe()) journeyId: string,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.journeys.get(req.session.userId, journeyId);
+    return this.journeys.get(req.session, journeyId);
   }
 
   @Post('journeys')
@@ -138,13 +139,14 @@ export class OnboardingController {
   }
 
   @Get('documents/:profileId')
+  @Header('Cache-Control', 'no-store')
   @RateLimit({ namespace: 'onboarding:documents:user', limit: 30, windowMs: 60000 })
   @ApiOperation({ summary: 'Download the owned legal profile documents' })
   getDocuments(
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ) {
-    return this.legalProfilesService.getDocuments(req.session.userId, profileId);
+    return this.legalProfilesService.getDocuments(req.session, profileId);
   }
 
   @Get('drafts')
@@ -263,7 +265,7 @@ export class OnboardingController {
       );
     }
 
-    const profile = await this.profilesService.createProfile(req.session.userId, profileType);
+    const profile = await this.profilesService.createProfile(req.session, profileType);
 
     this.logger.log(
       `Onboarding started for user ${privateLogId('actor', req.session.userId)}: profile ${privateLogId('profile', profile.id)} (${profileType})`
@@ -326,7 +328,7 @@ export class OnboardingController {
       );
     }
     const profile = await this.profilesService.saveIndividualProfile(
-      req.session.userId,
+      req.session,
       profileId,
       parsed.data
     );
@@ -438,7 +440,7 @@ export class OnboardingController {
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ) {
-    const profile = await this.profilesService.completeOnboarding(req.session.userId, profileId);
+    const profile = await this.profilesService.completeOnboarding(req.session, profileId);
 
     this.logger.log(
       `Onboarding completed for profile ${privateLogId('profile', profileId)} by user ${privateLogId('actor', req.session.userId)} (status=${profile.status})`
@@ -453,7 +455,7 @@ export class OnboardingController {
       firstName: profile.firstName,
       lastName: profile.lastName,
       message: 'Onboarding completed successfully',
-      journey: await this.journeys.forProfile(req.session.userId, profileId),
+      journey: await this.journeys.forProfile(req.session, profileId),
     };
   }
 }

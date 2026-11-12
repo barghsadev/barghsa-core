@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T17:08:59+00:00",
+  "updated": "2026-11-12T17:18:54+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -30954,15 +30954,15 @@
             },
             {
               "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
-              "sha256": "3caa2dd0e507eca26fc11ad66f996f60db826d77795e4365ad59cc514899f02e"
+              "sha256": "c3a2a3c0f1bc8e7c3d7c97c77ceb6b8fe106ab31fbe52850f4017cfe67237cbd"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding.controller.ts",
-              "sha256": "0e535da52bf3ca2e225088ffa122c6aa7fef8f59aa3de6e11dfe5fb2b5f8bc35"
+              "sha256": "63f8a7fb4bd98652004585b54136dbea448ecd9c31f28955a187dfc515ffeae1"
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity.service.ts",
@@ -31636,6 +31636,16 @@
                 "apps/api/src/user-settings/conversation-identity.service.ts"
               ],
               "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding.controller.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -51905,7 +51915,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -52552,6 +52562,14 @@
                 "apps/api/src/profiles/agents.service.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -52805,7 +52823,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -53504,6 +53522,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -53656,11 +53682,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/onboarding.controller.ts",
-              "sha256": "0e535da52bf3ca2e225088ffa122c6aa7fef8f59aa3de6e11dfe5fb2b5f8bc35"
+              "sha256": "63f8a7fb4bd98652004585b54136dbea448ecd9c31f28955a187dfc515ffeae1"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -53836,6 +53862,15 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding.controller.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -53997,15 +54032,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/onboarding.controller.ts",
-              "sha256": "0e535da52bf3ca2e225088ffa122c6aa7fef8f59aa3de6e11dfe5fb2b5f8bc35"
+              "sha256": "63f8a7fb4bd98652004585b54136dbea448ecd9c31f28955a187dfc515ffeae1"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -54194,6 +54229,16 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding.controller.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -54374,15 +54419,15 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
-              "sha256": "3caa2dd0e507eca26fc11ad66f996f60db826d77795e4365ad59cc514899f02e"
+              "sha256": "c3a2a3c0f1bc8e7c3d7c97c77ceb6b8fe106ab31fbe52850f4017cfe67237cbd"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-drafts.service.ts",
@@ -54568,6 +54613,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -54709,11 +54764,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/onboarding.controller.ts",
-              "sha256": "0e535da52bf3ca2e225088ffa122c6aa7fef8f59aa3de6e11dfe5fb2b5f8bc35"
+              "sha256": "63f8a7fb4bd98652004585b54136dbea448ecd9c31f28955a187dfc515ffeae1"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -54900,6 +54955,15 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding.controller.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -55041,7 +55105,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -55290,6 +55354,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -55474,7 +55546,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/onboarding-wizard.spec.ts",
@@ -56110,6 +56182,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -56281,7 +56361,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -56289,7 +56369,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -56483,6 +56563,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -60124,7 +60213,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
@@ -60809,6 +60898,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -61163,7 +61260,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -62141,6 +62238,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -68983,7 +69088,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
-              "sha256": "4b749c877ef9c4375968f63f005894b51ac4111bb623059bb78b9fa9e88921de"
+              "sha256": "7c66edd034e56bacdb976078484bfad5d12b4db739daa1bb7728ce5c246ade22"
             },
             {
               "path": "apps/api/src/crm/crm-list-http.integration.test.ts",
@@ -69019,7 +69124,7 @@
             },
             {
               "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
-              "sha256": "3caa2dd0e507eca26fc11ad66f996f60db826d77795e4365ad59cc514899f02e"
+              "sha256": "c3a2a3c0f1bc8e7c3d7c97c77ceb6b8fe106ab31fbe52850f4017cfe67237cbd"
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
@@ -69819,6 +69924,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/crm/crm-legal-documents.controller.ts",
+                "apps/api/src/profiles/legal-documents-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -90008,7 +90122,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -91425,6 +91539,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -466298,7 +466420,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
@@ -467011,6 +467133,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -468466,7 +468596,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/addresses-http.integration.test.ts",
@@ -469193,6 +469323,14 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Profile detail, verification and address authority is proved under a current session. Existing owner/Manager roles, immutable historical addresses, safe no-provider response and scoped notices retain their acceptance. The generated contract changes only documented error responses on owned profile detail and verification."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -618326,7 +618464,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -618667,6 +618805,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -619033,7 +619179,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -619263,6 +619409,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -619337,7 +619491,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -619558,6 +619712,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -619655,7 +619817,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -619895,6 +620057,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -620054,7 +620224,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -620378,6 +620548,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -620428,7 +620606,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -620769,6 +620947,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -620942,7 +621128,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -621300,6 +621486,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -622328,8 +622522,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, and 11 company team and ownership-transfer method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with onboarding drafts, personal and legal form resource loaders, then the remaining domains. Reuse source-bound checks for intact routes and verify demonstrated authority gaps defensively."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, and 12 onboarding method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with customer upload authorization, asset and upload receipt routes, then the remaining domains. Reuse source-bound checks for intact routes and verify demonstrated authority gaps defensively."
       ],
       "owner": null,
       "depends_on": [],
@@ -622375,6 +622569,7 @@
           "apps/api/src/contract/contract-signature.service.ts",
           "apps/api/src/contract/contract.controller.ts",
           "apps/api/src/contract/contract.service.ts",
+          "apps/api/src/crm/crm-legal-documents.controller.ts",
           "apps/api/src/documents/document-http.integration.test.ts",
           "apps/api/src/documents/document.service.ts",
           "apps/api/src/electricity/electricity-contract-invoice.ts",
@@ -622423,10 +622618,19 @@
           "apps/api/src/profiles/agents.service.ts",
           "apps/api/src/profiles/context-http.integration.test.ts",
           "apps/api/src/profiles/invitations.controller.ts",
+          "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+          "apps/api/src/profiles/legal-profiles.service.test.ts",
+          "apps/api/src/profiles/legal-profiles.service.ts",
+          "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+          "apps/api/src/profiles/onboarding-journeys.service.ts",
+          "apps/api/src/profiles/onboarding.controller.ts",
           "apps/api/src/profiles/ownership-http.integration.test.ts",
+          "apps/api/src/profiles/profile-pool-http.integration.test.ts",
+          "apps/api/src/profiles/profile-write-http.integration.test.ts",
           "apps/api/src/profiles/profiles.controller.ts",
           "apps/api/src/profiles/profiles.service.test.ts",
           "apps/api/src/profiles/profiles.service.ts",
+          "apps/api/src/profiles/sealed-legal-documents.ts",
           "apps/api/src/refund/refund.service.ts",
           "apps/api/src/refund/wallet-refund.controller.ts",
           "apps/api/src/saving/saving-address-amendments.ts",
@@ -622540,7 +622744,8 @@
           "release-0.6-account-settings-authority",
           "release-0.6-profile-selection-authority",
           "release-0.6-profile-read-authority",
-          "release-0.6-team-authority"
+          "release-0.6-team-authority",
+          "release-0.6-onboarding-authority"
         ],
         "current_acceptance": null
       }
@@ -622616,7 +622821,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -622850,6 +623055,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -623196,7 +623409,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -623574,6 +623787,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -624185,11 +624406,11 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -624197,7 +624418,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -624522,6 +624743,16 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -638320,7 +638551,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "5ae6ccfbc631b6b20ce1a440975453286e33f1a885893c157540832c38bf8609"
+              "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
             },
             {
               "path": "docs/threat-model.md",
@@ -638564,6 +638795,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -646427,7 +646666,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -646664,6 +646903,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -651378,7 +651625,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-pool-http.integration.test.ts",
-              "sha256": "1c112747df0aa58528011ae32e41fc866913561d7a49df3088dea473e117f657"
+              "sha256": "623f6b2a3db515e1c2cd40ef5d5c648e60ff97d54997721e901d91497bbee175"
             },
             {
               "path": "apps/api/src/saving/saving-order.service.ts",
@@ -651703,6 +651950,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profile-pool-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -721416,7 +721671,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -722111,6 +722366,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -722433,7 +722696,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -723128,6 +723391,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -723449,7 +723720,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -724144,6 +724415,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -791848,11 +792127,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -793988,6 +794267,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -794137,11 +794425,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -796277,6 +796565,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -799733,11 +800030,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -801886,6 +802183,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -802035,11 +802341,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -804175,6 +804481,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -804324,11 +804639,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -806464,6 +806779,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -806613,11 +806937,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -808753,6 +809077,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -808902,11 +809235,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -811042,6 +811375,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -811191,11 +811533,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -813331,6 +813673,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -813480,11 +813831,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -815620,6 +815971,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -815769,11 +816129,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -817909,6 +818269,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -818058,11 +818427,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -820198,6 +820567,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -820347,11 +820725,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -822487,6 +822865,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -822636,11 +823023,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -824776,6 +825163,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -825796,11 +826192,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -827936,6 +828332,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -828085,11 +828490,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -830225,6 +830630,15 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         }
@@ -852116,7 +852530,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -852811,6 +853225,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -853132,7 +853554,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -853827,6 +854249,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -854148,7 +854578,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -854843,6 +855273,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -855164,7 +855602,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -855859,6 +856297,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -856184,7 +856630,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -856879,6 +857325,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -857200,7 +857654,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -857895,6 +858349,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -858216,7 +858678,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -858911,6 +859373,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -859233,7 +859703,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -859928,6 +860398,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -860250,7 +860728,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -860945,6 +861423,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -861267,7 +861753,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -861962,6 +862448,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -862284,7 +862778,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -862979,6 +863473,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -863301,7 +863803,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -863996,6 +864498,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -864318,7 +864828,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -865013,6 +865523,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -865335,7 +865853,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -866030,6 +866548,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -866352,7 +866878,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -867047,6 +867573,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -923332,15 +923866,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -923984,6 +924518,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -924263,15 +924807,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -924915,6 +925459,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -925193,15 +925747,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -925845,6 +926399,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -926125,15 +926689,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -926777,6 +927341,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -927057,15 +927631,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -927709,6 +928283,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -927986,15 +928570,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -928638,6 +929222,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -928915,15 +929509,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -929567,6 +930161,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -929845,15 +930449,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -930497,6 +931101,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -930774,15 +931388,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -931426,6 +932040,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -931704,15 +932328,15 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
@@ -932356,6 +932980,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -957831,11 +958465,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -957851,11 +958485,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -957867,7 +958501,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -957887,11 +958521,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -958484,6 +959118,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -958738,11 +959386,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -958758,11 +959406,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -958774,7 +959422,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -958794,11 +959442,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -959391,6 +960039,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -959645,11 +960307,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -959665,11 +960327,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -959681,7 +960343,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -959701,11 +960363,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -960298,6 +960960,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -960553,11 +961229,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -960573,11 +961249,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -960589,7 +961265,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -960609,11 +961285,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -961206,6 +961882,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -961460,11 +962150,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -961480,11 +962170,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -961496,7 +962186,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -961516,11 +962206,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -962113,6 +962803,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -962367,11 +963071,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -962387,11 +963091,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -962403,7 +963107,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -962423,11 +963127,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -963020,6 +963724,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -963274,11 +963992,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -963294,11 +964012,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -963310,7 +964028,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -963330,11 +964048,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -963927,6 +964645,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -964182,11 +964914,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -964202,11 +964934,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -964218,7 +964950,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -964238,11 +964970,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -964835,6 +965567,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -965089,11 +965835,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -965109,11 +965855,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -965125,7 +965871,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -965145,11 +965891,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -965742,6 +966488,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -965996,11 +966756,11 @@
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
-              "sha256": "942ef1bb5526cad78fbd64a074a38ba7861187cee99beeef8cf2329f77d81cab"
+              "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
             },
             {
               "path": "apps/api/src/profiles/legal-profiles.service.ts",
-              "sha256": "c3fdb96c4e5519c0755e9d1c4a166f62f99e2253e96b9f056d84db0372b63fb0"
+              "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
             },
             {
               "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
@@ -966016,11 +966776,11 @@
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
-              "sha256": "2b30226a84c759683fd5efc96f3c92148daffb48895669e5b94ad7989eb2d432"
+              "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
             },
             {
               "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
-              "sha256": "98b14aa70ad990b6fe5b59c6adb3795c296a89d28cfb44706d4056e6fe88ef8d"
+              "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
             },
             {
               "path": "apps/api/src/profiles/ownership-authority-http.integration.test.ts",
@@ -966032,7 +966792,7 @@
             },
             {
               "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
-              "sha256": "d9785fdef4f7f99617ecf80462ba2f859d8f56688272a49826a44efc6fda2f6a"
+              "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
             },
             {
               "path": "apps/api/src/profiles/profiles.controller.ts",
@@ -966052,11 +966812,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -966649,6 +967409,20 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/legal-profiles.service.test.ts",
+                "apps/api/src/profiles/legal-profiles.service.ts",
+                "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+                "apps/api/src/profiles/onboarding-journeys.service.ts",
+                "apps/api/src/profiles/profile-write-http.integration.test.ts",
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -970931,11 +971705,11 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.test.ts",
-              "sha256": "53a58bc9ac3c8e9fb60154052a1c77ebe459750a717f2782800fc61d5a24a0f8"
+              "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/profiles/verification-http.integration.test.ts",
@@ -971544,6 +972318,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.test.ts",
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ],
           "presentation_renewals": [
@@ -1000790,7 +1001573,7 @@
             },
             {
               "path": "apps/api/src/profiles/profiles.service.ts",
-              "sha256": "dc6bcf562a3935c8211577f8e1d8edb7a7a6a3a66883b3921c1314fe5f44d086"
+              "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
             },
             {
               "path": "apps/api/src/public/branding.controller.ts",
@@ -1003265,6 +1004048,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-onboarding-authority",
+              "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+              "paths": [
+                "apps/api/src/profiles/profiles.service.ts"
+              ],
+              "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
             }
           ]
         },
@@ -1161986,6 +1162777,287 @@
         {
           "file": "team-routes.json",
           "sha256": "447a5bb91b90e6ae34d28e5be626bdbd5d2abf451d285ce346f512e83cb5f0f8"
+        }
+      ]
+    },
+    "release-0.6-onboarding-authority": {
+      "batch": "release-0.6-onboarding-authority",
+      "base_commit": "c20f3879440a2f81279b368f3c0138564d2d3ea6",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-03.01.01",
+        "02-auth-users-admin.md#T-03.01.02",
+        "02-auth-users-admin.md#T-03.02.01",
+        "02-auth-users-admin.md#T-03.02.02",
+        "02-auth-users-admin.md#T-03.02.03",
+        "02-auth-users-admin.md#T-03.02.04",
+        "02-auth-users-admin.md#T-03.03.01",
+        "02-auth-users-admin.md#T-03.03.02",
+        "02-auth-users-admin.md#T-03.03.03",
+        "02-auth-users-admin.md#T-03.04.01",
+        "02-auth-users-admin.md#T-03.04.02",
+        "02-auth-users-admin.md#T-05.02.01",
+        "02-auth-users-admin.md#T-07.01.03",
+        "03-core-business.md#T-03.09.03.01",
+        "03-core-business.md#T-03.09.03.03",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.10.02.09",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.11.01.01",
+        "07-ui-ux-design.md#T-07.11.01.02",
+        "07-ui-ux-design.md#T-07.11.01.04",
+        "07-ui-ux-design.md#T-07.11.01.05",
+        "07-ui-ux-design.md#T-07.11.02.01",
+        "07-ui-ux-design.md#T-07.11.02.02",
+        "07-ui-ux-design.md#T-07.11.02.03",
+        "07-ui-ux-design.md#T-07.11.02.04",
+        "07-ui-ux-design.md#T-07.11.02.05",
+        "07-ui-ux-design.md#T-07.12.01.01",
+        "07-ui-ux-design.md#T-07.12.01.02",
+        "07-ui-ux-design.md#T-07.12.01.03",
+        "07-ui-ux-design.md#T-07.12.01.04",
+        "07-ui-ux-design.md#T-07.12.01.06",
+        "07-ui-ux-design.md#T-07.12.01.07",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "07-ui-ux-design.md#T-07.22.01.01",
+        "07-ui-ux-design.md#T-07.22.01.02",
+        "07-ui-ux-design.md#T-07.22.01.03",
+        "07-ui-ux-design.md#T-07.22.01.04",
+        "07-ui-ux-design.md#T-07.22.01.05",
+        "07-ui-ux-design.md#T-07.22.02.01",
+        "07-ui-ux-design.md#T-07.22.02.02",
+        "07-ui-ux-design.md#T-07.22.02.03",
+        "07-ui-ux-design.md#T-07.22.02.04",
+        "07-ui-ux-design.md#T-07.22.02.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "07-ui-ux-design.md#T-07.30.02.14",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/crm/crm-legal-documents.controller.ts",
+        "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+        "apps/api/src/profiles/legal-profiles.service.test.ts",
+        "apps/api/src/profiles/legal-profiles.service.ts",
+        "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+        "apps/api/src/profiles/onboarding-journeys.service.ts",
+        "apps/api/src/profiles/onboarding.controller.ts",
+        "apps/api/src/profiles/profile-pool-http.integration.test.ts",
+        "apps/api/src/profiles/profile-write-http.integration.test.ts",
+        "apps/api/src/profiles/profiles.service.test.ts",
+        "apps/api/src/profiles/profiles.service.ts",
+        "apps/api/src/profiles/sealed-legal-documents.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "6e25e2d27a7f39b9f055916332dce14b1139ae660e56299ff5a3c695ce28e906"
+        },
+        {
+          "path": "apps/api/src/crm/crm-legal-documents.controller.ts",
+          "sha256": "7c66edd034e56bacdb976078484bfad5d12b4db739daa1bb7728ce5c246ade22"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-documents-http.integration.test.ts",
+          "sha256": "c3a2a3c0f1bc8e7c3d7c97c77ceb6b8fe106ab31fbe52850f4017cfe67237cbd"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.test.ts",
+          "sha256": "f300be2ea70e9f6cd8e95aa45c084ae50bfdd4812ff8b43233e0b736326082a4"
+        },
+        {
+          "path": "apps/api/src/profiles/legal-profiles.service.ts",
+          "sha256": "4d441726f96bbe127261d87819549e58ee62aaa5cde18392f954ed73bfa110a2"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-draft-list-http.integration.test.ts",
+          "sha256": "d02a748322bcb52bb3be5369b8070a331d6495c892245b270ec2293a05d99226"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-draft-state.ts",
+          "sha256": "4f647d35286f760e93377752df3f8ed32519b58a0b2713d40ad483b7ac5a374e"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-drafts.service.ts",
+          "sha256": "6f522e3ae2a1feb68ec6f6a119cd30d487412f13ed21088f87dca3011d479474"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-journeys-http.integration.test.ts",
+          "sha256": "9929127eb421dea21bc471870645f37fd1ef15a2d854f7efc3df9d5a885c08aa"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding-journeys.service.ts",
+          "sha256": "c1869a0c27d240ec694e573d3391544c246573dce26e5be3f15c73b9e9773b53"
+        },
+        {
+          "path": "apps/api/src/profiles/onboarding.controller.ts",
+          "sha256": "63f8a7fb4bd98652004585b54136dbea448ecd9c31f28955a187dfc515ffeae1"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-pool-http.integration.test.ts",
+          "sha256": "623f6b2a3db515e1c2cd40ef5d5c648e60ff97d54997721e901d91497bbee175"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-write-http.integration.test.ts",
+          "sha256": "48183dedf81edf7c7d85a29fd28a3860c294ffc3ae8aa8fbe8f325157a9dd599"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.test.ts",
+          "sha256": "28d6ae03de33655e0cb1ddee4d079d0dc709deb463aa790727cde09912d13c12"
+        },
+        {
+          "path": "apps/api/src/profiles/profiles.service.ts",
+          "sha256": "a5f710ee87c0ca2e550e99e67ba6e71dae4e8eba078bbe2a2537922eb85755d7"
+        },
+        {
+          "path": "apps/api/src/profiles/sealed-legal-documents.ts",
+          "sha256": "7fe6159c705a421e193d2264ba7fee71fd199c2a6c406118ce7f5010b3846083"
+        },
+        {
+          "path": "apps/api/src/profiles/verification-http.integration.test.ts",
+          "sha256": "298c1db96a32a30ec35e429add1448dc03f5291f3e80a40b28ec6073468eeed6"
+        },
+        {
+          "path": "apps/api/src/profiles/wizard-draft-retention-http.integration.test.ts",
+          "sha256": "85704f2d33fbcbb5d8a20aa3ecb9b2e847b35a0e8ff21a3dbae8d51ab0963914"
+        },
+        {
+          "path": "apps/api/src/session/account-session-read.ts",
+          "sha256": "c090ae58fd0c27345eda01376f6482fc0bfc73bb9880cd90a6c6714630425c1e"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
+        },
+        {
+          "path": "apps/web/src/lib/onboarding-journey.test.ts",
+          "sha256": "cb282d0916961f9b8ea9a02ef4a0d5cade660c230170564322dfb5dd95c673af"
+        },
+        {
+          "path": "apps/web/src/lib/onboarding-profile.test.ts",
+          "sha256": "71d76a745195ccd0bb9421cea51c61d12036ca03443ca1b09189e9e3d1956249"
+        },
+        {
+          "path": "apps/web/src/routes/onboarding-forms.test.tsx",
+          "sha256": "8c9f69f28da49fabed707470be75aae8a4ab681311e61f7597cdcffd3930d815"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "c1fb45a81ad93bad3be1f4f44d107ab354abf79f36d03e3f40871f6a2f76e763"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed 12 exact onboarding method/path pairs for journey read/start/finish, draft list/read/save, legacy start, personal and legal submission, completion and owned legal documents. The shared CRM copy loader caller was verified separately without changing its grants.",
+        "Native journey reads withhold data after the session expires while waiting. Legacy start, personal submission and completion roll back both data and audit if session proof expires during persistence.",
+        "Customer legal document reads check the live owner and each immutable copy for profile and purpose, issue private no-store responses, and recheck scope and copy revisions after signing. Unsealed, mismatched or removed records produce no signed URLs.",
+        "Existing owner isolation, step and selection ordering, draft version and TTL, atomic audits, document publication, verification policy and one-connection pool assertions passed.",
+        "The initial run found a personal-submission lock order regression. Restored profile-first locks while retaining the exact two-waiter, one-success and one-rejection assertions. All 63 affected API cases passed on the final source. Earlier source-bound results were retained for the five unaffected suites. 18 web tests, API build, typecheck, contract, lint and format passed."
+      ],
+      "limitations": [
+        "The remaining route inventory, v0.6.0 acceptance, staging deployment and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-onboarding-authority",
+      "execution_receipts": [
+        {
+          "file": "build-final.log",
+          "sha256": "bd168368547d17c6d75db442a909ea42a435b845657b06d1710630886d45322c"
+        },
+        {
+          "file": "types-final.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "api-final.log",
+          "sha256": "c43fac50c266032ff085bb812a31f38e26441ab960a0a642354d4da7990dae2b"
+        },
+        {
+          "file": "web.log",
+          "sha256": "b138c477015984d94e0d7db63af3b93c20d1e061dc569970fe16b830f4596f8a"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "e86c48bfa292b41b6eb4a6da10d8494954765645dded8bd0f0cdb64b3ca70f9d"
+        },
+        {
+          "file": "contract-final.log",
+          "sha256": "135329686d2878faa2e19fe4a091501fbc48ad6c6463fb6530841b5e33657567"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "format-final.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "api.log",
+          "sha256": "22e7c5a6843cf4c5a593bf0d7dd83d1bb109d0904c04b9bf151e5b79877639d1"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "lint-final.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "fc04504022a237b7f691ddcfa3c1479f78afbcee4742a301b6129268d73ff3dd"
+        },
+        {
+          "file": "onboarding-routes.json",
+          "sha256": "89a2bdabca8beb84d4208f9b559dc6e9c29128fe0391ba9d10524ce0cde0f92c"
         }
       ]
     }

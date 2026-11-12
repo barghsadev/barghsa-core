@@ -14,6 +14,10 @@ import { getDbPool } from '@barghsa/db';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
 import { VerifiedAttachmentsService } from '../storage/verified-attachments.service.js';
+import {
+  legalDocumentsUnavailable,
+  readSealedLegalDocuments,
+} from '../profiles/sealed-legal-documents.js';
 
 @ApiTags('CRM')
 @Controller('api/crm/profiles')
@@ -65,36 +69,17 @@ export class CrmLegalDocumentsController {
       )
     ).rows[0];
     if (!legal) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    const keys = legal.documents;
-    const unavailable = () => new HttpException({ error: 'STORAGE:UNAVAILABLE' }, 503);
-    if (
-      !Array.isArray(keys) ||
-      keys.length > 5 ||
-      new Set(keys).size !== keys.length ||
-      keys.some(
-        (key) =>
-          typeof key !== 'string' ||
-          !/^legal-profile-documents\/[0-9a-f-]{36}\/[0-9a-f]{64}$/.test(key)
-      )
-    )
-      throw unavailable();
-    if (!keys.length) return { profileId: legal.id, documents: [] };
-    // Only committed, immutable copies for this profile and purpose can be signed.
-    const records = (
-      await pool.query<{ storage_key: string; file_name: string | null }>(
-        `SELECT storage_key,file_name FROM storage_records WHERE storage_key=ANY($1::text[])
-       AND status='immutable' AND metadata->>'purpose'='legal_profile_document'
-       AND LOWER(metadata->>'profileId')=$2`,
-        [keys, legal.id]
-      )
-    ).rows;
-    if (records.length !== keys.length) throw unavailable();
-    const urls = await this.attachments.downloadUrls(keys, 'legal_profile_document');
-    if (urls.length !== keys.length) throw unavailable();
+    const copies = await readSealedLegalDocuments(pool, legal.id, legal.documents);
+    if (!copies.length) return { profileId: legal.id, documents: [] };
+    const urls = await this.attachments.downloadUrls(
+      copies.map((copy) => copy.storage_key),
+      'legal_profile_document'
+    );
+    if (urls.length !== copies.length) throw legalDocumentsUnavailable();
     return {
       profileId: legal.id,
-      documents: keys.map((key, i) => ({
-        name: records.find((record) => record.storage_key === key)!.file_name,
+      documents: copies.map((copy, i) => ({
+        name: copy.file_name,
         url: urls[i]!,
       })),
     };

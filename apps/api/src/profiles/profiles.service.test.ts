@@ -198,7 +198,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({}) // audit
         .mockResolvedValueOnce(undefined); // COMMIT (void)
 
-      const result = await service.createProfile('user-1', 'INDIVIDUAL');
+      const result = await service.createProfile(addressActor, 'INDIVIDUAL');
 
       expect(result.id).toBe('prof-new');
       expect(result.profileType).toBe('INDIVIDUAL');
@@ -240,7 +240,7 @@ describe('ProfilesService', () => {
         .mockResolvedValueOnce({}) // audit
         .mockResolvedValueOnce(undefined); // COMMIT (void)
 
-      const result = await service.createProfile('user-1', 'LEGAL');
+      const result = await service.createProfile(addressActor, 'LEGAL');
 
       expect(result.profileType).toBe('LEGAL');
       expect(result.isDefault).toBe(false);
@@ -256,7 +256,7 @@ describe('ProfilesService', () => {
         .mockRejectedValueOnce(new Error('DB error')) // check fails
         .mockResolvedValueOnce(undefined); // ROLLBACK (void)
 
-      await expect(service.createProfile('user-1', 'INDIVIDUAL')).rejects.toThrow('DB error');
+      await expect(service.createProfile(addressActor, 'INDIVIDUAL')).rejects.toThrow('DB error');
 
       expect(mockClient.query.mock.calls[3]![0]).toBe('ROLLBACK');
       expect(mockClient.release).toHaveBeenCalledTimes(1);
@@ -393,8 +393,6 @@ describe('ProfilesService', () => {
 
     it('transitions DRAFT to ACTIVE when verification is not required', async () => {
       vi.mocked(configCache.get).mockResolvedValue('DISABLED');
-      // getProfileById: returns draft profile
-      mockPool.query.mockResolvedValueOnce({ rows: [draftRow] });
       // connect() for transaction
       mockPool.connect.mockResolvedValue(transactionalClient);
       // BEGIN
@@ -411,7 +409,6 @@ describe('ProfilesService', () => {
         ],
       });
       mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'city' }] }); // selected geography
-      mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
       // Check existing default profiles
       mockClient.query.mockResolvedValueOnce({ rows: [] });
       // UPDATE status to ACTIVE
@@ -420,7 +417,7 @@ describe('ProfilesService', () => {
       mockClient.query.mockResolvedValueOnce({ rows: [activeRow] }); // transaction readback
       mockClient.query.mockResolvedValueOnce({}); // COMMIT
 
-      const result = await service.completeOnboarding('user-1', 'prof-1');
+      const result = await service.completeOnboarding(addressActor, 'prof-1');
 
       expect(result.status).toBe('ACTIVE');
       expect(result.id).toBe('prof-1');
@@ -436,7 +433,6 @@ describe('ProfilesService', () => {
 
     it('transitions DRAFT to PENDING_VERIFICATION when verification is required', async () => {
       vi.mocked(configCache.get).mockResolvedValue('MANUAL');
-      mockPool.query.mockResolvedValueOnce({ rows: [draftRow] });
       mockPool.connect.mockResolvedValue(transactionalClient);
       mockClient.query.mockResolvedValueOnce({}); // BEGIN
       mockClient.query.mockResolvedValueOnce({ rows: [draftRow] }); // locked current profile
@@ -451,7 +447,6 @@ describe('ProfilesService', () => {
         ],
       });
       mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'city' }] }); // selected geography
-      mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
       mockClient.query.mockResolvedValueOnce({ rows: [] }); // no existing default
       mockClient.query.mockResolvedValueOnce({ rowCount: 1 }); // UPDATE
       mockClient.query.mockResolvedValueOnce({}); // audit
@@ -460,40 +455,46 @@ describe('ProfilesService', () => {
       }); // transaction readback
       mockClient.query.mockResolvedValueOnce({}); // COMMIT
 
-      const result = await service.completeOnboarding('user-1', 'prof-1');
+      const result = await service.completeOnboarding(addressActor, 'prof-1');
 
       expect(result.status).toBe('PENDING_VERIFICATION');
     });
 
     it('rejects when profile does not belong to the user', async () => {
-      mockPool.query.mockResolvedValueOnce({
-        rows: [{ ...draftRow, user_id: 'other-user' }],
-      });
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // owner-scoped row lock
+        .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
-      await expect(service.completeOnboarding('user-1', 'prof-1')).rejects.toThrow(
+      await expect(service.completeOnboarding(addressActor, 'prof-1')).rejects.toThrow(
         'Profile not found'
+      );
+      expect(mockClient.query).toHaveBeenCalledWith(
+        'SELECT * FROM profiles WHERE id=$1 AND user_id=$2 AND NOT archived FOR UPDATE',
+        ['prof-1', addressActor.userId]
       );
     });
 
     it('rejects when profile does not exist', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [] }) // BEGIN
+        .mockResolvedValueOnce({ rows: [] }) // owner-scoped row lock
+        .mockResolvedValueOnce({ rows: [] }); // ROLLBACK
 
-      await expect(service.completeOnboarding('user-1', 'prof-1')).rejects.toThrow(
+      await expect(service.completeOnboarding(addressActor, 'prof-1')).rejects.toThrow(
         'Profile not found'
       );
     });
 
     it('is idempotent when profile is already ACTIVE and retains its default', async () => {
       const defaultRow = { ...activeRow, is_default: true };
-      mockPool.query.mockResolvedValueOnce({ rows: [defaultRow] });
       mockPool.connect.mockResolvedValue(transactionalClient);
       mockClient.query.mockResolvedValueOnce({}); // BEGIN
       mockClient.query.mockResolvedValueOnce({ rows: [defaultRow] }); // current owner/status lock
-      mockClient.query.mockResolvedValueOnce({ rows: [] }); // account lock
       mockClient.query.mockResolvedValueOnce({ rows: [{ id: 'prof-1' }] }); // existing default
       mockClient.query.mockResolvedValueOnce({ rows: [defaultRow] }); // readback
       mockClient.query.mockResolvedValueOnce({}); // COMMIT
-      const result = await service.completeOnboarding('user-1', 'prof-1');
+      const result = await service.completeOnboarding(addressActor, 'prof-1');
       expect(result.status).toBe('ACTIVE');
       expect(result.isDefault).toBe(true);
       expect(

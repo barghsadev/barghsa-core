@@ -1,10 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import type { Pool, PoolClient } from 'pg';
+import type { PoolClient } from 'pg';
 import { z } from 'zod';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { ProfilesService } from './profiles.service.js';
 
 const profileTypes = ['INDIVIDUAL', 'LEGAL'] as const;
@@ -75,7 +76,7 @@ export class OnboardingJourneysService {
   }
 
   private async project(
-    client: Pool | PoolClient,
+    client: PoolClient,
     userId: string,
     row: JourneyRow
   ): Promise<OnboardingJourney> {
@@ -118,33 +119,38 @@ export class OnboardingJourneysService {
     };
   }
 
-  async active(userId: string) {
-    const pool = getDbPool();
-    const result = await pool.query<JourneyRow>(
-      'SELECT * FROM profile_onboarding_journeys WHERE user_id=$1 AND completed_at IS NULL',
-      [userId]
-    );
-    return { journey: result.rows[0] ? await this.project(pool, userId, result.rows[0]) : null };
+  async active(actor: Actor) {
+    return readWithCurrentAccount(actor, async (client) => {
+      const result = await client.query<JourneyRow>(
+        'SELECT * FROM profile_onboarding_journeys WHERE user_id=$1 AND completed_at IS NULL',
+        [actor.userId]
+      );
+      return {
+        journey: result.rows[0] ? await this.project(client, actor.userId, result.rows[0]) : null,
+      };
+    });
   }
 
-  async get(userId: string, journeyId: string) {
-    const pool = getDbPool();
-    const result = await pool.query<JourneyRow>(
-      'SELECT * FROM profile_onboarding_journeys WHERE id=$1 AND user_id=$2',
-      [journeyId, userId]
-    );
-    if (!result.rows[0]) missing();
-    return this.project(pool, userId, result.rows[0]);
+  async get(actor: Actor, journeyId: string) {
+    const journey = await readWithCurrentAccount(actor, async (client) => {
+      const result = await client.query<JourneyRow>(
+        'SELECT * FROM profile_onboarding_journeys WHERE id=$1 AND user_id=$2',
+        [journeyId, actor.userId]
+      );
+      return result.rows[0] ? this.project(client, actor.userId, result.rows[0]) : null;
+    });
+    return journey ?? missing();
   }
 
-  async forProfile(userId: string, profileId: string) {
-    const pool = getDbPool();
-    const result = await pool.query<JourneyRow>(
-      `SELECT * FROM profile_onboarding_journeys WHERE user_id=$1
-       AND (individual_profile_id=$2 OR legal_profile_id=$2)`,
-      [userId, profileId]
-    );
-    return result.rows[0] ? this.project(pool, userId, result.rows[0]) : null;
+  async forProfile(actor: Actor, profileId: string) {
+    return readWithCurrentAccount(actor, async (client) => {
+      const result = await client.query<JourneyRow>(
+        `SELECT * FROM profile_onboarding_journeys WHERE user_id=$1
+         AND (individual_profile_id=$2 OR legal_profile_id=$2)`,
+        [actor.userId, profileId]
+      );
+      return result.rows[0] ? this.project(client, actor.userId, result.rows[0]) : null;
+    });
   }
 
   async start(actor: Actor, input: unknown) {
@@ -174,7 +180,7 @@ export class OnboardingJourneysService {
       } else {
         const ids: Partial<Record<Profile['profileType'], string>> = {};
         for (const type of types)
-          ids[type] = (await this.profiles.createProfile(actor.userId, type, client)).id;
+          ids[type] = (await this.profiles.createProfile(actor, type, client)).id;
         row = (
           await client.query<JourneyRow>(
             `INSERT INTO profile_onboarding_journeys(user_id,request_id,individual_profile_id,legal_profile_id)

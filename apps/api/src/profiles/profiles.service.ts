@@ -30,7 +30,7 @@ import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { idempotentMutation } from '../database/idempotency.js';
 import { ACTIVE_PROFILE_SQL } from './profile-context.js';
 
-type AddressActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+type ProfileActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
 export interface ProfileRow {
   id: string;
@@ -329,7 +329,7 @@ export class ProfilesService {
    *
    * Dependencies: T-03.01.01 (profiles), E-07 (verification settings UI).
    */
-  async getVerificationStatus(actor: string | AddressActor): Promise<VerificationStatusDto> {
+  async getVerificationStatus(actor: string | ProfileActor): Promise<VerificationStatusDto> {
     const mode = await this.getVerificationMode();
     if (typeof actor === 'string') return this.readVerificationStatus(actor, mode, getDbPool());
     return readWithCurrentAccount(actor, (client) =>
@@ -447,7 +447,7 @@ export class ProfilesService {
   }
 
   /** External approval is unavailable until a real provider and durable result path exist. */
-  async verifyProfileApi(actor: AddressActor, profileId: string): Promise<never> {
+  async verifyProfileApi(actor: ProfileActor, profileId: string): Promise<never> {
     const profile = await readWithCurrentAccount(actor, (client) =>
       this.getProfileById(profileId, client, actor.userId)
     );
@@ -475,10 +475,11 @@ export class ProfilesService {
    * profile check (T-03.01.01) proceeds past onboarding.
    */
   async createProfile(
-    userId: string,
+    actor: ProfileActor,
     profileType: 'INDIVIDUAL' | 'LEGAL',
     transaction?: PoolClient
   ): Promise<ProfileRow> {
+    const userId = actor.userId;
     const pool = getDbPool();
     const client = transaction ?? (await pool.connect());
 
@@ -503,6 +504,7 @@ export class ProfilesService {
         throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
       if (account.is_staff || account.is_admin || account.has_roles)
         throw new HttpException({ error: ErrorCodes.AUTHZ_FORBIDDEN.code }, 403);
+      if (!transaction) await requireCurrentSession(client, actor);
 
       // If the user has no default profile yet, set this one as default.
       const existing = await client.query(
@@ -525,7 +527,10 @@ export class ProfilesService {
         [userId, row.id, profileType, becomesDefault]
       );
 
-      if (!transaction) await client.query('COMMIT');
+      if (!transaction) {
+        await requireCurrentSession(client, actor);
+        await client.query('COMMIT');
+      }
       this.logger.log(
         `Profile ${privateLogId('profile', row.id)} (${profileType}) created for user ${privateLogId('actor', userId)}${becomesDefault ? ' as default' : ''}`
       );
@@ -549,12 +554,12 @@ export class ProfilesService {
    * address, postal code). National ID uniqueness is enforced at the DB
    * level via a partial unique index on active profiles.
    *
-   * @param userId - The authenticated user's ID.
+   * @param actor - The authenticated owner and session.
    * @param profileId - The draft profile ID from onboarding start.
    * @param data - Individual profile fields.
    */
   async saveIndividualProfile(
-    userId: string,
+    actor: ProfileActor,
     profileId: string,
     data: {
       draftVersion?: number | undefined;
@@ -568,60 +573,55 @@ export class ProfilesService {
       postalCode: string;
     }
   ): Promise<ProfileRow> {
+    const userId = actor.userId;
     const pool = getDbPool();
-
-    // Validate the profile exists and belongs to the user
-    const profile = await this.getProfileById(profileId);
-    if (!profile || profile.userId !== userId || profile.profileType !== 'INDIVIDUAL') {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Profile not found',
-        },
-        404
-      );
-    }
-
-    if (profile.status !== 'DRAFT') {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Profile is not in draft state',
-        },
-        400
-      );
-    }
-
-    // Validate national ID format and checksum
-    if (!validateNationalId(data.nationalId)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid national ID format',
-        },
-        400
-      );
-    }
-
-    // Validate postal code
-    if (!validatePostalCode(data.postalCode)) {
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: 'Invalid postal code format',
-        },
-        400
-      );
-    }
-
     const verificationMode = await this.getVerificationMode();
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
+      const profile = await this.getProfileById(profileId, client, userId);
+      if (!profile || profile.profileType !== 'INDIVIDUAL') {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Profile not found',
+          },
+          404
+        );
+      }
+      let validationError: string | undefined;
+      if (profile.status !== 'DRAFT') validationError = 'Profile is not in draft state';
+      else if (!validateNationalId(data.nationalId)) validationError = 'Invalid national ID format';
+      else if (!validatePostalCode(data.postalCode)) validationError = 'Invalid postal code format';
+      if (validationError) {
+        throw new HttpException(
+          {
+            statusCode: 400,
+            error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
+            message: validationError,
+          },
+          400
+        );
+      }
+
+      // Completion and journey selection take the profile lock before the account.
+      const locked = await client.query(
+        `SELECT id FROM profiles WHERE id=$1 AND user_id=$2 AND profile_type='INDIVIDUAL'
+         AND status='DRAFT' AND NOT archived FOR UPDATE`,
+        [profileId, userId]
+      );
+      if (!locked.rows.length) {
+        throw new HttpException(
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Profile not found',
+          },
+          404
+        );
+      }
+      await this.lockProfileActor(client, actor);
 
       // Update profile with individual fields
       const profileResult = await client.query(
@@ -633,8 +633,6 @@ export class ProfilesService {
       );
 
       if (profileResult.rows.length === 0) {
-        await client.query('ROLLBACK');
-        // Should not happen since we validated ownership above
         throw new HttpException(
           {
             statusCode: 404,
@@ -679,7 +677,8 @@ export class ProfilesService {
       );
 
       await client.query('DELETE FROM profile_onboarding_drafts WHERE profile_id=$1', [profileId]);
-      const updatedProfile = await this.getProfileById(profileId, client);
+      const updatedProfile = await this.getProfileById(profileId, client, userId);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
@@ -749,7 +748,7 @@ export class ProfilesService {
     );
   }
 
-  private async lockAddressActor(client: PoolClient, actor: AddressActor): Promise<void> {
+  private async lockProfileActor(client: PoolClient, actor: ProfileActor): Promise<void> {
     const account = (
       await client.query('SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE', [
         actor.userId,
@@ -761,7 +760,7 @@ export class ProfilesService {
   }
 
   async createAddress(
-    actor: AddressActor,
+    actor: ProfileActor,
     profileId: string,
     data: {
       provinceId: string;
@@ -792,7 +791,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await this.lockAddressActor(client, actor);
+      await this.lockProfileActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
       const { idempotencyKey, ...command } = data;
       const work = async (): Promise<AddressRow> => {
@@ -876,7 +875,7 @@ export class ProfilesService {
    * Historical orders retain their copied address snapshot.
    */
   async updateAddress(
-    actor: AddressActor,
+    actor: ProfileActor,
     profileId: string,
     addressId: string,
     data: {
@@ -893,7 +892,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await this.lockAddressActor(client, actor);
+      await this.lockProfileActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
       const { idempotencyKey, ...command } = data;
       await this.lockCurrentAddress(client, profileId, addressId);
@@ -1028,7 +1027,7 @@ export class ProfilesService {
    * address. Orders retain copied snapshot fields independently of the saved
    * address, so removing the saved address preserves order history.
    */
-  async deleteAddress(actor: AddressActor, profileId: string, addressId: string): Promise<void> {
+  async deleteAddress(actor: ProfileActor, profileId: string, addressId: string): Promise<void> {
     const { userId } = actor;
     const pool = getDbPool();
     // Orders own copied snapshot fields; deleting a saved address cannot
@@ -1036,7 +1035,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await this.lockAddressActor(client, actor);
+      await this.lockProfileActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
       const address = await this.lockCurrentAddress(client, profileId, addressId);
       if (address.main_address) {
@@ -1090,7 +1089,7 @@ export class ProfilesService {
    * consistency.
    */
   async setMainAddress(
-    actor: AddressActor,
+    actor: ProfileActor,
     profileId: string,
     addressId: string
   ): Promise<AddressRow> {
@@ -1099,7 +1098,7 @@ export class ProfilesService {
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      await this.lockAddressActor(client, actor);
+      await this.lockProfileActor(client, actor);
       await this.requireAddressEditor(userId, profileId, client);
       const current = await this.lockCurrentAddress(client, profileId, addressId);
       if (current.main_address) {
@@ -1252,7 +1251,7 @@ export class ProfilesService {
    */
   private async lockProfileEditor(
     client: PoolClient,
-    actor: AddressActor,
+    actor: ProfileActor,
     profileId: string,
     data: Record<string, unknown>
   ): Promise<void> {
@@ -1301,7 +1300,7 @@ export class ProfilesService {
   }
 
   async assertProfileFormAuthority(
-    actor: AddressActor,
+    actor: ProfileActor,
     profileId: string,
     data: Record<string, unknown>
   ): Promise<void> {
@@ -1320,14 +1319,14 @@ export class ProfilesService {
   }
 
   async assertAddressFormAuthority(
-    actor: AddressActor,
+    actor: ProfileActor,
     profileId: string,
     addressId?: string
   ): Promise<void> {
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      await this.lockAddressActor(client, actor);
+      await this.lockProfileActor(client, actor);
       await this.requireAddressEditor(actor.userId, profileId, client);
       if (addressId) await this.lockCurrentAddress(client, profileId, addressId);
       await requireCurrentSession(client, actor);
@@ -1547,20 +1546,9 @@ export class ProfilesService {
    * Idempotent: if already ACTIVE (e.g. saved by an earlier direct
    * save endpoint), returns success without changes.
    */
-  async completeOnboarding(userId: string, profileId: string): Promise<ProfileRow> {
+  async completeOnboarding(actor: ProfileActor, profileId: string): Promise<ProfileRow> {
+    const userId = actor.userId;
     const pool = getDbPool();
-    const profile = await this.getProfileById(profileId);
-
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException(
-        {
-          statusCode: 404,
-          error: ErrorCodes.NOT_FOUND_RESOURCE.code,
-          message: 'Profile not found',
-        },
-        404
-      );
-    }
 
     const client = await pool.connect();
     try {
@@ -1573,7 +1561,11 @@ export class ProfilesService {
       ).rows[0];
       if (!locked)
         throw new HttpException(
-          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          {
+            statusCode: 404,
+            error: ErrorCodes.NOT_FOUND_RESOURCE.code,
+            message: 'Profile not found',
+          },
           404
         );
       const isDraft = locked.status === 'DRAFT';
@@ -1659,7 +1651,7 @@ export class ProfilesService {
         : locked.status;
 
       // Profile locks precede account locks, as in profile context/ownership changes.
-      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      await this.lockProfileActor(client, actor);
 
       // Set as default if user has no default profile yet
       const existing = await client.query(
@@ -1688,14 +1680,15 @@ export class ProfilesService {
           ]
         );
       }
-      const updated = await this.getProfileById(profileId, client);
+      const updated = await this.getProfileById(profileId, client, userId);
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
 
       this.logger.log(
         `Onboarding completed for profile ${privateLogId('profile', profileId)} (${targetStatus})${becomesDefault ? ' as default' : ''}`
       );
 
-      return updated ?? profile;
+      return updated ?? mapRow(locked);
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;

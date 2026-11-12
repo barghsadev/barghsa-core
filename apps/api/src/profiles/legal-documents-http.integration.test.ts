@@ -310,6 +310,15 @@ it('CRM document reads enforce live staff access, sealed profile binding and sho
   );
   const read = (id: string = profileId, actor: Record<string, string> = headers.other!) =>
     fetch(http.base + '/api/crm/profiles/' + id + '/documents', { headers: actor });
+  const readCustomer = (actor = headers.owner!) =>
+    fetch(`${http.base}/api/onboarding/documents/${profileId}`, { headers: actor });
+  expect((await readCustomer(headers.other!)).status).toBe(404);
+  const customerResponse = await readCustomer();
+  expect(customerResponse.status).toBe(200);
+  expect(customerResponse.headers.get('cache-control')).toContain('no-store');
+  expect(await customerResponse.json()).toMatchObject({
+    documents: [{ key, name: 'company-proof.pdf' }],
+  });
   expect((await read(profileId, {})).status).toBe(401);
   expect((await read(profileId, headers.owner!)).status).toBe(403);
   expect((await read()).status).toBe(403);
@@ -362,24 +371,28 @@ it('CRM document reads enforce live staff access, sealed profile binding and sho
       key,
       JSON.stringify(metadata),
     ]);
-    const denied = await read();
-    expect(denied.status).toBe(503);
-    expect(await denied.text()).not.toContain('X-Amz-Signature');
+    for (const denied of await Promise.all([read(), readCustomer()])) {
+      expect(denied.status).toBe(503);
+      expect(await denied.text()).not.toContain('X-Amz-Signature');
+    }
   }
   await http.pool.query(
     "UPDATE storage_records SET metadata=$2::jsonb,status='removed' WHERE storage_key=$1",
     [key, JSON.stringify({ purpose: 'legal_profile_document', profileId })]
   );
   expect((await read()).status).toBe(503);
+  expect((await readCustomer()).status).toBe(503);
   await http.pool.query('UPDATE legal_profiles SET documents=$2::jsonb WHERE id=$1', [
     profileId,
     JSON.stringify(['uploads/document/unsealed.pdf']),
   ]);
   expect((await read()).status).toBe(503);
+  expect((await readCustomer()).status).toBe(503);
   await http.pool.query("UPDATE legal_profiles SET documents='[]'::jsonb WHERE id=$1", [profileId]);
   const empty = await read();
   expect(empty.status).toBe(200);
   expect(await empty.json()).toEqual({ profileId, documents: [] });
+  expect(await (await readCustomer()).json()).toEqual({ documents: [] });
   await http.pool.query("DELETE FROM user_roles WHERE user_id='other'");
   expect((await read()).status).toBe(403);
 });

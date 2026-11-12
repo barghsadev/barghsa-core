@@ -46,26 +46,26 @@ afterEach(async () => {
   await http?.close();
 }, 15000);
 
+const individualInput = () => ({
+  firstName: 'Changed',
+  lastName: 'Owner',
+  nationalId: '1234567891',
+  provinceId,
+  cityId,
+  fullAddress: 'Street',
+  postalCode: '1234567890',
+});
+async function prepareCompletion() {
+  await http.pool.query("UPDATE profiles SET national_id='1234567891' WHERE id=$1", [profileId]);
+  await http.pool.query(
+    "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Street','1234567890',true)",
+    [profileId, provinceId, cityId]
+  );
+}
+
 for (const action of ['save', 'complete', 'edit'] as const) {
   it(`finishes ${action} with one available database connection and returns committed state`, async () => {
-    const data = {
-      firstName: 'Changed',
-      lastName: 'Owner',
-      nationalId: '1234567891',
-      provinceId,
-      cityId,
-      fullAddress: 'Street',
-      postalCode: '1234567890',
-    };
-    if (action === 'complete') {
-      await http.pool.query("UPDATE profiles SET national_id='1234567891' WHERE id=$1", [
-        profileId,
-      ]);
-      await http.pool.query(
-        "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES ($1,$2,$3,'Street','1234567890',true)",
-        [profileId, provinceId, cityId]
-      );
-    }
+    if (action === 'complete') await prepareCompletion();
     const response = await fetch(
       `${http.base}${action === 'edit' ? `/api/profiles/${profileId}` : action === 'save' ? `/api/onboarding/individual/${profileId}` : `/api/onboarding/complete/${profileId}`}`,
       {
@@ -74,7 +74,11 @@ for (const action of ['save', 'complete', 'edit'] as const) {
         signal: AbortSignal.timeout(2500),
         ...(action === 'complete'
           ? {}
-          : { body: JSON.stringify(action === 'edit' ? { firstName: 'Changed' } : data) }),
+          : {
+              body: JSON.stringify(
+                action === 'edit' ? { firstName: 'Changed' } : individualInput()
+              ),
+            }),
       }
     );
     expect(response.status, http.logs()).toBe(200);
@@ -96,3 +100,52 @@ for (const action of ['save', 'complete', 'edit'] as const) {
     ).toHaveLength(1);
   });
 }
+
+it.each([
+  ['start', 'profile_draft_created'],
+  ['save', 'individual_profile_saved'],
+  ['complete', 'profile_onboarding_completed'],
+])('rolls back legacy onboarding %s if the session expires during audit', async (action, event) => {
+  if (action === 'complete') await prepareCompletion();
+  const snapshot = async () => {
+    const { rows } = await http.pool.query(
+      `SELECT (SELECT jsonb_agg(to_jsonb(p) ORDER BY p.id) FROM profiles p) AS profiles,
+              (SELECT jsonb_agg(to_jsonb(a) ORDER BY a.id) FROM addresses a) AS addresses,
+              (SELECT count(*)::int FROM audit_log) AS audits`
+    );
+    return rows[0];
+  };
+  const before = await snapshot();
+  await http.pool.query(`
+    CREATE SEQUENCE legacy_onboarding_audit_calls;
+    CREATE FUNCTION expire_legacy_onboarding_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      IF NEW.event='${event}' THEN
+        PERFORM nextval('legacy_onboarding_audit_calls');
+        UPDATE sessions SET idle_deadline=clock_timestamp()-INTERVAL '1 second'
+        WHERE user_id='profile-owner';
+      END IF;
+      RETURN NEW;
+    END $$;
+    CREATE TRIGGER expire_legacy_onboarding_session BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION expire_legacy_onboarding_session()
+  `);
+  const path =
+    action === 'start'
+      ? 'start'
+      : action === 'save'
+        ? `individual/${profileId}`
+        : `complete/${profileId}`;
+  const body =
+    action === 'start' ? { profileType: 'INDIVIDUAL' } : action === 'save' ? individualInput() : {};
+  const response = await fetch(`${http.base}/api/onboarding/${path}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(body),
+  });
+  expect(
+    (await http.pool.query('SELECT is_called FROM legacy_onboarding_audit_calls')).rows[0].is_called
+  ).toBe(true);
+  expect(response.status, await response.clone().text()).toBe(401);
+  expect(await snapshot()).toEqual(before);
+});

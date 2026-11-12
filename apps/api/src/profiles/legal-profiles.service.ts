@@ -1,5 +1,6 @@
 import type { PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import {
@@ -18,6 +19,7 @@ import {
 } from '@barghsa/shared/validation';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { ProfilesService, type ProfileRow } from './profiles.service.js';
+import { legalDocumentsUnavailable, readSealedLegalDocuments } from './sealed-legal-documents.js';
 
 export interface LegalProfileRow {
   id: string;
@@ -86,30 +88,48 @@ export class LegalProfilesService {
     private readonly attachments: VerifiedAttachmentsService
   ) {}
 
-  async getDocuments(userId: string, profileId: string) {
-    const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId || profile.profileType !== 'LEGAL')
-      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    const result = await getDbPool().query('SELECT documents FROM legal_profiles WHERE id=$1', [
-      profileId,
-    ]);
-    const keys = (result.rows[0]?.documents ?? []) as string[];
-    const urls = await this.attachments.downloadUrls(keys, 'legal_profile_document');
-    if (keys.length && urls.length !== keys.length)
-      throw new HttpException({ error: 'STORAGE:UNAVAILABLE' }, 503);
-    const records = keys.length
-      ? await getDbPool().query(
-          'SELECT storage_key,file_name FROM storage_records WHERE storage_key=ANY($1::text[])',
-          [keys]
-        )
-      : { rows: [] };
+  async getDocuments(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    profileId: string
+  ) {
+    const read = (client: PoolClient) =>
+      this.readOwnedLegalDocuments(client, actor.userId, profileId);
+    const copies = await readWithCurrentAccount(actor, read);
+    if (!copies.length) return { documents: [] };
+
+    // URL signing may wait on the provider. Revalidate scope and revisions afterwards.
+    const urls = await this.attachments.downloadUrls(
+      copies.map((copy) => copy.storage_key),
+      'legal_profile_document'
+    );
+    const current = await readWithCurrentAccount(actor, read);
+    if (
+      urls.length !== copies.length ||
+      current.length !== copies.length ||
+      copies.some(
+        (copy, index) =>
+          copy.storage_key !== current[index]?.storage_key ||
+          copy.revision !== current[index]?.revision
+      )
+    )
+      throw legalDocumentsUnavailable();
     return {
-      documents: keys.map((key, index) => ({
-        key,
-        name: records.rows.find((row) => row.storage_key === key)?.file_name ?? 'Document',
-        url: urls[index],
+      documents: copies.map((copy, index) => ({
+        key: copy.storage_key,
+        name: copy.file_name ?? 'Document',
+        url: urls[index]!,
       })),
     };
+  }
+
+  private async readOwnedLegalDocuments(client: PoolClient, userId: string, profileId: string) {
+    const { rows } = await client.query<{ id: string; documents: unknown }>(
+      `SELECT p.id,l.documents FROM profiles p LEFT JOIN legal_profiles l ON l.id=p.id
+       WHERE p.id=$1 AND p.user_id=$2 AND p.profile_type='LEGAL' AND NOT p.archived`,
+      [profileId, userId]
+    );
+    if (!rows[0]) throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+    return readSealedLegalDocuments(client, rows[0].id, rows[0].documents ?? []);
   }
 
   /**
