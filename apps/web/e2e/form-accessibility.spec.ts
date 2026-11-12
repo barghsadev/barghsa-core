@@ -2045,11 +2045,10 @@ for (const locale of ['en', 'fa']) {
           page.evaluate(() => document.documentElement.style.getPropertyValue('--primary'))
         )
         .toBe('#2563eb');
-      const settingsNavSelector = '[data-testid="admin-settings-layout"] > nav';
+      await expect(page.getByTestId('admin-settings-layout').locator('nav')).toHaveCount(0);
       const checkContrast = async (scrollToEnd = false) => {
         const content = await new AxeBuilder({ page })
           .include('main[data-area=admin]')
-          .exclude(settingsNavSelector)
           .withRules(['color-contrast'])
           .analyze();
         expect(content.violations).toEqual([]);
@@ -2097,9 +2096,9 @@ for (const locale of ['en', 'fa']) {
           await expect(page.locator('#admin-navigation')).toBeHidden();
         }
       };
-      const settingsNav = page.locator(settingsNavSelector);
-      if (await settingsNav.isVisible()) {
-        const labels = settingsNav.locator('a, p');
+      const workspaceSidebar = page.locator('#admin-navigation');
+      if (await workspaceSidebar.isVisible()) {
+        const labels = workspaceSidebar.locator('nav .shell-sidebar-label, nav p');
         const labelCount = await labels.count();
         const checked = new Set<number>();
         for (let index = 0; index < labelCount; index++) {
@@ -2109,24 +2108,26 @@ for (const locale of ['en', 'fa']) {
             .evaluate((label) =>
               label.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' })
             );
-          const visible = await settingsNav.evaluate((nav) => {
+          const visible = await workspaceSidebar.evaluate((nav) => {
             const bounds = nav.getBoundingClientRect();
             const pixel = (value: number) => Math.round(value * devicePixelRatio);
-            return Array.from(nav.querySelectorAll('a, p')).flatMap((label, index) => {
-              const rect = label.getBoundingClientRect();
-              const inView =
-                pixel(rect.top) >= pixel(Math.max(0, bounds.top)) &&
-                pixel(rect.bottom) <= pixel(Math.min(innerHeight, bounds.bottom));
-              label.toggleAttribute('data-contrast-visible', inView);
-              return inView ? [index] : [];
-            });
+            return Array.from(nav.querySelectorAll('nav .shell-sidebar-label, nav p')).flatMap(
+              (label, index) => {
+                const rect = label.getBoundingClientRect();
+                const inView =
+                  pixel(rect.top) >= pixel(Math.max(0, bounds.top)) &&
+                  pixel(rect.bottom) <= pixel(Math.min(innerHeight, bounds.bottom));
+                label.toggleAttribute('data-contrast-visible', inView);
+                return inView ? [index] : [];
+              }
+            );
           });
           expect(visible).toContain(index);
           const navigation = await new AxeBuilder({
             page,
             ...(locale === 'fa' ? { axeSource: persianNavigationAxeSource } : {}),
           })
-            .include(`${settingsNavSelector} [data-contrast-visible]`)
+            .include('#admin-navigation [data-contrast-visible]')
             .withRules(['color-contrast'])
             .analyze();
           expect(navigation.violations).toEqual([]);
@@ -2135,7 +2136,7 @@ for (const locale of ['en', 'fa']) {
           for (const label of visible) checked.add(label);
         }
         expect(checked.size).toBe(labelCount);
-        await settingsNav.evaluate((nav) => {
+        await workspaceSidebar.evaluate((nav) => {
           nav.scrollTop = 0;
         });
       }
