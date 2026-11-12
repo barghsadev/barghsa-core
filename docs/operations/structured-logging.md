@@ -31,6 +31,29 @@ its API and edge records and a queued delivery to its worker record. Confirm
 the configured external log sink receives those same structured records and
 apply the approved retention policy there.
 
+## Loki log shipping
+
+Use `deploy/monitoring/operator-log-shipping.yml` with the verified Alloy
+image and an approved Loki service on a dedicated internal Docker network.
+Set `BARGHSA_LOKI_NETWORK` to that network and give Loki the `loki` alias.
+Check network membership before starting Alloy and keep the push endpoint
+off published host ports.
+
+For API, worker, inference and web, set the four `BARGHSA_*_LOG_DIRECTORY`
+values to the parent directories of the active containers' Docker `LogPath`
+values. Confirm the `json-file` driver. Set `BARGHSA_EDGE_LOG_DIRECTORY` to
+the authorized NGINX access log directory. The agent reads `access.log` there.
+After a release, update any replaced container paths and recreate Alloy with
+the same positions volume. The agent mounts the selected directories read-only.
+
+Alloy accepts structured operator records, keeps validated route templates,
+request and trace IDs, pseudonymous references and outcome fields, and removes
+free-form messages and fields outside its allowlist. Use `service`,
+`environment`, `level` and `origin` as Loki labels. Filter a correlation ID
+from the JSON record after selecting the stream. Verify one API request and
+one worker delivery in Loki and check `loki_write_sent_entries_total` and
+`loki_write_dropped_entries_total` on Alloy. [Alloy Loki write metrics](https://grafana.com/docs/alloy/latest/reference/components/loki/loki.write/#debug-metrics).
+
 ## API and notification worker traces
 
 Set `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` to the protected OTLP HTTP traces

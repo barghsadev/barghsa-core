@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:17:35+00:00",
+  "updated": "2026-11-12T10:30:06+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -614980,7 +614980,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             }
           ],
           "source_renewals": [
@@ -615007,6 +615007,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -615144,7 +615152,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -615245,6 +615253,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -615514,7 +615530,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -615615,6 +615631,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -615820,7 +615844,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -615957,6 +615981,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -616162,7 +616194,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -616299,6 +616331,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -616979,7 +617019,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -617116,6 +617156,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -617132,19 +617180,64 @@
         "story": "06-security-testing-observability.md#spec-fbdd9ec1cd8c"
       },
       "requirement": "| T-06.13.02.05 | Configure Loki log shipping agent (Promtail / Grafana Alloy) | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
-        "current_acceptance": null
+        "changed_paths": [
+          "docs/operations/structured-logging.md",
+          "deploy/monitoring/operator-logs.alloy",
+          "deploy/monitoring/operator-log-shipping.yml"
+        ],
+        "batches": [
+          "release-0.6-loki-shipping"
+        ],
+        "current_acceptance": {
+          "batch": "release-0.6-loki-shipping",
+          "checks": [
+            "Configured the optional Alloy log shipper for active API, worker, AI inference, static web and NGINX files. The application sources use Docker json-file; the edge source reads native structured JSON. Compose validated five explicit read-only binds and the dedicated internal Loki network without publishing ports or mounting Docker control access.",
+            "Disposable Grafana Alloy 1.21.3 and Loki 3.7.9 accepted and returned six exact structured source records. Verified API and worker correlation, trace and pseudonym fields, route, status, duration and delivery identity. Unknown fields, free-form and malformed records, invalid correlation IDs and unselected files never reached Loki. Labels retained low-cardinality fields only.",
+            "Actual file rotation and an Alloy process restart were tested on the same positions volume. The Loki query and Alloy write counter verified one post-restart record and no replay. The containers, positions volume and test network were removed. Alloy native formatting and validation, Prettier and diff checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "docs/operations/structured-logging.md",
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+            },
+            {
+              "path": "deploy/monitoring/operator-logs.alloy",
+              "sha256": "77511592e1305f5a5512f2196b54294623b35f9c0df103c974f72a97220a92cb"
+            },
+            {
+              "path": "deploy/monitoring/operator-log-shipping.yml",
+              "sha256": "5fc8f5db263ad65779c5527465fa18348ce378cb48204b59faa632ccbef9d587"
+            },
+            {
+              "path": "deploy/staging/nginx.conf",
+              "sha256": "7e200bcd67036b403abbab1dee49d931955ffac8ded77041bade143a069c0ed6"
+            },
+            {
+              "path": "deploy/staging/compose.yml",
+              "sha256": "4d0a4d05925520ae0356457d6d4864ded07db432fb834064dc70bcdb6e28849e"
+            },
+            {
+              "path": "packages/shared/src/operator-logging.ts",
+              "sha256": "b704608e1cd108f78a7613223982dd94f9d4dc1a3ad4aff33ead9677aee73e0e"
+            },
+            {
+              "path": "apps/worker/src/delivery-log.ts",
+              "sha256": "885a9c5dca0cbd3841f3c071b076ab63b36e00400fb0d366b34f07541bbb44c3"
+            },
+            {
+              "path": "apps/api/src/metrics/http-request-metrics.ts",
+              "sha256": "80b31daa81378924d16a40ed12b70032ceb1fa8b404076589c6bdf0842104aa5"
+            }
+          ]
+        }
       }
     },
     {
@@ -626566,7 +626659,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -626597,6 +626690,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-loki-shipping",
+              "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
             }
           ]
         }
@@ -1092845,6 +1092946,86 @@
         {
           "file": "form-recovery-readback.json",
           "sha256": "dcb5afc140370957a95412eaa2b13e5565758fe0af742e6713fd60bc0c777bc3"
+        }
+      ]
+    },
+    "release-0.6-loki-shipping": {
+      "batch": "release-0.6-loki-shipping",
+      "base_commit": "3e3b22400a64fe370c06f1a1494ca041e9854478",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.16.01.04"
+      ],
+      "changed_paths": [
+        "docs/operations/structured-logging.md",
+        "deploy/monitoring/operator-logs.alloy",
+        "deploy/monitoring/operator-log-shipping.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+        },
+        {
+          "path": "deploy/monitoring/operator-logs.alloy",
+          "sha256": "77511592e1305f5a5512f2196b54294623b35f9c0df103c974f72a97220a92cb"
+        },
+        {
+          "path": "deploy/monitoring/operator-log-shipping.yml",
+          "sha256": "5fc8f5db263ad65779c5527465fa18348ce378cb48204b59faa632ccbef9d587"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "7e200bcd67036b403abbab1dee49d931955ffac8ded77041bade143a069c0ed6"
+        },
+        {
+          "path": "deploy/staging/compose.yml",
+          "sha256": "4d0a4d05925520ae0356457d6d4864ded07db432fb834064dc70bcdb6e28849e"
+        },
+        {
+          "path": "packages/shared/src/operator-logging.ts",
+          "sha256": "b704608e1cd108f78a7613223982dd94f9d4dc1a3ad4aff33ead9677aee73e0e"
+        },
+        {
+          "path": "apps/worker/src/delivery-log.ts",
+          "sha256": "885a9c5dca0cbd3841f3c071b076ab63b36e00400fb0d366b34f07541bbb44c3"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "80b31daa81378924d16a40ed12b70032ceb1fa8b404076589c6bdf0842104aa5"
+        }
+      ],
+      "checks": [
+        "Configured the optional Alloy log shipper for active API, worker, AI inference, static web and NGINX files. The application sources use Docker json-file; the edge source reads native structured JSON. Compose validated five explicit read-only binds and the dedicated internal Loki network without publishing ports or mounting Docker control access.",
+        "Disposable Grafana Alloy 1.21.3 and Loki 3.7.9 accepted and returned six exact structured source records. Verified API and worker correlation, trace and pseudonym fields, route, status, duration and delivery identity. Unknown fields, free-form and malformed records, invalid correlation IDs and unselected files never reached Loki. Labels retained low-cardinality fields only.",
+        "Actual file rotation and an Alloy process restart were tested on the same positions volume. The Loki query and Alloy write counter verified one post-restart record and no replay. The containers, positions volume and test network were removed. Alloy native formatting and validation, Prettier and diff checks passed."
+      ],
+      "limitations": [
+        "The rehearsal used synthetic source files and disposable Loki storage. Persistent staging sink approval and runtime activation, live release correlation, operational retention and archive readback remain separate gates. Alloy offsets are not an audit ledger."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-loki-shipping",
+      "execution_receipts": [
+        {
+          "file": "rehearse.py",
+          "sha256": "9808992707c9a62a4beb0ee329f108da56e53058029ac8ea25d59ee67fc8ab16"
+        },
+        {
+          "file": "local-loki.yml",
+          "sha256": "d35f88fcf9b1a1ba367f91c34a2484e313c5e1a778fcbe034ed07e6a1cf5a7b9"
+        },
+        {
+          "file": "rehearsal.log",
+          "sha256": "d365381b76e8751eed65a2c0f6cdd9eedfc24b173087765903119bf04e15d854"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "b3b0db1b3086df10923460b8c5883fdcbe127748765ece3e074dd143a50b4b6f"
         }
       ]
     }

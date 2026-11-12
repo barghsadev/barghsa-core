@@ -1,0 +1,115 @@
+loki.source.file "application" {
+	targets = [
+		{__path__ = "/var/log/barghsa/api/*-json.log", origin = "application"},
+		{__path__ = "/var/log/barghsa/worker/*-json.log", origin = "application"},
+		{__path__ = "/var/log/barghsa/ai-inference/*-json.log", origin = "application"},
+		{__path__ = "/var/log/barghsa/web/*-json.log", origin = "application"},
+	]
+
+	file_match {
+		enabled     = true
+		sync_period = "5s"
+	}
+	forward_to = [loki.process.docker.receiver]
+}
+
+loki.source.file "edge" {
+	targets    = [{__path__ = "/var/log/barghsa/edge/access.log", origin = "edge"}]
+	forward_to = [loki.process.operator.receiver]
+}
+
+loki.process "docker" {
+	stage.docker { }
+	forward_to = [loki.process.operator.receiver]
+}
+
+loki.process "operator" {
+	stage.json {
+		drop_malformed = true
+		expressions    = {
+			timestamp     = "timestamp",
+			service       = "service",
+			environment   = "environment",
+			level         = "level",
+			correlationId = "correlationId",
+			event         = "event",
+			context       = "context",
+			actorRef      = "actorRef",
+			profileRef    = "profileRef",
+			route         = "route",
+			method        = "method",
+			job           = "job",
+			outboxId      = "outboxId",
+			channel       = "channel",
+			traceId       = "traceId",
+			spanId        = "spanId",
+			status        = "status",
+			outcome       = "outcome",
+			durationMs    = "durationMs",
+			duration      = "duration",
+		}
+	}
+
+	stage.template {
+		source   = "safe_record"
+		template = `{{- $id := "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$" -}}
+{{- $correlation := lower (toString .correlationId) -}}
+{{- if and (regexMatch "^(api|worker|ai-inference|database|web)$" (toString .service)) (regexMatch "^(staging|production)$" (toString .environment)) (regexMatch "^(debug|info|warn|error|fatal)$" (toString .level)) (regexMatch "^[0-9T:.+Z-]{20,40}$" (toString .timestamp)) (or (regexMatch $id $correlation) (regexMatch "^[0-9a-f]{32}$" $correlation)) -}}
+  {{- $record := dict "timestamp" .timestamp "service" .service "environment" .environment "level" .level "correlationId" $correlation -}}
+  {{- range $key := list "event" "context" "job" "channel" "outcome" -}}
+    {{- $value := index $ $key -}}
+    {{- if regexMatch "^[a-zA-Z0-9_.-]{1,96}$" (toString $value) -}}
+      {{- $_ := set $record $key $value -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if regexMatch "^/[a-zA-Z0-9_./:-]{0,159}$" (toString .route) -}}{{- $_ := set $record "route" .route -}}{{- end -}}
+  {{- if regexMatch "^(GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|CONNECT|TRACE)$" (toString .method) -}}{{- $_ := set $record "method" .method -}}{{- end -}}
+  {{- if regexMatch "^actor:[0-9a-f]{32}$" (toString .actorRef) -}}{{- $_ := set $record "actorRef" .actorRef -}}{{- end -}}
+  {{- if regexMatch "^profile:[0-9a-f]{32}$" (toString .profileRef) -}}{{- $_ := set $record "profileRef" .profileRef -}}{{- end -}}
+  {{- if regexMatch $id (toString .outboxId) -}}{{- $_ := set $record "outboxId" .outboxId -}}{{- end -}}
+  {{- if regexMatch "^[0-9a-f]{32}$" (toString .traceId) -}}{{- $_ := set $record "traceId" .traceId -}}{{- end -}}
+  {{- if regexMatch "^[0-9a-f]{16}$" (toString .spanId) -}}{{- $_ := set $record "spanId" .spanId -}}{{- end -}}
+  {{- if regexMatch "^[1-5][0-9]{2}$" (toString .status) -}}
+    {{- $_ := set $record "status" (int .status) -}}
+  {{- else if regexMatch "^[a-z_]{1,32}$" (toString .status) -}}
+    {{- $_ := set $record "status" .status -}}
+  {{- end -}}
+  {{- range $key := list "durationMs" "duration" -}}
+    {{- $value := index $ $key -}}
+    {{- if regexMatch "^[0-9]{1,10}(\\.[0-9]{1,6})?$" (toString $value) -}}{{- $_ := set $record $key (float64 $value) -}}{{- end -}}
+  {{- end -}}
+  {{- toJson $record -}}
+{{- else -}}invalid{{- end -}}`
+	}
+
+	stage.drop {
+		source              = "safe_record"
+		value               = "invalid"
+		drop_counter_reason = "not_operator_record"
+	}
+
+	stage.timestamp {
+		source            = "timestamp"
+		format            = "RFC3339Nano"
+		action_on_failure = "skip"
+	}
+
+	stage.labels {
+		values = {service = "service", environment = "environment", level = "level"}
+	}
+
+	stage.label_keep {
+		values = ["origin", "service", "environment", "level"]
+	}
+
+	stage.output {
+		source = "safe_record"
+	}
+	forward_to = [loki.write.private.receiver]
+}
+
+loki.write "private" {
+	endpoint {
+		url = "http://loki:3100/loki/api/v1/push"
+	}
+}

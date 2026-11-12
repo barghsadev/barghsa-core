@@ -1,0 +1,54 @@
+name: barghsa-operator-log-shipping
+services:
+  alloy:
+    image: ${BARGHSA_ALLOY_IMAGE:?Set a verified immutable Grafana Alloy image}
+    pull_policy: never
+    command:
+      [
+        run,
+        --storage.path=/run/barghsa-alloy,
+        --server.http.listen-addr=127.0.0.1:12345,
+        /etc/alloy/config.alloy,
+      ]
+    user: '0:0'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    mem_limit: 384m
+    networks: [logs]
+    volumes:
+      - alloydata:/run/barghsa-alloy
+      - ./operator-logs.alloy:/etc/alloy/config.alloy:ro
+      - type: bind
+        source: ${BARGHSA_API_LOG_DIRECTORY:?Set the active API Docker log directory}
+        target: /var/log/barghsa/api
+        read_only: true
+        bind: { create_host_path: false }
+      - type: bind
+        source: ${BARGHSA_WORKER_LOG_DIRECTORY:?Set the active worker Docker log directory}
+        target: /var/log/barghsa/worker
+        read_only: true
+        bind: { create_host_path: false }
+      - type: bind
+        source: ${BARGHSA_INFERENCE_LOG_DIRECTORY:?Set the active inference Docker log directory}
+        target: /var/log/barghsa/ai-inference
+        read_only: true
+        bind: { create_host_path: false }
+      - type: bind
+        source: ${BARGHSA_WEB_LOG_DIRECTORY:?Set the active web Docker log directory}
+        target: /var/log/barghsa/web
+        read_only: true
+        bind: { create_host_path: false }
+      - type: bind
+        source: ${BARGHSA_EDGE_LOG_DIRECTORY:?Set the authorized edge access log directory}
+        target: /var/log/barghsa/edge
+        read_only: true
+        bind: { create_host_path: false }
+
+networks:
+  logs:
+    external: true
+    name: ${BARGHSA_LOKI_NETWORK:?Set the dedicated internal Loki network}
+volumes:
+  alloydata:
