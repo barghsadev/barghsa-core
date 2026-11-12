@@ -40,6 +40,16 @@ is off until the endpoint is set. `OTEL_EXPORTER_OTLP_TRACES_TIMEOUT` defaults
 to 2,000 milliseconds and applies to the collector connection as well as the
 export attempt.
 
+For Sentry performance monitoring, copy the traces endpoint and header from
+the approved environment's **Client Keys → OpenTelemetry** settings. Supply
+the endpoint as `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` and the header as
+`OTEL_EXPORTER_OTLP_TRACES_HEADERS` in protected deployment configuration.
+The header takes the form `x-sentry-auth=sentry%20sentry_key%3D<project-key>`.
+Route through an approved collector when both Grafana and Sentry need the
+traces. Keep the error envelopes and traces on their separate
+ingestion paths. Verify a synthetic trace by ID in the approved Sentry project
+before accepting the environment. [Sentry OTLP configuration](https://github.com/getsentry/otlp-tracing-sentry#setup-connect-to-sentry-2-minutes).
+
 The API accepts one valid W3C `traceparent` and starts a new context for
 missing, malformed or repeated values. It records the registered route
 template, HTTP method and status. URLs, query values, headers, bodies,

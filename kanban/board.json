@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:06:20+00:00",
+  "updated": "2026-11-12T10:10:38+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -614635,7 +614635,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             }
           ],
           "source_renewals": [
@@ -614654,6 +614654,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -614791,7 +614799,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -614884,6 +614892,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -615153,7 +615169,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -615246,6 +615262,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -615451,7 +615475,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -615580,6 +615604,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -615785,7 +615817,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -615914,6 +615946,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -616594,7 +616634,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -616723,6 +616763,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds the verified Explore and removal instructions. Existing structured logging and trace instrumentation procedures are preserved."
+            },
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -626173,7 +626221,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "c05d04c177a4982fdc9058907ce6bfc17b5c4302358a5072115633ccbd26775f"
+              "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -626194,6 +626242,16 @@
             {
               "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
               "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-sentry-trace-transport",
+              "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds the verified Sentry endpoint and header instructions. Existing tracing, logging and Grafana Explore procedures are preserved."
             }
           ]
         }
@@ -626823,18 +626881,22 @@
         "story": "06-security-testing-observability.md#spec-b598d0822d84"
       },
       "requirement": "| T-06.16.02.05 | Configure performance monitoring integration (tracing) with Sentry | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Enable the protected performance trace destination in the accepted staging configuration and read back the exact controlled API and worker traces in the approved Sentry project. The synthetic protocol probe received HTTP 200, and provider readback still requires an authenticated project reader."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "docs/operations/structured-logging.md"
+        ],
+        "batches": [
+          "release-0.6-sentry-trace-transport"
+        ],
         "current_acceptance": null
       }
     },
@@ -1091924,6 +1091986,64 @@
         {
           "file": "source.sha256",
           "sha256": "da82380f00b1752ee90b3aaac605fc277163bace10601a62f3cf310884e6bec4"
+        }
+      ]
+    },
+    "release-0.6-sentry-trace-transport": {
+      "batch": "release-0.6-sentry-trace-transport",
+      "base_commit": "9b39848d4f615e4481e1d0c8da077f83d2b9a5bb",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.16.02.05",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.16.01.04"
+      ],
+      "changed_paths": [
+        "docs/operations/structured-logging.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "11f9203da3d2084a3fc820546b38ceced4aaa2feedb17f41da9d8ed2fd1c18cf"
+        },
+        {
+          "path": "packages/shared/src/telemetry.ts",
+          "sha256": "6acc1efb29ac474acf1f4d95642f80f18d32dcc432a12d9ca397c4995e49d4f1"
+        },
+        {
+          "path": "apps/api/src/metrics/api-request-tracing.ts",
+          "sha256": "5bd74d1440f31604a188be2e5e60a96eacb130790bd36b56898af2c003f7a545"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "The compiled shared OTLP exporter sent API and worker spans to a protected-protocol fixture. Both used the expected OTLP JSON format and decoded Sentry auth header. The header value stayed out of the spans. The shared package build and 38 exports checks passed.",
+        "The approved staging Sentry endpoint returned HTTP 200 for one credential-free synthetic OTLP trace. The evidence file records its exact trace ID. The available browser session reached organization sign-in, so storage and project readback remain unverified.",
+        "The operations guide documents the existing configuration and how to keep both destinations through the approved collector. Prettier and git diff --check passed."
+      ],
+      "limitations": [
+        "Enable the protected performance trace destination in the accepted staging configuration and read back the exact controlled API and worker traces in the approved Sentry project. The synthetic protocol probe received HTTP 200, and provider readback still requires an authenticated project reader."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sentry-trace-transport",
+      "execution_receipts": [
+        {
+          "file": "ingest-receipt.json",
+          "sha256": "0e1ec8298bba8fea1495dfb3c4c123ed7df1a114f9de8deb675dc54f0300207a"
+        },
+        {
+          "file": "exporter-check.log",
+          "sha256": "ed80df3dddea87592d82462513da2143d81b91b30d6f2090d48c38b550943744"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "2c5d2144218cea774bec5c0f26ac86fc5d9d2f84ffa0199221bf1d428999ee4e"
         }
       ]
     }
