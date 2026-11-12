@@ -2,6 +2,10 @@ import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { AdminService } from './admin.service.js';
+
+type GreenRuleRecovery = Awaited<ReturnType<AdminService['getGreenRuleRecovery']>>;
+type GreenRuleDraft = Awaited<ReturnType<AdminService['stageGreenRuleRecovery']>>;
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
@@ -203,6 +207,116 @@ function save(body: unknown = input, user = 'operator') {
     body: JSON.stringify(body),
   });
 }
+it('stages a prior green revision and activates it once through current safety checks', async () => {
+  const path = `${http.base}/api/admin/config/green-electricity-rules`;
+  const history = (user = 'operator', query = '') =>
+    fetch(`${path}/rollback-history${query}`, { headers: headers[user]! });
+  const post = (action: string, body: unknown, user = 'operator') =>
+    fetch(`${path}/${action}`, {
+      method: 'POST',
+      headers: headers[user]!,
+      body: JSON.stringify(body),
+    });
+  expect((await history('other')).status).toBe(403);
+  expect((await history('operator', '?beforeVersion=1&beforeVersion=2')).status).toBe(400);
+  expect(await (await history()).json()).toEqual({
+    baseVersion: 0,
+    items: [],
+    nextBeforeVersion: null,
+    draft: null,
+  });
+  const prior = await save();
+  expect(prior.status, http.logs()).toBe(200);
+  const previousConfig = await prior.json();
+  const edited = {
+    ...input,
+    simple_order: { ...input.simple_order, mandatory_green_enabled: false },
+  };
+  expect((await save(edited)).status, http.logs()).toBe(200);
+  const found = await history();
+  expect(found.status, http.logs()).toBe(200);
+  const list = (await found.json()) as GreenRuleRecovery;
+  expect(list).toMatchObject({
+    baseVersion: 2,
+    draft: null,
+    items: [{ version: 1, config: previousConfig }],
+  });
+  const command = { sourceId: list.items[0]!.id, expectedVersion: 2 };
+  const epoch = async () =>
+    (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows[0].version;
+  const active = async () =>
+    (await http.pool.query('SELECT version,value FROM app_config WHERE key=$1', [configKey]))
+      .rows[0];
+  const before = await epoch();
+  expect((await post('rollback-draft', { ...command, expectedVersion: 1 })).status).toBe(409);
+  expect((await post('rollback-draft', { ...command, sourceId: randomUUID() })).status).toBe(404);
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='viewer'");
+  try {
+    expect((await post('rollback-draft', command, 'viewer')).status).toBe(403);
+  } finally {
+    await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='viewer'");
+  }
+  const staged = await post('rollback-draft', command);
+  expect(staged.status, http.logs()).toBe(201);
+  const draft = (await staged.json()) as GreenRuleDraft;
+  expect(draft).toMatchObject({
+    sourceId: command.sourceId,
+    sourceVersion: 1,
+    baseVersion: 2,
+    config: previousConfig,
+  });
+  expect(await (await post('rollback-draft', command)).json()).toEqual(draft);
+  expect(await (await history()).json()).toMatchObject({ draft });
+  expect(await active()).toEqual({ version: 2, value: edited });
+  expect(await epoch()).toBe(before);
+  const activation = { draftId: draft.id, expectedVersion: 2 };
+  await http.pool.query("UPDATE products SET status='inactive' WHERE system_key='green'");
+  expect((await post('rollback-activate', activation)).status, http.logs()).toBe(400);
+  expect(await active()).toEqual({ version: 2, value: edited });
+  expect(await epoch()).toBe(before);
+  await http.pool.query("UPDATE products SET status='active' WHERE system_key='green'");
+  const decisions = await Promise.all([
+    post('rollback-activate', activation),
+    post('rollback-activate', activation),
+  ]);
+  expect(decisions.map((response) => response.status).sort(), http.logs()).toEqual([200, 409]);
+  expect(await decisions.find((response) => response.ok)!.json()).toEqual({
+    config: previousConfig,
+    version: 3,
+    draftId: draft.id,
+  });
+  expect(await active()).toEqual({ version: 3, value: input });
+  expect(await epoch()).toBe(before + 1);
+  expect(await (await history()).json()).toMatchObject({ baseVersion: 3, draft: null });
+  const audits = await auditWindow.query(
+    "SELECT metadata::jsonb AS data FROM audit_log WHERE event='config_change' AND metadata::jsonb->>'key'=$1 ORDER BY created_at,id",
+    [configKey]
+  );
+  expect(audits.rows.map((row) => row.data.version)).toEqual([1, 2, 3]);
+  expect(audits.rows[2].data).toMatchObject({
+    rollbackDraftId: draft.id,
+    restoredFromVersion: 1,
+    previousVersion: 2,
+    previousValue: edited,
+  });
+  for (let version = 4; version <= 24; version++) {
+    const update = {
+      ...edited,
+      simple_order: { ...edited.simple_order, average_power_threshold_kw: version },
+    };
+    expect((await save(update)).status, http.logs()).toBe(200);
+  }
+  const newest = (await (await history()).json()) as GreenRuleRecovery;
+  expect(newest.baseVersion).toBe(24);
+  expect(newest.items.map((item) => item.version)).toEqual(
+    Array.from({ length: 20 }, (_, offset) => 23 - offset)
+  );
+  expect(newest.nextBeforeVersion).toBe(4);
+  const older = (await (await history('operator', '?beforeVersion=4')).json()) as GreenRuleRecovery;
+  expect(older.items.map((item) => item.version)).toEqual([3, 2, 1]);
+  expect(older.nextBeforeVersion).toBeNull();
+});
+
 it('rejects extra fields in the green settings envelope and every supplied mode', async () => {
   const version = (await http.pool.query("SELECT version FROM config_version WHERE id='global'"))
     .rows[0].version;

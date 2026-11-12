@@ -1,5 +1,5 @@
 import { confirmationText } from '@barghsa/i18n/confirmation';
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react';
 import { t } from '@barghsa/i18n/admin-ui';
 import { LoadingStatus, Alert, Button, Input, Label } from '@barghsa/ui';
 import {
@@ -42,7 +42,8 @@ import {
 } from '../lib/electricity-settings-form.js';
 const base = '/api/admin/config';
 type Copy = (key: string) => string;
-type Kind = 'rules' | 'retention' | 'template';
+type Kind = 'rules' | 'recovery' | 'retention' | 'template';
+const GreenRulesRecovery = lazy(() => import('../components/GreenRulesRecovery.js'));
 function GreenEditor({
   label,
   safety,
@@ -467,7 +468,13 @@ export default function AdminElectricityRulesPage() {
     label = (key: string) => t(`admin.green.${key}`, locale);
   const [revision, setRevision] = useState(0),
     [active, setActive] = useState<Kind | null>(null);
-  const scope = useCatalogueScope(useCallback(() => setActive(null), []));
+  const [showRecovery, setShowRecovery] = useState(false);
+  const scope = useCatalogueScope(
+    useCallback(() => {
+      setActive(null);
+      setShowRecovery(false);
+    }, [])
+  );
   const safety = useCatalogueResource(
     scope,
     `${base}/green-electricity-rules/safety-status`,
@@ -478,6 +485,11 @@ export default function AdminElectricityRulesPage() {
   }, [revision, safety.retry]);
   const rulesBusy = useCallback(
     (busy: boolean) => setActive((value) => (busy ? 'rules' : value === 'rules' ? null : value)),
+    []
+  );
+  const recoveryBusy = useCallback(
+    (busy: boolean) =>
+      setActive((value) => (busy ? 'recovery' : value === 'recovery' ? null : value)),
     []
   );
   const retentionBusy = useCallback(
@@ -533,6 +545,29 @@ export default function AdminElectricityRulesPage() {
             onDenied={scope.deny}
             refreshVersion={revision}
           />
+          <Button
+            type="button"
+            variant="outline"
+            aria-expanded={showRecovery}
+            aria-controls={showRecovery ? 'green-rule-recovery' : undefined}
+            disabled={active !== null}
+            onClick={() => setShowRecovery((value) => !value)}
+          >
+            {label('recoveryTitle')}
+          </Button>
+          {showRecovery && (
+            <div id="green-rule-recovery">
+              <Suspense fallback={<LoadingStatus>{label('recoveryLoading')}</LoadingStatus>}>
+                <GreenRulesRecovery
+                  label={label}
+                  disabled={!!active && active !== 'recovery'}
+                  onBusyChange={recoveryBusy}
+                  onDenied={scope.deny}
+                  onActivated={() => setRevision((value) => value + 1)}
+                />
+              </Suspense>
+            </div>
+          )}
           <RetentionEditor
             label={label}
             disabled={!!active && active !== 'retention'}

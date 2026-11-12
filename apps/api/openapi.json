@@ -3335,6 +3335,114 @@
         ]
       }
     },
+    "/api/admin/config/green-electricity-rules/rollback-activate": {
+      "post": {
+        "operationId": "AdminController_activateGreenRuleRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "draftId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate the exact green rule recovery draft as a new revision",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/green-electricity-rules/rollback-draft": {
+      "post": {
+        "operationId": "AdminController_stageGreenRuleRecovery",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a green rule recovery draft from a prior published revision",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/admin/config/green-electricity-rules/rollback-history": {
+      "get": {
+        "operationId": "AdminController_greenRuleRecoveryHistory",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read published green rule revisions and the current recovery draft",
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
     "/api/admin/config/green-electricity-rules/safety-status": {
       "get": {
         "operationId": "AdminController_getGreenElectricitySafetyStatus",

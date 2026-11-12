@@ -432,6 +432,22 @@ export const fa: Record<string, string> = {
   'admin.contractLimits.leadTimeDaysHelp':
     'عدد صحیح از ۰ تا ۳۶۵۰۰ وارد کنید. صفر به معنی مجاز بودن شروع از امروز است.',
   'admin.green.ruleEditor': 'ویرایش قواعد برق سبز',
+  'admin.green.recoveryTitle': 'تاریخچه قواعد برق سبز',
+  'admin.green.recoveryLoading': 'در حال دریافت تاریخچه قواعد…',
+  'admin.green.recoveryReadError': 'دریافت تاریخچه قواعد انجام نشد.',
+  'admin.green.recoveryEmpty': 'نسخه منتشرشده قبلی برای بازیابی وجود ندارد.',
+  'admin.green.recoveryRevision': 'نسخه {version}',
+  'admin.green.recoveryStage': 'ایجاد پیش‌نویس از نسخه {version}',
+  'admin.green.recoveryDraft': 'پیش‌نویس بازیابی نسخه {version}',
+  'admin.green.recoveryStageConfirm':
+    'این قواعد را برای بررسی به‌صورت پیش‌نویس بازیابی ذخیره کنید.',
+  'admin.green.recoveryActivate': 'فعال‌سازی پیش‌نویس بازیابی',
+  'admin.green.recoveryActivateConfirm':
+    'این قواعد را به‌عنوان نسخه جدید برای سفارش‌های آینده برق فعال کنید.',
+  'admin.green.recoveryConflict':
+    'قواعد یا پیش‌نویس تغییر کرده است. پیش از ادامه تاریخچه را تازه کنید.',
+  'admin.green.recoveryLatest': 'نسخه‌های اخیر',
+  'admin.green.recoveryOlder': 'نسخه‌های قدیمی‌تر',
   'admin.green.invalidActivation':
     'محصول برق سبز فعال با قیمت مثبت لازم است؛ یا قاعده را غیرفعال کنید.',
   'admin.green.readError': 'دریافت این تنظیمات انجام نشد. مقادیر واردشده حفظ شده است.',
@@ -1414,6 +1430,21 @@ export const en: Record<string, string> = {
   'admin.contractLimits.leadTimeDaysHelp':
     'Enter an integer from 0 to 36500. Zero permits a start date of today.',
   'admin.green.ruleEditor': 'Edit green-electricity rules',
+  'admin.green.recoveryTitle': 'Green rules history',
+  'admin.green.recoveryLoading': 'Loading rule history…',
+  'admin.green.recoveryReadError': 'Rule history could not be loaded.',
+  'admin.green.recoveryEmpty': 'There are no earlier published revisions to recover.',
+  'admin.green.recoveryRevision': 'Revision {version}',
+  'admin.green.recoveryStage': 'Draft from revision {version}',
+  'admin.green.recoveryDraft': 'Recovery draft from revision {version}',
+  'admin.green.recoveryStageConfirm': 'Save these rules as a recovery draft for review.',
+  'admin.green.recoveryActivate': 'Activate recovery draft',
+  'admin.green.recoveryActivateConfirm':
+    'Activate these rules as a new revision for future electricity orders.',
+  'admin.green.recoveryConflict':
+    'The rules or draft changed. Refresh the history before continuing.',
+  'admin.green.recoveryLatest': 'Recent revisions',
+  'admin.green.recoveryOlder': 'Older revisions',
   'admin.green.invalidActivation':
     'Use an active green product with a positive price, or disable this rule.',
   'admin.green.readError': 'These settings could not be loaded. Your entered values are kept.',

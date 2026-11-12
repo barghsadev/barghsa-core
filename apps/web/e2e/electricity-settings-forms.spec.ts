@@ -62,6 +62,90 @@ async function reads(page: Page) {
   );
 }
 for (const locale of ['en', 'fa'] as const)
+  test(`green rules recovery keeps the active revision until separate confirmation (${locale})`, async ({
+    page,
+  }) => {
+    await setupCatalogueForms(page, locale, locale === 'fa');
+    await reads(page);
+    const label = (key: string) => t(`admin.green.${key}`, locale);
+    const revision = {
+      id: '33333333-3333-4333-8333-333333333333',
+      version: 1,
+      config: greenConfig,
+    };
+    const draft = {
+      id: '44444444-4444-4444-8444-444444444444',
+      baseVersion: 2,
+      sourceId: revision.id,
+      sourceVersion: revision.version,
+      config: greenConfig,
+    };
+    let active = {
+      ...greenConfig,
+      simpleOrder: { ...greenConfig.simpleOrder, averagePowerThresholdKw: 1250 },
+    };
+    let version = 2;
+    let pending: typeof draft | null = null;
+    const stageCommands: unknown[] = [],
+      activationCommands: unknown[] = [];
+    const path = `${base}/green-electricity-rules`;
+    await page.route(`**${path}`, (route) => route.fulfill({ json: active }));
+    await page.route(`**${path}/rollback-history`, (route) =>
+      route.fulfill({
+        json: { baseVersion: version, items: [revision], nextBeforeVersion: null, draft: pending },
+      })
+    );
+    await page.route(`**${path}/rollback-draft`, (route) => {
+      stageCommands.push(route.request().postDataJSON());
+      pending = draft;
+      return route.fulfill({ status: 201, json: draft });
+    });
+    await page.route(`**${path}/rollback-activate`, (route) => {
+      activationCommands.push(route.request().postDataJSON());
+      version = 3;
+      active = greenConfig;
+      pending = null;
+      return route.fulfill({ json: { config: active, version, draftId: draft.id } });
+    });
+    const toggle = page.getByRole('button', { name: label('recoveryTitle'), exact: true });
+    const threshold = page.locator('#simpleOrder-threshold');
+    const dialog = page.getByRole('dialog');
+    const confirm = dialog.getByRole('button', {
+      name: locale === 'fa' ? 'تأیید' : 'Confirm',
+      exact: true,
+    });
+    const activate = page.getByRole('button', { name: label('recoveryActivate'), exact: true });
+    await page.goto('/admin/electricity-rules');
+    await expect(threshold).toHaveValue('1250');
+    await toggle.click();
+    await page
+      .getByRole('button', {
+        name: label('recoveryStage').replace('{version}', locale === 'fa' ? '۱' : '1'),
+        exact: true,
+      })
+      .click();
+    await expect(dialog).toContainText(label('recoveryStageConfirm'));
+    await confirm.click();
+    await expect(activate).toBeVisible();
+    expect(stageCommands).toEqual([{ sourceId: revision.id, expectedVersion: 2 }]);
+    expect(activationCommands).toEqual([]);
+    await expect(threshold).toHaveValue('1250');
+    await page.reload();
+    await toggle.click();
+    await expect(activate).toBeVisible();
+    await expect(threshold).toHaveValue('1250');
+    expect(
+      (await new AxeBuilder({ page }).include('#green-rule-recovery').analyze()).violations
+    ).toEqual([]);
+    await activate.click();
+    await expect(dialog).toContainText(label('recoveryActivateConfirm'));
+    await confirm.click();
+    await expect(threshold).toHaveValue('1000');
+    await expect(activate).toHaveCount(0);
+    expect(activationCommands).toEqual([{ draftId: draft.id, expectedVersion: 2 }]);
+  });
+
+for (const locale of ['en', 'fa'] as const)
   for (const dark of [false, true])
     test(`electricity settings validate and recover all three editors (${locale}, dark=${dark})`, async ({
       page,

@@ -29,6 +29,13 @@ is selected. If draft creation is unconfirmed, reload the history and load the
 stored draft. If another change became active, select a revision against the
 new current version. Verify the new active version and its source in the audit.
 
+For green-electricity rules, open **Green rules history** on the electricity
+settings page. Select a published revision to prepare a recovery draft. Review
+both order modes before selecting **Activate recovery draft**. Activation checks
+the current green product and quantity limits and records a new version linked
+to the draft and source revision. After a timeout, reload history and check the
+active rules before repeating any command.
+
 ## Data rollback
 
 1. Treat suspected data loss as P0. The database operator preserves the source and restores to a separate target using the approved backup and, when needed, the PITR target.

@@ -54,6 +54,11 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { assertGreenSettingsFields } from './electricity-settings-fields.js';
+import {
+  greenRecoveryActivateBody,
+  greenRecoveryHistoryQuery,
+  greenRecoveryStageBody,
+} from './green-electricity-recovery.js';
 import { assertWalletLimitFields } from './limit-settings-fields.js';
 
 import {
@@ -2488,6 +2493,45 @@ export class AdminController {
   async getGreenElectricityRules(@Req() req: AuthenticatedRequest) {
     this.assertElectricitySettingsPermission(req);
     return this.adminService.getGreenElectricityConfig();
+  }
+
+  @Get('config/green-electricity-rules/rollback-history')
+  @ApiOperation({ summary: 'Read published green rule revisions and the current recovery draft' })
+  @ApiQuery({ name: 'beforeVersion', required: false, type: Number })
+  async greenRuleRecoveryHistory(@Query() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = greenRecoveryHistoryQuery.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery history query');
+    return this.adminService.getGreenRuleRecovery(req.session, parsed.data.beforeVersion);
+  }
+
+  @Post('config/green-electricity-rules/rollback-draft')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @ApiOperation({ summary: 'Prepare a green rule recovery draft from a prior published revision' })
+  @ApiZodBody(greenRecoveryStageBody)
+  async stageGreenRuleRecovery(@Body() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = greenRecoveryStageBody.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery draft request');
+    return this.adminService.stageGreenRuleRecovery(parsed.data, req.session, req.ip ?? 'unknown');
+  }
+
+  @Post('config/green-electricity-rules/rollback-activate')
+  @UseGuards(StepUpGuard)
+  @RequiresStepUp()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Activate the exact green rule recovery draft as a new revision' })
+  @ApiZodBody(greenRecoveryActivateBody)
+  async activateGreenRuleRecovery(@Body() raw: unknown, @Req() req: AuthenticatedRequest) {
+    this.assertElectricitySettingsPermission(req);
+    const parsed = greenRecoveryActivateBody.safeParse(raw);
+    if (!parsed.success) throw new BadRequestException('Invalid recovery activation request');
+    return this.adminService.activateGreenRuleRecovery(
+      parsed.data,
+      req.session,
+      req.ip ?? 'unknown'
+    );
   }
 
   /**

@@ -16,11 +16,29 @@ import {
 } from '../session/session-step-up.js';
 import type { PoolClient } from 'pg';
 import { requireStaffMutationPermission, requireStaffStepUp } from './staff-mutation-permission.js';
+import { withStaffReadAuthority, type StaffReadActor } from './staff-read-authority.js';
+import {
+  GREEN_HISTORY_PAGE_SIZE,
+  GREEN_RECOVERY_EVENT,
+  readGreenRuleDraft,
+  readGreenRuleHistory,
+  readGreenRuleVersion,
+  type greenRecoveryActivateBody,
+  type greenRecoveryStageBody,
+} from './green-electricity-recovery.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { encryptAuthDelivery } from '@barghsa/shared/auth-delivery';
-import { Injectable, Logger, HttpException, Optional, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  HttpException,
+  Optional,
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import * as argon2 from 'argon2';
 import { PASSWORD_HASH_OPTIONS } from '@barghsa/shared/password-hash';
@@ -1597,6 +1615,87 @@ export class AdminService {
     return toGreenElectricityConfig(persisted);
   }
 
+  async getGreenRuleRecovery(actor: StaffReadActor, beforeVersion?: number) {
+    return withStaffReadAuthority(actor, 'admin:catalogue:edit', async (client) => {
+      const baseVersion = await readGreenRuleVersion(client);
+      const history = await readGreenRuleHistory(
+        client,
+        Math.min(baseVersion, beforeVersion ?? baseVersion)
+      );
+      const items = history.slice(0, GREEN_HISTORY_PAGE_SIZE);
+      return {
+        baseVersion,
+        items,
+        nextBeforeVersion: history.length > GREEN_HISTORY_PAGE_SIZE ? items.at(-1)!.version : null,
+        draft: await readGreenRuleDraft(client, baseVersion),
+      };
+    });
+  }
+
+  async stageGreenRuleRecovery(
+    input: z.infer<typeof greenRecoveryStageBody>,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:catalogue:edit');
+      await requireSessionStepUp(client, actor);
+      await client.query("SELECT pg_advisory_xact_lock(hashtext('green-electricity-config'))");
+      const baseVersion = await readGreenRuleVersion(client);
+      if (baseVersion !== input.expectedVersion) throw new ConflictException('Green rules changed');
+      const [source] = await readGreenRuleHistory(client, baseVersion, input.sourceId);
+      if (!source) throw new NotFoundException('Green rule revision not found');
+      await this.assertGreenElectricityActivation(source.config, client);
+      const current = await readGreenRuleDraft(client, baseVersion);
+      const draft =
+        current?.sourceId === source.id
+          ? current
+          : {
+              id: uuidv7(),
+              baseVersion,
+              sourceId: source.id,
+              sourceVersion: source.version,
+              config: source.config,
+            };
+      if (draft !== current) {
+        await client.query(
+          `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip,created_at)
+           VALUES($1,$2,$3,$4::jsonb,$5,$6,clock_timestamp())`,
+          [
+            draft.id,
+            actor.userId,
+            GREEN_RECOVERY_EVENT,
+            JSON.stringify({ key: GREEN_ELECTRICITY_CONFIG_KEY, ...draft }),
+            correlationIdStorage.getStore() ?? uuidv7(),
+            ip,
+          ]
+        );
+      }
+      await requireSessionStepUp(client, actor);
+      await client.query('COMMIT');
+      return draft;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async activateGreenRuleRecovery(
+    input: z.infer<typeof greenRecoveryActivateBody>,
+    actor: StaffReadActor,
+    ip: string
+  ) {
+    const draft = await readGreenRuleDraft(getDbPool(), input.expectedVersion);
+    if (draft?.id !== input.draftId)
+      throw new ConflictException('Green rule recovery draft changed');
+    const config = await this.setGreenElectricityConfig(draft.config, actor, ip, input);
+    return { config, version: draft.baseVersion + 1, draftId: draft.id };
+  }
+
   async getElectricityOrderDraftTtl(): Promise<{ days: number }> {
     return { days: await readWizardDraftTtl(getDbPool()) };
   }
@@ -1796,7 +1895,8 @@ export class AdminService {
   async setGreenElectricityConfig(
     input: unknown,
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    ip: string
+    ip: string,
+    recovery?: z.infer<typeof greenRecoveryActivateBody>
   ): Promise<GreenElectricityConfig> {
     const actorUserId = actor.userId;
     const validation = validateGreenElectricityConfig(input);
@@ -1838,6 +1938,14 @@ export class AdminService {
       const previousValue = prevResult.rows.length > 0 ? prevResult.rows[0]!.value : null;
       const previousVersion =
         prevResult.rows.length > 0 ? (prevResult.rows[0]!.version as number) : 0;
+      const draft = recovery ? await readGreenRuleDraft(client, previousVersion) : null;
+      if (
+        recovery &&
+        (previousVersion !== recovery.expectedVersion ||
+          draft?.id !== recovery.draftId ||
+          JSON.stringify(greenElectricityConfigToStored(draft.config)) !== JSON.stringify(stored))
+      )
+        throw new ConflictException('Green rule recovery draft changed');
 
       const upsertResult = await client.query(
         `INSERT INTO app_config (key, value, version, updated_at)
@@ -1870,6 +1978,9 @@ export class AdminService {
             previousVersion,
             newValue: stored,
             version: newVersion,
+            ...(draft
+              ? { rollbackDraftId: draft.id, restoredFromVersion: draft.sourceVersion }
+              : {}),
           }),
           correlationId,
           ip,
