@@ -62,6 +62,26 @@ Validate configuration with `promtool check config`, the existing `promtool test
 
 The optional watchdog overlay sends the monitoring heartbeat to an independent receiver. Follow the [alert delivery watchdog runbook](../runbooks/alert-delivery.md) for protected configuration and missing-heartbeat and recovery receipts.
 
+### Independent synthetic runner
+
+Once the independent runner and its private HTTPS exporter are approved, add
+`staging-synthetic.yml` after `staging-compose.yml` in the staging monitoring
+Compose command. Set `BARGHSA_SYNTHETIC_TARGETS_DIR` to a protected, operator-owned
+directory. Its `staging.yml` must list the approved exporter address as a
+Prometheus file discovery target.
+
+```yaml
+- targets: ['synthetic-runner.example.test:9100']
+```
+
+Allow connections only from the approved monitoring network. The hostname
+must match a certificate trusted by the Prometheus image. Prometheus assigns
+the staging and core labels and ingests only the probe result and completion
+timestamp from the exporter. Check that the `barghsa-synthetic` target is up
+and publishing fresh results before relying on its alerts. Verify a controlled
+failure, a reporting outage, both recoveries and the authorized pager receipt.
+[Synthetic runner setup](../../deploy/production/README.md#synthetic-health-probes)
+
 ### Operator dashboards
 
 Add `deploy/monitoring/staging-dashboards.yml` after `staging-compose.yml` when

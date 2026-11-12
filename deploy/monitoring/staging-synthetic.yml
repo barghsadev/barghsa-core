@@ -1,0 +1,9 @@
+services:
+  prometheus:
+    volumes:
+      - type: bind
+        source: ${BARGHSA_SYNTHETIC_TARGETS_DIR:?Set the protected synthetic target directory}
+        target: /etc/prometheus/synthetic-targets
+        read_only: true
+        bind:
+          create_host_path: false

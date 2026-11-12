@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T03:07:24+00:00",
+  "updated": "2026-11-12T03:21:36+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -88575,7 +88575,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -88591,7 +88591,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -90308,6 +90308,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -93438,7 +93447,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -93466,7 +93475,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -93723,6 +93732,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -93872,7 +93890,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             }
           ],
           "checks": [
@@ -94004,6 +94022,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -103196,7 +103222,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -103741,6 +103767,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -104355,7 +104389,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -104900,6 +104934,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -105514,7 +105556,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -106059,6 +106101,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -106674,7 +106724,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -107219,6 +107269,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -107833,7 +107891,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -108378,6 +108436,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -108942,7 +109008,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -109054,7 +109120,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -109402,6 +109468,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -109978,7 +110053,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -110359,6 +110434,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -110841,7 +110924,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -111386,6 +111469,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -492541,7 +492632,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -492549,7 +492640,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -493033,6 +493124,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -494745,7 +494845,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -495335,6 +495435,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -567381,7 +567489,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             }
           ],
           "checks": [
@@ -567558,6 +567666,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -568098,7 +568214,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -568316,6 +568432,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -569324,7 +569448,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -569504,6 +569628,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -569558,7 +569690,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -569642,6 +569774,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -569710,11 +569850,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             }
           ],
           "source_renewals": [
@@ -569867,6 +570007,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -569967,7 +570116,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -570052,6 +570201,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -570156,7 +570313,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -570258,6 +570415,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -570524,11 +570689,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -570681,6 +570846,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -570768,7 +570942,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -570949,6 +571123,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -571028,7 +571210,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -571117,6 +571299,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -571303,7 +571493,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             }
           ],
           "checks": [
@@ -571472,6 +571662,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -571691,7 +571889,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             }
           ],
           "checks": [
@@ -571832,6 +572030,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -573265,7 +573471,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -573420,6 +573626,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -573542,7 +573756,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -573704,6 +573918,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -575273,7 +575495,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -575410,6 +575632,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ]
         }
@@ -576666,7 +576896,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Install the validated probe and timer on the approved independent monitoring host. Verify live public and authenticated runs, its private metrics scrape, timer scheduling and the exact reported target.",
+        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated TLS scrape verified canonical labels and metric filtering.",
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt."
       ],
       "owner": null,
@@ -576678,11 +576908,15 @@
           "deploy/monitoring/systemd/barghsa-synthetic.timer",
           "deploy/production/README.md",
           "deploy/production/rollout-observer.py",
-          "deploy/production/test_synthetic_probe.py"
+          "deploy/production/test_synthetic_probe.py",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-synthetic.yml",
+          "docs/operations/notification-monitoring.md"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-synthetic-staging-scrape"
         ],
         "current_acceptance": null
       }
@@ -576737,7 +576971,7 @@
       "launch_required": true,
       "remaining": [
         "Verify the approved independent runner and private scrape on the target, then cause and clear an authorized fixture failure and a reporting outage. Inspect real Prometheus alerts, native authenticated operations receipts and the approved on-call pager delivery.",
-        "Read back the candidate dashboard with live results and run the expanded native PostgreSQL receipt cases."
+        "Read back the candidate dashboard with live results. Source-bound Linux PostgreSQL 17 run 43131603120 passed all 34 native receiver cases, including both synthetic alert types. The isolated runtime delivered both alerts and resolutions to its authenticated fixture receiver."
       ],
       "owner": null,
       "depends_on": [],
@@ -576754,11 +576988,14 @@
           "deploy/monitoring/synthetic-probe-alerts.yml",
           "deploy/production/README.md",
           "docs/runbooks/journey-availability.md",
-          "packages/shared/src/notifications/operations-alert-links.ts"
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "deploy/monitoring/staging-synthetic.yml",
+          "docs/operations/notification-monitoring.md"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
-          "release-0.6-synthetic-alerts"
+          "release-0.6-synthetic-alerts",
+          "release-0.6-synthetic-staging-scrape"
         ],
         "current_acceptance": null
       }
@@ -860400,7 +860637,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -862475,6 +862712,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "presentation_renewals": [
@@ -865084,7 +865329,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -867057,6 +867302,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
+            },
+            {
+              "batch": "release-0.6-synthetic-staging-scrape",
+              "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -872129,7 +872382,8 @@
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
-          "release-0.6-schema-aware-staging-rollback"
+          "release-0.6-schema-aware-staging-rollback",
+          "release-0.6-synthetic-staging-scrape"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -872204,7 +872458,8 @@
           "deploy/staging/deploy.sh",
           "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py"
+          "scripts/test_check_release_licenses.py",
+          "deploy/monitoring/staging-synthetic.yml"
         ]
       }
     },
@@ -1003473,6 +1003728,133 @@
         {
           "file": "paired-rehearsal.log",
           "sha256": "681dde43eaea0a4dbad6c008846af74618a38078c831de0de6531c96df3e70f8"
+        }
+      ]
+    },
+    "release-0.6-synthetic-staging-scrape": {
+      "batch": "release-0.6-synthetic-staging-scrape",
+      "base_commit": "1b615f6df5a142e37ab87507f2e681bc641b510e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "06-security-testing-observability.md#T-06.17.03.04",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/staging-prometheus.yml",
+        "deploy/monitoring/staging-synthetic.yml",
+        "docs/operations/notification-monitoring.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+        },
+        {
+          "path": "deploy/monitoring/staging-synthetic.yml",
+          "sha256": "e3d106c7d834038f2564ff84ec4d3a291f53b0c7d982e643939ff2ff5dfa8a0b"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "f6b4f58143a230106c26f712d95b967a937da30366ffc61cfabe1da07d03f8b6"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "1682cdacdca541b62a4fc55b79760f9332ab5ef7662c3972c9728011b0ce3926"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+        }
+      ],
+      "checks": [
+        "Read-only staging APIs reported only API and worker scrape jobs and the private barghsa-operations receiver. The new optional Compose overlay requires the protected target directory, mounts it read-only without creating it and preserves all other Compose settings.",
+        "Promtool 3.15.0 validates the full staging configuration and existing synthetic rule scenarios. Prometheus ingested only the two probe metrics over fixture HTTPS and assigned staging/core to both targets. Existing API and worker jobs and all six rule files are preserved.",
+        "Prometheus 3.15.0 and Alertmanager 0.34.1 exercised the original evaluation delays and bearer-authenticated webhook route in isolation. A sustained failed check and a stale reporting target each fired a P1 alert and sent a resolved notification after recovery.",
+        "Native Linux run 43131603120 passed all 34 receiver tests on PostgreSQL 17, including both synthetic P1 types. The worker, database, lockfile and receiver fixtures match the current source. The only delta in the compared shared scope is the unrelated S3 storage provider and its test.",
+        "Formatting, link target and whitespace checks passed. Temporary runtime processes, fixtures and credentials were removed."
+      ],
+      "limitations": [
+        "The native runtime rehearsal used private loopback fixtures, a fixture CA and a local authenticated receiver. No stage configuration, external provider or pager changed. The approved independent runner, authenticated live check, candidate dashboard and actual pager receipts remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-synthetic-staging-scrape",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "15c41cabcb98e262d32910c993eb7bc3c665e514869016b3664939400b752469"
+        },
+        {
+          "file": "rehearse-scrape.py",
+          "sha256": "8db0202347b3c95d90b4547e4dd52061ce7b217e87457518bb7fa208f61b013f"
+        },
+        {
+          "file": "scrape-rehearsal.log",
+          "sha256": "68c2bb4d066b078343a1bb2d6da8d68f80e26340fefe22e0c8c6043ffbef6ef8"
+        },
+        {
+          "file": "prometheus.log",
+          "sha256": "909e108ec136a901284647c9ff5b9e5658ce8829272b7669b6240baa032caa49"
+        },
+        {
+          "file": "alertmanager.log",
+          "sha256": "687727ff732fea89e5a3bed23c3223ed0723ad7748ba7b6c8ac6c72333001e69"
+        },
+        {
+          "file": "compose-proof.json",
+          "sha256": "4c67fc3dd3ae771cbe889362afd5ca969617877b7a3a490c36608fb6acd270b3"
+        },
+        {
+          "file": "native-receiver-proof.json",
+          "sha256": "ef49bcde2e87cc0b9316693a67b91c51a81b10da435239728a824b61ce1d629d"
+        },
+        {
+          "file": "staging-observation.json",
+          "sha256": "cd140ebda0ff2f37c8e1d9f2bd9ca2bfbd6759712c978b6d32e7f14ae5f3b4c2"
         }
       ]
     }

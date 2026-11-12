@@ -30,3 +30,17 @@ scrape_configs:
         labels:
           environment: staging
           database: core
+  - job_name: barghsa-synthetic
+    scheme: https
+    follow_redirects: false
+    file_sd_configs:
+      - files: [/etc/prometheus/synthetic-targets/staging.yml]
+    relabel_configs:
+      - target_label: environment
+        replacement: staging
+      - target_label: database
+        replacement: core
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: barghsa_synthetic_probe_(completed_timestamp_seconds|success)
+        action: keep
