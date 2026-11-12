@@ -1,12 +1,16 @@
 import { fetchWithPreauth } from '../test/public-auth.js';
-import { afterEach, expect, it } from 'vitest';
+import { afterEach, expect, it, vi } from 'vitest';
 import { createHash } from 'node:crypto';
 import { t } from '@barghsa/i18n';
 import { startHttpFixture } from '../test/http-fixture.js';
 
 let http: Awaited<ReturnType<typeof startHttpFixture>> | undefined;
 afterEach(async () => {
-  await http?.close();
+  try {
+    await http?.close();
+  } finally {
+    vi.unstubAllEnvs();
+  }
 }, 15000);
 async function post(username: string, ip: string, locale: 'en' | 'fa' = 'en') {
   return fetchWithPreauth(`${http!.base}/api/auth/forgot-password`, {
@@ -22,6 +26,7 @@ async function post(username: string, ip: string, locale: 'en' | 'fa' = 'en') {
 for (const trusted of [false, true]) {
   it(`uses forwarded clients only with explicit proxy trust (${trusted})`, async () => {
     if (!process.env.TEST_DATABASE_URL) throw new Error('PostgreSQL setup did not run');
+    vi.stubEnv('BARGHSA_DEPLOYMENT_ENV', 'development');
     http = await startHttpFixture(
       process.env.TEST_DATABASE_URL,
       undefined,
@@ -76,9 +81,15 @@ for (const trusted of [false, true]) {
     }
     const diagnostics = http
       .logs()
-      .split('[Nest] ')
-      .filter((entry) => entry.includes('[RateLimitGuard]'));
-    expect(diagnostics.join('\n')).toContain('Rate-limit check: forgot-password:ip');
+      .split('\n')
+      .filter((entry) => entry.startsWith('{') && entry.includes('"context":"RateLimitGuard"'));
+    expect(diagnostics.map((entry) => JSON.parse(entry))).toContainEqual(
+      expect.objectContaining({
+        service: 'api',
+        level: 'debug',
+        message: expect.stringContaining('Rate-limit check: forgot-password:ip'),
+      })
+    );
     expect(diagnostics.join('\n')).not.toMatch(/198\.51\.100\.|127\.0\.0\.1|quota@example\.test/);
   }, 40000);
 }

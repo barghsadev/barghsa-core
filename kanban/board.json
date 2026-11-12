@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T07:27:04+00:00",
+  "updated": "2026-11-12T07:32:25+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -14700,7 +14700,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -14855,6 +14855,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -42242,7 +42250,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -43809,6 +43817,14 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -64652,7 +64668,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -65830,6 +65846,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -66099,7 +66123,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -67091,6 +67115,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -67385,7 +67417,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -68401,6 +68433,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -82634,7 +82674,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -83902,6 +83942,14 @@
                 "apps/api/src/storage/storage-config.service.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -93383,7 +93431,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/notifications/unified-inbox.integration.test.ts",
@@ -95867,6 +95915,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -568556,7 +568612,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -568624,6 +568680,14 @@
                 "apps/api/src/profiles/invitation-mutation-http.integration.test.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -568686,7 +568750,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/rate-limit/rate-limit.decorator.ts",
@@ -568808,6 +568872,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -568978,7 +569050,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -569027,6 +569099,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -569234,7 +569314,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/common/http-exception.filter.ts",
@@ -569296,6 +569376,14 @@
                 "apps/api/src/common/http-exception.filter.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -569360,7 +569448,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/profiles/agents.service.ts",
@@ -569515,6 +569603,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -576456,7 +576552,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "deploy/pilot/nginx.conf",
@@ -576516,6 +576612,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -577916,7 +578020,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -578097,6 +578201,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ]
         }
@@ -595076,7 +595188,8 @@
           "packages/shared/src/operator-logging.ts",
           "pnpm-lock.yaml",
           "scripts/proxy-fixture.mjs",
-          "scripts/test-pilot-proxy.py"
+          "scripts/test-pilot-proxy.py",
+          "apps/api/src/crm/crm-verification.integration.test.ts"
         ],
         "batches": [
           "release-0.6-database-pool-deadlines-and-log-privacy",
@@ -595105,7 +595218,8 @@
           "release-0.6-dual-approval-and-emergency-evidence",
           "release-0.6-operator-log-pseudonyms",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-structured-operator-logs"
+          "release-0.6-structured-operator-logs",
+          "release-0.6-structured-log-fixtures"
         ],
         "current_acceptance": {
           "kind": "source-bound-ingress-authentication-and-wallet-diagnostic-proof",
@@ -595679,14 +595793,17 @@
           "scripts/test-pilot-proxy.py",
           "Dockerfile.base",
           "apps/worker/src/runtime-log-safety.test.ts",
-          "docs/security/release-license-review.md"
+          "docs/security/release-license-review.md",
+          "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "apps/api/src/crm/crm-verification.integration.test.ts"
         ],
         "batches": [
           "release-0.6-operator-log-pseudonyms",
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-native-provider-fixtures-and-staff-log-assertion",
           "release-0.6-structured-operator-logs",
-          "release-0.6-runtime-log-channel-and-image"
+          "release-0.6-runtime-log-channel-and-image",
+          "release-0.6-structured-log-fixtures"
         ],
         "current_acceptance": {
           "kind": "scoped-operator-log-verification",
@@ -771118,7 +771235,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -771822,6 +771939,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -772173,7 +772298,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -772877,6 +773002,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -773228,7 +773361,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -773932,6 +774065,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -774283,7 +774424,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -774987,6 +775128,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -775338,7 +775487,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -776042,6 +776191,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -790775,7 +790932,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -791479,6 +791636,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -791830,7 +791995,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -792534,6 +792699,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -792885,7 +793058,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -793589,6 +793762,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -793940,7 +794121,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -794644,6 +794825,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -794995,7 +795184,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -795699,6 +795888,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -796050,7 +796247,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -796754,6 +796951,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -797105,7 +797310,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -797809,6 +798014,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -798160,7 +798373,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -798864,6 +799077,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -799215,7 +799436,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -799919,6 +800140,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -800270,7 +800499,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -800974,6 +801203,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -801325,7 +801562,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -802029,6 +802266,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -802380,7 +802625,7 @@
             },
             {
               "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
-              "sha256": "2e4a34e5adc2e7c83496c167b2fc67d1d6a9e18774b8cb2b81d38a7b36c90e0c"
+              "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
             },
             {
               "path": "apps/api/src/auth/registration-dedup-http.integration.test.ts",
@@ -803084,6 +803329,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/auth/proxy-rate-http.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -904302,7 +904555,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -908339,6 +908592,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "presentation_renewals": [
@@ -909184,7 +909445,7 @@
             },
             {
               "path": "apps/api/src/crm/crm-verification.integration.test.ts",
-              "sha256": "e250254934864d022cdc75dea61966b1721bd637e854a28c3d28cb4c8c2f147d"
+              "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
             },
             {
               "path": "apps/api/src/documents/document-access.ts",
@@ -913097,6 +913358,14 @@
                 "packages/shared/src/storage/runtime-config.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-structured-log-fixtures",
+              "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+              "paths": [
+                "apps/api/src/crm/crm-verification.integration.test.ts"
+              ],
+              "scope": "Two test fixtures now assert the same runtime boundaries through the structured API and worker log output. All cases in both files passed in native fixtures."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -918091,7 +918360,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Verify the corrected cumulative tip in the exact protected integrity check. The 9c254e0e quality job found four advisories in the mutation tooling dependency tree. The scoped fixes passed the unchanged dependency audit and retained the mutation suite outcomes."
+        "Verify the corrected cumulative tip in the exact protected integrity check. The earlier protected run found four mutation tool dependency advisories and eight legacy-format or log destination assertions in the API tests. The unchanged dependency validator and the two native log fixture files passed with their respective fixes."
       ],
       "owner": null,
       "depends_on": [],
@@ -918360,7 +918629,8 @@
           "release-0.6-quarterly-manual-exercise",
           "release-0.6-weekly-dependency-advisory",
           "release-0.6-staging-image-scans",
-          "release-0.6-multipart-policy-validation"
+          "release-0.6-multipart-policy-validation",
+          "release-0.6-structured-log-fixtures"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -918574,7 +918844,9 @@
           "apps/worker/src/storage/multipart-cleanup.ts",
           "docs/operations/storage-retention.md",
           "packages/i18n/src/storage-policy-forms.ts",
-          "packages/shared/src/storage/runtime-config.ts"
+          "packages/shared/src/storage/runtime-config.ts",
+          "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "apps/api/src/crm/crm-verification.integration.test.ts"
         ]
       }
     },
@@ -1058051,6 +1058323,106 @@
         {
           "file": "typechecks.log",
           "sha256": "654e7e1dac284f71cc03ad7f7e5336ae50f9cad4b11b42a91342dd98679936f5"
+        }
+      ]
+    },
+    "release-0.6-structured-log-fixtures": {
+      "batch": "release-0.6-structured-log-fixtures",
+      "base_commit": "eb4b5af449004fc9cf2e2b70096c7298910562db",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.02.06",
+        "06-security-testing-observability.md#T-06.13.02.07",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.02.02",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.05.01.01",
+        "06-security-testing-observability.md#T-06.05.01.02",
+        "06-security-testing-observability.md#T-06.05.01.04",
+        "06-security-testing-observability.md#T-06.05.01.06",
+        "06-security-testing-observability.md#T-06.05.01.07",
+        "06-security-testing-observability.md#T-06.07.03.04",
+        "06-security-testing-observability.md#T-06.08.02.05",
+        "07-ui-ux-design.md#T-07.14.01.01",
+        "07-ui-ux-design.md#T-07.14.01.02",
+        "07-ui-ux-design.md#T-07.14.01.03",
+        "07-ui-ux-design.md#T-07.14.01.04",
+        "07-ui-ux-design.md#T-07.14.01.05",
+        "07-ui-ux-design.md#T-07.17.01.01",
+        "07-ui-ux-design.md#T-07.17.01.02",
+        "07-ui-ux-design.md#T-07.17.01.03",
+        "07-ui-ux-design.md#T-07.17.01.04",
+        "07-ui-ux-design.md#T-07.17.01.05",
+        "07-ui-ux-design.md#T-07.17.02.01",
+        "07-ui-ux-design.md#T-07.17.02.02",
+        "07-ui-ux-design.md#T-07.17.02.03",
+        "07-ui-ux-design.md#T-07.17.02.04",
+        "07-ui-ux-design.md#T-07.17.02.05",
+        "07-ui-ux-design.md#T-07.17.02.06",
+        "07-ui-ux-design.md#T-07.17.02.07",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+        "apps/api/src/crm/crm-verification.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/auth/proxy-rate-http.integration.test.ts",
+          "sha256": "9a2729650e64e601528a2190c336d21388fda92bafa5c7c62ecf200fdcd92faf"
+        },
+        {
+          "path": "apps/api/src/crm/crm-verification.integration.test.ts",
+          "sha256": "10a707be348926d2435a5dc6c501864c57ea2f39915d95d4eeb1585ff6d8cd6a"
+        },
+        {
+          "path": "packages/shared/src/operator-logging.ts",
+          "sha256": "85c1ce043714731ddeea048c1877c6e6eb240b12155287caa86f4ebd0d0018c3"
+        },
+        {
+          "path": "apps/api/src/common/correlation-logger.ts",
+          "sha256": "c688d7b49f6b9a88ab39223186cba7bac8ec9c7b1ac74bb429aa0ed604b0d25e"
+        },
+        {
+          "path": "apps/api/src/rate-limit/rate-limit.guard.ts",
+          "sha256": "16d5b866af2df85e3f0a57c030011a52e676e50c6beb08a0fa83225eb8e6984d"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-reader.ts",
+          "sha256": "7c85d1527191627faf3ada68737d4e69021ea2d5e8b03bfc5ab4b1db46046129"
+        }
+      ],
+      "checks": [
+        "The older protected run 43170829679 reported eight failing assertions in two files. The forwarded-client tests searched for Nest's old text formatter without enabling debug, while the verification delivery tests spied on console.info after worker logs moved to the Pino stdout destination.",
+        "The proxy tests explicitly enable the development logging profile in their isolated child process and verify structured API guard debug records. Their rate-limit, proxy identity, locale and absence-of-raw-identity assertions remain in force.",
+        "The verification tests now assert emitted worker JSON from stdout with the same event, outbox ID, correlation, channel and status requirements. The provider fixture, message template, privacy, preference, retry and no-repeat-send checks remain in force.",
+        "The isolated Linux run at b59e7117 passed both selected files and 27 native PostgreSQL cases. Actionlint, changed-file ESLint, Prettier and whitespace checks passed."
+      ],
+      "limitations": [
+        "The native run covers isolated PostgreSQL and controlled transport fixtures. The exact protected integrity and final live release gates remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-structured-log-fixtures",
+      "execution_receipts": [
+        {
+          "file": "diagnostic-snapshot.json",
+          "sha256": "8ed101141560a64273b1ec9653eebbcf63badcc6985d6ef438eb3ea9b1b2af5d"
+        },
+        {
+          "file": "verify-v06-structured-log-fixtures.yml",
+          "sha256": "969ce382baebd2ded832562d95ead8788f1336eb6045a79d738fd7acdea6645e"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "9130aeededb8fdbd8e2aba7243cb95ea515ff793e9759a89f3e98aaf10ae09bf"
+        },
+        {
+          "file": "native/structured-log-fixtures.log",
+          "sha256": "97aa36ab0ef6468b30825a79d8989204735972433f1532791ed44b896e12222f"
         }
       ]
     }

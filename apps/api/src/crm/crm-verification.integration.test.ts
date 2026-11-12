@@ -491,13 +491,14 @@ for (const locale of ['fa', 'en'] as const) {
           sms: new SmsNotificationTransport(db.pool, request),
         },
       };
-      const output = vi.spyOn(console, 'info').mockImplementation(() => {});
+      const output = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
       try {
         expect(await runOutboxPoll(options)).toEqual({ leased: 1, delivered: 1, failed: 0 });
         const records = output.mock.calls.map(([message]) => JSON.parse(String(message)));
         expect(records).toEqual(
           expect.arrayContaining([
             expect.objectContaining({
+              service: 'worker',
               event: 'notification.attempt',
               outboxId: outbox.id,
               correlationId,
@@ -505,6 +506,7 @@ for (const locale of ['fa', 'en'] as const) {
               status: 'delivered',
             }),
             expect.objectContaining({
+              service: 'worker',
               event: 'notification.attempt',
               outboxId: outbox.id,
               correlationId,
