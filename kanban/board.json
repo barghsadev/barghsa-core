@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:53:00+00:00",
+  "updated": "2026-11-12T11:03:13+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -585859,22 +585859,113 @@
         "story": "06-security-testing-observability.md#spec-2bcfd5883d56"
       },
       "requirement": "| T-06.04.02.01 | Audit all database access for raw SQL; flag any untrusted interpolation | M |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Complete the raw SQL sink and fragment data-flow review across API, worker and database code. The current TypeScript AST inventory records 3,913 candidate calls across 948 source files. It supplements the earlier review of 155 WHERE/ORDER BY templates and the five original Drizzle raw calls. Review remaining driver data flows and dynamically constructed migration SQL before acceptance."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "docs/security/supply-chain.md"
+        ],
         "batches": [
           "release-0.6-sql-field-allowlist-review",
-          "release-0.6-raw-sql-lint"
+          "release-0.6-raw-sql-lint",
+          "release-0.6-sql-data-flow"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "batch": "release-0.6-sql-data-flow",
+          "checks": [
+            "The source-bound TypeScript AST inventory inspected 1,920 tracked non-fixture JavaScript and TypeScript files across applications, packages, deployment and scripts. It enumerated 3,926 candidate execution sites, including 3,586 literal texts and 340 nonliteral candidates. Review traced the latter to fixed or composed source fragments, bound Drizzle calls, bounded placeholder counters, identifier allowlists, internal driver forwarding or non-SQL methods. No request-supplied or business-record text was identified as executable SQL text in this reviewed source.",
+            "Reviewed node-postgres and PgBouncer argument forwarding, fixed security rate-limit queries, notification transaction forwarding, profile-export selection statements, the database migration adapter and configuration backup and restore. The driver wrappers keep caller parameters attached to the SQL text. Additional SQL uses fixed statements, locally selected grammar and validated numeric timeouts. The four Drizzle raw calls use the fixed storage profile expression.",
+            "Reviewed all ten non-trigger dynamic execution sites found in tracked SQL files. Runtime migration values remain bound with USING. Dynamic identifiers are quoted with PostgreSQL %I, and receipt backfill statements are source literals. Backup queries use fixed table lists and the rehydration query loads JSON in COPY data framing.",
+            "The current catalogue controller and service, CRM and tickets focused suites passed all 100 tests across four files. The shared Drizzle raw RuleTester passed. The full node-postgres lint extension remains independently tracked by T-06.04.02.03."
+          ],
+          "source_evidence": [
+            {
+              "path": "docs/security/supply-chain.md",
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+            },
+            {
+              "path": "packages/db/src/transaction-pool.ts",
+              "sha256": "c586b9c3a5bda597e31356ace8c152891852663f597876f1dedf5b3f227512ae"
+            },
+            {
+              "path": "packages/db/src/migrate.ts",
+              "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+            },
+            {
+              "path": "packages/db/src/schema/storage-record.ts",
+              "sha256": "eb1886ce3b3ff7443544b8ba37067301bf4cbc98ca02d50cff9ac39f3407bbc5"
+            },
+            {
+              "path": "packages/db/scripts/backup/config_backup.py",
+              "sha256": "8c17f8741d3a2230eb440dafd59af32937f3cdbf6c37f41745585e472d498628"
+            },
+            {
+              "path": "packages/db/scripts/backup/verify_restore.py",
+              "sha256": "6d58774171678959d71eefdcd36bd42d32ad4911a2d5482c84d551708858fd38"
+            },
+            {
+              "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+              "sha256": "0f9261bd35e6cda637fa6b53ee3dad90323e993ef940868af5ea2a06851bb77d"
+            },
+            {
+              "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+              "sha256": "eb7f8fc2df7eedda52f44c8ff8cffb926b3ce7ea71da5ad9af77fe7304b95a99"
+            },
+            {
+              "path": "apps/api/src/crm/crm.service.ts",
+              "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
+            },
+            {
+              "path": "apps/api/src/tickets/tickets.service.ts",
+              "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+            },
+            {
+              "path": "apps/worker/src/privacy/profile-export.ts",
+              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+            },
+            {
+              "path": "apps/worker/src/notifications/outbox-runner.ts",
+              "sha256": "da6cb620736a26851ffd11c44ad7f3e7e06ee7ba239bcb6e2602c484e9965e27"
+            },
+            {
+              "path": "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
+              "sha256": "4cd453e5b67546ca41f229b432f326a557d8730c2f5e03e006b5899f71e45fa6"
+            },
+            {
+              "path": "packages/db/drizzle/0019_create_invoice_state_enum.sql",
+              "sha256": "8c87128f3ad2574323a69cf1787000dcda0af6b067a399fb27668932398f6ec9"
+            },
+            {
+              "path": "packages/db/drizzle/0079_create_bank_receipt_attachment_claims.sql",
+              "sha256": "10a3288e892f68b6d95f3daa36e85af7df24862c2a92d8aa1b085c863c99208e"
+            },
+            {
+              "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+              "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+            },
+            {
+              "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+              "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+            },
+            {
+              "path": "packages/db/drizzle/production/0133_database_updated_at.sql",
+              "sha256": "4531b8ece7d0294d5cd09dc943e8295473c8b6c4af93115785da6ebf3436b42d"
+            },
+            {
+              "path": "packages/db/drizzle/production/0173_new_domain_updated_at.sql",
+              "sha256": "e0e9ff7794802a451fe79547068b2669c75f6e5be1520d069b028c40ca78c262"
+            }
+          ]
+        }
       }
     },
     {
@@ -593748,7 +593839,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -594001,6 +594092,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -594934,7 +595033,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             },
             {
               "path": "packages/db/scripts/backup/Dockerfile",
@@ -595121,6 +595220,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -595500,7 +595607,7 @@
           "source_evidence": [
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -595655,6 +595762,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -597406,7 +597521,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             }
           ],
           "checks": [
@@ -597480,6 +597595,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -597606,7 +597729,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             }
           ],
           "checks": [
@@ -597680,6 +597803,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -608328,7 +608459,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             },
             {
               "path": "scripts/check-sast.py",
@@ -608485,6 +608616,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -611955,7 +612094,7 @@
             },
             {
               "path": "docs/security/supply-chain.md",
-              "sha256": "a46b7c4105075fef10449e8c8f3eff6a848f4b1277139f78aa306818c7c45a0c"
+              "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
             }
           ],
           "checks": [
@@ -612030,6 +612169,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-sql-data-flow",
+              "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+              "paths": [
+                "docs/security/supply-chain.md"
+              ],
+              "scope": "Adds the source-bound SQL audit and query review guidance. Existing CI, secret, dependency and image gate instructions retain their verified behavior."
             }
           ]
         }
@@ -1093702,6 +1093849,138 @@
         {
           "file": "source.sha256",
           "sha256": "b0d3e3b3163a579726927ff4cff40f02b1b198a8c76fdeab16c2055a023e5be6"
+        }
+      ]
+    },
+    "release-0.6-sql-data-flow": {
+      "batch": "release-0.6-sql-data-flow",
+      "base_commit": "f7782888c710c96b99d09d7b580377ea953e72f9",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.08.02.01",
+        "06-security-testing-observability.md#T-06.08.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.12.02.02"
+      ],
+      "changed_paths": [
+        "docs/security/supply-chain.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/supply-chain.md",
+          "sha256": "797d476190fedd3475f8eb35885771047c9ac0ceef97bf7cd217d161d9c169f6"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+        },
+        {
+          "path": "packages/db/src/transaction-pool.ts",
+          "sha256": "c586b9c3a5bda597e31356ace8c152891852663f597876f1dedf5b3f227512ae"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/src/schema/storage-record.ts",
+          "sha256": "eb1886ce3b3ff7443544b8ba37067301bf4cbc98ca02d50cff9ac39f3407bbc5"
+        },
+        {
+          "path": "packages/db/scripts/backup/config_backup.py",
+          "sha256": "8c17f8741d3a2230eb440dafd59af32937f3cdbf6c37f41745585e472d498628"
+        },
+        {
+          "path": "packages/db/scripts/backup/verify_restore.py",
+          "sha256": "6d58774171678959d71eefdcd36bd42d32ad4911a2d5482c84d551708858fd38"
+        },
+        {
+          "path": "packages/shared/src/rate-limit/postgres-rate-limiter.ts",
+          "sha256": "0f9261bd35e6cda637fa6b53ee3dad90323e993ef940868af5ea2a06851bb77d"
+        },
+        {
+          "path": "apps/api/src/catalogue/catalogue-products.service.ts",
+          "sha256": "eb7f8fc2df7eedda52f44c8ff8cffb926b3ce7ea71da5ad9af77fe7304b95a99"
+        },
+        {
+          "path": "apps/api/src/crm/crm.service.ts",
+          "sha256": "a840cf69d1b241d3e29c1d613e2c277c25faa1d0ad8fa500e087954af00c2d84"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "0a69c086764cee49ccd86acbf38af58092fddd536faeb829d4f3f45dba21d5a8"
+        },
+        {
+          "path": "apps/worker/src/privacy/profile-export.ts",
+          "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "da6cb620736a26851ffd11c44ad7f3e7e06ee7ba239bcb6e2602c484e9965e27"
+        },
+        {
+          "path": "packages/eslint-config/no-dynamic-drizzle-raw.mjs",
+          "sha256": "4cd453e5b67546ca41f229b432f326a557d8730c2f5e03e006b5899f71e45fa6"
+        },
+        {
+          "path": "packages/db/drizzle/0019_create_invoice_state_enum.sql",
+          "sha256": "8c87128f3ad2574323a69cf1787000dcda0af6b067a399fb27668932398f6ec9"
+        },
+        {
+          "path": "packages/db/drizzle/0079_create_bank_receipt_attachment_claims.sql",
+          "sha256": "10a3288e892f68b6d95f3daa36e85af7df24862c2a92d8aa1b085c863c99208e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0081_restore_domain_constraints.sql",
+          "sha256": "796961d64c90b7bcb6d86621d5f2e0b31f80508c463fcd213eabd7c1786d248c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0120_rolling_rate_limits.sql",
+          "sha256": "0715c4c8dbd6979196a02c54b18b9b5b74952bd6077abaf7c58a5b5457219416"
+        },
+        {
+          "path": "packages/db/drizzle/production/0133_database_updated_at.sql",
+          "sha256": "4531b8ece7d0294d5cd09dc943e8295473c8b6c4af93115785da6ebf3436b42d"
+        },
+        {
+          "path": "packages/db/drizzle/production/0173_new_domain_updated_at.sql",
+          "sha256": "e0e9ff7794802a451fe79547068b2669c75f6e5be1520d069b028c40ca78c262"
+        }
+      ],
+      "checks": [
+        "The source-bound TypeScript AST inventory inspected 1,920 tracked non-fixture JavaScript and TypeScript files across applications, packages, deployment and scripts. It enumerated 3,926 candidate execution sites, including 3,586 literal texts and 340 nonliteral candidates. Review traced the latter to fixed or composed source fragments, bound Drizzle calls, bounded placeholder counters, identifier allowlists, internal driver forwarding or non-SQL methods. No request-supplied or business-record text was identified as executable SQL text in this reviewed source.",
+        "Reviewed node-postgres and PgBouncer argument forwarding, fixed security rate-limit queries, notification transaction forwarding, profile-export selection statements, the database migration adapter and configuration backup and restore. The driver wrappers keep caller parameters attached to the SQL text. Additional SQL uses fixed statements, locally selected grammar and validated numeric timeouts. The four Drizzle raw calls use the fixed storage profile expression.",
+        "Reviewed all ten non-trigger dynamic execution sites found in tracked SQL files. Runtime migration values remain bound with USING. Dynamic identifiers are quoted with PostgreSQL %I, and receipt backfill statements are source literals. Backup queries use fixed table lists and the rehydration query loads JSON in COPY data framing.",
+        "The current catalogue controller and service, CRM and tickets focused suites passed all 100 tests across four files. The shared Drizzle raw RuleTester passed. The full node-postgres lint extension remains independently tracked by T-06.04.02.03."
+      ],
+      "limitations": [
+        "This is a defensive source review of SQL text construction and forwarding at the audited commit. Runtime scans, exact release image validation and independent penetration review retain their separate acceptance criteria.",
+        "Full source coverage can be revalidated against the per-file hashes in the AST inventory. Review changes in query builders, wrappers or migration execution before relying on this evidence for a later candidate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sql-data-flow",
+      "execution_receipts": [
+        {
+          "file": "inventory-sql.cjs",
+          "sha256": "29955d63c060c2174d9159b90a5fbc2a39e21f66a840173443fa429ff1ee4ee8"
+        },
+        {
+          "file": "sql-inventory.json",
+          "sha256": "c07b4bd3cc3b6af31629b996157c47293e453cbcd12b0c3c66ec7c221c65563b"
+        },
+        {
+          "file": "migration-execution.json",
+          "sha256": "7562ef779e6703e47e97f8efb9074388652cf3cca9620a22f5fb64c43eb4c986"
+        },
+        {
+          "file": "current-api-unit.log",
+          "sha256": "4b8f45adde44587ce4936533cbebef0a4517d396002a78f1b35ee8cd1f352299"
+        },
+        {
+          "file": "drizzle-lint.log",
+          "sha256": "21d3cffa513842efbe725413d878f705a90ec57f737911cf9d1b20d413d9de35"
         }
       ]
     }

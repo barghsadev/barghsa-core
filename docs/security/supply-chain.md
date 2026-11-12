@@ -14,6 +14,28 @@ Trivy scans the actual API/worker, web, ClamAV, and PostgreSQL backup images bui
 
 Triage medium findings within the current sprint. Record the affected component, production reachability, owner and remediation date. Resolve high and critical findings with a credible production path before release. An accepted risk needs explicit approval with a reason, a compensating control and an expiry.
 
+## SQL text review
+
+The v0.6.0 review at `f7782888` inventoried 3,926 query, execution and raw
+SQL call candidates across 1,920 JavaScript and TypeScript source files. It
+traced computed text in the API, worker, shared code and database adapter.
+It also covered SQL executed by migrations and the backup and restore tools.
+The board records the reviewed source and the focused test receipts.
+
+Keep request values and stored business data in PostgreSQL parameters.
+Keep SQL identifiers and operators in source-controlled mappings. The review
+verified closed sort and column mappings, fixed lock modes, locally generated
+placeholder indexes and SQL fragments composed from source literals. The
+transaction pool and driver wrapper forward text and values together. Their
+extra queries use a bound trace context and validated numeric timeouts.
+[node-postgres query parameters](https://node-postgres.com/features/queries).
+
+The migration review checked PostgreSQL `%I` quoting for dynamic identifiers,
+`USING` for rate-limit arguments and literal receipt backfill statements.
+Configuration backup and restore use a fixed table inventory and load the
+restored JSON through `COPY` data framing. Repeat the data-flow review for
+new SQL text builders, driver forwarding or migration execution paths.
+
 ## Dependency license review
 
 The release specification allows MIT, Apache-2.0, ISC, BSD-2-Clause and BSD-3-Clause. Resolve compound expressions against that list: DOMPurify offers Apache-2.0 as an alternative. A package manifest alone does not establish how its license obligations are met. Review the exact shipped version and retain any required notices.

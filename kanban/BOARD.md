@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T10:53:00+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T11:03:13+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1246 | Accepted with unchanged source bindings. |
-| verify | 12 | Existing work may be complete; inspect evidence before building. |
+| done | 1247 | Accepted with unchanged source bindings. |
+| verify | 11 | Existing work may be complete; inspect evidence before building. |
 | partial | 102 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1168,7 +1168,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.04.01.03` | done | Recorded batch work | Implement reusable pagination validation: max limit, cursor/offset constraints |
 | `06-security-testing-observability.md#T-06.04.01.04` | done | Recorded batch work | Add Zod refinement for business-rule validation (e.g. date ranges, amount limits) |
 | `06-security-testing-observability.md#T-06.04.01.05` | done | Recorded batch work | Write unit tests: valid request, invalid type, out of range, extra field, pagination abuse |
-| `06-security-testing-observability.md#T-06.04.02.01` | verify | Recorded batch work | Audit all database access for raw SQL; flag any untrusted interpolation |
+| `06-security-testing-observability.md#T-06.04.02.01` | done | Recorded batch work | Audit all database access for raw SQL; flag any untrusted interpolation |
 | `06-security-testing-observability.md#T-06.04.02.02` | done | Recorded batch work | Implement allowlist-based field mapping for dynamic `ORDER BY` / `WHERE` fields |
 | `06-security-testing-observability.md#T-06.04.02.03` | partial | Recorded batch work | Add lint rule: forbid raw SQL interpolation of non-literal strings |
 | `06-security-testing-observability.md#T-06.04.02.04` | done | Recorded batch work | Write SAST scan configuration targeting SQL injection patterns |
