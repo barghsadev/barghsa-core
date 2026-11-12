@@ -397,9 +397,18 @@ it('does not substitute an unbound approval when the bound request is absent', a
     [randomUUID(), finance, JSON.stringify({ refundId: row.id, approvalRequestId: randomUUID() })]
   );
   await transaction((c) => expect(latestRefundApproval(c, row)).rejects.toThrow('bound approval'));
+  const unrelated = await refund();
+  const approvalId = await approval(unrelated);
   await db.pool.query(
-    "UPDATE refund_retry_jobs SET next_attempt_at=now()+interval '1 day' WHERE refund_id=$1",
-    [row.id]
+    "INSERT INTO audit_log(id,user_id,event,metadata,created_at) VALUES($1,$2,'refund.approval_requested',$3,clock_timestamp()+interval '1 second')",
+    [randomUUID(), finance, JSON.stringify({ refundId: row.id, approvalRequestId: approvalId })]
+  );
+  await transaction((c) =>
+    expect(latestRefundApproval(c, row)).rejects.toThrow('does not match the refund')
+  );
+  await db.pool.query(
+    "UPDATE refund_retry_jobs SET next_attempt_at=now()+interval '1 day' WHERE refund_id=ANY($1::uuid[])",
+    [[row.id, unrelated.id]]
   );
 });
 

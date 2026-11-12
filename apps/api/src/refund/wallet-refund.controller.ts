@@ -50,7 +50,7 @@ export class WalletRefundController {
     const parsed = refundUuid.optional().safeParse(before);
     if (!parsed.success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_PARSE_ZOD.code }, 400);
-    return this.refunds.contractObligations(parsed.data);
+    return this.refunds.contractObligations(req.session, parsed.data);
   }
   @Get()
   @ApiOperation({ summary: 'Read refundable invoice balance and its wallet refund requests' })

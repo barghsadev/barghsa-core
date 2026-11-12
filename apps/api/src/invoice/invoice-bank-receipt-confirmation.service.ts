@@ -6,7 +6,7 @@ import {
   loadReceiptAttachments,
   type ReceiptAttachmentEvidence,
 } from '../finance/receipt-attachment-access.js';
-import { invoiceBankReceiptCreditScopeSql } from './invoice-bank-receipt-credit-scope.js';
+import { invoiceBankReceiptCreditScopeSql } from '@barghsa/db/refund-processing';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { literalSearchPattern, type HistorySort } from '@barghsa/shared/validation';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';

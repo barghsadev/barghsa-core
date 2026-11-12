@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
 import type { Pool, PoolClient } from 'pg';
-import { invoiceBankReceiptCreditScopeSql } from './invoice-bank-receipt-credit-scope.js';
+import { invoiceBankReceiptCreditScopeSql } from '@barghsa/db/refund-processing';
 
 export interface CustomerInvoicePayment {
   id: string;

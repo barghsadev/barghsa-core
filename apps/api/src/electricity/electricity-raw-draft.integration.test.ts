@@ -684,6 +684,30 @@ for (const action of ['reject', 'cancel'] as const)
       const { id, giftId } = await actualDraft(true),
         ids = await orphanFunding(id),
         before = await snapshot(id);
+      const provenance = action === 'cancel' && !approvalRequired ? randomUUID() : null;
+      if (provenance) {
+        await http.pool.query('INSERT INTO wallets(profile_id) VALUES($1) ON CONFLICT DO NOTHING', [
+          profile,
+        ]);
+        await http.pool.query(
+          `INSERT INTO bank_receipts(id,invoice_id,profile_id,amount,payment_date,payer_reference,attachment_key)
+           VALUES($1,$2,$3,100100,current_date,'orphan-allocation',$4)`,
+          [provenance, ids[0], profile, randomUUID()]
+        );
+        await http.pool.query(
+          "UPDATE bank_receipts SET state='Confirmed',confirmed_by='raw-reviewer',confirmed_at=NOW() WHERE id=$1",
+          [provenance]
+        );
+        await http.pool.query(
+          `INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id)
+           VALUES($1,'topup',100,'Completed',$2,$3)`,
+          [profile, `invoice-bank-receipt-overpayment-credit:${provenance}`, provenance]
+        );
+        await http.pool.query(
+          'UPDATE wallets SET posted_balance=posted_balance+100 WHERE profile_id=$1',
+          [profile]
+        );
+      }
       const response = await send(id, '/draft-terminal/review', {
         action,
         reason: 'Refund actual orphan invoices',
@@ -768,6 +792,42 @@ for (const action of ['reject', 'cancel'] as const)
       ).toBe('Cancelled');
       await http.pool.query("DELETE FROM user_roles WHERE user_id='raw-reviewer'");
       try {
+        if (provenance) {
+          const refund = receipt.refunds.find((entry) => entry.invoiceId === ids[0])!;
+          const creditKey = `invoice-bank-receipt-overpayment-credit:${provenance}`;
+          await http.pool.query(
+            'UPDATE wallet_transactions SET ref_id=$2 WHERE idempotency_key=$1',
+            [creditKey, randomUUID()]
+          );
+          try {
+            expect(await runWalletRefund(http.pool, refund.id)).toBe('failed');
+            expect(
+              (
+                await http.pool.query(
+                  'SELECT last_error_code FROM refund_retry_jobs WHERE refund_id=$1',
+                  [refund.id]
+                )
+              ).rows
+            ).toEqual([{ last_error_code: 'payment_allocation_conflict' }]);
+            expect(
+              (
+                await http.pool.query(
+                  "SELECT id FROM wallet_transactions WHERE ref_id=$1 AND type='refund'",
+                  [refund.id]
+                )
+              ).rows
+            ).toEqual([]);
+          } finally {
+            await http.pool.query(
+              'UPDATE wallet_transactions SET ref_id=$2 WHERE idempotency_key=$1',
+              [creditKey, provenance]
+            );
+          }
+          await http.pool.query(
+            'UPDATE refund_retry_jobs SET next_attempt_at=now() WHERE refund_id=$1',
+            [refund.id]
+          );
+        }
         for (const refund of receipt.refunds) {
           expect(await runWalletRefund(http.pool, refund.id)).toBe('completed');
           expect(await runWalletRefund(http.pool, refund.id)).toBe('deferred');
@@ -785,6 +845,18 @@ for (const action of ['reject', 'cancel'] as const)
           )
         ).rows[0]
       ).toEqual({ amount: '350000', count: 2 });
+      if (provenance) {
+        const refund = receipt.refunds.find((entry) => entry.invoiceId === ids[0])!;
+        const proof = (
+          await http.pool.query(
+            "SELECT metadata->'paymentAllocations' AS allocations FROM wallet_transactions WHERE ref_id=$1 AND type='refund'",
+            [refund.id]
+          )
+        ).rows[0];
+        expect(proof.allocations).toEqual([
+          { id: provenance, source: 'bank_receipt', amount: '100000' },
+        ]);
+      }
       expect(
         (
           await http.pool.query('SELECT status FROM refund_obligations WHERE order_id=$1', [id])

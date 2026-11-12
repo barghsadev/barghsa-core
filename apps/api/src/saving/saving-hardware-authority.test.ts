@@ -68,17 +68,15 @@ function fixture(price = '200') {
                 reserved_count: 0,
               },
             ]
-          : sql.includes('SELECT adjustment_invoice_id')
+          : sql.startsWith('SELECT charge.id FROM saving_hardware_upgrade_requests')
             ? upgrade
-              ? [{ adjustment_invoice_id: invoiceId }]
+              ? [{ id: invoiceId }]
               : []
-            : sql.includes('SELECT contract_id FROM saving_hardware_upgrade_requests')
+            : sql.startsWith('SELECT u.id,u.contract_id,u.contract_version_id,charge.id')
               ? upgrade
                 ? [{ contract_id: foreign ? targetId : contractId }]
                 : []
-              : sql.includes('FROM invoices')
-                ? [{ id: invoiceId }]
-                : [],
+              : [],
     })),
   };
   const access = async (
@@ -128,9 +126,10 @@ it.each([false, true])(
       await f.service.assertCanAmendHardware(id, actor, write, { hardwareProductId }, false);
     exactAccess(write);
     expect(h.finance).not.toHaveBeenCalled();
-    expect(f.client.query).toHaveBeenCalledWith(expect.stringContaining('FOR SHARE OF s,o,c,i'), [
-      id,
-    ]);
+    expect(f.client.query).toHaveBeenCalledWith(
+      expect.stringContaining('WHERE s.id=$1 AND s.profile_id=$2 FOR SHARE OF s,o,c,i'),
+      [id, profileId]
+    );
     noEffects(f.client);
   }
 );
@@ -176,16 +175,24 @@ it.each([false, true])(
     exactAccess(write);
     expect(h.finance).toHaveBeenCalledWith(f.client, actor.userId, 'invoices:write');
     const calls = f.client.query.mock.calls;
-    expect(calls[0]).toEqual([
-      expect.stringContaining('WHERE id=$1 AND order_id=$2'),
-      [targetId, id],
+    expect(calls).toEqual([
+      [
+        expect.stringContaining(
+          'WHERE u.id=$1 AND s.id=$2 AND s.profile_id=$3 FOR SHARE OF charge'
+        ),
+        [targetId, id, profileId],
+      ],
+      [
+        expect.stringContaining(
+          'WHERE u.id=$1 AND s.id=$2 AND s.profile_id=$3 AND charge.id=$4 FOR SHARE OF u'
+        ),
+        [targetId, id, profileId, invoiceId],
+      ],
+      [
+        expect.stringContaining('WHERE s.id=$1 AND s.profile_id=$2 FOR SHARE OF s,o,c,i'),
+        [id, profileId],
+      ],
     ]);
-    expect(calls[1]).toEqual(['SELECT id FROM invoices WHERE id=$1 FOR SHARE', [invoiceId]]);
-    expect(calls[2]).toEqual([
-      expect.stringContaining('adjustment_invoice_id=$3 FOR SHARE'),
-      [targetId, id, invoiceId],
-    ]);
-    expect(calls[3]).toEqual([expect.stringContaining('FOR SHARE OF s,o,c,i'), [id]]);
     noEffects(f.client);
   }
 );

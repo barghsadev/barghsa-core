@@ -50,10 +50,18 @@ function fixture(context: (typeof contexts)[number]) {
   };
 }
 function noEffects(client: { query: ReturnType<typeof vi.fn> }) {
-  for (const [sql] of client.query.mock.calls)
-    expect(sql).not.toMatch(
-      /\b(?:INSERT|UPDATE|DELETE)\b|audit_log|notifications|idempotency|saving_fulfillment_stages|saving_hardware_upgrade_requests/i
-    );
+  expect(client.query).toHaveBeenCalledExactlyOnceWith(
+    expect.stringContaining('WHERE s.id=$1 AND s.profile_id=$2 FOR SHARE OF s,o,c,i'),
+    [id, profileId]
+  );
+  const [sql] = client.query.mock.calls[0]!;
+  expect(sql).not.toMatch(
+    /\b(?:INSERT|UPDATE|DELETE)\b|audit_log|notifications|idempotency|saving_fulfillment_stages/i
+  );
+  expect(sql.match(/saving_hardware_upgrade_requests/g)).toHaveLength(1);
+  expect(sql).toMatch(
+    /EXISTS\(SELECT 1 FROM saving_hardware_upgrade_requests u\s+WHERE u\.order_id=s\.id AND u\.status='awaiting_payment'\)/
+  );
   expect(h.idempotency).not.toHaveBeenCalled();
   expect(h.finance).not.toHaveBeenCalled();
 }
@@ -70,10 +78,6 @@ it.each(contexts)(
       ...(context.write && context.fulfillment ? [{ financialReview: true }] : [])
     );
     expect(context.write ? h.review : h.mutation).not.toHaveBeenCalled();
-    expect(f.client.query).toHaveBeenCalledExactlyOnceWith(
-      expect.stringContaining('WHERE s.id=$1 FOR SHARE OF s,o,c,i'),
-      [id]
-    );
     noEffects(f.client);
   }
 );

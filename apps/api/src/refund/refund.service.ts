@@ -255,25 +255,12 @@ export class RefundService {
     destination: 'wallet' | 'external_bank',
     bankReference?: string
   ): Promise<RefundDecisionReview> {
-    const preliminary = (
-      await getDbPool().query<{ invoice_id: string }>(
-        'SELECT invoice_id FROM refunds WHERE id=$1',
-        [id]
-      )
-    ).rows[0];
-    if (!preliminary) throw new NotFoundException('Refund not found');
+    const invoiceId = await this.refundInvoiceId(id, destination);
     return this.transaction(
-      preliminary.invoice_id,
+      invoiceId,
       actor,
       async (client, invoice) => {
-        const row = (
-          await client.query<RefundRow>(
-            'SELECT * FROM refunds WHERE id=$1 AND invoice_id=$2 FOR UPDATE',
-            [id, invoice.id]
-          )
-        ).rows[0];
-        if (!row || row.destination !== destination)
-          throw new NotFoundException('Refund not found');
+        const row = await this.lockRefund(client, id, invoice, destination);
         if (
           (destination === 'external_bank' && action === 'process') ||
           (destination === 'wallet' && ['record-transfer', 'reconcile'].includes(action))
@@ -298,18 +285,14 @@ export class RefundService {
     destination: 'wallet' | 'external_bank',
     before?: string
   ) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
-      await requireCurrentSession(client, actor);
+    return this.financialRead(actor, async (client) => {
       const invoice = (
         await client.query<InvoiceRow & { archived: boolean }>(
           `SELECT i.id,i.profile_id,i.state,i.adjustment_kind,
                   i.paid_amount::text AS paid_amount,i.refunded_amount::text AS refunded_amount,
                   i.total_amount::text AS total_amount,
                   p.archived
-           FROM invoices i JOIN profiles p ON p.id=i.profile_id WHERE i.id=$1`,
+           FROM invoices i JOIN profiles p ON p.id=i.profile_id WHERE i.id=$1 FOR SHARE OF i`,
           [invoiceId]
         )
       ).rows[0];
@@ -317,21 +300,19 @@ export class RefundService {
       const reserved = (
         await client.query<{ amount: string }>(
           `SELECT COALESCE(SUM(amount),0)::text AS amount FROM refunds
-           WHERE invoice_id=$1 AND state NOT IN ('Completed','Rejected','Cancelled')`,
-          [invoiceId]
+           WHERE invoice_id=$1 AND profile_id=$2 AND state NOT IN ('Completed','Rejected','Cancelled')`,
+          [invoiceId, invoice.profile_id]
         )
       ).rows[0]!.amount;
       const available =
         BigInt(invoice.paid_amount) - BigInt(invoice.refunded_amount) - BigInt(reserved);
       const rows = await client.query<RefundRow>(
         `SELECT * FROM refunds WHERE invoice_id=$1 AND destination=$2
-         AND ($3::uuid IS NULL OR id<$3) ORDER BY id DESC LIMIT 51`,
-        [invoiceId, destination, before ?? null]
+         AND ($3::uuid IS NULL OR id<$3) AND profile_id=$4 ORDER BY id DESC LIMIT 51`,
+        [invoiceId, destination, before ?? null, invoice.profile_id]
       );
       const refunds: RefundDto[] = [];
       for (const row of rows.rows.slice(0, 50)) refunds.push(await this.dto(client, row));
-      await requireCurrentSession(client, actor);
-      await client.query('COMMIT');
       return {
         invoice: {
           invoiceId: invoice.id,
@@ -350,48 +331,56 @@ export class RefundService {
         refunds,
         nextBefore: rows.rows.length > 50 ? rows.rows[49]!.id : null,
       };
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+    });
   }
 
-  async contractObligations(before?: string) {
-    const rows = (
-      await getDbPool().query<{
-        id: string;
-        contractId: string | null;
-        invoiceId: string;
-        amount: string;
-        destination: string;
-        state: string;
-        bankReference: string | null;
-        nextAttemptAt: Date | null;
-        exhausted: boolean;
-        orderId: string | null;
-      }>(
-        `SELECT r.id,COALESCE(co.contract_id,eo.contract_id) AS "contractId",
-          eo.order_id AS "orderId",r.invoice_id AS "invoiceId",r.amount::text,
+  async contractObligations(actor: Actor, before?: string) {
+    return this.financialRead(actor, async (client) => {
+      const rows = (
+        await client.query<{
+          id: string;
+          contractId: string | null;
+          invoiceId: string;
+          amount: string;
+          destination: string;
+          state: string;
+          bankReference: string | null;
+          nextAttemptAt: Date | null;
+          exhausted: boolean;
+          orderId: string | null;
+        }>(
+          `SELECT r.id,COALESCE(contract.id,legacy_contract.id) AS "contractId",
+          legacy_order.id AS "orderId",r.invoice_id AS "invoiceId",r.amount::text,
           r.destination,r.state,r.bank_reference AS "bankReference",
           j.next_attempt_at AS "nextAttemptAt",(j.exhausted_at IS NOT NULL) AS exhausted
       FROM refunds r
+      JOIN invoices invoice ON invoice.id=r.invoice_id AND invoice.profile_id=r.profile_id
       LEFT JOIN contract_refund_obligations co ON co.refund_id=r.id
       LEFT JOIN refund_obligations eo ON eo.refund_id=r.id
+      LEFT JOIN contracts contract ON contract.id=co.contract_id
+        AND contract.profile_id=r.profile_id AND co.invoice_id=r.invoice_id
+        AND (invoice.contract_id=contract.id::text
+          OR (invoice.contract_id IS NULL AND invoice.order_id=contract.order_id))
+      LEFT JOIN orders legacy_order ON legacy_order.id=eo.order_id AND legacy_order.profile_id=r.profile_id
+        AND eo.profile_id=r.profile_id AND eo.invoice_id=r.invoice_id AND invoice.order_id=legacy_order.id
+      LEFT JOIN contracts legacy_contract ON legacy_contract.id=eo.contract_id
+        AND legacy_order.id IS NOT NULL AND legacy_contract.profile_id=r.profile_id
+        AND (legacy_contract.order_id IS NULL OR legacy_contract.order_id=legacy_order.id)
+        AND (invoice.contract_id IS NULL OR invoice.contract_id=legacy_contract.id::text)
       LEFT JOIN refund_retry_jobs j ON j.refund_id=r.id
       WHERE (co.refund_id IS NOT NULL OR eo.refund_id IS NOT NULL)
         AND r.state<>'Completed' AND ($1::uuid IS NULL OR r.id<$1)
       ORDER BY r.id DESC LIMIT 51`,
-        [before ?? null]
-      )
-    ).rows;
-    return {
-      obligations: rows
-        .slice(0, 50)
-        .map((row) => ({ ...row, nextAttemptAt: row.nextAttemptAt?.toISOString() ?? null })),
-      nextBefore: rows.length > 50 ? rows[49]!.id : null,
-    };
+          [before ?? null]
+        )
+      ).rows;
+      return {
+        obligations: rows
+          .slice(0, 50)
+          .map((row) => ({ ...row, nextAttemptAt: row.nextAttemptAt?.toISOString() ?? null })),
+        nextBefore: rows.length > 50 ? rows[49]!.id : null,
+      };
+    });
   }
 
   async request(
@@ -419,12 +408,22 @@ export class RefundService {
           )
         ).rows[0];
         if (existing) {
+          if (
+            existing.invoice_id !== invoice.id ||
+            existing.profile_id !== invoice.profile_id ||
+            existing.amount !== amount ||
+            existing.destination !== destination ||
+            existing.staff_id !== actor.userId
+          )
+            throw new ConflictException('Refund idempotency key belongs to a different request');
           const saved = (
             await client.query<{
               metadata: { fingerprint: string; financialReview?: RefundRequestReview };
             }>(
-              "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at,id LIMIT 1",
-              [existing.id]
+              `SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='refund.requested'
+                AND metadata::jsonb->>'refundId'=$1 AND metadata::jsonb->>'invoiceId'=$2
+                AND metadata::jsonb->>'profileId'=$3 ORDER BY created_at,id LIMIT 1`,
+              [existing.id, invoice.id, invoice.profile_id]
             )
           ).rows[0];
           if (saved?.metadata.fingerprint !== fingerprint)
@@ -495,202 +494,235 @@ export class RefundService {
     bankReference?: string,
     expectedReviewHash?: string
   ): Promise<RefundDto> {
-    const preliminary = (
-      await getDbPool().query<{ invoice_id: string }>(
-        'SELECT invoice_id FROM refunds WHERE id=$1',
-        [id]
-      )
-    ).rows[0];
-    if (!preliminary) throw new NotFoundException('Refund not found');
+    const invoiceId = await this.refundInvoiceId(id, destination);
     let manualRetry: { actorUserId: string; authorizationId: string } | undefined;
-    const result = await this.transaction(
-      preliminary.invoice_id,
-      actor,
-      async (client, invoice, archived) => {
-        const row = (
-          await client.query<RefundRow>(
-            'SELECT * FROM refunds WHERE id=$1 AND invoice_id=$2 FOR UPDATE',
-            [id, invoice.id]
-          )
-        ).rows[0];
-        if (!row || row.destination !== destination)
-          throw new NotFoundException('Refund not found');
+    const result = await this.transaction(invoiceId, actor, async (client, invoice, archived) => {
+      const row = await this.lockRefund(client, id, invoice, destination);
+      if (
+        (destination === 'external_bank' && action === 'process') ||
+        (destination === 'wallet' && ['record-transfer', 'reconcile'].includes(action))
+      )
+        throw new BadRequestException('Action does not match refund destination');
+      const reference = ['record-transfer', 'reconcile'].includes(action)
+        ? this.reference(bankReference)
+        : undefined;
+      if (reference && row.bank_reference && row.bank_reference !== reference)
+        throw new ConflictException('Bank reference does not match the recorded transfer');
+      const target =
+        action === 'approve'
+          ? 'Approved'
+          : action === 'reject'
+            ? 'Rejected'
+            : action === 'cancel'
+              ? 'Cancelled'
+              : action === 'record-transfer'
+                ? 'Processing'
+                : 'Completed';
+      if (row.state === target) {
         if (
-          (destination === 'external_bank' && action === 'process') ||
-          (destination === 'wallet' && ['record-transfer', 'reconcile'].includes(action))
+          action === 'record-transfer' &&
+          (!row.bank_reference || row.reconciliation_status !== 'Pending')
         )
-          throw new BadRequestException('Action does not match refund destination');
-        const reference = ['record-transfer', 'reconcile'].includes(action)
-          ? this.reference(bankReference)
-          : undefined;
-        if (reference && row.bank_reference && row.bank_reference !== reference)
-          throw new ConflictException('Bank reference does not match the recorded transfer');
-        const target =
-          action === 'approve'
-            ? 'Approved'
-            : action === 'reject'
-              ? 'Rejected'
-              : action === 'cancel'
-                ? 'Cancelled'
-                : action === 'record-transfer'
-                  ? 'Processing'
-                  : 'Completed';
-        if (row.state === target) {
-          if (
-            action === 'record-transfer' &&
-            (!row.bank_reference || row.reconciliation_status !== 'Pending')
-          )
-            throw new ConflictException('A pending recorded transfer is required');
-          return this.dto(client, row);
-        }
-        const normalizedReason = ['reject', 'cancel'].includes(action) ? this.reason(reason) : null;
-        const financialReview = expectedReviewHash
-          ? await this.decisionReview(
-              client,
-              invoice,
-              row,
-              action,
-              normalizedReason,
-              reference ?? null
-            )
-          : null;
-        if (financialReview) this.snapshots.assertConfirmed(financialReview, expectedReviewHash!);
-        if (action === 'reject' || action === 'cancel') {
-          await this.move(client, row, target, actor, ip, normalizedReason!, financialReview);
-          if (target === 'Rejected')
-            await notifyRefundOutcome(client, { ...row, state: 'Rejected' });
-          return this.dto(client, row);
-        }
-        assertWalletProfileWritable({ id: invoice.profile_id, archived });
-        const obligation = await readContractRefundAuthorization(client, row);
-        this.refundableInvoice(invoice, Boolean(obligation));
-        // Approval is rechecked before money leaves. Reconciliation confirms an
-        // already recorded transfer using its immutable evidence and a current reviewer.
-        if (action !== 'reconcile') await this.requireApproval(client, row);
-        if (action === 'approve') {
-          await this.move(
-            client,
-            row,
-            'Approved',
-            actor,
-            ip,
-            'Finance approved the refund',
-            financialReview
-          );
-          return this.dto(client, row);
-        }
-        if (action === 'record-transfer') {
-          if (row.state !== 'Approved')
-            throw new ConflictException('Only approved refunds can record a transfer');
-          await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
-            `external-refund-reference:${reference}`,
-          ]);
-          const duplicate = await client.query(
-            "SELECT id FROM refunds WHERE destination='external_bank' AND bank_reference=$1 AND id<>$2",
-            [reference, row.id]
-          );
-          if (duplicate.rows.length)
-            throw new ConflictException('Bank reference already belongs to another refund');
-          await client.query(
-            "UPDATE refunds SET bank_reference=$2,reconciliation_status='Pending' WHERE id=$1",
-            [row.id, reference]
-          );
-          row.bank_reference = reference!;
-          row.reconciliation_status = 'Pending';
-          await this.move(
-            client,
-            row,
-            'Processing',
-            actor,
-            ip,
-            'External bank transfer recorded',
-            financialReview
-          );
-          await this.audit(client, row, actor, ip, 'refund.bank_transfer_recorded', {
-            bankReference: reference,
-          });
-          return this.dto(client, row);
-        }
-        if (action === 'reconcile') {
-          if (
-            row.state !== 'Processing' ||
-            !row.bank_reference ||
-            row.reconciliation_status !== 'Pending'
-          )
-            throw new ConflictException('A pending recorded transfer is required');
-          const transfer = (
-            await client.query<{ user_id: string; bank_reference: string }>(
-              "SELECT user_id,metadata::jsonb->>'bankReference' AS bank_reference FROM audit_log WHERE event='refund.bank_transfer_recorded' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",
-              [row.id]
-            )
-          ).rows[0];
-          if (!transfer || transfer.bank_reference !== reference)
-            throw new ConflictException('Recorded transfer evidence is missing');
-          if (transfer.user_id === actor.userId)
-            throw new ForbiddenException(
-              'A second finance staff member must reconcile the transfer'
-            );
-          await client.query("UPDATE refunds SET reconciliation_status='Confirmed' WHERE id=$1", [
-            row.id,
-          ]);
-          row.reconciliation_status = 'Confirmed';
-          await this.audit(client, row, actor, ip, 'refund.bank_reconciled', {
-            bankReference: reference,
-            recordedBy: transfer.user_id,
-            ...(financialReview ? { financialReview } : {}),
-          });
-          await this.complete(client, row, invoice, actor, ip);
-          return this.dto(client, row);
-        }
-        if (!['Approved', 'Processing', 'Failed'].includes(row.state))
-          throw new ConflictException('Only approved wallet refunds can be processed');
-        const processingFrom = row.state;
-        if (row.state === 'Approved')
-          await this.move(
-            client,
-            row,
-            'Processing',
-            actor,
-            ip,
-            'Wallet refund processing requested',
-            financialReview
-          );
-        await client.query(
-          'INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,$2) ON CONFLICT(refund_id) DO NOTHING',
-          [row.id, actor.userId]
-        );
-        const job = (
-          await client.query(
-            'SELECT exhausted_at FROM refund_retry_jobs WHERE refund_id=$1 FOR UPDATE',
-            [row.id]
-          )
-        ).rows[0];
-        if (obligation && row.state === 'Failed' && job?.exhausted_at) {
-          manualRetry = { actorUserId: actor.userId, authorizationId: uuidv7() };
-          await this.audit(client, row, actor, ip, 'refund.manual_retry_requested', {
-            manualRetryId: manualRetry.authorizationId,
-            contractId: obligation.contractId,
-            intentId: obligation.intentId,
-            ...(financialReview ? { financialReview } : {}),
-          });
-        }
-        if (processingFrom !== 'Approved' && financialReview)
-          await this.audit(client, row, actor, ip, 'refund.process_requested', { financialReview });
+          throw new ConflictException('A pending recorded transfer is required');
         return this.dto(client, row);
       }
-    );
+      const normalizedReason = ['reject', 'cancel'].includes(action) ? this.reason(reason) : null;
+      const financialReview = expectedReviewHash
+        ? await this.decisionReview(
+            client,
+            invoice,
+            row,
+            action,
+            normalizedReason,
+            reference ?? null
+          )
+        : null;
+      if (financialReview) this.snapshots.assertConfirmed(financialReview, expectedReviewHash!);
+      if (action === 'reject' || action === 'cancel') {
+        await this.move(client, row, target, actor, ip, normalizedReason!, financialReview);
+        if (target === 'Rejected') await notifyRefundOutcome(client, { ...row, state: 'Rejected' });
+        return this.dto(client, row);
+      }
+      assertWalletProfileWritable({ id: invoice.profile_id, archived });
+      const obligation = await readContractRefundAuthorization(client, row);
+      this.refundableInvoice(invoice, Boolean(obligation));
+      // Approval is rechecked before money leaves. Reconciliation confirms an
+      // already recorded transfer using its immutable evidence and a current reviewer.
+      if (action !== 'reconcile') await this.requireApproval(client, row);
+      if (action === 'approve') {
+        await this.move(
+          client,
+          row,
+          'Approved',
+          actor,
+          ip,
+          'Finance approved the refund',
+          financialReview
+        );
+        return this.dto(client, row);
+      }
+      if (action === 'record-transfer') {
+        if (row.state !== 'Approved')
+          throw new ConflictException('Only approved refunds can record a transfer');
+        await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [
+          `external-refund-reference:${reference}`,
+        ]);
+        const duplicate = await client.query(
+          "SELECT id FROM refunds WHERE destination='external_bank' AND bank_reference=$1 AND id<>$2",
+          [reference, row.id]
+        );
+        if (duplicate.rows.length)
+          throw new ConflictException('Bank reference already belongs to another refund');
+        await client.query(
+          "UPDATE refunds SET bank_reference=$2,reconciliation_status='Pending' WHERE id=$1",
+          [row.id, reference]
+        );
+        row.bank_reference = reference!;
+        row.reconciliation_status = 'Pending';
+        await this.move(
+          client,
+          row,
+          'Processing',
+          actor,
+          ip,
+          'External bank transfer recorded',
+          financialReview
+        );
+        await this.audit(client, row, actor, ip, 'refund.bank_transfer_recorded', {
+          bankReference: reference,
+        });
+        return this.dto(client, row);
+      }
+      if (action === 'reconcile') {
+        if (
+          row.state !== 'Processing' ||
+          !row.bank_reference ||
+          row.reconciliation_status !== 'Pending'
+        )
+          throw new ConflictException('A pending recorded transfer is required');
+        const transfer = (
+          await client.query<{ user_id: string; bank_reference: string }>(
+            `SELECT user_id,metadata::jsonb->>'bankReference' AS bank_reference
+                FROM audit_log WHERE event='refund.bank_transfer_recorded'
+                  AND metadata::jsonb->>'refundId'=$1 AND metadata::jsonb->>'invoiceId'=$2
+                  AND metadata::jsonb->>'profileId'=$3 AND metadata::jsonb->>'amount'=$4
+                ORDER BY created_at DESC,id DESC LIMIT 1`,
+            [row.id, row.invoice_id, row.profile_id, row.amount]
+          )
+        ).rows[0];
+        if (!transfer || transfer.bank_reference !== reference)
+          throw new ConflictException('Recorded transfer evidence is missing');
+        if (transfer.user_id === actor.userId)
+          throw new ForbiddenException('A second finance staff member must reconcile the transfer');
+        await client.query("UPDATE refunds SET reconciliation_status='Confirmed' WHERE id=$1", [
+          row.id,
+        ]);
+        row.reconciliation_status = 'Confirmed';
+        await this.audit(client, row, actor, ip, 'refund.bank_reconciled', {
+          bankReference: reference,
+          recordedBy: transfer.user_id,
+          ...(financialReview ? { financialReview } : {}),
+        });
+        await this.complete(client, row, invoice, actor, ip);
+        return this.dto(client, row);
+      }
+      if (!['Approved', 'Processing', 'Failed'].includes(row.state))
+        throw new ConflictException('Only approved wallet refunds can be processed');
+      const processingFrom = row.state;
+      if (row.state === 'Approved')
+        await this.move(
+          client,
+          row,
+          'Processing',
+          actor,
+          ip,
+          'Wallet refund processing requested',
+          financialReview
+        );
+      await client.query(
+        'INSERT INTO refund_retry_jobs(refund_id,executor_user_id) VALUES($1,$2) ON CONFLICT(refund_id) DO NOTHING',
+        [row.id, actor.userId]
+      );
+      const job = (
+        await client.query(
+          'SELECT exhausted_at FROM refund_retry_jobs WHERE refund_id=$1 FOR UPDATE',
+          [row.id]
+        )
+      ).rows[0];
+      if (obligation && row.state === 'Failed' && job?.exhausted_at) {
+        manualRetry = { actorUserId: actor.userId, authorizationId: uuidv7() };
+        await this.audit(client, row, actor, ip, 'refund.manual_retry_requested', {
+          manualRetryId: manualRetry.authorizationId,
+          contractId: obligation.contractId,
+          intentId: obligation.intentId,
+          ...(financialReview ? { financialReview } : {}),
+        });
+      }
+      if (processingFrom !== 'Approved' && financialReview)
+        await this.audit(client, row, actor, ip, 'refund.process_requested', { financialReview });
+      return this.dto(client, row);
+    });
     if (action !== 'process' || result.state === 'Completed') return result;
     // The durable processing request is committed before attempting any money move.
     await runWalletRefund(getDbPool(), id, manualRetry);
+    // Read back only the refund whose processing grant this request committed.
     const client = await getDbPool().connect();
     try {
       await client.query('BEGIN');
-      const row = (
-        await client.query<RefundRow>('SELECT * FROM refunds WHERE id=$1 FOR UPDATE', [id])
-      ).rows[0]!;
+      const row = await this.lockRefund(
+        client,
+        id,
+        { id: result.invoiceId, profile_id: result.profileId },
+        destination
+      );
       const current = await this.dto(client, row);
       await client.query('COMMIT');
       return current;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  private async refundInvoiceId(id: string, destination: RefundRow['destination']) {
+    const row = (
+      await getDbPool().query<{ invoice_id: string }>(
+        'SELECT invoice_id FROM refunds WHERE id=$1 AND destination=$2',
+        [id, destination]
+      )
+    ).rows[0];
+    if (!row) throw new NotFoundException('Refund not found');
+    return row.invoice_id;
+  }
+
+  private async lockRefund(
+    client: PoolClient,
+    id: string,
+    invoice: Pick<InvoiceRow, 'id' | 'profile_id'>,
+    destination: RefundRow['destination']
+  ) {
+    const row = (
+      await client.query<RefundRow>(
+        'SELECT * FROM refunds WHERE id=$1 AND invoice_id=$2 AND profile_id=$3 AND destination=$4 FOR UPDATE',
+        [id, invoice.id, invoice.profile_id, destination]
+      )
+    ).rows[0];
+    if (!row) throw new NotFoundException('Refund not found');
+    return row;
+  }
+
+  private async financialRead<T>(actor: Actor, read: (client: PoolClient) => Promise<T>) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
+      await requireCurrentSession(client, actor);
+      const result = await read(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
       throw error;
@@ -802,8 +834,8 @@ export class RefundService {
       else await requireCurrentSession(client, actor);
       const invoice = (
         await client.query<InvoiceRow>(
-          'SELECT id,profile_id,state,adjustment_kind,total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1 FOR UPDATE',
-          [invoiceId]
+          'SELECT id,profile_id,state,adjustment_kind,total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          [invoiceId, profile.id]
         )
       ).rows[0];
       if (!invoice || invoice.profile_id !== profile.id)
@@ -956,11 +988,22 @@ export class RefundService {
         wallet_transaction_id: string | null;
         created_at: Date;
         finished_at: Date | null;
+        credit_conflict: boolean;
       }>(
-        'SELECT id,state,wallet_transaction_id,created_at,finished_at FROM refund_transactions WHERE refund_id=$1',
-        [row.id]
+        `SELECT t.id,t.state,t.wallet_transaction_id,t.created_at,t.finished_at,
+                ((t.wallet_transaction_id IS NOT NULL OR (t.state='Completed' AND $4='wallet'))
+                  AND credit.id IS NULL) AS credit_conflict
+         FROM refund_transactions t
+         LEFT JOIN wallet_transactions credit ON credit.id=t.wallet_transaction_id
+           AND $4='wallet' AND credit.wallet_id=$2 AND credit.amount=$3
+           AND credit.type='refund' AND credit.state='Completed' AND credit.ref_id=t.refund_id::text
+           AND credit.idempotency_key='refund-wallet-credit:'||t.refund_id::text
+         WHERE t.refund_id=$1`,
+        [row.id, row.profile_id, row.amount, row.destination]
       )
     ).rows[0];
+    if (transaction?.credit_conflict)
+      throw new ConflictException('Refund credit evidence requires reconciliation');
     const job =
       row.destination === 'wallet'
         ? (

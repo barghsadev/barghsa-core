@@ -4,6 +4,7 @@ import { resolveStaffPermissions } from '@barghsa/shared/admin';
 import { defaultInboxContent } from '@barghsa/shared/notifications';
 import {
   DUAL_APPROVAL_THRESHOLD_CONFIG_KEY,
+  INVOICE_BANK_RECEIPT_CHANNEL,
   readInvoiceBankReceiptDualApprovalThreshold,
 } from '@barghsa/shared/finance';
 import { postWalletCredit } from './wallet-credit';
@@ -28,6 +29,16 @@ export interface RefundProcessingRow {
   staff_id: string | null;
 }
 
+/** SQL predicate for a candidate credit joined to its confirmed receipt (r). */
+export const invoiceBankReceiptCreditScopeSql = `
+  credit.wallet_id=r.profile_id AND credit.ref_id=r.id::text
+  AND credit.type='topup' AND credit.state='Completed'
+  AND credit.amount>0 AND credit.amount<=r.amount
+  AND COALESCE(credit.metadata->>'channel','${INVOICE_BANK_RECEIPT_CHANNEL}')='${INVOICE_BANK_RECEIPT_CHANNEL}'
+  AND COALESCE(credit.metadata->>'purpose','overpayment')='overpayment'
+  AND COALESCE(credit.metadata->>'receiptId',r.id::text)=r.id::text
+  AND COALESCE(credit.metadata->>'invoiceId',r.invoice_id::text)=r.invoice_id::text`;
+
 /** A committed cancellation creates an immutable debt. Fulfillment uses that
  * recorded authority; later role or threshold changes cannot erase the debt. */
 export async function readContractRefundAuthorization(
@@ -43,11 +54,14 @@ export async function readContractRefundAuthorization(
     }>(
       `SELECT o.contract_id,c.intent_id,c.executed_by,
       (((p.state='Cancelled' AND COALESCE(i.financial_snapshot->>'terminalAction','cancel')='cancel') OR (p.state='Rejected' AND p.service_type='electricity' AND i.financial_snapshot->>'terminalAction'='reject')) AND p.current_version_id=i.version_id AND p.profile_id=$3
-       AND o.invoice_id=$2 AND $4::text IS NULL
+       AND o.invoice_id=$2 AND source.profile_id=p.profile_id AND $4::text IS NULL
+       AND (source.contract_id=p.id::text OR (source.order_id=p.order_id AND source.contract_id IS NULL))
+       AND i.financial_snapshot->>'profileId'=p.profile_id::text
        AND EXISTS(SELECT 1 FROM jsonb_array_elements(i.refund_decision->'refunds') d
          WHERE d->>'invoiceId'=$2::text AND d->>'amount'=$5 AND d->>'destination'=$6)) AS valid
     FROM contract_refund_obligations o JOIN contract_cancellations c ON c.contract_id=o.contract_id
-    JOIN contract_cancellation_intents i ON i.id=c.intent_id JOIN contracts p ON p.id=c.contract_id
+    JOIN contract_cancellation_intents i ON i.id=c.intent_id AND i.contract_id=c.contract_id
+    JOIN contracts p ON p.id=c.contract_id JOIN invoices source ON source.id=o.invoice_id
     WHERE o.refund_id=$1`,
       [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount, row.destination]
     )
@@ -88,25 +102,27 @@ export async function readContractRefundAuthorization(
         valid: boolean;
       }>(
         `SELECT o.contract_id,o.order_id,o.authorized_by,
-          (((parent.order_type='electricity' AND e.status IN ('rejected','cancelled')
+          COALESCE((((parent.order_type='electricity' AND e.status IN ('rejected','cancelled')
              AND c.status='cancelled' AND e.profile_id=$3)
             OR (parent.order_type='savings' AND s.status='rejected'
              AND p.service_type='savings' AND s.profile_id=$3))
            AND p.state IN ('Rejected','Cancelled') AND parent.status='CANCELLED'
            AND parent.profile_id=$3 AND p.profile_id=$3
            AND i.order_id=o.order_id AND i.id=$2 AND i.profile_id=$3
+           AND (i.contract_id IS NULL OR i.contract_id=p.id::text)
+           AND (p.order_id IS NULL OR p.order_id=o.order_id)
            AND o.invoice_id=$2 AND o.profile_id=$3 AND o.contract_id=p.id
            AND o.status IN ('processing','failed','completed')
            AND r.invoice_id=$2 AND r.profile_id=$3 AND r.amount=$5::bigint
            AND r.destination='wallet' AND r.staff_id IS NULL AND $4::text IS NULL
-           AND o.total_paid_amount-o.completed_refund_amount=$5::bigint) AS valid
+           AND o.total_paid_amount-o.completed_refund_amount=$5::bigint),false) AS valid
          FROM refund_obligations o
          JOIN refunds r ON r.id=o.refund_id
          JOIN orders parent ON parent.id=o.order_id
          LEFT JOIN electricity_orders e ON e.id=o.order_id
          LEFT JOIN electricity_contracts c ON c.order_id=o.order_id AND c.contract_id=o.contract_id
          LEFT JOIN saving_orders s ON s.order_id=o.order_id
-         JOIN contracts p ON p.id=o.contract_id
+         LEFT JOIN contracts p ON p.id=o.contract_id
          JOIN invoices i ON i.id=o.invoice_id
          WHERE o.refund_id=$1`,
         [row.id, row.invoice_id, row.profile_id, row.staff_id, row.amount]
@@ -148,10 +164,7 @@ export async function refundRequiresApproval(client: PoolClient, amount: string)
     throw new RefundProcessingError('invalid_policy', 'Dual approval configuration is invalid');
   return threshold.status === 'enabled' && BigInt(amount) >= BigInt(threshold.thresholdIrR);
 }
-export async function latestRefundApproval(
-  client: PoolClient,
-  row: Pick<RefundProcessingRow, 'id'>
-) {
+export async function latestRefundApproval(client: PoolClient, row: RefundProcessingRow) {
   const binding = (
     await client.query<{ id: string }>(
       "SELECT metadata::jsonb->>'approvalRequestId' AS id FROM audit_log WHERE event='refund.approval_requested' AND metadata::jsonb->>'refundId'=$1 ORDER BY created_at DESC,audit_log.id DESC LIMIT 1",
@@ -172,6 +185,19 @@ export async function latestRefundApproval(
   ).rows[0];
   if (!approval)
     throw new RefundProcessingError('approval_required', 'The bound approval request is missing');
+  if (
+    approval.action_type !== 'refund' ||
+    approval.initiator_id !== row.staff_id ||
+    approval.amount_irr !== row.amount ||
+    approval.details?.refundId !== row.id ||
+    approval.details?.invoiceId !== row.invoice_id ||
+    approval.details?.profileId !== row.profile_id ||
+    approval.details?.destination !== row.destination
+  )
+    throw new RefundProcessingError(
+      'approval_required',
+      'The bound approval does not match the refund'
+    );
   return approval;
 }
 export async function requireRefundFinancePermission(
@@ -212,16 +238,9 @@ export async function requireRefundApproval(
   if (!(await refundRequiresApproval(client, row.amount)) && !approval) return;
   if (
     !approval ||
-    approval.action_type !== 'refund' ||
-    approval.details.refundId !== row.id ||
     approval.status !== 'approved' ||
     !approval.reviewer_id ||
-    approval.reviewer_id === approval.initiator_id ||
-    approval.initiator_id !== row.staff_id ||
-    approval.amount_irr !== row.amount ||
-    approval.details.invoiceId !== row.invoice_id ||
-    approval.details.profileId !== row.profile_id ||
-    approval.details.destination !== row.destination
+    approval.reviewer_id === approval.initiator_id
   )
     throw new RefundProcessingError(
       'approval_required',
@@ -415,15 +434,20 @@ export async function runWalletRefund(
     );
     const invoice = (
       await client.query(
-        'SELECT id,profile_id,state,adjustment_kind,total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1 FOR UPDATE',
-        [owner.invoice_id]
+        'SELECT id,profile_id,state,adjustment_kind,total_amount,paid_amount,refunded_amount FROM invoices WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+        [owner.invoice_id, owner.profile_id]
       )
     ).rows[0];
     const row = (
-      await client.query<RefundProcessingRow>('SELECT * FROM refunds WHERE id=$1 FOR UPDATE', [
-        refundId,
-      ])
-    ).rows[0]!;
+      await client.query<RefundProcessingRow>(
+        'SELECT * FROM refunds WHERE id=$1 AND invoice_id=$2 AND profile_id=$3 FOR UPDATE',
+        [refundId, owner.invoice_id, owner.profile_id]
+      )
+    ).rows[0];
+    if (!row) {
+      await client.query('ROLLBACK');
+      return 'deferred';
+    }
     const job = (
       await client.query<{ executor_user_id: string; attempts: number; max_attempts: number }>(
         `SELECT executor_user_id,attempts,max_attempts FROM refund_retry_jobs WHERE refund_id=$1 AND completed_at IS NULL AND
@@ -507,27 +531,42 @@ export async function runWalletRefund(
         'INSERT INTO wallets(profile_id) VALUES($1) ON CONFLICT(profile_id) DO NOTHING',
         [row.profile_id]
       );
-      const paymentAllocations =
+      const allocationRows =
         obligation && 'orderId' in obligation
           ? (
-              await client.query<{ id: string; source: string; amount: string }>(
-                `SELECT id,source,amount FROM (
-                SELECT w.id,'wallet' AS source,(-w.amount)::text AS amount
+              await client.query<{
+                id: string;
+                source: string;
+                amount: string;
+                credit_conflict: boolean;
+              }>(
+                `SELECT id,source,amount,credit_conflict FROM (
+                SELECT w.id,'wallet' AS source,(-w.amount)::text AS amount,false AS credit_conflict
                 FROM wallet_transactions w WHERE w.wallet_id=$2 AND w.ref_id=$1
                   AND w.type='payment' AND w.state='Completed' AND w.amount<0
                 UNION ALL
-                SELECT b.id,'bank_receipt' AS source,
-                  (b.amount-COALESCE(c.amount,0))::text AS amount
-                FROM bank_receipts b LEFT JOIN wallet_transactions c
-                  ON c.wallet_id=b.profile_id
-                  AND c.idempotency_key='invoice-bank-receipt-overpayment-credit:'||b.id::text
-                WHERE b.invoice_id=$1::uuid AND b.profile_id=$2
-                  AND b.state='Confirmed'
+                SELECT r.id,'bank_receipt' AS source,
+                  (r.amount-COALESCE(credit.amount,0))::text AS amount,
+                  (credit.id IS NOT NULL AND (${invoiceBankReceiptCreditScopeSql}) IS NOT TRUE)
+                FROM bank_receipts r LEFT JOIN wallet_transactions credit
+                  ON credit.idempotency_key='invoice-bank-receipt-overpayment-credit:'||r.id::text
+                WHERE r.invoice_id=$1::uuid AND r.profile_id=$2
+                  AND r.state='Confirmed'
               ) allocations ORDER BY source,id`,
                 [row.invoice_id, row.profile_id]
               )
             ).rows
           : undefined;
+      if (allocationRows?.some((row) => row.credit_conflict))
+        throw new RefundProcessingError(
+          'payment_allocation_conflict',
+          'Bank receipt allocation requires reconciliation'
+        );
+      const paymentAllocations = allocationRows?.map(({ id, source, amount }) => ({
+        id,
+        source,
+        amount,
+      }));
       await postWalletCredit(
         client,
         profile,
