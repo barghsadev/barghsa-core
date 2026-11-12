@@ -32,9 +32,17 @@ pending entries match the reviewer workbook by scope, exact package URL,
 observed licenses and installation location. The other 461 entries pass the
 current allowlist. The report SHA-256 is
 `20cff858e60c357c84d1dacb1139b4916b83c6d51284240d1a9c909ec572376d`.
-Use the existing workbook for the pending dispositions. The final release
-requires the strict check on its own immutable images.
-[Current image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43286083146)
+[Earlier image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43286083146)
+
+The report-only image job at `c0487559` records 387 pending entries. Use the
+refreshed workbook for decisions. It includes `libc-bin`, `libc6` and
+`locales` at `2.39-0ubuntu8.12` in the staging PostgreSQL image. The signed
+Ubuntu indices verify the exact package and source archives, and the review
+packet includes the notices extracted from those packages. The report SHA-256
+is `b304ae4006e1f5eab3c70a33b7e7f1c277d426a0c2b696e43f251b3cc1312d95`.
+Named dispositions and the strict check on the final immutable images are
+required for release.
+[Hosted image inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43299081923) · [Ubuntu source archive](https://security.ubuntu.com/ubuntu/pool/main/g/glibc/glibc_2.39-0ubuntu8.12.dsc)
 
 ## Reviewer and approval
 

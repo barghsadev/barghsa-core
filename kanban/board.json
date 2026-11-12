@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T20:17:38+00:00",
+  "updated": "2026-11-12T20:28:42+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -20420,7 +20420,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for all 387 package entries in the current five-image inventory. Hosted report 43296288619 at 9545cd2c has 384 exact matches to the review workbook and three refreshed Ubuntu glibc-family entries: libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Review the refreshed package and source evidence before approval.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -20475,7 +20475,8 @@
           "release-0.6-unified-license-review",
           "release-0.6-gate-readback",
           "release-0.6-postgres-package-alignment",
-          "release-0.6-postgres-restore-readback"
+          "release-0.6-postgres-restore-readback",
+          "release-0.6-refreshed-license-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -43975,7 +43976,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "01ab92b2a35300200663abab003ae6ed57acbaf4cacbb38bf12b15dea3c3cc7f"
+              "sha256": "c4f1a07d5efade4b32f35b249b639202f56e1adf5ef0d046fae03e608a5b45c3"
             }
           ],
           "checks": [
@@ -44451,6 +44452,14 @@
                 "docs/security/release-license-review.md"
               ],
               "scope": "The updated license review packet records an exact inventory comparison. The license policy and approval requirements remain in force."
+            },
+            {
+              "batch": "release-0.6-refreshed-license-review",
+              "base_commit": "c04875597fa14d6b500187276e9337762b6b14ac",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Recorded the current five-image review inventory and verified exact Ubuntu notice and source evidence."
             }
           ],
           "presentation_renewals": [
@@ -638930,7 +638939,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for all 387 package entries in the current five-image inventory. Hosted report 43296288619 at 9545cd2c has 384 exact matches to the review workbook and three refreshed Ubuntu glibc-family entries: libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Review the refreshed package and source evidence before approval.",
+        "Obtain named owner or legal reviewer dispositions for the 387 pending rows in the refreshed workbook for c0487559. Hosted inventory 43299081923 matches all rows by scope, exact package URL, license set and location. The packet includes verified Ubuntu binary notices and corresponding source archive receipts for libc-bin, libc6 and locales at 2.39-0ubuntu8.12.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts."
       ],
@@ -638979,7 +638988,8 @@
           "release-0.6-weekly-dependency-advisory",
           "release-0.6-reuse-affected-preflight",
           "release-0.6-gate-readback",
-          "release-0.6-postgres-restore-readback"
+          "release-0.6-postgres-restore-readback",
+          "release-0.6-refreshed-license-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -1010749,7 +1010759,8 @@
           "release-0.6-pilot-rollout",
           "release-0.6-node-postgres-lint",
           "release-0.6-postgres-package-alignment",
-          "release-0.6-postgres-restore-readback"
+          "release-0.6-postgres-restore-readback",
+          "release-0.6-refreshed-license-review"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1171153,6 +1171164,52 @@
         {
           "file": "license-inventory-comparison.json",
           "sha256": "01f6846b987baee02dc00cad9bbc5b0165f6873603404d663093d2ca1f82dfa8"
+        }
+      ]
+    },
+    "release-0.6-refreshed-license-review": {
+      "batch": "release-0.6-refreshed-license-review",
+      "base_commit": "c04875597fa14d6b500187276e9337762b6b14ac",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "02-auth-users-admin.md#T-02.02.02",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "c4f1a07d5efade4b32f35b249b639202f56e1adf5ef0d046fae03e608a5b45c3"
+        }
+      ],
+      "checks": [
+        "The c0487559 inventory matches all 848 entries from 9545cd2c. It records 461 allowed and 387 review-required package and scope entries.",
+        "Verified Ubuntu's signed archive and SHA-256 checksums for the three exact binary packages and glibc source archives. Extracted and hashed their distribution notices.",
+        "Updated three package rows and the source reference. Verified the exported workbook has 387 blank decision rows and preserves the table filters, freeze panes, layout and dropdown validation."
+      ],
+      "limitations": [
+        "The refreshed workbook requests decisions. Package-specific approvals and strict final-candidate verification remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-restore-readback",
+      "execution_receipts": [
+        {
+          "file": "current-hosted-runtime-images/release-licenses.json",
+          "sha256": "b304ae4006e1f5eab3c70a33b7e7f1c277d426a0c2b696e43f251b3cc1312d95"
+        },
+        {
+          "file": "ubuntu-glibc-evidence/verified-ubuntu-packages.json",
+          "sha256": "8e003b0ea62adb28379d0c955ea4c9d0c11308280fe8478c64f43fec0ea4a5c1"
+        },
+        {
+          "file": "ubuntu-glibc-evidence/archive-signature.log",
+          "sha256": "f91323297ae779dca8b4836aa15c41d4b83e1f57cbf622f44cd250162686bbf1"
+        },
+        {
+          "file": "license-workbook-verified.json",
+          "sha256": "310c633590b5ba75a82e081488ddcbb2bb5106710dd3e760f41ef009ce01d3cb"
         }
       ]
     }
