@@ -40,6 +40,7 @@ async function click(label: string) {
 const cursor = notificationCursor();
 it.each([
   ['staff', 'fa'],
+  ['staff', 'en'],
   ['customer', 'en'],
 ] as const)('shows operations resource links in the %s workspace', async (context, locale) => {
   document.documentElement.lang = locale;
@@ -69,9 +70,16 @@ it.each([
   expect(links.map((link) => [link.textContent, link.getAttribute('href')])).toEqual(
     context === 'staff'
       ? [
-          ['داشبورد پایش', 'https://monitoring.example.test/d/barghsa-finance-safety'],
           [
-            'راهنمای اقدام',
+            locale === 'fa' ? 'داشبورد پایش' : 'Monitoring dashboard',
+            'https://monitoring.example.test/d/barghsa-finance-safety',
+          ],
+          [
+            locale === 'fa' ? 'بودجه دسترس‌پذیری' : 'Availability budget',
+            'https://monitoring.example.test/d/barghsa-executive-slo',
+          ],
+          [
+            locale === 'fa' ? 'راهنمای اقدام' : 'Runbook',
             'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/refund-backlog.md',
           ],
         ]

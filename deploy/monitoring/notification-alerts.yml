@@ -9,6 +9,17 @@ groups:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Email provider circuit is open
           description: 'Provider {{ $labels.provider_id }} stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after the configured cooldown.'
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: &journey_burn >-
+            {{- if and $labels.environment $labels.database -}}
+            {{- $selector := printf "barghsa:journey:burn_rate{environment=%q,database=%q,window=~\"1h|24h\"}" $labels.environment $labels.database -}}
+            {{- with query $selector | sortByLabel "window" | sortByLabel "service" -}}
+            {{- range $i, $sample := . -}}
+            {{- if $i }}, {{ end -}}
+            {{ $sample.Labels.service }}/{{ $sample.Labels.availability_tier }}/{{ $sample.Labels.window }}={{ printf "%.2fx" $sample.Value }}
+            {{- end -}}
+            {{- else -}}unavailable{{- end -}}
+            {{- else -}}unavailable{{- end -}}
       - alert: SmsProviderLowCredit
         expr: max without (instance, pod) (provider_sms_credit_low) == 1
         labels:
@@ -26,6 +37,8 @@ groups:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: SMS provider circuit is open
           description: 'Provider {{ $labels.provider_id }} stopped sending after provider failures. Inspect its configuration, health and delivery history; a configuration pause requires a tested replacement.'
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: *journey_burn
       - alert: NotificationDeadLettersPending
         expr: max without (instance, pod) (notifications_dead_letter_count) > 0
         for: 10m
@@ -52,6 +65,8 @@ groups:
         annotations:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Eligible notification outbox backlog exceeds five minutes
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: *journey_burn
       - alert: NotificationOutboxBacklogCritical
         expr: max without (instance, pod) (notifications_eligible_outbox_age_seconds) > 900
         labels:
@@ -60,6 +75,8 @@ groups:
         annotations:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: Eligible notification outbox backlog exceeds fifteen minutes
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: *journey_burn
   - name: barghsa-refund-obligations
     rules:
       - alert: RefundObligationOverdue
@@ -70,6 +87,8 @@ groups:
         annotations:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/refund-backlog.md
           summary: At least one mandatory refund has remained outstanding for more than one hour
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: *journey_burn
       - alert: WalletReconciliationCritical
         expr: max without (instance, pod) (reconciliation_wallets_critical_drift) > 0
         labels:
@@ -78,6 +97,8 @@ groups:
         annotations:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md
           summary: Current wallet balance differs from its ledger at or above the critical threshold
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: *journey_burn
       - alert: PaymentCallbackAnomaly
         expr: |
           max without (instance, pod, callback, reason) (
@@ -111,3 +132,5 @@ groups:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/ai-provider-outage.md
           summary: AI model circuit is open
           description: 'Model {{ $labels.model_id }} is temporarily unavailable after repeated provider failures. Review the model in admin; a short recovery probe is allowed after cooldown.'
+          slo_dashboard_uid: barghsa-executive-slo
+          journey_burn: *journey_burn

@@ -45,6 +45,8 @@ Give the protected collector target one `availability_tier` label per environmen
 
 The P1 rule requires 5% of the current UTC month's budget per hour over both the one-hour and five-minute windows. The P2 rule requires 2% per day over both the 24-hour and two-hour windows. A firing P1 suppresses the P2 for the same service and scope. The private inbox preserves the alert priority and the affected service. Verify collector ingestion, firing and resolved receipts, and approved pager and team routing in the target environment. [Prometheus rules](../../deploy/monitoring/journey-slo-alerts.yml) · [Journey runbook](../runbooks/journey-availability.md) · [Multi-window alerting](https://sre.google/workbook/alerting-on-slos/).
 
+The notification outbox, overdue refund, wallet reconciliation and open provider circuit alerts include the observed one-hour and 24-hour journey burn rates for their environment and database. The rates identify each measured service and tier. A rate of 0 records observed traffic with no failures, and an unavailable annotation means there are no matching measurements. The existing operation threshold and priority govern the response even when measured journey burn is low or unavailable. The private operations notice links to the availability budget dashboard alongside the operation dashboard and runbook. The alert data gives operators a place to check customer impact. Provider or queue events alone do not establish which journey failed. [Operational alert rules](../../deploy/monitoring/notification-alerts.yml).
+
 ## API health dashboard
 
 Import the API Health dashboard into private Grafana and select the Prometheus

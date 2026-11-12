@@ -518,6 +518,7 @@ it.each(['EmailProviderDegraded', 'SmsProviderDegraded'])(
     for (const [, options] of send.mock.calls) {
       const message = JSON.parse(String(options?.body)) as { html: string };
       expect(message.html).toContain('href="http://127.0.0.1:3009/d/barghsa-notifications"');
+      expect(message.html).toContain('href="http://127.0.0.1:3009/d/barghsa-executive-slo"');
       expect(message.html).toContain(
         'href="https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md"'
       );
@@ -542,6 +543,7 @@ it.each(['EmailProviderDegraded', 'SmsProviderDegraded'])(
     for (const notice of notices) {
       expect(operationsAlertLinks(notice.type, notice.params).map(({ href }) => href)).toEqual([
         'http://127.0.0.1:3009/d/barghsa-notifications',
+        'http://127.0.0.1:3009/d/barghsa-executive-slo',
         'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
       ]);
     }
