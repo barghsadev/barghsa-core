@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T04:43:35+00:00",
+  "updated": "2026-11-12T04:53:04+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4153,7 +4153,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             }
           ],
           "checks": [
@@ -4274,6 +4274,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -4659,7 +4667,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4791,6 +4799,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -5010,7 +5026,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             }
           ],
           "checks": [
@@ -5179,6 +5195,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -5475,7 +5499,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".size-limit.json",
@@ -5623,6 +5647,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -5875,7 +5907,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6006,6 +6038,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -6117,7 +6157,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6248,6 +6288,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -6601,7 +6649,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6814,6 +6862,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -6975,7 +7031,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -7106,6 +7162,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -7234,7 +7298,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -7404,6 +7468,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -10352,7 +10424,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             }
           ],
           "checks": [
@@ -10471,6 +10543,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -16894,11 +16974,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "AGENTS.md",
@@ -17050,6 +17130,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -17123,7 +17212,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -17284,6 +17373,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -17363,7 +17460,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "package.json",
@@ -17560,6 +17657,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -17800,7 +17905,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -17930,6 +18035,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -21935,7 +22048,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -22494,6 +22607,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -24684,11 +24805,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "eslint.config.mjs",
@@ -24840,6 +24961,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -24918,7 +25048,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".prettierignore",
@@ -25051,6 +25181,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -25135,7 +25273,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".husky/commit-msg",
@@ -25159,7 +25297,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "eslint.config.mjs",
@@ -25319,6 +25457,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -26469,7 +26616,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -27136,6 +27283,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -27219,7 +27374,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".prettierignore",
@@ -27235,7 +27390,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "package.json",
@@ -27464,6 +27619,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -27743,7 +27907,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -27798,6 +27962,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -498608,7 +498780,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -499092,6 +499264,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -499249,7 +499429,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -500003,6 +500183,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -500156,7 +500344,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -500626,6 +500814,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -500745,7 +500941,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -501215,6 +501411,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -501334,7 +501538,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -501804,6 +502008,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -541666,7 +541878,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "Dockerfile.web",
@@ -541851,6 +542063,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -542126,7 +542346,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -542284,6 +542504,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -542344,7 +542572,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "Dockerfile.web",
@@ -542529,6 +542757,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -542924,7 +543160,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             }
           ],
           "checks": [
@@ -543063,6 +543299,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -547839,7 +548083,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -547968,6 +548212,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -552846,7 +553098,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -553161,6 +553413,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -554242,7 +554502,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".gitignore",
@@ -554439,6 +554699,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -554502,7 +554770,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".gitignore",
@@ -554682,6 +554950,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         },
@@ -554804,7 +555080,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -554927,6 +555203,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         },
@@ -555033,7 +555317,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -555162,6 +555446,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -555220,7 +555512,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "Dockerfile.base",
@@ -555383,6 +555675,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -555446,7 +555746,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".gitignore",
@@ -555626,6 +555926,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         },
@@ -555734,7 +556042,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -555853,6 +556161,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -556663,7 +556979,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -556801,6 +557117,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -558362,7 +558686,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "vitest.config.ts",
@@ -558414,7 +558738,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -558542,6 +558866,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -558590,7 +558923,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -558741,6 +559074,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -558788,7 +559129,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -558927,6 +559268,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -558947,8 +559296,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify exact protected push execution of the updated selector on its immutable candidate. Hosted fc55c82a confirmed the existing package-graph selector, and exact isolated run 43134770507 confirms the prebuilt fast command with the same test tasks.",
-        "Reconcile the specification command with package-level selection that includes production build and subprocess consumers."
+        "Verify the updated selector in an exact protected push. The installed CLI uses vitest related --run for test-only diffs. The isolated Linux run executed the changed PostgreSQL HTTP and web tests and confirmed a passing case per file. Runtime, shared, migration, fixture and configuration changes retain the package-graph scope. The full release coverage gate remains separate."
       ],
       "owner": null,
       "depends_on": [],
@@ -558956,11 +559304,14 @@
         "historical_acceptance": null,
         "changed_paths": [
           ".github/workflows/ci.yml",
-          "docs/development/ci.md"
+          "docs/development/ci.md",
+          "scripts/run-fast-tests.mjs",
+          "scripts/run-fast-tests.test.mjs"
         ],
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
-          "release-0.6-prebuilt-ci-test-selection"
+          "release-0.6-prebuilt-ci-test-selection",
+          "release-0.6-related-test-selection"
         ],
         "current_acceptance": null
       }
@@ -561063,11 +561414,11 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -561114,6 +561465,15 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -561160,7 +561520,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -561237,6 +561597,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -561283,7 +561651,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -561360,6 +561728,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -561441,7 +561817,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -561575,6 +561951,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -562944,7 +563328,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -563079,6 +563463,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -563160,7 +563552,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -563217,6 +563609,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -564408,7 +564808,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -564416,7 +564816,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -564575,6 +564975,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -564700,7 +565109,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -564764,6 +565173,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -565054,7 +565471,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -565253,6 +565670,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -565312,7 +565737,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -565498,6 +565923,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -565995,7 +566428,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -566124,6 +566557,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -566176,7 +566617,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -566313,6 +566754,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -567201,7 +567650,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".size-limit.json",
@@ -567410,6 +567859,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -568346,7 +568803,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -568509,6 +568966,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -568557,7 +569022,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -568720,6 +569185,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -568770,7 +569243,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -568933,6 +569406,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -568980,7 +569461,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -569143,6 +569624,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -569209,11 +569698,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -569258,6 +569747,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -569304,7 +569802,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -569459,6 +569957,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -569508,7 +570014,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/openapi.json",
@@ -569714,6 +570220,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -569941,7 +570455,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -570122,6 +570636,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -570169,7 +570691,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -570410,6 +570932,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -570473,7 +571003,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/README.md",
@@ -570728,6 +571258,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -571305,7 +571843,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -571478,6 +572016,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -571536,7 +572082,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -571709,6 +572255,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -581078,7 +581632,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "Dockerfile.base",
@@ -581337,6 +581891,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -583625,7 +584187,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "Dockerfile.base",
@@ -583787,6 +584349,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -583979,7 +584549,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -584057,6 +584627,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -584165,7 +584743,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -584243,6 +584821,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -584297,7 +584883,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -584375,6 +584961,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -636102,7 +636696,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".size-limit.json",
@@ -637064,6 +637658,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -637208,7 +637810,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".size-limit.json",
@@ -638170,6 +638772,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -638965,7 +639575,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".size-limit.json",
@@ -639927,6 +640537,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -640010,7 +640628,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -640164,6 +640782,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         }
@@ -843983,7 +844609,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -844231,6 +844857,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -844789,7 +845423,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -845037,6 +845671,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -845595,7 +846237,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -845843,6 +846485,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -846402,7 +847052,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -846650,6 +847300,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -847208,7 +847866,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -847456,6 +848114,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -848014,7 +848680,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -848262,6 +848928,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -848820,7 +849494,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -849068,6 +849742,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -849627,7 +850309,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -849875,6 +850557,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -850433,7 +851123,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -850681,6 +851371,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -851239,7 +851937,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+              "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -851487,6 +852185,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -870715,7 +871421,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/openapi.json",
@@ -875057,6 +875763,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "presentation_renewals": [
@@ -875502,7 +876216,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": "apps/api/openapi.json",
@@ -879702,6 +880416,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -881975,7 +882697,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "7bc2007adacd4e3548298a71fa2a5329daa37cf8ea40e88915650dc976863fca"
+              "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
             },
             {
               "path": ".size-limit.json",
@@ -884286,6 +885008,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The workflow adds three spec paths to its existing critical accessibility invocation. Only new tagged browser cases and their documentation were added. Existing tests, assertions, performance budgets, scripts and release gates are unchanged."
+            },
+            {
+              "batch": "release-0.6-related-test-selection",
+              "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
             }
           ]
         },
@@ -884846,7 +885576,8 @@
           "release-0.6-strict-customer-commands",
           "release-0.6-critical-intake-accessibility",
           "release-0.6-sealed-clamav-lifecycle",
-          "release-0.6-native-rollout-browser"
+          "release-0.6-native-rollout-browser",
+          "release-0.6-related-test-selection"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -884975,7 +885706,9 @@
           "apps/api/src/documents/document-http.integration.test.ts",
           "docs/operations/clamav-signatures.md",
           "apps/api/src/test/http-fixture.ts",
-          "apps/web/e2e/rollout-smoke.spec.ts"
+          "apps/web/e2e/rollout-smoke.spec.ts",
+          "scripts/run-fast-tests.mjs",
+          "scripts/run-fast-tests.test.mjs"
         ]
       }
     },
@@ -1018923,6 +1019656,212 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-related-test-selection": {
+      "batch": "release-0.6-related-test-selection",
+      "base_commit": "e6da94c91941ffae22e8f9a76fdbe97074f0c80b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docs/development/ci.md",
+        "scripts/run-fast-tests.mjs",
+        "scripts/run-fast-tests.test.mjs"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "cdf982b50422c2a6c58be48648a001ef941011d68482e9f1f5dcd4f9c421b335"
+        },
+        {
+          "path": "apps/api/src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts",
+          "sha256": "75bf3782b9e0ef889f03148f8f1056aeaf23a092b0e46b06cc406996f7a55e25"
+        },
+        {
+          "path": "apps/api/vitest.config.ts",
+          "sha256": "fa9646bd82f6265c4fccd81b03382a46b375d457f8bad5c9e6f1867fc46e38f5"
+        },
+        {
+          "path": "apps/web/src/lib/profile-lifecycle-form.test.ts",
+          "sha256": "27c45df620c000944240ae078136a45952d36bd4f2d2ca3052162f8ddd636d6a"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "8e43e5abcc1dc1e0b785e086f8d6d91fef7585a9a5572ed1b32e335cc389d873"
+        },
+        {
+          "path": "packages/tsconfig/vitest.base.config.ts",
+          "sha256": "cacf7cba1dc965375f314e932ca0bbdc4f3884def06980f3d191b19f0bc58f99"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        },
+        {
+          "path": "scripts/run-fast-tests.mjs",
+          "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+        },
+        {
+          "path": "scripts/run-fast-tests.test.mjs",
+          "sha256": "8ae6f919da5f9f962f5a603f84846949c3a0ce16b979b4efa7bf95b1909bc980"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
+        }
+      ],
+      "checks": [
+        "Hosted run 43157375766 at 4e3a0997c44f13de5e83b25b37435a8582bd0cab used the production fast test command with an isolated test-only diff. It selected one PostgreSQL HTTP case and five web cases. Both changed files produced passing cases and no unrelated package suite ran.",
+        "Four selector decision tests passed. The fallback invocation test verified the workspace filter for runtime changes and full workspace tests when the comparison base was missing. The workflow diff preserves the full release coverage branch and required integrity check.",
+        "Exact check readback confirms the nightly report commit reached protected main. A single cumulative preflight covers the four following reviewed commits at their original tip. Their individual source-bound checks remain in the board.",
+        "Changed-file formatting, actionlint and whitespace checks passed."
+      ],
+      "limitations": [
+        "The related selector was exercised on a diagnostic branch. Its exact protected push and the final v0.6.0 release checks remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-related-test-selection",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "3da4bb4157993f1ad6b92dc3c0a178e28de1f22717d9c9a4030a98525016d39c"
+        },
+        {
+          "file": "diagnostic.json",
+          "sha256": "6df747dc1ea4dae8302553ee1825bd9dc28fd6fcc0ddbf73d05e5b8d59349cdc"
+        },
+        {
+          "file": "verify-related-tests.yml",
+          "sha256": "0e2fd441d08806125f9e14f79f361128cae067570e8847b504ca50c1fe900dc8"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "c5c8737c6d09e7365263cbce359a954eebb7e770e00cdabc11f1393a894d8376"
+        },
+        {
+          "file": "related-tests.log",
+          "sha256": "b02a1dfbf937f36d6cb1f1d69ba84b86b80d421d52c7f011e07efb9660220fa5"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "98912fa759dc0c89271f86ff99db114a31d7d258a52bf94c9ea4f60132c80601"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "fallback.log",
+          "sha256": "cd3b621d6ac8e064f59a6915c547fdf580f8f79d43f3a715c2777ff9019e2cc6"
+        },
+        {
+          "file": "cumulative-scope.json",
+          "sha256": "a99b86cc30428bcfa7c1294a6543e3550c29dd4fa6d5defc79ee0d4c832c44db"
+        },
+        {
+          "file": "nightly-integrity.json",
+          "sha256": "f6adf8d244b065d5831dee16da0689eb3141e8804a0b5818362b5fc6c7edff8e"
         }
       ]
     }
