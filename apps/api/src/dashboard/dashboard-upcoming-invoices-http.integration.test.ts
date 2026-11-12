@@ -149,5 +149,3 @@ it('returns only the active profile’s first three due invoices and totals ever
     (await fetch(`${http.base}/api/dashboard/widgets/invoices?profileId=${profileId}`)).status
   ).toBe(401);
 });
-
-// Baseline marker for the CI selection verification.

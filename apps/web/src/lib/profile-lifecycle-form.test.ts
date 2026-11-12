@@ -88,5 +88,3 @@ it('requires both completion blockers with their exact owners and resolution ste
     ).toBeNull();
   }
 });
-
-// Baseline marker for the CI selection verification.
