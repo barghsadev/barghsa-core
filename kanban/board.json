@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T01:56:40+00:00",
+  "updated": "2026-11-12T02:11:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9681,13 +9681,15 @@
           "packages/db/src/migrate.ts",
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py"
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md"
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
           "release-0.6-database-migration-baseline-and-upgrade",
           "release-0.6-multipart-upgrade-preflight-fix",
-          "release-0.6-staging-stateful-image-proof"
+          "release-0.6-staging-stateful-image-proof",
+          "release-0.6-staging-postgres-logical-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -549930,7 +549932,8 @@
       "launch_required": true,
       "remaining": [
         "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests.",
-        "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts."
+        "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
+        "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -549939,13 +549942,15 @@
         "changed_paths": [
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py"
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md"
         ],
         "batches": [
           "release-0.6-private-api-monitoring",
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-staging-stateful-image-proof"
+          "release-0.6-staging-stateful-image-proof",
+          "release-0.6-staging-postgres-logical-rehearsal"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -563082,7 +563087,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Replace the retained Debian PostgreSQL 16.15 staging image through a separately verified backup and isolated restore into the scanned PostgreSQL 16 candidate. The staging database uses libc en_US.utf8 with glibc collation version 2.36, so verify collation-sensitive behavior and extension compatibility on the target before changing the active volume. Record the exact replacement image scan, restore assertions, running ID and rollback evidence.",
+        "Select a scanned PostgreSQL 16 runtime that preserves staging text ordering and search, then complete a separately verified backup, isolated restore and packaged migration before switching the active volume. The Alpine image passed its scan and restored all 186 tables, roles, grants, sequences and extensions without invalid indexes, but changed Persian and English sort order. The official 16.15 Bookworm base alone had 131 high and 4 critical findings. Record the exact replacement scan, affected API ordering/search, application readiness, running ID and rollback evidence.",
         "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
@@ -563092,7 +563097,8 @@
         "changed_paths": [
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py"
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md"
         ],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
@@ -563100,7 +563106,8 @@
           "release-0.6-runtime-readiness-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-immutable-staging-acceptance",
-          "release-0.6-staging-stateful-image-proof"
+          "release-0.6-staging-stateful-image-proof",
+          "release-0.6-staging-postgres-logical-rehearsal"
         ],
         "current_acceptance": null
       }
@@ -871004,7 +871011,7 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Replace the retained Debian PostgreSQL 16.15 staging image through a separately verified backup and isolated restore into the scanned PostgreSQL 16 candidate. The staging database uses libc en_US.utf8 with glibc collation version 2.36, so verify collation-sensitive behavior and extension compatibility on the target before changing the active volume. Record the exact replacement image scan, restore assertions, running ID and rollback evidence."
+        "Select a scanned PostgreSQL 16 runtime that preserves staging text ordering and search, then complete a separately verified backup, isolated restore and packaged migration before switching the active volume. The Alpine image passed its scan and restored all 186 tables, roles, grants, sequences and extensions without invalid indexes, but changed Persian and English sort order. The official 16.15 Bookworm base alone had 131 high and 4 critical findings. Record the exact replacement scan, affected API ordering/search, application readiness, running ID and rollback evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -871244,7 +871251,8 @@
           "release-0.6-prebuilt-ci-test-selection",
           "release-0.6-compose-postgres17-acceptance",
           "release-0.6-single-edge-security-headers",
-          "release-0.6-staging-stateful-image-proof"
+          "release-0.6-staging-stateful-image-proof",
+          "release-0.6-staging-postgres-logical-rehearsal"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -871312,7 +871320,8 @@
           "docs/security/content-security-policy.md",
           "deploy/staging/README.md",
           "deploy/staging/release.sh",
-          "deploy/staging/test_release_rollback.py"
+          "deploy/staging/test_release_rollback.py",
+          "docs/operations/backup/postgresql-image-upgrade.md"
         ]
       }
     },
@@ -1001976,6 +1001985,98 @@
         {
           "file": "clamav-vulnerabilities.json",
           "sha256": "30cf694016d53a93fe3e010ea012b661f15e64f891be37a4b0bd196e37df7522"
+        }
+      ]
+    },
+    "release-0.6-staging-postgres-logical-rehearsal": {
+      "batch": "release-0.6-staging-postgres-logical-rehearsal",
+      "base_commit": "1b68fdac4943bda288e354acc1feeeced8f36ee8",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-image-upgrade.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "eabed521e9a558986c2b697c08325e4525e013b9b5e1136a1face05bd6d6bb00"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "apps/api/src/admin/admin.service.ts",
+          "sha256": "ef3c78cbea293cec37798fc72ce3cd5eb1bb08162e5669ff3bcd4ca95367f6c5"
+        }
+      ],
+      "checks": [
+        "Built the exact committed PostgreSQL 16 recipe on staging from its Git archive. Docker container DNS initially failed to reach the Alpine indexes. A per-build IPv4 mapping verified against the official TLS hostname restored both package feeds with normal signature checks and unchanged recipe bytes.",
+        "Verified the staged candidate archive against the exact Docker ID, OCI manifest, platform config and all layer digests. The Trivy 0.76.2 report and CycloneDX SBOM recorded zero high or critical and two unknown findings. The separate official Bookworm 16.15 base scan recorded 131 high and four critical findings.",
+        "Restored one read-only staging snapshot into separate network-disabled Debian and Alpine containers on staging. All 186 table fingerprints, schema and ownership, grants, roles, sequence values and five extension versions matched. Both had zero invalid indexes.",
+        "The exact Alpine restore failed the default-collation comparison on mixed Persian and English ordering. The three sampled ILIKE results matched. A separate retained Alpine probe also showed that en-US and fa-IR ICU differ from Debian for Persian half-space ordering. The staff team query uses the database default for ORDER BY name.",
+        "The active database retained its original image. The rehearsal volumes, containers and private snapshot were removed. Staging liveness and PostgreSQL readiness returned ok. The runbook formatting and board checks passed."
+      ],
+      "limitations": [
+        "This is a logical restore rehearsal, with the locale mismatch blocking a database switch. The final compatible image, verified cutover backup, migrator, live application checks and exact release receipts remain pending. It does not verify a production restore or authorize production changes."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-postgres-logical-rehearsal",
+      "execution_receipts": [
+        {
+          "file": "build-input.tsv",
+          "sha256": "c4396b1f9fc147e8edde6a5a601404ad20692b66b6ee3029011691579b613fdc"
+        },
+        {
+          "file": "build-context.sha256",
+          "sha256": "dcb2ec533bca0c866bce0459549796d5de4594318f426d46b3e356a9334f82cb"
+        },
+        {
+          "file": "build-pinned-mirror.log",
+          "sha256": "7281434144d65a24427ec076fe91a839d378cf4ac9314803afe9b42271f2699e"
+        },
+        {
+          "file": "candidate-archive-proof.json",
+          "sha256": "d5b084b5161b2b91803cfd4e7eb1f7aeb7b4b3d970588d28158bdab63b2c7c1d"
+        },
+        {
+          "file": "candidate-image.json",
+          "sha256": "7f80ed2ad83a26a184b10e361297891b8c92a85f5a67914600f62f6dd6eb0286"
+        },
+        {
+          "file": "candidate-sbom.cdx.json",
+          "sha256": "d790c85a3fa3027a704fd0e86d56caf7425e7c4e84670c8447782243d9edae11"
+        },
+        {
+          "file": "candidate-vulnerabilities.json",
+          "sha256": "8bc2309a455907e73ae7cac78d75833e219dea34d2c28bf2033ca1ebaf857a82"
+        },
+        {
+          "file": "debian-base-vulnerabilities.json",
+          "sha256": "ebf951ab6cea5efb1398145cf27545c830d66d88c8478da78b2e0743bccd4f9c"
+        },
+        {
+          "file": "debian-base-scan.log",
+          "sha256": "652bc1879601097898a28e8a391ad7994e15171be9f9ae702808f0051e32dda6"
+        },
+        {
+          "file": "rehearse-logical-restore.sh",
+          "sha256": "827947fd6a04449953a28e8aaf714d926c1d1f70b5d48269d16ef89d80825739"
+        },
+        {
+          "file": "rehearsal.log",
+          "sha256": "0b028fa070588b5ee102fd99757fbf83f8504d82e8f1608c12e7de2bd2ce4eab"
+        },
+        {
+          "file": "collation-probe.log",
+          "sha256": "fd9aef46d07e2b89464d875c0809879f0781fc86599efc3f20b18166088d81a7"
+        },
+        {
+          "file": "post-rehearsal.txt",
+          "sha256": "4e9dd27376d06d6c58194948aecbb8e5871dd86e56a48920286f483d4d12f327"
         }
       ]
     }
