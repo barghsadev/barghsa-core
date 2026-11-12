@@ -36,6 +36,10 @@ for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CL
     printf 'Invalid local image tag: %s\n' "$key" >&2; exit 1;
   }
   loaded_id=$(docker image inspect --format '{{.Id}}' "${!key}")
+  [[ "$loaded_id" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+    printf 'Invalid loaded image ID: %s\n' "$key" >&2
+    exit 1
+  }
   case "$key" in
     BARGHSA_APP_IMAGE|BARGHSA_WEB_IMAGE)
       expected_key=${key}_ID
@@ -44,6 +48,8 @@ for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CL
         exit 1
       }
       ;;
+    BARGHSA_POSTGRES_IMAGE) postgres_id=$loaded_id ;;
+    BARGHSA_CLAMAV_IMAGE) clamav_id=$loaded_id ;;
   esac
 done
 if [[ -r "$active" ]]; then
@@ -58,6 +64,16 @@ fi
 
 dc=(docker compose --env-file "$runtime" --env-file "$candidate" -f "$compose")
 "${dc[@]}" config --quiet
+
+verify_running_image() {
+  local service=$1 expected_id=$2 container running_id
+  container=$("${dc[@]}" ps -q "$service") || return
+  running_id=$(docker container inspect --format '{{.Image}}' "$container") || return
+  if [[ "$running_id" != "$expected_id" ]]; then
+    printf 'Running image ID differs from the candidate manifest: %s\n' "$service" >&2
+    return 1
+  fi
+}
 
 rollback() {
   local status=$?
@@ -82,6 +98,8 @@ trap rollback ERR
 # These images are pinned by digest; a cached exact image needs no registry round trip.
 "${dc[@]}" pull --policy missing redis objectstore
 "${dc[@]}" up -d --no-recreate --wait --wait-timeout 900 postgres redis objectstore clamav
+verify_running_image postgres "$postgres_id"
+verify_running_image clamav "$clamav_id"
 
 # Host NGINX enters the API through the Docker bridge gateway.
 export BARGHSA_PROXY_IPS
@@ -106,12 +124,7 @@ for service in api worker ai-inference web; do
   if [[ "$service" == web ]]; then
     expected_id=$BARGHSA_WEB_IMAGE_ID
   fi
-  container=$("${dc[@]}" ps -q "$service")
-  running_id=$(docker container inspect --format '{{.Image}}' "$container")
-  [[ "$running_id" == "$expected_id" ]] || {
-    printf 'Running image ID differs from the candidate manifest: %s\n' "$service" >&2
-    false
-  }
+  verify_running_image "$service" "$expected_id"
 done
 
 for health in live ready; do
@@ -144,3 +157,4 @@ install -m 0600 "$candidate" "$active"
 trap - ERR
 printf 'Staging release healthy: %s\n' "$BARGHSA_APP_IMAGE"
 printf 'Staging app and web image IDs: %s %s\n' "$BARGHSA_APP_IMAGE_ID" "$BARGHSA_WEB_IMAGE_ID"
+printf 'Staging PostgreSQL and ClamAV image IDs: %s %s\n' "$postgres_id" "$clamav_id"

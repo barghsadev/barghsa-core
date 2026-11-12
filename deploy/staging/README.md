@@ -188,11 +188,20 @@ Compose and NGINX configuration, initializes root-only random staging secrets
 on first deployment, runs the release script, and checks HTTPS plus a private
 S3 write and public signed read. App and web transfer tags include the full
 source revision and image ID, so a rebuild cannot replace a rollback tag. The
-release checks the loaded image IDs against the candidate manifest before
+release checks the loaded app and web image IDs against the candidate manifest before
 startup and reads back the running API, worker, AI inference and web image IDs
-before saving the active manifest and announcing the release. The queue log
-records the verified IDs for matching with image scan and SBOM receipts. Subsequent
-releases preserve `/etc/barghsa/staging/runtime.env` and Docker volumes.
+before saving the active manifest and announcing the release. It also verifies
+the running PostgreSQL and ClamAV image IDs against the retained image tags
+before migrations. The queue log records the four verified image IDs for
+matching with image scan and SBOM receipts. Subsequent releases preserve
+`/etc/barghsa/staging/runtime.env` and Docker volumes.
+For SBOMs generated from a saved image, verify the running Docker image ID
+against the archive descriptor, then verify the selected platform manifest,
+config and layer digests. The scanner can report the config digest when the
+Docker image ID is the manifest or index digest. Keep the verified chain with
+the scan receipt. Upgrade a retained stateful image through its backup and
+restore procedure before release when its exact scan fails the gate.
+
 Redis and object-store images are pinned by digest. Already installed exact
 images are reused with Compose's `--policy missing`; missing images are still
 pulled and a failed pull blocks the release.

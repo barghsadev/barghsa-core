@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T01:44:22+00:00",
+  "updated": "2026-11-12T01:56:40+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9678,12 +9678,16 @@
           "packages/db/src/migrate.provider-delivery-proof.test.ts",
           "packages/db/src/migrate.runner.test.ts",
           "packages/db/src/migrate.snapshot.test.ts",
-          "packages/db/src/migrate.ts"
+          "packages/db/src/migrate.ts",
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
           "release-0.6-database-migration-baseline-and-upgrade",
-          "release-0.6-multipart-upgrade-preflight-fix"
+          "release-0.6-multipart-upgrade-preflight-fix",
+          "release-0.6-staging-stateful-image-proof"
         ],
         "current_acceptance": null
       }
@@ -15292,7 +15296,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -15350,6 +15354,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ]
         }
@@ -23069,7 +23081,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -23177,6 +23189,14 @@
                 "apps/api/src/metrics/http-request-metrics.integration.test.ts"
               ],
               "scope": "Preserves all native histogram, health, revision and privacy assertions. Adds eight initialized journey series and checks omission on absent or invalid revision. The expanded PostgreSQL integration remains for hosted verification."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ]
         }
@@ -24979,7 +24999,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -25213,6 +25233,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ]
         }
@@ -77766,7 +77794,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -78824,6 +78852,14 @@
                 "apps/api/src/storage/storage-config-http.integration.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -128990,7 +129026,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -129002,7 +129038,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -129636,6 +129672,15 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -503116,7 +503161,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -503469,6 +503514,14 @@
                 "apps/worker/src/documents/scan-runner.ts"
               ],
               "scope": "Additive storage metrics at the upload and scanner commit points and a read-only active-job query on the existing private worker scrape. The inspected SQL conditions, owned upload and scanner guards, and existing business dispatch paths retain their tested behavior. Focused HTTP, worker, Prometheus and authenticated Grafana checks cover the affected telemetry and storage paths."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -519747,7 +519800,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -520031,6 +520084,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -520393,7 +520454,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -520677,6 +520738,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -521037,7 +521106,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -521321,6 +521390,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -521681,7 +521758,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -521989,6 +522066,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -522843,7 +522928,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -523127,6 +523212,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -523671,7 +523764,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -523683,7 +523776,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -524341,6 +524434,15 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -524856,7 +524958,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -525140,6 +525242,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -525499,7 +525609,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -525783,6 +525893,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -526143,7 +526261,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -526427,6 +526545,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -526788,7 +526914,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -527096,6 +527222,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -527455,7 +527589,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -527739,6 +527873,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -528098,7 +528240,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -528382,6 +528524,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -543797,7 +543947,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -543864,6 +544014,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ]
         }
@@ -549771,17 +549929,23 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests."
+        "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests.",
+        "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
+        ],
         "batches": [
           "release-0.6-private-api-monitoring",
           "release-0.6-staging-postgres-monitoring-readback",
-          "release-0.6-production-image-recipes-and-distribution"
+          "release-0.6-production-image-recipes-and-distribution",
+          "release-0.6-staging-stateful-image-proof"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -562918,19 +563082,25 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
+        "Replace the retained Debian PostgreSQL 16.15 staging image through a separately verified backup and isolated restore into the scanned PostgreSQL 16 candidate. The staging database uses libc en_US.utf8 with glibc collation version 2.36, so verify collation-sensitive behavior and extension compatibility on the target before changing the active volume. Record the exact replacement image scan, restore assertions, running ID and rollback evidence.",
         "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
+        ],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-runtime-sbom-provenance",
           "release-0.6-runtime-readiness-and-staging-smoke",
           "release-0.6-production-image-recipes-and-distribution",
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "release-0.6-staging-stateful-image-proof"
         ],
         "current_acceptance": null
       }
@@ -859346,7 +859516,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -859370,7 +859540,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -861442,6 +861612,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "presentation_renewals": [
@@ -864003,7 +864182,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "3eb6a17ffec8cf2153a75e049d6831cdf0bcc71daec476cd0cbfb2ea15746204"
+              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -864027,7 +864206,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "ecfd084e49350742ef466754f728bf66ede83aeacf5080573b6f254b585b5a0e"
+              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -865997,6 +866176,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-staging-stateful-image-proof",
+              "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -870815,7 +871003,8 @@
         "Preserve passing run 42894685607 at f0f9434c and verify a clean 40-shard rollup plus quarantine report for the final immutable v0.6.0 candidate.",
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
-        "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration."
+        "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
+        "Replace the retained Debian PostgreSQL 16.15 staging image through a separately verified backup and isolated restore into the scanned PostgreSQL 16 candidate. The staging database uses libc en_US.utf8 with glibc collation version 2.36, so verify collation-sensitive behavior and extension compatibility on the target before changing the active volume. Record the exact replacement image scan, restore assertions, running ID and rollback evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -871054,7 +871243,8 @@
           "release-0.6-s3-response-limits",
           "release-0.6-prebuilt-ci-test-selection",
           "release-0.6-compose-postgres17-acceptance",
-          "release-0.6-single-edge-security-headers"
+          "release-0.6-single-edge-security-headers",
+          "release-0.6-staging-stateful-image-proof"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -871119,7 +871309,10 @@
           "deploy/staging/nginx.conf",
           "scripts/check-proxy-tls.mjs",
           "scripts/proxy-fixture.mjs",
-          "docs/security/content-security-policy.md"
+          "docs/security/content-security-policy.md",
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
         ]
       }
     },
@@ -1001645,6 +1001838,144 @@
         {
           "file": "native-artifacts-43136382243/edge-headers-staging/proxy-negative.log",
           "sha256": "032d73593aca4b8f6f78a22bf7579a8d1e68de621a9101eeadcff0abc122e1dd"
+        }
+      ]
+    },
+    "release-0.6-staging-stateful-image-proof": {
+      "batch": "release-0.6-staging-stateful-image-proof",
+      "base_commit": "ade3c930b280b5e8c0325762f630e6ff1a0d9e46",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "a114b248de4d7a532c7fcb0715c9537a223a3749e0667b36e99556ca6c7d6fb8"
+        }
+      ],
+      "checks": [
+        "The staging worker checks retained PostgreSQL and ClamAV running image IDs before migrations and records all four image IDs after activation. Existing application image and rollback checks still run.",
+        "The 18 release tests and 15 notification tests passed. Negative image fixtures cover an invalid loaded ID, either stateful container mismatch before migrations and application mismatch after rollout. ShellCheck, Bash syntax, formatting and whitespace passed.",
+        "On 2026-11-12 the running and retained PostgreSQL and ClamAV image IDs matched on staging. The saved OCI descriptors, linux/amd64 configs and each selected layer digest matched the readback and Trivy 0.76.2 CycloneDX and vulnerability reports. PostgreSQL had 261 high and 18 critical findings. ClamAV had zero high or critical findings.",
+        "Hosted run 43136590255 built and scanned the separate Alpine PostgreSQL 16 image with zero high or critical findings. The current staging database runs Debian PostgreSQL 16.15 with a libc en_US.utf8 database and pgvector 0.8.6. Read-only staging inventory identifies installed extensions and collation for an isolated restore rehearsal."
+      ],
+      "limitations": [
+        "The current staging PostgreSQL image fails the vulnerability gate. Hosted image scan receipts apply to the built artifact only. The upgrade, verified restore, final candidate image IDs, exact staging and Telegram receipts, and production registry evidence remain open. No live staging configuration or service was changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-stateful-image-proof",
+      "execution_receipts": [
+        {
+          "file": "targeted-checks.log",
+          "sha256": "15bea3adf1873671807b178bedb38b9dabe6ee304f915b63f0775a251a58824c"
+        },
+        {
+          "file": "live-readback.tsv",
+          "sha256": "71d0c2c0711565bfedaf747b6c931590e3ff7671f2a4930044b025055f781d8f"
+        },
+        {
+          "file": "postgres-runtime-version.txt",
+          "sha256": "e59b4a42c3dbff15dcacb5267a27a3aef58466f51bc476823c9c905517ac8f17"
+        },
+        {
+          "file": "postgres-readonly-inventory.txt",
+          "sha256": "d60c4d455548811c6e42d00b01e181e87c3ff1e99d0abe3b669f97b006ced78e"
+        },
+        {
+          "file": "cache/db/metadata.json",
+          "sha256": "b1f823189210bcf5d1f2c4a3bf779ca8681f78a7b3ec8a6721cfb50222c8d78b"
+        },
+        {
+          "file": "verify-oci-archive.py",
+          "sha256": "076c155a82d152b9ca57402089c4127ec93efed5ef9015ef2ef73663616f3305"
+        },
+        {
+          "file": "scan-verified-archives.sh",
+          "sha256": "07bacfebbe797d9f19de8ef98f3b6be46f24711776e3c61d5df1b859aa04cbc2"
+        },
+        {
+          "file": "check-image-report.py",
+          "sha256": "fb1ca2bfe1436d4ebde2f6e94857540493cba8e03b94918ac9d02b7efe4d80af"
+        },
+        {
+          "file": "ci-43136590255/4-image.json",
+          "sha256": "939d5687bd519910419a2812b966001e6df50afe8d915782faf2893e29cbc47b"
+        },
+        {
+          "file": "postgres-archive-proof.json",
+          "sha256": "dfdadf32b0639fa18d5bb9510a3ca76c2764e162a5f58efbcb249cd75d2fe9b9"
+        },
+        {
+          "file": "postgres-compressed.sha256",
+          "sha256": "813b776648bcfcd4edc359cbe52d39fc5dc7c7ea99bae966cb7ec3f5acb16829"
+        },
+        {
+          "file": "postgres-image.json",
+          "sha256": "406c0257d2c760ee4832dd245d4f44e76b08b091ab4cc150e568f0f7edc43ba8"
+        },
+        {
+          "file": "postgres-sbom.cdx.json",
+          "sha256": "80598c7b26a08d2bba23aebd85bcb4389a84a0a514852d4210a710fc2b0be9e0"
+        },
+        {
+          "file": "postgres-vulnerabilities.json",
+          "sha256": "c2935360b1744ff96796a97dd4fa81850c562c5e813785d8796cd9eff460ae22"
+        },
+        {
+          "file": "clamav-archive-proof.json",
+          "sha256": "28b7b846671482bb091c3c4173f42f85d553691b1adf6a0185e38543e93be7d2"
+        },
+        {
+          "file": "clamav-compressed.sha256",
+          "sha256": "b83fe8a027276cdb267af875eb62de76cd013d3908e3ae6b59311fbd874a4aa3"
+        },
+        {
+          "file": "clamav-image.json",
+          "sha256": "6f9dcc9748fb1b283e0a25068bd86f81f2f3b3db413403898a5fa95b7aaada16"
+        },
+        {
+          "file": "clamav-sbom.cdx.json",
+          "sha256": "ba52c02e3088589d354421848590ba245f0ac37a5abdcd2785c8d211f2514f58"
+        },
+        {
+          "file": "clamav-vulnerabilities.json",
+          "sha256": "30cf694016d53a93fe3e010ea012b661f15e64f891be37a4b0bd196e37df7522"
         }
       ]
     }

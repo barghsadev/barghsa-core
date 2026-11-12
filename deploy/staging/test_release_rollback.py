@@ -74,6 +74,9 @@ done
         text = RELEASE.read_text()
         loaded = text[text.index("for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE"):
                       text.index('\nif [[ -r "$active" ]]')]
+        verify = text[text.index("verify_running_image() {"):text.index("\nrollback() {")]
+        stateful = text[text.index('verify_running_image postgres "$postgres_id"'):
+                        text.index("\n# Host NGINX enters")]
         running = text[text.index("for service in api worker ai-inference web"):
                        text.index("\nfor health in live ready")]
         script = f'''set -euo pipefail
@@ -88,21 +91,33 @@ compose() {{ printf '%s\\n' "$3"; }}
 docker() {{
   if [[ "$1:$5" == "$mode" ]]; then
     printf 'sha256:%064d\\n' 0
+  elif [[ "$1:$5" == "image:barghsa-clamav:vps-fixture" && "$mode" == malformed ]]; then
+    printf '%s\\n' not-an-image
   elif [[ "$5" == "$BARGHSA_WEB_IMAGE" || "$5" == web ]]; then
     printf '%s\\n' "$BARGHSA_WEB_IMAGE_ID"
+  elif [[ "$5" == "$BARGHSA_POSTGRES_IMAGE" || "$5" == postgres ]]; then
+    printf 'sha256:%064d\\n' 3
+  elif [[ "$5" == "$BARGHSA_CLAMAV_IMAGE" || "$5" == clamav ]]; then
+    printf 'sha256:%064d\\n' 4
   else
     printf '%s\\n' "$BARGHSA_APP_IMAGE_ID"
   fi
 }}
 mode=$1
 {loaded}
+{verify}
 trap 'echo rollback' ERR
+{stateful}
+echo migrations-admitted
 {running}
 echo accepted
 '''
         for mode, expected in (
             ('match', 'accepted'),
             ('image:barghsa-app:vps-fixture', 'Loaded image ID differs'),
+            ('malformed', 'Invalid loaded image ID: BARGHSA_CLAMAV_IMAGE'),
+            ('container:postgres', 'Running image ID differs from the candidate manifest: postgres'),
+            ('container:clamav', 'Running image ID differs from the candidate manifest: clamav'),
             ('container:ai-inference', 'Running image ID differs'),
         ):
             with self.subTest(mode=mode):
@@ -111,6 +126,8 @@ echo accepted
                 self.assertIn(expected, result.stdout + result.stderr)
                 self.assertEqual(result.returncode, 0 if mode == 'match' else 1)
                 self.assertEqual('rollback' in result.stdout, mode.startswith('container:'))
+                self.assertEqual('migrations-admitted' in result.stdout,
+                                 mode in ('match', 'container:ai-inference'))
 
 
 if __name__ == "__main__":
