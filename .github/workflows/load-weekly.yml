@@ -57,3 +57,60 @@ jobs:
           path: ${{ runner.temp }}/barghsa-performance.json
           if-no-files-found: error
           retention-days: 30
+
+  maintenance:
+    name: Test financial mutations and report dependency updates
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - name: Install the pinned tools
+        id: install
+        run: pnpm install --frozen-lockfile
+      - name: Run financial mutation testing
+        env:
+          BARGHSA_MUTATION_REPORT: ${{ runner.temp }}/financial-mutations.json
+        run: |
+          pnpm --filter @barghsa/shared exec stryker run
+          jq -e '
+            [.files[] | .mutants] | length == 3
+            and all(.[]; any(.[]; .status == "Killed")
+              and all(.[]; .status != "RuntimeError" and .status != "CompileError"))
+          ' "$BARGHSA_MUTATION_REPORT"
+      - name: Collect dependency update candidates
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        shell: bash
+        run: |
+          report="$RUNNER_TEMP/pnpm-outdated.json"
+          errors="$RUNNER_TEMP/pnpm-outdated.stderr"
+          status=0
+          pnpm --recursive outdated --format=json --no-color > "$report" 2> "$errors" || status=$?
+          if [[ $status -gt 1 || -s "$errors" ]]; then
+            echo 'Dependency registry check failed' >&2
+            exit 1
+          fi
+          jq -e --argjson status "$status" '
+            type == "object" and (if $status == 1 then length > 0 else length == 0 end)
+            and all(.[]; (.current | type) == "string" and (.latest | type) == "string")
+          ' "$report"
+          jq --arg revision "$GITHUB_SHA" '{source_sha: $revision, outdated: .}' \
+            "$report" > "$RUNNER_TEMP/dependency-review.json"
+      - name: Preserve mutation and dependency reports
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-maintenance-reports
+          path: |
+            ${{ runner.temp }}/financial-mutations.json
+            ${{ runner.temp }}/dependency-review.json
+          if-no-files-found: error
+          retention-days: 30

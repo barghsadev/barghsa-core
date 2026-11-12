@@ -136,6 +136,7 @@ describe('wallet ledger reconciliation contract (T-04.2.01.08)', () => {
     it('parses numeric SUM strings that carry a trailing .0', () => {
       expect(parseLedgerAmount('1000.00')).toBe(1000n);
       expect(parseLedgerAmount('-40.0')).toBe(-40n);
+      expect(parseLedgerAmount('  42.00  ')).toBe(42n);
     });
 
     it('returns 0n for unusable driver values so a scan cannot throw', () => {
@@ -143,6 +144,8 @@ describe('wallet ledger reconciliation contract (T-04.2.01.08)', () => {
       expect(parseLedgerAmount(undefined)).toBe(0n);
       expect(parseLedgerAmount('')).toBe(0n);
       expect(parseLedgerAmount('1.5')).toBe(0n);
+      expect(parseLedgerAmount('balance=1000.00')).toBe(0n);
+      expect(parseLedgerAmount('1000.00 IRR')).toBe(0n);
       expect(parseLedgerAmount(1.5)).toBe(0n);
     });
   });
