@@ -65,7 +65,7 @@ function request(path, { insecure = false, oversized = false } = {}) {
       },
       (res) => {
         res.resume();
-        res.once('end', () => resolve({ status: res.statusCode, headers: res.headers }));
+        res.once('end', () => resolve({ status: res.statusCode, headers: res.headersDistinct }));
       }
     );
     req.once('error', reject);
@@ -74,20 +74,33 @@ function request(path, { insecure = false, oversized = false } = {}) {
   });
 }
 
+function assertEdgeHeaders({ headers }, path) {
+  for (const [name, value] of Object.entries({
+    'x-content-type-options': 'nosniff',
+    'referrer-policy': 'strict-origin-when-cross-origin',
+    'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+    'x-frame-options': 'DENY',
+  })) {
+    assert.deepEqual(headers[name], [value], `${path}: ${name}`);
+  }
+  assert.deepEqual(
+    headers['strict-transport-security'],
+    expectedHsts ? [expectedHsts] : undefined,
+    `${path}: strict-transport-security`
+  );
+}
+
 const redirect = await request('/api/ping', { insecure: true });
 assert.equal(redirect.status, 301);
 assert.equal(redirect.headers['strict-transport-security'], undefined);
 const upstream = await request('/api/upstream-hsts');
 assert.equal(upstream.status, 200);
-assert.equal(upstream.headers['strict-transport-security'], expectedHsts);
+assertEdgeHeaders(upstream, 'upstream response');
 const tooLarge = await request('/api/large', { oversized: true });
 assert.equal(tooLarge.status, 413);
-assert.equal(tooLarge.headers['strict-transport-security'], expectedHsts);
+assertEdgeHeaders(tooLarge, 'edge size rejection');
 const responses = await Promise.all(Array.from({ length: 24 }, () => request('/api/auth/login')));
 const limits = responses.filter(({ status }) => status === 429);
 assert.ok(limits.length > 0, 'Expected a local rate limit response');
-for (const { headers } of limits) {
-  assert.equal(headers['strict-transport-security'], expectedHsts);
-  assert.equal(headers['x-frame-options'], 'DENY');
-}
-console.log(`PASS ${mode} HSTS on HTTPS success and errors, including local rate-limit responses`);
+for (const limit of limits) assertEdgeHeaders(limit, 'edge rate limit');
+console.log(`PASS ${mode} edge security headers on HTTPS success, size rejection and rate limit`);

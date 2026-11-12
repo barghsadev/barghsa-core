@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T01:39:01+00:00",
+  "updated": "2026-11-12T01:44:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -15017,7 +15017,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -15033,7 +15033,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
+              "sha256": "b253bf36fbbce1ecb9f532c0a64d05f780703dfd6a520781f7e0bb663a4d4305"
             }
           ],
           "checks": [
@@ -15050,6 +15050,15 @@
                 "scripts/test-pilot-proxy.py"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -15167,13 +15176,18 @@
           "packages/i18n/src/auth.ts",
           "packages/shared/src/errors/error-codes.ts",
           "scripts/check-pilot-proxy.mjs",
-          "scripts/proxy-fixture.mjs"
+          "scripts/proxy-fixture.mjs",
+          "deploy/pilot/nginx.conf",
+          "deploy/staging/nginx.conf",
+          "scripts/check-proxy-tls.mjs",
+          "docs/security/content-security-policy.md"
         ],
         "batches": [
           "release-0.6-browser-origin-security",
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-security-headers",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-single-edge-security-headers"
         ],
         "current_acceptance": null
       }
@@ -15266,11 +15280,11 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -15286,7 +15300,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
+              "sha256": "b253bf36fbbce1ecb9f532c0a64d05f780703dfd6a520781f7e0bb663a4d4305"
             }
           ],
           "checks": [
@@ -15326,6 +15340,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -15428,7 +15452,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/pilot/README.md",
@@ -15479,6 +15503,14 @@
                 "deploy/pilot/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -43600,7 +43632,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -43612,7 +43644,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "packages/db/drizzle/production/0082_restore_foundation_constraints.sql",
@@ -43664,7 +43696,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
+              "sha256": "b253bf36fbbce1ecb9f532c0a64d05f780703dfd6a520781f7e0bb663a4d4305"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -44159,6 +44191,16 @@
                 "scripts/test-pilot-proxy.py"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ],
           "presentation_renewals": [
@@ -534423,7 +534465,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -534431,7 +534473,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "docs/security/otp.md",
@@ -534590,6 +534632,15 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -535946,7 +535997,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
@@ -536079,6 +536130,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "docs/security/content-security-policy.md"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -536136,7 +536195,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             }
           ],
           "checks": [
@@ -536172,6 +536231,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "docs/security/content-security-policy.md"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -536338,7 +536405,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             },
             {
               "path": "apps/web/src/routes/onboarding/complete.css",
@@ -536480,6 +536547,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "docs/security/content-security-policy.md"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -536568,7 +536643,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             },
             {
               "path": "scripts/check-production-security-headers.mjs",
@@ -536701,6 +536776,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "docs/security/content-security-policy.md"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -536794,7 +536877,7 @@
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             },
             {
               "path": "packages/shared/src/finance/wallet-payment-review.ts",
@@ -536835,6 +536918,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "docs/security/content-security-policy.md"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -536904,11 +536995,11 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -536916,7 +537007,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
+              "sha256": "b253bf36fbbce1ecb9f532c0a64d05f780703dfd6a520781f7e0bb663a4d4305"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -536966,6 +537057,16 @@
                 "scripts/test-pilot-proxy.py"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/staging/nginx.conf",
+                "docs/security/content-security-policy.md",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -537062,11 +537163,11 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "docs/security/content-security-policy.md",
-              "sha256": "d4b54e603388895e4025f98b3ccdb356985fb6ecd738725bca174f5238dd3a00"
+              "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -537184,6 +537285,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/staging/nginx.conf",
+                "docs/security/content-security-policy.md"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -537204,7 +537314,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Staging and isolated pilot checks cover the response boundary. Verify the complete policy with the accepted staging SHA and the HSTS policy at the selected production-equivalent TLS ingress."
+        "Verify the complete security header policy with the accepted staging SHA and the HSTS policy at the selected production-equivalent TLS ingress. The isolated hosted proxy tests now enforce exact singular headers on HTTPS success, 413 and 429."
       ],
       "owner": null,
       "depends_on": [],
@@ -537213,14 +537323,20 @@
         "changed_paths": [
           "apps/api/src/app.factory.ts",
           "apps/api/src/auth/navigation-http.integration.test.ts",
-          "docs/security/security-verification.md"
+          "docs/security/security-verification.md",
+          "deploy/pilot/nginx.conf",
+          "deploy/staging/nginx.conf",
+          "scripts/check-proxy-tls.mjs",
+          "scripts/proxy-fixture.mjs",
+          "docs/security/content-security-policy.md"
         ],
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-proxy-security-headers",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-suppress-api-framework-header",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-single-edge-security-headers"
         ],
         "current_acceptance": null
       }
@@ -537240,19 +537356,26 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The integrity workflow invokes both updated proxy profiles. Verify its hosted result on the exact candidate and complete the selected production-equivalent ingress TLS/HSTS gate."
+        "Verify the integrated security-header checks on the final immutable candidate and complete the selected production-equivalent ingress TLS/HSTS gate. The exact isolated pilot and staging runs passed both positive checks and rejection of the original duplicate headers."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/pilot/nginx.conf",
+          "deploy/staging/nginx.conf",
+          "scripts/check-proxy-tls.mjs",
+          "scripts/proxy-fixture.mjs",
+          "docs/security/content-security-policy.md"
+        ],
         "batches": [
           "release-0.6-browser-response-policy",
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-proxy-security-headers",
           "release-0.6-security-header-ci-and-nonce-evidence",
-          "release-0.6-edge-tls-and-hsts"
+          "release-0.6-edge-tls-and-hsts",
+          "release-0.6-single-edge-security-headers"
         ],
         "current_acceptance": null
       }
@@ -543670,7 +543793,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/staging/README.md",
@@ -543678,7 +543801,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -543690,7 +543813,7 @@
             },
             {
               "path": "scripts/proxy-fixture.mjs",
-              "sha256": "6d3fb4ce755484dbb7abdc40ac3a0e213de4543055c0b73e4f46e5e837ffe9d3"
+              "sha256": "b253bf36fbbce1ecb9f532c0a64d05f780703dfd6a520781f7e0bb663a4d4305"
             }
           ],
           "checks": [
@@ -543731,6 +543854,16 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The runbooks add exact digest review before a dashboard image pull and staging free-space checks that preserve rollback materials. The scanner, deployment and alert receiver source are unchanged. Existing application and monitoring health remained verified during the targeted cache maintenance."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf",
+                "scripts/proxy-fixture.mjs"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -549960,11 +550093,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "scripts/check-staging-proxy.mjs",
@@ -550019,6 +550152,15 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -550103,11 +550245,11 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -550140,6 +550282,15 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf",
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -560081,7 +560232,7 @@
             },
             {
               "path": "deploy/pilot/nginx.conf",
-              "sha256": "0b27732cfeea5b175c192af64c6fee22b200f3e6549eb0910e6ef558fa9b4268"
+              "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -560217,6 +560368,14 @@
                 "deploy/pilot/nginx.conf"
               ],
               "scope": "Both NGINX profiles passed the prior proxy and privacy fixtures plus the new handshake/header probes. The pilot instructions add the verified production-only renderer. Prior routing, quotas, API cooldown, cache, forwarded addresses, privacy logs, SSE, WebSocket and topology decisions remain covered."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/pilot/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -566303,7 +566462,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
@@ -566476,6 +566635,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -568250,7 +568417,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -568406,6 +568573,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -575394,7 +575569,7 @@
             },
             {
               "path": "deploy/staging/nginx.conf",
-              "sha256": "3fad5d55b79696cd57fba2f428db569aa4e7404800d852d031035cf85d54c5b1"
+              "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
             },
             {
               "path": "docs/security/session-lifetime.md",
@@ -575530,6 +575705,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
+            },
+            {
+              "batch": "release-0.6-single-edge-security-headers",
+              "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+              "paths": [
+                "deploy/staging/nginx.conf"
+              ],
+              "scope": "The two proxies emit one required baseline header value. Existing web CSP, HSTS renderer, TLS ciphers and trust checks, routing and edge quota assertions match their predecessor. The exact hosted positive and negative proxy probes passed."
             }
           ]
         }
@@ -870870,7 +871053,8 @@
           "release-0.6-license-handoff-current",
           "release-0.6-s3-response-limits",
           "release-0.6-prebuilt-ci-test-selection",
-          "release-0.6-compose-postgres17-acceptance"
+          "release-0.6-compose-postgres17-acceptance",
+          "release-0.6-single-edge-security-headers"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -870930,7 +871114,12 @@
           "packages/shared/src/storage/s3-storage-provider.ts",
           "packages/shared/src/storage/storage.test.ts",
           "docs/operations/storage-configuration.md",
-          "docs/development/ci.md"
+          "docs/development/ci.md",
+          "deploy/pilot/nginx.conf",
+          "deploy/staging/nginx.conf",
+          "scripts/check-proxy-tls.mjs",
+          "scripts/proxy-fixture.mjs",
+          "docs/security/content-security-policy.md"
         ]
       }
     },
@@ -1001323,6 +1001512,139 @@
         {
           "file": "native-artifacts-43135700901/db.log",
           "sha256": "e6de7c32b668e0db11b89d2cfea182821b77089a8658d338f14a4230b1776943"
+        }
+      ]
+    },
+    "release-0.6-single-edge-security-headers": {
+      "batch": "release-0.6-single-edge-security-headers",
+      "base_commit": "b2a45cf8e066c98244c79686bd8f60ba426af58e",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.02",
+        "06-security-testing-observability.md#T-06.02.03.04",
+        "06-security-testing-observability.md#T-06.02.03.05",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.01",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "02-auth-users-admin.md#T-02.04.01",
+        "06-security-testing-observability.md#T-06.01.04.08",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.02.07",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.04",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ],
+      "changed_paths": [
+        "deploy/pilot/nginx.conf",
+        "deploy/staging/nginx.conf",
+        "scripts/check-proxy-tls.mjs",
+        "scripts/proxy-fixture.mjs",
+        "docs/security/content-security-policy.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "04ccc11e45f0af6b9922100e2b3af6356e6981ac72f0297d109870a1c2ef10ca"
+        },
+        {
+          "path": "deploy/staging/nginx.conf",
+          "sha256": "d3c7b8bd636ce70b91954778bed897f8f5c2b82f50011bdd7d6effa03d3b5014"
+        },
+        {
+          "path": "scripts/check-proxy-tls.mjs",
+          "sha256": "166c569cfe4e3400e118388483a35b7505bd4a896e5c70d71db8f53258c9681c"
+        },
+        {
+          "path": "scripts/proxy-fixture.mjs",
+          "sha256": "b253bf36fbbce1ecb9f532c0a64d05f780703dfd6a520781f7e0bb663a4d4305"
+        },
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
+        },
+        {
+          "path": "deploy/pilot/render-nginx.py",
+          "sha256": "8e128ce4807c142191ea1636303716b2cb02104c1b22ffcb73ae356b19e78c49"
+        },
+        {
+          "path": "deploy/staging/nginx-api-proxy.conf",
+          "sha256": "ffc79d8f52d6dd3628d7b0feee4aca07a172f3f33547ff02abe9238244dd5f09"
+        },
+        {
+          "path": "deploy/staging/nginx-s3-proxy.conf",
+          "sha256": "9f1cd69e8b73bdafbf88dfec384820b7e158e3061a21d2bfab9f3fb05c7414ca"
+        },
+        {
+          "path": "scripts/test-pilot-proxy.py",
+          "sha256": "7d965109a1d3ff76924e9d76bca612bb608ea82146ebdfea261837abe6c82f69"
+        },
+        {
+          "path": "scripts/check-pilot-proxy.mjs",
+          "sha256": "3d1d3d7004acbcae9f2013b11540545919f0377bd4c90826399115c97bbcbc58"
+        },
+        {
+          "path": "scripts/check-staging-proxy.mjs",
+          "sha256": "b6c301584b799bf501023998d2ff00a2adef99a538b11bd786ff727ad1093c9b"
+        },
+        {
+          "path": "scripts/check-production-security-headers.mjs",
+          "sha256": "5b9665ad2c6b7db50ad68d3cc9f564dd718a84390658415b87db0c8dd1147029"
+        },
+        {
+          "path": "apps/web/server.js",
+          "sha256": "8d10b12b183af27f897447622d84b86dbc2c47ea041a570500dd175a0ed82395"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+        }
+      ],
+      "checks": [
+        "Live staging /login emitted duplicate X-Content-Type-Options, Referrer-Policy and X-Frame-Options fields. The two proxy configurations now hide the four upstream baseline security fields that NGINX already owns and emit each required value once. The normal web server and CSP policies retain their source bytes.",
+        "Exact hosted run 43136382243 passed both production-like pilot configurations and the staging proxy profile, including TLS hostname, supported and refused protocols, ciphertext selection, HSTS behavior, request limits, proxy logging and other existing assertions. The new probe counts individual headers on upstream HTTPS success, local 413 and local 429.",
+        "Restoring each original NGINX configuration on the disposable runner made the actual CI proxy check fail on duplicate X-Content-Type-Options. This exercised the negative gate without changing the tested TLS, storage, cache or quota controls. Actionlint, focused ESLint, formatting and whitespace passed."
+      ],
+      "limitations": [
+        "The current live staging response is evidence of the gap on v0.5.0. The fix is verified in disposable proxies. Exact accepted staging, deployed TLS/HSTS, CSP observation and Telegram receipts remain separate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-single-edge-security-headers",
+      "execution_receipts": [
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "709f21ab19abb9556ff3dbd3364f015bb8bf3b51ddff126bef95e49a0b213a9e"
+        },
+        {
+          "file": "live-legacy-header-readback.log",
+          "sha256": "b16665fc7cbfb92e56bad3133fd1a2a0aaa41fac97fca6c7c9813edd30325501"
+        },
+        {
+          "file": "native-run-43136382243.json",
+          "sha256": "4d52e6b04eec7dbcc03ade5745c96efc032eace3f516b4771c226f33fb6b7586"
+        },
+        {
+          "file": "native-artifacts-43136382243/edge-headers-pilot/proxy-positive.log",
+          "sha256": "6e59c7667faa80aee60ab5be1fa23662dbc22f16840acf090a7f33ac4ee052db"
+        },
+        {
+          "file": "native-artifacts-43136382243/edge-headers-pilot/proxy-negative.log",
+          "sha256": "75fca1ce47d1d8d4659d7f195bb939f4cb21532654cd9e78876f52e6e5a0476a"
+        },
+        {
+          "file": "native-artifacts-43136382243/edge-headers-staging/proxy-positive.log",
+          "sha256": "a69bde1e4d4f922f3bddc84769e556c4b07a8b34532c5f0546b434018a2f678c"
+        },
+        {
+          "file": "native-artifacts-43136382243/edge-headers-staging/proxy-negative.log",
+          "sha256": "032d73593aca4b8f6f78a22bf7579a8d1e68de621a9101eeadcff0abc122e1dd"
         }
       ]
     }

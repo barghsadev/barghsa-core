@@ -9,3 +9,5 @@ Stylesheets load from the app origin. Inline style elements require the response
 Compose passes `BARGHSA_WEB_CSP_MODE` to the web process. The default is `report-only`. Reports go to `/api/csp-report`, which checks browser provenance, size and rate before logging sanitized diagnostics with a correlation ID. Keep collection available in both modes. Verify that a controlled report reaches the deployed log sink, review one week of reports and resolve legitimate application violations. Rehearse customer and staff journeys in the affected browsers before switching to `enforce`. If enforcement disrupts a legitimate route, return to `report-only` and preserve the reports for diagnosis.
 
 HSTS is an ingress policy. Enable it only after verifying production TLS and the impact on subdomains. This policy does not enable preload.
+
+The pilot and staging proxies emit one value for `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, and `X-Frame-Options`. They replace those four upstream fields and keep the existing CSP handling. The proxy checks verify the exact header values and count on HTTPS success and proxy-generated size and rate-limit responses.
