@@ -412,6 +412,95 @@ it('reads exact masked saved status outside the open queue without step-up or st
   expect((await fetch(`${endpoint}/${row.dead}`, { headers })).status).toBe(403);
 });
 
+it.each(['queue', 'detail'] as const)(
+  'withholds dead-letter %s data if the staff session expires during a blocked read',
+  async (surface) => {
+    const row = await seed();
+    const path = surface === 'queue' ? prefixes[0] : `${prefixes[1]}/${row.dead}`;
+    const url = `${fixture.base}${path}`;
+    expect((await fetch(url, { headers })).status).toBe(200);
+    const blocker = await db.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('LOCK TABLE notification_dead_letter IN ACCESS EXCLUSIVE MODE');
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid as number;
+      await db.pool.query(
+        "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
+        [actor.sessionId]
+      );
+      pending = fetch(url, { headers });
+      await expect
+        .poll(async () => {
+          const { rows } = await db.pool.query(
+            `SELECT EXISTS(SELECT 1 FROM pg_stat_activity
+               WHERE $1=ANY(pg_blocking_pids(pid)) AND query LIKE '%FROM notification_dead_letter dl%') AS blocked`,
+            [pid]
+          );
+          return rows[0].blocked;
+        })
+        .toBe(true);
+      await expect
+        .poll(
+          async () => {
+            const { rows } = await db.pool.query(
+              'SELECT expires_at<clock_timestamp() AS expired FROM sessions WHERE session_id=$1',
+              [actor.sessionId]
+            );
+            return rows[0].expired;
+          },
+          { timeout: 5000 }
+        )
+        .toBe(true);
+      await blocker.query('COMMIT');
+      const response = await pending;
+      expect(response.status, await response.clone().text()).toBe(401);
+      expect(await response.text()).not.toContain(row.dead);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+    }
+  }
+);
+
+it('keeps inconsistent delivery links in triage while withholding payload and retry', async () => {
+  const range = { from: '2025-12-01T00:00:00Z', to: '2025-12-02T00:00:00Z' };
+  const row = await seed(range.from);
+  await db.pool.query('UPDATE notification_outbox SET payload=$2 WHERE id=$1', [
+    row.outbox,
+    JSON.stringify({ name: 'Linked delivery details' }),
+  ]);
+  await db.pool.query("UPDATE notification_dead_letter SET channel='sms' WHERE id=$1", [row.dead]);
+  const before = await snapshot(row);
+  const detail = await fetch(`${fixture.base}${prefixes[0]}/${row.dead}`, { headers });
+  expect(detail.status).toBe(200);
+  const expected = { id: row.dead, status: 'open', channel: 'sms', data: null, recipientKey: null };
+  expect(await detail.json()).toMatchObject(expected);
+  const list = await fetch(`${fixture.base}${prefixes[1]}?status=open&channel=sms`, { headers });
+  expect(list.status).toBe(200);
+  expect(await list.json()).toEqual(expect.arrayContaining([expect.objectContaining(expected)]));
+  const preview = await previewReplay(range);
+  expect(preview.status).toBe(200);
+  expect(await preview.json()).toMatchObject({ entries: [] });
+  const retry = await fetch(`${fixture.base}${prefixes[1]}/${row.dead}/retry`, {
+    method: 'POST',
+    headers,
+  });
+  expect(retry.status).toBe(409);
+  expect(await snapshot(row)).toEqual(before);
+  await expect(
+    service.deadLetterAction(row.dead, 'resolve', 'triage-staff')
+  ).resolves.toMatchObject({
+    ...expected,
+    status: 'resolved',
+  });
+  const after = await snapshot(row);
+  expect(after.outbox).toEqual(before.outbox);
+  expect(after.job).toEqual(before.job);
+  expect(after.audits).toMatchObject([{ event: 'notification_resolved' }]);
+});
+
 it('serves scoped stable delivery-history pages and honors revoked read permission', async () => {
   const row = await seed();
   const ids = Array.from({ length: 30 }, () => randomUUID())

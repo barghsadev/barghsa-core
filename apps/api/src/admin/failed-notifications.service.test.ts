@@ -18,6 +18,7 @@ const actor = {
   csrfToken: 'triage-unit-csrf',
 };
 vi.mock('../session/session-step-up.js', () => ({
+  requireCurrentSession: vi.fn().mockResolvedValue(undefined),
   requireSessionStepUp: vi.fn().mockResolvedValue(new Date('2026-09-09T00:00:00Z')),
 }));
 
@@ -35,6 +36,8 @@ function mockClient(calls: { sql: string; rows?: unknown[]; rowCount?: number }[
     const sql = norm(String(args[0] ?? ''));
     const call = calls.find((c) => sql.includes(norm(c.sql)));
     if (call) return Promise.resolve({ rows: call.rows ?? [], rowCount: call.rowCount ?? 0 });
+    if (sql.includes('current_setting'))
+      return Promise.resolve({ rows: [{ context: 'staff' }], rowCount: 1 });
     // default: rollback/commit no-op
     return Promise.resolve({ rows: [], rowCount: 0 });
   });
@@ -77,6 +80,7 @@ const DL_ROW = {
   id: 'dl-1',
   outbox_id: 'ob-1',
   job_id: 'job-1',
+  delivery_link_valid: true,
   channel: 'email',
   event_key: 'profile_verified',
   severity: 'error',
@@ -99,10 +103,6 @@ const DL_ROW = {
     devices: ['x'],
   },
 };
-
-function returnRows(rows: Record<string, unknown>[]) {
-  return { rows };
-}
 
 // ─── Masking unit tests ───────────────────────────────────────────────
 
@@ -196,12 +196,14 @@ describe('maskSensitiveData / maskIdentifier (T-09.09.03)', () => {
 
 describe('FailedNotificationsService.listFailedNotifications (T-09.09.03)', () => {
   it('lists rows newest-first, maps DTO and masks recipient + payload', async () => {
-    const { service, mockQuery } = await loadService();
-    mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]));
-    const result = await service.listFailedNotifications();
-    expect(String(mockQuery.mock.calls[0]![0])).toContain(
-      'ORDER BY dl.created_at DESC, dl.id DESC'
-    );
+    const { service, mockConnect } = await loadService();
+    const { mockClientQuery, client } = mockClient([{ sql: 'SELECT dl.*', rows: [DL_ROW] }]);
+    mockConnect.mockResolvedValue(client);
+    const result = await service.listFailedNotifications({}, actor);
+    const [select] = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('SELECT dl.*')
+    )!;
+    expect(String(select)).toContain('ORDER BY dl.created_at DESC, dl.id DESC');
     expect(result[0]).toMatchObject({
       id: 'dl-1',
       outboxId: 'ob-1',
@@ -222,24 +224,27 @@ describe('FailedNotificationsService.listFailedNotifications (T-09.09.03)', () =
   });
 
   it('passes status/severity/channel filters through', async () => {
-    const { service, mockQuery } = await loadService();
-    mockQuery.mockResolvedValueOnce(returnRows([]));
-    await service.listFailedNotifications({
-      status: 'open',
-      severity: 'critical',
-      channel: 'sms',
-    });
-    expect(String(mockQuery.mock.calls[0]![0])).toContain('dl.status = $1');
-    expect(mockQuery.mock.calls[0]![1]).toEqual(['open', 'critical', 'sms', 50, 0]);
+    const { service, mockConnect } = await loadService();
+    const { mockClientQuery, client } = mockClient([]);
+    mockConnect.mockResolvedValue(client);
+    await service.listFailedNotifications(
+      { status: 'open', severity: 'critical', channel: 'sms' },
+      actor
+    );
+    const [select, params] = mockClientQuery.mock.calls.find(([sql]) =>
+      String(sql).includes('SELECT dl.*')
+    )!;
+    expect(String(select)).toContain('dl.status = $1');
+    expect(params).toEqual(['open', 'critical', 'sms', 50, 0]);
   });
 
   it('rejects an invalid status with 400', async () => {
-    const { service, mockQuery } = await loadService();
+    const { service, mockConnect } = await loadService();
     const rejection = await service
-      .listFailedNotifications({ status: 'bogus' as never })
+      .listFailedNotifications({ status: 'bogus' as never }, actor)
       .catch((e: unknown) => e);
     expect(httpStatus(rejection)).toBe(400);
-    expect(mockQuery).not.toHaveBeenCalled();
+    expect(mockConnect).not.toHaveBeenCalled();
   });
 
   it('rejects an invalid severity/channel with 400', async () => {
@@ -247,13 +252,15 @@ describe('FailedNotificationsService.listFailedNotifications (T-09.09.03)', () =
     expect(
       httpStatus(
         await service
-          .listFailedNotifications({ severity: 'urgent' as never })
+          .listFailedNotifications({ severity: 'urgent' as never }, actor)
           .catch((e: unknown) => e)
       )
     ).toBe(400);
     expect(
       httpStatus(
-        await service.listFailedNotifications({ channel: 'push' as never }).catch((e: unknown) => e)
+        await service
+          .listFailedNotifications({ channel: 'push' as never }, actor)
+          .catch((e: unknown) => e)
       )
     ).toBe(400);
   });
@@ -266,32 +273,20 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const { service, mockQuery, mockConnect } = await loadService();
     const { mockClientQuery, mockRelease, client } = mockClient([
       { sql: 'BEGIN' },
-      // SELECT ... FOR UPDATE
+      { sql: 'SELECT id FROM notification_outbox', rows: [{ id: DL_ROW.outbox_id }] },
       {
         sql: 'FOR UPDATE OF dl',
         rows: [DL_ROW],
       },
-      { sql: 'UPDATE notification_outbox' },
-      { sql: 'UPDATE notification_job' },
+      { sql: 'UPDATE notification_outbox', rowCount: 1 },
+      { sql: 'UPDATE notification_job', rowCount: 1 },
       { sql: 'UPDATE notification_dead_letter' },
       { sql: 'INSERT INTO audit_log' },
       { sql: 'COMMIT' },
     ]);
     mockConnect.mockResolvedValue(client);
-    mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]));
-    mockClientQuery.mockImplementation(
-      (...args: unknown[]): Promise<{ rows: unknown[]; rowCount: number }> => {
-        const s = String(args[0] ?? '');
-        if (s.includes('UPDATE notification_outbox') || s.includes('UPDATE notification_job')) {
-          return Promise.resolve({ rows: [], rowCount: 1 });
-        }
-        if (s.includes('FOR UPDATE OF dl'))
-          return Promise.resolve({ rows: [DL_ROW] as unknown[], rowCount: 0 });
-        return Promise.resolve({ rows: [], rowCount: 0 });
-      }
-    );
-
     await service.retryFailedNotification('dl-1', actor, '127.0.0.1');
+    expect(mockQuery).not.toHaveBeenCalled();
 
     // outbox requeued
     const outboxUpdate = mockClientQuery.mock.calls.find(([s]) =>
@@ -300,10 +295,12 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     expect(outboxUpdate).toContain(
       "SET status = 'queued', locked_until = NULL, lease_token = NULL"
     );
-    const jobUpdate = mockClientQuery.mock.calls.find(([s]) =>
+    const [jobUpdate, jobParams] = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('UPDATE notification_job')
-    )![0] as string;
+    )!;
     expect(jobUpdate).toContain("SET status = 'queued', attempts = 0, run_after = NOW()");
+    expect(jobUpdate).toContain('WHERE id = $1 AND outbox_id = $2 AND channel = $3');
+    expect(jobParams).toEqual(['job-1', 'ob-1', 'email']);
 
     const auditCall = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('INSERT INTO audit_log')
@@ -342,23 +339,12 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
     const { service, mockConnect } = await loadService();
     const { mockClientQuery, client, mockRelease } = mockClient([
       { sql: 'BEGIN' },
+      { sql: 'SELECT id FROM notification_outbox', rows: [{ id: DL_ROW.outbox_id }] },
       { sql: 'FOR UPDATE OF dl', rows: [DL_ROW] },
-      { sql: 'UPDATE notification_outbox' },
+      { sql: 'UPDATE notification_outbox', rowCount: 1 },
       { sql: 'UPDATE notification_job' },
     ]);
     mockConnect.mockResolvedValue(client);
-    // Both re-queue updates affect 0 rows -> not actually retryable.
-    mockClientQuery.mockImplementation(
-      (...args: unknown[]): Promise<{ rows: unknown[]; rowCount: number }> => {
-        const s = String(args[0] ?? '');
-        if (s.includes('UPDATE notification_outbox') || s.includes('UPDATE notification_job')) {
-          return Promise.resolve({ rows: [], rowCount: 0 });
-        }
-        if (s.includes('FOR UPDATE OF dl'))
-          return Promise.resolve({ rows: [DL_ROW] as unknown[], rowCount: 0 });
-        return Promise.resolve({ rows: [], rowCount: 0 });
-      }
-    );
     const rejection = await service
       .retryFailedNotification('dl-1', actor, '127.0.0.1')
       .catch((e: unknown) => e);
@@ -367,6 +353,11 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       statusCode: 409,
       error: ErrorCodes.CONFLICT_STATE.code,
     });
+    expect(mockClientQuery).toHaveBeenCalledWith(
+      expect.stringContaining('UPDATE notification_job'),
+      ['job-1', 'ob-1', 'email']
+    );
+    expect(mockClientQuery).toHaveBeenCalledWith('ROLLBACK');
     // No audit row was written for a failed retry.
     const auditCall = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('INSERT INTO audit_log')
@@ -392,7 +383,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
   });
 
   it('resolve marks resolved without requeueing', async () => {
-    const { service, mockQuery, mockConnect } = await loadService();
+    const { service, mockConnect } = await loadService();
     const { mockClientQuery, client } = mockClient([
       { sql: 'BEGIN' },
       {
@@ -404,7 +395,6 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       { sql: 'COMMIT' },
     ]);
     mockConnect.mockResolvedValue(client);
-    mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]));
     await service.resolveFailedNotification('dl-1', actor, '127.0.0.1');
     const calls = mockClientQuery.mock.calls.map(([s]) => String(s));
     expect(calls.some((s) => s.includes('UPDATE notification_outbox'))).toBe(false);
@@ -415,7 +405,7 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
   });
 
   it('dismiss marks dismissed and audits', async () => {
-    const { service, mockQuery, mockConnect } = await loadService();
+    const { service, mockConnect } = await loadService();
     const { mockClientQuery, client } = mockClient([
       { sql: 'BEGIN' },
       {
@@ -427,7 +417,6 @@ describe('FailedNotificationsService transitions (T-09.09.03)', () => {
       { sql: 'COMMIT' },
     ]);
     mockConnect.mockResolvedValue(client);
-    mockQuery.mockResolvedValueOnce(returnRows([DL_ROW]));
     await service.dismissFailedNotification('dl-1', actor, '127.0.0.1');
     const audit = mockClientQuery.mock.calls.find(([s]) =>
       String(s).includes('INSERT INTO audit_log')

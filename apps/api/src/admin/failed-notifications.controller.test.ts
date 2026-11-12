@@ -86,13 +86,10 @@ describe('failed-notifications permission gates (T-09.09.03)', () => {
   it('passes filters to the service for admin', async () => {
     const { controller, service } = makeController();
     await controller.list('open', 'critical', 'email', '10', '0', adminReq);
-    expect(service.listFailedNotifications).toHaveBeenCalledWith({
-      status: 'open',
-      severity: 'critical',
-      channel: 'email',
-      limit: 10,
-      offset: 0,
-    });
+    expect(service.listFailedNotifications).toHaveBeenCalledWith(
+      { status: 'open', severity: 'critical', channel: 'email', limit: 10, offset: 0 },
+      adminReq.session
+    );
   });
 
   it('rejects an invalid limit with 400 before touching the service', async () => {

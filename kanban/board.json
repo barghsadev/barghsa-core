@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T15:55:26+00:00",
+  "updated": "2026-11-12T16:03:09+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -22567,7 +22567,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.ts",
@@ -22696,6 +22696,14 @@
                 "apps/api/src/admin/failed-jobs.controller.ts"
               ],
               "scope": "Failed-job reads hold current staff and view authority. Decision receipts retain step-up, audit and exact row binding, and all responses expose only the supported payload counters and status flag."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -28118,7 +28126,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/api-client/src/openapi.generated.ts",
@@ -28301,6 +28309,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -30518,7 +30534,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "scripts/check-sast.py",
@@ -31360,6 +31376,14 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -45506,7 +45530,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -46953,6 +46977,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -69270,7 +69302,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -70518,6 +70550,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -70843,7 +70883,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -71885,6 +71925,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -72239,7 +72287,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -73302,6 +73350,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -75679,7 +75735,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -76265,6 +76321,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -76575,7 +76639,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -76814,6 +76878,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -84509,7 +84581,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -85094,6 +85166,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -85781,7 +85861,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -86366,6 +86446,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -87053,7 +87141,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -87638,6 +87726,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -87919,7 +88015,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -88145,6 +88241,14 @@
                 "apps/api/src/admin/admin-read-boundaries.test.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -88674,7 +88778,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -89905,6 +90009,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -93584,7 +93696,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -94059,6 +94171,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -94531,7 +94651,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -95006,6 +95126,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -95478,7 +95606,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -95954,6 +96082,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -96424,7 +96560,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -96899,6 +97035,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -97978,7 +98122,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -98239,6 +98383,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -98446,7 +98598,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -98522,11 +98674,11 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -99765,6 +99917,16 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -100098,7 +100260,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -100162,11 +100324,11 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -102960,6 +103122,16 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -103207,7 +103379,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -103283,11 +103455,11 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -104443,6 +104615,16 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -104943,7 +105125,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.tsx",
@@ -104983,7 +105165,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/email-webhook/email-webhook-http.integration.test.ts",
@@ -105055,11 +105237,11 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/web/src/components/NotificationDeliveryHistory.test.tsx",
@@ -106269,6 +106451,17 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -106461,7 +106654,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/web/src/components/DeadLetterPanel.tsx",
@@ -106852,6 +107045,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.service.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -117610,7 +117811,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -118303,6 +118504,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -118913,7 +119122,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -119606,6 +119815,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -120216,7 +120433,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -120909,6 +121126,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -121520,7 +121745,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -122213,6 +122438,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -122823,7 +123056,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -123516,6 +123749,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -124076,7 +124317,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -124682,6 +124923,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -125254,7 +125503,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -125739,6 +125988,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -126217,7 +126474,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -126910,6 +127167,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -129011,7 +129276,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -130248,6 +130513,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -130762,7 +131035,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -131999,6 +132272,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -132605,7 +132886,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -133190,6 +133471,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -133809,7 +134098,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -134394,6 +134683,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -135019,7 +135316,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -135604,6 +135901,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -138346,23 +138651,23 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -138722,6 +139027,18 @@
                 "apps/api/src/admin/failed-jobs.service.ts"
               ],
               "scope": "Failed-job reads hold current staff and view authority. Decision receipts retain step-up, audit and exact row binding, and all responses expose only the supported payload counters and status flag."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.controller.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -138843,23 +139160,23 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -139219,6 +139536,18 @@
                 "apps/api/src/admin/failed-jobs.service.ts"
               ],
               "scope": "Failed-job reads hold current staff and view authority. Decision receipts retain step-up, audit and exact row binding, and all responses expose only the supported payload counters and status flag."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.controller.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -139587,7 +139916,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -140824,6 +141153,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -141300,7 +141637,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -141946,6 +142283,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -142418,7 +142763,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -143064,6 +143409,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -151527,7 +151880,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -152173,6 +152526,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -153581,7 +153942,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -154172,6 +154533,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -154439,7 +154808,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -154684,6 +155053,14 @@
                 "apps/api/src/session/staff-permissions.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -180503,7 +180880,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/db/drizzle/production/0080_complete_schema.sql",
@@ -181464,6 +181841,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -183499,7 +183884,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/db/drizzle/production/0080_complete_schema.sql",
@@ -184460,6 +184845,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -193637,7 +194030,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/db/src/schema/wallets.ts",
@@ -194087,6 +194480,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -194807,7 +195208,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -195071,6 +195472,14 @@
                 "apps/api/src/admin/admin-read-boundaries.test.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -195324,7 +195733,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/db/drizzle/0076_wallet_tx_online_pending_expiry_idx.sql",
@@ -195847,6 +196256,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -202663,7 +203080,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/db/src/migrate.bank-receipt-attachment-claims.test.ts",
@@ -203214,6 +203631,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -256653,7 +257078,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -257427,6 +257852,14 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -257783,7 +258216,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -258557,6 +258990,14 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -258935,7 +259376,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -259823,6 +260264,14 @@
                 "apps/api/src/solar/solar-final.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -260410,7 +260859,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -262094,6 +262543,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -262726,7 +263183,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -264410,6 +264867,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -264810,7 +265275,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -265584,6 +266049,14 @@
                 "apps/api/src/consultation/consultation-request.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -350672,7 +351145,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -351525,6 +351998,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -351939,7 +352420,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -352792,6 +353273,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -353206,7 +353695,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -354059,6 +354548,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -354473,7 +354970,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -355326,6 +355823,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -355740,7 +356245,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -356593,6 +357098,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -357007,7 +357520,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -357860,6 +358373,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -358274,7 +358795,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -359127,6 +359648,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -359541,7 +360070,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -360394,6 +360923,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -360808,7 +361345,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -361661,6 +362198,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -362075,7 +362620,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -362928,6 +363473,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -363342,7 +363895,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -364195,6 +364748,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -364609,7 +365170,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -365462,6 +366023,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -365877,7 +366446,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -366730,6 +367299,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -367144,7 +367721,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -367997,6 +368574,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -368411,7 +368996,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -369264,6 +369849,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -369678,7 +370271,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -370531,6 +371124,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -370945,7 +371546,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -371798,6 +372399,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -612479,7 +613088,7 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/gift-code.controller.test.ts",
@@ -612857,6 +613466,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -615661,8 +616278,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, and six failed-job access, read and decision route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with failed-notification access, detail and recovery routes, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, and 16 failed-notification access, read, replay and decision route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with notification delivery history and contact correction, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -615677,6 +616294,10 @@
           "apps/api/src/admin/failed-jobs.controller.ts",
           "apps/api/src/admin/failed-jobs.service.test.ts",
           "apps/api/src/admin/failed-jobs.service.ts",
+          "apps/api/src/admin/failed-notifications.controller.test.ts",
+          "apps/api/src/admin/failed-notifications.controller.ts",
+          "apps/api/src/admin/failed-notifications.service.test.ts",
+          "apps/api/src/admin/failed-notifications.service.ts",
           "apps/api/src/admin/reconciliation-exceptions-http.integration.test.ts",
           "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
           "apps/api/src/admin/reconciliation-exceptions.controller.ts",
@@ -615728,6 +616349,7 @@
           "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
           "apps/api/src/invoice/manual-invoice-http.integration.test.ts",
           "apps/api/src/invoice/manual-invoice.service.ts",
+          "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
           "apps/api/src/refund/refund.service.ts",
           "apps/api/src/refund/wallet-refund.controller.ts",
           "apps/api/src/saving/saving-address-amendments.ts",
@@ -615778,6 +616400,7 @@
           "apps/web/src/pages/electricity-increase-fixtures.ts",
           "apps/worker/src/contracts/electricity-increase-runner.test.ts",
           "apps/worker/src/contracts/electricity-increase-runner.ts",
+          "docs/operations/notification-delivery-recovery.md",
           "docs/security/authorization.md",
           "packages/db/drizzle/production/0293_electricity_increase_automation_scope.sql",
           "packages/db/drizzle/production/0294_saving_invoice_automation_scope.sql",
@@ -615811,7 +616434,8 @@
           "release-0.6-reconciliation-authority",
           "release-0.6-manual-invoice-authority",
           "release-0.6-failed-job-authority",
-          "release-0.6-legacy-electricity-refund-authority"
+          "release-0.6-legacy-electricity-refund-authority",
+          "release-0.6-failed-notification-authority"
         ],
         "current_acceptance": null
       }
@@ -618823,11 +619447,11 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
@@ -618993,6 +619617,15 @@
                 "apps/api/src/admin/failed-jobs.controller.ts"
               ],
               "scope": "Failed-job reads hold current staff and view authority. Decision receipts retain step-up, audit and exact row binding, and all responses expose only the supported payload counters and status flag."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.controller.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -619236,11 +619869,11 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/reconciliation-exceptions.controller.test.ts",
@@ -619434,6 +620067,15 @@
                 "apps/api/src/admin/failed-jobs.controller.ts"
               ],
               "scope": "Failed-job reads hold current staff and view authority. Decision receipts retain step-up, audit and exact row binding, and all responses expose only the supported payload counters and status flag."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.controller.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -638917,7 +639559,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/test/order-submission-notifications.ts",
@@ -639045,6 +639687,14 @@
                 "apps/api/src/electricity/electricity-order.integration.test.ts"
               ],
               "scope": "The additive migration preserves earlier migration entries and the table schema. Reviewed the scope checks on settlement and expiry and verified native payment, worker, baseline and exact upgrade cases. Unchanged parts of previously accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -645335,11 +645985,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/worker/src/auth-delivery/runner.integration.test.ts",
@@ -645507,6 +646157,15 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -654657,7 +655316,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             }
           ],
           "checks": [
@@ -654859,6 +655518,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -655766,7 +656433,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             }
           ],
           "checks": [
@@ -655968,6 +656635,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -662018,19 +662693,19 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -662225,6 +662900,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -662274,19 +662960,19 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.ts",
-              "sha256": "f668e40746ec53d41535d7d2ffc81f136781be12435caab6e60ea548f605b389"
+              "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "apps/api/src/admin/staff-mutation-permission.ts",
@@ -662481,6 +663167,17 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ]
         }
@@ -967244,7 +967941,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "packages/i18n/src/providers.ts",
@@ -968920,7 +969617,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -971178,6 +971875,15 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -974123,7 +974829,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/admin/admin-read-boundaries.test.ts",
@@ -976606,6 +977312,14 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -977121,15 +977835,15 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -977685,7 +978399,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -979277,7 +979991,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -981863,6 +982577,18 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "presentation_renewals": [
@@ -982352,15 +983078,15 @@
             },
             {
               "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
-              "sha256": "d44dfbbe40d343550b90524f43245714005af948f00ef1e37c0c512284dc61b4"
+              "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.test.ts",
-              "sha256": "78741526dc7c273287b9bdcadba2a0bb14b406628fca66575c50f5ffe5b14934"
+              "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
             },
             {
               "path": "apps/api/src/admin/failed-notifications.service.ts",
-              "sha256": "63c9e66d97886cb10861e02cc6296d76e5f8dc9e22d365a5e7602bd5224011a5"
+              "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
             },
             {
               "path": "apps/api/src/admin/notification-template-boundaries.test.ts",
@@ -982900,7 +983626,7 @@
             },
             {
               "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
-              "sha256": "9a9a38983dfda9373e3fc414bdca256de5ac6a6527b3b873b819b73f70e5a84f"
+              "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -984468,7 +985194,7 @@
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
-              "sha256": "426930f52ed1327a5e8962ae8dd332977504576b13b67bee736536dce4bfe511"
+              "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -986954,6 +987680,18 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "The wallet refund worker distinguishes exact legacy pre-termination staff refunds from obligations authorized by a committed electricity termination. Finance approval and strict mandatory debt provenance remain enforced."
+            },
+            {
+              "batch": "release-0.6-failed-notification-authority",
+              "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+              "paths": [
+                "apps/api/src/admin/failed-notifications.controller.test.ts",
+                "apps/api/src/admin/failed-notifications.service.test.ts",
+                "apps/api/src/admin/failed-notifications.service.ts",
+                "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+                "docs/operations/notification-delivery-recovery.md"
+              ],
+              "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1147580,6 +1148318,227 @@
         {
           "file": "hosted-failure-excerpt.log",
           "sha256": "91fa3f66730585893341c7c196ec04473987db83384c729ca05d510ab43de88e"
+        }
+      ]
+    },
+    "release-0.6-failed-notification-authority": {
+      "batch": "release-0.6-failed-notification-authority",
+      "base_commit": "89254f4547b20e2aa196cd4d2a876dbcbd767974",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "01-platform-infrastructure.md#T-06.01.05",
+        "01-platform-infrastructure.md#T-07.02.05",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.02.02",
+        "02-auth-users-admin.md#T-05.02.03",
+        "02-auth-users-admin.md#T-05.02.04",
+        "02-auth-users-admin.md#T-05.03.01",
+        "02-auth-users-admin.md#T-05.03.02",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "02-auth-users-admin.md#T-07.01.01",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.02.01",
+        "02-auth-users-admin.md#T-09.02.02",
+        "02-auth-users-admin.md#T-09.03.01",
+        "02-auth-users-admin.md#T-09.03.02",
+        "02-auth-users-admin.md#T-09.05.01",
+        "05-notifications-documents-ai.md#T-05.01.01",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.03",
+        "05-notifications-documents-ai.md#T-05.01.05",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-09.09.02",
+        "02-auth-users-admin.md#T-09.09.03",
+        "02-auth-users-admin.md#T-09.10.01",
+        "02-auth-users-admin.md#T-09.10.02",
+        "02-auth-users-admin.md#T-09.10.03",
+        "02-auth-users-admin.md#T-09.12.04",
+        "02-auth-users-admin.md#T-10.01.01",
+        "02-auth-users-admin.md#T-10.01.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.06",
+        "04-invoices-wallet-contracts.md#T-04.2.02.07",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "03-core-business.md#T-03.04.01.01",
+        "03-core-business.md#T-03.04.01.02",
+        "03-core-business.md#T-03.04.01.03",
+        "03-core-business.md#T-03.04.01.04",
+        "03-core-business.md#T-03.04.01.05",
+        "03-core-business.md#T-03.04.02.01",
+        "03-core-business.md#T-03.04.02.02",
+        "03-core-business.md#T-03.04.02.03",
+        "03-core-business.md#T-03.04.02.04",
+        "03-core-business.md#T-03.04.03.01",
+        "03-core-business.md#T-03.04.03.02",
+        "03-core-business.md#T-03.04.03.03",
+        "03-core-business.md#T-03.04.03.04",
+        "03-core-business.md#T-03.04.04.01",
+        "03-core-business.md#T-03.04.04.02",
+        "03-core-business.md#T-03.04.04.03",
+        "03-core-business.md#T-03.04.04.04",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.04.01.03",
+        "06-security-testing-observability.md#T-06.04.01.05",
+        "06-security-testing-observability.md#T-06.10.02.07",
+        "06-security-testing-observability.md#T-06.11.04.02",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.15.03.06",
+        "06-security-testing-observability.md#T-06.15.03.07",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/failed-notifications.controller.test.ts",
+        "apps/api/src/admin/failed-notifications.controller.ts",
+        "apps/api/src/admin/failed-notifications.service.test.ts",
+        "apps/api/src/admin/failed-notifications.service.ts",
+        "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+        "docs/operations/notification-delivery-recovery.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.test.ts",
+          "sha256": "8f0ce15b93dfd7aa0f9ae3c17372e1e52d3293b6214882d034d1410942202272"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.controller.ts",
+          "sha256": "8caab1bca896c05bc9474f4e85f3ddc06cf626b56ea247f3cb9ca48fd9eac7a5"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.test.ts",
+          "sha256": "ce479dc87db028d38b0b4c30e27c9a89b3b3b2da8b97ff19b4f52e8439268afe"
+        },
+        {
+          "path": "apps/api/src/admin/failed-notifications.service.ts",
+          "sha256": "6f4e5fd42b8abd066d0f8ae60334ac80ec6266d5950850cbb708bdc6b0b72e26"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/notifications/dead-letter-recovery.integration.test.ts",
+          "sha256": "4d4a9c1d728eccd736d82c054d4ae0d3b1ec9655f8601c8933745769f6488447"
+        },
+        {
+          "path": "apps/api/src/session/authorization.service.ts",
+          "sha256": "d502e02960fdaf15dbc096d0daaed29ecf5066c38bdf198af7718bf8b8f313c2"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/web/src/pages/AdminFailedNotificationsPage.tsx",
+          "sha256": "a62973132825b7800d32abc470912796421a28adf9ec38d1844c5e15597c8872"
+        },
+        {
+          "path": "apps/web/src/pages/operational-queue-recovery.test.tsx",
+          "sha256": "fcc3c32dfaf3e95fc39408c6cf58c5cadc90d3a1f884eb10713be4fda26650ed"
+        },
+        {
+          "path": "apps/worker/src/notifications/dead-letter.ts",
+          "sha256": "483af94f514fe75ad0d99e91e9f58c24309a88c14b130d37837da18f9deecf54"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-lease.ts",
+          "sha256": "5bb8a2abf2e34656aa0c8e2c0c183d1ae61eb801435623a08ceeee0bfb6813e7"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-runner.ts",
+          "sha256": "da6cb620736a26851ffd11c44ad7f3e7e06ee7ba239bcb6e2602c484e9965e27"
+        },
+        {
+          "path": "apps/worker/src/notifications/outbox-writer.ts",
+          "sha256": "12ee525da161401e0ab04d1adbefea10a69e3522a8fccb880373fefa366c1136"
+        },
+        {
+          "path": "apps/worker/src/notifications/send-receipt.ts",
+          "sha256": "094aa78ebdbde4298aee287fd9770bfd7ce3d488a16b5c5aa12b43053673943e"
+        },
+        {
+          "path": "docs/operations/notification-delivery-recovery.md",
+          "sha256": "d4e68de9d1ad4db0aa738506aa1eaca30872d8c10a87402ef470b68b70a73c98"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed eight failed-notification access, list, detail, preview, replay, retry, resolve and dismiss handlers mounted under two aliases. The access endpoints expose capability flags only.",
+        "Queue and detail require live staff view authority through the read. Native PostgreSQL cases confirm that session expiry while waiting on a read withholds its data. Preview also holds the live retry grant.",
+        "List and detail withhold recipient and payload details when the job, outbox and channel do not match. Exact retry leaves the mismatched delivery and audit unchanged. Resolve remains available with an atomic audit and no delivery changes.",
+        "Verified that exact replay, durable receipt fencing, concurrent retries, masking, CSRF, live staff authority, step-up and rollback continue to pass through the normal HTTP entry points and worker callers.",
+        "83 targeted API cases and 12 web caller cases passed. API build, typecheck, generated contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-failed-notification-authority",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "e80225465b188bb4aa2bd46c5ee49b04e39d10f6030aa213f800f6b2adf8ec53"
+        },
+        {
+          "file": "web.log",
+          "sha256": "6c9698b33b780b8498d62fc14ac04154f39553b297f12f0a47d7130c95c986e6"
+        },
+        {
+          "file": "types.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "4fadfe526fc6241522d6b72a97ed08bbf475c5315ecd8ef23d310305f3b59a31"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "35492074f7d616dc4a0f655901088dda4169d43dda1429be2587310ec6a5ee04"
+        },
+        {
+          "file": "failed-notification-routes.json",
+          "sha256": "4ae16bf4ac0268600ae0018f13809b0a88cf1fd8d017dc8a4a55f03a4774fbc0"
         }
       ]
     }

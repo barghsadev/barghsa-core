@@ -3,9 +3,10 @@ import { requireCurrentSession, requireSessionStepUp } from '../session/session-
 import type { ValidatedSession } from '../session/session.service.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
-import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { Injectable, Logger, HttpException, ForbiddenException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
 
@@ -67,9 +68,21 @@ export interface ListFailedNotificationsOptions {
 const DEFAULT_LIST_LIMIT = 50;
 const MAX_LIST_LIMIT = 200;
 export const MAX_REPLAY_SELECTION = 50;
+const JOB_LINK = 'j.id = dl.job_id AND j.outbox_id = dl.outbox_id AND j.channel = dl.channel';
+const DELIVERY_DETAILS = `SELECT dl.*, ob.payload, ob.id IS NOT NULL AS delivery_link_valid
+  FROM notification_dead_letter dl
+  LEFT JOIN notification_job j ON ${JOB_LINK}
+  LEFT JOIN notification_outbox ob ON ob.id = j.outbox_id`;
 
 export type NotificationReplayRange = { from: Date; to: Date };
 type NotificationReplaySelection = { id: string; revision: string };
+
+async function assertStaffContext(client: PoolClient) {
+  const result = await client.query(
+    "SELECT current_setting('barghsa.actor_context', true) AS context"
+  );
+  if (result.rows[0]?.context !== 'staff') throw new ForbiddenException();
+}
 
 /**
  * Failed-notifications dashboard service (S-09.09, T-09.09.03).
@@ -94,17 +107,16 @@ export class FailedNotificationsService {
   private readonly logger = new Logger(FailedNotificationsService.name);
 
   /** Exact saved-state read with the same payload masking as the triage list. */
-  async getFailedNotification(id: string): Promise<FailedNotificationDto> {
-    const result = await getDbPool().query(
-      `SELECT dl.*, ob.payload
-         FROM notification_dead_letter dl
-         LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id
-        WHERE dl.id = $1`,
-      [id]
-    );
-    if (!result.rows[0])
-      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    return toFailedNotificationDto(result.rows[0]);
+  async getFailedNotification(
+    id: string,
+    actor: FailedNotificationActor
+  ): Promise<FailedNotificationDto> {
+    return this.readForStaff(actor, async (client) => {
+      const result = await client.query(`${DELIVERY_DETAILS} WHERE dl.id = $1`, [id]);
+      if (!result.rows[0])
+        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      return toFailedNotificationDto(result.rows[0]);
+    });
   }
 
   /**
@@ -113,7 +125,8 @@ export class FailedNotificationsService {
    * @throws 400 when an invalid status/severity/channel filter is supplied.
    */
   async listFailedNotifications(
-    options: ListFailedNotificationsOptions = {}
+    options: ListFailedNotificationsOptions,
+    actor: FailedNotificationActor
   ): Promise<FailedNotificationDto[]> {
     const limit = sanitizeLimit(options.limit);
     const offset = sanitizeOffset(options.offset);
@@ -152,20 +165,43 @@ export class FailedNotificationsService {
       );
     }
 
-    const pool = getDbPool();
-    const result = await pool.query(
-      `SELECT dl.*, ob.payload
-         FROM notification_dead_letter dl
-         LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id
-        WHERE ($1::text IS NULL OR dl.status = $1)
-          AND ($2::text IS NULL OR dl.severity = $2)
-          AND ($3::text IS NULL OR dl.channel = $3)
-        ORDER BY dl.created_at DESC, dl.id DESC
-        LIMIT $4 OFFSET $5`,
-      [status, severity, channel, limit, offset]
-    );
+    return this.readForStaff(actor, async (client) => {
+      const result = await client.query(
+        `${DELIVERY_DETAILS}
+          WHERE ($1::text IS NULL OR dl.status = $1)
+            AND ($2::text IS NULL OR dl.severity = $2)
+            AND ($3::text IS NULL OR dl.channel = $3)
+          ORDER BY dl.created_at DESC, dl.id DESC
+          LIMIT $4 OFFSET $5`,
+        [status, severity, channel, limit, offset]
+      );
+      return result.rows.map(toFailedNotificationDto);
+    });
+  }
 
-    return result.rows.map((row: Record<string, unknown>) => toFailedNotificationDto(row));
+  private async readForStaff<T>(
+    actor: FailedNotificationActor,
+    read: (client: PoolClient) => Promise<T>,
+    additionalPermission?: 'admin:jobs:retry'
+  ): Promise<T> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:view');
+      if (additionalPermission)
+        await requireStaffMutationPermission(client, actor.userId, additionalPermission);
+      await requireCurrentSession(client, actor);
+      await assertStaffContext(client);
+      const result = await read(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -184,46 +220,37 @@ export class FailedNotificationsService {
   }
 
   async previewOutboxReplay(range: NotificationReplayRange, actor: FailedNotificationActor) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:view');
-      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:retry');
-      await requireCurrentSession(client, actor);
-      const { rows } = await client.query<
-        NotificationReplaySelection & {
-          outboxId: string;
-          channel: string;
-          eventKey: string;
-          createdAt: Date;
-        }
-      >(
-        `SELECT dl.id, EXTRACT(EPOCH FROM dl.updated_at)::text AS revision,
+    return this.readForStaff(
+      actor,
+      async (client) => {
+        const { rows } = await client.query<
+          NotificationReplaySelection & {
+            outboxId: string;
+            channel: string;
+            eventKey: string;
+            createdAt: Date;
+          }
+        >(
+          `SELECT dl.id, EXTRACT(EPOCH FROM dl.updated_at)::text AS revision,
               o.id AS "outboxId", dl.channel, dl.event_key AS "eventKey", o.created_at AS "createdAt"
          FROM notification_outbox o
          JOIN notification_dead_letter dl ON dl.outbox_id=o.id AND dl.status='open'
-         JOIN notification_job j ON j.id=dl.job_id AND j.outbox_id=o.id
-           AND j.channel=dl.channel AND j.status='dead_letter'
+         JOIN notification_job j ON ${JOB_LINK} AND j.status='dead_letter'
          LEFT JOIN notification_send_receipts r ON r.outbox_id=o.id AND r.channel=dl.channel
         WHERE o.created_at >= $1 AND o.created_at < $2 AND o.status='failed'
           AND (o.locked_until IS NULL OR o.locked_until < NOW())
           AND (r.status IS NULL OR r.status='rejected')
         ORDER BY o.created_at, o.id, dl.id
         LIMIT $3`,
-        [range.from, range.to, MAX_REPLAY_SELECTION + 1]
-      );
-      await requireCurrentSession(client, actor);
-      await client.query('COMMIT');
-      return {
-        entries: rows.slice(0, MAX_REPLAY_SELECTION),
-        truncated: rows.length > MAX_REPLAY_SELECTION,
-      };
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+          [range.from, range.to, MAX_REPLAY_SELECTION + 1]
+        );
+        return {
+          entries: rows.slice(0, MAX_REPLAY_SELECTION),
+          truncated: rows.length > MAX_REPLAY_SELECTION,
+        };
+      },
+      'admin:jobs:retry'
+    );
   }
 
   async replayOutbox(
@@ -332,9 +359,10 @@ export class FailedNotificationsService {
       if (opts.replaySelection)
         await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:view');
       const stepUpVerifiedAt = await requireSessionStepUp(client, actor);
+      await assertStaffContext(client);
       // All delivery/recovery paths lock the parent before a channel or triage
       // row. Reversing this order can deadlock with worker finalization.
-      await client.query(
+      const lockedOutbox = await client.query<{ id: string }>(
         `SELECT id FROM notification_outbox
         WHERE id=(SELECT outbox_id FROM notification_dead_letter WHERE id=$1)
         FOR UPDATE`,
@@ -343,9 +371,7 @@ export class FailedNotificationsService {
 
       const selection = opts.replaySelection;
       const result = await client.query(
-        `SELECT dl.*, ob.payload
-           FROM notification_dead_letter dl
-           LEFT JOIN notification_outbox ob ON ob.id = dl.outbox_id
+        `${DELIVERY_DETAILS}
           WHERE dl.id = $1
             ${selection ? 'AND ob.created_at >= $2 AND ob.created_at < $3 AND EXTRACT(EPOCH FROM dl.updated_at) = $4::numeric' : ''}
           FOR UPDATE OF dl`,
@@ -381,6 +407,9 @@ export class FailedNotificationsService {
       }
 
       if (opts.requeue) {
+        if (!row.delivery_link_valid || lockedOutbox.rows[0]?.id !== row.outbox_id) {
+          throw new HttpException({ error: ErrorCodes.CONFLICT_STATE.code }, 409);
+        }
         const receipt = await client.query(
           `SELECT status FROM notification_send_receipts
            WHERE outbox_id=$1 AND channel=$2 FOR UPDATE`,
@@ -416,9 +445,9 @@ export class FailedNotificationsService {
           `UPDATE notification_job
               SET status = 'queued', attempts = 0, run_after = NOW(),
                   last_error = NULL, updated_at = NOW()
-            WHERE id = $1 AND outbox_id = $2
+            WHERE id = $1 AND outbox_id = $2 AND channel = $3
               AND status = 'dead_letter'`,
-          [row.job_id, row.outbox_id]
+          [row.job_id, row.outbox_id, row.channel]
         );
         // A no-op update means the row is not actually retryable (already
         // queued/in flight) — fail closed rather than reporting a false success.
@@ -544,7 +573,7 @@ export function toFailedNotificationDto(row: Record<string, unknown>): FailedNot
     attempts: Number(row.attempts) || 0,
     maxAttempts: Number(row.max_attempts) || 0,
     status: row.status as DeadLetterStatus,
-    recipientKey: maskIdentifier(userId ?? profileId),
+    recipientKey: row.delivery_link_valid === false ? null : maskIdentifier(userId ?? profileId),
     data: rawPayload ? (maskSensitiveData(rawPayload) as Record<string, unknown>) : null,
     resolvedById:
       row.resolved_by === null || row.resolved_by === undefined ? null : String(row.resolved_by),

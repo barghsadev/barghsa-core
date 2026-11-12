@@ -176,7 +176,7 @@ export class FailedNotificationsController {
       if (parsed.data.limit !== undefined) options.limit = parsed.data.limit;
       if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
-    return this.failedNotificationsService.listFailedNotifications(options);
+    return this.failedNotificationsService.listFailedNotifications(options, req.session);
   }
 
   @Get('replay-preview')
@@ -240,7 +240,7 @@ export class FailedNotificationsController {
   @ApiResponse({ status: 404, description: 'Notification not found' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.assertViewPermission(req);
-    return this.failedNotificationsService.getFailedNotification(id);
+    return this.failedNotificationsService.getFailedNotification(id, req.session);
   }
 
   /**

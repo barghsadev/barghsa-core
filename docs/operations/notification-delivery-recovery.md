@@ -28,6 +28,13 @@ History rows count processing attempts. Recovering an accepted receipt or
 holding an uncertain receipt does not make another provider request, so those
 rows have no measured send duration. The history view explains this distinction.
 
+Queue and detail reads hold the current staff view grant through the read and
+check session validity before returning data. A dead-letter entry must match
+the job ID, outbox ID and delivery channel to show its payload or qualify for
+retry. Entries with inconsistent links remain visible for triage with recipient
+and payload details hidden. Resolving or dismissing them still records an audit
+entry and leaves the delivery records intact.
+
 ## Replay a reviewed date range
 
 With `admin:jobs:view` and `admin:jobs:retry`, open
