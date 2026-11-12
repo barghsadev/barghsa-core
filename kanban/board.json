@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T05:34:58+00:00",
+  "updated": "2026-11-12T05:41:29+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -549549,7 +549549,8 @@
       "remaining": [
         "Profile self-edit, address create/update, legacy onboarding start, individual/legal onboarding submit, agent invitation creation and role changes, ownership transfer initiation and decisions, legacy order creation and legacy terms acceptance now reject unknown fields. Audit remaining CRM and administrative, service ordering, financial, document, notification, support and operational command DTOs. Preserve documented fields, typed envelopes, provider signatures and the narrow CSP telemetry exception.",
         "Verify malformed remaining commands fail before protected side effects, finish the application-wide schema inventory and verify the current hosted provider mutation and test boundaries.",
-        "Staff creation, role changes, versioned verification settings and dual-approval rejection now reject unknown fields. Continue the application-wide command inventory for the remaining endpoints and preserve intentionally typed dynamic payloads."
+        "Staff creation, role changes, versioned verification settings and dual-approval rejection now reject unknown fields. Continue the application-wide command inventory for the remaining endpoints and preserve intentionally typed dynamic payloads.",
+        "The direct profile and address tests now verify normalization and mutation receipts with valid payloads and separately verify generic rejection of unexpected fields before any authority feedback or writes."
       ],
       "owner": null,
       "depends_on": [],
@@ -549587,14 +549588,16 @@
           "apps/api/src/admin/dual-approval.controller.ts",
           "apps/api/src/admin/staff-creation-http.integration.test.ts",
           "apps/api/src/admin/staff-mutation-http.integration.test.ts",
-          "apps/api/src/admin/verification-mode-http.integration.test.ts"
+          "apps/api/src/admin/verification-mode-http.integration.test.ts",
+          "apps/api/src/profiles/profile-form-input-fields.test.ts"
         ],
         "batches": [
           "release-0.6-reject-unknown-auth-command-fields",
           "release-0.6-provider-command-unknown-fields",
           "release-0.6-upload-profile-request-admission",
           "release-0.6-strict-customer-commands",
-          "release-0.6-strict-staff-commands"
+          "release-0.6-strict-staff-commands",
+          "release-0.6-profile-strict-receipt-regression"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -889571,7 +889574,8 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes."
+        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
+        "Cumulative preflight 43157243591 failed three profile and address test fixtures that supplied unknown fields with otherwise valid commands. The assertions were aligned with the strict command requirement and focused checks passed. Verify the corrected cumulative tip in the required protected integrity check."
       ],
       "owner": null,
       "depends_on": [],
@@ -889829,7 +889833,8 @@
           "release-0.6-runtime-image-binding",
           "release-0.6-strict-staff-commands",
           "release-0.6-unified-license-review",
-          "release-0.6-verification-secret-boundary"
+          "release-0.6-verification-secret-boundary",
+          "release-0.6-profile-strict-receipt-regression"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -889974,7 +889979,8 @@
           "apps/api/src/verification/verification-provider.controller.ts",
           "apps/api/src/verification/verification-provider.service.ts",
           "docs/operations/preflight/provider-secret-review.sql",
-          "docs/security/security-verification.md"
+          "docs/security/security-verification.md",
+          "apps/api/src/profiles/profile-form-input-fields.test.ts"
         ]
       }
     },
@@ -1025004,6 +1025010,58 @@
         {
           "file": "verify-verification-secret-final.yml",
           "sha256": "9130baa4d923cfc312b59a1533f351654b7b933bffc46853e4520b06514932eb"
+        }
+      ]
+    },
+    "release-0.6-profile-strict-receipt-regression": {
+      "batch": "release-0.6-profile-strict-receipt-regression",
+      "base_commit": "7fde69f90b36067dc5b340840c88893729aa1048",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/profiles/profile-form-input-fields.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/profiles/profile-form-input-fields.test.ts",
+          "sha256": "025fc804336aeaa338dd4120e946657a32a8dbeab3bc4aaa16ba96d23abcb956"
+        }
+      ],
+      "checks": [
+        "The previous cumulative required run failed with three assertions in one direct controller test file. The previous positive fixtures sent an ignored legacy key. Strict parsing rejected each payload. The coverage aggregation and integrity failures were consequences of that test failure.",
+        "Hosted PostgreSQL run 43162713316 passed 72 cases in the direct test and both affected HTTP suites. All three previous receipt and normalization assertions remain intact for valid inputs. Three explicit negative cases require a generic 400 and no work for otherwise valid requests with an unknown field.",
+        "Changed-file lint, formatting, diagnostic actionlint and whitespace checks passed."
+      ],
+      "limitations": [
+        "The corrected cumulative protected preflight and exact push are pending. No API production code changed in this fixture correction."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-profile-strict-receipt-regression",
+      "execution_receipts": [
+        {
+          "file": "diagnostic.json",
+          "sha256": "f674a86b3c1042cf0d585a0da817dd72d308276aa98d4788ea350e9fa0ed9a07"
+        },
+        {
+          "file": "failed-run.json",
+          "sha256": "5907baaaec96a4bfcdc1a4566e2b7027edb5391bab47e27d58b34b91f261af35"
+        },
+        {
+          "file": "failure-excerpt.log",
+          "sha256": "9766541bed6124c98f460bf1efea75599aed3b033575af2beed4db0366433791"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "30b0fb7ace51c5f23276dd4fe48a12917604eec3d74bf522f8a75932455d0155"
+        },
+        {
+          "file": "native-profile-receipts.log",
+          "sha256": "b668e5ce48ce90eb6ebe9c7226a95bb650e10626b327c35a2fc9fb1ea2762b4f"
+        },
+        {
+          "file": "verify-profile-receipts.yml",
+          "sha256": "8c19ad098aa05aff56cc2e00cc3de88d405b14172e8b483aec88c79a4da24ecc"
         }
       ]
     }
