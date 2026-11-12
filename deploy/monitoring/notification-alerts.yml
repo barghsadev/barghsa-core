@@ -143,6 +143,21 @@ groups:
           summary: A payment idempotency key was used with conflicting payment data
   - name: barghsa-storage-lifecycle
     rules:
+      - alert: ClamAvSignaturesStale
+        expr: |
+          max by (environment, database) (
+            (barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""} == 0)
+            or (time() - barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""} >= 172800)
+            or (barghsa_clamav_signature_build_timestamp_seconds{environment=~"staging|production",database!=""} > time() + 300)
+          )
+        for: 5m
+        labels:
+          severity: warning
+          priority: P2
+        annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/operations/clamav-signatures.md
+          dashboard_uid: barghsa-storage-uploads
+          summary: Loaded ClamAV signatures are overdue or could not be verified
       - alert: StorageLifecycleNeedsReview
         expr: max by (environment, database) (barghsa_storage_lifecycle_job_needs_review) == 1
         for: 5m

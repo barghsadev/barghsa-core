@@ -54,6 +54,8 @@ services:
   clamav:
     image: '${BARGHSA_CLAMAV_REPOSITORY:?Set the scanner image repository}@sha256:${BARGHSA_CLAMAV_DIGEST:?Set the verified scanner image digest}'
     pull_policy: never
+    environment:
+      TZ: UTC0
     volumes: ['clamav-data:/var/lib/clamav']
     healthcheck:
       test: [CMD, /usr/local/bin/barghsa-clamav-healthcheck]

@@ -71,6 +71,7 @@ services:
     pull_policy: never
     environment:
       FRESHCLAM_CHECKS: ${BARGHSA_CLAMAV_FRESHCLAM_CHECKS:-1}
+      TZ: UTC0
     volumes:
       - clamavdata:/var/lib/clamav
       - type: bind

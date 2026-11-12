@@ -4,6 +4,78 @@
   'tests':
     [
       {
+        'name': 'ClamAV alert waits five minutes after the 48-hour signature limit and clears on update',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="staging",database="core",instance="a"}',
+              'values': '60+0x2886 172800',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '48h5m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+            {
+              'eval_time': '48h6m',
+              'alertname': 'ClamAvSignaturesStale',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      &clamav_labels {
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'warning',
+                        'priority': 'P2',
+                      },
+                    'exp_annotations':
+                      &clamav_annotations {
+                        'summary': 'Loaded ClamAV signatures are overdue or could not be verified',
+                        'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/operations/clamav-signatures.md',
+                        'dashboard_uid': 'barghsa-storage-uploads',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '48h7m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'ClamAV alert surfaces an unreadable replica and future timestamp within the same scope',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="staging",database="core",instance="a"}',
+              'values': '0+0x5 120',
+            },
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="staging",database="core",instance="b"}',
+              'values': '120+0x6',
+            },
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="staging",database="core",instance="c"}',
+              'values': '3600+0x5 120',
+            },
+            {
+              'series': 'barghsa_clamav_signature_build_timestamp_seconds{job="barghsa-worker",environment="dev",database="core",instance="other"}',
+              'values': '0+0x6',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '4m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+            {
+              'eval_time': '5m',
+              'alertname': 'ClamAvSignaturesStale',
+              'exp_alerts':
+                [{ 'exp_labels': *clamav_labels, 'exp_annotations': *clamav_annotations }],
+            },
+            { 'eval_time': '6m', 'alertname': 'ClamAvSignaturesStale', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'SMS credit review deduplicates replicas, yields to P2 and requires a scoped low-credit state',
         'interval': '1m',
         'input_series':

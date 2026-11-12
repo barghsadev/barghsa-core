@@ -26,6 +26,7 @@ import {
 } from './documents/scan-runner.js';
 import { scanStoredUpload } from './documents/upload-scan-job.js';
 import { collectStorageScanBacklog } from './documents/storage-scan-metrics.js';
+import { collectClamAvSignatureBuildTime } from './documents/clamav-signature-metrics.js';
 import { createTraceProvider } from '@barghsa/shared/telemetry';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE } from '@barghsa/shared/storage';
 import { reportServerError } from '@barghsa/shared/error-reporting';
@@ -406,6 +407,10 @@ async function main(): Promise<void> {
   if (scannerHost) {
     if (!Number.isInteger(scannerPort) || scannerPort < 1 || scannerPort > 65535)
       throw new Error('Invalid document scanner port');
+    pollers.every(
+      () => collectClamAvSignatureBuildTime({ host: scannerHost, port: scannerPort }),
+      30_000
+    );
     const uploadScans = new JobHandlerRegistry();
     uploadScans.register(STORAGE_UPLOAD_SCAN_JOB_TYPE, (payload, context) =>
       scanStoredUpload(

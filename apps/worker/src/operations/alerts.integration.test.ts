@@ -167,47 +167,50 @@ function parsed(input = envelope()) {
   return parseOperationsAlerts(input, 'staging', 'core');
 }
 
-it('retains the P2 credit priority in the authenticated receipt and private admin intent', async () => {
-  const original = envelope();
-  const missing = {
-    alerts: [
-      {
-        ...original.alerts[0]!,
-        labels: { ...original.alerts[0]!.labels, alertname: 'SmsProviderLowCredit' },
-      },
-    ],
-  };
-  expect(() => parseOperationsAlerts(missing, 'staging', 'core')).toThrow('scope or identity');
-  const input = {
-    alerts: [
-      {
-        ...original.alerts[0]!,
-        labels: {
-          ...original.alerts[0]!.labels,
-          alertname: 'SmsProviderLowCredit',
-          priority: 'P2',
+it.each(['SmsProviderLowCredit', 'ClamAvSignaturesStale'])(
+  'retains the P2 %s priority in the authenticated receipt and private admin intent',
+  async (alertName) => {
+    const original = envelope();
+    const missing = {
+      alerts: [
+        {
+          ...original.alerts[0]!,
+          labels: { ...original.alerts[0]!.labels, alertname: alertName },
         },
-      },
-    ],
-  };
-  const response = await request(input);
-  expect(response.status).toBe(200);
-  const body = (await response.json()) as { receipts: { id: string }[] };
-  expect(
-    (
-      await ctx.pool.query(
-        'SELECT alert_name,priority,severity FROM operations_alert_receipts WHERE id=$1',
-        [body.receipts[0]!.id]
-      )
-    ).rows[0]
-  ).toEqual({ alert_name: 'SmsProviderLowCredit', priority: 'P2', severity: 'warning' });
-  expect(
-    (await ctx.pool.query('SELECT payload FROM notification_outbox')).rows[0].payload.priority
-  ).toBe('P2');
-  expect((await ctx.pool.query('SELECT event_key,channels FROM notification_outbox')).rows).toEqual(
-    [{ event_key: 'admin.operations_alert', channels: ['in_app'] }]
-  );
-});
+      ],
+    };
+    expect(() => parseOperationsAlerts(missing, 'staging', 'core')).toThrow('scope or identity');
+    const input = {
+      alerts: [
+        {
+          ...original.alerts[0]!,
+          labels: {
+            ...original.alerts[0]!.labels,
+            alertname: alertName,
+            priority: 'P2',
+          },
+        },
+      ],
+    };
+    const response = await request(input);
+    expect(response.status).toBe(200);
+    const body = (await response.json()) as { receipts: { id: string }[] };
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT alert_name,priority,severity FROM operations_alert_receipts WHERE id=$1',
+          [body.receipts[0]!.id]
+        )
+      ).rows[0]
+    ).toEqual({ alert_name: alertName, priority: 'P2', severity: 'warning' });
+    expect(
+      (await ctx.pool.query('SELECT payload FROM notification_outbox')).rows[0].payload.priority
+    ).toBe('P2');
+    expect(
+      (await ctx.pool.query('SELECT event_key,channels FROM notification_outbox')).rows
+    ).toEqual([{ event_key: 'admin.operations_alert', channels: ['in_app'] }]);
+  }
+);
 
 it.each([
   'WalletReconciliationReview',

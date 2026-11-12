@@ -2,6 +2,8 @@
 
 A healthy daemon must also have current signature data. Compare the daemon's version with the vendor's signed update feed before selecting a scanner image. Record the loaded signature version and the result of clean and infected test uploads. A successful PING only proves the daemon is running.
 
+The worker reads ClamD's private `VERSION` response every 30 seconds and exports the loaded signature database's UTC build time. The staging and production scanner services run in UTC. `ClamAvSignaturesStale` opens one P2 alert per environment and database after five minutes with a missing or invalid build time, or signatures at least 48 hours old. Compare the mirror, archive signatures and loaded version. Confirm the alert clears after a current database loads. [Storage and Uploads dashboard](../../deploy/monitoring/grafana-storage-uploads-dashboard.json) · [ClamD protocol](https://docs.clamav.net/manual/Usage/ClamdProtocol.html)
+
 If FreshClam receives HTTP 403, preserve the vendor's cooldown and investigate the response. Resume after the cooldown or switch to an approved private mirror with its own official upstream. Restrict access to the scanner hosts, verify signatures and freshness before reload, and alert on overdue updates. [ClamAV private mirror documentation](https://docs.clamav.net/appendix/CvdPrivateMirror.html)
 
 ## Staging mirror

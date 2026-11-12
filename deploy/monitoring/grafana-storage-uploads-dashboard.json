@@ -24,7 +24,7 @@
   "description": "Verified uploads and scanner activity for the selected environment and database. Counts come from Prometheus observations, not a storage or security audit ledger.",
   "tags": ["barghsa", "operations", "storage"],
   "schemaVersion": 39,
-  "version": 2,
+  "version": 3,
   "editable": true,
   "refresh": "30s",
   "time": { "from": "now-6h", "to": "now" },
@@ -218,6 +218,37 @@
           "range": true,
           "legendFormat": "{{cleanup_job}}",
           "expr": "max by (cleanup_job) (barghsa_storage_lifecycle_job_needs_review{environment=\"$environment\",database=\"$database\"})"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "timeseries",
+      "title": "Loaded ClamAV signature age",
+      "description": "Age of the database actually loaded by ClamD. A missing or invalid timestamp appears as a gap. The overdue threshold is 48 hours.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 12, "y": 29, "w": 12, "h": 8 },
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "unit": "h",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 48 }
+            ]
+          },
+          "custom": { "thresholdsStyle": { "mode": "line" } }
+        },
+        "overrides": []
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "legendFormat": "{{instance}}",
+          "expr": "clamp_min(time() - (barghsa_clamav_signature_build_timestamp_seconds{environment=\"$environment\",database=\"$database\"} > 0 and barghsa_clamav_signature_build_timestamp_seconds{environment=\"$environment\",database=\"$database\"} <= time() + 300), 0) / 3600"
         }
       ]
     }
