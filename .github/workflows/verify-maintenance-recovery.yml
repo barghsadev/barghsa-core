@@ -1,0 +1,41 @@
+name: Verify maintenance recovery and capability isolation
+on:
+  push:
+    branches: ['codex/verify/v06-maintenance-recovery-*']
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact fixture runtime
+        run: pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker
+      - name: Exercise maintenance publication, recovery drafts and authorization
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+            src/maintenance/maintenance-http.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/native-maintenance.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-maintenance
+          path: ${{ runner.temp }}/native-maintenance.log
+          retention-days: 14

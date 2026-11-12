@@ -20,6 +20,15 @@ the deployment record. [Guarded rollout](../../deploy/production/README.md#guard
 2. Use the supported versioned admin flow to apply the captured safe settings as an audited active version, with fresh authority and validation. Providers require the configuration-bound tests and explicit activation.
 3. Read back the effective version and exercise the affected behavior. Confirm the rejected version remains in the audit and stale updates are refused. [Storage configuration](../operations/storage-configuration.md). [Provider activation and recovery](../operations/notification-monitoring.md).
 
+For a capability pause, open **Service maintenance**, select the service, and
+open **Maintenance history**. Restore a published revision as a draft. This
+keeps the current status in effect. Review the draft and replace an expired
+return time before activating it. Historical private rationale stays in its
+original audit event. Enter a new private rationale when the standard notice
+is selected. If draft creation is unconfirmed, reload the history and load the
+stored draft. If another change became active, select a revision against the
+new current version. Verify the new active version and its source in the audit.
+
 ## Data rollback
 
 1. Treat suspected data loss as P0. The database operator preserves the source and restores to a separate target using the approved backup and, when needed, the PITR target.

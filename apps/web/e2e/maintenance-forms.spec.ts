@@ -9,7 +9,7 @@ import AxeBuilder from '@axe-core/playwright';
 import type { MaintenanceSetting } from '../src/lib/maintenance-form';
 
 test.use({ timezoneId: 'America/Los_Angeles' });
-async function setup(page: Page, locale: 'en' | 'fa') {
+async function setup(page: Page, locale: 'en' | 'fa', initial?: Partial<MaintenanceSetting>) {
   await crmShell(page, locale);
   await page.route('**/api/public/branding/config', (route) =>
     route.fulfill({
@@ -43,6 +43,7 @@ async function setup(page: Page, locale: 'en' | 'fa') {
     owner: 'Operations',
     version: 1,
     updatedAt: '2026-10-05T00:00:00.000Z',
+    ...initial,
   };
   let status = 200,
     malformed = false;
@@ -126,6 +127,98 @@ async function inspect(page: Page, locale: string, info: TestInfo, name: string)
   }
 }
 for (const locale of ['en', 'fa'] as const) {
+  test(`maintenance restores history into a separate reviewed draft (${locale})`, async ({
+    page,
+  }, info) => {
+    const { word, confirm, confirmPause, save, row } = await setup(page, locale, {
+      active: false,
+      reason: null,
+      estimatedUntil: null,
+      owner: null,
+      version: 3,
+    });
+    const source = {
+      id: '01900000-0000-7000-8000-000000000001',
+      setting: {
+        ...row(),
+        active: true,
+        reason: { fa: 'در حال بازبینی', en: 'Reviewing the service' },
+        owner: 'Operations',
+        estimatedUntil: '2099-01-01T00:00:32.000Z',
+        version: 2,
+      },
+    };
+    const recovery = {
+      id: '01900000-0000-7000-8000-000000000002',
+      sourceId: source.id,
+      baseVersion: 3,
+      setting: source.setting,
+    };
+    let stored = false;
+    const stages: unknown[] = [],
+      activations: unknown[] = [];
+    await page.route('**/api/admin/maintenance/electricity_checkout/history', (route) =>
+      route.fulfill({
+        json: {
+          baseVersion: 3,
+          items: [source],
+          nextBeforeVersion: null,
+          draft: stored ? recovery : null,
+        },
+      })
+    );
+    await page.route('**/api/admin/maintenance/electricity_checkout/rollback-draft', (route) => {
+      stages.push(route.request().postDataJSON());
+      stored = true;
+      return route.fulfill({ status: 201, json: locale === 'fa' ? {} : recovery });
+    });
+    await page.route('**/api/admin/maintenance/electricity_checkout', (route) => {
+      activations.push(route.request().postDataJSON());
+      const next = { ...source.setting, version: 4 };
+      save(next);
+      return route.fulfill({ json: next });
+    });
+    await page.getByRole('button', { name: word('history'), exact: true }).click();
+    const version = new Intl.NumberFormat(locale, { useGrouping: false }).format(2);
+    await page
+      .getByRole('button', {
+        name: word('restoreRevision').replace('{version}', version),
+        exact: true,
+      })
+      .click();
+    await confirm().click();
+    if (locale === 'fa') {
+      await expect(page.getByText(word('unconfirmedDraft'), { exact: true })).toBeVisible();
+      await page
+        .getByRole('button', {
+          name: word('resumeRecovery').replace('{version}', version),
+          exact: true,
+        })
+        .click();
+    }
+    await expect(page.getByRole('checkbox', { name: word('active'), exact: true })).toBeChecked();
+    await expect(page.getByLabel(word('reasonEn'), { exact: true })).toHaveValue(
+      source.setting.reason.en
+    );
+    expect(stages).toEqual([{ sourceId: source.id, expectedVersion: 3 }]);
+    expect(activations).toEqual([]);
+    expect(row()).toMatchObject({ version: 3, active: false });
+    await inspect(page, locale, info, 'maintenance-recovery-draft');
+    await page.getByRole('button', { name: word('activateRecovery'), exact: true }).click();
+    await confirmPause();
+    await expect(page.getByText(word('saved'), { exact: true })).toBeVisible();
+    expect(activations).toEqual([
+      {
+        active: true,
+        reason: source.setting.reason,
+        owner: source.setting.owner,
+        estimatedUntil: source.setting.estimatedUntil,
+        expectedVersion: 3,
+        rollbackDraftId: recovery.id,
+      },
+    ]);
+    expect(row()).toMatchObject({ version: 4, active: true });
+  });
   test(`maintenance can keep the pause rationale private (${locale})`, async ({ page }, info) => {
     const { word, confirmPause, save, row } = await setup(page, locale);
     const visibility = page.getByRole('checkbox', { name: word('publishReason'), exact: true });

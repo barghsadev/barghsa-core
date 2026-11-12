@@ -3188,9 +3188,46 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        /** Activate or deactivate maintenance for one capability */
+        /**
+         * Activate or deactivate maintenance for one capability
+         * @description A reviewed recovery may include rollbackDraftId for the current capability and version.
+         */
         put: operations["AdminMaintenanceController_update"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/maintenance/{capability}/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Review prior published maintenance settings and the current recovery draft */
+        get: operations["AdminMaintenanceController_rollbackHistory"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/maintenance/{capability}/rollback-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Copy a prior published maintenance revision into a recovery draft */
+        post: operations["AdminMaintenanceController_stageRollback"];
         delete?: never;
         options?: never;
         head?: never;
@@ -19386,7 +19423,24 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": {
+                    active: boolean;
+                    /** Format: date-time */
+                    estimatedUntil: string | null;
+                    expectedVersion: number;
+                    owner: string | null;
+                    publishReason?: boolean;
+                    reason: {
+                        en: string;
+                        fa: string;
+                    } | null;
+                    /** Format: uuid */
+                    rollbackDraftId?: string;
+                };
+            };
+        };
         responses: {
             /** @description Updated maintenance setting and version */
             200: {
@@ -19396,6 +19450,70 @@ export interface operations {
                 content?: never;
             };
             /** @description The setting changed since it was read */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminMaintenanceController_rollbackHistory: {
+        parameters: {
+            query?: {
+                beforeVersion?: number;
+            };
+            header?: never;
+            path: {
+                capability: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Bounded revision history without private rationale */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminMaintenanceController_stageRollback: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                capability: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    /** Format: uuid */
+                    sourceId: string;
+                };
+            };
+        };
+        responses: {
+            /** @description Recovery draft and the active version it is based on */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The selected published revision does not belong to this capability */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description The active maintenance version changed */
             409: {
                 headers: {
                     [name: string]: unknown;

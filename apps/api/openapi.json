@@ -18800,6 +18800,7 @@
     },
     "/api/admin/maintenance/{capability}": {
       "put": {
+        "description": "A reviewed recovery may include rollbackDraftId for the current capability and version.",
         "operationId": "AdminMaintenanceController_update",
         "parameters": [
           {
@@ -18811,6 +18812,70 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "estimatedUntil": {
+                    "format": "date-time",
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483647,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "owner": {
+                    "maxLength": 100,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "publishReason": {
+                    "type": "boolean"
+                  },
+                  "reason": {
+                    "additionalProperties": false,
+                    "nullable": true,
+                    "properties": {
+                      "en": {
+                        "maxLength": 500,
+                        "type": "string"
+                      },
+                      "fa": {
+                        "maxLength": 500,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "fa",
+                      "en"
+                    ],
+                    "type": "object"
+                  },
+                  "rollbackDraftId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "active",
+                  "reason",
+                  "estimatedUntil",
+                  "owner",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Updated maintenance setting and version"
@@ -18825,6 +18890,103 @@
           }
         ],
         "summary": "Activate or deactivate maintenance for one capability",
+        "tags": [
+          "Admin · Maintenance"
+        ]
+      }
+    },
+    "/api/admin/maintenance/{capability}/history": {
+      "get": {
+        "operationId": "AdminMaintenanceController_rollbackHistory",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "capability",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bounded revision history without private rationale"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Review prior published maintenance settings and the current recovery draft",
+        "tags": [
+          "Admin · Maintenance"
+        ]
+      }
+    },
+    "/api/admin/maintenance/{capability}/rollback-draft": {
+      "post": {
+        "operationId": "AdminMaintenanceController_stageRollback",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "capability",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "sourceId",
+                  "expectedVersion"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Recovery draft and the active version it is based on"
+          },
+          "404": {
+            "description": "The selected published revision does not belong to this capability"
+          },
+          "409": {
+            "description": "The active maintenance version changed"
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Copy a prior published maintenance revision into a recovery draft",
         "tags": [
           "Admin · Maintenance"
         ]
