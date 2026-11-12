@@ -604,6 +604,42 @@ it('revalidates the retained subject when a draft update removes an allowed vari
   expect(response.status).toBe(400);
   expect(await snapshot()).toEqual(before);
 });
+
+it('bounds notification authoring requests without creating a version or recording a send', async () => {
+  const create = await seed('create');
+  const value = await seed('update');
+  const send = await seed('test-send');
+  const before = await snapshot();
+  const endpoint = `${http.base}/api/admin/notifications/templates`;
+  const bodyTemplate = 'x'.repeat(65_537);
+  const variables = Array.from({ length: 101 }, (_, i) => `field${i}`);
+  for (const [path, method, body, field] of [
+    [
+      '',
+      'POST',
+      { eventKey: create.event, channel: 'email', locale: 'en', bodyTemplate, variables: [] },
+      'bodyTemplate',
+    ],
+    [`/${value.id}`, 'PUT', { variables }, 'variables'],
+    [`/${value.id}`, 'PUT', { bodyTemplate: 'Replacement', status: 'active' }, undefined],
+    ['/preview', 'POST', { bodyTemplate }, undefined],
+    [`/${send.id}/test-send`, 'POST', { userId: 'another-editor' }, undefined],
+  ] as const) {
+    const response = await fetch(`${endpoint}${path}`, {
+      method,
+      headers: headers.editor!,
+      body: JSON.stringify(body),
+    });
+    expect(response.status, `${method} ${path}`).toBe(400);
+    const payload: unknown = await response.json();
+    expect(payload).toMatchObject({
+      error: { code: 'VALIDATION:INPUT:INVALID', ...(field ? { fields: [field] } : {}) },
+    });
+    expect(JSON.stringify(payload)).not.toContain('another-editor');
+  }
+  expect(await snapshot()).toEqual(before);
+});
+
 it('rejects publishing an invalid legacy draft before replacing the active template', async () => {
   const value = await seed('publish');
   await http.pool.query("UPDATE notification_templates SET subject='{{}}' WHERE id=$1", [value.id]);

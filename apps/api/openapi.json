@@ -19658,9 +19658,11 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "bodyTemplate": {
                     "description": "Template body with {{variable}} placeholders",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "channel": {
@@ -19692,17 +19694,21 @@
                       "oneOf": [
                         {
                           "description": "Variable name (legacy string form)",
+                          "maxLength": 100,
                           "type": "string"
                         },
                         {
+                          "additionalProperties": false,
                           "properties": {
                             "description": {
                               "description": "Human-readable description",
+                              "maxLength": 500,
                               "nullable": true,
                               "type": "string"
                             },
                             "name": {
                               "description": "Placeholder name",
+                              "maxLength": 100,
                               "type": "string"
                             }
                           },
@@ -19713,6 +19719,7 @@
                         }
                       ]
                     },
+                    "maxItems": 100,
                     "type": "array"
                   }
                 },
@@ -19720,8 +19727,7 @@
                   "eventKey",
                   "channel",
                   "locale",
-                  "bodyTemplate",
-                  "variables"
+                  "bodyTemplate"
                 ],
                 "type": "object"
               }
@@ -19754,9 +19760,11 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "bodyTemplate": {
                     "description": "Template body with {{variable}} placeholders",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "channel": {
@@ -19777,7 +19785,12 @@
                     "type": "string"
                   },
                   "sampleData": {
+                    "additionalProperties": {
+                      "maxLength": 4096,
+                      "type": "string"
+                    },
                     "description": "Optional sample values keyed by variable name",
+                    "maxProperties": 100,
                     "type": "object"
                   },
                   "variables": {
@@ -19786,17 +19799,21 @@
                       "oneOf": [
                         {
                           "description": "Variable name (legacy string form)",
+                          "maxLength": 100,
                           "type": "string"
                         },
                         {
+                          "additionalProperties": false,
                           "properties": {
                             "description": {
                               "description": "Human-readable description",
+                              "maxLength": 500,
                               "nullable": true,
                               "type": "string"
                             },
                             "name": {
                               "description": "Placeholder name",
+                              "maxLength": 100,
                               "type": "string"
                             }
                           },
@@ -19807,12 +19824,12 @@
                         }
                       ]
                     },
+                    "maxItems": 100,
                     "type": "array"
                   }
                 },
                 "required": [
-                  "bodyTemplate",
-                  "variables"
+                  "bodyTemplate"
                 ],
                 "type": "object"
               }
@@ -19917,9 +19934,11 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "bodyTemplate": {
                     "description": "Template body",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "subject": {
@@ -19932,17 +19951,21 @@
                       "oneOf": [
                         {
                           "description": "Variable name (legacy string form)",
+                          "maxLength": 100,
                           "type": "string"
                         },
                         {
+                          "additionalProperties": false,
                           "properties": {
                             "description": {
                               "description": "Human-readable description",
+                              "maxLength": 500,
                               "nullable": true,
                               "type": "string"
                             },
                             "name": {
                               "description": "Placeholder name",
+                              "maxLength": 100,
                               "type": "string"
                             }
                           },
@@ -19953,6 +19976,7 @@
                         }
                       ]
                     },
+                    "maxItems": 100,
                     "type": "array"
                   }
                 },
@@ -20028,6 +20052,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "destination": {
                     "description": "Verified destination (email or phone) belonging to the admin, or an allow-listed dev test address",
@@ -24214,10 +24239,12 @@
                 "properties": {
                   "contentEn": {
                     "description": "English TOS content (Markdown)",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "contentFa": {
                     "description": "Persian TOS content (Markdown)",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "versionId": {
@@ -24344,10 +24371,12 @@
                 "properties": {
                   "contentEn": {
                     "description": "English TOS content (Markdown)",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "contentFa": {
                     "description": "Persian TOS content (Markdown)",
+                    "maxLength": 65536,
                     "type": "string"
                   },
                   "expectedRevision": {

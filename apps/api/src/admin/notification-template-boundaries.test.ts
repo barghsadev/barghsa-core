@@ -95,6 +95,8 @@ describe('notification template input boundaries', () => {
     { ...template, locale: 'fr' },
     { ...template, bodyTemplate: '' },
     { ...template, variables: [42] },
+    { ...template, variables: ['v'.repeat(101)] },
+    { ...template, variables: [{ name: 'reference', description: 'd'.repeat(501) }] },
   ])('rejects invalid creation %j', async (body) => {
     const { controller, call } = fixture();
     await expect(controller.createNotificationTemplate(body, request())).rejects.toMatchObject({
@@ -116,17 +118,26 @@ describe('notification template input boundaries', () => {
     ).rejects.toMatchObject({ status: 400 });
     expect(call).not.toHaveBeenCalled();
   });
-  it.each([null, { bodyTemplate: '' }, { bodyTemplate: 'Hi', sampleData: { user: {} } }])(
-    'rejects malformed preview %j',
-    async (body) => {
-      const { controller, call } = fixture();
-      await expect(
-        controller.previewNotificationTemplateBody(body, request())
-      ).rejects.toMatchObject({ status: 400 });
-      expect(call).not.toHaveBeenCalled();
-    }
-  );
-  it.each([{ destination: 42 }, { destination: 'a'.repeat(321) }])(
+  it.each([
+    null,
+    { bodyTemplate: '' },
+    { bodyTemplate: 'Hi', sampleData: { user: {} } },
+    { bodyTemplate: 'Hi', sampleData: { user: 's'.repeat(4097) } },
+    { bodyTemplate: 'Hi', sampleData: { ['n'.repeat(101)]: 'sample' } },
+    {
+      bodyTemplate: 'Hi',
+      sampleData: Object.fromEntries(Array.from({ length: 101 }, (_, i) => [`key${i}`, 'value'])),
+    },
+    { bodyTemplate: 'Hi', variables: [{ name: 'user', extra: 'private' }] },
+    { bodyTemplate: 'Hi', extra: 'private' },
+  ])('rejects malformed preview %j', async (body) => {
+    const { controller, call } = fixture();
+    await expect(controller.previewNotificationTemplateBody(body, request())).rejects.toMatchObject(
+      { status: 400 }
+    );
+    expect(call).not.toHaveBeenCalled();
+  });
+  it.each([null, { destination: 42 }, { destination: 'a'.repeat(321) }])(
     'rejects malformed test destinations',
     async (body) => {
       const { controller, call } = fixture();
@@ -136,12 +147,16 @@ describe('notification template input boundaries', () => {
       expect(call).not.toHaveBeenCalled();
     }
   );
-  it('binds creation to the authenticated actor and strips caller authority fields', async () => {
+  it('rejects caller authority fields and binds valid creation to the authenticated actor', async () => {
     const { controller, call } = fixture();
-    await controller.createNotificationTemplate(
-      { ...template, userId: 'forged', status: 'active' },
-      request()
-    );
+    await expect(
+      controller.createNotificationTemplate(
+        { ...template, userId: 'forged', status: 'active' },
+        request()
+      )
+    ).rejects.toMatchObject({ status: 400 });
+    expect(call).not.toHaveBeenCalled();
+    await controller.createNotificationTemplate(template, request());
     expect(call).toHaveBeenCalledWith(
       { ...template, subject: null, variables: [] },
       request().session
@@ -158,11 +173,15 @@ describe('notification template input boundaries', () => {
     },
   ])('preserves partial edits without clearing omitted fields %j', async (body) => {
     const { controller, call } = fixture();
-    await controller.updateNotificationTemplate(
-      'template',
-      { ...body, actor: 'forged', status: 'active' },
-      request()
-    );
+    await expect(
+      controller.updateNotificationTemplate(
+        'template',
+        { ...body, actor: 'forged', status: 'active' },
+        request()
+      )
+    ).rejects.toMatchObject({ status: 400 });
+    expect(call).not.toHaveBeenCalled();
+    await controller.updateNotificationTemplate('template', body, request());
     expect(call).toHaveBeenCalledWith('template', body, request().session);
   });
   it('keeps preview sample data separate from delivery', async () => {
@@ -175,9 +194,17 @@ describe('notification template input boundaries', () => {
   });
   it('trims an explicit test destination and binds the initiating actor', async () => {
     const { controller, call } = fixture();
+    await expect(
+      controller.testSendNotificationTemplate(
+        'template',
+        { destination: ' test@example.test ', userId: 'forged' },
+        request()
+      )
+    ).rejects.toMatchObject({ status: 400 });
+    expect(call).not.toHaveBeenCalled();
     await controller.testSendNotificationTemplate(
       'template',
-      { destination: ' test@example.test ', userId: 'forged' },
+      { destination: ' test@example.test ' },
       request()
     );
     expect(call).toHaveBeenCalledWith('template', request().session, {

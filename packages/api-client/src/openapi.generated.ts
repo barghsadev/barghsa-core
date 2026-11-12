@@ -19974,7 +19974,7 @@ export interface operations {
                     /** @description Email subject (email channel only) */
                     subject?: string;
                     /** @description Allow-listed variable names (+ optional descriptions) */
-                    variables: (string | {
+                    variables?: (string | {
                         /** @description Human-readable description */
                         description?: string | null;
                         /** @description Placeholder name */
@@ -20030,9 +20030,11 @@ export interface operations {
                      */
                     locale?: "fa" | "en";
                     /** @description Optional sample values keyed by variable name */
-                    sampleData?: Record<string, never>;
+                    sampleData?: {
+                        [key: string]: string;
+                    };
                     /** @description Allow-listed variable names (+ optional descriptions) */
-                    variables: (string | {
+                    variables?: (string | {
                         /** @description Human-readable description */
                         description?: string | null;
                         /** @description Placeholder name */

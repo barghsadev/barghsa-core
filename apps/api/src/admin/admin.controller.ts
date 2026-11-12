@@ -61,6 +61,61 @@ import {
   STAFF_ASSIGNMENT_MAX_FALLBACKS,
 } from '@barghsa/shared/admin';
 
+const STAFF_CONTENT_MAX_LENGTH = 65_536;
+const TEMPLATE_MAX_VARIABLES = 100;
+const TEMPLATE_VARIABLE_MAX_LENGTH = 100;
+const TEMPLATE_SAMPLE_MAX_LENGTH = 4_096;
+const termsContent = z
+  .string()
+  .min(1)
+  .max(STAFF_CONTENT_MAX_LENGTH)
+  .refine((value) => !!value.trim());
+const templateBody = z.string().min(1).max(STAFF_CONTENT_MAX_LENGTH);
+const templateVariableName = z.string().min(1).max(TEMPLATE_VARIABLE_MAX_LENGTH);
+const templateVariables = z
+  .array(
+    z.union([
+      templateVariableName,
+      z.strictObject({
+        name: templateVariableName,
+        description: z.string().max(500).nullable().optional(),
+      }),
+    ])
+  )
+  .max(TEMPLATE_MAX_VARIABLES);
+const templateVariablesOpenApi = {
+  type: 'array' as const,
+  maxItems: TEMPLATE_MAX_VARIABLES,
+  items: {
+    oneOf: [
+      {
+        type: 'string' as const,
+        maxLength: TEMPLATE_VARIABLE_MAX_LENGTH,
+        description: 'Variable name (legacy string form)',
+      },
+      {
+        type: 'object' as const,
+        additionalProperties: false,
+        properties: {
+          name: {
+            type: 'string' as const,
+            maxLength: TEMPLATE_VARIABLE_MAX_LENGTH,
+            description: 'Placeholder name',
+          },
+          description: {
+            type: 'string' as const,
+            maxLength: 500,
+            nullable: true,
+            description: 'Human-readable description',
+          },
+        },
+        required: ['name'],
+      },
+    ],
+  },
+  description: 'Allow-listed variable names (+ optional descriptions)',
+};
+
 const assignmentChoiceProperties = {
   teamId: { type: 'string' as const, format: 'uuid' },
   strategy: { type: 'string' as const, enum: [...STAFF_ASSIGNMENT_STRATEGIES] },
@@ -1250,8 +1305,16 @@ export class AdminController {
       additionalProperties: false,
       properties: {
         versionId: { type: 'string', description: 'Human-readable version ID, e.g. "v2"' },
-        contentFa: { type: 'string', description: 'Persian TOS content (Markdown)' },
-        contentEn: { type: 'string', description: 'English TOS content (Markdown)' },
+        contentFa: {
+          type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
+          description: 'Persian TOS content (Markdown)',
+        },
+        contentEn: {
+          type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
+          description: 'English TOS content (Markdown)',
+        },
       },
     },
   })
@@ -1275,14 +1338,8 @@ export class AdminController {
         .min(1)
         .max(50)
         .refine((value) => !!value.trim()),
-      contentFa: z
-        .string()
-        .min(1)
-        .refine((value) => !!value.trim()),
-      contentEn: z
-        .string()
-        .min(1)
-        .refine((value) => !!value.trim()),
+      contentFa: termsContent,
+      contentEn: termsContent,
     });
 
     const parsed = schema.safeParse(rawBody);
@@ -1313,8 +1370,16 @@ export class AdminController {
       properties: {
         expectedRevision: { type: 'string', pattern: '^[a-f0-9]{64}$' },
         versionId: { type: 'string', description: 'Human-readable version ID' },
-        contentFa: { type: 'string', description: 'Persian TOS content (Markdown)' },
-        contentEn: { type: 'string', description: 'English TOS content (Markdown)' },
+        contentFa: {
+          type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
+          description: 'Persian TOS content (Markdown)',
+        },
+        contentEn: {
+          type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
+          description: 'English TOS content (Markdown)',
+        },
       },
     },
   })
@@ -1342,16 +1407,8 @@ export class AdminController {
         .max(50)
         .refine((value) => !!value.trim())
         .optional(),
-      contentFa: z
-        .string()
-        .min(1)
-        .refine((value) => !!value.trim())
-        .optional(),
-      contentEn: z
-        .string()
-        .min(1)
-        .refine((value) => !!value.trim())
-        .optional(),
+      contentFa: termsContent.optional(),
+      contentEn: termsContent.optional(),
     });
 
     const parsed = schema.safeParse(rawBody);
@@ -1584,7 +1641,8 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['eventKey', 'channel', 'locale', 'bodyTemplate', 'variables'],
+      required: ['eventKey', 'channel', 'locale', 'bodyTemplate'],
+      additionalProperties: false,
       properties: {
         eventKey: { type: 'string', description: 'Event key, e.g. "profile_verified"' },
         channel: { type: 'string', enum: ['email', 'sms', 'in_app'] },
@@ -1592,29 +1650,10 @@ export class AdminController {
         subject: { type: 'string', description: 'Email subject (email channel only)' },
         bodyTemplate: {
           type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
           description: 'Template body with {{variable}} placeholders',
         },
-        variables: {
-          type: 'array',
-          items: {
-            oneOf: [
-              { type: 'string', description: 'Variable name (legacy string form)' },
-              {
-                type: 'object',
-                properties: {
-                  name: { type: 'string', description: 'Placeholder name' },
-                  description: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'Human-readable description',
-                  },
-                },
-                required: ['name'],
-              },
-            ],
-          },
-          description: 'Allow-listed variable names (+ optional descriptions)',
-        },
+        variables: templateVariablesOpenApi,
       },
     },
   })
@@ -1630,23 +1669,13 @@ export class AdminController {
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
 
-    const schema = z.object({
+    const schema = z.strictObject({
       eventKey: z.string().min(1).max(100),
       channel: z.enum(['email', 'sms', 'in_app']),
       locale: z.enum(['fa', 'en']),
       subject: z.string().max(200).nullable().optional(),
-      bodyTemplate: z.string().min(1),
-      variables: z
-        .array(
-          z.union([
-            z.string().min(1),
-            z.object({
-              name: z.string().min(1).max(100),
-              description: z.string().max(500).nullable().optional(),
-            }),
-          ])
-        )
-        .default([]),
+      bodyTemplate: templateBody,
+      variables: templateVariables.default([]),
     });
 
     const parsed = schema.safeParse(rawBody);
@@ -1691,30 +1720,15 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
+      additionalProperties: false,
       properties: {
         subject: { type: 'string', description: 'Email subject' },
-        bodyTemplate: { type: 'string', description: 'Template body' },
-        variables: {
-          type: 'array',
-          items: {
-            oneOf: [
-              { type: 'string', description: 'Variable name (legacy string form)' },
-              {
-                type: 'object',
-                properties: {
-                  name: { type: 'string', description: 'Placeholder name' },
-                  description: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'Human-readable description',
-                  },
-                },
-                required: ['name'],
-              },
-            ],
-          },
-          description: 'Allow-listed variable names (+ optional descriptions)',
+        bodyTemplate: {
+          type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
+          description: 'Template body',
         },
+        variables: templateVariablesOpenApi,
       },
     },
   })
@@ -1728,20 +1742,10 @@ export class AdminController {
   ): Promise<NotificationTemplateResult> {
     this.assertNotificationPermission(req);
 
-    const schema = z.object({
+    const schema = z.strictObject({
       subject: z.string().max(200).nullable().optional(),
-      bodyTemplate: z.string().min(1).optional(),
-      variables: z
-        .array(
-          z.union([
-            z.string().min(1),
-            z.object({
-              name: z.string().min(1).max(100),
-              description: z.string().max(500).nullable().optional(),
-            }),
-          ])
-        )
-        .optional(),
+      bodyTemplate: templateBody.optional(),
+      variables: templateVariables.optional(),
     });
 
     const parsed = schema.safeParse(rawBody);
@@ -1869,7 +1873,8 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
-      required: ['bodyTemplate', 'variables'],
+      required: ['bodyTemplate'],
+      additionalProperties: false,
       properties: {
         channel: {
           type: 'string',
@@ -1884,31 +1889,14 @@ export class AdminController {
         },
         bodyTemplate: {
           type: 'string',
+          maxLength: STAFF_CONTENT_MAX_LENGTH,
           description: 'Template body with {{variable}} placeholders',
         },
-        variables: {
-          type: 'array',
-          items: {
-            oneOf: [
-              { type: 'string', description: 'Variable name (legacy string form)' },
-              {
-                type: 'object',
-                properties: {
-                  name: { type: 'string', description: 'Placeholder name' },
-                  description: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'Human-readable description',
-                  },
-                },
-                required: ['name'],
-              },
-            ],
-          },
-          description: 'Allow-listed variable names (+ optional descriptions)',
-        },
+        variables: templateVariablesOpenApi,
         sampleData: {
           type: 'object',
+          maxProperties: TEMPLATE_MAX_VARIABLES,
+          additionalProperties: { type: 'string', maxLength: TEMPLATE_SAMPLE_MAX_LENGTH },
           description: 'Optional sample values keyed by variable name',
         },
       },
@@ -1923,22 +1911,15 @@ export class AdminController {
   ): Promise<RenderedTemplate> {
     this.assertNotificationPermission(req);
 
-    const schema = z.object({
+    const schema = z.strictObject({
       channel: z.enum(['email', 'sms', 'in_app']).optional(),
       locale: z.enum(['fa', 'en']).optional(),
-      bodyTemplate: z.string().min(1),
-      variables: z
-        .array(
-          z.union([
-            z.string().min(1),
-            z.object({
-              name: z.string().min(1).max(100),
-              description: z.string().max(500).nullable().optional(),
-            }),
-          ])
-        )
-        .default([]),
-      sampleData: z.record(z.string(), z.string()).optional(),
+      bodyTemplate: templateBody,
+      variables: templateVariables.default([]),
+      sampleData: z
+        .record(templateVariableName, z.string().max(TEMPLATE_SAMPLE_MAX_LENGTH))
+        .refine((values) => Object.keys(values).length <= TEMPLATE_MAX_VARIABLES)
+        .optional(),
     });
 
     const parsed = schema.safeParse(rawBody);
@@ -1980,6 +1961,7 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
+      additionalProperties: false,
       properties: {
         destination: {
           type: 'string',
@@ -2007,10 +1989,10 @@ export class AdminController {
     this.assertNotificationPermission(req);
 
     const parsed = z
-      .object({
+      .strictObject({
         destination: z.string().trim().max(320).optional(),
       })
-      .safeParse(rawBody ?? {});
+      .safeParse(rawBody === undefined ? {} : rawBody);
     if (!parsed.success) {
       throw new HttpException(
         { statusCode: 400, error: ErrorCodes.VALIDATION_INPUT_INVALID.code },

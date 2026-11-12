@@ -108,6 +108,29 @@ it('rejects unknown fields before creating, editing or publishing terms', async 
   ).toEqual([{ action: 'create' }]);
 });
 
+it('bounds each submitted terms locale without mutating a rejected draft', async () => {
+  const limit = 65_536;
+  const oversized = 'x'.repeat(limit + 1);
+  const created = await request('', 'POST', { ...draft, contentFa: oversized });
+  expect(created.status).toBe(400);
+  expect(await created.json()).toMatchObject({ error: { fields: ['contentFa'] } });
+  expect((await http.pool.query('SELECT id FROM tos_versions')).rows).toHaveLength(0);
+
+  const accepted = await request('', 'POST', { ...draft, contentEn: 'a'.repeat(limit) });
+  expect(accepted.status).toBe(201);
+  const { id } = (await accepted.json()) as { id: string };
+  const before = (await http.pool.query('SELECT * FROM tos_versions WHERE id=$1', [id])).rows;
+  const rejected = await request(`/${id}`, 'PUT', { contentEn: oversized });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.json()).toMatchObject({ error: { fields: ['contentEn'] } });
+  expect((await http.pool.query('SELECT * FROM tos_versions WHERE id=$1', [id])).rows).toEqual(
+    before
+  );
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='tos_updated'")).rows
+  ).toHaveLength(1);
+});
+
 it('paginates only published terms metadata anonymously without recording acceptance', async () => {
   const published: string[] = [];
   for (let index = 0; index < 22; index++) {
