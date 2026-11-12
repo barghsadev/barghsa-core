@@ -4,7 +4,7 @@ ALTER TABLE "notification_outbox" ALTER COLUMN "trace_parent" SET DEFAULT nullif
 ALTER TABLE "notification_outbox" ADD CONSTRAINT "notification_outbox_trace_parent_valid" CHECK (
       "notification_outbox"."trace_parent" ~ '^00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]$'
       AND substring("notification_outbox"."trace_parent", 4, 32) <> repeat('0', 32)
-      AND substring("notification_outbox"."trace_parent", 37, 16) <> repeat('0', 16)) NOT VALID;--> statement-breakpoint
+      AND substring("notification_outbox"."trace_parent", 37, 16) <> repeat('0', 16));--> statement-breakpoint
 CREATE FUNCTION preserve_notification_trace_parent() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   IF NEW.trace_parent IS DISTINCT FROM OLD.trace_parent THEN

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T09:12:40+00:00",
+  "updated": "2026-11-12T09:24:15+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -611458,7 +611458,8 @@
           "pnpm-lock.yaml"
         ],
         "batches": [
-          "release-0.6-notification-outbox-tracing"
+          "release-0.6-notification-outbox-tracing",
+          "release-0.6-validated-outbox-trace-constraint"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -611509,7 +611510,7 @@
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
-              "sha256": "008a054ca809018294a0669c01d6f8be4c5615b0bf39c2908dc81b2419f4773f"
+              "sha256": "3fa262afcc6514a18cfefbf54329ab6b081c1aee70103b2c3f0024d387015487"
             },
             {
               "path": "packages/db/drizzle/production/meta/0291_snapshot.json",
@@ -611566,6 +611567,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The password-change service and account outbox insert add optional spans with fixed labels. The existing transaction, token, privacy and delivery checks exercise the same business operations and error paths."
+            },
+            {
+              "batch": "release-0.6-validated-outbox-trace-constraint",
+              "base_commit": "91fb041e26ca0828d8f198986fa16dada3e59b14",
+              "paths": [
+                "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
+              ],
+              "scope": "Validate the new trace-parent constraint during the unpublished additive migration so PostgreSQL matches the production schema snapshot. Existing NULL rows, insert validation, immutable trace metadata and worker behavior passed."
             }
           ]
         }
@@ -611786,7 +611795,8 @@
           "pnpm-lock.yaml"
         ],
         "batches": [
-          "release-0.6-notification-outbox-tracing"
+          "release-0.6-notification-outbox-tracing",
+          "release-0.6-validated-outbox-trace-constraint"
         ],
         "current_acceptance": {
           "batch": "release-0.6-notification-outbox-tracing",
@@ -611837,7 +611847,7 @@
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
-              "sha256": "008a054ca809018294a0669c01d6f8be4c5615b0bf39c2908dc81b2419f4773f"
+              "sha256": "3fa262afcc6514a18cfefbf54329ab6b081c1aee70103b2c3f0024d387015487"
             },
             {
               "path": "packages/db/drizzle/production/meta/0291_snapshot.json",
@@ -611894,6 +611904,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "The password-change service and account outbox insert add optional spans with fixed labels. The existing transaction, token, privacy and delivery checks exercise the same business operations and error paths."
+            },
+            {
+              "batch": "release-0.6-validated-outbox-trace-constraint",
+              "base_commit": "91fb041e26ca0828d8f198986fa16dada3e59b14",
+              "paths": [
+                "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
+              ],
+              "scope": "Validate the new trace-parent constraint during the unpublished additive migration so PostgreSQL matches the production schema snapshot. Existing NULL rows, insert validation, immutable trace metadata and worker behavior passed."
             }
           ]
         }
@@ -622783,7 +622801,8 @@
         ],
         "batches": [
           "release-0.6-notification-outbox-tracing",
-          "release-0.6-domain-postgresql-tracing"
+          "release-0.6-domain-postgresql-tracing",
+          "release-0.6-validated-outbox-trace-constraint"
         ],
         "current_acceptance": null
       }
@@ -943630,7 +943649,8 @@
           "release-0.6-structured-log-fixtures",
           "release-0.6-portable-staging-images",
           "release-0.6-otlp-connection-deadline",
-          "release-0.6-reuse-affected-preflight"
+          "release-0.6-reuse-affected-preflight",
+          "release-0.6-validated-outbox-trace-constraint"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -943851,7 +943871,8 @@
           "apps/api/src/metrics/database-telemetry.ts",
           "docs/operations/postgresql-monitoring.md",
           "scripts/ci_preflight_receipt.py",
-          "scripts/test_ci_preflight_receipt.py"
+          "scripts/test_ci_preflight_receipt.py",
+          "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
         ]
       }
     },
@@ -1087328,6 +1087349,68 @@
         {
           "file": "run-native.sh",
           "sha256": "e6cfffc9d6a1239bc16907aa313de84856ed3671ac5dc613b00fbcaf08723688"
+        }
+      ]
+    },
+    "release-0.6-validated-outbox-trace-constraint": {
+      "batch": "release-0.6-validated-outbox-trace-constraint",
+      "base_commit": "91fb041e26ca0828d8f198986fa16dada3e59b14",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.16.01.05",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
+          "sha256": "3fa262afcc6514a18cfefbf54329ab6b081c1aee70103b2c3f0024d387015487"
+        }
+      ],
+      "checks": [
+        "GitHub preflight 43188369615 failed its live PostgreSQL snapshot comparison because the outbox trace constraint was NOT VALID. The migration now validates the constraint during the additive change. No snapshot assertions or trace-format restrictions changed.",
+        "Staging had 71 outbox rows and no trace_parent column. Its journal had not applied 0291, and the migration had not reached remote main. The legacy outbox insert and exact 0290-to-0291 upgrade preserve old rows and prove replay and immutability.",
+        "185 database snapshot and outbox migration tests and the compiled HTTP-to-worker trace test passed against PostgreSQL 17.9. The generated snapshot guard made no changes."
+      ],
+      "limitations": [
+        "The failed GitHub run cannot publish its SHA. The corrected candidate requires its own required GitHub check. The schema was not changed on staging."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-trace-migration-validation",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "3f6e17228f17259098797c5a92eeda247b5efa03afad29a25dd543f4308e327c"
+        },
+        {
+          "file": "db-postgres.log",
+          "sha256": "26dc66bc83e70657127746a4909b29903bef1e7bc71bee228a73b9ac0318e0e3"
+        },
+        {
+          "file": "api-postgres.log",
+          "sha256": "9b960cba6e95d1315f7c55d37a372c9fecf18302c0120dbe08c497cd3383108f"
+        },
+        {
+          "file": "snapshot-guard.log",
+          "sha256": "5cc09b7dad4b65bd3c69b322b9d61309369c0dd1c1c3e2c4c43070256a04347a"
+        },
+        {
+          "file": "ci-43188369615-schema-failure.log",
+          "sha256": "9ecb240b1946e101d54eef2c0ea642f6e62c7827a094c753282c60dcc589a1b0"
+        },
+        {
+          "file": "staging-journal-before-release.tsv",
+          "sha256": "64398777958d92348b2aaef9aecd2ad055f2d4df551d88a90b98ed5f63114702"
+        },
+        {
+          "file": "run-db.sh",
+          "sha256": "38159cda42ba30a58068051b924c5ff70c17b20a5f3be18c59b5cd0ea2b73078"
+        },
+        {
+          "file": "run-api.sh",
+          "sha256": "ba927bdbd4418dec53dccea0e01c502e1748ed736317e6cf05f1128d2983091a"
         }
       ]
     }
