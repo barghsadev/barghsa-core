@@ -8,7 +8,6 @@ import json
 import os
 from pathlib import Path
 import platform
-import secrets
 import subprocess
 import tarfile
 import tempfile
@@ -74,8 +73,8 @@ def self_test(binary: Path, folder: Path, ignore: Path) -> None:
         ["config", "user.email", "scanner@example.test"],
     ]:
         subprocess.run(["git", "-C", str(repository), *command], env=env, check=True)
-    # A generated, nonfunctional value proves detection without using any real credential.
-    token = secrets.token_hex(32)
+    # This nonfunctional fixture consistently meets the pinned generic-key entropy threshold.
+    token = hashlib.sha256(b"Barghsa Gitleaks self-test fixture").hexdigest()
     (repository / "fixture.env").write_text(f'api_key = "{token}"\n')
     subprocess.run(["git", "-C", str(repository), "add", "fixture.env"], env=env, check=True)
     subprocess.run(
@@ -85,9 +84,15 @@ def self_test(binary: Path, folder: Path, ignore: Path) -> None:
     report = folder / "fixture.json"
     if scan(binary, repository, report, ignore) != 1:
         raise RuntimeError("Secret scanner did not reject the synthetic credential")
-    findings = json.loads(report.read_text())
-    if not findings or token in report.read_text():
-        raise RuntimeError("Secret scanner report is empty or not redacted")
+    redacted = report.read_text()
+    findings = json.loads(redacted)
+    if not any(
+        finding.get("RuleID") == "generic-api-key" and finding.get("File") == "fixture.env"
+        for finding in findings
+    ):
+        raise RuntimeError("Secret scanner report is missing the synthetic credential finding")
+    if token in redacted:
+        raise RuntimeError("Secret scanner report is not redacted")
     print("Synthetic credential detection and report redaction passed", flush=True)
 
 

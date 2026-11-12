@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T22:00:15+00:00",
+  "updated": "2026-11-12T22:08:52+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -645262,11 +645262,11 @@
             },
             {
               "path": "scripts/check-secrets.py",
-              "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+              "sha256": "0f4443df4aef8f212d549d6cc3c30462e2ceb809ea3b4c65a5bdd5c6930d31d1"
             },
             {
               "path": "scripts/test_check_secrets.py",
-              "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+              "sha256": "97354ea931a07225d9433d41e1bb8892642c3f51af0ca3a41eb4f15ca8a34a85"
             }
           ],
           "checks": [
@@ -645539,6 +645539,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Only the pinned Sonner stylesheet insertion patch changed in dependency metadata. Existing styles, wallet field feedback and payment behavior retain targeted browser and unit proof."
+            },
+            {
+              "batch": "release-0.6-deterministic-secret-scan-fixture",
+              "base_commit": "137264f7418d2ce504a6a8f3f8904d9b60e4b864",
+              "paths": [
+                "scripts/check-secrets.py",
+                "scripts/test_check_secrets.py"
+              ],
+              "scope": "Verified the deterministic synthetic credential and exact redacted finding. The unchanged checksum-pinned scanner covered complete local Git history."
             }
           ]
         }
@@ -645614,11 +645623,11 @@
             },
             {
               "path": "scripts/check-secrets.py",
-              "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+              "sha256": "0f4443df4aef8f212d549d6cc3c30462e2ceb809ea3b4c65a5bdd5c6930d31d1"
             },
             {
               "path": "scripts/test_check_secrets.py",
-              "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+              "sha256": "97354ea931a07225d9433d41e1bb8892642c3f51af0ca3a41eb4f15ca8a34a85"
             }
           ],
           "checks": [
@@ -645822,6 +645831,15 @@
                 ".gitleaksignore"
               ],
               "scope": "Recomputed three exact historical source digests. The pinned scanner detected and redacted its synthetic credential and the complete local scan passed."
+            },
+            {
+              "batch": "release-0.6-deterministic-secret-scan-fixture",
+              "base_commit": "137264f7418d2ce504a6a8f3f8904d9b60e4b864",
+              "paths": [
+                "scripts/check-secrets.py",
+                "scripts/test_check_secrets.py"
+              ],
+              "scope": "Verified the deterministic synthetic credential and exact redacted finding. The unchanged checksum-pinned scanner covered complete local Git history."
             }
           ]
         },
@@ -646766,11 +646784,11 @@
             },
             {
               "path": "scripts/check-secrets.py",
-              "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+              "sha256": "0f4443df4aef8f212d549d6cc3c30462e2ceb809ea3b4c65a5bdd5c6930d31d1"
             },
             {
               "path": "scripts/test_check_secrets.py",
-              "sha256": "340475480e6455a18f7731f34b2e298e37f2259dbc97234353a0f9ad931a16fe"
+              "sha256": "97354ea931a07225d9433d41e1bb8892642c3f51af0ca3a41eb4f15ca8a34a85"
             }
           ],
           "checks": [
@@ -646974,6 +646992,15 @@
                 ".gitleaksignore"
               ],
               "scope": "Recomputed three exact historical source digests. The pinned scanner detected and redacted its synthetic credential and the complete local scan passed."
+            },
+            {
+              "batch": "release-0.6-deterministic-secret-scan-fixture",
+              "base_commit": "137264f7418d2ce504a6a8f3f8904d9b60e4b864",
+              "paths": [
+                "scripts/check-secrets.py",
+                "scripts/test_check_secrets.py"
+              ],
+              "scope": "Verified the deterministic synthetic credential and exact redacted finding. The unchanged checksum-pinned scanner covered complete local Git history."
             }
           ]
         },
@@ -651126,12 +651153,10 @@
         "story": "06-security-testing-observability.md#spec-dd69de0e23f0"
       },
       "requirement": "| T-06.09.01.04 | Add `vitest --related` for affected-only test runs in CI | S |",
-      "status": "partial",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "GitHub test-only preflight 43293337565 at ec43d7b4 exercised the current related selector and passed four cases in the single selected web test file. Its exact affected-test receipt binds the comparison to 26242fb58. The required aggregate failed at the separate Ubuntu PostgreSQL image build before scanning. Verify the protected successor and preserve the independent full release coverage requirement."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -651147,9 +651172,52 @@
           "release-0.6-prebuilt-ci-test-selection",
           "release-0.6-related-test-selection",
           "release-0.6-gate-readback",
-          "release-0.6-postgres-package-alignment"
+          "release-0.6-postgres-package-alignment",
+          "release-0.6-related-test-selector-acceptance"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "kind": "source_bound_acceptance",
+          "reviewed_sha": "ec43d7b45c9807cbc6b9838f48987803b9d57bc3",
+          "source_evidence": [
+            {
+              "path": ".github/workflows/ci.yml",
+              "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+            },
+            {
+              "path": "apps/web/src/lib/shell-navigation.test.ts",
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
+            },
+            {
+              "path": "apps/web/vitest.config.ts",
+              "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+            },
+            {
+              "path": "docs/development/ci.md",
+              "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+            },
+            {
+              "path": "scripts/ci_preflight_receipt.py",
+              "sha256": "7c980c777ce1dc0c0ec4a90b6771e18f7e23a5c7f90f2ce7d8bedb95d451d12f"
+            },
+            {
+              "path": "scripts/run-fast-tests.mjs",
+              "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+            },
+            {
+              "path": "scripts/run-fast-tests.test.mjs",
+              "sha256": "8ae6f919da5f9f962f5a603f84846949c3a0ce16b979b4efa7bf95b1909bc980"
+            },
+            {
+              "path": "scripts/test_ci_preflight_receipt.py",
+              "sha256": "2ab6ea602ce7c1a6d0c106c7bf1c9527b079f7b6373b59b5e59b588c4a439005"
+            }
+          ],
+          "checks": [
+            "Test-only hosted preflight 43293337565 selected only the changed web Vitest file and passed four cases. The affected-test receipt bound the candidate and exact base. The separate runtime image job failed on that run.",
+            "Protected main run 43310340984 passed the required aggregate and reused exact affected-test evidence. The selector, workflow and receipt handling match their hosted sources. Four selector and seven receipt checks passed locally.",
+            "Runtime, fixture and configuration changes retain affected-workspace execution. Full release coverage remains a separate gate."
+          ]
+        }
       }
     },
     {
@@ -665065,7 +665133,8 @@
           "release-0.6-reuse-affected-preflight",
           "release-0.6-protected-main-test-reuse",
           "release-0.6-protected-main-complete",
-          "release-0.6-main-integrity-5aa2db96"
+          "release-0.6-main-integrity-5aa2db96",
+          "release-0.6-deterministic-secret-scan-fixture"
         ],
         "current_acceptance": null
       }
@@ -1024061,7 +1024130,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated 9545cd2c candidate pair applied 0289–0294 and passed HTTP/database readiness. The previous app rejected 0294 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
-        "Preflight 43306013887 and protected main run 43310340984 passed Verify monorepo integrity at 5aa2db96. Successor preflight 43310381340 and strict release coverage, image-license and live gates remain open."
+        "Preflight 43310381340 passed Verify monorepo integrity and 44b94a3e reached protected main. Main run 43315917435 stopped its secret job at the random fixture self-test before scanning history. The deterministic fixture passed with the pinned Linux and macOS scanners. The exact successor and strict release gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1024344,7 +1024413,8 @@
           "release-0.6-staging-paired-restore-rehearsal",
           "release-0.6-protected-main-test-reuse",
           "release-0.6-protected-main-complete",
-          "release-0.6-main-integrity-5aa2db96"
+          "release-0.6-main-integrity-5aa2db96",
+          "release-0.6-deterministic-secret-scan-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1187449,6 +1187519,154 @@
         {
           "file": "build-readback.log",
           "sha256": "efa9f95163287f828f9467d67061f0945006af870e6303c44b3781a5694ffd77"
+        }
+      ]
+    },
+    "release-0.6-deterministic-secret-scan-fixture": {
+      "batch": "release-0.6-deterministic-secret-scan-fixture",
+      "base_commit": "137264f7418d2ce504a6a8f3f8904d9b60e4b864",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "scripts/check-secrets.py",
+        "scripts/test_check_secrets.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": ".gitleaksignore",
+          "sha256": "ed77d24c0ff53ce3e10e30ea001dc062ea8606f0c4ed49a517958667c66187a8"
+        },
+        {
+          "path": "scripts/check-secrets.py",
+          "sha256": "0f4443df4aef8f212d549d6cc3c30462e2ceb809ea3b4c65a5bdd5c6930d31d1"
+        },
+        {
+          "path": "scripts/test_check_secrets.py",
+          "sha256": "97354ea931a07225d9433d41e1bb8892642c3f51af0ca3a41eb4f15ca8a34a85"
+        }
+      ],
+      "checks": [
+        "Hosted protected-main job 131523764031 detected no finding in its randomly generated synthetic Git commit and stopped before repository scanning. The same published SHA had passed its required preflight 43310381340.",
+        "The deterministic fixture consistently meets the pinned generic-key entropy rule. The self-test requires a redacted finding for the expected rule and exact fixture file.",
+        "Six scanner unit checks passed. Pinned Linux x86_64 and macOS binaries detected the actual fixture. The redacted scan of complete local Git history returned an empty findings report."
+      ],
+      "limitations": [
+        "The updated self-test still needs exact hosted acceptance. This batch does not attest the strict release coverage, licenses or live operational gates."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-secret-scan-readback",
+      "execution_receipts": [
+        {
+          "file": "main-43315917435.json",
+          "sha256": "91e2b2b3af8c0038cde6e03c233a00616fbc5e82d9b51cb54d821c7c5a94ab3a"
+        },
+        {
+          "file": "main-secret-scan-43315917435.log",
+          "sha256": "b5be7685541af139fe182ec85b2a08de3924ec222494827b10d95c1815a67f4e"
+        },
+        {
+          "file": "protected-preflight-43310381340.json",
+          "sha256": "03a4a0ee39ccc771ab5205c5439a625c0e50220c4a2cd1a1335f91fce5cc4f28"
+        },
+        {
+          "file": "secret-tests.log",
+          "sha256": "9aac21dda751119f24bfc068e405c14b317e6b560f4f48a1d6de8e0b0bfe0c05"
+        },
+        {
+          "file": "linux-fixture.log",
+          "sha256": "87c0734101fa2ef307cfe79467727f3b1b9f9b0afa9c2550f73ae2cbe0d0f179"
+        },
+        {
+          "file": "full-history.log",
+          "sha256": "1d0b8c30bb5aa314c94b000d74b54519b2eaa306b8a30f0c8934e9134e6344e1"
+        },
+        {
+          "file": "full-history-redacted.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ]
+    },
+    "release-0.6-related-test-selector-acceptance": {
+      "batch": "release-0.6-related-test-selector-acceptance",
+      "base_commit": "ec43d7b45c9807cbc6b9838f48987803b9d57bc3",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.01.04"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "apps/web/src/lib/shell-navigation.test.ts",
+          "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
+        },
+        {
+          "path": "apps/web/vitest.config.ts",
+          "sha256": "1504b02f0222841aef059c7d58f0e6cef786f3f7430b183b80c3f66ccabe6687"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "6f3c8084526a0c5b3b2ba7590b5e9501931c5f11299b68a9ce330bb3172f698e"
+        },
+        {
+          "path": "scripts/ci_preflight_receipt.py",
+          "sha256": "7c980c777ce1dc0c0ec4a90b6771e18f7e23a5c7f90f2ce7d8bedb95d451d12f"
+        },
+        {
+          "path": "scripts/run-fast-tests.mjs",
+          "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+        },
+        {
+          "path": "scripts/run-fast-tests.test.mjs",
+          "sha256": "8ae6f919da5f9f962f5a603f84846949c3a0ce16b979b4efa7bf95b1909bc980"
+        },
+        {
+          "path": "scripts/test_ci_preflight_receipt.py",
+          "sha256": "2ab6ea602ce7c1a6d0c106c7bf1c9527b079f7b6373b59b5e59b588c4a439005"
+        }
+      ],
+      "checks": [
+        "Hosted run 43293337565 proved exact test-only selection and a passing case for the changed Vitest file. Protected main run 43310340984 proved exact affected-test reuse and passed the aggregate.",
+        "The selector and its supporting workflow match the current source. Four selector and seven receipt checks passed."
+      ],
+      "limitations": [
+        "The related-only execution proof is scoped to test changes. It does not certify other jobs in that historical run or replace full release coverage."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-secret-scan-readback",
+      "execution_receipts": [
+        {
+          "file": "related-hosted-status.json",
+          "sha256": "375344e5467ac2ad731202906e5aa7597974665c211cb08012322b6b035a7940"
+        },
+        {
+          "file": "affected-test-receipt.json",
+          "sha256": "8e2fdd7472325f7298ca3c15c87eed48c0fde21f310435bdf95770910aed75ef"
+        },
+        {
+          "file": "related-hosted-selection.log",
+          "sha256": "49d4fae17168bbfd3e6d2c65702dbfb37f94956db09f6e9bdab3b9a165f596f7"
+        },
+        {
+          "file": "protected-main-passing-43310340984.json",
+          "sha256": "d56705b9b67a408b5e5d47d3704cf32f354227b88167405353bf5da5ce4c3d42"
+        },
+        {
+          "file": "affected-selector-tests.log",
+          "sha256": "be4abca6c024d554e6f9cce19ff76cdd2b0e1b0aba97dbb4b9bf28ebcb055f25"
+        },
+        {
+          "file": "affected-receipt-tests.log",
+          "sha256": "86c967a00f06ad033ecab8fdfd48f0dfe4f7c54ecd2a5af426df39e10af79aa8"
         }
       ]
     }

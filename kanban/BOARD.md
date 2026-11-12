@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T22:00:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T22:08:52+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.1**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1251 | Accepted with unchanged source bindings. |
+| done | 1252 | Accepted with unchanged source bindings. |
 | verify | 3 | Existing work may be complete; inspect evidence before building. |
-| partial | 107 | An earlier review found unmet criteria; reconcile later fixes. |
+| partial | 106 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1263,7 +1263,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.01.01` | done | Recorded batch work | Configure Vitest across all packages with shared config, coverage thresholds, and reporter |
 | `06-security-testing-observability.md#T-06.09.01.02` | done | Recorded batch work | Implement test utilities: controllable clock, fixed UUIDs, deterministic random, fake provider factories |
 | `06-security-testing-observability.md#T-06.09.01.03` | done | Recorded batch work | Implement table-driven test helper for financial examples (inputs → expected outputs) |
-| `06-security-testing-observability.md#T-06.09.01.04` | partial | Recorded batch work | Add `vitest --related` for affected-only test runs in CI |
+| `06-security-testing-observability.md#T-06.09.01.04` | done | Recorded batch work | Add `vitest --related` for affected-only test runs in CI |
 | `06-security-testing-observability.md#T-06.09.02.01` | done | Recorded batch work | Author unit tests for all state machines: Orders, Contracts, Invoices, Payments, Refunds, Documents, Wallet transactions, Invitations, Verification cases |
 | `06-security-testing-observability.md#T-06.09.02.02` | done | Recorded batch work | Author unit tests for pricing engine: VAT calculation, discounts, rounding (half-up to IRR), electricity composition rules, Jalali period calculations |
 | `06-security-testing-observability.md#T-06.09.02.03` | done | Recorded batch work | Author unit tests for authorization policy: role permissions, capability checks, profile-scoped access, BOLA denial |

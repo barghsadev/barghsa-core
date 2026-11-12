@@ -1,6 +1,7 @@
 import hashlib
 import importlib.util
 import io
+import json
 from pathlib import Path
 import tarfile
 import tempfile
@@ -69,6 +70,29 @@ class SecretScanTests(unittest.TestCase):
         self.assertIn("--log-opts=--all", args)
         self.assertIn("--gitleaks-ignore-path=ignore", args)
         self.assertNotIn("--exit-code=0", args)
+
+    def test_self_test_requires_its_own_redacted_finding(self):
+        expected = {"RuleID": "generic-api-key", "File": "fixture.env", "Secret": "REDACTED"}
+        for finding, expose_fixture, failure in [
+            (expected, False, None),
+            ({**expected, "File": "different.env"}, False, "missing the synthetic credential"),
+            (expected, True, "not redacted"),
+        ]:
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as directory:
+                folder = Path(directory)
+
+                def scan(_binary, repository, report, _ignore):
+                    fixture = (repository / "fixture.env").read_text().split('"')[1]
+                    result = {**finding, **({"Secret": fixture} if expose_fixture else {})}
+                    report.write_text(json.dumps([result]))
+                    return 1
+
+                with patch.object(scanner, "scan", side_effect=scan):
+                    if failure:
+                        with self.assertRaisesRegex(RuntimeError, failure):
+                            scanner.self_test(Path("binary"), folder, Path("ignore"))
+                    else:
+                        scanner.self_test(Path("binary"), folder, Path("ignore"))
 
     def test_shallow_history_fails_before_tool_download(self):
         with patch("sys.argv", ["check-secrets.py", "--report", "/tmp/unused-report.json"]), patch.object(
