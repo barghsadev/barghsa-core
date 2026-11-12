@@ -60,6 +60,47 @@ def verify_image_scans(directory, image_ids, includes_stateful):
     return {"directory": str(directory.resolve()), "images": scans}
 
 
+def file_sha256(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def verify_bundle_reports(directory, commit, image_ids):
+    if not isinstance(image_ids, dict) or set(image_ids) != {"app", "web"} or not all(
+        isinstance(value, str) and re.fullmatch(r"sha256:[a-f0-9]{64}", value)
+        for value in image_ids.values()
+    ):
+        raise ValueError("Invalid application image bundle identities")
+    scan_index = verify_image_scans(directory, image_ids, False)["images"]
+    license_bytes = (directory / "release-licenses.json").read_bytes()
+    licenses = json.loads(license_bytes)
+    packages = licenses["packages"]
+    if (licenses["commit"] != commit
+            or any(licenses["images"].get(scope) != identity for scope, identity in image_ids.items())
+            or not {"app", "web", "browser"} <= {row["scope"] for row in packages}
+            or any(row["status"] not in {"allowed", "approved"} for row in packages)):
+        raise ValueError("The image bundle requires passing license evidence for the exact commit and images")
+    return scan_index, hashlib.sha256(license_bytes).hexdigest()
+
+
+def verify_image_bundle(directory, commit, manifest_sha):
+    raw = (directory / "bundle.json").read_bytes()
+    if hashlib.sha256(raw).hexdigest() != manifest_sha:
+        raise ValueError("The selected image bundle manifest changed")
+    manifest = json.loads(raw)
+    if manifest["schema_version"] != 1 or manifest["commit"] != commit:
+        raise ValueError("Image bundle does not match the queued commit")
+    scans, license_sha = verify_bundle_reports(directory, commit, manifest["image_ids"])
+    if scans != manifest["scans"] or license_sha != manifest["license_sha256"]:
+        raise ValueError("Image bundle evidence changed after preparation")
+    if file_sha256(directory / "images.tar.gz") != manifest["archive_sha256"]:
+        raise ValueError("Image bundle archive checksum differs from its manifest")
+    return manifest
+
+
 @contextmanager
 def locked(state, name):
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -98,8 +139,14 @@ def check_release(repo, commit):
     return repo, version
 
 
-def enqueue(repo, state, commit, screenshots):
+def enqueue(repo, state, commit, screenshots, image_bundle=None):
     repo, version = check_release(repo, commit)
+    bundle = None
+    if image_bundle is not None:
+        directory = image_bundle.resolve(strict=True)
+        manifest_sha = file_sha256(directory / "bundle.json")
+        verify_image_bundle(directory, commit, manifest_sha)
+        bundle = {"directory": str(directory), "manifest_sha256": manifest_sha}
     images = {}
     for path in screenshots:
         data = Path(path).read_bytes()
@@ -115,6 +162,8 @@ def enqueue(repo, state, commit, screenshots):
             job = json.loads(path.read_text())
             if images and sorted(images) != job["screenshots"]:
                 raise ValueError("This commit already has an immutable screenshot selection")
+            if bundle is not None and bundle != job.get("image_bundle"):
+                raise ValueError("This commit already has an immutable image bundle selection")
             return job
         if any(job["version"] == version for job in jobs(state)):
             raise ValueError("A different queued commit already uses this release version")
@@ -123,6 +172,8 @@ def enqueue(repo, state, commit, screenshots):
             (directory / name).write_bytes(data)
         job = {"commit": commit, "version": version, "repo": str(repo),
                "created_ns": time.time_ns(), "phase": "queued", "screenshots": sorted(images)}
+        if bundle is not None:
+            job["image_bundle"] = bundle
         save(path, job)
         return job
 
@@ -159,7 +210,10 @@ def deploy(job, state):
     if command(checkout, "git", "status", "--porcelain", capture=True):
         raise ValueError("Release checkout has uncommitted files")
     receipt = directory / "runtime-images.json"
-    command(checkout, "./deploy/staging/deploy.sh", str(receipt))
+    deploy_args = ["./deploy/staging/deploy.sh", str(receipt)]
+    if bundle := job.get("image_bundle"):
+        deploy_args.extend([bundle["directory"], bundle["manifest_sha256"]])
+    command(checkout, *deploy_args)
     # Older immutable releases predate the receipt argument.
     if receipt.exists():
         job["runtime_images"] = json.loads(receipt.read_text())
@@ -243,6 +297,7 @@ def main():
     add.add_argument("--repo", type=Path, default=Path.cwd())
     add.add_argument("--commit", required=True)
     add.add_argument("--screenshot", action="append", default=[])
+    add.add_argument("--image-bundle", type=Path)
     check = actions.add_parser("check-release")
     check.add_argument("--repo", type=Path, default=Path.cwd())
     check.add_argument("--commit", required=True)
@@ -254,6 +309,15 @@ def main():
     verify.add_argument("--scan-dir", required=True, type=Path)
     verify.add_argument("--includes-stateful", action="store_true")
     verify.add_argument("--receipt", type=Path)
+    prepare_bundle = actions.add_parser("prepare-image-bundle")
+    prepare_bundle.add_argument("directory", type=Path)
+    prepare_bundle.add_argument("commit")
+    prepare_bundle.add_argument("app_id")
+    prepare_bundle.add_argument("web_id")
+    verify_bundle = actions.add_parser("verify-image-bundle")
+    verify_bundle.add_argument("directory", type=Path)
+    verify_bundle.add_argument("commit")
+    verify_bundle.add_argument("manifest_sha")
     actions.add_parser("work")
     actions.add_parser("status")
     retry = actions.add_parser("retry")
@@ -268,6 +332,20 @@ def main():
         receipt["image_scans"] = verify_image_scans(args.scan_dir, receipt["image_ids"], args.includes_stateful)
         if args.receipt:
             save(args.receipt, receipt)
+        return 0
+    if args.action == "prepare-image-bundle":
+        if not re.fullmatch(r"[a-f0-9]{40}", args.commit):
+            raise ValueError("Image bundle preparation requires the full source commit")
+        ids = {"app": args.app_id, "web": args.web_id}
+        scans, license_sha = verify_bundle_reports(args.directory, args.commit, ids)
+        save(args.directory / "bundle.json", {
+            "schema_version": 1, "commit": args.commit, "image_ids": ids, "scans": scans,
+            "license_sha256": license_sha, "archive_sha256": file_sha256(args.directory / "images.tar.gz"),
+        })
+        return 0
+    if args.action == "verify-image-bundle":
+        bundle = verify_image_bundle(args.directory, args.commit, args.manifest_sha)
+        print(bundle["image_ids"]["app"], bundle["image_ids"]["web"], bundle["archive_sha256"])
         return 0
     if args.action == "work":
         return work(state)
@@ -284,7 +362,7 @@ def main():
             job.pop("error", None)
             save(state / "jobs" / job["commit"] / "job.json", job)
     else:
-        job = enqueue(args.repo, state, args.commit, args.screenshot)
+        job = enqueue(args.repo, state, args.commit, args.screenshot, args.image_bundle)
     if job["phase"] == "failed":
         raise ValueError("Release failed; inspect its deploy.log before explicit retry")
     pid = start_worker(state) if job["phase"] != "completed" else None
@@ -296,6 +374,6 @@ def main():
 if __name__ == "__main__":
     try:
         sys.exit(main())
-    except (ValueError, OSError, subprocess.CalledProcessError) as error:
+    except (ValueError, KeyError, TypeError, OSError, subprocess.CalledProcessError) as error:
         print(f"Release queue: {error}", file=sys.stderr)
         sys.exit(1)

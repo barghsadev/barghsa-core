@@ -1,0 +1,113 @@
+name: Verify v0.6 staging image bundle fixtures
+on:
+  push:
+    branches: ['codex/verify/v06-portable-staging-images-*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build disposable images and write clearly marked fixture reports
+        shell: bash
+        run: |
+          for scope in app web; do
+            context="$RUNNER_TEMP/fixture-$scope"
+            mkdir -- "$context"
+            printf '%s\n' "$scope disposable fixture" > "$context/payload"
+            printf 'FROM scratch\nLABEL org.opencontainers.image.revision="%s"\nCOPY payload /payload\n' "$GITHUB_SHA" > "$context/Dockerfile"
+            docker build --platform linux/amd64 -t "barghsa-ci-$scope:$GITHUB_SHA" "$context"
+          done
+          python3 - <<'PYTHON'
+          import hashlib, json, os, subprocess
+          from pathlib import Path
+          commit = os.environ["GITHUB_SHA"]
+          scans = Path(os.environ["RUNNER_TEMP"]) / "runtime-image-scan"
+          scans.mkdir()
+          ids = {}
+          for index, scope in enumerate(("app", "web"), 1):
+              image = f"barghsa-ci-{scope}:{commit}"
+              image_id = subprocess.check_output(["docker", "image", "inspect", "--format", "{{.Id}}", image], text=True).strip()
+              ids[scope] = image_id
+              data = json.dumps({"scope": scope, "purpose": "fixture"}).encode()
+              sha = hashlib.sha256(data).hexdigest()
+              for suffix in ("vulnerabilities.json", "sbom.cdx.json"):
+                  (scans / f"{index}-{suffix}").write_bytes(data)
+              (scans / f"{index}-image.json").write_text(json.dumps({
+                  "image_id": image_id, "blocked": False, "report_sha256": sha, "sbom_sha256": sha,
+              }))
+          (scans / "release-licenses.json").write_text(json.dumps({
+              "commit": commit, "images": ids, "scope": "fixture-only",
+              "packages": [{"scope": scope, "status": "allowed"} for scope in ("app", "web", "browser")],
+          }))
+          PYTHON
+      - name: Package verified staging application images
+        shell: bash
+        run: |
+          umask 077
+          bundle="$RUNNER_TEMP/staging-image-bundle"
+          scans="$RUNNER_TEMP/runtime-image-scan"
+          mkdir -- "$bundle"
+          cp "$scans"/{1,2}-{image.json,sbom.cdx.json,vulnerabilities.json} \
+            "$scans/release-licenses.json" "$bundle/"
+          ids=()
+          tags=()
+          for scope in app web; do
+            source="barghsa-ci-$scope:$GITHUB_SHA"
+            id=$(docker image inspect --format '{{if and (eq .Os "linux") (eq .Architecture "amd64")}}{{.Id}}{{end}}' "$source")
+            [[ "$id" =~ ^sha256:[a-f0-9]{64}$ ]]
+            tag="barghsa-$scope:vps-$GITHUB_SHA-${id#sha256:}"
+            docker image tag "$id" "$tag"
+            ids+=("$id")
+            tags+=("$tag")
+          done
+          docker save "${tags[@]}" | gzip -1 > "$bundle/images.tar.gz"
+          python3 deploy/staging/release-queue.py prepare-image-bundle \
+            "$bundle" "$GITHUB_SHA" "${ids[@]}"
+      - name: Exercise the exact checksum-gated loader and read back both runtime IDs
+        shell: bash
+        run: |
+          python3 - <<'PYTHON' | tee "$RUNNER_TEMP/native-bundle-check.json"
+          import hashlib, json, os, subprocess, sys
+          from pathlib import Path
+          commit = os.environ["GITHUB_SHA"]
+          bundle = Path(os.environ["RUNNER_TEMP"]) / "staging-image-bundle"
+          raw = (bundle / "bundle.json").read_bytes()
+          manifest = json.loads(raw)
+          manifest_sha = hashlib.sha256(raw).hexdigest()
+          checked = subprocess.check_output([
+              sys.executable, "deploy/staging/release-queue.py", "verify-image-bundle", str(bundle), commit, manifest_sha,
+          ], text=True).strip().split()
+          tags = {scope: f"barghsa-{scope}:vps-{commit}-{identity.removeprefix('sha256:')}"
+                  for scope, identity in manifest["image_ids"].items()}
+          archive = (bundle / "images.tar.gz").read_bytes()
+          command = Path("deploy/staging/deploy.sh").read_text().split("load_archive=$(cat <<'BASH'\n", 1)[1].split("\nBASH\n", 1)[0]
+          subprocess.run(["docker", "image", "rm", "--force", *manifest["image_ids"].values()], check=True, stdout=sys.stderr)
+          load = ["bash", "-c", command, "--", checked[-1]]
+          rejected = subprocess.run(load, input=archive + b"changed", capture_output=True)
+          assert rejected.returncode != 0
+          for tag in tags.values():
+              assert subprocess.run(["docker", "image", "inspect", tag], capture_output=True).returncode != 0
+          subprocess.run(load, input=archive, check=True, stdout=sys.stderr)
+          for scope, tag in tags.items():
+              image = json.loads(subprocess.check_output(["docker", "image", "inspect", tag]))[0]
+              assert image["Id"] == manifest["image_ids"][scope]
+              assert image["Config"]["Labels"]["org.opencontainers.image.revision"] == commit
+              assert image["Os"] == "linux" and image["Architecture"] == "amd64"
+          print(json.dumps({"scope": "disposable-fixtures", "commit": commit,
+                            "verified_images": manifest["image_ids"], "bad_archive_rejected_before_load": True,
+                            "manifest_sha256": manifest_sha, "archive_sha256": checked[-1]}, indent=2))
+          PYTHON
+      - name: Retain disposable bundle verification
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-image-bundle-fixture
+          path: |
+            ${{ runner.temp }}/native-bundle-check.json
+            ${{ runner.temp }}/staging-image-bundle/
+          if-no-files-found: error
+          retention-days: 14
