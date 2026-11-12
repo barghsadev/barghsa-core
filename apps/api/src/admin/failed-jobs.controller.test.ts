@@ -91,12 +91,15 @@ describe('failed-jobs permission gates (T-09.09.02)', () => {
   it('passes filters to the service for admin', async () => {
     const { controller, service } = makeController();
     await controller.listFailedJobs('dead_letter', 'service_breach_scan', '10', '0', adminReq);
-    expect(service.listFailedJobs).toHaveBeenCalledWith({
-      status: 'dead_letter',
-      jobType: 'service_breach_scan',
-      limit: 10,
-      offset: 0,
-    });
+    expect(service.listFailedJobs).toHaveBeenCalledWith(
+      {
+        status: 'dead_letter',
+        jobType: 'service_breach_scan',
+        limit: 10,
+        offset: 0,
+      },
+      adminReq.session
+    );
   });
 
   it('rejects an invalid limit with 400 before touching the service', async () => {

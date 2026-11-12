@@ -157,7 +157,7 @@ export class FailedJobsController {
       if (parsed.data.limit !== undefined) options.limit = parsed.data.limit;
       if (parsed.data.offset !== undefined) options.offset = parsed.data.offset;
     }
-    return this.failedJobsService.listFailedJobs(options);
+    return this.failedJobsService.listFailedJobs(options, req.session);
   }
 
   @Get(':id')
@@ -168,7 +168,7 @@ export class FailedJobsController {
   @ApiResponse({ status: 404, description: 'Job not found' })
   detail(@Param('id', new ParseUUIDPipe()) id: string, @Req() req: AuthenticatedRequest) {
     this.assertViewPermission(req);
-    return this.failedJobsService.getFailedJob(id);
+    return this.failedJobsService.getFailedJob(id, req.session);
   }
 
   /**

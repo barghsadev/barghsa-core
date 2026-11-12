@@ -1,9 +1,10 @@
 import type { ValidatedSession } from '../session/session.service.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from './staff-mutation-permission.js';
-import { Injectable, Logger, HttpException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, HttpException } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   isBackgroundJobStatus,
@@ -43,6 +44,14 @@ export interface ListFailedJobsOptions {
 const DEFAULT_LIST_LIMIT = 50;
 const MAX_LIST_LIMIT = 200;
 const MAX_BULK_RETRY_IDS = 200;
+type JobActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
+
+async function assertStaffContext(client: PoolClient) {
+  const result = await client.query(
+    "SELECT current_setting('barghsa.actor_context', true) AS context"
+  );
+  if (result.rows[0]?.context !== 'staff') throw new ForbiddenException();
+}
 
 /**
  * Failed-jobs dashboard service (S-09.09, T-09.09.02).
@@ -67,18 +76,19 @@ const MAX_BULK_RETRY_IDS = 200;
 export class FailedJobsService {
   private readonly logger = new Logger(FailedJobsService.name);
 
-  /** Exact saved-state read; the controller enforces current view authority. */
-  async getFailedJob(id: string): Promise<FailedJobDto> {
-    const result = await getDbPool().query(
-      `SELECT bj.*, resolver.username AS resolved_by_username
+  async getFailedJob(id: string, actor: JobActor): Promise<FailedJobDto> {
+    return this.readForStaff(actor, async (client) => {
+      const result = await client.query(
+        `SELECT bj.*, resolver.username AS resolved_by_username
          FROM background_jobs bj
          LEFT JOIN users resolver ON resolver.user_id = bj.resolved_by_id
         WHERE bj.id = $1`,
-      [id]
-    );
-    if (!result.rows[0])
-      throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    return toFailedJobDto(result.rows[0]);
+        [id]
+      );
+      if (!result.rows[0])
+        throw new HttpException({ error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
+      return toFailedJobDto(result.rows[0]);
+    });
   }
 
   /**
@@ -87,7 +97,7 @@ export class FailedJobsService {
    *
    * @throws 400 when an invalid status or jobType filter is supplied.
    */
-  async listFailedJobs(options: ListFailedJobsOptions = {}): Promise<FailedJobDto[]> {
+  async listFailedJobs(options: ListFailedJobsOptions, actor: JobActor): Promise<FailedJobDto[]> {
     const limit = sanitizeLimit(options.limit);
     const offset = sanitizeOffset(options.offset);
     const status = options.status ?? null;
@@ -115,19 +125,39 @@ export class FailedJobsService {
       );
     }
 
-    const pool = getDbPool();
-    const result = await pool.query(
-      `SELECT bj.*, resolver.username AS resolved_by_username
+    return this.readForStaff(actor, async (client) => {
+      const result = await client.query(
+        `SELECT bj.*, resolver.username AS resolved_by_username
          FROM background_jobs bj
          LEFT JOIN users resolver ON resolver.user_id = bj.resolved_by_id
         WHERE ($1::text IS NULL OR bj.status = $1)
           AND ($2::text IS NULL OR bj.job_type = $2)
         ORDER BY bj.first_failed_at DESC, bj.id DESC
         LIMIT $3 OFFSET $4`,
-      [status, jobType, limit, offset]
-    );
+        [status, jobType, limit, offset]
+      );
 
-    return result.rows.map(toFailedJobDto);
+      return result.rows.map(toFailedJobDto);
+    });
+  }
+
+  private async readForStaff<T>(actor: JobActor, read: (client: PoolClient) => Promise<T>) {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(client, actor.userId, 'admin:jobs:view');
+      await requireCurrentSession(client, actor);
+      await assertStaffContext(client);
+      const result = await read(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return result;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
   }
 
   /**
@@ -136,11 +166,7 @@ export class FailedJobsService {
    *
    * @throws 404 when the job does not exist, 409 when it is already resolved.
    */
-  async retryFailedJob(
-    jobId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    ip: string
-  ): Promise<FailedJobDto> {
+  async retryFailedJob(jobId: string, actor: JobActor, ip: string): Promise<FailedJobDto> {
     return (await this.transition([jobId], actor, ip, 'retrying', false))[0]!;
   }
 
@@ -149,11 +175,7 @@ export class FailedJobsService {
    * retryable state are skipped (not an error); a job that does not exist is
    * skipped too. Returns the jobs that were successfully moved to retrying.
    */
-  async retryFailedJobsBulk(
-    ids: string[],
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    ip: string
-  ): Promise<FailedJobDto[]> {
+  async retryFailedJobsBulk(ids: string[], actor: JobActor, ip: string): Promise<FailedJobDto[]> {
     if (!Array.isArray(ids) || ids.length === 0) {
       throw new HttpException(
         {
@@ -185,17 +207,13 @@ export class FailedJobsService {
    *
    * @throws 404 when the job does not exist, 409 when it is already resolved.
    */
-  async resolveFailedJob(
-    jobId: string,
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
-    ip: string
-  ): Promise<FailedJobDto> {
+  async resolveFailedJob(jobId: string, actor: JobActor, ip: string): Promise<FailedJobDto> {
     return (await this.transition([jobId], actor, ip, 'resolved', false))[0]!;
   }
 
   private async transition(
     ids: string[],
-    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    actor: JobActor,
     ip: string,
     toStatus: 'retrying' | 'resolved',
     skipInvalid: boolean
@@ -207,8 +225,9 @@ export class FailedJobsService {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actorUserId, 'admin:jobs:retry');
       await requireSessionStepUp(client, actor);
+      await assertStaffContext(client);
       const found = await client.query(
-        `SELECT * FROM background_jobs WHERE id=ANY($1::uuid[]) ORDER BY id FOR UPDATE`,
+        `SELECT id,job_type,status FROM background_jobs WHERE id=ANY($1::uuid[]) ORDER BY id FOR UPDATE`,
         [ids]
       );
       if (!skipInvalid && !found.rows.length)
@@ -285,6 +304,45 @@ export class FailedJobsService {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────
 
+// Worker producers record aggregate counts for triage. Retained payloads may
+// also contain provider input that does not belong in a staff job receipt.
+const jobCounterKeys = new Set([
+  'aborted',
+  'cancelled',
+  'clean',
+  'completed',
+  'deleted',
+  'delivered',
+  'destroyed',
+  'errors',
+  'expirationScheduled',
+  'failed',
+  'infected',
+  'marked',
+  'planned',
+  'rejected',
+  'reported',
+  'retrying',
+  'scanned',
+  'scheduled',
+  'sent',
+  'walletAlertErrors',
+]);
+
+function jobPayloadSummary(value: unknown): FailedJobDto['payload'] {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return null;
+  return Object.fromEntries(
+    Object.entries(value).filter(([key, entry]) =>
+      key === 'busy'
+        ? typeof entry === 'boolean'
+        : jobCounterKeys.has(key) &&
+          typeof entry === 'number' &&
+          Number.isSafeInteger(entry) &&
+          entry >= 0
+    )
+  );
+}
+
 /** Map a raw pg row to the API DTO. */
 export function toFailedJobDto(row: Record<string, unknown>): FailedJobDto {
   const toIso = (v: unknown): string | null => {
@@ -303,10 +361,7 @@ export function toFailedJobDto(row: Record<string, unknown>): FailedJobDto {
     errorCategory: String(row.error_category),
     attempts: Number(row.attempts) || 0,
     maxAttempts: Number(row.max_attempts) || 0,
-    payload:
-      row.payload === null || row.payload === undefined
-        ? null
-        : (row.payload as Record<string, unknown>),
+    payload: jobPayloadSummary(row.payload),
     firstFailedAt: toIso(row.first_failed_at) ?? toIso(row.created_at) ?? '',
     lastRunAt: toIso(row.last_run_at) ?? '',
     nextRunAt: toIso(row.next_run_at),

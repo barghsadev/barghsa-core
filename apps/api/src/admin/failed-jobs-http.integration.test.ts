@@ -2,6 +2,7 @@ import { AuditWindow } from '../test/audit-window.js';
 import { beforeAll, afterAll, beforeEach, expect, it } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { startHttpFixture } from '../test/http-fixture.js';
+import type { FailedJobDto } from './failed-jobs.service.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 const headers: Record<string, Record<string, string>> = {};
 beforeAll(async () => {
@@ -59,19 +60,36 @@ async function row(id: string) {
 }
 it('reads an exact job outside its former queue with current view authority and no mutation', async () => {
   const id = await seed();
-  expect((await request(`/${id}/resolve`, 'POST', {})).status).toBe(200);
+  const payload = {
+    failed: 2,
+    expirationScheduled: 1,
+    busy: false,
+    providerContext: { reference: 'private-fixture-reference' },
+    privateNumber: 123456,
+    reported: ['private-fixture-detail'],
+  };
+  await http.pool.query('UPDATE background_jobs SET payload=$2 WHERE id=$1', [id, payload]);
+  const receipt = await request(`/${id}/resolve`, 'POST', {});
+  expect(receipt.status).toBe(200);
+  const safePayload = { failed: 2, expirationScheduled: 1, busy: false };
+  expect(((await receipt.json()) as FailedJobDto).payload).toEqual(safePayload);
   expect(await (await request('?status=failed')).json()).toEqual([]);
+  const resolved = (await (await request('?status=resolved')).json()) as FailedJobDto[];
+  expect(resolved[0]?.payload).toEqual(safePayload);
   const before = await row(id);
+  expect(before.payload).toEqual(payload);
   const audits = (await auditWindow.query('SELECT count(*) FROM audit_log')).rows[0].count;
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='viewer'");
   const result = await request(`/${id}`, 'GET', undefined, 'viewer');
   expect(result.status).toBe(200);
-  expect(await result.json()).toMatchObject({
+  const detail = (await result.json()) as FailedJobDto;
+  expect(detail).toMatchObject({
     id,
     jobType: 'storage_cleanup',
     status: 'resolved',
     resolvedByUsername: 'operator@example.test',
   });
+  expect(detail.payload).toEqual(safePayload);
   expect(await row(id)).toEqual(before);
   expect((await auditWindow.query('SELECT count(*) FROM audit_log')).rows[0].count).toBe(audits);
   expect((await fetch(`${http.base}/api/admin/failed-jobs/${id}`)).status).toBe(401);
@@ -219,5 +237,54 @@ it('rejects a permission revoked after the guard and releases its transaction wi
     );
   }
 });
+
+it.each(['queue', 'detail'])(
+  'withholds the failed-jobs %s when staff authority expires during a read',
+  async (surface) => {
+    const id = await seed();
+    const session = randomUUID();
+    await http.pool.query(
+      `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES ($1,'viewer',$2,$3,clock_timestamp()+INTERVAL '3 seconds',NOW()+INTERVAL '30 minutes','staff')`,
+      [session, randomUUID(), randomUUID()]
+    );
+    headers.expiring = { Cookie: `barghsa_session=${session}` };
+    const locker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await locker.query('BEGIN');
+      await locker.query('LOCK TABLE background_jobs IN ACCESS EXCLUSIVE MODE');
+      pending = request(surface === 'detail' ? `/${id}` : '', 'GET', undefined, 'expiring');
+      await expect
+        .poll(
+          async () =>
+            Number(
+              (
+                await http.pool.query(
+                  `SELECT count(*) FROM pg_stat_activity WHERE datname=current_database() AND wait_event_type='Lock'
+       AND query LIKE '%FROM background_jobs%' AND cardinality(pg_blocking_pids(pid))>0`
+                )
+              ).rows[0].count
+            ),
+          { timeout: 2000 }
+        )
+        .toBe(1);
+      await locker.query(
+        `SELECT pg_sleep(GREATEST(0, EXTRACT(EPOCH FROM expires_at-clock_timestamp()))+0.05)
+       FROM sessions WHERE session_id=$1`,
+        [session]
+      );
+      await locker.query('COMMIT');
+      const response = await pending;
+      expect(response.status, http.logs()).toBe(401);
+      expect(await response.text()).not.toContain(id);
+    } finally {
+      await locker.query('ROLLBACK').catch(() => {});
+      locker.release();
+      await pending?.catch(() => {});
+    }
+  },
+  10000
+);
 
 const auditWindow = new AuditWindow(() => http.pool);
