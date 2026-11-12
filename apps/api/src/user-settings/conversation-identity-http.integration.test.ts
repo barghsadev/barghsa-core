@@ -235,6 +235,55 @@ it('accepts Persian join controls, renders literal markup safely and never inven
     avatarUrl: null,
   });
 });
+it('withholds an avatar link if its identity changes while signing waits', async () => {
+  const user = await actor();
+  const key = await verifiedKey(user);
+  const saved = await save(user, {
+    displayName: 'Private avatar',
+    avatarUploadKey: key,
+    revision: 0,
+  });
+  expect(saved.status, http.logs()).toBe(200);
+  expect(await saved.json()).toMatchObject({ revision: 1, avatarUrl: expect.any(String) });
+  const held = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await held.query('BEGIN');
+    await held.query('LOCK TABLE app_config IN ACCESS EXCLUSIVE MODE');
+    const { rows } = await held.query('SELECT pg_backend_pid() AS pid');
+    pending = read(user);
+    await expect
+      .poll(
+        async () =>
+          (
+            await http.pool.query(
+              `SELECT EXISTS(SELECT 1 FROM pg_stat_activity
+        WHERE $1=ANY(pg_blocking_pids(pid)) AND query LIKE '%storage.active%') AS blocked`,
+              [rows[0].pid]
+            )
+          ).rows[0].blocked
+      )
+      .toBe(true);
+    const cleared = await fetch(`${http.base}${path}`, {
+      method: 'PUT',
+      headers: user.headers,
+      body: JSON.stringify({ displayName: 'Updated avatar', avatarUploadKey: null, revision: 1 }),
+      signal: AbortSignal.timeout(3000),
+    });
+    expect(cleared.status).toBe(200);
+    expect(await cleared.json()).toMatchObject({ revision: 2, avatarUrl: null });
+    await held.query('COMMIT');
+    const response = await pending;
+    expect(response.status).toBe(409);
+    expect(await response.json()).not.toHaveProperty('avatarUrl');
+    expect(await (await read(user)).json()).toMatchObject({ revision: 2, avatarUrl: null });
+  } finally {
+    await held.query('ROLLBACK').catch(() => undefined);
+    held.release();
+    await pending;
+  }
+});
+
 it('detects conflicting changes, preserves existing photo on name-only edits and allows only one concurrent revision', async () => {
   const user = await actor();
   const key = await verifiedKey(user);

@@ -252,3 +252,62 @@ it('uses the owned default only when no explicit selection exists', async () => 
   expect((await save({ email: true })).status).toBe(404);
   expect(await stored()).toHaveLength(1);
 });
+
+it.each([
+  ['marketing-consent', 'user_notification_preferences'],
+  ['notifications', 'account_login_identifiers'],
+  ['conversation-identity', 'conversation_identities'],
+] as const)(
+  'withholds %s when a blocked settings read outlasts its session',
+  async (route, table) => {
+    const url = `${http.base}/api/user/settings/${route}`;
+    expect((await fetch(url, { headers })).status).toBe(200);
+    const held = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await held.query('BEGIN');
+      await held.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+      const { rows } = await held.query('SELECT pg_backend_pid() AS pid');
+      await http.pool.query(
+        "UPDATE sessions SET expires_at=clock_timestamp()+interval '2 seconds' WHERE session_id=$1",
+        [sessionId]
+      );
+      pending = fetch(url, { headers });
+      await expect
+        .poll(
+          async () =>
+            (
+              await http.pool.query(
+                `SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE $1=ANY(pg_blocking_pids(pid))
+        AND query LIKE '%' || $2 || '%') AS blocked`,
+                [rows[0].pid, table]
+              )
+            ).rows[0].blocked
+        )
+        .toBe(true);
+      await expect
+        .poll(
+          async () =>
+            (
+              await http.pool.query(
+                'SELECT expires_at<=clock_timestamp() AS expired FROM sessions WHERE session_id=$1',
+                [sessionId]
+              )
+            ).rows[0].expired,
+          { timeout: 5000 }
+        )
+        .toBe(true);
+      await held.query('COMMIT');
+      const response = await pending;
+      expect(response.status).toBe(401);
+      const body = await response.json();
+      for (const field of ['channels', 'availableChannels', 'avatarUrl', 'displayName'])
+        expect(body).not.toHaveProperty(field);
+    } finally {
+      await held.query('ROLLBACK').catch(() => undefined);
+      held.release();
+      await pending;
+    }
+  },
+  10000
+);

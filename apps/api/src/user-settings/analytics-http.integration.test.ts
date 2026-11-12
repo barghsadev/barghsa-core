@@ -103,3 +103,16 @@ it('rolls consent back when the audit insert fails', async () => {
   expect((await consent({ consent: true })).status).toBe(500);
   expect(await (await read()).json()).toEqual({ consent: null });
 });
+
+it('rolls back a consented event when the session expires during persistence', async () => {
+  expect((await consent({ consent: true })).status).toBe(200);
+  await http.pool.query(`
+    CREATE FUNCTION expire_analytics_session() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN UPDATE sessions SET expires_at=clock_timestamp()-interval '1 second' WHERE user_id='analytics-owner';
+    RETURN NEW; END $$;
+    CREATE TRIGGER expire_analytics_session BEFORE INSERT ON analytics_events FOR EACH ROW EXECUTE FUNCTION expire_analytics_session()
+  `);
+  expect((await event({ name: 'page_view', area: 'customer' })).status).toBe(401);
+  expect((await http.pool.query('SELECT id FROM analytics_events')).rows).toEqual([]);
+  expect(await (await read()).json()).toEqual({ consent: true });
+});

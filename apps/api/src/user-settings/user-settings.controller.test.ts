@@ -8,9 +8,9 @@ const mockClient = {
   release: vi.fn(),
 };
 const mockPool = {
-  query: vi.fn(),
   connect: vi.fn().mockResolvedValue(mockClient),
 };
+const settingsRows = vi.fn();
 
 vi.mock('@barghsa/db', () => ({
   getDbPool: () => mockPool,
@@ -35,8 +35,16 @@ describe('UserSettingsController — timezone endpoints', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockClient.query.mockResolvedValue({
-      rows: [{ timezone: 'Asia/Tehran', disabled_at: null, active: true, csrf_token: 'csrf' }],
+    settingsRows.mockReset();
+    mockClient.query.mockImplementation(async (sql: string) => {
+      if (
+        sql.startsWith('SELECT timezone FROM users') ||
+        sql.includes('FROM user_notification_preferences')
+      )
+        return settingsRows();
+      return {
+        rows: [{ timezone: 'Asia/Tehran', disabled_at: null, active: true, csrf_token: 'csrf' }],
+      };
     });
     controller = new UserSettingsController();
   });
@@ -47,20 +55,21 @@ describe('UserSettingsController — timezone endpoints', () => {
 
   describe('getTimezone', () => {
     it('returns the stored timezone for the authenticated user', async () => {
-      mockPool.query.mockResolvedValue({
+      settingsRows.mockResolvedValue({
         rows: [{ timezone: 'Asia/Tehran' }],
       });
 
       const result = await controller.getTimezone(fakeReq);
 
-      expect(mockPool.query).toHaveBeenCalledWith(`SELECT timezone FROM users WHERE user_id = $1`, [
-        'user-001',
-      ]);
+      expect(mockClient.query).toHaveBeenCalledWith(
+        `SELECT timezone FROM users WHERE user_id = $1`,
+        ['user-001']
+      );
       expect(result).toEqual({ timezone: 'Asia/Tehran' });
     });
 
     it('returns the correct timezone when a different one is set', async () => {
-      mockPool.query.mockResolvedValue({
+      settingsRows.mockResolvedValue({
         rows: [{ timezone: 'America/New_York' }],
       });
 
@@ -70,7 +79,7 @@ describe('UserSettingsController — timezone endpoints', () => {
     });
 
     it('throws 404 when the user is not found', async () => {
-      mockPool.query.mockResolvedValue({ rows: [] });
+      settingsRows.mockResolvedValue({ rows: [] });
 
       await expect(controller.getTimezone(fakeReq)).rejects.toThrow(HttpException);
       await expect(controller.getTimezone(fakeReq)).rejects.toMatchObject({
@@ -85,10 +94,6 @@ describe('UserSettingsController — timezone endpoints', () => {
 
   describe('updateTimezone', () => {
     it('updates and returns the new timezone for a valid IANA string', async () => {
-      mockPool.query.mockResolvedValue({
-        rows: [{ timezone: 'Europe/London' }],
-      });
-
       const result = await controller.updateTimezone({ timezone: 'Europe/London' }, fakeReq);
 
       expect(mockClient.query).toHaveBeenCalledWith(
@@ -129,10 +134,6 @@ describe('UserSettingsController — timezone endpoints', () => {
     });
 
     it('accepts "UTC" as a valid timezone', async () => {
-      mockPool.query.mockResolvedValue({
-        rows: [{ timezone: 'UTC' }],
-      });
-
       const result = await controller.updateTimezone({ timezone: 'UTC' }, fakeReq);
 
       expect(result).toEqual({ timezone: 'UTC' });
@@ -153,7 +154,7 @@ describe('UserSettingsController — timezone endpoints', () => {
 
   describe('marketing consent', () => {
     it('returns opted-out defaults when the current owned profile has no consent', async () => {
-      mockPool.query.mockResolvedValueOnce({ rows: [] });
+      settingsRows.mockResolvedValueOnce({ rows: [] });
       expect(await controller.getMarketingConsent(fakeReq)).toEqual({
         channels: {
           email: { optedIn: false, lastChangedAt: null },
@@ -162,7 +163,7 @@ describe('UserSettingsController — timezone endpoints', () => {
       });
     });
     it('returns selected-profile channel state from one scoped read', async () => {
-      mockPool.query.mockResolvedValueOnce({
+      settingsRows.mockResolvedValueOnce({
         rows: [{ channel: 'email', marketing_opted_in: true, updated_at: '2026-01-01T00:00:00Z' }],
       });
       expect(await controller.getMarketingConsent(fakeReq)).toEqual({

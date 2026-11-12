@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T16:35:07+00:00",
+  "updated": "2026-11-12T16:41:45+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -23175,7 +23175,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -23290,6 +23290,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -26285,7 +26293,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/e2e/branding-theme.spec.ts",
@@ -26515,6 +26523,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -26953,11 +26969,11 @@
             },
             {
               "path": "apps/api/src/user-settings/analytics.controller.ts",
-              "sha256": "dc4db1f5943f509754a085c2b95655b49def1062fef7849ad7e64f4291d0c147"
+              "sha256": "5e25b33ed036d4c54069e8cb1c9c8d98d2bd6cb595b910c0da062b0fd7e2efc1"
             },
             {
               "path": "apps/api/src/user-settings/analytics-http.integration.test.ts",
-              "sha256": "e5fb24cce4b054782ce484dc7303bb0dddbc89ea8254612863e4518ddbf66fef"
+              "sha256": "cceb8d4ae3102a7066947b401a541319cdb27941dee2f2c46e8d8822ecb3d419"
             },
             {
               "path": "apps/web/e2e/analytics-consent.spec.ts",
@@ -26981,6 +26997,15 @@
                 "kanban/epics/01-platform-infrastructure.md"
               ],
               "scope": "The infrastructure epic edits are limited to the local development Compose story and its service-image notes. Root Compose only changes the server and bucket initializer image references. Private storage, health, volume reuse, MinIO lifecycle and version-specific hold policy, exact multipart bytes, orphan listing and abort were checked on the pinned replacement. Existing source, environment defaults and staging/production deployment configurations retain prior evidence."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/analytics-http.integration.test.ts",
+                "apps/api/src/user-settings/analytics.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -30758,7 +30783,7 @@
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity.service.ts",
-              "sha256": "2d9460153674ec93bcada61d76744d25d7b7127c1bc5017259604a66fe9d7acd"
+              "sha256": "76d74cf8c9abda0d5c01c096b851a316cf6610c7728f59fe1f9eb86e41ec6e86"
             },
             {
               "path": "packages/db/src/documents.migrated.test.ts",
@@ -31420,6 +31445,14 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/conversation-identity.service.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -56859,7 +56892,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/e2e/form-accessibility.spec.ts",
@@ -57919,6 +57952,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "presentation_renewals": [
@@ -117792,11 +117833,11 @@
           "source_evidence": [
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
-              "sha256": "6d2f9e2666762c753a48f3c1171a25dc61ccb30cc4f1442990a1d9ff0e5411b0"
+              "sha256": "9caae425a06117bcd0003c5441fb6f3ed398a4a89a3fcd2be1f881502cef9800"
             },
             {
               "path": "apps/api/src/profiles/profile-context.ts",
@@ -118060,6 +118101,15 @@
                 "apps/api/src/profiles/profile-context.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "presentation_renewals": [
@@ -149819,7 +149869,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -150251,6 +150301,14 @@
                 "apps/api/src/catalogue/catalogue-products.controller.test.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "presentation_renewals": [
@@ -150708,7 +150766,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -151139,6 +151197,14 @@
                 "apps/api/src/catalogue/catalogue-products.controller.test.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "presentation_renewals": [
@@ -154083,7 +154149,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -154514,6 +154580,14 @@
                 "apps/api/src/catalogue/catalogue-products.controller.test.ts"
               ],
               "scope": "Central staff and profile decisions deny malformed authority. Valid authenticated staff decisions and all 28 defined profile SQL queries retain their previous behavior. Existing fixture assertions, database resource scope and transaction boundaries were preserved."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "presentation_renewals": [
@@ -615280,7 +615354,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -615589,6 +615663,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -615955,7 +616037,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -616149,6 +616231,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -616223,7 +616313,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -616409,6 +616499,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -616506,7 +616604,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -616714,6 +616812,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -616873,7 +616979,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -617165,6 +617271,14 @@
                 "apps/worker/src/privacy/profile-export.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -617215,7 +617329,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -617524,6 +617638,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -617697,7 +617819,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -618023,6 +618145,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -619027,8 +619157,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, and four account-owned background-job method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with authenticated account preferences and identity resource loaders, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with authenticated profile selection and invitation resource loaders, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -619137,6 +619267,14 @@
           "apps/api/src/tickets/profile-closure-http.integration.test.ts",
           "apps/api/src/tickets/tickets-http.integration.test.ts",
           "apps/api/src/tickets/tickets.service.ts",
+          "apps/api/src/user-settings/account-settings-read.ts",
+          "apps/api/src/user-settings/analytics-http.integration.test.ts",
+          "apps/api/src/user-settings/analytics.controller.ts",
+          "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
+          "apps/api/src/user-settings/conversation-identity.service.ts",
+          "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+          "apps/api/src/user-settings/user-settings.controller.test.ts",
+          "apps/api/src/user-settings/user-settings.controller.ts",
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
           "apps/api/src/wallet/bank-receipt-topup.service.ts",
           "apps/api/src/wallet/chargeback-alert.integration.test.ts",
@@ -619211,7 +619349,8 @@
           "release-0.6-inbox-session-authority",
           "release-0.6-ticket-attachment-authority",
           "release-0.6-profile-export-authority",
-          "release-0.6-account-job-authority"
+          "release-0.6-account-job-authority",
+          "release-0.6-account-settings-authority"
         ],
         "current_acceptance": null
       }
@@ -619287,7 +619426,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -619489,6 +619628,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -619835,7 +619982,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -620181,6 +620328,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -620804,7 +620959,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -621090,6 +621245,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -628896,7 +629059,7 @@
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
-              "sha256": "04c20376dc4973dec634bbbd3ac61aadd5dc00af395e4d11c5949de258581b9a"
+              "sha256": "5b8ce04f9d417dfd891f5abcad16a59ecc86b75fd7f8d68822c6d04f5641dc05"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -629358,6 +629521,14 @@
                 "apps/api/src/storage/verified-attachments.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/conversation-identity-http.integration.test.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -634824,7 +634995,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "8bba5364c2960947507d8e6145ff73d9560aa58835d2c760abb857f6f50bac9e"
+              "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
             },
             {
               "path": "docs/threat-model.md",
@@ -635036,6 +635207,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -697034,7 +697213,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -697736,6 +697915,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -697914,7 +698101,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -698616,6 +698803,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -698794,7 +698989,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -699496,6 +699691,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -699674,7 +699877,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -700376,6 +700579,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -700554,7 +700765,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -701256,6 +701467,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -701434,7 +701653,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -702136,6 +702355,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -702314,7 +702541,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -703016,6 +703243,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -703194,7 +703429,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -703896,6 +704131,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -704074,7 +704317,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -704776,6 +705019,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -704954,7 +705205,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -705656,6 +705907,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -705834,7 +706093,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -706536,6 +706795,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -706714,7 +706981,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -707416,6 +707683,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -707594,7 +707869,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -708296,6 +708571,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -708474,7 +708757,7 @@
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/web/build.mjs",
@@ -709176,6 +709459,14 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The delivery-history endpoint rejects a malformed optional UUID before querying. History and contact-correction routes require staff context and current grants. Existing staff, receipt attribution, suppression and audit assertions passed."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -722768,7 +723059,7 @@
             },
             {
               "path": "apps/api/src/user-settings/conversation-identity.service.ts",
-              "sha256": "2d9460153674ec93bcada61d76744d25d7b7127c1bc5017259604a66fe9d7acd"
+              "sha256": "76d74cf8c9abda0d5c01c096b851a316cf6610c7728f59fe1f9eb86e41ec6e86"
             },
             {
               "path": "apps/web/build.mjs",
@@ -724542,6 +724833,14 @@
                 "apps/web/e2e/electricity-quantity-increase-form-fixture.ts"
               ],
               "scope": "Reviewed changed electricity history, detail, increase and price-adjustment paths. Native cases preserved authorized financial outcomes and rejected mismatched links. Unit and production Chromium checks preserved request-bound signing and staff decisions. Unchanged parts of previously accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/conversation-identity.service.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ]
         }
@@ -982543,11 +982842,11 @@
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
-              "sha256": "6d2f9e2666762c753a48f3c1171a25dc61ccb30cc4f1442990a1d9ff0e5411b0"
+              "sha256": "9caae425a06117bcd0003c5441fb6f3ed398a4a89a3fcd2be1f881502cef9800"
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -986329,6 +986628,15 @@
                 "docs/operations/async-jobs.md"
               ],
               "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "presentation_renewals": [
@@ -987822,11 +988130,11 @@
             },
             {
               "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
-              "sha256": "6d2f9e2666762c753a48f3c1171a25dc61ccb30cc4f1442990a1d9ff0e5411b0"
+              "sha256": "9caae425a06117bcd0003c5441fb6f3ed398a4a89a3fcd2be1f881502cef9800"
             },
             {
               "path": "apps/api/src/user-settings/user-settings.controller.ts",
-              "sha256": "af7a26fbedc066dac828a9d11b8b6be5c5b686eb65c4484db92f89ffb729ea09"
+              "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
@@ -991488,6 +991796,15 @@
                 "docs/operations/async-jobs.md"
               ],
               "scope": "Owned async-job status, result and retry hold current session authority. Staff jobs retain their operating context and current staff eligibility, and retry rechecks the session after the atomic audit write."
+            },
+            {
+              "batch": "release-0.6-account-settings-authority",
+              "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+              "paths": [
+                "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+                "apps/api/src/user-settings/user-settings.controller.ts"
+              ],
+              "scope": "Authenticated settings reads hold the current account and session through access. Existing owner-scoped consent and avatar provenance remain enforced. The avatar receipt checks the current revision after signing and analytics events recheck before commit."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1153514,6 +1153831,205 @@
         {
           "file": "account-job-routes.json",
           "sha256": "1fc97d756f64e61eaab66b7f1aedcc273eaada53d11620a7aad2972dff55ba0a"
+        }
+      ]
+    },
+    "release-0.6-account-settings-authority": {
+      "batch": "release-0.6-account-settings-authority",
+      "base_commit": "8f64a9c3dbb235268c8e15bb43b57949867af219",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "01-platform-infrastructure.md#T-06.02.03",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-06.04.01",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-03.03.05",
+        "05-notifications-documents-ai.md#T-05.05.03",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/user-settings/account-settings-read.ts",
+        "apps/api/src/user-settings/analytics-http.integration.test.ts",
+        "apps/api/src/user-settings/analytics.controller.ts",
+        "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
+        "apps/api/src/user-settings/conversation-identity.service.ts",
+        "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+        "apps/api/src/user-settings/user-settings.controller.test.ts",
+        "apps/api/src/user-settings/user-settings.controller.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/profiles/profile-context.ts",
+          "sha256": "af60a9ca1bda412f65e7192c228a6cb7a9739054b4dd38ecf62dc17f20f6c205"
+        },
+        {
+          "path": "apps/api/src/session/operating-context.ts",
+          "sha256": "940c00212272f9b5402b23334d1f513c53d59853e9090824d6e8fff1e3d301ec"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/storage/verified-attachments.service.ts",
+          "sha256": "56c417ced1922e9eb6f5042a9af7469e86d29ec50cbe23a89b9cab1d82e8bbe8"
+        },
+        {
+          "path": "apps/api/src/user-settings/account-settings-read.ts",
+          "sha256": "6468dd9b4b7b99e603dc587f369c9649ec960ecaf82962acfe67eab8533885e6"
+        },
+        {
+          "path": "apps/api/src/user-settings/analytics-http.integration.test.ts",
+          "sha256": "cceb8d4ae3102a7066947b401a541319cdb27941dee2f2c46e8d8822ecb3d419"
+        },
+        {
+          "path": "apps/api/src/user-settings/analytics.controller.ts",
+          "sha256": "5e25b33ed036d4c54069e8cb1c9c8d98d2bd6cb595b910c0da062b0fd7e2efc1"
+        },
+        {
+          "path": "apps/api/src/user-settings/conversation-identity-http.integration.test.ts",
+          "sha256": "5b8ce04f9d417dfd891f5abcad16a59ecc86b75fd7f8d68822c6d04f5641dc05"
+        },
+        {
+          "path": "apps/api/src/user-settings/conversation-identity.controller.ts",
+          "sha256": "eb44393f4aae2886c84bd89839f9f9b7bc84df6a490278c272a4f612dd8ad93c"
+        },
+        {
+          "path": "apps/api/src/user-settings/conversation-identity.service.ts",
+          "sha256": "76d74cf8c9abda0d5c01c096b851a316cf6610c7728f59fe1f9eb86e41ec6e86"
+        },
+        {
+          "path": "apps/api/src/user-settings/marketing-consent-http.integration.test.ts",
+          "sha256": "9caae425a06117bcd0003c5441fb6f3ed398a4a89a3fcd2be1f881502cef9800"
+        },
+        {
+          "path": "apps/api/src/user-settings/notification-preferences-http.integration.test.ts",
+          "sha256": "ffdca747b061dcc2ab8b1fae30efc29a6715e3c17df3708259b92473452e4331"
+        },
+        {
+          "path": "apps/api/src/user-settings/theme-http.integration.test.ts",
+          "sha256": "5f166595f99185dd6756431b9df153c0ac0fbd21277b5cf5c6c86e6ef1d2a20c"
+        },
+        {
+          "path": "apps/api/src/user-settings/timezone-http.integration.test.ts",
+          "sha256": "a40749eb612fa60400f044b760f2d0fee5614fa6ec669a3225a5035b3df04cbe"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.test.ts",
+          "sha256": "7c7f3b82b644bd3fcd46c5695f56f11997cc77c6bbc25bbcd7aa0014a1a53480"
+        },
+        {
+          "path": "apps/api/src/user-settings/user-settings.controller.ts",
+          "sha256": "149577bbe9e49a883372324a9a44a2c2be9b29681afc33d3b47ee9fb3c3c8e5d"
+        },
+        {
+          "path": "apps/web/src/components/ConversationIdentityDialog.test.tsx",
+          "sha256": "b794453dbdb72fb0474a2c335bc64afff078f97b4dbfa0915f88a24717a4c447"
+        },
+        {
+          "path": "apps/web/src/lib/analytics-client.test.ts",
+          "sha256": "fb2d93c1a954c241a94ffd30ca40308b533d744d37361cf5a86ee479a651f316"
+        },
+        {
+          "path": "apps/web/src/routes/_app/settings/preference-native-forms.test.tsx",
+          "sha256": "d46dd4c7a53cb630dc66ed36f167b2743668aa53f68d28209fec12b6f9e14d33"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "623173e9ece03cd4ec1c288f6fcc54218b61e27b6793c02a0482b042fc2bd065"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed 13 method/path pairs for theme, timezone, notification preferences, marketing consent, analytics and conversation identity. Account endpoints use the authenticated user; marketing consent uses only the current owned profile.",
+        "Settings reads hold current account/session authority through their resource query. Native blocked reads return 401 after expiry without marketing, notification or identity fields.",
+        "Conversation avatar URL preparation stays outside the authorization transaction. A native concurrent change during signing withholds the stale link while the committed new identity remains readable. Consent and revision checks still pass.",
+        "Consented analytics events roll back if the session expires during persistence. Existing consent redaction, audited preference decisions, ownership, copy verification and CSRF cases passed.",
+        "72 settings API tests plus one final native avatar signing case and 34 web caller tests passed. API build, typecheck, generated contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-account-settings-authority",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "89c691870f590dc995bb63d8a99ab9103edaa4689a7a104794ee0ca0bb8f2d7c"
+        },
+        {
+          "file": "avatar-signing.log",
+          "sha256": "f4cf5fa8c92339b0fb6a1bd53406652f28eba94579ab49ea2ca8ce25df70b900"
+        },
+        {
+          "file": "web.log",
+          "sha256": "4a172f6516e698a950d3c4ae25201562753435646f863a676d7333ab0ceb6475"
+        },
+        {
+          "file": "types-final.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "3cea365aacb15c05f422ecdbc489e90a31da09f6afe8741412eb82f75b13155a"
+        },
+        {
+          "file": "format-final.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint-final.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "32f307c0804005fbc61c17ec08acd1ffbc1ae973c5ae6f39b17e4cb5772a2f4c"
+        },
+        {
+          "file": "account-settings-routes.json",
+          "sha256": "a22cfda0076979b7d994386eac16d3bc014f4feb3b1890e1f71b410d93c0406d"
         }
       ]
     }

@@ -61,11 +61,22 @@ export class ConversationIdentityService {
     );
   }
 
-  private async dto(row: IdentityRow) {
+  private async dto(req: AuthenticatedRequest, row: IdentityRow) {
     const urls =
       row.avatar_key && row.source_key
         ? await this.attachments.downloadUrls([row.avatar_key], 'conversation_avatar')
         : [];
+    if (row.avatar_key && row.source_key) {
+      await this.withIdentityTransaction(req, async (client) => {
+        const current = await this.row(client, req.session.userId);
+        if (
+          current.revision !== row.revision ||
+          current.avatar_key !== row.avatar_key ||
+          current.source_key !== row.source_key
+        )
+          throw new ConflictException('Conversation identity changed; reload and retry');
+      });
+    }
     return {
       displayName: row.display_name,
       avatarUrl: urls[0] ?? null,
@@ -77,27 +88,10 @@ export class ConversationIdentityService {
   }
 
   async read(req: AuthenticatedRequest) {
-    const client = await getDbPool().connect();
-    try {
-      await client.query('BEGIN');
-      const account = (
-        await client.query(
-          'SELECT disabled_at,activation_token FROM users WHERE user_id=$1 FOR SHARE',
-          [req.session.userId]
-        )
-      ).rows[0];
-      if (!account || account.disabled_at || account.activation_token)
-        throw new UnauthorizedException();
-      await requireCurrentSession(client, req.session);
-      const row = await this.row(client, req.session.userId);
-      await client.query('COMMIT');
-      return this.dto(row);
-    } catch (error) {
-      await client.query('ROLLBACK').catch(() => {});
-      throw error;
-    } finally {
-      client.release();
-    }
+    const row = await this.withIdentityTransaction(req, (client) =>
+      this.row(client, req.session.userId)
+    );
+    return this.dto(req, row);
   }
 
   private async withIdentityTransaction<T>(
@@ -217,6 +211,6 @@ export class ConversationIdentityService {
       );
       return this.row(client, req.session.userId);
     });
-    return this.dto(saved);
+    return this.dto(req, saved);
   }
 }

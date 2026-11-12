@@ -34,6 +34,10 @@ Both notification inbox APIs recheck profile selection and notice ownership in
 their resource queries. The account and session stay locked until the response
 is authorized or the read-state change commits.
 
+Account settings reads keep the session current through the query. Marketing
+consent uses the current owned profile. Conversation identity checks the
+session and saved photo reference again after signing a private avatar link.
+
 ## Staff capabilities
 
 - Staff sessions use the union of current database role capabilities for Customer Support, CRM and Verification, Finance, Legal and Contracts, Operations and Admin. A matching permission, explicit wildcard grant or current administrator authority is required. Staff account status permits staff context. Each protected operation still checks the required capability.

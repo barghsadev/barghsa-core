@@ -22,6 +22,7 @@ import type { PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ACTIVE_PROFILE_SQL } from '../profiles/profile-context.js';
+import { readAccountSettings } from './account-settings-read.js';
 
 /**
  * Allowed notification channel values.
@@ -59,14 +60,14 @@ export class UserSettingsController {
     },
   })
   async getTheme(@Req() req: AuthenticatedRequest) {
-    const result = await getDbPool().query(
-      'SELECT theme_mode,disabled_at FROM users WHERE user_id=$1',
-      [req.session.userId]
-    );
-    const user = result.rows[0];
-    if (!user || user.disabled_at)
-      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
-    return { mode: user.theme_mode as 'light' | 'dark' | null };
+    return readAccountSettings(req.session, async (client) => {
+      const result = await client.query('SELECT theme_mode FROM users WHERE user_id=$1', [
+        req.session.userId,
+      ]);
+      const user = result.rows[0];
+      if (!user) throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      return { mode: user.theme_mode as 'light' | 'dark' | null };
+    });
   }
 
   @Put('theme')
@@ -153,7 +154,9 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getNotificationPreferences(@Req() req: AuthenticatedRequest) {
-    return this.readNotificationPreferences(getDbPool(), req.session.userId);
+    return readAccountSettings(req.session, (client) =>
+      this.readNotificationPreferences(client, req.session.userId)
+    );
   }
 
   private async readNotificationPreferences(client: Pick<PoolClient, 'query'>, userId: string) {
@@ -292,17 +295,17 @@ export class UserSettingsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getTimezone(@Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
-    const pool = getDbPool();
-
-    const result = await pool.query(`SELECT timezone FROM users WHERE user_id = $1`, [userId]);
-
-    if (result.rows.length === 0) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    const timezone = result.rows[0].timezone as string;
-    this.logger.debug(`User ${privateLogId('actor', userId)}: timezone = ${timezone}`);
-    return { timezone };
+    return readAccountSettings(req.session, async (client) => {
+      const result = await client.query('SELECT timezone FROM users WHERE user_id = $1', [userId]);
+      if (!result.rows[0])
+        throw new HttpException(
+          { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+          404
+        );
+      const timezone = result.rows[0].timezone as string;
+      this.logger.debug(`User ${privateLogId('actor', userId)}: timezone = ${timezone}`);
+      return { timezone };
+    });
   }
 
   /**
@@ -415,9 +418,9 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getMarketingConsent(@Req() req: AuthenticatedRequest) {
-    return {
-      channels: await this.getMarketingConsentInternal(getDbPool(), req.session.userId, true),
-    };
+    return readAccountSettings(req.session, async (client) => ({
+      channels: await this.getMarketingConsentInternal(client, req.session.userId, true),
+    }));
   }
 
   /**

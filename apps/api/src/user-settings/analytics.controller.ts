@@ -19,6 +19,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { readAccountSettings } from './account-settings-read.js';
 
 const consentInput = z.object({ consent: z.boolean() }).strict();
 
@@ -35,14 +36,14 @@ export class AnalyticsController {
     schema: { type: 'object', properties: { consent: { type: 'boolean', nullable: true } } },
   })
   async getConsent(@Req() req: AuthenticatedRequest) {
-    const result = await getDbPool().query(
-      'SELECT analytics_consent,disabled_at FROM users WHERE user_id=$1',
-      [req.session.userId]
-    );
-    const account = result.rows[0];
-    if (!account || account.disabled_at)
-      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
-    return { consent: account.analytics_consent as boolean | null };
+    return readAccountSettings(req.session, async (client) => {
+      const result = await client.query('SELECT analytics_consent FROM users WHERE user_id=$1', [
+        req.session.userId,
+      ]);
+      const account = result.rows[0];
+      if (!account) throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      return { consent: account.analytics_consent as boolean | null };
+    });
   }
 
   @Put('consent')
@@ -129,6 +130,7 @@ export class AnalyticsController {
           'service' in event ? event.service : null,
         ]
       );
+      await requireCurrentSession(client, req.session);
       await client.query('COMMIT');
     } catch (error) {
       await client.query('ROLLBACK').catch(() => {});
