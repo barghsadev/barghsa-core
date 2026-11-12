@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:30:06+00:00",
+  "updated": "2026-11-12T10:36:41+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -29707,7 +29707,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "packages/db/drizzle/production/0287_multipart_operation_recovery.sql",
@@ -30379,6 +30379,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -191281,7 +191289,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -191520,6 +191528,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -191969,7 +191985,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -192226,6 +192242,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -192672,7 +192696,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -192934,6 +192958,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -193427,7 +193459,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -193852,6 +193884,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -194296,7 +194336,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -194558,6 +194598,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -194889,7 +194937,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -195128,6 +195176,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -195459,7 +195515,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -195698,6 +195754,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -196030,7 +196094,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -196269,6 +196333,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -196602,7 +196674,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -196841,6 +196913,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -197182,7 +197262,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -197421,6 +197501,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -197754,7 +197842,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -197993,6 +198081,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -547459,7 +547555,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -547883,6 +547979,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -548089,7 +548193,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -548513,6 +548617,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -548721,7 +548833,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -549166,6 +549278,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -549406,7 +549526,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -549937,6 +550057,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -550155,7 +550283,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "apps/web/src/components/DocumentRetentionPolicies.tsx",
@@ -550579,6 +550707,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -630064,10 +630200,13 @@
           "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
           "packages/db/drizzle/production/meta/0292_snapshot.json",
           "packages/db/drizzle/production/meta/_journal.json",
-          "packages/db/src/financial-evidence-retention-upgrade.migrated.test.ts"
+          "packages/db/src/financial-evidence-retention-upgrade.migrated.test.ts",
+          "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+          "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
         ],
         "batches": [
-          "release-0.6-retained-financial-evidence"
+          "release-0.6-retained-financial-evidence",
+          "release-0.6-retention-compatibility"
         ],
         "current_acceptance": {
           "batch": "release-0.6-retained-financial-evidence",
@@ -630075,7 +630214,9 @@
             "The release policy documents a ten-year default for canonical audit, security and financial evidence and no automatic expiry. Operational telemetry retention and eligible-document disposal have separate data paths. Permanent financial and contractual document bytes retain their existing guards.",
             "PostgreSQL 17.9 upgraded 0291 to 0292 and preserved the exact existing financial rows and journal. An eleven-year-old wallet entry, an issued invoice, receipt history and callback identities rejected deletion. The protected financial tables rejected truncation. Normal wallet and receipt state transitions and deletion of an unissued draft still worked.",
             "The prior audit, authorization and AI audit guards rejected mutation and deletion. The legal hold HTTP flow preserved authorized versioning and retained approval history. Existing API wallet, callback, chargeback, bank receipt and closure behavior and the three reconciliation workers passed. Tests reset with isolated databases or dedicated records and kept their original assertions.",
-            "234 database, 79 API, 36 worker and five targeted protected-audit/document cases passed. The generated snapshot differs only by snapshot lineage IDs. The database snapshot check, all three package typechecks and changed-file lint passed."
+            "234 database, 79 API, 36 worker and five targeted protected-audit/document cases passed. The generated snapshot differs only by snapshot lineage IDs. The database snapshot check, all three package typechecks and changed-file lint passed.",
+            "The corrected migration permits only the existing foreign-key actor unlink after account removal. A direct attribution-clearing UPDATE is rejected. Every other receipt event field is identical before and after unlink, and the prior immutability, truncation, upgrade and snapshot assertions pass.",
+            "The service workflow scanner fixture seeds one production-migrated template and clones a fresh database for each test. All existing configuration, due-time, actor, retry and concurrent workflow assertions run with financial protection enabled."
           ],
           "source_evidence": [
             {
@@ -630104,11 +630245,11 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
-              "sha256": "59838dc53f651195e3d27e6be808d459684bcad7705aa6e759fdbe79b2f24fc5"
+              "sha256": "974a1448bf3a1e75b1d2789bcb8fe6b45df338d1f717f25ad93a8bf730429893"
             },
             {
               "path": "packages/db/drizzle/production/meta/0292_snapshot.json",
@@ -630169,6 +630310,33 @@
             {
               "path": "apps/api/src/documents/document-http.integration.test.ts",
               "sha256": "a07b0857de44f07c907308dc809219443e91717949b6181251b5cb6162c855c2"
+            },
+            {
+              "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+              "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
+            },
+            {
+              "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
+            },
+            {
+              "path": "packages/db/drizzle/production/0237_receipt_activity_actors.sql",
+              "sha256": "d6c64c9d7f90f68a595406ca7c1e4492628edbb339bef8d44b521767a205171d"
+            },
+            {
+              "path": "packages/db/src/migrate.snapshot.test.ts",
+              "sha256": "6091f8c61af0ad12b340dbb0bc7381c56265f172fb854e3349b75a2b67f93dda"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md",
+                "packages/db/drizzle/production/0292_financial_evidence_retention.sql"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ]
         }
@@ -917885,7 +918053,7 @@
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
-              "sha256": "26ee7197de56e41998c5fec769a7faea6d2582d1977168acff713cdf294c31b0"
+              "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.ts",
@@ -918325,6 +918493,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "apps/worker/src/service-targets/workflow-scanner.integration.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -918955,7 +919131,7 @@
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
-              "sha256": "26ee7197de56e41998c5fec769a7faea6d2582d1977168acff713cdf294c31b0"
+              "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.ts",
@@ -919395,6 +919571,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "apps/worker/src/service-targets/workflow-scanner.integration.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -924613,7 +924797,7 @@
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
-              "sha256": "929b4a330f99c37ac0267b7fe0d9af86c18b020d7cab15ef3b21d448a4e77265"
+              "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
             },
             {
               "path": "packages/db/src/schema/bank-receipt-attachment-claims.test.ts",
@@ -927609,6 +927793,14 @@
                 "apps/api/src/wallet/chargeback-alert.integration.test.ts"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -935411,7 +935603,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -937754,6 +937946,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "presentation_renewals": [
@@ -940371,7 +940571,7 @@
             },
             {
               "path": "docs/operations/storage-retention.md",
-              "sha256": "3a5b5fa319f5483ce9f5f10836faabf696dd4adbc9763049b99718c1b1613f6b"
+              "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
             },
             {
               "path": "kanban/RELEASES.md",
@@ -942614,6 +942814,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-retention-compatibility",
+              "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+              "paths": [
+                "docs/operations/storage-retention.md"
+              ],
+              "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1093026,6 +1093234,103 @@
         {
           "file": "source.sha256",
           "sha256": "b3b0db1b3086df10923460b8c5883fdcbe127748765ece3e074dd143a50b4b6f"
+        }
+      ]
+    },
+    "release-0.6-retention-compatibility": {
+      "batch": "release-0.6-retention-compatibility",
+      "base_commit": "74fe48e789fe68879e594c207ed6e3668b2ef218",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.18.01.04",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17",
+        "release-readiness#R-02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+        "docs/operations/storage-retention.md",
+        "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
+        "packages/db/src/receipt-activity-upgrade.migrated.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+          "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
+        },
+        {
+          "path": "docs/operations/storage-retention.md",
+          "sha256": "e710c4fa6c76d7445253d0094a9ba91ecf6b1ad103e5f2e3f7c71bbd71d4913c"
+        },
+        {
+          "path": "packages/db/drizzle/production/0292_financial_evidence_retention.sql",
+          "sha256": "974a1448bf3a1e75b1d2789bcb8fe6b45df338d1f717f25ad93a8bf730429893"
+        },
+        {
+          "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
+          "sha256": "2999bf3e2e167bfa40c813817906fb6b27db7d19fa3636327be64c3bad68f097"
+        },
+        {
+          "path": "packages/db/drizzle/production/0237_receipt_activity_actors.sql",
+          "sha256": "d6c64c9d7f90f68a595406ca7c1e4492628edbb339bef8d44b521767a205171d"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/0292_snapshot.json",
+          "sha256": "e52ccd10a75b285d132664a7934afd1f271f24249211ca40208c3dd8c736b963"
+        },
+        {
+          "path": "packages/db/src/financial-evidence-retention-upgrade.migrated.test.ts",
+          "sha256": "1a3a81517e8aa8373ea423bc2411b8f8e568ada0c0cc382506f0d234493e2800"
+        },
+        {
+          "path": "packages/db/src/migrate.snapshot.test.ts",
+          "sha256": "6091f8c61af0ad12b340dbb0bc7381c56265f172fb854e3349b75a2b67f93dda"
+        }
+      ],
+      "checks": [
+        "The required preflight at 69c98e42 failed because the workflow test reset cascaded into protected invoices and the existing receipt-activity upgrade exercise reached actor-account deletion. The affected candidate was never published to main. Migration 0292 was absent from verified main.",
+        "The corrected migration permits only the existing foreign-key actor unlink after account removal. A direct attribution-clearing UPDATE is rejected. Every other receipt event field is identical before and after unlink, and the prior immutability, truncation, upgrade and snapshot assertions pass.",
+        "The service workflow scanner fixture seeds one production-migrated template and clones a fresh database for each test. All existing configuration, due-time, actor, retry and concurrent workflow assertions run with financial protection enabled.",
+        "200 PostgreSQL database tests and 20 worker scanner tests passed. Both package typechecks, changed-file lint, Prettier and git diff --check passed."
+      ],
+      "limitations": [
+        "The corrected source needs a fresh protected preflight before publishing. The verified PostgreSQL databases were disposable."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-retention-compatibility",
+      "execution_receipts": [
+        {
+          "file": "run-targeted.sh",
+          "sha256": "20a8f0f86757ea339ca68759e7f0ed0ad99269affdcfbb0abd1a7b6689fcf3aa"
+        },
+        {
+          "file": "db.log",
+          "sha256": "069fad0d8e5ec996b3ff2f9b9fb4f640ac40a5d36dd1dc61c04ac548882c33f8"
+        },
+        {
+          "file": "worker.log",
+          "sha256": "a6b6b77d136690af29581c7bcb41e1ce4ecd5895ecbf8db1def03de9bff08359"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "f8557d62d269f0a14ae32ec284d0a4355df3e55b01be4cea3b1778678e6ff9ec"
         }
       ]
     }

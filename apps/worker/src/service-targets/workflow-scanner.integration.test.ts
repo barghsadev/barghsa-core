@@ -24,42 +24,45 @@ let management: Pool,
   province: string,
   city: string,
   team: string;
-const database = `test_workflows_${randomUUID().replaceAll('-', '')}`;
+const template = `test_workflow_template_${randomUUID().replaceAll('-', '')}`;
+let database: string | undefined;
+let templatePool: Pool | undefined;
 beforeAll(async () => {
   management = new Pool({ connectionString: process.env.TEST_DATABASE_URL! });
-  await management.query(`CREATE DATABASE "${database}"`);
+  await management.query(`CREATE DATABASE "${template}"`);
   const url = new URL(process.env.TEST_DATABASE_URL!);
-  url.pathname = `/${database}`;
+  url.pathname = `/${template}`;
   expect((await runMigrations({ connection: { pgdirectUrl: url.toString() } })).ok).toBe(true);
-  pool = new Pool({ connectionString: url.toString() });
-  await pool.query(`INSERT INTO users(user_id,username,password_hash,is_staff,is_admin) VALUES
+  const fixture = new Pool({ connectionString: url.toString() });
+  templatePool = fixture;
+  await fixture.query(`INSERT INTO users(user_id,username,password_hash,is_staff,is_admin) VALUES
     ('wf-owner','owner@example.test','test',false,false),('wf-source','source@example.test','test',true,false),
     ('wf-destination','destination@example.test','test',true,false),('wf-no-access','noaccess@example.test','test',true,false),
     ('wf-admin','admin@example.test','test',true,true);
     INSERT INTO staff_roles(role_id,name,description,permissions) VALUES('wf-source','Source','Test','["*"]'),('wf-destination','Destination','Test','["*"]');
     INSERT INTO user_roles(user_id,role_id) VALUES('wf-source','wf-source'),('wf-destination','wf-destination')`);
-  profile = (await pool.query("INSERT INTO profiles(user_id) VALUES('wf-owner') RETURNING id"))
+  profile = (await fixture.query("INSERT INTO profiles(user_id) VALUES('wf-owner') RETURNING id"))
     .rows[0].id;
   province = (
-    await pool.query(
+    await fixture.query(
       "INSERT INTO provinces(name_fa,name_en) VALUES('Test province','Workflow province') RETURNING id"
     )
   ).rows[0].id;
   city = (
-    await pool.query(
+    await fixture.query(
       "INSERT INTO cities(province_id,name_fa,name_en) VALUES($1,'Test city','Workflow city') RETURNING id",
       [province]
     )
   ).rows[0].id;
   address = (
-    await pool.query(
+    await fixture.query(
       "INSERT INTO addresses(profile_id,province_id,city_id,full_address,postal_code,main_address) VALUES($1,$2,$3,'Private address','1234567890',true) RETURNING id",
       [profile, province, city]
     )
   ).rows[0].id;
   const product = async (type: string) =>
     (
-      await pool.query(
+      await fixture.query(
         'INSERT INTO products(type,title,status,price) VALUES($1,\'{"en":"Workflow test"}\', \'active\',1000) RETURNING id',
         [type]
       )
@@ -67,37 +70,45 @@ beforeAll(async () => {
   plan = await product('saving_plan');
   hardware = await product('hardware');
   agreement = (
-    await pool.query(
+    await fixture.query(
       "INSERT INTO saving_plan_agreement_versions(plan_id,title,body,created_by) VALUES($1,'Terms','Immutable terms','wf-source') RETURNING id",
       [plan]
     )
   ).rows[0].id;
   team = (
-    await pool.query("INSERT INTO staff_teams(name) VALUES('Workflow destination') RETURNING id")
+    await fixture.query("INSERT INTO staff_teams(name) VALUES('Workflow destination') RETURNING id")
   ).rows[0].id;
-  await pool.query(
+  await fixture.query(
     "INSERT INTO staff_team_members(team_id,user_id) VALUES($1,'wf-destination'),($1,'wf-no-access')",
     [team]
   );
+  await fixture.query('DELETE FROM app_config');
+  await fixture.end();
+  templatePool = undefined;
 }, 40000);
 afterAll(async () => {
-  await pool?.end();
-  if (management) {
-    await management.query(`DROP DATABASE IF EXISTS "${database}"`);
-    await management.end();
+  try {
+    await templatePool?.end();
+    await management?.query(`DROP DATABASE IF EXISTS "${template}"`);
+  } finally {
+    await management?.end();
   }
 });
 beforeEach(async () => {
-  await pool.query(`TRUNCATE notification_outbox CASCADE;
-    TRUNCATE service_breach_alerts;
-    TRUNCATE orders,contracts,tickets,verification_cases,consultation_requests,solar_construction_requests CASCADE;
-    DELETE FROM app_config;
-    DELETE FROM user_roles WHERE user_id='wf-source' AND role_id='wf-destination';
-    DELETE FROM staff_team_members WHERE user_id='wf-source';
-    UPDATE users SET disabled_at=NULL WHERE user_id LIKE 'wf-%';
-    UPDATE staff_roles SET permissions='["*"]' WHERE role_id IN ('wf-source','wf-destination')`);
+  const name = `test_workflows_${randomUUID().replaceAll('-', '')}`;
+  await management.query(`CREATE DATABASE "${name}" TEMPLATE "${template}"`);
+  database = name;
+  const url = new URL(process.env.TEST_DATABASE_URL!);
+  url.pathname = `/${database}`;
+  pool = new Pool({ connectionString: url.toString() });
 });
-afterEach(() => vi.unstubAllEnvs());
+afterEach(async () => {
+  vi.unstubAllEnvs();
+  if (!database) return;
+  await pool.end();
+  await management.query(`DROP DATABASE "${database}"`);
+  database = undefined;
+});
 async function configure(
   key: ServiceWorkflowKey,
   change: Partial<NonNullable<ServiceWorkflowPolicy[ServiceWorkflowKey]>> = {}

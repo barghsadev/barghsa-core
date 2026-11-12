@@ -265,6 +265,9 @@ It keeps receipt status events append-only and rejects bulk truncation of
 the protected finance tables, including refund history. Unissued drafts
 with no payment or refund remain eligible for removal. Current application
 writers can append receipts, advance states and post compensating entries.
+When an actor account is deleted, the existing foreign key clears its
+reference in receipt history. The event, actor type, reason and timestamp
+remain intact. Direct updates to a retained event are rejected.
 Apply the migration before traffic and retain it during binary rollback.
 The production backup and recovery gate verifies the separate durability
 of retained evidence.

@@ -184,7 +184,19 @@ it('preserves legacy evidence and captures receipt-bound actors/notes atomically
       await client.query('ROLLBACK');
       client.release();
     }
+    const beforeUnlink = (await pool.query('SELECT * FROM bank_receipt_status_events ORDER BY id'))
+      .rows;
+    await expect(
+      pool.query(
+        "UPDATE bank_receipt_status_events SET actor_user_id=NULL WHERE actor_user_id='staff'"
+      )
+    ).rejects.toMatchObject({ code: '55000' });
     await pool.query("DELETE FROM users WHERE user_id='staff'");
+    expect((await pool.query('SELECT * FROM bank_receipt_status_events ORDER BY id')).rows).toEqual(
+      beforeUnlink.map((row) =>
+        row.actor_user_id === 'staff' ? { ...row, actor_user_id: null } : row
+      )
+    );
     expect(
       (
         await pool.query(
