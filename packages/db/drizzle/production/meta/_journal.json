@@ -1499,6 +1499,13 @@
       "when": 1794490368251,
       "tag": "0293_electricity_increase_automation_scope",
       "breakpoints": true
+    },
+    {
+      "idx": 294,
+      "version": "7",
+      "when": 1794491502319,
+      "tag": "0294_saving_invoice_automation_scope",
+      "breakpoints": true
     }
   ]
 }

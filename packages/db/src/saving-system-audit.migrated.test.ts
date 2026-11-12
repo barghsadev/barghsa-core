@@ -5,6 +5,7 @@ import { join, resolve } from 'node:path';
 import { Pool, type PoolClient } from 'pg';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
+import { runMigrationPrefix } from './test/migration-prefix';
 const production = resolve('drizzle/production');
 const previous = mkdtempSync(join(tmpdir(), 'saving-system-audit-upgrade-'));
 const scoped = mkdtempSync(join(tmpdir(), 'saving-system-audit-scope-'));
@@ -52,12 +53,12 @@ afterAll(async () => {
     rmSync(scoped, { recursive: true, force: true });
   }
 }, 30000);
-async function seed(tracked = true) {
+async function seed(tracked = true, db = pool) {
   const actor = randomUUID(),
     profile = randomUUID(),
     order = randomUUID(),
     id = randomUUID();
-  const c = await pool.connect();
+  const c = await db.connect();
   try {
     await c.query('BEGIN');
     await c.query("INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test')", [
@@ -303,6 +304,101 @@ it('attributes an untracked stock observation to the actual order instead of a n
     affectedUserId: f.actor,
   });
 });
+
+it('upgrades populated orders and reserves payment effects for the scoped original invoice', async () => {
+  const database = 'test_saving_invoice_scope_' + randomUUID().replaceAll('-', '');
+  await management.query(`CREATE DATABASE "${database}"`);
+  const url = new URL(process.env.TEST_DATABASE_URL!);
+  url.pathname = '/' + database;
+  const options = { connection: { pgdirectUrl: url.toString() } };
+  const db = new Pool({ connectionString: url.toString() });
+  const tag = '0294_saving_invoice_automation_scope';
+  try {
+    expect(
+      await runMigrationPrefix('0293_electricity_increase_automation_scope', options)
+    ).toMatchObject({
+      ok: true,
+    });
+    const owner = await seed(true, db);
+    const legacy = await seed(true, db);
+    async function addContract(f: typeof owner) {
+      const contract = randomUUID(),
+        version = randomUUID();
+      const tx = await db.connect();
+      try {
+        await tx.query('BEGIN');
+        await tx.query(
+          "INSERT INTO contracts(id,profile_id,order_id,service_type,current_version_id) VALUES($1,$2,$3,'savings',$4)",
+          [contract, f.profile, f.order, version]
+        );
+        await tx.query(
+          "INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by) VALUES($1,$2,1,jsonb_build_object('text','Terms'),'Initial',$3)",
+          [version, contract, f.actor]
+        );
+        await tx.query('COMMIT');
+        return contract;
+      } catch (error) {
+        await tx.query('ROLLBACK');
+        throw error;
+      } finally {
+        tx.release();
+      }
+    }
+    const ownerContract = await addContract(owner);
+    await addContract(legacy);
+    async function addInvoice(
+      order: string,
+      profile: string,
+      type: 'auto' | 'manual',
+      contract: string | null = null
+    ) {
+      const { id } = (
+        await db.query<{ id: string }>(
+          `INSERT INTO invoices(order_id,profile_id,type,contract_id,state,total_amount,issued_at,payable_from)
+         VALUES($1,$2,$3,$4,'Unpaid',100,NOW(),NOW()) RETURNING id`,
+          [order, profile, type, contract]
+        )
+      ).rows[0]!;
+      return id;
+    }
+    const original = await addInvoice(owner.order, owner.profile, 'auto');
+    const legacyInvoice = await addInvoice(legacy.order, owner.profile, 'auto');
+    const manual = await addInvoice(owner.order, owner.profile, 'manual', ownerContract);
+    const beforeOwner = await snapshot(owner, db);
+    const beforeLegacy = await snapshot(legacy, db);
+    const invoices = async () => (await db.query('SELECT * FROM invoices ORDER BY id')).rows;
+    const beforeInvoices = await invoices();
+    expect(await runMigrationPrefix(tag, options)).toEqual({ ok: true, applied: [tag] });
+    expect(await runMigrationPrefix(tag, options)).toEqual({ ok: true, applied: [] });
+    expect(await snapshot(owner, db)).toEqual(beforeOwner);
+    expect(await snapshot(legacy, db)).toEqual(beforeLegacy);
+    expect(await invoices()).toEqual(beforeInvoices);
+
+    const pay = (invoiceId: string) =>
+      db.query(
+        "UPDATE invoices SET state='Paid',paid_amount=total_amount,paid_at=clock_timestamp() WHERE id=$1",
+        [invoiceId]
+      );
+    await pay(legacyInvoice);
+    expect(await snapshot(legacy, db)).toEqual(beforeLegacy);
+    await pay(manual);
+    expect(await snapshot(owner, db)).toEqual(beforeOwner);
+    await pay(original);
+    const after = await snapshot(owner, db);
+    expect(after.order[0]).toMatchObject({ financial_status: 'paid' });
+    expect(after.hardware[0]).toMatchObject({ stock_count: 1, reserved_count: 0 });
+    expect(after.reservation[0]).toMatchObject({ status: 'allocated' });
+    expect(after.audits.filter((row) => row.event === 'saving.inventory.allocated')).toHaveLength(
+      1
+    );
+    await db.query("UPDATE invoices SET state='Paid' WHERE id=$1", [original]);
+    expect((await snapshot(owner, db)).audits).toEqual(after.audits);
+    expect((await snapshot(owner, db)).hardware).toEqual(after.hardware);
+  } finally {
+    await db.end();
+    await management.query(`DROP DATABASE "${database}"`);
+  }
+}, 30000);
 it('restores prior functions transactionally while retaining immutable history and forward compatibility', async () => {
   const f = await seed(),
     before = await snapshot(f),
