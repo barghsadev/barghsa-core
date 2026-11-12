@@ -85,7 +85,7 @@ describe('job-recorder (T-09.09.02)', () => {
   it('never throws when the DB write fails (best-effort)', async () => {
     const { mockQuery, pool } = makePool();
     mockQuery.mockRejectedValue(new Error('duplicate value PRIVATE_JOB_LEDGER_FIXTURE'));
-    const error = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
+    const error = vi.spyOn(process.stderr, 'write').mockImplementation(() => true);
     try {
       await expect(
         recordJobFailure({ jobType: 'service_breach_scan', error: 'x' }, pool)

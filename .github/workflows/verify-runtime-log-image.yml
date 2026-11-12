@@ -1,0 +1,51 @@
+name: Verify production logging and package contents
+on:
+  push:
+    branches: ['codex/verify/v06-log-image-*']
+
+permissions:
+  contents: read
+
+jobs:
+  app:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build the exact production application image
+        run: docker build -f Dockerfile.base --target production --build-arg "BARGHSA_RELEASE_SHA=$GITHUB_SHA" -t "barghsa-ci-app:$GITHUB_SHA" .
+      - name: Verify runtime logger channels and packaged dependencies
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/image-report"
+          docker run --rm --entrypoint node "barghsa-ci-app:$GITHUB_SHA" -e '
+            const assert = require("node:assert/strict");
+            const { createRequire } = require("node:module");
+            const { existsSync } = require("node:fs");
+            const { dirname, join } = require("node:path");
+            for (const [service, manifest] of [["api", "/app/package.json"], ["worker", "/app/worker/package.json"]]) {
+              const load = createRequire(manifest);
+              const shared = load.resolve("@barghsa/shared/operator-logging");
+              const pino = createRequire(shared).resolve("pino/package.json");
+              assert.equal(load(pino).version, "10.4.0");
+              assert.equal(existsSync(join(dirname(pino), "test/fixtures/transport")), false);
+              assert.throws(() => load.resolve("@stryker-mutator/core"), { code: "MODULE_NOT_FOUND" });
+              const log = load(shared).createOperatorLogger(service);
+              log("warn", "Runtime warning probe");
+              log("error", "Runtime error probe");
+            }
+          ' > "$RUNNER_TEMP/image-report/stdout.jsonl" 2> "$RUNNER_TEMP/image-report/stderr.jsonl"
+          jq -es 'length == 2 and all(.[]; .level == "warn" and .message == "Runtime warning probe")' "$RUNNER_TEMP/image-report/stdout.jsonl"
+          jq -es 'length == 2 and all(.[]; .level == "error" and .message == "Runtime error probe")' "$RUNNER_TEMP/image-report/stderr.jsonl"
+      - name: Scan the exact rebuilt image and verify its SBOM
+        run: |
+          bash scripts/check-runtime-images.sh "$RUNNER_TEMP/image-report" "barghsa-ci-app:$GITHUB_SHA"
+          jq -e 'any(.components[]; .purl == "pkg:npm/pino@10.4.0") and all(.components[]; .purl != "pkg:npm/transport@0.0.1")' "$RUNNER_TEMP/image-report/1-sbom.cdx.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: runtime-log-image
+          path: ${{ runner.temp }}/image-report
+          retention-days: 14

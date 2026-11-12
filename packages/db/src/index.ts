@@ -73,7 +73,9 @@ function poolTimeoutPolicy(config: DbPoolConfig): QueryTimeoutPolicy {
   return policy;
 }
 
-const logDatabase = createOperatorLogger('database');
+const logDatabase = createOperatorLogger('database', {
+  write: (line) => process.stdout.write(line),
+});
 
 /** Keep the pool's existing production diagnostic policy. */
 function structuredLog(

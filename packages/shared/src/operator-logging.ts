@@ -24,7 +24,13 @@ type Attributes = Record<string, unknown>;
 /** Accept only the privacy-minimized fields and messages selected by the producer. */
 export function createOperatorLogger(
   service: 'api' | 'worker' | 'ai-inference' | 'database',
-  destination: DestinationStream = { write: (line) => process.stdout.write(line) }
+  destination: DestinationStream = pino.multistream(
+    [
+      { level: 'debug', stream: { write: (line: string) => process.stdout.write(line) } },
+      { level: 'error', stream: { write: (line: string) => process.stderr.write(line) } },
+    ],
+    { dedupe: true }
+  )
 ) {
   const environment = deploymentEnvironment();
   const logger = pino(
