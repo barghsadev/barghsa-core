@@ -1,0 +1,48 @@
+name: Verify bounded S3 responses
+on:
+  push:
+    branches: ['codex/verify/v06-s3-response-*']
+
+permissions:
+  contents: read
+
+jobs:
+  storage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build API, worker and shared packages once
+        run: pnpm -r --filter '@barghsa/api...' --filter '@barghsa/worker...' build
+      - name: Verify health, storage configuration and worker version operations
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+            src/health/storage-health-http.integration.test.ts \
+            src/storage/storage-config-http.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/s3-api.log"
+          pnpm --filter @barghsa/worker exec vitest run --reporter=verbose \
+            src/documents/destruction-storage.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/s3-worker.log"
+      - name: Preserve caller logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bounded-s3-callers
+          path: |
+            ${{ runner.temp }}/s3-api.log
+            ${{ runner.temp }}/s3-worker.log
+          retention-days: 14

@@ -24,8 +24,10 @@ import {
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { Upload } from '@aws-sdk/lib-storage';
 import { NoSuchKey } from '@aws-sdk/client-s3';
+import { IncomingMessage } from 'node:http';
 import { Readable } from 'node:stream';
 import type { ReadableStream as NodeReadableStream } from 'node:stream/web';
+import { readCappedBytes } from './read-capped-bytes.js';
 import { protectStorageTransport } from './storage-circuit.js';
 
 import type {
@@ -79,6 +81,7 @@ function signedUrlExpiry(value = DEFAULT_EXPIRES_IN): number {
   return value;
 }
 const DEFAULT_MAX_KEYS = 100;
+const MAX_METADATA_RESPONSE_BYTES = 10 * 1024 * 1024;
 
 // ---------------------------------------------------------------------------
 // Implementation
@@ -102,13 +105,13 @@ export class S3StorageProvider implements IFileStorageProvider {
     this.prefix = config.prefix ?? '';
     this.logger = logger;
 
+    const requestTimeout = config.requestTimeoutMs ?? 30_000;
     const clientConfig: S3ClientConfig = {
       region: config.region,
       forcePathStyle: config.forcePathStyle ?? false,
       maxAttempts: config.maxRetries ?? 3,
-      requestHandler: {
-        requestTimeout: config.requestTimeoutMs ?? 30_000,
-      },
+      followRegionRedirects: false,
+      requestHandler: { requestTimeout, throwOnRequestTimeout: true },
     };
 
     if (config.endpoint) {
@@ -126,6 +129,45 @@ export class S3StorageProvider implements IFileStorageProvider {
     this.removeCircuitMetrics = protectStorageTransport(
       this.client,
       config.observeCircuit !== false
+    );
+    this.client.middlewareStack.add(
+      (next, context) => async (args) => {
+        const result = await next(args);
+        const response = result.response as { body?: unknown; statusCode?: number };
+        const body = response?.body;
+        if (!(body instanceof IncomingMessage))
+          throw new StorageProviderError('Unexpected storage transport response');
+
+        if (context.commandName === 'GetObjectCommand' && response.statusCode === 200) {
+          body.setTimeout(requestTimeout, () => {
+            body.destroy(new Error('Storage object response was idle'));
+          });
+          return result;
+        }
+
+        // Apply the byte and time limits before the SDK buffers and parses response metadata.
+        const timer = setTimeout(() => {
+          body.destroy(
+            Object.assign(new Error('Storage metadata response timed out'), {
+              name: 'TimeoutError',
+            })
+          );
+        }, requestTimeout);
+        try {
+          const { bytes, truncated } = await readCappedBytes(body, MAX_METADATA_RESPONSE_BYTES);
+          if (truncated)
+            throw new StorageProviderError('Storage metadata response exceeds the size limit');
+          response.body = Readable.from([bytes]);
+          return result;
+        } finally {
+          clearTimeout(timer);
+        }
+      },
+      {
+        name: 'barghsaStorageResponseLimits',
+        step: 'deserialize',
+        priority: 'low',
+      }
     );
     const approved = config.approvedEndpointOrigins;
     if (approved) {

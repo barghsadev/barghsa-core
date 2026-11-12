@@ -163,6 +163,99 @@ it('stops SDK retries once the actual S3 failure threshold is reached', async ()
   }
 });
 
+it('fails stalled S3 requests before headers, during metadata and during an object read', async () => {
+  const requests: string[] = [];
+  const server = createServer((request, response) => {
+    const url = new URL(request.url!, 'http://fixture');
+    requests.push(request.method!);
+    if (request.method === 'HEAD') return;
+    if (url.searchParams.has('list-type')) {
+      response.writeHead(200, { 'content-type': 'application/xml' });
+      response.write('<ListBucketResult>');
+      return;
+    }
+    response.writeHead(200, { 'content-length': '10' });
+    response.write('partial');
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Storage fixture did not start');
+  const provider = new S3StorageProvider(
+    makeConfig({
+      endpoint: `http://127.0.0.1:${address.port}`,
+      maxRetries: 1,
+      requestTimeoutMs: 250,
+    })
+  );
+  try {
+    await expect(provider.objectExists('stalled')).rejects.toMatchObject({
+      name: 'StorageProviderError',
+      cause: { name: 'TimeoutError', code: 'ETIMEDOUT' },
+    });
+    await expect(provider.listObjects('')).rejects.toThrow('Storage metadata response timed out');
+    const object = await provider.getObject('partial');
+    await expect(new Response(object.body).arrayBuffer()).rejects.toThrow(
+      'Storage object response was idle'
+    );
+    expect(requests).toEqual(['HEAD', 'GET', 'GET']);
+  } finally {
+    provider.destroy();
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
+
+it('caps S3 control responses and continues to stream objects larger than that cap', async () => {
+  const large = Buffer.alloc(10 * 1024 * 1024 + 1, 'a');
+  const server = createServer((request, response) => {
+    const url = new URL(request.url!, 'http://fixture');
+    if (url.searchParams.has('list-type')) {
+      response.writeHead(200, { 'content-type': 'application/xml' });
+      response.write('<ListBucketResult>');
+      response.end(large);
+      return;
+    }
+    if (url.pathname.endsWith('/unavailable')) {
+      response.writeHead(503, { 'content-type': 'application/xml' });
+      response.end(large);
+      return;
+    }
+    response.writeHead(200, {
+      'content-type': 'application/octet-stream',
+      'content-length': large.byteLength,
+    });
+    response.end(large);
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Storage fixture did not start');
+  const provider = new S3StorageProvider(
+    makeConfig({
+      endpoint: `http://127.0.0.1:${address.port}`,
+      maxRetries: 1,
+      requestTimeoutMs: 3_000,
+    })
+  );
+  try {
+    await expect(provider.listObjects('')).rejects.toThrow(
+      'Storage metadata response exceeds the size limit'
+    );
+    await expect(provider.getObject('unavailable')).rejects.toThrow(
+      'Storage metadata response exceeds the size limit'
+    );
+    const object = await provider.getObject('large');
+    expect(object.contentLength).toBe(large.byteLength);
+    const received = new Uint8Array(await new Response(object.body).arrayBuffer());
+    expect(Buffer.from(received).equals(large)).toBe(true);
+  } finally {
+    provider.destroy();
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
+
 // ---------------------------------------------------------------------------
 // StorageObjectNotFound
 // ---------------------------------------------------------------------------
