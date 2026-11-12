@@ -1,8 +1,7 @@
-import { Icon } from './Icon.js';
 import type { ReactNode, RefObject } from 'react';
 import { Link } from '@tanstack/react-router';
 import { Button } from '@barghsa/ui';
-import { Menu, X, ChevronRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { shellText } from '@barghsa/i18n/shell';
 import { BrandMark } from './BrandMark.js';
 import { LanguageSwitcher } from './LanguageSwitcher.js';
@@ -13,7 +12,7 @@ export function Topbar({
   area,
   locale,
   isWide,
-  currentLabel,
+  breadcrumbs,
   actions,
   profileBadge,
   menuOpen,
@@ -25,7 +24,7 @@ export function Topbar({
   area: 'dashboard' | 'admin';
   locale: 'fa' | 'en';
   isWide: boolean;
-  currentLabel: string | undefined;
+  breadcrumbs: ReactNode;
   actions: ReactNode;
   profileBadge?: ReactNode;
   menuOpen: boolean;
@@ -34,7 +33,6 @@ export function Topbar({
   onAccountOpen: () => void;
   navigationId: string;
 }) {
-  const title = shellText(area === 'admin' ? 'administration' : 'workspace', locale);
   const preferences = (
     <>
       <ThemeSwitcher />
@@ -42,29 +40,16 @@ export function Topbar({
     </>
   );
   return (
-    <header className="shell-topbar">
-      <Link
-        to="/app"
-        aria-label={shellText('workspace', locale)}
-        className={isWide ? 'hidden' : 'shell-topbar-brand'}
-      >
-        <BrandMark compact />
-      </Link>
-      <div className="shell-topbar-context">
-        <span className="shrink-0 text-muted-foreground">{title}</span>
-        {currentLabel ? (
-          <>
-            <Icon
-              icon={ChevronRight}
-              className="size-3.5 shrink-0 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <span className="truncate font-medium">{currentLabel}</span>
-          </>
-        ) : null}
-      </div>
+    <header className="shell-topbar" data-area={area} data-toast-anchor>
+      {(!isWide || area === 'admin') && (
+        <Link to="/app" aria-label={shellText('workspace', locale)} className="shell-topbar-brand">
+          <BrandMark compact={!isWide} />
+        </Link>
+      )}
+      {breadcrumbs}
       <div className="shell-topbar-actions">
-        {isWide && <div className="hidden lg:contents">{preferences}</div>}
+        {isWide && <div className="shell-topbar-preferences">{preferences}</div>}
+        {actions}
         <ProfileMenu
           area={area}
           locale={locale}
@@ -76,7 +61,6 @@ export function Topbar({
             ) : undefined
           }
         />
-        {actions}
         <Button
           ref={menuButton}
           variant="ghost"

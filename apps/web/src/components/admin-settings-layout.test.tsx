@@ -1,5 +1,5 @@
 import { QueryProvider } from '../test/query-provider.js';
-import { act, type ComponentProps } from 'react';
+import { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { Settings } from 'lucide-react';
@@ -17,11 +17,6 @@ const router = vi.hoisted(() => ({
 vi.mock('@tanstack/react-router', () => ({
   useLocation: () => ({ pathname: router.path }),
   useNavigate: () => router.navigate,
-  Link: ({ to, children, ...props }: Omit<ComponentProps<'a'>, 'href'> & { to: string }) => (
-    <a href={to} {...props}>
-      {children}
-    </a>
-  ),
 }));
 let host: HTMLDivElement, root: Root;
 beforeEach(() => {
@@ -82,9 +77,7 @@ it('selects the matching configuration ancestor without accepting a partial segm
   router.path = '/admin/contract-limits/details';
   await render();
   expect(activeAdminSettingsPath(router.path)).toBe('/admin/contract-limits');
-  expect(host.querySelector('a[aria-current=page]')?.getAttribute('href')).toBe(
-    '/admin/contract-limits'
-  );
+  expect(host.querySelector('nav')).toBeNull();
   expect(host.querySelector<HTMLSelectElement>('select')!.value).toBe('/admin/contract-limits');
 });
 it('rejects an injected destination and focuses new content after valid section navigation', async () => {
@@ -104,12 +97,13 @@ it('rejects an injected destination and focuses new content after valid section 
 });
 it('offers the same destinations with Persian category labels and omits unavailable roles', async () => {
   await render('fa');
-  expect(host.querySelector('nav')?.getAttribute('aria-label')).toBe('بخش تنظیمات');
+  expect(host.querySelector('nav')).toBeNull();
+  expect(host.querySelector('label')?.textContent).toBe('بخش تنظیمات');
   expect(host.querySelectorAll('optgroup')).toHaveLength(2);
   expect([...host.querySelectorAll('option')].map((option) => option.value)).toEqual([
     '/admin/electricity-rules',
     '/admin/contract-limits',
     '/admin/verification',
   ]);
-  expect(host.querySelector('a[href="/admin/roles"]')).toBeNull();
+  expect(host.querySelector('option[value="/admin/roles"]')).toBeNull();
 });
