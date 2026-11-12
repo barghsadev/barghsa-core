@@ -22,7 +22,13 @@ beforeEach(() => vi.clearAllMocks());
 
 it('records successful activation polls', async () => {
   mocks.activate.mockResolvedValue({ activated: 2, skipped: 1 });
-  mocks.expire.mockResolvedValue({ expired: 3, cancelled: 2, financeReview: 1, skipped: 0 });
+  mocks.expire.mockResolvedValue({
+    expired: 3,
+    cancelled: 2,
+    financeReview: 1,
+    skipped: 0,
+    scopeMismatch: false,
+  });
   expect(await runElectricityIncreaseActivation()).toEqual({
     activated: 2,
     activationSkipped: 1,
@@ -30,8 +36,34 @@ it('records successful activation polls', async () => {
     cancelled: 2,
     financeReview: 1,
     skipped: 0,
+    scopeMismatch: false,
   });
   expect(mocks.success).toHaveBeenCalledWith('electricity_increase_activation', mocks.pool);
+});
+
+it('records a scope mismatch for reconciliation alongside valid outcomes', async () => {
+  mocks.activate.mockResolvedValue({ activated: 1, skipped: 0 });
+  mocks.expire.mockResolvedValue({
+    expired: 1,
+    cancelled: 1,
+    financeReview: 0,
+    skipped: 0,
+    scopeMismatch: true,
+  });
+  expect(await runElectricityIncreaseActivation()).toMatchObject({
+    activated: 1,
+    expired: 1,
+    scopeMismatch: true,
+  });
+  expect(mocks.success).not.toHaveBeenCalled();
+  expect(mocks.failure).toHaveBeenCalledWith(
+    {
+      jobType: 'electricity_increase_activation',
+      error: 'electricity_increase_scope_requires_reconciliation',
+      errorCategory: 'permanent',
+    },
+    mocks.pool
+  );
 });
 
 it('records a retryable failure without exposing the database error', async () => {

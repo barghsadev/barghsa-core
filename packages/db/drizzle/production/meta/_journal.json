@@ -1492,6 +1492,13 @@
       "when": 1794476367341,
       "tag": "0292_financial_evidence_retention",
       "breakpoints": true
+    },
+    {
+      "idx": 293,
+      "version": "7",
+      "when": 1794490368251,
+      "tag": "0293_electricity_increase_automation_scope",
+      "breakpoints": true
     }
   ]
 }

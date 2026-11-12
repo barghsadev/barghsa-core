@@ -6,6 +6,7 @@ import { join, resolve } from 'node:path';
 import { Pool } from 'pg';
 import { afterAll, beforeAll, expect, it } from 'vitest';
 import { runMigrations } from './migrate';
+import { expireDueElectricityIncreases } from './electricity-increase-activation';
 const production = resolve('drizzle/production');
 const previous = mkdtempSync(join(tmpdir(), 'electricity-system-audit-upgrade-'));
 const name = 'test_electricity_system_audit_' + randomUUID().replaceAll('-', '');
@@ -54,7 +55,7 @@ afterAll(async () => {
     rmSync(previous, { recursive: true, force: true });
   }
 }, 30000);
-async function seed(signed = false) {
+async function seed(signed = false, db = pool) {
   const actor = randomUUID(),
     profile = randomUUID(),
     order = randomUUID(),
@@ -63,7 +64,7 @@ async function seed(signed = false) {
     request = randomUUID(),
     baseInvoice = randomUUID(),
     invoice = randomUUID();
-  const c = await pool.connect();
+  const c = await db.connect();
   try {
     await c.query('BEGIN');
     await c.query("INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'test')", [
@@ -256,3 +257,59 @@ it('can roll back both function replacements transactionally without losing hist
   });
   expect(await snapshot(legacy)).toEqual(historical);
 });
+
+it('upgrades the current schema without rewriting legacy requests and processes valid work beside a mismatch', async () => {
+  const database = 'test_electricity_scope_' + randomUUID().replaceAll('-', '');
+  await management.query(`CREATE DATABASE "${database}"`);
+  const url = new URL(process.env.TEST_DATABASE_URL!);
+  url.pathname = '/' + database;
+  const options = { connection: { pgdirectUrl: url.toString() } };
+  const db = new Pool({ connectionString: url.toString() });
+  const scopeMigration = '0293_electricity_increase_automation_scope';
+  try {
+    expect(await runMigrationPrefix('0292_financial_evidence_retention', options)).toMatchObject({
+      ok: true,
+    });
+    const valid = await seed(false, db);
+    const invalid = await seed(false, db);
+    await db.query(
+      'INSERT INTO electricity_contracts(order_id,contract_id) VALUES($1,$2),($3,$4)',
+      [valid.order, valid.contract, invalid.order, invalid.contract]
+    );
+    await db.query(
+      "UPDATE electricity_quantity_increase_requests SET period_end=NOW()-INTERVAL '1 day'"
+    );
+    await db.query('UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1', [
+      invalid.request,
+      valid.profile,
+    ]);
+    const read = async () =>
+      (await db.query('SELECT * FROM electricity_quantity_increase_requests ORDER BY id')).rows;
+    const before = await read();
+    expect(await runMigrationPrefix(scopeMigration, options)).toEqual({
+      ok: true,
+      applied: [scopeMigration],
+    });
+    expect(await read()).toEqual(before);
+    expect(await runMigrationPrefix(scopeMigration, options)).toEqual({ ok: true, applied: [] });
+    expect(await expireDueElectricityIncreases(db, 1)).toEqual({
+      expired: 1,
+      cancelled: 0,
+      financeReview: 0,
+      skipped: 0,
+      scopeMismatch: true,
+    });
+    const after = await read();
+    expect(after.find((row) => row.id === valid.request)).toMatchObject({ status: 'expired' });
+    expect(after.find((row) => row.id === invalid.request)).toEqual(
+      before.find((row) => row.id === invalid.request)
+    );
+    expect(await expireDueElectricityIncreases(db, 1)).toMatchObject({
+      expired: 0,
+      scopeMismatch: true,
+    });
+  } finally {
+    await db.end();
+    await management.query(`DROP DATABASE "${database}"`);
+  }
+}, 30000);

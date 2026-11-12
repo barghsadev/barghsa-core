@@ -17,6 +17,7 @@ import { expectCoreAudit } from '../test/core-audit.js';
 import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createHash, randomUUID } from 'node:crypto';
 import { activateReadyContracts } from '@barghsa/db/contract-activation';
+import { expireDueElectricityIncreases } from '@barghsa/db/electricity-increase-activation';
 import { retryDueWalletRefunds, runWalletRefund } from '@barghsa/db/refund-processing';
 import type { ElectricityPriceAdjustmentReview } from '@barghsa/shared/finance';
 import { startHttpFixture } from '../test/http-fixture.js';
@@ -3291,6 +3292,25 @@ it.each([
       audits: (await http.pool.query('SELECT to_jsonb(a) AS row FROM audit_log a ORDER BY id'))
         .rows,
     });
+    const withMismatchedProfile = async (requestId: string, check: () => Promise<void>) => {
+      const { id } = (
+        await http.pool.query<{ id: string }>(
+          "INSERT INTO profiles(user_id,status) VALUES('buyer','ACTIVE') RETURNING id"
+        )
+      ).rows[0]!;
+      await http.pool.query(
+        'UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1',
+        [requestId, id]
+      );
+      try {
+        await check();
+      } finally {
+        await http.pool.query(
+          'UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1',
+          [requestId, input.profileId]
+        );
+      }
+    };
     const invalidNoWrite = async (
       endpoint: string,
       body: unknown,
@@ -3357,16 +3377,7 @@ it.each([
 
     if (decision === 'reject') {
       const staffPath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}`;
-      const { id: mismatchedProfile } = (
-        await http.pool.query<{ id: string }>(
-          `INSERT INTO profiles(user_id,status) VALUES('buyer','ACTIVE') RETURNING id`
-        )
-      ).rows[0]!;
-      await http.pool.query(
-        'UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1',
-        [result.requestId, mismatchedProfile]
-      );
-      try {
+      await withMismatchedProfile(result.requestId, async () => {
         const read = await fetch(path, { headers });
         expect(read.status, http.logs()).toBe(200);
         expect(await read.json()).toMatchObject({ request: null, canRequest: false });
@@ -3376,12 +3387,7 @@ it.each([
           body: JSON.stringify({ reason: 'Check request scope' }),
         });
         expect(review.status, http.logs()).toBe(404);
-      } finally {
-        await http.pool.query(
-          'UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1',
-          [result.requestId, input.profileId]
-        );
-      }
+      });
       const command = { idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64) };
       await invalidNoWrite(
         `${staffPath}/approve/review`,
@@ -3830,6 +3836,26 @@ it.each([
         ).effectiveTotalKwh
       ).toBe('10');
       if (decision === 'expire_unpaid') {
+        await withMismatchedProfile(result.requestId, async () => {
+          const before = await increaseSnapshot();
+          const excluded = await http.pool.query<{ disposition: string }>(
+            'SELECT expire_electricity_increase($1,$2) AS disposition',
+            [result.requestId, expiredAt]
+          );
+          expect(excluded.rows[0]?.disposition).toBe('skipped');
+          expect((await expireDueElectricityIncreases(http.pool, 1)).scopeMismatch).toBe(true);
+          await expect(
+            http.pool.query(
+              "UPDATE invoices SET state='Paid',paid_amount=total_amount WHERE id=$1",
+              [signedRequest.adjustmentInvoiceId]
+            )
+          ).rejects.toMatchObject({
+            code: '23514',
+            message: 'Electricity increase invoice scope requires reconciliation',
+          });
+          expect(await increaseSnapshot()).toEqual(before);
+        });
+        expect((await expireDueElectricityIncreases(http.pool, 1)).scopeMismatch).toBe(false);
         const disposition = await http.pool.query<{ disposition: string }>(
           'SELECT expire_electricity_increase($1,$2) AS disposition',
           [result.requestId, expiredAt]
@@ -3926,9 +3952,21 @@ it.each([
           [result.requestId, new Date(new Date(review.quote.eligibleFrom).getTime() - 1_000)]
         );
         expect(earlyActivation.rows[0]?.activated).toBe(false);
+        const dueAt = new Date(new Date(review.quote.eligibleFrom).getTime() + 60_000);
+        if (decision === 'approve_future') {
+          await withMismatchedProfile(result.requestId, async () => {
+            const before = await increaseSnapshot();
+            const excluded = await http.pool.query<{ activated: boolean }>(
+              'SELECT finalize_paid_electricity_increase($1,$2) AS activated',
+              [result.requestId, dueAt]
+            );
+            expect(excluded.rows[0]?.activated).toBe(false);
+            expect(await increaseSnapshot()).toEqual(before);
+          });
+        }
         const activation = await http.pool.query<{ activated: boolean }>(
           'SELECT finalize_paid_electricity_increase($1,$2) AS activated',
-          [result.requestId, new Date(new Date(review.quote.eligibleFrom).getTime() + 60_000)]
+          [result.requestId, dueAt]
         );
         expect(activation.rows[0]?.activated).toBe(true);
       }

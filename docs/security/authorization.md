@@ -14,6 +14,7 @@ The API's `AuthorizationService` resolves staff and profile capabilities. Staff 
 - Solar list and detail reads scope the related contract, publication and initial invoice to the request's authorized profile.
 - Saving list, detail and change commands use the saving profile to scope the commercial order, invoice and contract. Change review and confirmation apply that scope before locking financial records. Hardware history uses the same profile for linked adjustment invoices.
 - Electricity increase and price adjustment endpoints bind the contract, order, profile and invoice lineage before showing terms or quoting a financial basis. Invalid linked invoices stay out of public receipts. The public increase signature receipt identifies the request and includes the signer, time, amendment digest and amount. Stored session and network evidence remains in the restricted signed record.
+- Electricity increase settlement and expiry validate the same relationships before changing a request or its charge invoice. An invalid link leaves the records intact for reconciliation. The worker reports `electricity_increase_scope_requires_reconciliation` in the failed-jobs ledger and continues processing valid requests. An authorized finance operator can locate affected records using a read-only query for pending, awaiting-signature or awaiting-payment requests where `electricity_increase_has_scope(r)` is false. Verify the originating contract, order and signed evidence before any approved correction.
 
 ## Staff capabilities
 

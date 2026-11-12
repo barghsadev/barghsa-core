@@ -12,7 +12,18 @@ export async function runElectricityIncreaseActivation(pool: Pool = getDbPool())
   try {
     const activated = await activateDueElectricityIncreases(pool);
     const expired = await expireDueElectricityIncreases(pool);
-    await recordJobSuccess('electricity_increase_activation', pool);
+    if (expired.scopeMismatch) {
+      await recordJobFailure(
+        {
+          jobType: 'electricity_increase_activation',
+          error: 'electricity_increase_scope_requires_reconciliation',
+          errorCategory: 'permanent',
+        },
+        pool
+      );
+    } else {
+      await recordJobSuccess('electricity_increase_activation', pool);
+    }
     return { activated: activated.activated, activationSkipped: activated.skipped, ...expired };
   } catch {
     await recordJobFailure(
