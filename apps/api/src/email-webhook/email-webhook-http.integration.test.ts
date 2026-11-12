@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, beforeEach, expect, it, vi } from 'vitest';
 import { createHash, createHmac, randomUUID } from 'node:crypto';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture';
 import { ProviderSecretsService } from '../provider-config/provider-secrets.service';
 
@@ -390,6 +391,86 @@ async function resolveCorrection(id: string, note: unknown = 'Contact corrected'
     body: JSON.stringify({ note }),
   });
 }
+it('rejects a malformed delivery-history ID and preserves the exact optional UUID filter', async () => {
+  const { id } = await queue(randomUUID());
+  const path = `${http.base}/api/admin/notifications/delivery-logs`;
+  const read = (notificationId: string) =>
+    fetch(`${path}?${new URLSearchParams({ notificationId })}`, { headers: staffHeaders });
+  const invalid = await read('invalid-notification-id');
+  expect(invalid.status).toBe(400);
+  expect(await invalid.json()).toMatchObject({
+    error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code },
+  });
+  const found = await read(id.toUpperCase());
+  expect(found.status).toBe(200);
+  expect(await found.json()).toMatchObject([{ notificationId: id }]);
+  const absent = await read(randomUUID());
+  expect(absent.status).toBe(200);
+  expect(await absent.json()).toEqual([]);
+});
+
+it('keeps delivery history and correction decisions in the staff operating context', async () => {
+  const { id: outboxId } = await queue(randomUUID());
+  const id = await correction();
+  const customerSession = randomUUID();
+  const customerCsrf = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,
+      expires_at,idle_deadline,step_up_verified_at)
+     VALUES ($1,'webhook-staff',$2,$3,'customer',NOW()+INTERVAL '1 day',NOW()+INTERVAL '1 hour',NOW())`,
+    [customerSession, customerCsrf, randomUUID()]
+  );
+  await http.pool.query(
+    `UPDATE staff_roles SET permissions='["admin:jobs:view","admin:jobs:retry"]' WHERE role_id='webhook-review'`
+  );
+  try {
+    const headers = {
+      ...staffHeaders,
+      Cookie: `barghsa_session=${customerSession}`,
+      'X-CSRF-Token': customerCsrf,
+    };
+    const denied = await Promise.all([
+      fetch(`${http.base}/api/admin/notifications/delivery-logs?notificationId=${outboxId}`, {
+        headers,
+      }),
+      fetch(`${http.base}${correctionsPath}`, { headers }),
+      fetch(`${http.base}${correctionsPath}/${id}/resolve`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ note: 'Correction completed' }),
+      }),
+    ]);
+    for (const response of denied) {
+      expect(response.status).toBe(403);
+      expect(await response.json()).toMatchObject({
+        error: { code: ErrorCodes.AUTHZ_FORBIDDEN.code },
+      });
+    }
+    expect(
+      (
+        await http.pool.query('SELECT resolved_at FROM email_customer_corrections WHERE id=$1', [
+          id,
+        ])
+      ).rows
+    ).toEqual([{ resolved_at: null }]);
+    expect(
+      (
+        await http.pool.query(
+          "SELECT id FROM audit_log WHERE event='email_customer_correction_resolved' AND metadata::jsonb->>'correctionId'=$1",
+          [id]
+        )
+      ).rowCount
+    ).toBe(0);
+    expect((await http.pool.query('SELECT id FROM email_suppressions')).rowCount).toBe(1);
+    expect((await resolveCorrection(id)).status).toBe(200);
+  } finally {
+    await http.pool.query(
+      `UPDATE staff_roles SET permissions='["admin:jobs:view"]' WHERE role_id='webhook-review'`
+    );
+    await http.pool.query('DELETE FROM sessions WHERE session_id=$1', [customerSession]);
+  }
+});
+
 it('creates one actionable task per open recipient and exposes it only to authorized staff', async () => {
   const id = await correction();
   expect((await post(payload('email.complained'))).status).toBe(200);

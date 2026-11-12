@@ -2016,7 +2016,7 @@ export class AdminController {
    * Filterable by notification id, channel, and status; newest-first with
    * limit + offset pagination. Read-only: the append-only delivery log is
    * written exclusively by the outbox worker.
-   * Permission: admin (isAdmin session flag).
+   * Permission: admin:jobs:view in staff context.
    */
   @Get('notifications/delivery-logs')
   @ApiOperation({ summary: 'List notification delivery logs (admin)' })
@@ -2059,7 +2059,12 @@ export class AdminController {
       limit?: number;
       offset?: number;
     } = {};
-    if (notificationId) options.notificationId = notificationId;
+    if (notificationId) {
+      const parsedId = z.guid().safeParse(notificationId);
+      if (!parsedId.success)
+        throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+      options.notificationId = parsedId.data;
+    }
     if (channel) options.channel = channel;
     if (status) options.status = status;
     const parsedLimit = limit !== undefined ? parseInt(limit, 10) : NaN;

@@ -47,9 +47,10 @@ describe('privileged delivery log reads', () => {
   });
   it('passes bounded page inputs and channel/status selection', async () => {
     const { controller, logs } = fixture();
+    const id = '01a50000-1000-7000-8000-000000000001';
     await controller.listDeliveryLogs(
       request(['admin:jobs:view']),
-      'notification-1',
+      id,
       'email',
       'failed',
       '20',
@@ -57,7 +58,7 @@ describe('privileged delivery log reads', () => {
     );
     expect(logs).toHaveBeenCalledWith(
       {
-        notificationId: 'notification-1',
+        notificationId: id,
         channel: 'email',
         status: 'failed',
         limit: 20,
