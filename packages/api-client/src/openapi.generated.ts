@@ -23264,12 +23264,22 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Provider configuration. */
+            /** @description Provider configuration status. Setting names and values are write-only. */
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": {
+                        config: {
+                            enabled: boolean;
+                            providerId: string;
+                            settingsConfigured: boolean;
+                        };
+                        displayName: string;
+                        providerId: string;
+                    };
+                };
             };
             /** @description Admin role required */
             403: {
@@ -23304,8 +23314,10 @@ export interface operations {
                     enabled: boolean;
                     /** @description Must match the URL providerId */
                     providerId: string;
-                    /** @description Provider-specific settings (URL, API key, etc.) */
-                    settings: Record<string, never>;
+                    /** @description Replacement settings. The server seals this object and never returns it. */
+                    settings: {
+                        [key: string]: string;
+                    };
                 };
             };
         };
@@ -23333,6 +23345,13 @@ export interface operations {
             };
             /** @description Provider not found */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Provider settings encryption is unavailable */
+            503: {
                 headers: {
                     [name: string]: unknown;
                 };

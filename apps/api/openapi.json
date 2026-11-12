@@ -24838,7 +24838,46 @@
         ],
         "responses": {
           "200": {
-            "description": "Provider configuration."
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "config": {
+                      "properties": {
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "providerId": {
+                          "type": "string"
+                        },
+                        "settingsConfigured": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "providerId",
+                        "enabled",
+                        "settingsConfigured"
+                      ],
+                      "type": "object"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "providerId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "providerId",
+                    "displayName",
+                    "config"
+                  ],
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Provider configuration status. Setting names and values are write-only."
           },
           "403": {
             "description": "Admin role required"
@@ -24869,6 +24908,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "enabled": {
                     "description": "Whether the provider is enabled",
@@ -24879,8 +24919,12 @@
                     "type": "string"
                   },
                   "settings": {
-                    "description": "Provider-specific settings (URL, API key, etc.)",
-                    "type": "object"
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Replacement settings. The server seals this object and never returns it.",
+                    "type": "object",
+                    "writeOnly": true
                   }
                 },
                 "required": [
@@ -24906,6 +24950,9 @@
           },
           "404": {
             "description": "Provider not found"
+          },
+          "503": {
+            "description": "Provider settings encryption is unavailable"
           }
         },
         "summary": "Update verification provider configuration",
