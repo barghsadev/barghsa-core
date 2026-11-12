@@ -78,12 +78,29 @@ verify_running_image() {
 rollback() {
   local status=$?
   trap - ERR
-  echo 'Release failed; restoring previous app images' >&2
   if [[ -r "$active" ]]; then
     local previous=(docker compose --env-file "$runtime" --env-file "$active" -f "$compose")
     # Compose gives exported shell variables priority over the previous manifest.
     if ! (
       unset BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE
+      if ! "${previous[@]}" run --rm --no-deps api node -e '
+const { createDbPool, dbHealth, closeDbPools } = require("@barghsa/db");
+(async () => {
+  createDbPool();
+  try {
+    if (!(await dbHealth({ verifySchema: true })).ok) process.exitCode = 1;
+  } finally {
+    await closeDbPools();
+  }
+})().catch(() => { process.exitCode = 1; });
+'; then
+        echo 'Previous app could not verify the current database schema. Recover the matching app and database pair, or roll forward.' >&2
+        if ! "${previous[@]}" stop worker web api ai-inference; then
+          echo 'Stopping the staging application after the failed schema check also failed' >&2
+        fi
+        exit 1
+      fi
+      echo 'Release failed; restoring previous app images' >&2
       "${previous[@]}" up -d --no-deps --wait --wait-timeout 240 api web worker ai-inference
     ); then
       echo 'Restoring the previous staging app images failed' >&2

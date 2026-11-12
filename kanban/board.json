@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T02:58:58+00:00",
+  "updated": "2026-11-12T03:07:24+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9591,7 +9591,7 @@
       "remaining": [
         "Repeat migration-before-start, compatible rollout and rollback, and backup/restore verification on the designated production-equivalent topology. The isolated production Compose migration service has verified the canonical journal and rejects a mismatched expected version.",
         "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence.",
-        "The isolated 0288-to-0289 upgrade and idempotent repeat pass on both the retained Debian and scanned Ubuntu trial runtime. Verify recovery with the original application and database together. Current exact-head readiness rejects the previous app against the newer schema."
+        "The isolated 0288-to-0289 migration and idempotent repeat pass on the retained Debian and Ubuntu trial runtimes. The old image correctly rejects the migrated database and returns HTTP readiness 200 with its preserved 0288 database. Verify the final staging cutover and recovery on the production-equivalent topology."
       ],
       "owner": null,
       "depends_on": [],
@@ -9772,7 +9772,8 @@
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
-          "release-0.6-packaged-ubuntu-migration"
+          "release-0.6-packaged-ubuntu-migration",
+          "release-0.6-schema-aware-staging-rollback"
         ],
         "current_acceptance": null
       }
@@ -15389,7 +15390,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -15455,6 +15456,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ]
         }
@@ -23214,7 +23223,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -23330,6 +23339,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ]
         }
@@ -25156,7 +25173,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -25398,6 +25415,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ]
         }
@@ -77975,7 +78000,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -79041,6 +79066,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -129207,7 +129240,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -129219,7 +129252,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -129862,6 +129895,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -503382,7 +503424,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -503743,6 +503785,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -520021,7 +520071,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -520313,6 +520363,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -520675,7 +520733,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -520967,6 +521025,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -521327,7 +521393,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -521619,6 +521685,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -521979,7 +522053,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -522295,6 +522369,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -523149,7 +523231,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -523441,6 +523523,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -523985,7 +524075,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -523997,7 +524087,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -524664,6 +524754,15 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -525179,7 +525278,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -525471,6 +525570,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -525830,7 +525937,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -526122,6 +526229,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -526482,7 +526597,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -526774,6 +526889,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -527135,7 +527258,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -527451,6 +527574,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -527810,7 +527941,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -528102,6 +528233,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -528461,7 +528600,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -528753,6 +528892,14 @@
                 "deploy/staging/release.sh"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -544208,7 +544355,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -544283,6 +544430,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checks now verify the two retained stateful images before migrations and record their IDs. Existing rollout order, app/web ID check, rollback, provider configuration, health, signed storage smoke and active manifest write retain their behavior. Release and mocked notification tests passed. The staging runbook change is confined to these deployment and scan instructions."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ]
         }
@@ -563613,7 +563768,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Rehearse the verified staging database and app pair through cutover and rollback before accepting writes. The active preview database is at 0288 and the retained baseline is at 0281. The packaged rehearsal applies 0289 once and preserves all 186 application-table fingerprints. The previous app schema readiness rejects 0289, so app-only rollback cannot recover readiness after migration. Keep the original database volume and previous images available as a pair. Verify full application readiness, the cutover backup and the exact deployed image identities.",
+        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
         "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
@@ -563644,7 +563799,8 @@
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
-          "release-0.6-packaged-ubuntu-migration"
+          "release-0.6-packaged-ubuntu-migration",
+          "release-0.6-schema-aware-staging-rollback"
         ],
         "current_acceptance": null
       }
@@ -564476,7 +564632,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology."
+        "Connect the guard to the approved production-equivalent ingress and observation adapters. Verify live smoke, scoped error and SLO readback, current reconciliation and security signals, and previous-image restoration in that topology.",
+        "The staging guard refuses previous-image startup when the database schema check fails. The isolated rehearsal verifies the matched old pair. Rehearse recovery after a failed release with the final candidate, database backup and approved topology."
       ],
       "owner": null,
       "depends_on": [],
@@ -564486,11 +564643,15 @@
           "deploy/production/README.md",
           "deploy/production/guarded-rollout.py",
           "deploy/production/test_guarded_rollout.py",
-          "docs/runbooks/bad-deployment.md"
+          "docs/runbooks/bad-deployment.md",
+          "deploy/staging/README.md",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_release_rollback.py"
         ],
         "batches": [
           "release-0.6-staging-image-rollback",
-          "release-0.6-launch-halt-and-rollback"
+          "release-0.6-launch-halt-and-rollback",
+          "release-0.6-schema-aware-staging-rollback"
         ],
         "current_acceptance": null
       }
@@ -860191,7 +860352,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -860215,7 +860376,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -862305,6 +862466,15 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -864866,7 +865036,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d7296c9854f5c18364d6323cd559e4a442ff5f957e1aa79f7c8e0af538481613"
+              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -864890,7 +865060,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "37ac0a7d05fa64087f6ea53f052478780ee720a19d878468d8ee987d9afa6d49"
+              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -866878,6 +867048,15 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-schema-aware-staging-rollback",
+              "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -871705,7 +871884,7 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Rehearse the verified staging database and app pair through cutover and rollback before accepting writes. The active preview database is at 0288 and the retained baseline is at 0281. The packaged rehearsal applies 0289 once and preserves all 186 application-table fingerprints. The previous app schema readiness rejects 0289, so app-only rollback cannot recover readiness after migration. Keep the original database volume and previous images available as a pair. Verify full application readiness, the cutover backup and the exact deployed image identities."
+        "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes."
       ],
       "owner": null,
       "depends_on": [],
@@ -871949,7 +872128,8 @@
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
-          "release-0.6-packaged-ubuntu-migration"
+          "release-0.6-packaged-ubuntu-migration",
+          "release-0.6-schema-aware-staging-rollback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1003215,6 +1003395,84 @@
         {
           "file": "package-review-postgres-staging-212cb619.csv",
           "sha256": "df2086fa0f305d8a550a6c999a711c2d9dd3bbd692965016b097cd9b6d82eb6b"
+        }
+      ]
+    },
+    "release-0.6-schema-aware-staging-rollback": {
+      "batch": "release-0.6-schema-aware-staging-rollback",
+      "base_commit": "08daf297207b1a2037fc4332cdfec147d4bdea6c",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-02.03.02",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "06-security-testing-observability.md#T-06.12.04.03",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "541b17e660fe68c8d18b346f7c6837ccd54fa0cf93a95e8c5279ed8e39ad2f05"
+        }
+      ],
+      "checks": [
+        "The release rollback probes exact-head readiness using the previous app image and active database configuration before restoring app services. Failed readiness stops API, worker, web and AI and retains the original release error.",
+        "The previous app image accepted both copies of the 209-entry preview database before migration. The exact packaged 0289 migration advanced the isolated Ubuntu trial copy to 210 entries and current database readiness passed. The previous-image probe returned 1 on the upgraded copy.",
+        "Against the preserved 209-entry Debian clone the same previous-image probe returned 0 and the actual API image returned HTTP 200 with PostgreSQL ok and degraded overall status while object storage was isolated. Rehearsal containers had no network, and the actual live app and database images and migration count were unchanged. Scratch resources were removed.",
+        "ShellCheck and bash syntax, 19 rollback and queue tests, 15 mocked notifier tests, staging README format and whitespace checks passed. No live deployment or external messages were sent."
+      ],
+      "limitations": [
+        "The recovery rehearsal used isolated clones, the exact historical app and an Ubuntu trial image. It proves database and previous API readiness; external providers were isolated. It does not certify the final images, live ingress, candidate acceptance, database cutover, production rollback or Telegram."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-schema-aware-staging-rollback",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "db9141b6f1f6c0bc8d953e408a1d938fa17e58d83c2b0996c277a5af937060cc"
+        },
+        {
+          "file": "rollback-schema-probe.js",
+          "sha256": "984f049432c1daa8b6ca70390dc928f08827a6c9bc16a8ed2843e7fc3a505716"
+        },
+        {
+          "file": "rehearse-pair.sh",
+          "sha256": "668578e2e4a003c7f47f8b36f23c8432cd121a4af40823e60172725375e44911"
+        },
+        {
+          "file": "paired-rehearsal.log",
+          "sha256": "681dde43eaea0a4dbad6c008846af74618a38078c831de0de6531c96df3e70f8"
         }
       ]
     }

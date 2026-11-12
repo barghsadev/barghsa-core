@@ -10,7 +10,7 @@ RELEASE = Path(__file__).with_name("release.sh")
 
 
 class ReleaseRollbackTests(unittest.TestCase):
-    def run_rollback(self, simulate_failure=False):
+    def run_rollback(self, simulate_failure=False, schema_ready=True):
         with tempfile.TemporaryDirectory(prefix="barghsa-rollback-") as directory:
             root = Path(directory)
             runtime = root / "runtime.env"
@@ -26,10 +26,22 @@ class ReleaseRollbackTests(unittest.TestCase):
                 """#!/usr/bin/env bash
 set -eu
 args=()
-while [[ $# -gt 0 && $1 != up ]]; do
+while [[ $# -gt 0 && $1 != up && $1 != run && $1 != stop ]]; do
   args+=("$1")
   shift
 done
+if [[ $1 == run ]]; then
+  [[ $2 == --rm && $3 == --no-deps && $4 == api && $5 == node && $6 == -e ]]
+  [[ $7 == *'dbHealth({ verifySchema: true })'* ]]
+  [[ -z ${BARGHSA_APP_IMAGE+x} ]]
+  [[ "$SCHEMA_READY" == 1 ]]
+  exit
+fi
+if [[ $1 == stop ]]; then
+  [[ $* == 'stop worker web api ai-inference' ]]
+  echo apps-stopped
+  exit
+fi
 [[ $* == 'up -d --no-deps --wait --wait-timeout 240 api web worker ai-inference' ]]
 "$REAL_DOCKER" "${args[@]}" config --format json
 [[ "$SIMULATE_FAILURE" == 0 ]]
@@ -43,6 +55,7 @@ done
                 "PATH": f"{root}:{os.environ['PATH']}",
                 "REAL_DOCKER": shutil.which("docker") or "docker",
                 "BARGHSA_APP_IMAGE": "barghsa-app:failed-candidate",
+                "SCHEMA_READY": "1" if schema_ready else "0",
                 "SIMULATE_FAILURE": "1" if simulate_failure else "0",
             }
             script = (
@@ -69,6 +82,13 @@ done
         result = self.run_rollback(simulate_failure=True)
         self.assertEqual(result.returncode, 17, result.stderr)
         self.assertIn("Restoring the previous staging app images failed", result.stderr)
+
+    def test_schema_mismatch_stops_application_instead_of_starting_previous_images(self):
+        result = self.run_rollback(schema_ready=False)
+        self.assertEqual(result.returncode, 17, result.stderr)
+        self.assertEqual(result.stdout.strip(), "apps-stopped")
+        self.assertIn("Previous app could not verify the current database schema", result.stderr)
+        self.assertIn("Recover the matching app and database pair, or roll forward", result.stderr)
 
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()
