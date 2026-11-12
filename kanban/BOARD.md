@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T05:22:45+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T05:34:58+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1233 | Accepted with unchanged source bindings. |
-| verify | 44 | Existing work may be complete; inspect evidence before building. |
-| partial | 83 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 43 | Existing work may be complete; inspect evidence before building. |
+| partial | 84 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1217,7 +1217,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.06.02.06` | done | Recorded batch work | Ensure raw provider events stored securely (encrypted or access-controlled) when permitted by policy |
 | `06-security-testing-observability.md#T-06.06.02.07` | partial | Recorded batch work | Write tests: valid callback, expired timestamp, replayed event, wrong signature, missing signature, duplicate delivery |
 | `06-security-testing-observability.md#T-06.07.01.01` | verify | Inventory needed | Implement secrets resolution abstraction: env vars, AWS Secrets Manager / HashiCorp Vault / encrypted config file |
-| `06-security-testing-observability.md#T-06.07.01.02` | verify | Recorded batch work | Ensure secrets are encrypted at rest and masked in every API response and admin UI display |
+| `06-security-testing-observability.md#T-06.07.01.02` | partial | Recorded batch work | Ensure secrets are encrypted at rest and masked in every API response and admin UI display |
 | `06-security-testing-observability.md#T-06.07.01.03` | verify | Recorded batch work | Exclude secrets from logs, analytics, error tracking, telemetry, and support exports |
 | `06-security-testing-observability.md#T-06.07.01.04` | done | Recorded batch work | Implement rotation support: overlapping active/previous key period; key versioning |
 | `06-security-testing-observability.md#T-06.07.01.05` | done | Recorded batch work | Audit codebase for hardcoded secrets, .env committed, frontend-bundled secrets |

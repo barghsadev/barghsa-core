@@ -105,6 +105,15 @@ values in protected runtime configuration.
    verify their migration or expiry explicitly. Preserve restore access for
    retained backups. After v2 writes begin, rollback needs a compatible reader.
 
+Identity verification provider settings use the provider configuration key
+and bind ciphertext to the configuration row. Admin reads return only
+enabled and configured status. The registered adapter reads settings when
+needed. For an existing plaintext row, recover its settings from the protected
+configuration source and save them through the authorized provider settings
+endpoint. The save seals the settings and advances the configuration version.
+Check the remaining plaintext count with the read-only provider inventory
+before retiring old records or keys. [Provider inventory](../operations/preflight/provider-secret-review.sql)
+
 ## Original files and previews
 
 Document, template and receipt originals use 300-second private signed URLs
