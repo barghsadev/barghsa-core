@@ -371,10 +371,25 @@ jobs:
     name: Run tests
     # Keep the Poppler dependency install on a fixed Ubuntu release.
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      checks: read
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Verify affected-test preflight evidence handling
+        run: python3 -m unittest discover -s scripts -p 'test_ci_preflight_receipt.py'
+      - name: Reuse affected tests from the exact protected preflight
+        id: preflight
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.FULL_CI != 'true'
+        continue-on-error: true
+        timeout-minutes: 1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUSH_TEST_BASE: ${{ github.event.before }}
+        run: python3 scripts/ci_preflight_receipt.py reuse
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
@@ -384,15 +399,18 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Install PDF preview renderer
+        if: steps.preflight.outputs.reused != 'true'
         timeout-minutes: 6
         run: bash scripts/install-ci-pdf-renderer.sh
       - run: pnpm build
+        if: steps.preflight.outputs.reused != 'true'
       - name: Verify affected test selection
         run: node --test scripts/run-fast-tests.test.mjs
       # Every workspace coverage script runs the same test suite with coverage enabled.
       # Run it once, with at most two packages starting database/server fixtures together.
       - name: Run affected tests or full coverage
         id: coverage
+        if: steps.preflight.outputs.reused != 'true'
         env:
           BARGHSA_TEST_PREBUILT: '1'
           BARGHSA_TEST_POSTGRES_COMPOSE: '1'
@@ -404,6 +422,9 @@ jobs:
               PUSH_TEST_BASE=$(git merge-base HEAD origin/main 2>/dev/null) || PUSH_TEST_BASE=''
             fi
             node scripts/run-fast-tests.mjs "$PUSH_TEST_BASE"
+            if [[ "$PUSH_TEST_BASE" =~ ^[0-9a-f]{40}$ ]]; then
+              printf 'tested_base=%s\n' "$PUSH_TEST_BASE" >> "$GITHUB_OUTPUT"
+            fi
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n
           else
@@ -434,6 +455,22 @@ jobs:
         with:
           name: flaky-test-report
           path: ${{ runner.temp }}/flaky-test-report.json
+          retention-days: 7
+      - name: Record the exact affected-test receipt
+        id: receipt
+        if: github.event_name == 'push' && github.event.created && startsWith(github.ref, 'refs/heads/codex/preflight/') && env.FULL_CI != 'true'
+        continue-on-error: true
+        env:
+          PUSH_TEST_BASE: ${{ steps.coverage.outputs.tested_base }}
+        run: python3 scripts/ci_preflight_receipt.py write
+      - name: Retain affected-test receipt for direct publication
+        if: steps.receipt.outputs.saved == 'true'
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: affected-test-evidence-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/affected-test-receipt.json
+          if-no-files-found: error
           retention-days: 7
 
   coverage:

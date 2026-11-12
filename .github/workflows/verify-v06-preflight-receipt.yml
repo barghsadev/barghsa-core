@@ -1,0 +1,66 @@
+name: Verify v0.6 affected-test receipt transport
+on:
+  push:
+    branches: ['codex/verify/v06-preflight-receipt-*']
+permissions:
+  contents: read
+  actions: read
+  checks: read
+jobs:
+  verify:
+    name: Verify affected-test receipt transport
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      DONOR_SHA: f8d9747957a3015836788330c9dbd2307d09c22c
+      DONOR_BASE: 3afb153272733a936aae322368d469877a94cba7
+      DONOR_RUN: '43176139660'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Exercise receipt checks
+        run: python3 -m unittest discover -s scripts -p 'test_ci_preflight_receipt.py'
+      - name: Write a fixture receipt in this isolated diagnostic run
+        run: |
+          env GITHUB_REF=refs/heads/codex/preflight/fixture FULL_CI=false PUSH_TEST_BASE="$DONOR_BASE"             python3 scripts/ci_preflight_receipt.py write
+      - uses: actions/upload-artifact@v4
+        with:
+          name: affected-test-evidence-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/affected-test-receipt.json
+          if-no-files-found: error
+          retention-days: 1
+      - name: Read the diagnostic artifact and verify live read-only Actions permissions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY' | tee "$RUNNER_TEMP/preflight-receipt-transport.log"
+          from datetime import datetime, timezone
+          import os
+          import sys
+          from unittest.mock import patch
+          sys.path.insert(0, 'scripts')
+          import ci_preflight_receipt as evidence
+          repo = os.environ['GITHUB_REPOSITORY']
+          run, attempt = int(os.environ['GITHUB_RUN_ID']), int(os.environ['GITHUB_RUN_ATTEMPT'])
+          donor, base, donor_run = os.environ['DONOR_SHA'], os.environ['DONOR_BASE'], int(os.environ['DONOR_RUN'])
+          actual = evidence.read_receipt(repo, run, attempt)
+          assert actual == evidence.proof(os.environ['GITHUB_SHA'], base, run, attempt)
+          print('Read-only Actions token round-tripped the exact attempt artifact.')
+          now = datetime.now(timezone.utc)
+          with patch.object(evidence, 'read_receipt', return_value=evidence.proof(donor, base, donor_run, 1)):
+              assert evidence.find_preflight(repo, donor, base, now) == donor_run
+              assert evidence.find_preflight(repo, donor, 'a' * 40, now) is None
+          print('Read-only Actions token verified the actual successful preflight and check suite.')
+          assert evidence.find_preflight(repo, donor, base, now) is None
+          assert evidence.find_preflight(repo, os.environ['GITHUB_SHA'], base, now) is None
+          print('An older run without a receipt and this diagnostic run cannot authorize test reuse.')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: preflight-receipt-transport-log
+          path: ${{ runner.temp }}/preflight-receipt-transport.log
+          if-no-files-found: warn
+          retention-days: 7
