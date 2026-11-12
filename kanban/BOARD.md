@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T12:58:48+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T13:13:22+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1249 | Accepted with unchanged source bindings. |
-| verify | 5 | Existing work may be complete; inspect evidence before building. |
-| partial | 106 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 4 | Existing work may be complete; inspect evidence before building. |
+| partial | 107 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1154,7 +1154,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.03.01.08` | done | Recorded batch work | Write integration tests: each role's permitted/denied actions, profile isolation, cross-tenant BOLA attempts |
 | `06-security-testing-observability.md#T-06.03.01.09` | done | Recorded batch work | Ensure AuthorizationService logs every authorization denial as a structured audit event with actor, resource, action, reason, timestamp |
 | `06-security-testing-observability.md#T-06.03.01.10` | done | Recorded batch work | Write integration test: authorization denials are logged and appear on audit event dashboard |
-| `06-security-testing-observability.md#T-06.03.02.01` | verify | Inventory needed | Audit all existing resource-loading endpoints for BOLA gaps (load by ID without profile scope check) |
+| `06-security-testing-observability.md#T-06.03.02.01` | partial | Recorded batch work | Audit all existing resource-loading endpoints for BOLA gaps (load by ID without profile scope check) |
 | `06-security-testing-observability.md#T-06.03.02.02` | done | Recorded batch work | Implement reusable query scope filter: `where({ id, profileId: activeProfileId })` for customer resources |
 | `06-security-testing-observability.md#T-06.03.02.03` | done | Recorded batch work | Ensure staff/staff-admin routes verify explicit permission, not just "is staff" |
 | `06-security-testing-observability.md#T-06.03.02.04` | done | Recorded batch work | Write BOLA/IDOR penetration tests: attempt cross-profile access via UUID enumeration, direct ID manipulation |

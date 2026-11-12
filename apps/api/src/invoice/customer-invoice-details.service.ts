@@ -626,7 +626,7 @@ export class CustomerInvoiceDetailsService {
           saving_order_id: string | null;
           solar_request_id: string | null;
         }>(
-          `SELECT COALESCE(viewed.consultation_id,i.consultation_id) AS consultation_id,
+          `SELECT consultation.invoice_reference AS consultation_id,
                linked_contract.contract_id,linked_contract.contract_state,
              CASE WHEN EXISTS (
                SELECT 1 FROM electricity_orders e
@@ -640,6 +640,9 @@ export class CustomerInvoiceDetailsService {
               LIMIT 1) AS solar_request_id
              FROM invoices i
              LEFT JOIN invoices viewed ON viewed.id=$3 AND viewed.profile_id=i.profile_id
+             LEFT JOIN consultation_requests consultation
+               ON consultation.invoice_reference=COALESCE(viewed.consultation_id,i.consultation_id)
+                AND consultation.profile_id=i.profile_id
              LEFT JOIN LATERAL (
                SELECT c.id::text AS contract_id,c.state::text AS contract_state
                FROM contracts c

@@ -461,4 +461,74 @@ it('keeps foreign financial rows out of an owned consultation even when their re
     ],
     nextBefore: null,
   });
+
+  const invoice = await fetch(`${http.base}/api/invoices/${invoiceId}`, {
+    headers: headers.company!,
+  });
+  expect(invoice.status, http.logs()).toBe(200);
+  expect(await invoice.json()).toMatchObject({ consultationId: null });
+
+  const staffSession = randomUUID();
+  await http.pool.query(
+    `INSERT INTO users(user_id,username,password_hash,is_staff)
+       VALUES('consultation-reader','reader@consultation.test','test-only',true);
+     INSERT INTO staff_roles(role_id,name,description,permissions)
+       VALUES('consultation-reader','Consultation reader','Fixture','["orders:read"]');
+     INSERT INTO user_roles(user_id,role_id) VALUES('consultation-reader','consultation-reader')`
+  );
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+     VALUES($1,'consultation-reader',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes','staff')`,
+    [staffSession, randomUUID(), randomUUID()]
+  );
+  const staffDetail = await fetch(`${http.base}/api/staff/consultations/${requestId}`, {
+    headers: { Cookie: `barghsa_session=${staffSession}` },
+  });
+  expect(staffDetail.status, http.logs()).toBe(200);
+  expect(await staffDetail.json()).toMatchObject({
+    request: {
+      id: requestId,
+      invoice_id: null,
+      invoice_state: null,
+      has_paid_invoice: false,
+      uncovered_credit: '0',
+    },
+  });
+
+  const { id: standaloneInvoice } = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO invoices(profile_id,type,total_amount) VALUES($1,'manual',500) RETURNING id`,
+      [profiles.individual]
+    )
+  ).rows[0]!;
+  await http.pool.query('UPDATE consultation_requests SET invoice_id=$2 WHERE id=$1', [
+    requestId,
+    standaloneInvoice,
+  ]);
+  const standaloneDetail = await fetch(`${http.base}/api/consultations/requests/${requestId}`, {
+    headers: headers.individual!,
+  });
+  expect(standaloneDetail.status, http.logs()).toBe(200);
+  expect(await standaloneDetail.json()).toMatchObject({
+    request: { id: requestId, invoice_id: null, invoice_state: null },
+  });
+
+  const held = await http.pool.connect();
+  try {
+    await held.query('BEGIN');
+    await held.query('SELECT id FROM consultation_requests WHERE id=$1 FOR UPDATE', [requestId]);
+    const denied = await fetch(
+      `${http.base}/api/consultations/requests/${requestId}/provide-info`,
+      {
+        method: 'POST',
+        headers: headers.company!,
+        body: JSON.stringify({ reason: 'Additional fixture information' }),
+        signal: AbortSignal.timeout(3000),
+      }
+    );
+    expect(denied.status, http.logs()).toBe(404);
+  } finally {
+    await held.query('ROLLBACK');
+    held.release();
+  }
 });

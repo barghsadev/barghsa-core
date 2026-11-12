@@ -287,6 +287,7 @@ export class ConsultationRequestService {
               ) AS refund_pending
            FROM consultation_requests r
              LEFT JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
+               AND i.consultation_id=r.id::text
              WHERE r.profile_id=$1
                AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
                AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
@@ -332,6 +333,14 @@ export class ConsultationRequestService {
     try {
       await client.query('BEGIN');
       await requireCurrentSession(client, actor);
+      const scope = (
+        await client.query<{ profile_id: string }>(
+          'SELECT profile_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!scope || !(await this.orders.mayManageOrders(client, actor.userId, scope.profile_id)))
+        throw new NotFoundException('Consultation request not found');
       const request = (
         await client.query<Record<string, unknown>>(
           `SELECT r.id,r.profile_id,r.product_id,r.product_snapshot,r.status,r.staff_owner_id,
@@ -341,15 +350,12 @@ export class ConsultationRequestService {
           EXISTS(SELECT 1 FROM invoices paid WHERE paid.consultation_id=r.id::text
             AND paid.profile_id=r.profile_id AND paid.paid_amount>0) AS has_paid_invoice
             FROM consultation_requests r
-            LEFT JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id WHERE r.id=$1`,
-          [id]
+            LEFT JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
+              AND i.consultation_id=r.id::text WHERE r.id=$1 AND r.profile_id=$2`,
+          [id, scope.profile_id]
         )
       ).rows[0];
-      if (
-        !request ||
-        !(await this.orders.mayManageOrders(client, actor.userId, request.profile_id as string))
-      )
-        throw new NotFoundException('Consultation request not found');
+      if (!request) throw new NotFoundException('Consultation request not found');
       const history = (
         await client.query(
           `SELECT e.status,e.actor_user_id,
@@ -365,7 +371,7 @@ export class ConsultationRequestService {
           `SELECT id,adjustment_kind,total_amount::text AS amount,state
            FROM invoices WHERE consultation_id=$1 AND profile_id=$2 AND adjustment_for_invoice_id IS NOT NULL
            ORDER BY created_at,id`,
-          [id, request.profile_id]
+          [id, scope.profile_id]
         )
       ).rows;
       const refunds = (
@@ -373,7 +379,7 @@ export class ConsultationRequestService {
           `SELECT r.id,r.amount::text AS amount,r.state,r.destination
            FROM refunds r JOIN invoices i ON i.id=r.invoice_id
            WHERE i.consultation_id=$1 AND i.profile_id=$2 ORDER BY r.created_at,r.id`,
-          [id, request.profile_id]
+          [id, scope.profile_id]
         )
       ).rows;
       const names = await activityNames(client, [

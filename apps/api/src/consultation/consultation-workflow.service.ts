@@ -64,6 +64,7 @@ interface RequestRow {
   accepted_by: string | null;
   offer_valid_until: Date | null;
 }
+type ConsultationInvoiceScope = Pick<RequestRow, 'id' | 'profile_id'>;
 
 interface OfferInvoiceRow {
   id: string;
@@ -198,23 +199,19 @@ export class ConsultationWorkflowService {
       await requireCurrentSession(client, actor);
       const request = (
         await client.query(
-          `SELECT r.*,i.state AS invoice_state,p.profile_type,p.user_id AS profile_user_id,
+          `SELECT r.*,i.id AS scoped_invoice_id,i.state AS invoice_state,p.profile_type,p.user_id AS profile_user_id,
             COALESCE(NULLIF(lp.legal_name,''),NULLIF(TRIM(CONCAT_WS(' ',p.first_name,p.last_name)),''),p.id::text) AS profile_name
            FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
            LEFT JOIN legal_profiles lp ON lp.id=p.id
-           LEFT JOIN invoices i ON i.id=r.invoice_id WHERE r.id=$1`,
+           LEFT JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
+             AND i.consultation_id=r.id::text WHERE r.id=$1`,
           [id]
         )
       ).rows[0];
       if (!request) throw new NotFoundException('Consultation request not found');
-      request.has_paid_invoice =
-        (
-          await client.query<{ paid: boolean }>(
-            'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-            [id]
-          )
-        ).rows[0]?.paid ?? false;
-      request.uncovered_credit = (await this.uncoveredCredit(client, id)).toString();
+      const { scoped_invoice_id, ...detail } = request;
+      detail.has_paid_invoice = await this.hasPaidInvoice(client, request);
+      detail.uncovered_credit = (await this.uncoveredCredit(client, request)).toString();
       const history = (
         await client.query(
           `SELECT e.status,e.actor_user_id,
@@ -233,7 +230,8 @@ export class ConsultationWorkflowService {
       await client.query('COMMIT');
       return {
         request: {
-          ...request,
+          ...detail,
+          invoice_id: scoped_invoice_id,
           staff_owner_name: names.get(request.staff_owner_id as string) ?? null,
         },
         history: history.map((event) => ({
@@ -335,9 +333,11 @@ export class ConsultationWorkflowService {
                   await client.query<{ available: string }>(
                     `SELECT (COALESCE(SUM(i.paid_amount-i.refunded_amount),0) -
                 COALESCE((SELECT SUM(r.amount) FROM refunds r JOIN invoices ri ON ri.id=r.invoice_id
-                  WHERE ri.consultation_id=$1 AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
-               FROM invoices i WHERE i.consultation_id=$1 AND i.adjustment_kind IS DISTINCT FROM 'credit'`,
-                    [id]
+                  WHERE ri.consultation_id=$1 AND ri.profile_id=$2
+                    AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
+               FROM invoices i WHERE i.consultation_id=$1 AND i.profile_id=$2
+                 AND i.adjustment_kind IS DISTINCT FROM 'credit'`,
+                    [id, request.profile_id]
                   )
                 ).rows[0];
                 if (!request.fee || BigInt(funding?.available ?? '0') < BigInt(request.fee))
@@ -355,8 +355,9 @@ export class ConsultationWorkflowService {
                     consultation_id: string | null;
                     profile_id: string;
                   }>(
-                    'SELECT state,paid_amount,consultation_id,profile_id FROM invoices WHERE id=$1',
-                    [request.invoice_id]
+                    `SELECT state,paid_amount,consultation_id,profile_id FROM invoices
+                     WHERE id=$1 AND consultation_id=$2 AND profile_id=$3`,
+                    [request.invoice_id, id, request.profile_id]
                   )
                 ).rows[0];
                 if (
@@ -365,13 +366,7 @@ export class ConsultationWorkflowService {
                   invoice.profile_id !== request.profile_id
                 )
                   throw new ConflictException('Consultation invoice linkage is invalid');
-                const paidHistory = (
-                  await client.query<{ paid: boolean }>(
-                    'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-                    [id]
-                  )
-                ).rows[0]?.paid;
-                if (paidHistory)
+                if (await this.hasPaidInvoice(client, request))
                   throw new ConflictException('Paid consultation requires a refund review');
                 if (
                   BigInt(invoice.paid_amount) > 0n ||
@@ -433,18 +428,7 @@ export class ConsultationWorkflowService {
       await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
       const checkSession = write ? requireSessionStepUp : requireCurrentSession;
       await checkSession(client, actor);
-      const invoices = paid
-        ? (
-            await client.query<{ id: string }>(
-              'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
-              [id]
-            )
-          ).rows
-        : source.invoice_id
-          ? [{ id: source.invoice_id }]
-          : [];
-      for (const invoice of invoices)
-        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
+      await this.lockInvoices(client, { id, ...source }, source.invoice_id, paid);
       const request = await this.lockRequest(client, id);
       if (request.profile_id !== source.profile_id || request.invoice_id !== source.invoice_id)
         throw new ConflictException('Consultation changed; refresh before acting');
@@ -483,9 +467,9 @@ export class ConsultationWorkflowService {
         await requireSessionStepUp(client, actor);
         const priorInvoices = (
           await client.query<{ id: string }>(
-            `SELECT id FROM invoices WHERE consultation_id=$1
+            `SELECT id FROM invoices WHERE consultation_id=$1 AND profile_id=$3
          AND (metadata->>'idempotencyKey'=$2 OR metadata#>>'{correctionRequest,key}'=$2) LIMIT 2`,
-            [id, input.idempotencyKey]
+            [id, input.idempotencyKey, request.profile_id]
           )
         ).rows;
         if (priorInvoices.length > 1)
@@ -518,13 +502,7 @@ export class ConsultationWorkflowService {
         const fee = BigInt(input.fee);
         if (fee <= 0n || fee > 9_223_372_036_854_775_807n) throw new InputFieldException(['fee']);
         const validUntil = consultationOfferDeadline(input.validUntil);
-        const paidHistory = (
-          await client.query<{ paid: boolean }>(
-            'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-            [id]
-          )
-        ).rows[0]?.paid;
-        if (paidHistory)
+        if (await this.hasPaidInvoice(client, request))
           throw new ConflictException(
             'Paid consultation fees require the paid adjustment workflow'
           );
@@ -546,8 +524,9 @@ export class ConsultationWorkflowService {
           if (!input.reason?.trim()) throw new InputFieldException(['reason']);
           const previous = (
             await client.query<{ consultation_id: string | null; profile_id: string }>(
-              'SELECT consultation_id,profile_id FROM invoices WHERE id=$1',
-              [request.invoice_id]
+              `SELECT consultation_id,profile_id FROM invoices
+               WHERE id=$1 AND consultation_id=$2 AND profile_id=$3`,
+              [request.invoice_id, id, request.profile_id]
             )
           ).rows[0];
           if (previous?.consultation_id !== id || previous.profile_id !== request.profile_id)
@@ -585,7 +564,12 @@ export class ConsultationWorkflowService {
             reason: 'Consultation fee offer',
           });
           invoiceId = created.invoiceId;
-          await client.query('UPDATE invoices SET consultation_id=$2 WHERE id=$1', [invoiceId, id]);
+          const attached = await client.query(
+            'UPDATE invoices SET consultation_id=$2 WHERE id=$1 AND profile_id=$3',
+            [invoiceId, id, request.profile_id]
+          );
+          if (attached.rowCount !== 1)
+            throw new ConflictException('Consultation invoice linkage is invalid');
         }
         await client.query(
           `UPDATE consultation_requests SET status='offer_pending',fee=$2,scope=$3,
@@ -638,13 +622,7 @@ export class ConsultationWorkflowService {
       throw new ConflictException('Consultation is not ready for a fee offer');
     if (request.status === 'offer_pending' && !request.invoice_id)
       throw new ConflictException('Existing consultation offer has no invoice');
-    const paidHistory = (
-      await client.query<{ paid: boolean }>(
-        'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-        [request.id]
-      )
-    ).rows[0]?.paid;
-    if (paidHistory)
+    if (await this.hasPaidInvoice(client, request))
       throw new ConflictException('Paid consultation fees require the paid adjustment workflow');
     let previousInvoice: { id: string; state: string; totalAmount: string } | null = null;
     if (request.invoice_id) {
@@ -659,8 +637,8 @@ export class ConsultationWorkflowService {
           profile_id: string;
         }>(
           `SELECT id,state,total_amount,paid_amount,consultation_id,profile_id
-           FROM invoices WHERE id=$1`,
-          [request.invoice_id]
+           FROM invoices WHERE id=$1 AND consultation_id=$2 AND profile_id=$3`,
+          [request.invoice_id, request.id, request.profile_id]
         )
       ).rows[0];
       if (
@@ -733,8 +711,7 @@ export class ConsultationWorkflowService {
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
       await requireCurrentSession(client, actor);
-      if (preview.invoice_id)
-        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [preview.invoice_id]);
+      await this.lockInvoices(client, { id, ...preview }, preview.invoice_id, false);
       const request = await this.lockRequest(client, id);
       if (request.profile_id !== preview.profile_id || request.invoice_id !== preview.invoice_id)
         throw new ConflictException('Consultation changed; refresh before acting');
@@ -761,7 +738,7 @@ export class ConsultationWorkflowService {
     const validUntil = consultationOfferDeadline(input.validUntil);
     if (request.status !== 'offer_accepted' || !request.invoice_id || !request.fee)
       throw new ConflictException('Only an accepted paid consultation can be adjusted');
-    await this.assertCreditsCovered(client, request.id);
+    await this.assertCreditsCovered(client, request);
     const invoice = (
       await client.query<{
         id: string;
@@ -772,8 +749,8 @@ export class ConsultationWorkflowService {
         profile_id: string;
       }>(
         `SELECT id,state,total_amount,paid_amount,consultation_id,profile_id
-         FROM invoices WHERE id=$1`,
-        [request.invoice_id]
+         FROM invoices WHERE id=$1 AND consultation_id=$2 AND profile_id=$3`,
+        [request.invoice_id, request.id, request.profile_id]
       )
     ).rows[0];
     if (
@@ -806,11 +783,11 @@ export class ConsultationWorkflowService {
           `SELECT i.id,(i.paid_amount-i.refunded_amount-
             COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
               AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
-           FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
+           FROM invoices i WHERE i.consultation_id=$1 AND i.profile_id=$2 AND i.paid_amount>0
              AND i.adjustment_kind IS DISTINCT FROM 'credit'
              AND i.state IN ('Paid','PartiallyRefunded')
            ORDER BY i.created_at DESC,i.id DESC`,
-          [request.id]
+          [request.id, request.profile_id]
         )
       ).rows;
       for (const paid of paidInvoices) {
@@ -894,14 +871,7 @@ export class ConsultationWorkflowService {
       if (needsInvoiceWrite)
         await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
       await requireCurrentSession(client, actor);
-      const invoices = (
-        await client.query<{ id: string }>(
-          'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
-          [id]
-        )
-      ).rows;
-      for (const invoice of invoices)
-        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
+      await this.lockInvoices(client, { id, ...preview }, preview.invoice_id, true);
       const request = await this.lockRequest(client, id);
       if (request.profile_id !== preview.profile_id || request.invoice_id !== preview.invoice_id)
         throw new ConflictException('Consultation changed; refresh before acting');
@@ -1049,7 +1019,7 @@ export class ConsultationWorkflowService {
     action: 'cancel' | 'reject' | 'recover_refund',
     reason: string
   ): Promise<ConsultationPaidResolutionReview> {
-    const uncoveredCredit = await this.uncoveredCredit(client, request.id);
+    const uncoveredCredit = await this.uncoveredCredit(client, request);
     const recovery = action === 'recover_refund';
     const resultingStatus: ConsultationStatus = recovery
       ? request.status
@@ -1072,10 +1042,10 @@ export class ConsultationWorkflowService {
         `SELECT i.id,i.state,(i.paid_amount-i.refunded_amount-
           COALESCE((SELECT SUM(r.amount) FROM refunds r WHERE r.invoice_id=i.id
             AND r.state NOT IN ('Completed','Rejected','Cancelled')),0))::text AS available
-         FROM invoices i WHERE i.consultation_id=$1 AND i.paid_amount>0
+         FROM invoices i WHERE i.consultation_id=$1 AND i.profile_id=$2 AND i.paid_amount>0
            AND i.adjustment_kind IS DISTINCT FROM 'credit'
          ORDER BY i.created_at DESC,i.id DESC`,
-        [request.id]
+        [request.id, request.profile_id]
       )
     ).rows;
     if (!recovery && paidInvoices.length === 0)
@@ -1106,8 +1076,8 @@ export class ConsultationWorkflowService {
           consultation_id: string | null;
         }>(
           `SELECT id,state,paid_amount,adjustment_kind,profile_id,consultation_id
-           FROM invoices WHERE id=$1`,
-          [request.invoice_id]
+           FROM invoices WHERE id=$1 AND consultation_id=$2 AND profile_id=$3`,
+          [request.invoice_id, request.id, request.profile_id]
         )
       ).rows[0];
       if (
@@ -1216,14 +1186,7 @@ export class ConsultationWorkflowService {
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
       await requireStaffMutationPermission(client, actor.userId, 'admin:financial:edit');
       await requireSessionStepUp(client, actor);
-      const invoices = (
-        await client.query<{ id: string }>(
-          'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
-          [id]
-        )
-      ).rows;
-      for (const invoice of invoices)
-        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
+      await this.lockInvoices(client, { id, ...source }, source.invoice_id, true);
       const request = await this.lockRequest(client, id);
       if (request.profile_id !== source.profile_id || request.invoice_id !== source.invoice_id)
         throw new ConflictException('Consultation changed; refresh before acting');
@@ -1483,9 +1446,18 @@ export class ConsultationWorkflowService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      const request = await this.lockRequest(client, id);
-      if (!(await this.orders.mayManageOrders(client, actor.userId, request.profile_id, true)))
+      const scope = (
+        await client.query<{ profile_id: string }>(
+          'SELECT profile_id FROM consultation_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (
+        !scope ||
+        !(await this.orders.mayManageOrders(client, actor.userId, scope.profile_id, true))
+      )
         throw new NotFoundException('Consultation request not found');
+      const request = await this.lockRequest(client, id, scope.profile_id);
       if (!canTransitionConsultation(request.status, 'under_review', 'customer'))
         throw new ConflictException('Consultation is not waiting for customer information');
       await client.query(
@@ -1559,8 +1531,8 @@ export class ConsultationWorkflowService {
     const invoice = (
       await client.query<OfferInvoiceRow>(
         `SELECT id,state,paid_amount,total_amount,adjustment_kind,profile_id,consultation_id
-         FROM invoices WHERE id=$1 FOR UPDATE`,
-        [preview.invoice_id]
+         FROM invoices WHERE id=$1 AND consultation_id=$2 AND profile_id=$3 FOR UPDATE`,
+        [preview.invoice_id, id, preview.profile_id]
       )
     ).rows[0];
     const request = await this.lockRequest(client, id);
@@ -1574,13 +1546,7 @@ export class ConsultationWorkflowService {
     if (request.status !== 'offer_pending')
       throw new ConflictException('Consultation offer is no longer pending');
     if (decision === 'decline') {
-      const paidHistory = (
-        await client.query<{ paid: boolean }>(
-          'SELECT EXISTS(SELECT 1 FROM invoices WHERE consultation_id=$1 AND paid_amount>0) AS paid',
-          [id]
-        )
-      ).rows[0]?.paid;
-      if (paidHistory)
+      if (await this.hasPaidInvoice(client, request))
         throw new ConflictException('Paid consultation requires a staff refund review');
       if (
         BigInt(invoice.paid_amount) > 0n ||
@@ -1792,18 +1758,7 @@ export class ConsultationWorkflowService {
       } else {
         await requireCurrentSession(client, actor);
       }
-      if (financial) {
-        const invoices = (
-          await client.query<{ id: string }>(
-            'SELECT id FROM invoices WHERE consultation_id=$1 ORDER BY id',
-            [id]
-          )
-        ).rows;
-        for (const invoice of invoices)
-          await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [invoice.id]);
-      } else if (preview.invoice_id) {
-        await client.query('SELECT id FROM invoices WHERE id=$1 FOR UPDATE', [preview.invoice_id]);
-      }
+      await this.lockInvoices(client, { id, ...preview }, preview.invoice_id, financial);
       const request = await this.lockRequest(client, id);
       if (request.invoice_id !== preview.invoice_id || request.profile_id !== preview.profile_id)
         throw new ConflictException('Consultation changed; refresh before acting');
@@ -1841,29 +1796,64 @@ export class ConsultationWorkflowService {
     }
   }
 
-  private async lockRequest(client: PoolClient, id: string): Promise<RequestRow> {
+  private async lockRequest(
+    client: PoolClient,
+    id: string,
+    profileId?: string
+  ): Promise<RequestRow> {
     const request = (
       await client.query<RequestRow>(
         `SELECT r.id,r.profile_id,r.status,r.staff_owner_id,r.staff_team,r.submitted_by,
          r.invoice_id,r.fee,r.scope,r.deliverables,r.product_snapshot,
          r.accepted_at,r.accepted_by,r.offer_valid_until,p.user_id AS profile_user_id
        FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
-       WHERE r.id=$1 FOR UPDATE OF r`,
-        [id]
+       WHERE r.id=$1 AND ($2::uuid IS NULL OR r.profile_id=$2) FOR UPDATE OF r`,
+        [id, profileId ?? null]
       )
     ).rows[0];
     if (!request) throw new NotFoundException('Consultation request not found');
     return request;
   }
 
-  private async assertCreditsCovered(client: PoolClient, id: string) {
-    if ((await this.uncoveredCredit(client, id)) > 0n)
+  private async lockInvoices(
+    client: PoolClient,
+    scope: ConsultationInvoiceScope,
+    currentInvoiceId: string | null,
+    lockAll: boolean
+  ) {
+    if (!lockAll && !currentInvoiceId) return;
+    const { rows } = await client.query<{ id: string }>(
+      `SELECT id FROM invoices WHERE consultation_id=$1 AND profile_id=$2
+       AND ($3::uuid IS NULL OR id=$3) ORDER BY id FOR UPDATE`,
+      [scope.id, scope.profile_id, lockAll ? null : currentInvoiceId]
+    );
+    if (currentInvoiceId && !rows.some((row) => row.id === currentInvoiceId))
+      throw new ConflictException('Consultation invoice linkage is invalid');
+  }
+
+  private async hasPaidInvoice(
+    client: PoolClient,
+    scope: ConsultationInvoiceScope
+  ): Promise<boolean> {
+    const { rows } = await client.query<{ paid: boolean }>(
+      `SELECT EXISTS(SELECT 1 FROM invoices
+       WHERE consultation_id=$1 AND profile_id=$2 AND paid_amount>0) AS paid`,
+      [scope.id, scope.profile_id]
+    );
+    return rows[0]?.paid ?? false;
+  }
+
+  private async assertCreditsCovered(client: PoolClient, scope: ConsultationInvoiceScope) {
+    if ((await this.uncoveredCredit(client, scope)) > 0n)
       throw new ConflictException(
         'Resolve the uncovered consultation credit before another financial change'
       );
   }
 
-  private async uncoveredCredit(client: PoolClient, id: string): Promise<bigint> {
+  private async uncoveredCredit(
+    client: PoolClient,
+    scope: ConsultationInvoiceScope
+  ): Promise<bigint> {
     const row = (
       await client.query<{ credited: string; obligated: string }>(
         `WITH actions AS (
@@ -1885,10 +1875,12 @@ export class ConsultationWorkflowService {
          )
          SELECT
            COALESCE((SELECT SUM(i.total_amount) FROM invoices i JOIN credit_ids c ON c.id=i.id::text
-             WHERE i.adjustment_kind='credit'),0)::text AS credited,
+             WHERE i.consultation_id=$1 AND i.profile_id=$2 AND i.adjustment_kind='credit'),0)::text AS credited,
            COALESCE((SELECT SUM(r.amount) FROM refunds r JOIN refund_ids linked ON linked.id=r.id::text
-             WHERE r.state NOT IN ('Rejected','Cancelled')),0)::text AS obligated`,
-        [id]
+             JOIN invoices i ON i.id=r.invoice_id AND i.profile_id=r.profile_id
+             WHERE i.consultation_id=$1 AND i.profile_id=$2
+               AND r.state NOT IN ('Rejected','Cancelled')),0)::text AS obligated`,
+        [scope.id, scope.profile_id]
       )
     ).rows[0]!;
     const missing = BigInt(row.credited) - BigInt(row.obligated);

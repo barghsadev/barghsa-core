@@ -23,8 +23,10 @@ export async function settlePaidConsultation(
       `SELECT r.id,r.profile_id,r.status,r.invoice_id,r.accepted_by,r.submitted_by,
        p.user_id AS profile_user_id
        FROM consultation_requests r JOIN profiles p ON p.id=r.profile_id
+       JOIN invoices i ON i.id=$2 AND i.id=r.invoice_id AND i.profile_id=r.profile_id
+         AND i.consultation_id=r.id::text
        WHERE r.id=$1 FOR UPDATE OF r`,
-      [consultationId]
+      [consultationId, invoiceId]
     )
   ).rows[0];
   if (!row || row.invoice_id !== invoiceId || row.status !== 'offer_pending' || !row.accepted_by)

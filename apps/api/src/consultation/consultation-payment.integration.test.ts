@@ -195,9 +195,9 @@ async function decide(path: string, user: string, body: Record<string, unknown> 
   return post(path, user, { ...body, expectedReviewHash: review.hash });
 }
 
-async function offer() {
+async function offer(payingProfileId = profileId) {
   const created = await post('/api/consultations/requests', 'consultation-payer', {
-    profileId,
+    profileId: payingProfileId,
     productId,
     submissionKey: randomUUID(),
   });
@@ -1194,4 +1194,75 @@ it('accepts a previously paid invoice without losing the consultation status', a
   expect(await accepted.json()).toMatchObject({ status: 'offer_accepted', paymentRequired: false });
   await expectSettlementAudit(requestId, invoiceId);
   await expectSettlementNoOp(requestId, invoiceId);
+});
+
+it('scopes settlement and refund calculations to the consultation profile', async () => {
+  const { id: payingProfile } = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO profiles(user_id,profile_type,status)
+       VALUES('consultation-payer','LEGAL','ACTIVE') RETURNING id`
+    )
+  ).rows[0]!;
+  await http.pool.query(
+    'INSERT INTO wallets(profile_id,posted_balance,reserved_balance) VALUES($1,500000,0)',
+    [payingProfile]
+  );
+  expect(
+    (await post(`/api/profiles/default/${payingProfile}`, 'consultation-payer', {})).status
+  ).toBe(200);
+  const { requestId, invoiceId, root } = await offer(payingProfile);
+  const customerRoot = `/api/consultations/requests/${requestId}`;
+  expect((await decide(`${customerRoot}/accept`, 'consultation-payer')).status).toBe(200);
+  const { id: otherInvoice } = (
+    await http.pool.query<{ id: string }>(
+      `INSERT INTO invoices(profile_id,consultation_id,type,state,total_amount,paid_amount,issued_at,payable_from)
+       VALUES($1,$2,'manual','Paid',900000,900000,NOW(),NOW()) RETURNING id`,
+      [profileId, requestId]
+    )
+  ).rows[0]!;
+  await http.pool.query('UPDATE consultation_requests SET invoice_id=$2 WHERE id=$1', [
+    requestId,
+    otherInvoice,
+  ]);
+  try {
+    await expectSettlementNoOp(requestId, otherInvoice);
+    const blocked = await post(`${root}/paid-resolution-review`, 'consultation-finance', {
+      action: 'cancel',
+      reason: 'Check the recorded payment scope',
+    });
+    expect(blocked.status, http.logs()).toBe(409);
+    expect(JSON.stringify(await blocked.json())).not.toContain(otherInvoice);
+  } finally {
+    await http.pool.query('UPDATE consultation_requests SET invoice_id=$2 WHERE id=$1', [
+      requestId,
+      invoiceId,
+    ]);
+  }
+
+  await pay(invoiceId);
+  const invoice = await fetch(`${http.base}/api/invoices/${invoiceId}`, {
+    headers: headers['consultation-payer']!,
+  });
+  expect(invoice.status, http.logs()).toBe(200);
+  expect(await invoice.json()).toMatchObject({ consultationId: requestId });
+  const credit = await post(`${root}/paid-fee-review`, 'consultation-finance', {
+    fee: '450000',
+    reason: 'Reduce scope',
+    validUntil: new Date(Date.now() + 7 * 86_400_000).toISOString(),
+  });
+  expect(credit.status, http.logs()).toBe(200);
+  expect(await credit.json()).toMatchObject({
+    data: { refundPlan: [{ invoiceId, amount: '50000', availableBefore: '500000' }] },
+  });
+  const resolution = await post(`${root}/paid-resolution-review`, 'consultation-finance', {
+    action: 'cancel',
+    reason: 'Check the recorded payment scope',
+  });
+  expect(resolution.status, http.logs()).toBe(200);
+  expect(await resolution.json()).toMatchObject({
+    data: {
+      refundAllocations: [{ invoiceId, amount: '500000', availableBefore: '500000' }],
+      totalRefund: '500000',
+    },
+  });
 });
