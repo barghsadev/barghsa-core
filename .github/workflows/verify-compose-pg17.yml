@@ -1,0 +1,136 @@
+name: Verify actual PostgreSQL 17 Compose fixture
+on:
+  push:
+    branches: ['codex/verify/v06-compose-pg17-*']
+
+permissions:
+  contents: read
+
+jobs:
+  postgres:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    env:
+      BARGHSA_TEST_PREBUILT: '1'
+      BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build compiled API and worker fixtures once
+        run: pnpm -r --filter '@barghsa/api...' --filter '@barghsa/worker...' build
+      - name: Observe exact Compose image and service isolation through the fixture
+        shell: bash
+        run: |
+          cd packages/db
+          node --input-type=module <<'NODE' | tee "$RUNNER_TEMP/compose-pg17.json"
+          import assert from 'node:assert/strict';
+          import { execFileSync } from 'node:child_process';
+          import { Pool } from 'pg';
+          import testSetup from './dist/test/globalSetup.js';
+          const { startTestPostgres } = testSetup;
+
+          function running() {
+            return execFileSync('docker', ['ps', '--filter', 'label=com.docker.compose.service=postgres', '--format', '{{.ID}}'], { encoding: 'utf8' })
+              .trim().split('\n').filter(Boolean);
+          }
+
+          async function inspect(pool, url) {
+            const container = running().map((id) => JSON.parse(execFileSync('docker', ['inspect', id], { encoding: 'utf8' }))[0])
+              .find((item) => item.NetworkSettings.Ports['5432/tcp']?.some((binding) =>
+                binding.HostIp === '127.0.0.1' && binding.HostPort === url.port));
+            assert.ok(container);
+            assert.equal(container.Config.Image, 'pgvector/pgvector:pg17');
+            assert.match(container.Image, /^sha256:[a-f0-9]{64}$/);
+            assert.match(container.Config.Labels['com.docker.compose.project'], /^barghsa-test-[a-f0-9-]{36}$/);
+            assert.ok(Object.hasOwn(container.HostConfig.Tmpfs ?? {}, '/var/lib/postgresql/data'));
+            const identity = await pool.query("SELECT current_database() AS database, current_setting('server_version_num')::integer AS version");
+            assert.equal(identity.rows[0].database, 'barghsa_test');
+            assert.equal(Math.floor(identity.rows[0].version / 10000), 17);
+            const extensions = await pool.query("SELECT extname FROM pg_extension WHERE extname = ANY($1) ORDER BY extname", [['btree_gist','vector']]);
+            assert.deepEqual(extensions.rows.map(({ extname }) => extname), ['btree_gist','vector']);
+            return {
+              container: container.Id.slice(0,12),
+              project: container.Config.Labels['com.docker.compose.project'],
+              image: container.Config.Image,
+              image_id: container.Image,
+              loopback_port: Number(url.port),
+              server_version_num: identity.rows[0].version,
+              extensions: extensions.rows.map(({ extname }) => extname),
+              tmpfs: true,
+            };
+          }
+
+          const first = await startTestPostgres();
+          let second, poolA, poolB, firstClosed = false;
+          try {
+            second = await startTestPostgres();
+            const urlA = new URL(first.connectionString);
+            const urlB = new URL(second.connectionString);
+            assert.equal(urlA.hostname, '127.0.0.1');
+            assert.equal(urlB.hostname, '127.0.0.1');
+            assert.notEqual(urlA.port, urlB.port);
+            assert.match(urlA.password, /^[a-f0-9]{48}$/);
+            assert.match(urlB.password, /^[a-f0-9]{48}$/);
+            assert.notEqual(urlA.password, urlB.password);
+            poolA = new Pool({ connectionString: first.connectionString, max: 1 });
+            poolB = new Pool({ connectionString: second.connectionString, max: 1 });
+            const a = await inspect(poolA, urlA);
+            const b = await inspect(poolB, urlB);
+            assert.notEqual(a.project, b.project);
+            assert.equal(a.image_id, b.image_id);
+            await poolA.query('CREATE TABLE isolated_fixture_record (id integer PRIMARY KEY)');
+            await poolA.query('INSERT INTO isolated_fixture_record (id) VALUES ($1)', [1]);
+            assert.deepEqual((await poolB.query("SELECT to_regclass('isolated_fixture_record') AS relation")).rows, [{ relation: null }]);
+            await poolA.end();
+            poolA = undefined;
+            await first.close();
+            firstClosed = true;
+            assert.equal(running().includes(a.container), false);
+            assert.equal(running().includes(b.container), true);
+            assert.deepEqual((await poolB.query('SELECT 1 AS active')).rows, [{ active: 1 }]);
+            await poolB.end();
+            poolB = undefined;
+            await second.close();
+            second = undefined;
+            assert.equal(running().includes(b.container), false);
+            console.log(JSON.stringify({
+              instances: [a, b],
+              isolated_credentials: true,
+              isolated_rows: true,
+              independent_teardown: true,
+              both_removed: true,
+            }, null, 2));
+          } finally {
+            try {
+              await Promise.all([poolA?.end(), poolB?.end()]);
+            } finally {
+              await Promise.all([firstClosed ? undefined : first.close(), second?.close()]);
+            }
+          }
+          NODE
+      - name: Exercise the migrated API, worker and database callers
+        shell: bash
+        run: |
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose src/test/http-fixture-template.integration.test.ts 2>&1 | tee "$RUNNER_TEMP/api.log"
+          pnpm --filter @barghsa/worker exec vitest run --reporter=verbose src/operations/alerts.integration.test.ts -t 'records the private P2' 2>&1 | tee "$RUNNER_TEMP/worker.log"
+          pnpm --filter @barghsa/db exec vitest run --reporter=verbose src/storage-multipart.migrated.test.ts 2>&1 | tee "$RUNNER_TEMP/db.log"
+      - name: Retain runtime and test evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: compose-pg17-evidence
+          path: |
+            ${{ runner.temp }}/compose-pg17.json
+            ${{ runner.temp }}/api.log
+            ${{ runner.temp }}/worker.log
+            ${{ runner.temp }}/db.log
+          retention-days: 14
