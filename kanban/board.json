@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T01:22:24+00:00",
+  "updated": "2026-11-12T01:31:24+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -4153,7 +4153,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             }
           ],
           "checks": [
@@ -4250,6 +4250,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -4635,7 +4643,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "scripts/check-suppressed-errors.sh",
@@ -4743,6 +4751,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -4962,7 +4978,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             }
           ],
           "checks": [
@@ -5083,6 +5099,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -5379,7 +5403,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".size-limit.json",
@@ -5503,6 +5527,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -5755,7 +5787,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -5862,6 +5894,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -5973,7 +6013,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6080,6 +6120,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -6425,7 +6473,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/e2e/consultation-journey.spec.ts",
@@ -6606,6 +6654,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -6767,7 +6823,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/flaky-test-quarantine.md",
@@ -6874,6 +6930,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -7002,7 +7066,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -7138,6 +7202,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -10068,7 +10140,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             }
           ],
           "checks": [
@@ -10163,6 +10235,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -16485,11 +16565,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "AGENTS.md",
@@ -16608,6 +16688,15 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -16681,7 +16770,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -16818,6 +16907,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -16897,7 +16994,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "package.json",
@@ -17046,6 +17143,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -17286,7 +17391,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/changed-coverage.md",
@@ -17392,6 +17497,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -21311,7 +21424,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -21845,6 +21958,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -23830,11 +23951,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "eslint.config.mjs",
@@ -23953,6 +24074,15 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -24031,7 +24161,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".prettierignore",
@@ -24140,6 +24270,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -24224,7 +24362,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".husky/commit-msg",
@@ -24248,7 +24386,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "eslint.config.mjs",
@@ -24375,6 +24513,15 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -25477,7 +25624,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -26095,6 +26242,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -26178,7 +26333,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".prettierignore",
@@ -26194,7 +26349,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "package.json",
@@ -26364,6 +26519,15 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -26635,7 +26799,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -26674,6 +26838,14 @@
                 "README.md"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -493482,7 +493654,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -493942,6 +494114,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -494099,7 +494279,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -494821,6 +495001,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -494974,7 +495162,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -495420,6 +495608,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -495539,7 +495735,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -495985,6 +496181,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -496104,7 +496308,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/ai-agents/ai-model-breaker.ts",
@@ -496550,6 +496754,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -535706,7 +535918,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "Dockerfile.web",
@@ -535859,6 +536071,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -536126,7 +536346,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -536252,6 +536472,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -536312,7 +536540,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "Dockerfile.web",
@@ -536465,6 +536693,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -536834,7 +537070,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             }
           ],
           "checks": [
@@ -536940,6 +537176,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -541469,7 +541713,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -541574,6 +541818,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -546352,7 +546604,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -546635,6 +546887,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -547716,7 +547976,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".gitignore",
@@ -547889,6 +548149,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -547952,7 +548220,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".gitignore",
@@ -548108,6 +548376,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         },
@@ -548230,7 +548506,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -548329,6 +548605,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         },
@@ -548435,7 +548719,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -548540,6 +548824,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -548598,7 +548890,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "Dockerfile.base",
@@ -548737,6 +549029,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -548800,7 +549100,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".gitignore",
@@ -548956,6 +549256,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         },
@@ -549064,7 +549372,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -549159,6 +549467,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -549898,7 +550214,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "scripts/check-runtime-images.sh",
@@ -550012,6 +550328,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -551549,7 +551873,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "vitest.config.ts",
@@ -551601,7 +551925,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -551696,6 +552020,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -551744,7 +552077,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/admin/admin.service.test.ts",
@@ -551871,6 +552204,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -551918,7 +552259,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.test.ts",
@@ -552033,6 +552374,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -552053,16 +552402,20 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify an exact hosted push with the package-graph dependent selector and keep the full release workflow distinct.",
+        "Verify exact protected push execution of the updated selector on its immutable candidate. Hosted fc55c82a confirmed the existing package-graph selector, and exact isolated run 43134770507 confirms the prebuilt fast command with the same test tasks.",
         "Reconcile the specification command with package-level selection that includes production build and subprocess consumers."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          ".github/workflows/ci.yml",
+          "docs/development/ci.md"
+        ],
         "batches": [
-          "release-0.6-test-fixtures-and-affected-dependents"
+          "release-0.6-test-fixtures-and-affected-dependents",
+          "release-0.6-prebuilt-ci-test-selection"
         ],
         "current_acceptance": null
       }
@@ -554162,7 +554515,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -554215,6 +554568,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -554261,7 +554622,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -554314,6 +554675,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -554395,7 +554764,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -554513,6 +554882,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -555815,7 +556192,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -555934,6 +556311,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -556015,7 +556400,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -556048,6 +556433,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -557219,7 +557612,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -557227,7 +557620,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -557352,6 +557745,15 @@
                 "docs/development/ci.md"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -557477,7 +557879,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -557517,6 +557919,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Documented the actual build and artifact prerequisites and the single-push preflight already specified in the Kanban workflow."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -557785,7 +558195,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -557959,6 +558369,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -558018,7 +558436,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/e2e/contract-quantity-increase.spec.ts",
@@ -558179,6 +558597,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -558660,7 +559086,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -558765,6 +559191,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -558817,7 +559251,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".semgrep/security.tsx",
@@ -558930,6 +559364,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed. Updated the required check documentation from five to six jobs and explained the retained fast and full coverage scopes."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -559794,7 +560236,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".size-limit.json",
@@ -559979,6 +560421,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -560915,7 +561365,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -561054,6 +561504,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -561102,7 +561560,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -561241,6 +561699,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -561291,7 +561757,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -561430,6 +561896,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -561477,7 +561951,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/src/electricity/electricity-calculation.service.ts",
@@ -561616,6 +562090,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -561682,11 +562164,11 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -561697,6 +562179,17 @@
             "The implemented job order follows the data dependencies. Compiled API and browser fixtures require a build before integration. The native and browser coverage outputs precede source coverage enforcement. Scanners run independently and the protected required check waits for all results. This retains parallel independent checks requested by the release workflow.",
             "GitHub readback verified active branch ruleset 26844024 requires the GitHub Actions Verify monorepo integrity context. The new aggregate summary contains six outcomes and fails if any required result is failed, cancelled or skipped.",
             "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            }
           ]
         }
       }
@@ -561742,7 +562235,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -561873,6 +562366,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -561922,7 +562423,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/openapi.json",
@@ -562078,6 +562579,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -562272,7 +562781,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -562419,6 +562928,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -562466,7 +562983,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -562675,6 +563192,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -562738,7 +563263,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/README.md",
@@ -562952,6 +563477,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -563496,7 +564029,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -563635,6 +564168,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -563693,7 +564234,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -563832,6 +564373,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -572931,7 +573480,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "Dockerfile.base",
@@ -573138,6 +573687,14 @@
                 "packages/shared/src/error-reporting.test.ts"
               ],
               "scope": "Added source coverage for valid and rejected package manifests, including prerelease/build metadata and length, type, name and missing data checks. Existing reporter tests and executable source retain their bytes. All 11 cases and the repository changed-source coverage calculation passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -575310,7 +575867,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "Dockerfile.base",
@@ -575447,6 +576004,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -575639,7 +576204,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -575693,6 +576258,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -575801,7 +576374,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -575855,6 +576428,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -575909,7 +576490,7 @@
             },
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -575963,6 +576544,14 @@
                 "deploy/production/check-promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -626567,7 +627156,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".size-limit.json",
@@ -627503,6 +628092,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -627647,7 +628244,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".size-limit.json",
@@ -628583,6 +629180,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -629361,7 +629966,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".size-limit.json",
@@ -630297,6 +630902,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -630380,7 +630993,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/web/e2e/critical-accessibility.ts",
@@ -630510,6 +631123,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         }
@@ -830196,7 +830817,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -830406,6 +831027,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -830964,7 +831593,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -831174,6 +831803,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -831732,7 +832369,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -831942,6 +832579,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -832501,7 +833146,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -832711,6 +833356,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -833269,7 +833922,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -833479,6 +834132,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -834037,7 +834698,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -834247,6 +834908,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -834805,7 +835474,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -835015,6 +835684,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -835574,7 +836251,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -835784,6 +836461,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -836342,7 +837027,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -836552,6 +837237,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -837110,7 +837803,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "b0bc8e8aa23b6fdb8e6f50a9f299e91560658e3c7f4b670b194ad3779ad4e371"
+              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -837320,6 +838013,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -856265,7 +856966,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/openapi.json",
@@ -860509,6 +861210,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "presentation_renewals": [
@@ -860954,7 +861663,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": "apps/api/openapi.json",
@@ -865056,6 +865765,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -867313,7 +868030,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/ci.yml",
-              "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+              "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
             },
             {
               "path": ".size-limit.json",
@@ -869568,6 +870285,14 @@
                 "packages/i18n/src/workspace.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-prebuilt-ci-test-selection",
+              "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+              "paths": [
+                ".github/workflows/ci.yml"
+              ],
+              "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
             }
           ]
         },
@@ -870102,7 +870827,8 @@
           "release-0.6-sentry-deploy-marker",
           "release-0.6-api-pressure-alerts",
           "release-0.6-license-handoff-current",
-          "release-0.6-s3-response-limits"
+          "release-0.6-s3-response-limits",
+          "release-0.6-prebuilt-ci-test-selection"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -870161,7 +870887,8 @@
           "docs/security/release-license-review.md",
           "packages/shared/src/storage/s3-storage-provider.ts",
           "packages/shared/src/storage/storage.test.ts",
-          "docs/operations/storage-configuration.md"
+          "docs/operations/storage-configuration.md",
+          "docs/development/ci.md"
         ]
       }
     },
@@ -1000253,6 +1000980,172 @@
         {
           "file": "native-artifacts-43133852345/s3-worker.log",
           "sha256": "212d7c6ecb56620d9173a49eed5844c884b0bd29490e93e5a7f1b601e4e70d81"
+        }
+      ]
+    },
+    "release-0.6-prebuilt-ci-test-selection": {
+      "batch": "release-0.6-prebuilt-ci-test-selection",
+      "base_commit": "f1fe1636d7efd5bedfaa927db01ef2880dd6b624",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.01.05",
+        "01-platform-infrastructure.md#T-01.02.04",
+        "01-platform-infrastructure.md#T-01.03.02",
+        "01-platform-infrastructure.md#T-01.03.04",
+        "01-platform-infrastructure.md#T-01.04.01",
+        "01-platform-infrastructure.md#T-01.04.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.05",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-02.03.04",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-05.03.03",
+        "01-platform-infrastructure.md#T-05.03.05",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.02",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "05-notifications-documents-ai.md#T-05.08.01",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "05-notifications-documents-ai.md#T-05.08.03",
+        "05-notifications-documents-ai.md#T-05.08.04",
+        "05-notifications-documents-ai.md#T-05.08.05",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.04",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.03",
+        "06-security-testing-observability.md#T-06.04.02.04",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.01",
+        "06-security-testing-observability.md#T-06.07.02.02",
+        "06-security-testing-observability.md#T-06.07.02.03",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.05",
+        "06-security-testing-observability.md#T-06.07.03.05",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.09.01.02",
+        "06-security-testing-observability.md#T-06.09.01.03",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.02.03",
+        "06-security-testing-observability.md#T-06.11.02.04",
+        "06-security-testing-observability.md#T-06.11.03.05",
+        "06-security-testing-observability.md#T-06.12.01.01",
+        "06-security-testing-observability.md#T-06.12.01.02",
+        "06-security-testing-observability.md#T-06.12.01.03",
+        "06-security-testing-observability.md#T-06.12.01.04",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.02.03",
+        "06-security-testing-observability.md#T-06.12.02.04",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "06-security-testing-observability.md#T-06.19.01.03",
+        "06-security-testing-observability.md#T-06.19.01.05",
+        "06-security-testing-observability.md#T-06.19.01.06",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.05.02.04",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        ".github/workflows/ci.yml",
+        "docs/development/ci.md"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "a97bbe68f43818b5e6dd10e828bb287732707a493fc73cb2c26fef9b3b916a9f"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+        },
+        {
+          "path": "turbo.json",
+          "sha256": "9ccc230bf843adbb00f82183e5294607402abc9bffa324e30ffa21f65c6cd97c"
+        },
+        {
+          "path": "packages/shared/turbo.json",
+          "sha256": "4f91bf6bf1be965a45d8725807dc0c2c63638ec55b7a2c04eba49fc48a342a03"
+        },
+        {
+          "path": "package.json",
+          "sha256": "4eda79c366516c2a82600e29a95aad22f3d03ffb4d6f22239ea23471fedc16d3"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        },
+        {
+          "path": "apps/api/src/test/build-http-app.ts",
+          "sha256": "316df2e398f44063465dae16ebc2decbf88b4c64b95be47c3bd3735c0158a8b0"
+        }
+      ],
+      "checks": [
+        "Exact passing predecessor run 43128471381 job 130886442630 had a successful workspace build and then rebuilt dependency packages during forced affected tests. The retained task receipt identifies at least three repeated build executions.",
+        "Pinned Turbo 2.10.11 dry runs compare executable package test IDs and commands for eight scopes. Tests remain identical, including shared and translation dependents, API/worker-only, real first-preflight and push bases, an empty commit range and full fallback. The four duplicate build tasks in the real shared selection were already present in the successful workspace build.",
+        "Exact hosted diagnostic 43134770507 built the workspace and then ran the shared and i18n package test commands. All 1,437 Vitest cases and 20 Node cases, including real MinIO, passed. The Turbo execution summary contained exactly those two test tasks, and built outputs retained their hashes. The strict full CI, coverage floors, flaky test controls, required job checks, fixture setup and fallback remain unchanged. Actionlint, formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The native diagnostic exercises representative package tasks. The full protected preflight on the queued immutable tip remains pending. The task wording about file-level Vitest selection remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-prebuilt-ci-test-selection",
+      "execution_receipts": [
+        {
+          "file": "predecessor-build-tasks.json",
+          "sha256": "523c45a2c336501fedd69ba166f6b09f02c5487172b7b13670bdcbf6b528feff"
+        },
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "df3b2a4eddb720363689387afae27bda342c063e9524d19155b5c3a219339626"
+        },
+        {
+          "file": "selection.log",
+          "sha256": "6dc87da04b43968e2d0afbbf2f0aa08d16fd9ff0d2499dfe660fee692f377e96"
+        },
+        {
+          "file": "native-run-43134770507.json",
+          "sha256": "a225d785571c9da4d35880abf4f1e852b517be88a26b1af8ab38fcbc054c3ed3"
+        },
+        {
+          "file": "native-artifacts-43134770507/prebuilt-test.log",
+          "sha256": "5494fec31c2d4338ddcf93b243d4e70c785dd4fab07b7b2bf017a3c757bbe509"
+        },
+        {
+          "file": "native-artifacts-43134770507/prebuilt-tasks.json",
+          "sha256": "240641caa74e866c174949eaa35081037dc30dce310b12af57a7dcb74d727956"
         }
       ]
     }

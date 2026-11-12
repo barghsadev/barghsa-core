@@ -359,9 +359,9 @@ jobs:
               if git cat-file -e "$PUSH_TEST_BASE^{commit}" 2>/dev/null; then
                 filters+=(--filter="...[$PUSH_TEST_BASE]")
               fi
-              pnpm turbo run test --force --concurrency=2 "${filters[@]}"
+              pnpm turbo run test --only --force --concurrency=2 "${filters[@]}"
             else
-              pnpm turbo run test --force --concurrency=2 --filter="...[origin/main]"
+              pnpm turbo run test --only --force --concurrency=2 --filter="...[origin/main]"
             fi
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
             pnpm turbo run test:coverage --concurrency=2 --filter="...[origin/main]" --filter=@barghsa/web --filter=@barghsa/ui --filter=@barghsa/shared --filter=@barghsa/i18n

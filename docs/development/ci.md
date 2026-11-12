@@ -8,6 +8,8 @@ Direct pushes to `main` require **Verify monorepo integrity** on the exact candi
 
 The test and application-quality jobs build the workspace before using compiled API and browser fixtures. They run alongside the static, secret and runtime image scans. Combined coverage waits for the two jobs that produce its artifacts. The required check waits for all six results, including the full coverage enforcement result when full CI is selected.
 
+The fast test step uses the successful workspace build from the same job. Turbo selects affected workspaces and their dependents, then executes their test tasks with `--only --force`. This reruns the selected tests while omitting build tasks whose outputs are already present.
+
 The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari in eight shards per project. For a release candidate, dispatch `ci.yml` and `browser-nightly.yml` against the same immutable preflight ref. Verify both runs report the intended `headSha` and retain the strict rollup from all 40 browser shards. The Chromium coverage run and the browser matrix provide separate evidence. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
 The web suite pins Playwright 1.65.0 for its driver. This version restores WebKit mouse movement deltas used by the NumberField scrub test. Run the web suite with the same Node.js 24 version as CI when reproducing hosted results. [Playwright WebKit fix](https://github.com/microsoft/playwright/issues/43417)
