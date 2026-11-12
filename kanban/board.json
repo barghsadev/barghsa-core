@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T17:58:59+00:00",
+  "updated": "2026-11-12T18:10:50+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -3688,14 +3688,14 @@
       "push_receipt": null,
       "deployment_job": null,
       "acceptance": {
-        "accepted_at": "2026-11-12T17:58:59+00:00",
+        "accepted_at": "2026-11-12T18:10:50+00:00",
         "evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell",
         "source_binding": "Isolated from exact live v0.5.0 b0dce58ca8d2ec0bf48dcecb575f54d51cedf916. Source and build, browser, and capture receipts are retained with the patch.",
         "gates": {
           "navigation": "Single sidebar and breadcrumb, responsive layouts, active navigation and permission filtering verified.",
           "theme": "Managed theme has no interactive preference control; user-managed theme writes and recovery verified.",
           "accessibility": "Persian and English keyboard, responsive, light and dark contrast verified.",
-          "build_and_budgets": "Production build, typecheck, 15 units, 66 browser cases and 102 budgets passed."
+          "build_and_budgets": "Corrected staging build, typecheck, lint, 66 browser cases, and all 102 original budgets passed. The merged build measures 299.84 KB gzip for the 300 KB wallet limit. The prior focused unit evidence remains valid."
         },
         "production_authorized": false
       }
@@ -556394,7 +556394,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -556537,6 +556537,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -556689,7 +556697,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -556832,6 +556840,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -557486,7 +557502,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AuditLogViewer.tsx",
@@ -558450,6 +558466,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -558555,7 +558579,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/pages/AdminAiAgentsPage.tsx",
@@ -558818,6 +558842,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -579201,7 +579233,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -579473,6 +579505,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -579581,7 +579621,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -579853,6 +579893,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -579961,7 +580009,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -580233,6 +580281,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -580341,7 +580397,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/dashboard/DashboardLayout.tsx",
@@ -580613,6 +580669,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -581430,7 +581494,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
@@ -581930,6 +581994,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -582161,7 +582233,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -582615,6 +582687,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -583040,7 +583120,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -583494,6 +583574,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -583918,7 +584006,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -584372,6 +584460,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -584889,7 +584985,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -585236,6 +585332,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -586418,7 +586522,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -586765,6 +586869,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -589152,7 +589264,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AssistantChatComponents.tsx",
@@ -589459,6 +589571,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -591150,7 +591270,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -591754,6 +591874,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -592148,7 +592276,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -592752,6 +592880,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -593740,7 +593876,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AuthLayout.tsx",
@@ -594344,6 +594480,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         }
@@ -594667,7 +594811,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -595543,6 +595687,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -595728,7 +595880,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -596604,6 +596756,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -596789,7 +596949,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -597665,6 +597825,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -597850,7 +598018,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -598726,6 +598894,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -598911,7 +599087,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -599787,6 +599963,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -599972,7 +600156,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -600848,6 +601032,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -601033,7 +601225,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -601909,6 +602101,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -602094,7 +602294,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -602970,6 +603170,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -603155,7 +603363,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -604031,6 +604239,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -604216,7 +604432,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -605092,6 +605308,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -605277,7 +605501,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -606153,6 +606377,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -606338,7 +606570,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -607214,6 +607446,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -607399,7 +607639,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -608275,6 +608515,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -608460,7 +608708,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -609336,6 +609584,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -609521,7 +609777,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -610397,6 +610653,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -610582,7 +610846,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -611458,6 +611722,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -611643,7 +611915,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -612519,6 +612791,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -612704,7 +612984,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -613580,6 +613860,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -613765,7 +614053,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -614641,6 +614929,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -614826,7 +615122,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BrandMark.tsx",
@@ -615702,6 +615998,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -696640,7 +696944,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -697094,6 +697398,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -697518,7 +697830,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -697972,6 +698284,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -698396,7 +698716,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -698850,6 +699170,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -699274,7 +699602,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -699728,6 +700056,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -700156,7 +700492,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -700610,6 +700946,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -701034,7 +701378,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -701488,6 +701832,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -701912,7 +702264,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -702366,6 +702718,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -702791,7 +703151,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -703245,6 +703605,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -703670,7 +704038,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -704124,6 +704492,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -704549,7 +704925,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -705003,6 +705379,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -705428,7 +705812,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -705882,6 +706266,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -706307,7 +706699,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -706761,6 +707153,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -707186,7 +707586,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -707640,6 +708040,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -708065,7 +708473,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -708519,6 +708927,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -708944,7 +709360,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BottomTabBar.tsx",
@@ -709398,6 +709814,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ],
           "presentation_renewals": [
@@ -822495,7 +822919,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/AssignmentFallbackEditor.tsx",
@@ -824530,6 +824954,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
             }
           ]
         },
@@ -825169,11 +825601,12 @@
       "evidence": {
         "batches": [
           "release-0.5.1-admin-sidebar",
-          "release-0.5.1-admin-shell"
+          "release-0.5.1-admin-shell",
+          "release-0.5.1-shell-budget"
         ],
         "current_acceptance": {
           "status": "passed",
-          "reviewed_sha": "e694f0b4d0118d0b37b83f4c8704ffd3d03f9fd4",
+          "reviewed_sha": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
           "source_evidence": [
             {
               "path": "apps/web/e2e/admin-settings.spec.ts",
@@ -825205,7 +825638,7 @@
             },
             {
               "path": "apps/web/src/components/AppShell.tsx",
-              "sha256": "1edfa4b05bde15f4e7d94e4408c7ec75311e19d3a81aa00407ee54d030f1f0d9"
+              "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
             },
             {
               "path": "apps/web/src/components/BreadcrumbBar.tsx",
@@ -825249,9 +825682,22 @@
             "Admin-managed themes apply without rendering a preference control or making user theme preference requests. User-selectable themes keep confirmation, recovery and save authority.",
             "66 production browser cases passed across Chromium and Safari with Persian and English, desktop/tablet/mobile, light and dark, keyboard, contrast, workspace switching and verified saves.",
             "The production build, 15 focused units, web typecheck, changed-file lint and formatting, and all 102 route and interaction gzip budgets passed.",
-            "Reviewed Persian desktop and mobile captures from the built release with synthetic settings data."
+            "Reviewed Persian desktop and mobile captures from the built release with synthetic settings data.",
+            "Removed programmatic sidebar scrolling from the shared shell. The sidebar uses normal browser scrolling and keeps active link styling and keyboard navigation.",
+            "The initial protected preflight exceeded the wallet gzip limit at 300.07 KB. The corrected local merged build measured 299.84 KB against the original 300 KB limit. All 102 original budgets passed in the corrected staging and merged builds.",
+            "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures."
           ],
-          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell"
+          "evidence_location": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell",
+          "source_renewals": [
+            {
+              "batch": "release-0.5.1-shell-budget",
+              "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+              "paths": [
+                "apps/web/src/components/AppShell.tsx"
+              ],
+              "scope": "Shared shell behavior and unchanged route budgets verified on the corrected candidate."
+            }
+          ]
         }
       }
     }
@@ -945531,6 +945977,127 @@
         "07-ui-ux-design.md#T-07.30.02.01",
         "release-readiness#R-02.02",
         "release-readiness#R-04.02"
+      ]
+    },
+    "release-0.5.1-shell-budget": {
+      "batch": "release-0.5.1-shell-budget",
+      "base_commit": "814c3f18f2fa39f11b3e74b597b167aed70b2f05",
+      "task_keys": [
+        "07-ui-ux-design.md#T-07.01.03.16",
+        "07-ui-ux-design.md#T-07.01.03.17",
+        "07-ui-ux-design.md#T-07.01.03.19",
+        "07-ui-ux-design.md#T-07.01.03.20",
+        "07-ui-ux-design.md#T-07.04.01.01",
+        "07-ui-ux-design.md#T-07.04.01.02",
+        "07-ui-ux-design.md#T-07.04.01.03",
+        "07-ui-ux-design.md#T-07.04.01.04",
+        "07-ui-ux-design.md#T-07.04.01.06",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.07",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.03",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "release-readiness#R-04.02",
+        "release-readiness#R-04.03"
+      ],
+      "changed_paths": [
+        "apps/web/src/components/AppShell.tsx"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/components/AppShell.tsx",
+          "sha256": "f768cae6942297c27b6a736d5050c9e842ad28fab70e358307bfe02c0b069044"
+        }
+      ],
+      "checks": [
+        "Removed programmatic sidebar scrolling from the shared shell. The sidebar uses normal browser scrolling and keeps active link styling and keyboard navigation.",
+        "The initial protected preflight exceeded the wallet gzip limit at 300.07 KB. The corrected local merged build measured 299.84 KB against the original 300 KB limit. All 102 original budgets passed in the corrected staging and merged builds.",
+        "All 66 production-browser cases passed with the corrected shell across Chromium and Safari. Reviewed the updated Persian desktop and mobile captures."
+      ],
+      "limitations": [
+        "The failed first preflight did not advance main or staging. The corrected exact preflight remains a separate publication gate."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.5.1-admin-shell",
+      "execution_receipts": [
+        {
+          "file": "compact-build.log",
+          "sha256": "d76cc7f778c55dbc66c7c523c32aac283a9ed4daa52733f1284ae334b351dae2"
+        },
+        {
+          "file": "compact-bundle.log",
+          "sha256": "f667566f32aeef216cd08ebdc5a8c9d9505128afd2840fe732604d90d9803d5b"
+        },
+        {
+          "file": "compact-browser.log",
+          "sha256": "d56bb6f346ca26e5729db55c5402a564efa1ea9bcc6a890aad413426320a68db"
+        },
+        {
+          "file": "publication-bundle-compact.log",
+          "sha256": "9a24d073eafd5e2f040772813adb7ebf23c6435decbc53e7ce75446068b26f4d"
+        },
+        {
+          "file": "quality-failure.log",
+          "sha256": "68fd4bbc73f315549e791a4892c7c63092d285fecc9fe70eab7fc9b314119a21"
+        },
+        {
+          "file": "compact-format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "compact-types.log",
+          "sha256": "988ab6baf820faaab485cd30b0a8b51b975929d2b711db98d7cea43cdbd4098e"
+        },
+        {
+          "file": "compact-lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "admin-shell-final-desktop.png",
+          "sha256": "05972134717628f46753bde2e4708b6f4e8dae66066491197d3a47e4f9891965"
+        },
+        {
+          "file": "admin-shell-final-mobile.png",
+          "sha256": "45a8ab6a0bd5aa31d62a01f6a95aa3e595038979fa01f10bcf00898ca80677e5"
+        }
       ]
     }
   },
