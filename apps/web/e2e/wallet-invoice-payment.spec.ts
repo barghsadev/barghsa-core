@@ -5,6 +5,7 @@ import { openHistoryFilters, applyHistoryFilters } from './history-filter-reset'
 import AxeBuilder from '@axe-core/playwright';
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { scanCriticalDialog } from './critical-accessibility';
 import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { createHash } from 'node:crypto';
@@ -227,6 +228,62 @@ async function shell(
     });
   });
 }
+for (const locale of ['fa', 'en'] as const) {
+  test(
+    `wallet payment review dialog is accessible (${locale})`,
+    { tag: '@a11y-critical' },
+    async ({ page }, info) => {
+      const amount = '1250000';
+      const balance = '2000000';
+      await shell(page, locale, locale === 'fa', amount, () => '0');
+      const writes: string[] = [];
+      await page.route(`**/api/invoices/${invoiceId}/wallet-payment`, (route) => {
+        if (route.request().method() !== 'GET') {
+          writes.push(route.request().method());
+          return route.fulfill({ status: 409, json: {} });
+        }
+        return route.fulfill({
+          json: {
+            invoiceId,
+            profileId,
+            remainingAmount: amount,
+            availableBalance: balance,
+            canPay: true,
+            review: financialReview(amount, balance),
+          },
+        });
+      });
+      await page.goto(`/invoices/${invoiceId}`);
+      await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      const trigger = page.getByRole('button', {
+        name: walletText('pay', locale),
+        exact: true,
+      });
+      await expect(trigger).toBeEnabled();
+      await trigger.press('Enter');
+      const dialog = page.getByRole('dialog');
+      await expect(dialog).toContainText(
+        formatCurrencyIrr(amount, locale, {
+          numberStyle: locale === 'fa' ? 'persian' : 'western',
+        })
+      );
+      await expect(dialog).toContainText('Customer profile');
+      await expect(
+        dialog.getByRole('button', { name: t('team.confirm', locale), exact: true })
+      ).toBeDisabled();
+      await scanCriticalDialog(page);
+      if (locale === 'fa' && info.project.name === 'chromium')
+        await dialog.screenshot({ path: info.outputPath('wallet-payment-review-fa.png') });
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+      await expect(
+        page.getByRole('button', { name: walletText('retry', locale), exact: true })
+      ).toBeFocused();
+      expect(writes).toEqual([]);
+    }
+  );
+}
+
 for (const locale of ['fa', 'en'] as const)
   for (const darkMode of [false, true])
     test(`wallet payment keeps exact confirmation across verification and ambiguous retry (${locale}, dark=${darkMode})`, async ({

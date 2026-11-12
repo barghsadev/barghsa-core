@@ -1,5 +1,8 @@
 import { test, expect, type Page } from './coverage-fixture';
 import { approveRiskConfirmation } from './confirmation-fixture';
+import { scanCriticalDialog } from './critical-accessibility';
+import { t } from '@barghsa/i18n/app';
+import { t as approvalText } from '@barghsa/i18n/admin-ui';
 const id = '11111111-1111-4111-8111-111111111111';
 const request = {
   id,
@@ -41,6 +44,41 @@ async function shell(page: Page, locale = 'en') {
   );
 }
 for (const locale of ['fa', 'en'] as const) {
+  test(
+    `staff approval review dialog is accessible (${locale})`,
+    { tag: '@a11y-critical' },
+    async ({ page }, info) => {
+      await shell(page, locale);
+      const amount = '250000';
+      await page.route(/\/api\/admin\/approval-requests\?/, (route) =>
+        route.fulfill({ json: [{ ...request, amountIrR: amount }] })
+      );
+      const writes: string[] = [];
+      await page.route(`**/api/admin/approval-requests/${id}/approve`, (route) => {
+        writes.push(route.request().method());
+        return route.fulfill({ status: 409, json: {} });
+      });
+      await page.goto('/admin/approval-requests');
+      await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
+      const title = approvalText('admin.approvals.approve', locale);
+      const trigger = page.getByRole('button', { name: title, exact: true });
+      await trigger.press('Enter');
+      const dialog = page.getByRole('dialog', { name: title, exact: true });
+      await expect(dialog).toContainText(id);
+      await expect(dialog).toContainText(new Intl.NumberFormat(locale).format(BigInt(amount)));
+      await expect(
+        dialog.getByRole('button', { name: t('team.confirm', locale), exact: true })
+      ).toBeDisabled();
+      await scanCriticalDialog(page);
+      if (locale === 'fa' && info.project.name === 'chromium')
+        await dialog.screenshot({ path: info.outputPath('staff-approval-review-fa.png') });
+      await page.keyboard.press('Escape');
+      await expect(dialog).toHaveCount(0);
+      await expect(trigger).toBeFocused();
+      expect(writes).toEqual([]);
+    }
+  );
+
   test(`approval retains exact amount and request across step-up (${locale})`, async ({ page }) => {
     await shell(page, locale);
     let verified = false,

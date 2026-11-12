@@ -13,7 +13,10 @@ The production browser cases tagged `@a11y-critical` cover login, the customer
 dashboard, service histories, the wallet, contract details and the populated
 customer intake forms for electricity, saving, solar and consultation. The
 intake checks cover both electricity modes in English and Persian. They scan
-the rendered forms without creating a real order or request. Fast CI runs
+the rendered forms without creating a real order or request. The gate also
+checks the populated final reviews, consultation ready to submit, and the
+wallet payment and staff approval dialogs. The dialog cases check keyboard
+opening and focus restoration on dismissal before any financial write. Fast CI runs
 these cases against the production web build and fails on a violation. The
 full browser suite also runs them. Making the job a required merge check is
 controlled by the repository rules.

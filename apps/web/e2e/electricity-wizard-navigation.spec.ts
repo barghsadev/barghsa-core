@@ -901,58 +901,64 @@ for (const locale of ['en', 'fa'] as const) {
 
 for (const locale of ['en', 'fa'] as const)
   for (const mode of ['simple', 'advanced'] as const) {
-    test(`${mode} final review keeps inputs read-only and preserves review on failed edits (${locale})`, async ({
-      page,
-    }, info) => {
-      const state = await fixture(page, mode, locale, 5);
-      await page.goto(`${path(mode)}?step=5`);
-      const sections = page.locator('[data-review-section]');
-      await expect(sections).toHaveCount(7);
-      await expect(sections.locator('input,select,textarea')).toHaveCount(0);
-      await expect(page.locator('[data-review-section=address]')).toContainText(
-        address.fullAddress
-      );
-      await checkRoutePresentation(page, info, locale);
-      const quantity = page.locator(
-        `[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`
-      );
-      state.saveStatus = 503;
-      await quantity.getByRole('button').click();
-      const recoveryNotice = page
-        .getByRole('alert')
-        .filter({ hasText: confirmationText('unconfirmed', locale) });
-      await expect(recoveryNotice).toBeVisible();
-      await expect(page).toHaveURL(/step=5$/);
-      await expect(quantity).toBeVisible();
-      if (mode === 'advanced') await expectNoticeBelowPageHeader(recoveryNotice);
-      state.saveStatus = 200;
-      await checkDraft(page, locale).click();
-      await retryDraft(page, locale).click();
-      await expect(page).toHaveURL(/step=2$/);
-      await expect(field(page, mode)).toHaveValue('100');
-      await checkRoutePresentation(page, info, locale);
-      await field(page, mode).fill('120');
-      await button(page, 'electricity.order.next', locale).click();
-      await button(page, 'electricity.order.next', locale).click();
-      await expect(
-        page.locator(mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]')
-      ).toBeChecked();
-      await button(page, 'electricity.order.next', locale).click();
-      await expect(page).toHaveURL(/step=5$/);
-      await expect(
-        page.locator(`[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`)
-      ).toContainText(locale === 'fa' ? '۱۲۰' : '120');
-      expect(state.orders).toHaveLength(0);
-      expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
-      expect(
-        await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
-      ).toBe(true);
-      await page.locator('[data-review-section=address]').getByRole('button').click();
-      await expect(page).toHaveURL(/step=4$/);
-      await expect(
-        page.locator(mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]')
-      ).toBeChecked();
-    });
+    test(
+      `${mode} final review keeps inputs read-only and preserves review on failed edits (${locale})`,
+      { tag: '@a11y-critical' },
+      async ({ page }, info) => {
+        const state = await fixture(page, mode, locale, 5);
+        await page.goto(`${path(mode)}?step=5`);
+        const sections = page.locator('[data-review-section]');
+        await expect(sections).toHaveCount(7);
+        await expect(sections.locator('input,select,textarea')).toHaveCount(0);
+        await expect(page.locator('[data-review-section=address]')).toContainText(
+          address.fullAddress
+        );
+        await checkRoutePresentation(page, info, locale);
+        const quantity = page.locator(
+          `[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`
+        );
+        state.saveStatus = 503;
+        await quantity.getByRole('button').click();
+        const recoveryNotice = page
+          .getByRole('alert')
+          .filter({ hasText: confirmationText('unconfirmed', locale) });
+        await expect(recoveryNotice).toBeVisible();
+        await expect(page).toHaveURL(/step=5$/);
+        await expect(quantity).toBeVisible();
+        if (mode === 'advanced') await expectNoticeBelowPageHeader(recoveryNotice);
+        state.saveStatus = 200;
+        await checkDraft(page, locale).click();
+        await retryDraft(page, locale).click();
+        await expect(page).toHaveURL(/step=2$/);
+        await expect(field(page, mode)).toHaveValue('100');
+        await checkRoutePresentation(page, info, locale);
+        await field(page, mode).fill('120');
+        await button(page, 'electricity.order.next', locale).click();
+        await button(page, 'electricity.order.next', locale).click();
+        await expect(
+          page.locator(
+            mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]'
+          )
+        ).toBeChecked();
+        await button(page, 'electricity.order.next', locale).click();
+        await expect(page).toHaveURL(/step=5$/);
+        await expect(
+          page.locator(`[data-review-section=${mode === 'simple' ? 'quantity' : 'products'}]`)
+        ).toContainText(locale === 'fa' ? '۱۲۰' : '120');
+        expect(state.orders).toHaveLength(0);
+        expect((await new AxeBuilder({ page }).include('main').analyze()).violations).toEqual([]);
+        expect(
+          await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)
+        ).toBe(true);
+        await page.locator('[data-review-section=address]').getByRole('button').click();
+        await expect(page).toHaveURL(/step=4$/);
+        await expect(
+          page.locator(
+            mode === 'simple' ? `#order-address-${address.id}` : 'input[name="addressId"]'
+          )
+        ).toBeChecked();
+      }
+    );
   }
 
 for (const locale of ['en', 'fa'] as const)

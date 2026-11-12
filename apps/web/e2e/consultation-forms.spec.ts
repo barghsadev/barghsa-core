@@ -59,6 +59,14 @@ for (const [locale, theme] of settings) {
       await expect(page.locator(`#consultation-product-${consultationProduct}`)).toBeEnabled();
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await scanCriticalMain(page);
+      await page.locator(`#consultation-product-${consultationProduct}`).check();
+      await page.getByRole('checkbox', { name: copy('confirm'), exact: true }).check();
+      await expect(
+        page
+          .getByRole('group', { name: copy('intakeForm'), exact: true })
+          .locator('button[type=submit]')
+      ).toBeEnabled();
+      await scanCriticalMain(page);
       expect(state.intakeWrites).toEqual([]);
     }
   );

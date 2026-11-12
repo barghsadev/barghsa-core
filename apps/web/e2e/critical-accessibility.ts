@@ -1,10 +1,10 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, type Page, type TestInfo } from './coverage-fixture';
 
-async function scanMain(page: Page) {
+async function scanRegion(page: Page, selector = 'main#main-content') {
   await page.evaluate(() => document.fonts.ready);
   return new AxeBuilder({ page })
-    .include('main#main-content')
+    .include(selector)
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'])
     .analyze();
 }
@@ -12,12 +12,20 @@ async function scanMain(page: Page) {
 export async function scanCriticalMain(page: Page) {
   await expect(page.locator('main#main-content')).toBeVisible();
   await expect(page.getByRole('main')).toHaveCount(1);
-  const result = await scanMain(page);
+  const result = await scanRegion(page);
+  expect(result.violations).toEqual([]);
+}
+
+export async function scanCriticalDialog(page: Page) {
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toHaveCount(1);
+  await expect(dialog).toBeVisible();
+  const result = await scanRegion(page, '[role="dialog"]');
   expect(result.violations).toEqual([]);
 }
 
 export async function scanAdvisoryMain(page: Page, info: TestInfo) {
-  const result = await scanMain(page);
+  const result = await scanRegion(page);
   const route = new URL(page.url()).pathname;
   const direction = await page.locator('html').getAttribute('dir');
   const browser = info.project.name;

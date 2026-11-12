@@ -197,6 +197,8 @@ jobs:
             e2e/electricity-wizard-navigation.spec.ts \
             e2e/service-wizard-navigation.spec.ts \
             e2e/consultation-forms.spec.ts \
+            e2e/wallet-invoice-payment.spec.ts \
+            e2e/approval-queue.spec.ts \
             --grep @a11y-critical
         env:
           BARGHSA_TEST_PREBUILT: '1'

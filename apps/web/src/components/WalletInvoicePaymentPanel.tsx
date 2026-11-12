@@ -2,7 +2,7 @@ import { useCommandFeedback } from '../hooks/useCommandFeedback.js';
 import { useOwnedFinancialRead } from '../hooks/useOwnedFinancialRead.js';
 import { useAccountUser } from '../hooks/useAccountUser.js';
 import { useProfileContextRevision } from '../lib/profile-context.js';
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { LoadingStatus, Alert, AlertDescription, Button, ScrollArea } from '@barghsa/ui';
 import { tWalletInvoicePayment as t } from '@barghsa/i18n/wallet-invoice-payment';
 import { confirmationText } from '@barghsa/i18n/confirmation';
@@ -84,6 +84,7 @@ function OwnedWalletInvoicePaymentPanel({
     numbers = useNumberFormatting(locale);
   const time = useAccountTime(locale);
   const text = (key: Parameters<typeof t>[0]) => t(key, locale);
+  const paymentButton = useRef<HTMLButtonElement>(null);
   const [quote, setQuote] = useState<Quote | null>(null),
     [intent, setIntent] = useState<Intent | null>(null);
   const [revision, setRevision] = useState(0),
@@ -217,6 +218,7 @@ function OwnedWalletInvoicePaymentPanel({
           )}
           <div className="flex flex-wrap gap-3">
             <Button
+              ref={paymentButton}
               className="hover:bg-primary"
               disabled={loading || open || !quote?.canPay || time.status !== 'ready'}
               onClick={() => {
@@ -250,6 +252,7 @@ function OwnedWalletInvoicePaymentPanel({
             risk="financial"
             confirmationDisabled={time.status !== 'ready'}
             action={paymentAction}
+            finalFocus={paymentButton}
             summary={
               <>
                 {time.notice}
