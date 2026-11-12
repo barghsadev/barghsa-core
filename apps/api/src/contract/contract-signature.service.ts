@@ -34,8 +34,8 @@ interface RequestRow {
   original_document_id: string;
   requested_by: string;
   requested_at: Date;
-  original_name: string;
-  document_state: string;
+  original_name: string | null;
+  document_state: string | null;
 }
 interface SignatureRow {
   request_id: string;
@@ -43,10 +43,10 @@ interface SignatureRow {
   recorded_by: string;
   recorded_by_type: 'customer' | 'staff';
   recorded_at: Date;
-  original_name: string;
-  document_state: string;
-  uploaded_by: string;
-  uploaded_by_type: string;
+  original_name: string | null;
+  document_state: string | null;
+  uploaded_by: string | null;
+  uploaded_by_type: string | null;
 }
 @Injectable()
 export class ContractSignatureService {
@@ -60,12 +60,19 @@ export class ContractSignatureService {
     if (!row) throw new NotFoundException();
     return row;
   }
-  private async latest(client: PoolClient, versionId: string) {
+  private async latest(client: PoolClient, parent: Parent, versionId: string) {
     return (
       await client.query<RequestRow>(
-        `SELECT r.id,r.request_number,r.original_document_id,r.requested_by,r.requested_at,d.original_name,d.state AS document_state
-   FROM contract_signature_requests r JOIN documents d ON d.id=r.original_document_id WHERE r.version_id=$1 ORDER BY r.request_number DESC LIMIT 1`,
-        [versionId]
+        `SELECT r.id,r.request_number,r.original_document_id,r.requested_by,r.requested_at,
+                d.original_name,d.state AS document_state
+         FROM contract_signature_requests r
+         LEFT JOIN contract_documents cd ON cd.document_id=r.original_document_id
+           AND cd.contract_id=r.contract_id AND cd.contract_version_id=r.version_id
+           AND cd.role IN ('original','amendment')
+         LEFT JOIN documents d ON d.id=cd.document_id AND d.profile_id=$3
+           AND d.business_record_type='contract' AND d.business_record_id=r.contract_id
+         WHERE r.contract_id=$1 AND r.version_id=$2 ORDER BY r.request_number DESC LIMIT 1`,
+        [parent.id, versionId, parent.profile_id]
       )
     ).rows[0];
   }
@@ -104,12 +111,20 @@ export class ContractSignatureService {
     staff: boolean,
     canWrite: boolean
   ) {
-    const request = await this.latest(client, versionId);
+    const request = await this.latest(client, parent, versionId);
     const signed = (
       await client.query<SignatureRow>(
-        `SELECT s.request_id,s.signed_document_id,s.recorded_by,s.recorded_by_type,s.recorded_at,d.original_name,d.state AS document_state,d.uploaded_by,d.uploaded_by_type
-   FROM contract_signatures s JOIN documents d ON d.id=s.signed_document_id WHERE s.contract_id=$1 AND s.version_id=$2`,
-        [parent.id, versionId]
+        `SELECT s.request_id,s.signed_document_id,s.recorded_by,s.recorded_by_type,s.recorded_at,
+                d.original_name,d.state AS document_state,d.uploaded_by,d.uploaded_by_type
+         FROM contract_signatures s
+         LEFT JOIN contract_signature_requests r ON r.id=s.request_id
+           AND r.contract_id=s.contract_id AND r.version_id=s.version_id
+         LEFT JOIN contract_documents cd ON cd.document_id=s.signed_document_id
+           AND cd.contract_id=r.contract_id AND cd.contract_version_id=r.version_id AND cd.role='signed'
+         LEFT JOIN documents d ON d.id=cd.document_id AND d.profile_id=$3
+           AND d.business_record_type='contract' AND d.business_record_id=s.contract_id
+         WHERE s.contract_id=$1 AND s.version_id=$2`,
+        [parent.id, versionId, parent.profile_id]
       )
     ).rows[0];
     const isCurrent = parent.current_version_id === versionId;
@@ -123,6 +138,7 @@ export class ContractSignatureService {
       canRequest:
         staff &&
         canWrite &&
+        (!request || request.document_state !== null) &&
         ((isCurrent &&
           !parent.signed_at &&
           ['Accepted', 'AwaitingSignature'].includes(parent.state)) ||
@@ -132,29 +148,31 @@ export class ContractSignatureService {
         ((isCurrent && parent.state === 'AwaitingSignature') || isAmendment) &&
         request?.document_state === 'Approved' &&
         !signed,
-      request: request
-        ? {
-            id: request.id,
-            requestNumber: request.request_number,
-            originalDocumentId: request.original_document_id,
-            originalName: request.original_name,
-            documentState: request.document_state,
-            requestedAt: request.requested_at.toISOString(),
-            ...(staff ? { requestedBy: request.requested_by } : {}),
-          }
-        : null,
-      signature: signed
-        ? {
-            requestId: signed.request_id,
-            signedDocumentId: signed.signed_document_id,
-            originalName: signed.original_name,
-            documentState: signed.document_state,
-            recordedByType: signed.recorded_by_type,
-            uploadedByType: signed.uploaded_by_type,
-            recordedAt: signed.recorded_at.toISOString(),
-            ...(staff ? { recordedBy: signed.recorded_by, uploadedBy: signed.uploaded_by } : {}),
-          }
-        : null,
+      request:
+        request?.document_state != null
+          ? {
+              id: request.id,
+              requestNumber: request.request_number,
+              originalDocumentId: request.original_document_id,
+              originalName: request.original_name,
+              documentState: request.document_state,
+              requestedAt: request.requested_at.toISOString(),
+              ...(staff ? { requestedBy: request.requested_by } : {}),
+            }
+          : null,
+      signature:
+        signed?.document_state != null
+          ? {
+              requestId: signed.request_id,
+              signedDocumentId: signed.signed_document_id,
+              originalName: signed.original_name,
+              documentState: signed.document_state,
+              recordedByType: signed.recorded_by_type,
+              uploadedByType: signed.uploaded_by_type,
+              recordedAt: signed.recorded_at.toISOString(),
+              ...(staff ? { recordedBy: signed.recorded_by, uploadedBy: signed.uploaded_by } : {}),
+            }
+          : null,
     };
   }
   async get(
@@ -330,8 +348,11 @@ export class ContractSignatureService {
                 !['Accepted', 'AwaitingSignature'].includes(parent.state))
             )
               throw new ConflictException('Contract is not the expected accepted version');
-            const previous = await this.latest(client, input.expectedVersionId);
-            if ((previous?.id ?? null) !== input.expectedRequestId)
+            const previous = await this.latest(client, parent, input.expectedVersionId);
+            if (
+              previous?.document_state === null ||
+              (previous?.id ?? null) !== input.expectedRequestId
+            )
               throw new ConflictException('The signing request changed');
             const financialReview =
               input.expectedReviewHash === undefined
@@ -384,7 +405,7 @@ export class ContractSignatureService {
             await notifyContractReview(client, id, 'signature_requested');
             const result = await this.view(
               client,
-              await this.parent(client, id),
+              await this.parent(client, id, parent.profile_id),
               input.expectedVersionId,
               true,
               true
@@ -423,8 +444,8 @@ export class ContractSignatureService {
                 parent.signed_at)
             )
               throw new ConflictException('Contract is not awaiting this signature');
-            const latest = await this.latest(client, input.expectedVersionId);
-            if (latest?.id !== input.requestId)
+            const latest = await this.latest(client, parent, input.expectedVersionId);
+            if (latest?.id !== input.requestId || latest.document_state !== 'Approved')
               throw new ConflictException('The signing request changed');
             const financialReview =
               input.expectedReviewHash === undefined
@@ -483,7 +504,7 @@ export class ContractSignatureService {
             );
             const result = await this.view(
               client,
-              await this.parent(client, id),
+              await this.parent(client, id, parent.profile_id),
               input.expectedVersionId,
               staff,
               true

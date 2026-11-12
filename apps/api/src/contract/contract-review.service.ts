@@ -117,8 +117,8 @@ export class ContractReviewService {
             }>(
               `SELECT c.state,c.current_version_id,a.state AS amendment_state,a.base_version_id
                FROM contracts c JOIN contract_amendments a ON a.contract_id=c.id
-               WHERE c.id=$1 AND a.version_id=$2 FOR UPDATE OF c`,
-              [id, input.expectedVersionId]
+               WHERE c.id=$1 AND a.version_id=$2 AND c.profile_id=$3 FOR UPDATE OF c`,
+              [id, input.expectedVersionId, identity.profile_id]
             )
           ).rows[0];
           if (
@@ -202,10 +202,11 @@ export class ContractReviewService {
           if (archived) throw new ConflictException('Profile is archived');
           const row = (
             await client.query<{ state: string; current_version_id: string }>(
-              'SELECT state,current_version_id FROM contracts WHERE id=$1 FOR UPDATE',
-              [id]
+              'SELECT state,current_version_id FROM contracts WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+              [id, identity.profile_id]
             )
-          ).rows[0]!;
+          ).rows[0];
+          if (!row) throw new NotFoundException();
           const expected = action === 'submit' ? 'Draft' : 'AwaitingStaffReview';
           if (row.state !== expected || row.current_version_id !== input.expectedVersionId)
             throw new ConflictException('Contract is not the expected review version');
@@ -276,7 +277,7 @@ export class ContractReviewService {
         const cursor = await client.query<{ published_at: string }>(
           `SELECT p.published_at::text FROM contracts c
            JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id
-           JOIN contract_publications p ON p.version_id=v.id
+          JOIN contract_publications p ON p.version_id=v.id AND p.contract_id=c.id
            WHERE ${predicate} AND c.id=$8::uuid`,
           [...params, before]
         );
@@ -316,16 +317,19 @@ export class ContractReviewService {
           profile.first_name AS profile_first_name,profile.last_name AS profile_last_name,
           c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,v.id AS version_id,v.version_number,
           v.content->'commercialValue' AS commercial_value,p.published_at,a.accepted_at,a.party_snapshot,
-            r.service_starts_at,r.service_ends_at,r.initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state,
+            r.service_starts_at,r.service_ends_at,i.id AS initial_invoice_id,i.total_amount AS initial_invoice_amount,i.state AS initial_invoice_state,
             (SELECT amendment.state::text FROM contract_amendments amendment
              WHERE amendment.contract_id=c.id AND amendment.base_version_id=c.current_version_id
                AND amendment.state IN ('AwaitingCustomerAcceptance','AwaitingSignature')
              LIMIT 1) AS pending_amendment_state
           FROM contracts c JOIN profiles profile ON profile.id=c.profile_id
-          JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
-          LEFT JOIN contract_acceptances a ON a.version_id=v.id
-          LEFT JOIN contract_activation_requirements r ON r.version_id=v.id
+          JOIN contract_versions v ON v.id=c.current_version_id AND v.contract_id=c.id
+          JOIN contract_publications p ON p.version_id=v.id AND p.contract_id=c.id
+          LEFT JOIN contract_acceptances a ON a.version_id=v.id AND a.contract_id=c.id
+          LEFT JOIN contract_activation_requirements r ON r.version_id=v.id AND r.contract_id=c.id
           LEFT JOIN invoices i ON i.id=r.initial_invoice_id AND i.profile_id=c.profile_id
+            AND i.adjustment_for_invoice_id IS NULL
+            AND (i.contract_id=c.id::text OR (i.contract_id IS NULL AND i.order_id=c.order_id))
           LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
           LEFT JOIN electricity_orders e ON e.id=c.order_id AND e.profile_id=c.profile_id AND c.service_type='electricity'
       WHERE ${predicate}
@@ -392,8 +396,10 @@ export class ContractReviewService {
           accepted_at: Date | null;
         }>(
           `SELECT v.id,v.version_number,v.change_description,v.created_at,p.published_at,a.accepted_at
-      FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
-      LEFT JOIN contract_acceptances a ON a.version_id=v.id WHERE c.id=$1 AND c.profile_id=$2 AND ($3::int IS NULL OR v.version_number<$3)
+      FROM contracts c JOIN contract_versions v ON v.contract_id=c.id
+      JOIN contract_publications p ON p.version_id=v.id AND p.contract_id=c.id
+      LEFT JOIN contract_acceptances a ON a.version_id=v.id AND a.contract_id=c.id
+      WHERE c.id=$1 AND c.profile_id=$2 AND ($3::int IS NULL OR v.version_number<$3)
       ORDER BY v.version_number DESC LIMIT 101`,
           [id, profileId, before ?? null]
         )
@@ -520,9 +526,10 @@ export class ContractReviewService {
         `SELECT c.id,c.contract_number,c.profile_id,c.order_id,e.status AS linked_order_status,s.id AS saving_order_id,c.service_type,c.state,c.current_version_id,v.id AS version_id,v.version_number,
         v.content,v.change_description,v.created_at,p.published_at,a.accepted_at,a.accepted_by,a.party_snapshot,
         amendment.state AS amendment_state,amendment.base_version_id,requirements.signature_required
-        FROM contracts c JOIN contract_versions v ON v.contract_id=c.id JOIN contract_publications p ON p.version_id=v.id
-        JOIN contract_activation_requirements requirements ON requirements.version_id=v.id
-        LEFT JOIN contract_acceptances a ON a.version_id=v.id
+        FROM contracts c JOIN contract_versions v ON v.contract_id=c.id
+        JOIN contract_publications p ON p.version_id=v.id AND p.contract_id=c.id
+        JOIN contract_activation_requirements requirements ON requirements.version_id=v.id AND requirements.contract_id=c.id
+        LEFT JOIN contract_acceptances a ON a.version_id=v.id AND a.contract_id=c.id
         LEFT JOIN contract_amendments amendment ON amendment.version_id=v.id AND amendment.contract_id=c.id
         LEFT JOIN saving_orders s ON s.order_id=c.order_id AND s.profile_id=c.profile_id AND c.service_type='savings'
         LEFT JOIN electricity_orders e ON e.id=c.order_id AND e.profile_id=c.profile_id AND c.service_type='electricity'

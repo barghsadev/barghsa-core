@@ -95,11 +95,14 @@ function visible(staff: boolean) {
     JOIN solar_construction_documents sd ON sd.request_id=r.id
     WHERE r.id=${documents.businessRecordId} AND r.profile_id=${documents.profileId}
       AND sd.document_id=${documents.id}))`;
-  return staff
-    ? solarScope
-    : sql`(${solarScope} AND ${documents.state}<>'Removed' AND (${documents.businessRecordType}<>'contract'
-    OR EXISTS (SELECT 1 FROM contract_publications p WHERE p.contract_id=${documents.businessRecordId}
-      AND p.version_id=${contractDocuments.contractVersionId})))`;
+  const contractScope = sql`(${documents.businessRecordType}<>'contract' OR EXISTS (
+    SELECT 1 FROM contracts c
+    JOIN contract_versions v ON v.contract_id=c.id AND v.id=${contractDocuments.contractVersionId}
+    WHERE c.id=${documents.businessRecordId} AND c.id=${contractDocuments.contractId}
+      AND c.profile_id=${documents.profileId}
+      AND (${staff} OR EXISTS (SELECT 1 FROM contract_publications p
+        WHERE p.contract_id=c.id AND p.version_id=v.id))))`;
+  return and(solarScope, contractScope, staff ? undefined : ne(documents.state, 'Removed'));
 }
 function dto(row: LinkedDocument) {
   const d = row.document;

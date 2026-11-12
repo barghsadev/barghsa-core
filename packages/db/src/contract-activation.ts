@@ -18,7 +18,7 @@ export async function readContractActivation(
       signature_required: boolean;
       payment_required: boolean;
       service_start_required: boolean;
-      initial_invoice_id: string | null;
+      scoped_initial_invoice_id: string | null;
       service_starts_at: Date | null;
       service_ends_at: Date | null;
       approved: boolean;
@@ -28,7 +28,13 @@ export async function readContractActivation(
       started: boolean;
       evaluated_at: Date;
     }>(
-      'SELECT a.*,r.service_ends_at FROM contract_activation_status($1,$3,$2,$4) a JOIN contract_activation_requirements r ON r.version_id=a.version_id',
+      `SELECT a.*,r.service_ends_at,i.id AS scoped_initial_invoice_id
+       FROM contract_activation_status($1,$3,$2,$4) a
+       JOIN contracts c ON c.id=a.id
+       JOIN contract_activation_requirements r ON r.version_id=a.version_id AND r.contract_id=c.id
+       LEFT JOIN invoices i ON i.id=a.initial_invoice_id AND i.profile_id=c.profile_id
+         AND i.adjustment_for_invoice_id IS NULL
+         AND (i.contract_id=c.id::text OR (i.contract_id IS NULL AND i.order_id=c.order_id))`,
       [id, profileId ?? null, versionId ?? null, staff]
     )
   ).rows[0];
@@ -52,7 +58,7 @@ export async function readContractActivation(
     state: r.state,
     isCurrent,
     ruleRevision: r.rule_revision,
-    initialInvoiceId: r.initial_invoice_id,
+    initialInvoiceId: r.scoped_initial_invoice_id,
     serviceStartsAt: r.service_starts_at?.toISOString() ?? null,
     serviceEndsAt: r.service_ends_at?.toISOString() ?? null,
     evaluatedAt: r.evaluated_at.toISOString(),

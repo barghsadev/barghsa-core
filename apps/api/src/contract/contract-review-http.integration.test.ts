@@ -322,6 +322,45 @@ it('shows the published value, service period and initial invoice on customer an
       },
     ],
   });
+  const siblingResponse = await send('admin/contracts', 'POST', {
+    profileId: f.profile,
+    serviceType: 'savings',
+    content: { text: 'Separate contract' },
+    changeDescription: 'Separate contract',
+    idempotencyKey: randomUUID(),
+  });
+  expect(siblingResponse.status).toBe(201);
+  const sibling = (await siblingResponse.json()) as { id: string };
+  // Model an existing requirement whose invoice origin was subsequently changed.
+  await http.pool.query('UPDATE invoices SET contract_id=$2 WHERE id=$1', [invoiceId, sibling.id]);
+  try {
+    const hiddenInvoice = {
+      id: f.row.id,
+      initialInvoiceId: null,
+      initialInvoiceAmount: null,
+      initialInvoiceState: null,
+    };
+    const currentCustomerList = await send('contracts', 'GET', undefined, f.owner);
+    const currentStaffList = await send('admin/contracts?profileId=' + f.profile);
+    for (const list of [currentCustomerList, currentStaffList]) {
+      expect(list.status, http.logs()).toBe(200);
+      expect(await list.json()).toMatchObject({
+        contracts: expect.arrayContaining([expect.objectContaining(hiddenInvoice)]),
+      });
+    }
+    const activation = await send(`contracts/${f.row.id}/activation`, 'GET', undefined, f.owner);
+    expect(activation.status, http.logs()).toBe(200);
+    expect(await activation.json()).toMatchObject({ initialInvoiceId: null, ready: false });
+    const review = await send(
+      `contracts/${f.row.id}/acceptance-review?versionId=${f.row.currentVersionId}`,
+      'GET',
+      undefined,
+      f.owner
+    );
+    expect(review.status, http.logs()).toBe(409);
+  } finally {
+    await http.pool.query('UPDATE invoices SET contract_id=$2 WHERE id=$1', [invoiceId, f.row.id]);
+  }
   const other = await fixture();
   const otherList = await send('contracts', 'GET', undefined, other.owner);
   expect(

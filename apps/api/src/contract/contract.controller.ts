@@ -27,6 +27,7 @@ import { hasStaffPermission } from '../session/staff-permissions.js';
 import { authoringQuery, contractAuthoringOptions } from './contract-authoring.js';
 import { ContractService } from './contract.service.js';
 import { ContractPdfService } from './contract-pdf.service.js';
+import { staffDocumentRead } from '../documents/document-access.js';
 import { parseContractAuthoringInput } from './contract-journey-input-fields.js';
 import {
   contractUuid,
@@ -88,7 +89,8 @@ export class ContractController {
   @ApiQuery({ name: 'limit', required: false, type: Number })
   list(@Req() req: AuthenticatedRequest, @Query() query: unknown) {
     this.authorize(req);
-    return this.service.list(parse(contractListSchema, query));
+    const input = parse(contractListSchema, query);
+    return staffDocumentRead(req.session, 'contract', (client) => this.service.list(input, client));
   }
   @Get('authoring-options')
   @ApiOperation({
@@ -215,7 +217,10 @@ export class ContractController {
   @ApiOperation({ summary: 'Read a staff contract with its current full version' })
   get(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     this.authorize(req);
-    return this.service.getWithHistory(parse(contractUuid, id));
+    const contractId = parse(contractUuid, id);
+    return staffDocumentRead(req.session, 'contract', (client) =>
+      this.service.getWithHistory(contractId, client)
+    );
   }
   @Get(':id/versions')
   @ApiParam({ name: 'id', format: 'uuid' })
@@ -232,11 +237,13 @@ export class ContractController {
     @Query('before') before?: string
   ) {
     this.authorize(req);
-    return this.service.versions(
-      parse(contractUuid, id),
+    const contractId = parse(contractUuid, id);
+    const cursor =
       before === undefined
         ? undefined
-        : parse(z.coerce.number().int().min(1).max(2147483647), before)
+        : parse(z.coerce.number().int().min(1).max(2147483647), before);
+    return staffDocumentRead(req.session, 'contract', (client) =>
+      this.service.versions(contractId, cursor, client)
     );
   }
   @Get(':id/versions/:versionId')
@@ -249,7 +256,11 @@ export class ContractController {
     @Param('versionId') versionId: string
   ) {
     this.authorize(req);
-    return this.service.versionWithHistory(parse(contractUuid, id), parse(contractUuid, versionId));
+    const contractId = parse(contractUuid, id);
+    const version = parse(contractUuid, versionId);
+    return staffDocumentRead(req.session, 'contract', (client) =>
+      this.service.versionWithHistory(contractId, version, client)
+    );
   }
   @Post(':id/versions/:versionId/generate-pdf')
   @RequiresStepUp()

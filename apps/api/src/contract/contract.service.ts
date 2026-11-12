@@ -17,7 +17,7 @@ import {
   invoices,
   profiles,
 } from '@barghsa/db';
-import { and, desc, eq, lt, sql, createDbClient as drizzle } from '@barghsa/db';
+import { and, desc, eq, isNull, lt, or, sql, createDbClient as drizzle } from '@barghsa/db';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import type {
@@ -78,8 +78,11 @@ export class ContractService {
     return readCancellationSnapshot(getDbPool(), id, terminalAction);
   }
 
-  async list(input: ContractListInput) {
-    const rows = await drizzle(getDbPool())
+  async list(
+    input: ContractListInput,
+    client: ReturnType<typeof getDbPool> | PoolClient = getDbPool()
+  ) {
+    const rows = await drizzle(client)
       .select({
         id: contracts.id,
         contractNumber: contracts.contractNumber,
@@ -101,7 +104,7 @@ export class ContractService {
         acceptedAt: contracts.acceptedAt,
         serviceStartsAt: contractActivationRequirements.serviceStartsAt,
         serviceEndsAt: contractActivationRequirements.serviceEndsAt,
-        initialInvoiceId: contractActivationRequirements.initialInvoiceId,
+        initialInvoiceId: invoices.id,
         initialInvoiceAmount: invoices.totalAmount,
         initialInvoiceState: invoices.state,
         pendingAmendmentState: sql<
@@ -129,16 +132,30 @@ export class ContractService {
           eq(contractVersions.id, contracts.currentVersionId)
         )
       )
-      .leftJoin(contractAcceptances, eq(contractAcceptances.versionId, contractVersions.id))
+      .leftJoin(
+        contractAcceptances,
+        and(
+          eq(contractAcceptances.versionId, contractVersions.id),
+          eq(contractAcceptances.contractId, contracts.id)
+        )
+      )
       .leftJoin(
         contractActivationRequirements,
-        eq(contractActivationRequirements.versionId, contractVersions.id)
+        and(
+          eq(contractActivationRequirements.versionId, contractVersions.id),
+          eq(contractActivationRequirements.contractId, contracts.id)
+        )
       )
       .leftJoin(
         invoices,
         and(
           eq(invoices.id, contractActivationRequirements.initialInvoiceId),
-          eq(invoices.profileId, contracts.profileId)
+          eq(invoices.profileId, contracts.profileId),
+          isNull(invoices.adjustmentForInvoiceId),
+          or(
+            eq(invoices.contractId, sql`${contracts.id}::text`),
+            and(isNull(invoices.contractId), eq(invoices.orderId, contracts.orderId))
+          )
         )
       )
       .where(
@@ -175,18 +192,25 @@ export class ContractService {
     };
   }
 
-  async getWithHistory(id: string) {
-    const contract = await this.get(id);
+  async getWithHistory(
+    id: string,
+    client: ReturnType<typeof getDbPool> | PoolClient = getDbPool()
+  ) {
+    const contract = await this.get(id, client);
     return {
       ...contract,
-      ...(await contractStatusHistory(getDbPool(), id, contract.currentVersion.id, true)),
+      ...(await contractStatusHistory(client, id, contract.currentVersion.id, true)),
     };
   }
 
-  async versionWithHistory(id: string, versionId: string) {
+  async versionWithHistory(
+    id: string,
+    versionId: string,
+    client: ReturnType<typeof getDbPool> | PoolClient = getDbPool()
+  ) {
     return {
-      ...(await this.version(id, versionId)),
-      ...(await contractStatusHistory(getDbPool(), id, versionId, true)),
+      ...(await this.version(id, versionId, client)),
+      ...(await contractStatusHistory(client, id, versionId, true)),
     };
   }
 
@@ -199,7 +223,12 @@ export class ContractService {
       await db
         .select({ acceptedParty: contractAcceptances.partySnapshot })
         .from(contractAcceptances)
-        .where(eq(contractAcceptances.versionId, row.currentVersionId))
+        .where(
+          and(
+            eq(contractAcceptances.versionId, row.currentVersionId),
+            eq(contractAcceptances.contractId, id)
+          )
+        )
     )[0];
     const linkedOrderStatus =
       row.serviceType === 'electricity' && row.orderId
@@ -277,17 +306,21 @@ export class ContractService {
     if (!row) throw new NotFoundException();
     return versionDto(row);
   }
-  async versions(id: string, before?: number) {
+  async versions(
+    id: string,
+    before?: number,
+    client: ReturnType<typeof getDbPool> | PoolClient = getDbPool()
+  ) {
     if (
       !(
-        await drizzle(getDbPool())
+        await drizzle(client)
           .select({ id: contracts.id })
           .from(contracts)
           .where(eq(contracts.id, id))
       )[0]
     )
       throw new NotFoundException();
-    const rows = await drizzle(getDbPool())
+    const rows = await drizzle(client)
       .select()
       .from(contractVersions)
       .where(

@@ -94,8 +94,12 @@ export async function readContractFinancialReview(
   if (row.initial_invoice_id) {
     const invoice = (
       await client.query(
-        'SELECT total_amount,paid_amount FROM invoices WHERE id=$1 AND profile_id=$2 FOR SHARE',
-        [row.initial_invoice_id, input.profileId]
+        `SELECT i.total_amount,i.paid_amount FROM invoices i
+         JOIN contracts c ON c.id=$3 AND c.profile_id=i.profile_id
+         WHERE i.id=$1 AND i.profile_id=$2 AND i.adjustment_for_invoice_id IS NULL
+           AND (i.contract_id=c.id::text OR (i.contract_id IS NULL AND i.order_id=c.order_id))
+         FOR SHARE OF i`,
+        [row.initial_invoice_id, input.profileId, input.contractId]
       )
     ).rows[0] as { total_amount: string; paid_amount: string } | undefined;
     if (!invoice) throw new ConflictException('Initial invoice requires reconciliation');
@@ -191,6 +195,7 @@ async function reviewedDocument(
       `SELECT d.id,d.original_name,d.checksum,cd.contract_id,cd.contract_version_id
      FROM documents d JOIN contract_documents cd ON cd.document_id=d.id
      WHERE d.id=$1 AND d.profile_id=$2 AND cd.contract_id=$3 AND cd.contract_version_id=$4 AND cd.role=$5
+       AND d.business_record_type='contract' AND d.business_record_id=cd.contract_id
        AND d.state='Approved' AND d.storage_key IS NOT NULL AND d.checksum IS NOT NULL
        AND ($5='signed' OR d.detected_mime='application/pdf') FOR SHARE OF d,cd`,
       [documentId, input.profileId, input.contractId, input.versionId, role]
