@@ -1,6 +1,9 @@
 import importlib.util
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 from tempfile import TemporaryDirectory
 import unittest
 
@@ -69,3 +72,24 @@ class NightlyBrowserReportTests(unittest.TestCase):
         self.assertIn("| 1 | failure | 1/40 | 3 | 2 |", history)
         self.assertIn("| 2 | cancelled | Unavailable | Unknown | Unknown |", history)
         self.assertEqual(nightly.history_lines(None, self.root), ["Scheduled run history unavailable."])
+
+    def test_writes_the_same_message_when_the_matrix_is_incomplete(self):
+        self.write_shard("chromium", 1)
+        report = self.root / "report.json"
+        message = self.root / "report.md"
+        summary = self.root / "job-summary.md"
+        result = subprocess.run(
+            [
+                sys.executable, nightly.__file__, "--outcomes", str(self.root),
+                "--history", str(self.root), "--report", str(report), "--message", str(message),
+            ],
+            env={**os.environ, "GITHUB_STEP_SUMMARY": str(summary)},
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(json.loads(report.read_text())["status"], "incomplete")
+        self.assertEqual(message.read_text(), result.stdout)
+        self.assertEqual(summary.read_text(), result.stdout)
+        self.assertIn("Current result is **incomplete**. 1 of 40 shards reported.", result.stdout)

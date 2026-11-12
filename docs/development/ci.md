@@ -12,6 +12,23 @@ The fast test step uses the successful workspace build from the same job. Turbo 
 
 The nightly browser workflow runs Chromium, Firefox, WebKit, Mobile Chrome, and Mobile Safari in eight shards per project. For a release candidate, dispatch `ci.yml` and `browser-nightly.yml` against the same immutable preflight ref. Verify both runs report the intended `headSha` and retain the strict rollup from all 40 browser shards. The Chromium coverage run and the browser matrix provide separate evidence. The release workflow in `kanban/WORKFLOW.md` governs when to enqueue staging after the verified release push.
 
+### Nightly outcome email
+
+After the owner designates the mailbox and approves delivery, configure the
+`nightly-browser-delivery` GitHub environment. Store the verified sender and the
+dedicated recipient as `NIGHTLY_BROWSER_EMAIL_FROM` and
+`NIGHTLY_BROWSER_EMAIL_TO` environment secrets. Store the sending-only key as
+`NIGHTLY_BROWSER_RESEND_KEY`, then set the repository variable
+`NIGHTLY_BROWSER_EMAIL_ENABLED=true`.
+
+Only the first attempt of a scheduled run sends email. The email includes the
+commit, run link, job outcomes and seven-day browser summary. A missing
+summary or unsuccessful check requires review. Read
+`nightly-browser-email-receipt` for the provider acceptance ID and confirm
+receipt in the approved mailbox. If acceptance is unconfirmed, inspect the
+provider before attempting any resend. Manual dispatch still produces the
+reports for release verification. [Resend idempotency](https://resend.com/docs/dashboard/emails/idempotency-keys)
+
 The web suite pins Playwright 1.65.0 for its driver. This version restores WebKit mouse movement deltas used by the NumberField scrub test. Run the web suite with the same Node.js 24 version as CI when reproducing hosted results. [Playwright WebKit fix](https://github.com/microsoft/playwright/issues/43417)
 
 The nightly Firefox jobs use Mozilla Firefox 159.0, revision 1575 from Playwright's pinned `1.66.0-alpha-2026-11-10` runtime distribution. The default Firefox revision 1572 crashed during axe analysis on both macOS and hosted Linux. The previous stable runtime could not create a context with the 1.65 driver because its download protocol lacks a required parameter. Local reproduction can use `BARGHSA_FIREFOX_EXECUTABLE` to select the same revision. Retire the pin after the default stable Firefox passes the same accessibility cases and the full hosted matrix.

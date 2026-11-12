@@ -102,6 +102,7 @@ def main():
     parser.add_argument("--outcomes", type=Path, required=True)
     parser.add_argument("--history", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--message", type=Path)
     args = parser.parse_args()
     current = summarize_shards(args.outcomes)
     args.report.write_text(json.dumps(current, indent=2) + "\n")
@@ -122,10 +123,13 @@ def main():
         "",
         *history_lines(read_json(args.history / "runs.json"), args.history),
     ]
-    print("\n".join(lines))
+    message = "\n".join(lines) + "\n"
+    print(message, end="")
+    if args.message:
+        args.message.write_text(message)
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as output:
-            output.write("\n".join(lines) + "\n")
+            output.write(message)
     return 0 if current["status"] == "passed" else 1
 
 

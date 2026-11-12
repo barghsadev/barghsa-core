@@ -140,7 +140,7 @@ jobs:
   report:
     name: Report seven days of browser outcomes
     if: ${{ always() && !cancelled() }}
-    needs: [browsers]
+    needs: [contracts, browsers]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -173,10 +173,11 @@ jobs:
       - name: Summarize current and historical outcomes
         if: ${{ always() && !cancelled() }}
         run: |
-          python3 -m unittest discover -s scripts -p 'test_report_nightly_browser.py'
+          python3 -m unittest discover -s scripts -p 'test_*nightly_browser*.py'
           python3 scripts/report-nightly-browser.py \
             --outcomes "$RUNNER_TEMP/browser-outcomes" --history "$RUNNER_TEMP/nightly-history" \
-            --report "$RUNNER_TEMP/nightly-browser-summary.json"
+            --report "$RUNNER_TEMP/nightly-browser-summary.json" \
+            --message "$RUNNER_TEMP/nightly-browser-summary.md"
       - name: Check known quarantines
         if: ${{ always() && !cancelled() }}
         run: python3 scripts/check-flaky-tests.py --report "$RUNNER_TEMP/nightly-quarantine.json"
@@ -187,6 +188,48 @@ jobs:
           name: nightly-browser-summary
           path: |
             ${{ runner.temp }}/nightly-browser-summary.json
+            ${{ runner.temp }}/nightly-browser-summary.md
             ${{ runner.temp }}/nightly-quarantine.json
           overwrite: true
+          retention-days: 14
+
+  deliver:
+    name: Email the scheduled browser outcome report
+    if: ${{ always() && !cancelled() && github.event_name == 'schedule' && github.run_attempt == '1' && vars.NIGHTLY_BROWSER_EMAIL_ENABLED == 'true' }}
+    needs: [contracts, browsers, report]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: nightly-browser-delivery
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        id: checkout
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: nightly-browser-summary
+          path: ${{ runner.temp }}/nightly-email-report
+      - name: Send the dedicated nightly email
+        if: ${{ always() && !cancelled() && steps.checkout.outcome == 'success' }}
+        env:
+          NIGHTLY_BROWSER_EMAIL_FROM: ${{ secrets.NIGHTLY_BROWSER_EMAIL_FROM }}
+          NIGHTLY_BROWSER_EMAIL_TO: ${{ secrets.NIGHTLY_BROWSER_EMAIL_TO }}
+          NIGHTLY_BROWSER_RESEND_KEY: ${{ secrets.NIGHTLY_BROWSER_RESEND_KEY }}
+          NIGHTLY_CONTRACTS_RESULT: ${{ needs.contracts.result }}
+          NIGHTLY_BROWSERS_RESULT: ${{ needs.browsers.result }}
+          NIGHTLY_REPORT_RESULT: ${{ needs.report.result }}
+        run: |
+          python3 scripts/email-nightly-browser-report.py \
+            --report-dir "$RUNNER_TEMP/nightly-email-report" \
+            --receipt "$RUNNER_TEMP/nightly-browser-email-receipt.json"
+      - name: Preserve the email provider receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-browser-email-receipt
+          path: ${{ runner.temp }}/nightly-browser-email-receipt.json
+          if-no-files-found: ignore
           retention-days: 14

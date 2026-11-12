@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T03:49:09+00:00",
+  "updated": "2026-11-12T03:59:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -6533,7 +6533,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -6734,6 +6734,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -7142,7 +7150,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -7178,7 +7186,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             },
             {
               "path": "scripts/test-browser-flake-gate.mjs",
@@ -7194,7 +7202,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
             }
           ],
           "checks": [
@@ -7298,6 +7306,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -16736,7 +16754,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "AGENTS.md",
@@ -16872,6 +16890,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -17975,7 +18001,7 @@
       "launch_required": true,
       "remaining": [
         "Read back a successful 02:00 UTC scheduled run on current release source and its seven-day history, preserving the six unavailable historical detailed receipts as gaps. The same workflow passed by manual dispatch at f0f9434c.",
-        "Verify actual result delivery to the authorized dedicated receiver and repeat invalidated checks for the exact accepted candidate.",
+        "Designate the dedicated mailbox and verified sender, approve delivery and configure the sending-only key in the protected nightly-browser-delivery environment. Verify provider acceptance and receipt at the mailbox on the first scheduled execution, then repeat invalidated checks on the exact accepted candidate.",
         "Reconcile scheduled run 42990347003 on the final candidate. Current exact-source proof covers the provider, ownership and registration fixture corrections, the WebKit branding transport repair and eight retry-disabled repeats of the transient contrast case. Retain the original failed measurement and verify a clean scheduled 40-shard rollup."
       ],
       "owner": null,
@@ -18008,7 +18034,13 @@
           "apps/web/e2e/consumer-theme.spec.ts",
           "apps/web/e2e/registration-feature.spec.ts",
           "apps/web/e2e/team.spec.ts",
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          ".github/workflows/browser-nightly.yml",
+          "docs/development/ci.md",
+          "scripts/email-nightly-browser-report.py",
+          "scripts/report-nightly-browser.py",
+          "scripts/test_email_nightly_browser_report.py",
+          "scripts/test_report_nightly_browser.py"
         ],
         "batches": [
           "2026-09-21-nightly-browser-repairs",
@@ -18051,7 +18083,8 @@
           "release-0.6-clean-browser-rollup-and-brand-rehearsal",
           "release-0.6-scheduled-browser-fixture-contracts",
           "release-0.6-webkit-fixture-idle-connection",
-          "release-0.6-webkit-contrast-readback"
+          "release-0.6-webkit-contrast-readback",
+          "release-0.6-nightly-email-receipts"
         ],
         "current_acceptance": null
       }
@@ -24419,7 +24452,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "eslint.config.mjs",
@@ -24555,6 +24588,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -24866,7 +24907,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "eslint.config.mjs",
@@ -25010,6 +25051,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -26893,7 +26942,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "package.json",
@@ -27098,6 +27147,14 @@
                 "packages/api-client/src/openapi.generated.ts"
               ],
               "scope": "The contract delta is limited to maintenance history, recovery-draft creation and the existing maintenance update. Drafts use the existing audit trail. Normal maintenance changes, other routes and storage schema retain their existing boundaries."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -27369,7 +27426,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "kanban/WORKFLOW.md",
@@ -27416,6 +27473,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -555356,7 +555421,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "vitest.config.ts",
@@ -555520,6 +555585,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -558021,7 +558094,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "apps/api/src/test/http-fixture-template.integration.test.ts",
@@ -558044,6 +558117,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -558090,7 +558171,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -558151,6 +558232,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -558197,7 +558286,7 @@
           "source_evidence": [
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -558258,6 +558347,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -558339,7 +558436,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -558465,6 +558562,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -559784,7 +559889,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/shared/src/auth-delivery/smsir-client.test.ts",
@@ -559911,6 +560016,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -559992,7 +560105,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/db/src/test/globalSetup.ts",
@@ -560033,6 +560146,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -560875,7 +560996,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": "apps/web/e2e/confirmation-fixture.ts",
@@ -560911,7 +561032,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -560940,6 +561061,15 @@
                 ".github/workflows/browser-nightly.yml"
               ],
               "scope": "Run the same pinned scanner from main CI in the independent nightly contracts job. The browser matrix, strict rollup, quarantine behavior and existing artifact identity are preserved. The pinned scan and workflow checks passed."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -561211,7 +561341,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -561223,7 +561353,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "scripts/browser-projects.mjs",
@@ -561365,6 +561495,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -561490,7 +561629,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "scripts/run-production-browser.mjs",
@@ -561538,6 +561677,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -565875,7 +566022,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "docs/security/supply-chain.md",
@@ -565904,6 +566051,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -566559,7 +566714,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -566595,7 +566750,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             },
             {
               "path": "scripts/test_check_browser_results.py",
@@ -566607,7 +566762,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
             }
           ],
           "source_renewals": [
@@ -566726,6 +566881,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -567057,7 +567222,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -567085,7 +567250,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             }
           ],
           "source_renewals": [
@@ -567291,6 +567456,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -567682,7 +567856,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": "apps/web/playwright.config.ts",
@@ -567714,7 +567888,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             },
             {
               "path": "scripts/web-navigation-paths.mjs",
@@ -567738,6 +567912,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The lockfile changes only the local development process-tree patch binding. The frozen dependency install, existing watchers and real root dev startup and restart passed. The workflow only changes the base calculation on a first preflight push. Shell scenarios verified existing update, main, PR and dispatch paths. Other behavior retains its prior source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -567844,7 +568027,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -567872,7 +568055,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -567880,7 +568063,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
             }
           ],
           "source_renewals": [
@@ -568003,6 +568186,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -568057,7 +568250,7 @@
           "source_evidence": [
             {
               "path": ".github/workflows/browser-nightly.yml",
-              "sha256": "fff9c553d3e55e95e34c9b2573f2caef0ee00cadfd60ef6666a48f348736dbe8"
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
             },
             {
               "path": ".github/workflows/ci.yml",
@@ -568085,7 +568278,7 @@
             },
             {
               "path": "scripts/report-nightly-browser.py",
-              "sha256": "9f4f1d304e7e270a98121a4acf4bc97a3b0e8a066f67fd1c29482589c077328b"
+              "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
             },
             {
               "path": "scripts/test_check_flaky_tests.py",
@@ -568093,7 +568286,7 @@
             },
             {
               "path": "scripts/test_report_nightly_browser.py",
-              "sha256": "8f57cfe2b989c2e385765166354e3f624bbce6f1b44552f3c2406aff50099efa"
+              "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
             }
           ],
           "source_renewals": [
@@ -568216,6 +568409,16 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                ".github/workflows/browser-nightly.yml",
+                "scripts/report-nightly-browser.py",
+                "scripts/test_report_nightly_browser.py"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ]
         }
@@ -838010,7 +838213,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -838228,6 +838431,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -838786,7 +838997,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -839004,6 +839215,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -839562,7 +839781,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -839780,6 +839999,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -840339,7 +840566,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -840557,6 +840784,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -841115,7 +841350,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -841333,6 +841568,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -841891,7 +842134,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -842109,6 +842352,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -842667,7 +842918,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -842885,6 +843136,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -843444,7 +843703,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -843662,6 +843921,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -844220,7 +844487,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -844438,6 +844705,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -844996,7 +845271,7 @@
             },
             {
               "path": "docs/development/ci.md",
-              "sha256": "2afcfe6878bf97a9b3a7a5dc238c1a8a3aeba3a08d1554991a062f0ab842d81f"
+              "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
             },
             {
               "path": "packages/i18n/src/app.ts",
@@ -845214,6 +845489,14 @@
                 "docs/development/ci.md"
               ],
               "scope": "Adds --only to the two fast test commands after the successful same-job build. Exact workflow comparison, eight pinned Turbo plans and an isolated hosted shared/i18n run preserved the selected test commands and full release controls."
+            },
+            {
+              "batch": "release-0.6-nightly-email-receipts",
+              "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+              "paths": [
+                "docs/development/ci.md"
+              ],
+              "scope": "The nightly cron, browser matrix, advisory and contract checks are unchanged. The rollup saves its existing message and can email it from an isolated, opt-in job. Prior status, coverage, quarantine and evidence assertions remain."
             }
           ],
           "presentation_renewals": [
@@ -878376,7 +878659,8 @@
           "release-0.6-schema-aware-staging-rollback",
           "release-0.6-synthetic-staging-scrape",
           "release-0.6-admin-theme-default",
-          "release-0.6-maintenance-recovery"
+          "release-0.6-maintenance-recovery",
+          "release-0.6-nightly-email-receipts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -878479,7 +878763,12 @@
           "apps/web/src/lib/maintenance-form.ts",
           "apps/web/src/pages/AdminMaintenancePage.tsx",
           "docs/runbooks/bad-deployment.md",
-          "packages/i18n/src/maintenance.ts"
+          "packages/i18n/src/maintenance.ts",
+          ".github/workflows/browser-nightly.yml",
+          "scripts/email-nightly-browser-report.py",
+          "scripts/report-nightly-browser.py",
+          "scripts/test_email_nightly_browser_report.py",
+          "scripts/test_report_nightly_browser.py"
         ]
       }
     },
@@ -1010923,6 +1011212,149 @@
         {
           "file": "fixture-maintenance-recovery-fa.png",
           "sha256": "925b645fdc5047fccf9de2d6e9cb7725ed82fa12a6b23bae569f8c3454461718"
+        }
+      ]
+    },
+    "release-0.6-nightly-email-receipts": {
+      "batch": "release-0.6-nightly-email-receipts",
+      "base_commit": "be0a2bd042287e09713f53a5e5964b1dcce6828d",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.01",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-01.04.04",
+        "01-platform-infrastructure.md#T-01.04.06",
+        "01-platform-infrastructure.md#T-05.03.01",
+        "01-platform-infrastructure.md#T-07.03.01",
+        "01-platform-infrastructure.md#T-07.03.03",
+        "01-platform-infrastructure.md#T-07.05.02",
+        "01-platform-infrastructure.md#T-07.05.04",
+        "06-security-testing-observability.md#T-06.09.01.01",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.10.01.02",
+        "06-security-testing-observability.md#T-06.10.01.03",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.10.03.01",
+        "06-security-testing-observability.md#T-06.10.03.10",
+        "06-security-testing-observability.md#T-06.10.03.14",
+        "06-security-testing-observability.md#T-06.10.03.15",
+        "06-security-testing-observability.md#T-06.12.02.02",
+        "06-security-testing-observability.md#T-06.12.03.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.05.01",
+        "06-security-testing-observability.md#T-06.12.05.04",
+        "06-security-testing-observability.md#T-06.12.05.05",
+        "07-ui-ux-design.md#T-07.28.01.01",
+        "07-ui-ux-design.md#T-07.28.01.02",
+        "07-ui-ux-design.md#T-07.28.01.03",
+        "07-ui-ux-design.md#T-07.28.01.04",
+        "07-ui-ux-design.md#T-07.28.01.05",
+        "07-ui-ux-design.md#T-07.29.01.01",
+        "07-ui-ux-design.md#T-07.29.01.02",
+        "07-ui-ux-design.md#T-07.29.01.03",
+        "07-ui-ux-design.md#T-07.29.01.04",
+        "07-ui-ux-design.md#T-07.29.01.05"
+      ],
+      "changed_paths": [
+        ".github/workflows/browser-nightly.yml",
+        "docs/development/ci.md",
+        "scripts/email-nightly-browser-report.py",
+        "scripts/report-nightly-browser.py",
+        "scripts/test_email_nightly_browser_report.py",
+        "scripts/test_report_nightly_browser.py"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+        },
+        {
+          "path": "docs/development/ci.md",
+          "sha256": "a61a3c0872bcb01175e3785b57df55fcf869b6e58f3d52646a79627cc577fdd4"
+        },
+        {
+          "path": "scripts/email-nightly-browser-report.py",
+          "sha256": "4634fa5c457414008c9634e5c489f20f4e0f641436ab161dfa3eaa17b503649f"
+        },
+        {
+          "path": "scripts/report-nightly-browser.py",
+          "sha256": "5ae16de349c83deb49746886db364179618b2d787dc49620ea9c2e888d959c08"
+        },
+        {
+          "path": "scripts/test_email_nightly_browser_report.py",
+          "sha256": "cadee637438fe9f82aef69ab1a1f9e0d262253f64e38bc1651a73e91bc4a9ed0"
+        },
+        {
+          "path": "scripts/test_report_nightly_browser.py",
+          "sha256": "e44fda4b87a928e33947c2ad62d6bb4e692fa6e03279cd70a5ad5cb492ececfd"
+        }
+      ],
+      "checks": [
+        "The existing daily cron, checks and 40-shard browser matrix are unchanged. The rollup emits a durable copy of its summary. The optional delivery job uses protected sender, recipient and sending key settings, runs only on the first scheduled attempt and remains disabled without the explicit repository flag.",
+        "The 40 retained shard reports from scheduled run 42990347003 regenerate the exact hosted failed rollup, including 20 unexpected outcomes and three flakes. The seven-day report retains the six unavailable historical rollup receipts as unknown. The deployment, browser and source checks are not relabelled as passing.",
+        "One TLS loopback provider request used the actual historical run, exact source SHA, failure and seven-day summary. The fixture returns an acceptance ID and the archived receipt contains no addresses or credential. The transport never follows a redirect or retries an uncertain send.",
+        "All 11 targeted report and delivery tests passed. They cover invalid schedules and recipient config, incomplete and unavailable results, job failures, receipt validation, redirect and timeout. Actionlint, Python compilation, formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The Resend response is from the loopback fixture. No email was sent to a live mailbox. The dedicated sender, recipient, protected key, real provider and mailbox receipts and clean current scheduled rollup remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-nightly-email-receipts",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "6a048d2b159db32791b59f4a508ca03b20221392fe3c10afe1a10a1ec35268e1"
+        },
+        {
+          "file": "scope-proof.json",
+          "sha256": "a6ec7dc5215a06aadcc6552adfb63de6a197bf4082e206841b51b6dc05c10cfb"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "0196e2736006ed294ecc137ec5059b25add3c88f6a31f5b2ef15913e4d73e60e"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "scheduled-run.json",
+          "sha256": "277ac9209633f9c9ee31ea509824faa5ab4f7a3459157276c8e73a7053746cc7"
+        },
+        {
+          "file": "scheduled-original/nightly-browser-summary.json",
+          "sha256": "553f448979a1023167021b2ed8f7d8029fd7ed44f95f0fa6a85176cbc3d0b842"
+        },
+        {
+          "file": "history/runs.json",
+          "sha256": "8447717de0640be1efce8d644902f6f2e5f61a819c01def09f6d95e7144d0e09"
+        },
+        {
+          "file": "report/nightly-browser-summary.json",
+          "sha256": "553f448979a1023167021b2ed8f7d8029fd7ed44f95f0fa6a85176cbc3d0b842"
+        },
+        {
+          "file": "report/nightly-browser-summary.md",
+          "sha256": "d03936c4859e7638b6ee9600e1b2b73756103e83d00f50a514fd530cb6e9cf92"
+        },
+        {
+          "file": "report-rehearsal.log",
+          "sha256": "d03936c4859e7638b6ee9600e1b2b73756103e83d00f50a514fd530cb6e9cf92"
+        },
+        {
+          "file": "rehearse-delivery.py",
+          "sha256": "899a693307ea19e9060d79d06f30cccb64f636adb50155525a05c7a7e6c26a11"
+        },
+        {
+          "file": "tls-rehearsal.log",
+          "sha256": "8e39caadfcd9f3f090ac1aa3e2c2040861bf98ab2a81086d01d96ab0cea8b8cf"
+        },
+        {
+          "file": "fixture-receipt.json",
+          "sha256": "67b711d083266ad960f895192e0912430977b3a91cb6d8ff92a8f9704087d6b1"
         }
       ]
     }
