@@ -33,6 +33,31 @@ async function actor() {
     },
   };
 }
+
+it('rejects unknown fields before changing a staff member’s roles or writing audit history', async () => {
+  const current = await actor();
+  const target = await actor();
+  const response = await fetch(`${http.base}/api/admin/users/${target.userId}/roles`, {
+    method: 'PUT',
+    headers: current.headers,
+    body: JSON.stringify({
+      roleIds: ['role-finance'],
+      reason: 'Reviewed staff duties',
+      unexpected: 'private-submitted-value',
+    }),
+  });
+  expect(response.status).toBe(400);
+  const body = await response.text();
+  expect(JSON.parse(body)).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(body).not.toContain('private-submitted-value');
+  expect(
+    (await http.pool.query('SELECT role_id FROM user_roles WHERE user_id=$1', [target.userId])).rows
+  ).toEqual([{ role_id: 'role-admin' }]);
+  expect(
+    (await http.pool.query('SELECT 1 FROM audit_log WHERE user_id=$1', [current.userId])).rows
+  ).toEqual([]);
+});
+
 const operations = ['create', 'roles', 'disable', 'activation'] as const;
 for (const operation of operations)
   for (const change of ['remove-role', 'disable-actor', 'revoke-session', 'rotate-csrf'] as const) {

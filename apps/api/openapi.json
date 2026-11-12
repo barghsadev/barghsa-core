@@ -827,6 +827,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "reason": {
                     "description": "Reason for the rejection (mandatory)",
@@ -3617,6 +3618,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "action": {
                     "enum": [
@@ -24548,6 +24550,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "activationMethod": {
                     "description": "How the staff user activates their account",
@@ -24731,6 +24734,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "reason": {
                     "description": "Optional reason for the role change",

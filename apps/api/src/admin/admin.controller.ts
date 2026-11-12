@@ -93,7 +93,7 @@ const assignmentRulesSchema = {
 /**
  * Zod schema for the create-staff-user request body.
  */
-export const CreateStaffUserSchema = z.object({
+export const CreateStaffUserSchema = z.strictObject({
   username: z
     .string()
     .trim()
@@ -228,7 +228,7 @@ export interface BrandConfigDto {
 /**
  * Zod schema for the profile-verification-mode request body.
  */
-export const SetProfileVerificationModeSchema = z.object({
+export const SetProfileVerificationModeSchema = z.strictObject({
   mode: z.enum(['DISABLED', 'MANUAL', 'API']),
   expectedVersion: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
   action: z.enum(['draft', 'activate']),
@@ -239,7 +239,7 @@ export type SetProfileVerificationModeDto = z.infer<typeof SetProfileVerificatio
 /**
  * Zod schema for the update-staff-roles request body.
  */
-export const UpdateStaffRolesSchema = z.object({
+export const UpdateStaffRolesSchema = z.strictObject({
   roleIds: z.array(z.string().min(1, { message: 'VALIDATION:INPUT:MISSING' })),
   reason: z.string().max(500).optional(),
 });
@@ -397,6 +397,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['username', 'firstName', 'lastName', 'activationMethod'],
+      additionalProperties: false,
       properties: {
         username: { type: 'string', description: 'Email or E.164 phone number' },
         firstName: { type: 'string', description: 'Staff first name' },
@@ -537,6 +538,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['roleIds'],
+      additionalProperties: false,
       properties: {
         roleIds: { type: 'array', items: { type: 'string' }, description: 'Role IDs to assign' },
         reason: { type: 'string', description: 'Optional reason for the role change' },
@@ -914,6 +916,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['mode', 'expectedVersion', 'action'],
+      additionalProperties: false,
       properties: {
         mode: { type: 'string', enum: ['DISABLED', 'MANUAL', 'API'] },
         expectedVersion: { type: 'integer', minimum: 0 },

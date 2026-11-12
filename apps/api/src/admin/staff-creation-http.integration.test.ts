@@ -89,6 +89,19 @@ async function creationCounts() {
   ).rows[0];
 }
 
+it('rejects unknown fields on staff creation before creating an account or sending activation', async () => {
+  const current = await actor();
+  const input = { ...staff('link'), unexpected: 'private-submitted-value' };
+  const before = await creationCounts();
+  const response = await create(current, input);
+  expect(response.status).toBe(400);
+  const body = await response.text();
+  expect(JSON.parse(body)).toMatchObject({ error: { code: 'VALIDATION:INPUT:INVALID' } });
+  expect(body).not.toContain('private-submitted-value');
+  await noCreation(current, input.username);
+  expect(await creationCounts()).toEqual(before);
+});
+
 it.each(['missing', 'expired', 'future'] as const)(
   'staff creation rejects %s step-up',
   async (mode) => {

@@ -28,7 +28,7 @@ import {
 import { APPROVAL_REVIEW_REASON_MAX_LENGTH } from '@barghsa/shared/finance';
 
 /** Zod schema for the reject-request body (reason is mandatory). */
-export const RejectApprovalRequestSchema = z.object({
+export const RejectApprovalRequestSchema = z.strictObject({
   reason: z.string().trim().min(1).max(APPROVAL_REVIEW_REASON_MAX_LENGTH),
 });
 
@@ -209,6 +209,7 @@ export class DualApprovalController {
     schema: {
       type: 'object',
       required: ['reason'],
+      additionalProperties: false,
       properties: {
         reason: {
           type: 'string',

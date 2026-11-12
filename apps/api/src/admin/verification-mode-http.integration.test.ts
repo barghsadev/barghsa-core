@@ -156,6 +156,19 @@ it('returns only owned validation identifiers after checking write permission', 
   });
   expect(unknownAction.status).toBe(400);
   expect(await unknownAction.json()).not.toHaveProperty('error.fields');
+  const unknownField = await update({
+    mode: 'MANUAL',
+    action: 'draft',
+    expectedVersion: 0,
+    unexpected: 'private-submitted-value',
+  });
+  expect(unknownField.status).toBe(400);
+  const unknownFieldBody = await unknownField.text();
+  expect(JSON.parse(unknownFieldBody)).toMatchObject({
+    error: { code: 'VALIDATION:INPUT:INVALID' },
+  });
+  expect(unknownFieldBody).not.toContain('private-submitted-value');
+  expect(await snapshot()).toEqual(before);
   await http.pool.query(
     "UPDATE staff_roles SET permissions='[]' WHERE role_id='verification-editor'"
   );
