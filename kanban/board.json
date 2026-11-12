@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T18:48:07+00:00",
+  "updated": "2026-11-12T19:44:14+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -635061,7 +635061,8 @@
         "batches": [
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-prebuilt-ci-test-selection",
-          "release-0.6-related-test-selection"
+          "release-0.6-related-test-selection",
+          "release-0.6-hosted-related-selection"
         ],
         "current_acceptance": null
       }
@@ -684897,7 +684898,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -685024,6 +685025,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -685192,7 +685201,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -685319,6 +685328,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -715807,7 +715824,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -716190,6 +716207,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -716812,7 +716837,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -717195,6 +717220,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -717816,7 +717849,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -718199,6 +718232,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -845892,7 +845933,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -846275,6 +846316,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -846896,7 +846945,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -847279,6 +847328,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -847900,7 +847957,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -848283,6 +848340,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -848904,7 +848969,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -849287,6 +849352,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -849912,7 +849985,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -850295,6 +850368,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -850916,7 +850997,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -851299,6 +851380,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -851920,7 +852009,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -852303,6 +852392,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -852925,7 +853022,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -853308,6 +853405,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -853930,7 +854035,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -854313,6 +854418,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -854935,7 +855048,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -855318,6 +855431,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -855940,7 +856061,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -856323,6 +856444,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -856945,7 +857074,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -857328,6 +857457,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -857950,7 +858087,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -858333,6 +858470,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -858955,7 +859100,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -859338,6 +859483,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -859960,7 +860113,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -860343,6 +860496,14 @@
                 "packages/ui/src/styles.css"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-hosted-related-selection",
+              "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "The added assertion covers an unknown child of the exact home route. Existing assertions and application code are intact."
             }
           ],
           "presentation_renewals": [
@@ -1152828,6 +1152989,72 @@
         {
           "file": "live-runtime.after.txt",
           "sha256": "73c536661c7726c03c7334b1f3fdb9ea535ed468d00ea85b26f748e1699daef6"
+        }
+      ]
+    },
+    "release-0.6-hosted-related-selection": {
+      "batch": "release-0.6-hosted-related-selection",
+      "base_commit": "26242fb58a151852256f0422ab49e66a44c53b37",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "07-ui-ux-design.md#T-07.01.03.16",
+        "07-ui-ux-design.md#T-07.01.03.17",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03"
+      ],
+      "changed_paths": [
+        "apps/web/src/lib/shell-navigation.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/lib/shell-navigation.test.ts",
+          "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
+        },
+        {
+          "path": "apps/web/src/lib/shell-navigation.ts",
+          "sha256": "049483df96b2c562852928c55e0fafb41ff5540f6ac4420d57e074354bbf2e7f"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "scripts/run-fast-tests.mjs",
+          "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "The production selector evaluated a diff limited to one web test file at 1adb2141 against 26242fb58. The related invocation ran the selected file and passed all four cases.",
+        "The added assertion verifies that an unlisted child does not inherit the home item as active."
+      ],
+      "limitations": [
+        "The first diagnostic hosted preflight failed at board validation because the test file was referenced by earlier acceptance. Exact hosted selector, required check and direct publication receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-hosted-related-selection",
+      "execution_receipts": [
+        {
+          "file": "selector-exact-local.log",
+          "sha256": "34e2a543188df8aa57b5afcc5d03061a2555c736ae55b78f42f3fc66d9fb1c3f"
         }
       ]
     }
