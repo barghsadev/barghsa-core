@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:10:38+00:00",
+  "updated": "2026-11-12T10:17:35+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -24537,7 +24537,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "packages/ui/.ladle/components.tsx",
@@ -25118,6 +25118,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -601371,12 +601379,10 @@
         "story": "06-security-testing-observability.md#spec-f7421d6dc1ea"
       },
       "requirement": "| T-06.09.03.09 | Ensure every critical form preserves valid input after server validation/provider error | S |",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Delivery-window and notification-editor input retention, recovery and no-repeat-write behavior passed locally. Reconcile the other critical form requirements before closing this cross-cutting criterion. Both electricity draft routes now retain the same inline recovery alert and unblocked controls."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -601390,13 +601396,328 @@
           "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
           "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
           "apps/web/src/pages/electricity-order.test.tsx",
-          "docs/design/notification-recovery.md"
+          "docs/design/notification-recovery.md",
+          "docs/design/accessibility.md"
         ],
         "batches": [
           "release-0.6-delivery-window-feedback-overlay",
-          "release-0.6-browser-recovery-selection-and-overlay"
+          "release-0.6-browser-recovery-selection-and-overlay",
+          "release-0.6-critical-form-recovery"
         ],
-        "current_acceptance": null
+        "current_acceptance": {
+          "batch": "release-0.6-critical-form-recovery",
+          "checks": [
+            "Reviewed the current critical customer and protected staff form flows against the existing rendered and browser assertions. Checked localized validation feedback and retained fields, original captured request retries after ambiguous outcomes, no duplicate upload or financial write, profile and permission changes, and rejection and retirement of one-time codes.",
+            "All eight Chromium shards in scheduled GitHub run 43190340052 completed successfully. In the 61 selected specifications, 702 cases passed on the first attempt. The evidence records the actual titles and shard for authentication, onboarding, addresses and uploads, four launch services, wallet, invoices, contracts and refunds, and protected configuration and staff actions.",
+            "The tested web app, UI, generated API client, browser runner, workflow, 61 exact specification files and reviewed form source are unchanged. The shared package and lockfile delta adds server OpenTelemetry and operational log and alert helpers with no browser imports. Existing source-bound wallet top-up and invoice rendered tests remain in force. Documentation and git diff --check passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "docs/design/accessibility.md",
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
+            },
+            {
+              "path": "pnpm-lock.yaml",
+              "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+            },
+            {
+              "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+              "sha256": "c18c6cec31514fc03b305d2405d302a8ed072e400d3cdceb71c55a1c4e8e1d4a"
+            },
+            {
+              "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+              "sha256": "a4497ced8a450c8fc99097e099915932d4ae6e13c7c8eef60dd5a1e54bf93aaf"
+            },
+            {
+              "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+              "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
+            },
+            {
+              "path": "apps/web/src/pages/SolarRequestPage.tsx",
+              "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
+            },
+            {
+              "path": "apps/web/src/pages/ConsultationsPage.tsx",
+              "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.tsx",
+              "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+            },
+            {
+              "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+              "sha256": "f075664a91d886de230f7f3aa3fe3006631cd2f5c336594c115dee3b557f692a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+              "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+            },
+            {
+              "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+              "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
+            },
+            {
+              "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+              "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+            },
+            {
+              "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+              "sha256": "355411908b82ecdd8a28a851d667624e450b93de5e1e4d8603dd40ba9a2018be"
+            },
+            {
+              "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+              "sha256": "782b217311c9a1fe305d90c8dd37e6780b91b313b82aad9c5c92610e9a82a8a3"
+            },
+            {
+              "path": ".github/workflows/browser-nightly.yml",
+              "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+            },
+            {
+              "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+              "sha256": "09ee12cf4efe6b16502e16d424217cd705bfd199e405b1a4f08d6f7dc732bf7d"
+            },
+            {
+              "path": "apps/web/e2e/account-settings-forms.spec.ts",
+              "sha256": "265b6abb11194016eaa8cbf31c38713a5fdaa6945a36fba2b8898d5ee1290ee2"
+            },
+            {
+              "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+              "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
+            },
+            {
+              "path": "apps/web/e2e/cancellation-forms.spec.ts",
+              "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
+            },
+            {
+              "path": "apps/web/e2e/catalogue-forms.spec.ts",
+              "sha256": "6e4ee915d6d6a68923a3c2ea8deed3419d196ceb598587f8d73bc83b75c3b25c"
+            },
+            {
+              "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
+              "sha256": "fda9474dd48ec31e39bc40ad91443389b8dc6e60ef09bb5fdf1e0f9ba5c19d2d"
+            },
+            {
+              "path": "apps/web/e2e/consultation-forms.spec.ts",
+              "sha256": "1ffdd8d27847e4a0d2d5bc6fc837d612f511c40f0aec0d32edb784cae6a451c4"
+            },
+            {
+              "path": "apps/web/e2e/consultation-journey.spec.ts",
+              "sha256": "cea609cf06c31f9d79c32fa2cf76e4e4cb91e4f710ec80ba88842c7659c577ac"
+            },
+            {
+              "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
+              "sha256": "737006de3fd43a900b8a3083235267d5100c9b151db974a6aeac980899dfd4d3"
+            },
+            {
+              "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
+              "sha256": "6cbbed979a784783e60c042451337d97676c7f43041d56a2f8ae218b78814397"
+            },
+            {
+              "path": "apps/web/e2e/contract-review-signature-forms.spec.ts",
+              "sha256": "79445dadc554ce85efed2b383ae8d0cff426a24c8790452ca90591d930aa67c6"
+            },
+            {
+              "path": "apps/web/e2e/customer-address-selection.spec.ts",
+              "sha256": "c6a121bd7b04b5e6a8ca3bd917ed9a4804b0a69ecd34d20be88bb453694c8ca1"
+            },
+            {
+              "path": "apps/web/e2e/customer-receipts.spec.ts",
+              "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
+            },
+            {
+              "path": "apps/web/e2e/document-upload-controls.spec.ts",
+              "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+            },
+            {
+              "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
+              "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
+            },
+            {
+              "path": "apps/web/e2e/electricity-journey.spec.ts",
+              "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
+            },
+            {
+              "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+              "sha256": "a6ed69c9adb9f91b7020674b6d57f0eb1c7862501b90f0a756fef9e1d144a6f6"
+            },
+            {
+              "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
+              "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
+            },
+            {
+              "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+              "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
+            },
+            {
+              "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
+              "sha256": "f962eec1cc1a0a7905f071f72b778524af46570f0b09ef4629686e869b9f3c0d"
+            },
+            {
+              "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+              "sha256": "c80f3afab8aa387ef124076de76a0a01e48c6c7029accd6bc5a83b8f8351252b"
+            },
+            {
+              "path": "apps/web/e2e/form-accessibility.spec.ts",
+              "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+            },
+            {
+              "path": "apps/web/e2e/gift-code-forms.spec.ts",
+              "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
+            },
+            {
+              "path": "apps/web/e2e/invoice-forms.spec.ts",
+              "sha256": "287a528ddeeac92a5139f6fc782448cfc432a0423f72f47869ed6df3a455639c"
+            },
+            {
+              "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+              "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+            },
+            {
+              "path": "apps/web/e2e/login-native-forms.spec.ts",
+              "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
+            },
+            {
+              "path": "apps/web/e2e/login-recovery.spec.ts",
+              "sha256": "da4407e7f52ab289d7f57c59b15b515332f7cbddc719efa31b6629453a8e7458"
+            },
+            {
+              "path": "apps/web/e2e/maintenance-forms.spec.ts",
+              "sha256": "d1f0a580de220cf74775f7b767594e780cd78b3e102753a6c51aa1e4734a8cee"
+            },
+            {
+              "path": "apps/web/e2e/notification-forms.spec.ts",
+              "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
+            },
+            {
+              "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+              "sha256": "d380f6e74857e602bf19a37b3544b4d2daee31147b22e8098a156c4f1ee6c26b"
+            },
+            {
+              "path": "apps/web/e2e/online-payment-return.spec.ts",
+              "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
+            },
+            {
+              "path": "apps/web/e2e/password-recovery-forms.spec.ts",
+              "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
+            },
+            {
+              "path": "apps/web/e2e/payment-review-recovery.spec.ts",
+              "sha256": "8130b46ecad2e76176b097d129560aa23817c28ac6c44bef521652af1c462346"
+            },
+            {
+              "path": "apps/web/e2e/profile-address-forms.spec.ts",
+              "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
+            },
+            {
+              "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+              "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
+            },
+            {
+              "path": "apps/web/e2e/provider-forms.spec.ts",
+              "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
+            },
+            {
+              "path": "apps/web/e2e/reconciliation-forms.spec.ts",
+              "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
+            },
+            {
+              "path": "apps/web/e2e/refund-forms.spec.ts",
+              "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
+            },
+            {
+              "path": "apps/web/e2e/registration-native-forms.spec.ts",
+              "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
+            },
+            {
+              "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
+              "sha256": "6937b9f230f9df60582148e453d2669857441a7e1307d151bf049b0541e75ed3"
+            },
+            {
+              "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
+              "sha256": "ca259c3765593d3a03aa159bc98c3c29691a51834f669229942261f939847d52"
+            },
+            {
+              "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
+              "sha256": "ec263d88bb26f25a000d47f8a162fa26612fce5c369f2bcf0738c33f2d130878"
+            },
+            {
+              "path": "apps/web/e2e/saving-journey.spec.ts",
+              "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
+            },
+            {
+              "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+              "sha256": "7dbfe6da75106e6d19ea9df14615ff5469d5c53dcd0381dd4b235534835fcb2e"
+            },
+            {
+              "path": "apps/web/e2e/security-settings-forms.spec.ts",
+              "sha256": "152471a2964820a2a66a9433bca8b40164ede412467d138f8774542d7ce323b4"
+            },
+            {
+              "path": "apps/web/e2e/service-settings-forms.spec.ts",
+              "sha256": "9a5eb7083b27e67f170d71f25feb9cd944c4abcc25eb826405dff18746141fdc"
+            },
+            {
+              "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
+              "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
+            },
+            {
+              "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+              "sha256": "44c7e23b93f5a632fbc61715044aeb972c80c346bba70e25e6bff3134110584d"
+            },
+            {
+              "path": "apps/web/e2e/solar-journey.spec.ts",
+              "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+            },
+            {
+              "path": "apps/web/e2e/solar-operation-forms.spec.ts",
+              "sha256": "1580433d47fe10708ea9588bb9f52ea12d0109b8484dd0cc1d14b0368b24ebc6"
+            },
+            {
+              "path": "apps/web/e2e/solar-postal-forms.spec.ts",
+              "sha256": "da947e6e688d91c73ef3b7dcc14cd530b6f541f36865826b4da0da5b81b6870a"
+            },
+            {
+              "path": "apps/web/e2e/staff-access-native-forms.spec.ts",
+              "sha256": "bd8936820ea091a7be4cb4b7af82e35eb37f40d175ec89930ba1a0bd9f046718"
+            },
+            {
+              "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
+              "sha256": "bf2553c6a5446a336d947921928d444696bc5360668b9abb2e7206125d070afc"
+            },
+            {
+              "path": "apps/web/e2e/staff-team-forms.spec.ts",
+              "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
+            },
+            {
+              "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+              "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+            },
+            {
+              "path": "apps/web/e2e/ticket-forms.spec.ts",
+              "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
+            },
+            {
+              "path": "apps/web/e2e/vat-forms.spec.ts",
+              "sha256": "a68e84a95b211bdf29f53dad018d8e444ab5cc0278423fbc853bdca79619512a"
+            },
+            {
+              "path": "apps/web/e2e/verification-settings-forms.spec.ts",
+              "sha256": "aa13d31ae5c41c7a30cff3a7f0cfaf7fce43231a35fe2281580cf7e14e65ed6d"
+            },
+            {
+              "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
+              "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
+            },
+            {
+              "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+              "sha256": "cf6b0be7a251e469efd2b27067449513b3d8b6617340943d676fc4b3df1fd930"
+            },
+            {
+              "path": "apps/web/e2e/wallet-limit.spec.ts",
+              "sha256": "6c7496c2f5ee5b238875e714bd7e6f6e2f95df7e6e8db963ce205dbc830c8671"
+            }
+          ]
+        }
       }
     },
     {
@@ -606463,7 +606784,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "packages/ui/package.json",
@@ -606684,6 +607005,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -606791,7 +607120,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -607003,6 +607332,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -607042,7 +607379,7 @@
           "source_evidence": [
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             }
           ],
           "source_renewals": [
@@ -607069,6 +607406,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -678994,7 +679339,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -679310,6 +679655,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -679527,7 +679880,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -679909,6 +680262,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -680126,7 +680487,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -680508,6 +680869,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -680769,7 +681138,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -681085,6 +681454,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -682518,7 +682895,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -682960,6 +683337,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -683262,7 +683647,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -683662,6 +684047,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -684235,7 +684628,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "docs/design/notification-recovery.md",
@@ -684343,6 +684736,14 @@
                 "docs/design/accessibility.md"
               ],
               "scope": "Critical browser coverage and accessibility guidance expand to launch reviews and dialogs. Existing test assertions, CI gates and advisory behavior are preserved."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -684559,7 +684960,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -684941,6 +685342,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -685243,7 +685652,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -685643,6 +686052,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -686191,7 +686608,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -686828,6 +687245,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -687376,7 +687801,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -688013,6 +688438,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -688315,7 +688748,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "docs/operations/preflight/production-image-review.md",
@@ -688715,6 +689148,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -689263,7 +689704,7 @@
             },
             {
               "path": "docs/design/accessibility.md",
-              "sha256": "0f79feba07744412e256230874c3bee38b74732a75b9d8593f6864e1742d19f4"
+              "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
             },
             {
               "path": "kanban/epics/07-ui-ux-design.md",
@@ -689900,6 +690341,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-critical-form-recovery",
+              "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+              "paths": [
+                "docs/design/accessibility.md"
+              ],
+              "scope": "Adds recovery and draft ownership guidance. Existing accessibility and release checks are preserved."
             }
           ]
         }
@@ -1092044,6 +1092493,358 @@
         {
           "file": "source.sha256",
           "sha256": "2c5d2144218cea774bec5c0f26ac86fc5d9d2f84ffa0199221bf1d428999ee4e"
+        }
+      ]
+    },
+    "release-0.6-critical-form-recovery": {
+      "batch": "release-0.6-critical-form-recovery",
+      "base_commit": "69c98e42bf73c773d860c7767d784e9da84e2736",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.09.03.09",
+        "01-platform-infrastructure.md#T-06.03.03",
+        "06-security-testing-observability.md#T-06.11.01.02",
+        "06-security-testing-observability.md#T-06.11.01.03",
+        "06-security-testing-observability.md#T-06.11.01.04",
+        "07-ui-ux-design.md#T-07.05.01.01",
+        "07-ui-ux-design.md#T-07.05.01.02",
+        "07-ui-ux-design.md#T-07.05.01.03",
+        "07-ui-ux-design.md#T-07.05.01.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.08",
+        "07-ui-ux-design.md#T-07.05.01.09",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.01.11",
+        "07-ui-ux-design.md#T-07.05.02.01",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "07-ui-ux-design.md#T-07.05.02.03"
+      ],
+      "changed_paths": [
+        "docs/design/accessibility.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/design/accessibility.md",
+          "sha256": "c001389337c480eca6eb33e8f7a3ab5257692ac0339cf1a910413ad8d98e7128"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        },
+        {
+          "path": "apps/web/src/pages/SimpleElectricityOrderPage.tsx",
+          "sha256": "c18c6cec31514fc03b305d2405d302a8ed072e400d3cdceb71c55a1c4e8e1d4a"
+        },
+        {
+          "path": "apps/web/src/pages/AdvancedElectricityOrderPage.tsx",
+          "sha256": "a4497ced8a450c8fc99097e099915932d4ae6e13c7c8eef60dd5a1e54bf93aaf"
+        },
+        {
+          "path": "apps/web/src/pages/SavingsOrderPage.tsx",
+          "sha256": "af5c666ffbe6523cb7a546e081497beef54fa5533c6f1d37e581875e8850df35"
+        },
+        {
+          "path": "apps/web/src/pages/SolarRequestPage.tsx",
+          "sha256": "cd08bddbaaa38991861dd6011f0edbfa2ce435bf9004f2f15da9ce58517dd519"
+        },
+        {
+          "path": "apps/web/src/pages/ConsultationsPage.tsx",
+          "sha256": "8f419c0885c81ee907115c8e53b074ca571ecfe15f90382cd6cdfe5232a8288a"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.tsx",
+          "sha256": "44ee2de825c64b4a53473aaf8a022175959f36ed543fa97f6d582949c89be630"
+        },
+        {
+          "path": "apps/web/src/pages/WalletPage.errors.test.tsx",
+          "sha256": "f075664a91d886de230f7f3aa3fe3006631cd2f5c336594c115dee3b557f692a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminWalletReceiptsPage.tsx",
+          "sha256": "5fee160ba3fc78dc9a28754117ea75938e7c02b4496d55c2ab6d9266e71cd67a"
+        },
+        {
+          "path": "apps/web/src/pages/AdminConsultationsPage.tsx",
+          "sha256": "e974553f4ca6a67d32ad3d63e374b95af4b8fa0f2572ba886655f2524d8d8f33"
+        },
+        {
+          "path": "apps/web/src/pages/AdminSavingOrdersPage.tsx",
+          "sha256": "22290c1a41f0da488500443be9fefcc8375b074a4bc74fefd89aeda0fe2db5db"
+        },
+        {
+          "path": "apps/web/src/components/WalletInvoicePaymentPanel.tsx",
+          "sha256": "355411908b82ecdd8a28a851d667624e450b93de5e1e4d8603dd40ba9a2018be"
+        },
+        {
+          "path": "apps/web/src/components/DeliveryWindowConfigPanel.tsx",
+          "sha256": "782b217311c9a1fe305d90c8dd37e6780b91b313b82aad9c5c92610e9a82a8a3"
+        },
+        {
+          "path": ".github/workflows/browser-nightly.yml",
+          "sha256": "95d065e29d8a78b96e70de861712f99d22538bc5c9620c807043ee65b8932bff"
+        },
+        {
+          "path": "apps/web/e2e/account-recovery-closure.spec.ts",
+          "sha256": "09ee12cf4efe6b16502e16d424217cd705bfd199e405b1a4f08d6f7dc732bf7d"
+        },
+        {
+          "path": "apps/web/e2e/account-settings-forms.spec.ts",
+          "sha256": "265b6abb11194016eaa8cbf31c38713a5fdaa6945a36fba2b8898d5ee1290ee2"
+        },
+        {
+          "path": "apps/web/e2e/approval-reason-forms.spec.ts",
+          "sha256": "0239163c4b7514aa54830768d7fb61ed677002fd44e569158284f7d5c60b15ed"
+        },
+        {
+          "path": "apps/web/e2e/cancellation-forms.spec.ts",
+          "sha256": "af8efcc627db9c5dec1d86d22e915f8341a93540117469ef0128c4cc34a880f1"
+        },
+        {
+          "path": "apps/web/e2e/catalogue-forms.spec.ts",
+          "sha256": "6e4ee915d6d6a68923a3c2ea8deed3419d196ceb598587f8d73bc83b75c3b25c"
+        },
+        {
+          "path": "apps/web/e2e/consultation-fee-offer-forms.spec.ts",
+          "sha256": "fda9474dd48ec31e39bc40ad91443389b8dc6e60ef09bb5fdf1e0f9ba5c19d2d"
+        },
+        {
+          "path": "apps/web/e2e/consultation-forms.spec.ts",
+          "sha256": "1ffdd8d27847e4a0d2d5bc6fc837d612f511c40f0aec0d32edb784cae6a451c4"
+        },
+        {
+          "path": "apps/web/e2e/consultation-journey.spec.ts",
+          "sha256": "cea609cf06c31f9d79c32fa2cf76e4e4cb91e4f710ec80ba88842c7659c577ac"
+        },
+        {
+          "path": "apps/web/e2e/consultation-paid-resolution-forms.spec.ts",
+          "sha256": "737006de3fd43a900b8a3083235267d5100c9b151db974a6aeac980899dfd4d3"
+        },
+        {
+          "path": "apps/web/e2e/contract-authoring-forms.spec.ts",
+          "sha256": "6cbbed979a784783e60c042451337d97676c7f43041d56a2f8ae218b78814397"
+        },
+        {
+          "path": "apps/web/e2e/contract-review-signature-forms.spec.ts",
+          "sha256": "79445dadc554ce85efed2b383ae8d0cff426a24c8790452ca90591d930aa67c6"
+        },
+        {
+          "path": "apps/web/e2e/customer-address-selection.spec.ts",
+          "sha256": "c6a121bd7b04b5e6a8ca3bd917ed9a4804b0a69ecd34d20be88bb453694c8ca1"
+        },
+        {
+          "path": "apps/web/e2e/customer-receipts.spec.ts",
+          "sha256": "2307db44b583b9f1a1aa771b172ad7083e7af224e0078589de34cfa0fea3b30b"
+        },
+        {
+          "path": "apps/web/e2e/document-upload-controls.spec.ts",
+          "sha256": "f68badcf28656ba3204fc5e3d8260e28a596fb5af0b2f4c899dbf5cac1f250d8"
+        },
+        {
+          "path": "apps/web/e2e/electricity-correction-forms.spec.ts",
+          "sha256": "50030a7917f70cc995899a626bd9f586412a7fd977c855ab12b0fd8589cd7270"
+        },
+        {
+          "path": "apps/web/e2e/electricity-journey.spec.ts",
+          "sha256": "770772a53ef3ca0fbb6a40bb1aa9dc245bdc738b7a2078ba8fc4d7fc81839bf2"
+        },
+        {
+          "path": "apps/web/e2e/electricity-price-adjustment-forms.spec.ts",
+          "sha256": "a6ed69c9adb9f91b7020674b6d57f0eb1c7862501b90f0a756fef9e1d144a6f6"
+        },
+        {
+          "path": "apps/web/e2e/electricity-quantity-increase-forms.spec.ts",
+          "sha256": "b199f0de23aa23ca633ce92da06cf46a75b095ed6fa7709a266723712668e3af"
+        },
+        {
+          "path": "apps/web/e2e/electricity-settings-forms.spec.ts",
+          "sha256": "e107c7d15d6c67f9e96107023389cadf9fe7ba8598f05e27ebae94851c12bd2d"
+        },
+        {
+          "path": "apps/web/e2e/electricity-simple-journey.spec.ts",
+          "sha256": "f962eec1cc1a0a7905f071f72b778524af46570f0b09ef4629686e869b9f3c0d"
+        },
+        {
+          "path": "apps/web/e2e/electricity-wizard-navigation.spec.ts",
+          "sha256": "c80f3afab8aa387ef124076de76a0a01e48c6c7029accd6bc5a83b8f8351252b"
+        },
+        {
+          "path": "apps/web/e2e/form-accessibility.spec.ts",
+          "sha256": "231929ebc3795d67d8190975bb6e60e5b580a9b1520c75931b1d39b3f1a6bd75"
+        },
+        {
+          "path": "apps/web/e2e/gift-code-forms.spec.ts",
+          "sha256": "e719d46498d567afca63fa9721de1de28e0adb961d52acc3bf131043a8f48fc1"
+        },
+        {
+          "path": "apps/web/e2e/invoice-forms.spec.ts",
+          "sha256": "287a528ddeeac92a5139f6fc782448cfc432a0423f72f47869ed6df3a455639c"
+        },
+        {
+          "path": "apps/web/e2e/limit-settings-forms.spec.ts",
+          "sha256": "5f5c9866c353f7c5b6e78479e84784c72814665eb5b0920410fdd7bac1652117"
+        },
+        {
+          "path": "apps/web/e2e/login-native-forms.spec.ts",
+          "sha256": "4a701474705ca10b8ce53c7584446380e5371218e0f2ca5e858e16467b0a44fd"
+        },
+        {
+          "path": "apps/web/e2e/login-recovery.spec.ts",
+          "sha256": "da4407e7f52ab289d7f57c59b15b515332f7cbddc719efa31b6629453a8e7458"
+        },
+        {
+          "path": "apps/web/e2e/maintenance-forms.spec.ts",
+          "sha256": "d1f0a580de220cf74775f7b767594e780cd78b3e102753a6c51aa1e4734a8cee"
+        },
+        {
+          "path": "apps/web/e2e/notification-forms.spec.ts",
+          "sha256": "282717710440ba999d4cb6075c35872bee79a33921bb0f71a19e4487bb1559b3"
+        },
+        {
+          "path": "apps/web/e2e/onboarding-wizard.spec.ts",
+          "sha256": "d380f6e74857e602bf19a37b3544b4d2daee31147b22e8098a156c4f1ee6c26b"
+        },
+        {
+          "path": "apps/web/e2e/online-payment-return.spec.ts",
+          "sha256": "fe07f9c918c5d3dcc5fca19495e4a8fd5fd3ee3a0bd8f9b722074dd489e72aba"
+        },
+        {
+          "path": "apps/web/e2e/password-recovery-forms.spec.ts",
+          "sha256": "4a679226f1e0783a6a9ce67cf61a770aa898bd9d27ba4c946db4a78e490f2a2b"
+        },
+        {
+          "path": "apps/web/e2e/payment-review-recovery.spec.ts",
+          "sha256": "8130b46ecad2e76176b097d129560aa23817c28ac6c44bef521652af1c462346"
+        },
+        {
+          "path": "apps/web/e2e/profile-address-forms.spec.ts",
+          "sha256": "3e19472647b13a4ac43b9f7550b23a76037d8860442e963c89b541b514c2cf6e"
+        },
+        {
+          "path": "apps/web/e2e/profile-lifecycle-forms.spec.ts",
+          "sha256": "0025099fd945e492a959bf5161b1b94b0cabf8f94e56888684e01a4585ec1009"
+        },
+        {
+          "path": "apps/web/e2e/provider-forms.spec.ts",
+          "sha256": "16de6d2ce8a172eade8a305549c24911ca55b64f3a216bf3b7c4f6bb6a44ae34"
+        },
+        {
+          "path": "apps/web/e2e/reconciliation-forms.spec.ts",
+          "sha256": "bacbe80487a8105819f155533520f232ccfb853d6e5d2af97dbb27c7d843a876"
+        },
+        {
+          "path": "apps/web/e2e/refund-forms.spec.ts",
+          "sha256": "d0d2cffd6c65f0f7ad8a3e9b8d0507a841f09d1069ac4c66462b55ec1bcc9a7f"
+        },
+        {
+          "path": "apps/web/e2e/registration-native-forms.spec.ts",
+          "sha256": "8cf4f56a975dc3e6214e7136646be9db08b3ba66e5f140b4a2fdb2a80178d625"
+        },
+        {
+          "path": "apps/web/e2e/saving-catalogue-forms.spec.ts",
+          "sha256": "6937b9f230f9df60582148e453d2669857441a7e1307d151bf049b0541e75ed3"
+        },
+        {
+          "path": "apps/web/e2e/saving-change-address-forms.spec.ts",
+          "sha256": "ca259c3765593d3a03aa159bc98c3c29691a51834f669229942261f939847d52"
+        },
+        {
+          "path": "apps/web/e2e/saving-hardware-forms.spec.ts",
+          "sha256": "ec263d88bb26f25a000d47f8a162fa26612fce5c369f2bcf0738c33f2d130878"
+        },
+        {
+          "path": "apps/web/e2e/saving-journey.spec.ts",
+          "sha256": "fe517a9c278137b7bed088505d9e2822f5975d984cccfbfa79eaeae61d465223"
+        },
+        {
+          "path": "apps/web/e2e/saving-staff-operation-forms.spec.ts",
+          "sha256": "7dbfe6da75106e6d19ea9df14615ff5469d5c53dcd0381dd4b235534835fcb2e"
+        },
+        {
+          "path": "apps/web/e2e/security-settings-forms.spec.ts",
+          "sha256": "152471a2964820a2a66a9433bca8b40164ede412467d138f8774542d7ce323b4"
+        },
+        {
+          "path": "apps/web/e2e/service-settings-forms.spec.ts",
+          "sha256": "9a5eb7083b27e67f170d71f25feb9cd944c4abcc25eb826405dff18746141fdc"
+        },
+        {
+          "path": "apps/web/e2e/solar-contract-issue-forms.spec.ts",
+          "sha256": "3401f30f2dad9bb6803d6333009414f2c0fe6593eb694d88a27e245dd7a53266"
+        },
+        {
+          "path": "apps/web/e2e/solar-document-review-forms.spec.ts",
+          "sha256": "44c7e23b93f5a632fbc61715044aeb972c80c346bba70e25e6bff3134110584d"
+        },
+        {
+          "path": "apps/web/e2e/solar-journey.spec.ts",
+          "sha256": "71b37aa9df9fc301d22bd8ed77e3eb6581aefe047fa97a273660d85a4020946a"
+        },
+        {
+          "path": "apps/web/e2e/solar-operation-forms.spec.ts",
+          "sha256": "1580433d47fe10708ea9588bb9f52ea12d0109b8484dd0cc1d14b0368b24ebc6"
+        },
+        {
+          "path": "apps/web/e2e/solar-postal-forms.spec.ts",
+          "sha256": "da947e6e688d91c73ef3b7dcc14cd530b6f541f36865826b4da0da5b81b6870a"
+        },
+        {
+          "path": "apps/web/e2e/staff-access-native-forms.spec.ts",
+          "sha256": "bd8936820ea091a7be4cb4b7af82e35eb37f40d175ec89930ba1a0bd9f046718"
+        },
+        {
+          "path": "apps/web/e2e/staff-receipt-rejection-forms.spec.ts",
+          "sha256": "bf2553c6a5446a336d947921928d444696bc5360668b9abb2e7206125d070afc"
+        },
+        {
+          "path": "apps/web/e2e/staff-team-forms.spec.ts",
+          "sha256": "fd40399c2632fff58bc26523ab18f4bdff66a8c8587328e6f9e5ada0ae901b85"
+        },
+        {
+          "path": "apps/web/e2e/storage-policy-forms.spec.ts",
+          "sha256": "fbf7236507119aa8be55567e23fbf079ce6f5afb0341463409afa83b70dc7089"
+        },
+        {
+          "path": "apps/web/e2e/ticket-forms.spec.ts",
+          "sha256": "5cce4db6d72741214fb2b8942af57c68146e111453e6c1444efd805d69b5116e"
+        },
+        {
+          "path": "apps/web/e2e/vat-forms.spec.ts",
+          "sha256": "a68e84a95b211bdf29f53dad018d8e444ab5cc0278423fbc853bdca79619512a"
+        },
+        {
+          "path": "apps/web/e2e/verification-settings-forms.spec.ts",
+          "sha256": "aa13d31ae5c41c7a30cff3a7f0cfaf7fce43231a35fe2281580cf7e14e65ed6d"
+        },
+        {
+          "path": "apps/web/e2e/wallet-confirmation-forms.spec.ts",
+          "sha256": "995d796eb3ede25e7dbe4e47d830185bd765d2aa23943fbe08af7fb52d24345a"
+        },
+        {
+          "path": "apps/web/e2e/wallet-invoice-payment.spec.ts",
+          "sha256": "cf6b0be7a251e469efd2b27067449513b3d8b6617340943d676fc4b3df1fd930"
+        },
+        {
+          "path": "apps/web/e2e/wallet-limit.spec.ts",
+          "sha256": "6c7496c2f5ee5b238875e714bd7e6f6e2f95df7e6e8db963ce205dbc830c8671"
+        }
+      ],
+      "checks": [
+        "Reviewed the current critical customer and protected staff form flows against the existing rendered and browser assertions. Checked localized validation feedback and retained fields, original captured request retries after ambiguous outcomes, no duplicate upload or financial write, profile and permission changes, and rejection and retirement of one-time codes.",
+        "All eight Chromium shards in scheduled GitHub run 43190340052 completed successfully. In the 61 selected specifications, 702 cases passed on the first attempt. The evidence records the actual titles and shard for authentication, onboarding, addresses and uploads, four launch services, wallet, invoices, contracts and refunds, and protected configuration and staff actions.",
+        "The tested web app, UI, generated API client, browser runner, workflow, 61 exact specification files and reviewed form source are unchanged. The shared package and lockfile delta adds server OpenTelemetry and operational log and alert helpers with no browser imports. Existing source-bound wallet top-up and invoice rendered tests remain in force. Documentation and git diff --check passed."
+      ],
+      "limitations": [
+        "Only the eight terminal Chromium jobs and 61 related browser files are used for this acceptance. The remaining scheduled browsers, nightly delivery, live provider operation and exact staging release checks remain separately tracked."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-critical-form-recovery",
+      "execution_receipts": [
+        {
+          "file": "check-existing-recovery.py",
+          "sha256": "12a3d1fa5b395d1f72a140ea65cc76bf7b038a4c4740c9e25857438a1cf01f32"
+        },
+        {
+          "file": "form-recovery-readback.json",
+          "sha256": "dcb5afc140370957a95412eaa2b13e5565758fe0af742e6713fd60bc0c777bc3"
         }
       ]
     }

@@ -40,6 +40,21 @@ text is unobscured and records its contrast against the actual canvas in both
 themes and languages. This covers controls that the full-page Axe scan can
 flag for manual review when they sit below the queue.
 
+## Form recovery
+
+Keep valid input visible after validation or provider failure while the user
+retains authority over the form. Associate a known validation error with its
+field. When a write outcome is uncertain, retain the captured request and
+use the operation's explicit retry, readback or reset procedure.
+Clear rejected one-time codes and withdraw private values when authority is
+lost or the user switches profiles.
+
+Exercise these cases in the production browser build for authentication,
+onboarding, all four launch services, financial reviews and protected staff
+forms. Check the displayed values and the exact retried request where the
+operation permits retry. The provider and authorization rules still apply
+when the interface retains a draft.
+
 ## Manual keyboard and screen-reader review
 
 Use an isolated staging candidate with synthetic identities, documents and

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T10:10:38+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T10:17:35+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1244 | Accepted with unchanged source bindings. |
-| verify | 15 | Existing work may be complete; inspect evidence before building. |
+| done | 1245 | Accepted with unchanged source bindings. |
+| verify | 14 | Existing work may be complete; inspect evidence before building. |
 | partial | 101 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1271,7 +1271,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.09.03.06` | done | Recorded batch work | Write RTL tests for electricity order wizards: simple order, advanced order, green rule disclosure, price review |
 | `06-security-testing-observability.md#T-06.09.03.07` | done | Recorded batch work | Write RTL tests for wallet/invoice/payment pages: balance display, top-up, invoice payment, refund view |
 | `06-security-testing-observability.md#T-06.09.03.08` | done | Recorded batch work | Write RTL tests for admin pages: configuration, role management, product/settings CRUD |
-| `06-security-testing-observability.md#T-06.09.03.09` | verify | Recorded batch work | Ensure every critical form preserves valid input after server validation/provider error |
+| `06-security-testing-observability.md#T-06.09.03.09` | done | Recorded batch work | Ensure every critical form preserves valid input after server validation/provider error |
 | `06-security-testing-observability.md#T-06.09.03.10` | done | Recorded batch work | Write RTL tests for permission-dependent UI: elements hidden/disabled per role |
 | `06-security-testing-observability.md#T-06.10.01.01` | done | Recorded batch work | Set up test PostgreSQL instance in CI and local dev (Docker Compose service) |
 | `06-security-testing-observability.md#T-06.10.01.02` | done | Recorded batch work | Configure NestJS testing module: bootstrap real app with test DB, apply migrations before each suite |
