@@ -1,0 +1,71 @@
+{
+  "uid": "barghsa-monthly-costs",
+  "title": "Monthly costs",
+  "schemaVersion": 41,
+  "tags": ["operations", "billing"],
+  "time": { "from": "now-30d", "to": "now" },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Actual and budget by category",
+      "datasource": { "type": "prometheus", "uid": "barghsa-prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "sum by (environment,database,month,currency,category) (barghsa_monthly_cost_amount{job=\"barghsa-monthly-costs\"})",
+          "legendFormat": "{{environment}} / {{database}} · {{month}} · {{category}} · actual {{currency}}"
+        },
+        {
+          "refId": "B",
+          "expr": "barghsa_monthly_cost_budget{job=\"barghsa-monthly-costs\"}",
+          "legendFormat": "{{environment}} / {{database}} · {{month}} · {{category}} · budget {{currency}}"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Cost per active profile and per order",
+      "datasource": { "type": "prometheus", "uid": "barghsa-prometheus" },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "barghsa_monthly_cost_per_unit{job=\"barghsa-monthly-costs\"}",
+          "legendFormat": "{{environment}} / {{database}} · {{month}} · {{unit}} · {{currency}}"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Actual by provider and AI model",
+      "datasource": { "type": "prometheus", "uid": "barghsa-prometheus" },
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 9 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "barghsa_monthly_cost_amount{job=\"barghsa-monthly-costs\"}",
+          "legendFormat": "{{environment}} / {{database}} · {{month}} · {{category}} · {{provider}} {{model}} · {{currency}}"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Billing snapshot cutoff age",
+      "datasource": { "type": "prometheus", "uid": "barghsa-prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "gridPos": { "h": 7, "w": 24, "x": 0, "y": 18 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "time() - barghsa_monthly_cost_cutoff_timestamp_seconds{job=\"barghsa-monthly-costs\"}",
+          "legendFormat": "{{environment}} / {{database}} · {{month}}"
+        }
+      ]
+    }
+  ]
+}

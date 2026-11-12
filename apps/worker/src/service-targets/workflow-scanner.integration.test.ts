@@ -14,6 +14,7 @@ import { scanServiceBreaches } from './breach-scanner.js';
 import { scanServiceEscalations } from './escalation-scanner.js';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
 import { InAppNotificationTransport } from '../notifications/in-app-transport.js';
+import { collectMonthlyCostMetrics, costCategories } from '../operations/monthly-costs.js';
 let management: Pool,
   pool: Pool,
   profile: string,
@@ -133,7 +134,7 @@ async function configure(
   );
   return policy;
 }
-async function seed(key: ServiceWorkflowKey, status?: string) {
+async function seed(key: ServiceWorkflowKey, status?: string, submittedAt?: Date) {
   const id = randomUUID();
   if (key.startsWith('ticket_')) {
     await pool.query(
@@ -153,9 +154,9 @@ async function seed(key: ServiceWorkflowKey, status?: string) {
   }
   if (key === 'consultation') {
     await pool.query(
-      `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,submitted_by,submission_key,staff_owner_id,status,updated_at)
-      SELECT $1,$2,id,'{"title":{"en":"Private consultation"}}','wf-owner',$1,'wf-source',$3,NOW()-INTERVAL '4 hours' FROM products WHERE system_key='electricity_generation_station'`,
-      [id, profile, status ?? 'under_review']
+      `INSERT INTO consultation_requests(id,profile_id,product_id,product_snapshot,submitted_by,submission_key,staff_owner_id,status,updated_at,submitted_at)
+      SELECT $1,$2,id,'{"title":{"en":"Private consultation"}}','wf-owner',$1,'wf-source',$3,NOW()-INTERVAL '4 hours',COALESCE($4::timestamptz,NOW()) FROM products WHERE system_key='electricity_generation_station'`,
+      [id, profile, status ?? 'under_review', submittedAt]
     );
     return { id, table: 'consultation_requests' };
   }
@@ -186,8 +187,8 @@ async function seed(key: ServiceWorkflowKey, status?: string) {
   if (key === 'solar_order') {
     await pool.query(
       `INSERT INTO solar_construction_requests(id,profile_id,submitted_by,submission_key,building_type,grid_type,property_form,structural_frame,building_completion_date,agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at,status,submitted_at)
-      VALUES($1,$2,'wf-owner',$1,'building_apartment','off_grid','villa','concrete','2020-01-01',true,'v1','Private agreement',NOW(),$3,NOW()-INTERVAL '4 hours')`,
-      [id, profile, status ?? 'documents_under_review']
+      VALUES($1,$2,'wf-owner',$1,'building_apartment','off_grid','villa','concrete','2020-01-01',true,'v1','Private agreement',NOW(),$3,COALESCE($4::timestamptz,NOW()-INTERVAL '4 hours'))`,
+      [id, profile, status ?? 'documents_under_review', submittedAt]
     );
     return { id, table: 'solar_construction_requests' };
   }
@@ -207,14 +208,14 @@ async function seed(key: ServiceWorkflowKey, status?: string) {
   if (key === 'electricity_order') {
     await pool.query(
       `INSERT INTO electricity_orders(id,profile_id,settings_snapshot,status,submitted_at,total_kwh,average_power_kw,green_rule_applied,submitted_by,period_start,period_end,pricing_snapshot)
-      VALUES($1,$2,'{}',$3,NOW()-INTERVAL '4 hours',1,1,false,'wf-owner',NOW(),NOW()+INTERVAL '1 day','{}')`,
-      [id, profile, status ?? 'awaiting_staff_review']
+      VALUES($1,$2,'{}',$3,COALESCE($4::timestamptz,NOW()-INTERVAL '4 hours'),1,1,false,'wf-owner',NOW(),NOW()+INTERVAL '1 day','{}')`,
+      [id, profile, status ?? 'awaiting_staff_review', submittedAt]
     );
     return { id, table: 'electricity_orders' };
   }
   await pool.query(
     `INSERT INTO saving_orders(id,order_id,profile_id,saving_plan_id,hardware_product_id,bill_identifier,installation_address_id,agreement_version_id,agreement_snapshot,address_snapshot,pricing_snapshot,verification_result,status,financial_status,submitted_at)
-    VALUES($1,$2,$3,$4,$5,$6,$7,$8,'Private agreement','{}','{"total":"9007199254740993"}','{}',$9,'paid',NOW()-INTERVAL '4 hours')`,
+    VALUES($1,$2,$3,$4,$5,$6,$7,$8,'Private agreement','{}','{"total":"9007199254740993"}','{}',$9,'paid',COALESCE($10::timestamptz,NOW()-INTERVAL '4 hours'))`,
     [
       id,
       order,
@@ -225,10 +226,81 @@ async function seed(key: ServiceWorkflowKey, status?: string) {
       address,
       agreement,
       status ?? 'in_progress',
+      submittedAt,
     ]
   );
   return { id, table: 'saving_orders' };
 }
+
+it('collects cost denominators for all four submitted services with a column-limited reporting login', async () => {
+  const month = new Date().toISOString().slice(0, 7);
+  const submitted = new Date(`${month}-02T12:00:00.000Z`);
+  const cutoff = new Date(`${month}-01T00:00:00.000Z`);
+  cutoff.setUTCMonth(cutoff.getUTCMonth() + 1);
+  await pool.query("UPDATE profiles SET status='ACTIVE' WHERE id=$1", [profile]);
+  await pool.query(
+    "INSERT INTO profiles(user_id,status) VALUES('wf-owner','DRAFT'),('wf-owner','SUSPENDED')"
+  );
+  for (const service of [
+    'electricity_order',
+    'saving_order',
+    'solar_order',
+    'consultation',
+  ] as const)
+    await seed(service, undefined, submitted);
+  await seed('consultation', undefined, cutoff);
+
+  const role = 'cost_reporting_' + randomUUID().replaceAll('-', '');
+  await pool.query(`CREATE ROLE ${role} LOGIN PASSWORD 'fixture-only-password';
+    GRANT USAGE ON SCHEMA public TO ${role};
+    GRANT SELECT(user_id,archived,status,created_at) ON profiles TO ${role};
+    GRANT SELECT(user_id,disabled_at) ON users TO ${role};
+    GRANT SELECT(id,order_type) ON orders TO ${role};
+    GRANT SELECT(id,submitted_at) ON electricity_orders TO ${role};
+    GRANT SELECT(submitted_at) ON saving_orders,solar_construction_requests,consultation_requests TO ${role}`);
+  const url = new URL(process.env.TEST_DATABASE_URL!);
+  url.pathname = '/' + database;
+  url.username = role;
+  url.password = 'fixture-only-password';
+  const reporting = new Pool({ connectionString: url.toString() });
+  try {
+    const costs = Object.keys(costCategories).map((category) => ({
+      category,
+      provider: 'fixture',
+      amountMicros: 10_000_000,
+      ...(category === 'ai' ? { model: 'fixture-model' } : {}),
+    }));
+    const metrics = await collectMonthlyCostMetrics(
+      reporting,
+      {
+        month,
+        asOf: cutoff.toISOString(),
+        currency: 'USD',
+        costs,
+        budgets: Object.fromEntries(
+          costs.map(({ category, amountMicros }) => [category, amountMicros])
+        ),
+      },
+      cutoff
+    );
+    expect(metrics).toContain(
+      `barghsa_monthly_cost_units{month="${month}",unit="active_profile"} 1\n`
+    );
+    expect(metrics).toContain(`barghsa_monthly_cost_units{month="${month}",unit="order"} 4\n`);
+    expect(metrics).toContain(
+      `barghsa_monthly_cost_per_unit{month="${month}",currency="USD",unit="order"} 20\n`
+    );
+    await expect(reporting.query('SELECT password_hash FROM users')).rejects.toThrow(
+      'permission denied'
+    );
+    await expect(reporting.query("UPDATE profiles SET status='ACTIVE'")).rejects.toThrow(
+      'permission denied'
+    );
+  } finally {
+    await reporting.end();
+    await pool.query(`DROP OWNED BY ${role}; DROP ROLE ${role}`);
+  }
+});
 const scan = (options: Parameters<typeof scanServiceWorkflows>[0] = {}) =>
   scanServiceWorkflows({ pool, ...options });
 for (const key of SERVICE_WORKFLOW_KEYS)

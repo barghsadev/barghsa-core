@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T12:35:48+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T12:49:21+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1248 | Accepted with unchanged source bindings. |
-| verify | 9 | Existing work may be complete; inspect evidence before building. |
-| partial | 103 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 6 | Existing work may be complete; inspect evidence before building. |
+| partial | 106 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1385,9 +1385,9 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.14.02.09` | done | Recorded batch work | Create Notifications dashboard: delivery rate by channel, queue age, failure breakdown, bounce rate |
 | `06-security-testing-observability.md#T-06.14.02.10` | done | Recorded batch work | Create AI Usage/Cost dashboard: request volume, token usage, cost per model per day, error rate |
 | `06-security-testing-observability.md#T-06.14.02.11` | partial | Recorded batch work | Add production release markers to all dashboards (annotation per deploy) |
-| `06-security-testing-observability.md#T-06.14.03.01` | verify | Inventory needed | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model |
-| `06-security-testing-observability.md#T-06.14.03.02` | verify | Inventory needed | Expose unit-cost metrics: cost per active profile, cost per order |
-| `06-security-testing-observability.md#T-06.14.03.03` | verify | Inventory needed | Configure alert on >20% monthly variance from budget per cost category |
+| `06-security-testing-observability.md#T-06.14.03.01` | partial | Recorded batch work | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model |
+| `06-security-testing-observability.md#T-06.14.03.02` | partial | Recorded batch work | Expose unit-cost metrics: cost per active profile, cost per order |
+| `06-security-testing-observability.md#T-06.14.03.03` | partial | Recorded batch work | Configure alert on >20% monthly variance from budget per cost category |
 | `06-security-testing-observability.md#T-06.15.01.01` | done | Recorded batch work | Define alert severity taxonomy: P1 (user-facing outage, payment/refund risk), P2 (degradation, backlog), P3 (warning, info) |
 | `06-security-testing-observability.md#T-06.15.01.02` | partial | Recorded batch work | Configure P1 alerts: payment/refund duplication risk, ledger mismatch, backup failure, outbox backlog > threshold, elevated auth failures, SLO burn rate |
 | `06-security-testing-observability.md#T-06.15.01.03` | partial | Recorded batch work | Configure P2 alerts: provider circuit-breaker open, queue age > target, database connection pool saturation, elevated error rate on critical routes |

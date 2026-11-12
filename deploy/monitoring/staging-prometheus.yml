@@ -16,6 +16,8 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets: ['alertmanager:9093']
+scrape_config_files:
+  - /etc/prometheus/optional-scrapes/*.yml
 scrape_configs:
   - job_name: barghsa-api
     static_configs:

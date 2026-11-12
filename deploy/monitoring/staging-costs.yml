@@ -1,0 +1,16 @@
+services:
+  prometheus:
+    volumes:
+      - ./staging-cost-scrape.yml:/etc/prometheus/optional-scrapes/monthly-costs.yml:ro
+      - ./monthly-cost-alerts.yml:/etc/prometheus/optional/monthly-cost-alerts.yml:ro
+      - ${BARGHSA_COST_SCRAPE_TOKEN_FILE:?Set the protected billing scrape token file}:/run/secrets/cost-scrape-token:ro
+  operations:
+    environment:
+      OPS_MONTHLY_COST_SNAPSHOT_FILE: /run/billing/monthly-costs.json
+      OPS_MONTHLY_COST_SCRAPE_TOKEN_FILE: /run/secrets/cost-scrape-token
+    volumes:
+      - ${BARGHSA_MONTHLY_COST_DIR:?Set the protected billing snapshot directory}:/run/billing:ro
+      - ${BARGHSA_COST_SCRAPE_TOKEN_FILE:?Set the protected billing scrape token file}:/run/secrets/cost-scrape-token:ro
+  grafana:
+    volumes:
+      - ./grafana-monthly-cost-dashboard.json:/var/lib/grafana/operations/monthly-costs.json:ro

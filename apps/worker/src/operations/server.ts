@@ -1,11 +1,21 @@
 import { createServer } from 'node:http';
 import { createDirectDbPool } from '@barghsa/db';
 import { receiveOperationsAlerts } from './alerts.js';
+import { serveMonthlyCostMetrics } from './monthly-costs.js';
 
 const pool = createDirectDbPool({}, { shared: false });
+const costDatabaseUrl = process.env['OPS_MONTHLY_COST_DATABASE_URL'];
+const costPool = costDatabaseUrl
+  ? createDirectDbPool(
+      { pgdirectUrl: costDatabaseUrl, poolMin: 0, poolMax: 1, statementTimeout: '5s' },
+      { shared: false }
+    )
+  : null;
 const server = createServer(async (req, res) => {
   const path = (req.url ?? '').split('?')[0];
   if (path === '/operations/alerts') return receiveOperationsAlerts(req, res, pool);
+  if (path === '/operations/monthly-costs' && costPool)
+    return serveMonthlyCostMetrics(req, res, costPool);
   if (path === '/health') {
     try {
       if (
@@ -36,7 +46,7 @@ for (const signal of ['SIGTERM', 'SIGINT'])
   process.once(signal, () => {
     const deadline = setTimeout(() => process.exit(1), 15000);
     server.close(() => {
-      void pool.end().then(() => {
+      void Promise.all([pool.end(), costPool?.end()]).then(() => {
         clearTimeout(deadline);
         process.exit(0);
       });

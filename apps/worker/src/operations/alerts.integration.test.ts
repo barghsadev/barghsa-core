@@ -214,10 +214,18 @@ it.each([
   'PublicTlsCertificateExpiring',
   'StorageLifecycleNeedsReview',
   'SmsProviderCreditReview',
+  'MonthlyCostBudgetVariance',
 ])('delivers P3 %s and its resolution once to the private admin inbox', async (alertName) => {
   const input = envelope();
   const alert = input.alerts[0]!;
   Object.assign(alert.labels, { alertname: alertName, priority: 'P3' });
+  const isCostAlert = alertName === 'MonthlyCostBudgetVariance';
+  if (isCostAlert) {
+    expect((await request(input)).status).toBe(400);
+    Object.assign(alert.labels, { category: 'nonexistent' });
+    expect((await request(input)).status).toBe(400);
+    Object.assign(alert.labels, { category: 'storage_egress' });
+  }
   const wrongPriority = structuredClone(input);
   Object.assign(wrongPriority.alerts[0]!.labels, { priority: 'P2' });
   expect((await request(wrongPriority)).status).toBe(400);
@@ -261,10 +269,26 @@ it.each([
       profile_id: null,
       operating_context: 'staff',
       type: 'admin.operations_alert',
-      params: { operationsAlertName: alertName, priority: 'P3', alertStatus },
+      params: {
+        operationsAlertName: alertName,
+        priority: 'P3',
+        alertStatus,
+        ...(isCostAlert ? { details: expect.stringContaining('Storage egress') } : {}),
+      },
     }))
   );
   expect(JSON.stringify(notices.rows)).not.toMatch(/DO_NOT_COPY|unsafe\.example/);
+  if (isCostAlert)
+    expect(operationsAlertLinks('admin.operations_alert', notices.rows[0]!.params)).toEqual([
+      {
+        label: 'notifications.operations.dashboard',
+        href: 'http://127.0.0.1:3009/d/barghsa-monthly-costs',
+      },
+      {
+        label: 'notifications.operations.runbook',
+        href: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/monthly-cost-monitoring.md',
+      },
+    ]);
 });
 
 it.each([

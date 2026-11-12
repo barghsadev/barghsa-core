@@ -27,6 +27,7 @@ const alertResources = {
   PostgresBackupFailed: ['barghsa-postgresql', 'postgresql-backup'],
   PostgresBackupStale: ['barghsa-postgresql', 'postgresql-backup'],
   PostgresBackupMonitoringUnavailable: ['barghsa-postgresql', 'postgresql-backup'],
+  MonthlyCostBudgetVariance: ['barghsa-monthly-costs', 'monthly-cost-monitoring'],
 } as const;
 
 const availabilityBudgetAlerts = new Set([

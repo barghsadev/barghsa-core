@@ -3,6 +3,7 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { Pool } from 'pg';
 import { operationsDashboardOrigin } from '@barghsa/shared/notifications';
 import { enqueueOutbox } from '../notifications/outbox-writer.js';
+import { costCategories, isCostCategory } from './monthly-costs.js';
 
 const labels: Record<string, string> = {
   EmailProviderDegraded: 'اختلال ارسال ایمیل / Email delivery unavailable',
@@ -41,6 +42,7 @@ const labels: Record<string, string> = {
   PostgresBackupStale: 'پشتیبان تأییدشده اخیر در دسترس نیست / No recent verified database backup',
   PostgresBackupMonitoringUnavailable:
     'گزارش پشتیبان‌گیری در دسترس نیست / Database backup monitoring unavailable',
+  MonthlyCostBudgetVariance: 'انحراف هزینه ماهانه از بودجه / Monthly cost budget variance',
 };
 const journeyNames: Record<string, string> = {
   electricity: 'برق / Electricity',
@@ -114,6 +116,7 @@ const alertPriorities = new Map<string, AlertPriority>([
   ['PostgresBackupFailed', 'P1'],
   ['PostgresBackupStale', 'P1'],
   ['PostgresBackupMonitoringUnavailable', 'P1'],
+  ['MonthlyCostBudgetVariance', 'P3'],
 ]);
 type Alert = {
   name: string;
@@ -127,6 +130,7 @@ type Alert = {
   service?: string;
   syntheticCheck?: string;
   criticalApiRoute?: string;
+  costCategory?: keyof typeof costCategories;
 };
 
 export function parseOperationsAlerts(
@@ -153,6 +157,7 @@ export function parseOperationsAlerts(
       name === 'JourneyErrorBudgetFastBurn' || name === 'JourneyErrorBudgetSlowBurn';
     const service = journeyBurn ? source?.service : undefined;
     const syntheticCheck = name === 'SyntheticProbeFailed' ? source?.check : undefined;
+    const costCategory = name === 'MonthlyCostBudgetVariance' ? source?.category : undefined;
     const criticalApiRoute =
       name === 'CriticalApiRouteErrors' &&
       typeof source?.method === 'string' &&
@@ -175,6 +180,7 @@ export function parseOperationsAlerts(
       (name === 'SyntheticProbeFailed' &&
         (typeof syntheticCheck !== 'string' ||
           !Object.hasOwn(syntheticCheckNames, syntheticCheck))) ||
+      (name === 'MonthlyCostBudgetVariance' && !isCostCategory(costCategory)) ||
       (name === 'CriticalApiRouteErrors' &&
         (!criticalApiRoute ||
           !criticalApiRoutes.has(criticalApiRoute) ||
@@ -200,6 +206,7 @@ export function parseOperationsAlerts(
       ...(typeof service === 'string' ? { service } : {}),
       ...(typeof syntheticCheck === 'string' ? { syntheticCheck } : {}),
       ...(criticalApiRoute ? { criticalApiRoute } : {}),
+      ...(isCostCategory(costCategory) ? { costCategory } : {}),
     };
   });
 }
@@ -266,6 +273,7 @@ export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
       if (!admins.rowCount) throw new Error('Operations alert requires an active administrator');
       const subject =
         alert.criticalApiRoute ??
+        (alert.costCategory ? costCategories[alert.costCategory] : undefined) ??
         (alert.service
           ? journeyNames[alert.service]
           : alert.syntheticCheck && syntheticCheckNames[alert.syntheticCheck]);

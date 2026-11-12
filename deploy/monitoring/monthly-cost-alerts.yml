@@ -1,0 +1,13 @@
+groups:
+  - name: barghsa-monthly-costs
+    rules:
+      - alert: MonthlyCostBudgetVariance
+        expr: barghsa_monthly_cost_variance_exceeded{job="barghsa-monthly-costs",environment!="",database!=""} == 1
+        for: 10m
+        labels:
+          severity: warning
+          priority: P3
+        annotations:
+          summary: 'Monthly cost variance for {{ $labels.category }} in {{ $labels.month }} exceeds 20%'
+          dashboard_uid: barghsa-monthly-costs
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/monthly-cost-monitoring.md

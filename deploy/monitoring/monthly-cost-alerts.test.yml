@@ -1,0 +1,30 @@
+rule_files: [monthly-cost-alerts.yml]
+evaluation_interval: 1m
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'barghsa_monthly_cost_variance_exceeded{job="barghsa-monthly-costs",environment="staging",database="core",category="storage_egress",month="2026-10",currency="USD"}'
+        values: '0 1+0x10 0'
+      - series: 'barghsa_monthly_cost_variance_exceeded{job="barghsa-monthly-costs",environment="staging",database="core",category="compute",month="2026-10",currency="USD"}'
+        values: '0+0x12'
+      - series: 'barghsa_monthly_cost_variance_exceeded{job="barghsa-monthly-costs",category="compute",month="2026-10",currency="USD"}'
+        values: '1+0x12'
+    alert_rule_test:
+      - { eval_time: 10m, alertname: MonthlyCostBudgetVariance, exp_alerts: [] }
+      - eval_time: 11m
+        alertname: MonthlyCostBudgetVariance
+        exp_alerts:
+          - exp_labels:
+              job: barghsa-monthly-costs
+              environment: staging
+              database: core
+              category: storage_egress
+              month: '2026-10'
+              currency: USD
+              severity: warning
+              priority: P3
+            exp_annotations:
+              summary: Monthly cost variance for storage_egress in 2026-10 exceeds 20%
+              dashboard_uid: barghsa-monthly-costs
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/monthly-cost-monitoring.md
+      - { eval_time: 12m, alertname: MonthlyCostBudgetVariance, exp_alerts: [] }

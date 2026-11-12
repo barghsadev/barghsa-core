@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T12:35:48+00:00",
+  "updated": "2026-11-12T12:49:21+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -99262,11 +99262,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
-              "sha256": "dafe45a78cf697f25e3c1aee6392ff6f58e35f3cf04b7bc9a04e4554f1fa8e2f"
+              "sha256": "2c4d2507d8596c20ecb0984e9aac79807280faef69b0b4408a98054d824af1ed"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -99290,7 +99290,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -101233,6 +101233,16 @@
                 "apps/api/src/admin/admin.controller.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/server.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -104638,11 +104648,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
-              "sha256": "dafe45a78cf697f25e3c1aee6392ff6f58e35f3cf04b7bc9a04e4554f1fa8e2f"
+              "sha256": "2c4d2507d8596c20ecb0984e9aac79807280faef69b0b4408a98054d824af1ed"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -104662,7 +104672,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -104999,6 +105009,16 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/server.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -122046,11 +122066,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
-              "sha256": "dafe45a78cf697f25e3c1aee6392ff6f58e35f3cf04b7bc9a04e4554f1fa8e2f"
+              "sha256": "2c4d2507d8596c20ecb0984e9aac79807280faef69b0b4408a98054d824af1ed"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -122070,7 +122090,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -122534,6 +122554,16 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/server.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -536855,11 +536885,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
-              "sha256": "dafe45a78cf697f25e3c1aee6392ff6f58e35f3cf04b7bc9a04e4554f1fa8e2f"
+              "sha256": "2c4d2507d8596c20ecb0984e9aac79807280faef69b0b4408a98054d824af1ed"
             },
             {
               "path": "apps/worker/src/notifications/dead-letter.ts",
@@ -536875,7 +536905,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -537460,6 +537490,16 @@
                 "apps/api/src/notifications/notification-template-http.integration.test.ts"
               ],
               "scope": "Runtime changes are confined to validation of staff terms and notification authoring requests. The generated API diff changes only six matching request bodies. Valid captured terms, draft revisions, publication, permissions, actor binding, preview semantics, verified delivery destinations and web caller regressions passed."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/server.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -539487,7 +539527,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -540140,6 +540180,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -610725,7 +610773,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
@@ -610864,6 +610912,14 @@
                 "packages/db/src/storage-multipart.migrated.test.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -617408,7 +617464,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -617594,6 +617650,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -619381,11 +619445,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -619555,6 +619619,15 @@
                 "apps/worker/src/wallet/reconciliation-scanner.integration.test.ts"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -627547,7 +627620,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             }
           ],
           "checks": [
@@ -627766,6 +627839,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -628091,7 +628172,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -628317,6 +628398,14 @@
                 "apps/worker/src/notifications/outbox-reader.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -628424,7 +628513,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -628714,6 +628803,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -628795,11 +628892,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -629105,6 +629202,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -629175,7 +629281,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -629401,6 +629507,14 @@
                 "apps/worker/src/notifications/outbox-reader.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -629880,7 +629994,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -630150,6 +630264,14 @@
                 "apps/api/src/metrics/http-request-metrics.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -630204,7 +630326,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -630312,6 +630434,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -630380,7 +630510,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -630581,6 +630711,14 @@
                 "apps/worker/src/notifications/outbox-runner.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -630895,7 +631033,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -631054,6 +631192,14 @@
                 "apps/api/src/auth/auth.service.ts"
               ],
               "scope": "The password-change service and account outbox insert add optional spans with fixed labels. The existing transaction, token, privacy and delivery checks exercise the same business operations and error paths."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -631355,7 +631501,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -631555,6 +631701,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -631988,7 +632142,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -632093,6 +632247,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -632148,18 +632310,35 @@
         "story": "06-security-testing-observability.md#spec-2761d58562cb"
       },
       "requirement": "| T-06.14.03.01 | Implement monthly cost tracking instrumentation: compute (per environment), PostgreSQL, object storage/egress, Redis, notification providers, observability stack, AI provider/model | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Provide a protected staging billing snapshot with reconciled charges, reporting currency and approved budgets for the eight categories, and a dedicated reporting database login. Verify the exact deployed authenticated scrape and dashboard against those inputs. The implementation accepts operator-prepared billing exports and invoices and does not fetch provider accounts."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/monthly-costs.test.ts",
+          "apps/worker/src/operations/monthly-costs.ts",
+          "apps/worker/src/operations/server.ts",
+          "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+          "deploy/monitoring/grafana-monthly-cost-dashboard.json",
+          "deploy/monitoring/monthly-cost-alerts.test.yml",
+          "deploy/monitoring/monthly-cost-alerts.yml",
+          "deploy/monitoring/staging-cost-scrape.yml",
+          "deploy/monitoring/staging-costs.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "docs/runbooks/monthly-cost-monitoring.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
+        "batches": [
+          "release-0.6-monthly-cost-monitoring"
+        ],
         "current_acceptance": null
       }
     },
@@ -632174,18 +632353,35 @@
         "story": "06-security-testing-observability.md#spec-2761d58562cb"
       },
       "requirement": "| T-06.14.03.02 | Expose unit-cost metrics: cost per active profile, cost per order | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the exact deployed cost-per-active-profile and cost-per-order samples against reconciled charges and the corresponding database counts. Native PostgreSQL proved the read-only column grants, current active profile definition, all four submitted services, and the exclusive cutoff."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/monthly-costs.test.ts",
+          "apps/worker/src/operations/monthly-costs.ts",
+          "apps/worker/src/operations/server.ts",
+          "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+          "deploy/monitoring/grafana-monthly-cost-dashboard.json",
+          "deploy/monitoring/monthly-cost-alerts.test.yml",
+          "deploy/monitoring/monthly-cost-alerts.yml",
+          "deploy/monitoring/staging-cost-scrape.yml",
+          "deploy/monitoring/staging-costs.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "docs/runbooks/monthly-cost-monitoring.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
+        "batches": [
+          "release-0.6-monthly-cost-monitoring"
+        ],
         "current_acceptance": null
       }
     },
@@ -632200,18 +632396,35 @@
         "story": "06-security-testing-observability.md#spec-2761d58562cb"
       },
       "requirement": "| T-06.14.03.03 | Configure alert on >20% monthly variance from budget per cost category | S |\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify a controlled firing and resolved P3 receipt through the exact deployed Prometheus, Alertmanager and admin inbox with an approved staging billing fixture. Native receipts and rule tests already verify strict greater-than 20%, budget zero, closed-month underspend, scoped categories and duplicate suppression."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/monthly-costs.test.ts",
+          "apps/worker/src/operations/monthly-costs.ts",
+          "apps/worker/src/operations/server.ts",
+          "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+          "deploy/monitoring/grafana-monthly-cost-dashboard.json",
+          "deploy/monitoring/monthly-cost-alerts.test.yml",
+          "deploy/monitoring/monthly-cost-alerts.yml",
+          "deploy/monitoring/staging-cost-scrape.yml",
+          "deploy/monitoring/staging-costs.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "docs/runbooks/monthly-cost-monitoring.md",
+          "packages/shared/src/notifications/operations-alert-links.ts"
+        ],
+        "batches": [
+          "release-0.6-monthly-cost-monitoring"
+        ],
         "current_acceptance": null
       }
     },
@@ -632760,11 +632973,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -632957,6 +633170,15 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -633502,11 +633724,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -633796,6 +634018,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -633875,11 +634106,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -634185,6 +634416,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -634262,11 +634502,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -634545,6 +634785,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -634623,11 +634872,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -634659,7 +634908,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -634854,6 +635103,16 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -634928,11 +635187,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "daee8337f985b5505a28b047d3bb0ec24179afd9fc41650ed312eb3ec2976194"
+              "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "d98537aac837d6adf0ff5618239693eaca906ce26362c763c39290e182046ea2"
+              "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -634976,7 +635235,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -635180,6 +635439,16 @@
                 "apps/worker/src/notifications/worker-metrics.ts"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -637610,7 +637879,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+              "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -637800,6 +638069,14 @@
                 "docs/runbooks/storage-outage.md"
               ],
               "scope": "The worker now reads active storage lifecycle failures from the durable job ledger and a projected non-secret SMS limit from the existing verified-provider query. The changes add two P3 review signals, private alert entries, dashboards and tests. Existing failure, recovery, SMS P2, notification and critical financial behavior remain covered."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -639602,7 +639879,7 @@
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
-              "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
+              "sha256": "07cac269ead17561fba8b7b6fbc107b6ceb4aec4a15bc38afdf13b59b9610234"
             },
             {
               "path": "packages/db/src/receipt-activity-upgrade.migrated.test.ts",
@@ -639626,6 +639903,14 @@
                 "packages/db/drizzle/production/0292_financial_evidence_retention.sql"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/service-targets/workflow-scanner.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ]
         }
@@ -932236,7 +932521,7 @@
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
-              "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
+              "sha256": "07cac269ead17561fba8b7b6fbc107b6ceb4aec4a15bc38afdf13b59b9610234"
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.ts",
@@ -932737,6 +933022,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/service-targets/workflow-scanner.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -933367,7 +933660,7 @@
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
-              "sha256": "6129587854ac2d2aed63de9014969f1f2655966eef8660af6f54f9666bee0f3b"
+              "sha256": "07cac269ead17561fba8b7b6fbc107b6ceb4aec4a15bc38afdf13b59b9610234"
             },
             {
               "path": "apps/worker/src/service-targets/workflow-scanner.ts",
@@ -933868,6 +934161,14 @@
                 "apps/api/src/admin/admin.service.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-monthly-cost-monitoring",
+              "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+              "paths": [
+                "apps/worker/src/service-targets/workflow-scanner.integration.test.ts"
+              ],
+              "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
             }
           ],
           "presentation_renewals": [
@@ -1110766,6 +1111067,198 @@
         {
           "file": "lint.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "release-0.6-monthly-cost-monitoring": {
+      "batch": "release-0.6-monthly-cost-monitoring",
+      "base_commit": "ab3b32ea8b807ff4cc226976f7b73585e2a7b67f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.14.03.01",
+        "06-security-testing-observability.md#T-06.14.03.02",
+        "06-security-testing-observability.md#T-06.14.03.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.18.01.04",
+        "07-ui-ux-design.md#T-07.30.02.15",
+        "07-ui-ux-design.md#T-07.30.02.17"
+      ],
+      "changed_paths": [
+        "apps/worker/src/operations/alerts.integration.test.ts",
+        "apps/worker/src/operations/alerts.ts",
+        "apps/worker/src/operations/monthly-costs.test.ts",
+        "apps/worker/src/operations/monthly-costs.ts",
+        "apps/worker/src/operations/server.ts",
+        "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+        "deploy/monitoring/grafana-monthly-cost-dashboard.json",
+        "deploy/monitoring/monthly-cost-alerts.test.yml",
+        "deploy/monitoring/monthly-cost-alerts.yml",
+        "deploy/monitoring/staging-cost-scrape.yml",
+        "deploy/monitoring/staging-costs.yml",
+        "deploy/monitoring/staging-prometheus.yml",
+        "docs/runbooks/monthly-cost-monitoring.md",
+        "packages/shared/src/notifications/operations-alert-links.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/orders/orders.service.ts",
+          "sha256": "3ed5f12f178b43478be297bc358bb5456770e2871a3326cae5fd02430b03a1b8"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "d76634c0570de9cd1ef583eea0c1b9af1808d68c3ab1e059a434813e353f0810"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "6ad4beeb788381a7c17f4be7666224f8963ccc361401e0f52128bf2c0f6ed1f8"
+        },
+        {
+          "path": "apps/worker/src/operations/monthly-costs.test.ts",
+          "sha256": "3a0ac2bed426df93a1a5c45be339652247b78cfd30a65512f1607344b5eff6dd"
+        },
+        {
+          "path": "apps/worker/src/operations/monthly-costs.ts",
+          "sha256": "7f7f8cc685d3b37d088a0ade9959bec77b03b199f7662b7808be66974d6729a0"
+        },
+        {
+          "path": "apps/worker/src/operations/server.ts",
+          "sha256": "2c4d2507d8596c20ecb0984e9aac79807280faef69b0b4408a98054d824af1ed"
+        },
+        {
+          "path": "apps/worker/src/service-targets/workflow-scanner.integration.test.ts",
+          "sha256": "07cac269ead17561fba8b7b6fbc107b6ceb4aec4a15bc38afdf13b59b9610234"
+        },
+        {
+          "path": "deploy/monitoring/grafana-monthly-cost-dashboard.json",
+          "sha256": "42ac92832a9aa0bca9f36205c218d9b08821012cc7b5c3d9a5395ffe9fabbd59"
+        },
+        {
+          "path": "deploy/monitoring/grafana-provisioning/datasources.yml",
+          "sha256": "787bfd0bf0cda5c3cfd355326f37769d70ecffd498e5f38b03c1eafa43b12a76"
+        },
+        {
+          "path": "deploy/monitoring/monthly-cost-alerts.test.yml",
+          "sha256": "5dfbd8831fa72f8c17e605af8741e6fa3d34c7353ae428b5c17b084b3c99428b"
+        },
+        {
+          "path": "deploy/monitoring/monthly-cost-alerts.yml",
+          "sha256": "8fb52773b4aaf3f3dc2b10d340b57de462af051b60ac02fc112e752157e6b962"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+        },
+        {
+          "path": "deploy/monitoring/staging-cost-scrape.yml",
+          "sha256": "d44fde435bb5256caeae91d1128e120570ea588c5aaf53c5e9665bb826d79794"
+        },
+        {
+          "path": "deploy/monitoring/staging-costs.yml",
+          "sha256": "bb4b091b5cb460376c0d5cc19ff729255bbe03aca9e481bc1a691c1509d6239b"
+        },
+        {
+          "path": "deploy/monitoring/staging-dashboards.yml",
+          "sha256": "9ca779b86822ef581117396128856da6f69f6aa8277af8d1e590ffe4e22c774c"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "0556db343b9b6e9f25b88d1432356f1b749363c3e52682a227d2efdaded6403a"
+        },
+        {
+          "path": "docs/runbooks/monthly-cost-monitoring.md",
+          "sha256": "44106e393afa136c2a9f89b320f30ff113543f401205faa80f3a59ddfe81a0a6"
+        },
+        {
+          "path": "packages/db/drizzle/production/0290_operations_alert_p3_priority.sql",
+          "sha256": "3206b61d597a5d888a986da60ceff1f750b3253ac28000188988d03ea9937b84"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.test.ts",
+          "sha256": "accc863e1724a47299e9b30fb1c6db496321d59559f01e4da68fdc4892359591"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "982d92df82ab39c8737d213ad01617d70ede7f3c76c58620ccc2d8c84b594d4d"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "The worker build and 64 related worker tests passed. The real protected HTTP fixture verified the dedicated token, refusal before database access, bounded file reads, unavailable responses and no-store metrics. The migrated PostgreSQL workflow suite counted submitted electricity, saving, solar and consultation, excluded the cutoff record and inactive profiles, and proved a column-limited login cannot read passwords or write profiles.",
+        "The exact micros tests verified the threshold excludes exactly 20%, alerts on charges against a zero budget, handles closed-month underspend and suppresses unavailable unit costs. Native worker receipts proved a P3 firing and resolution each reached only the admin inbox once, with both configured resource links and no arbitrary provider content. All 12 shared alert-link tests passed.",
+        "Prometheus 3.15.0 checked the cost rule and its delayed firing, unscoped sample exclusion and resolution. Compose and Prometheus config validation covered both the default and billing-enabled paths, preserved the previous monitoring configuration and verified the read-only mounts, private authenticated scrape and all five PromQL expressions used by the four dashboard panels against known samples. Lint, formatting and diff checks passed."
+      ],
+      "limitations": [
+        "Reconciled provider bills, approved category budgets and the dedicated reporting login are deployment inputs. No charge, budget or billing receipt was represented as live. The profile denominator is the active base at scrape time and the order denominator uses the specified UTC cutoff.",
+        "No deployed Grafana dashboard, Prometheus scrape, Alertmanager receipt or v0.6.0 staging release is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-monthly-cost-monitoring",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "f789a1f1fd3e1014174f9d3aa15e27ce19a2e2bfc1bcaa69a1f66198fcc29b5c"
+        },
+        {
+          "file": "worker-tests.log",
+          "sha256": "1c3954bcf1011ea58b43d99cc0cce97dda857f1048c3fa9a9e46b12f0ee36b4c"
+        },
+        {
+          "file": "shared-tests.log",
+          "sha256": "d6d4ac1e564f05c153f6bac2baf0267430aae788d2ae098ae7d6d979131b3455"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "promtool-rules.log",
+          "sha256": "15d8d98c47ef9d80e7947e6a2770653a4d77ad9beae7326bf5046b86c5264cae"
+        },
+        {
+          "file": "promtool-tests.log",
+          "sha256": "8289a4919870ab5b28f5e90a86b4af3cdbd8c244516c02fca90d6e3f289a6711"
+        },
+        {
+          "file": "monitoring-config.log",
+          "sha256": "45a7efb228c1af45c1d06becf2bb38fa9ec5235a921e28724be647f37d8defef"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "verify-monitoring.py",
+          "sha256": "3c711a6398ad1ea99c12faed6f0a18b8b539a695adca05c1cc30cf645a4d7395"
         }
       ]
     }
