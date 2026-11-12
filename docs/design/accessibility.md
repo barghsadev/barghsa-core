@@ -93,11 +93,15 @@ exercise both themes in a populated route fixture that allows a theme choice.
 The probe uses the application preference, records the actual theme at each
 width and restores the previous preference before the journey continues.
 
+The workspace header contains one breadcrumb landmark. The compact layout
+places the breadcrumb under the header controls. The theme selector appears
+when published branding allows an account preference.
+
 Admin settings use the workspace sidebar for desktop navigation. The
 mobile section picker keeps access to settings and focuses the selected
-section. The workspace sidebar retains its own foreground and active-fill
-contrast checks. The public brand tile and bolt use the paired primary fill
-and foreground.
+section. The admin sidebar marks the current destination with an inset
+indicator and a contrasting fill. The public brand tile and bolt use the
+paired primary fill and foreground.
 
 Keep readable content opaque during page and list entrance animations. Even
 a brief fade of the whole row can put its text below the contrast floor.

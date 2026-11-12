@@ -799,28 +799,38 @@
     border-radius: var(--radius-md);
   }
   .app-shell {
+    --admin-sidebar-width: 16.5rem;
     @apply flex h-dvh flex-col bg-background text-foreground [--mobile-navigation-height:calc(4rem+env(safe-area-inset-bottom))] lg:[--mobile-navigation-height:0px];
   }
   .app-shell[data-no-navigation='true'] {
     --mobile-navigation-height: 0px;
   }
   .shell-topbar {
-    @apply flex min-h-(--topbar-height) shrink-0 items-center gap-1 border-b bg-card px-2 sm:gap-3 sm:px-4 md:px-6;
+    @apply grid min-h-(--topbar-height) shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 border-b bg-card px-3 pt-1 sm:gap-x-4 sm:px-4 lg:px-6 lg:pt-0;
   }
-  .shell-topbar-context {
-    @apply hidden min-w-0 flex-1 items-center gap-2 text-sm md:flex;
+  .shell-topbar[data-area='admin'] {
+    @apply lg:grid-cols-[calc(var(--admin-sidebar-width)-2.5rem)_minmax(0,1fr)_auto];
+  }
+  .shell-topbar[data-area='admin'] .shell-breadcrumbs {
+    @apply lg:col-start-2;
+  }
+  .shell-topbar[data-area='admin'] .shell-topbar-actions {
+    @apply lg:col-start-3;
   }
   .shell-topbar-actions {
-    @apply ms-auto flex shrink-0 items-center gap-1 sm:gap-2;
+    @apply col-start-2 row-start-1 flex items-center gap-1 sm:gap-2;
+  }
+  .shell-topbar-preferences {
+    @apply hidden items-center gap-1 border-e pe-2 lg:flex;
   }
   .shell-topbar-brand {
-    @apply flex min-h-11 min-w-11 items-center text-foreground no-underline;
+    @apply col-start-1 row-start-1 flex min-h-11 w-fit items-center text-foreground no-underline;
   }
   .shell-breadcrumbs {
-    @apply shrink-0 border-b bg-card/60 px-4 py-2 text-sm lg:px-6;
+    @apply col-span-2 col-start-1 row-start-2 min-w-0 pb-2 text-sm lg:col-span-1 lg:row-start-1 lg:pb-0;
   }
   .shell-breadcrumb-parent {
-    @apply rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
+    @apply max-w-48 truncate rounded-sm text-muted-foreground hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
   }
   .shell-breadcrumb-trigger {
     @apply min-h-8 cursor-pointer list-none rounded-md px-2 py-1 font-semibold text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary;
@@ -845,6 +855,21 @@
   }
   .app-shell-sidebar[data-expanded='true'] {
     @apply block md:w-(--sidebar-width);
+  }
+  .shell-sidebar-navigation {
+    @apply flex flex-col gap-5;
+  }
+  .app-shell-sidebar[data-area='admin'] {
+    --sidebar-width: var(--admin-sidebar-width);
+  }
+  .app-shell-sidebar[data-area='admin'] .shell-sidebar-brand {
+    @apply lg:hidden;
+  }
+  .app-shell-sidebar[data-area='admin'] .shell-sidebar-navigation {
+    @apply gap-3;
+  }
+  .app-shell-sidebar[data-area='admin'] .shell-sidebar-group + .shell-sidebar-group {
+    @apply border-t border-border pt-3;
   }
   .shell-sidebar-panel {
     @apply md:hidden md:group-hover/sidebar:block md:group-focus-within/sidebar:block md:group-data-[expanded=true]/sidebar:block lg:block;
@@ -873,6 +898,13 @@
   .shell-navigation-link[aria-current='page'] {
     font-weight: 650;
     transition: none;
+  }
+  .app-shell-sidebar[data-area='admin'] .shell-navigation-link {
+    border-inline-start: 2px solid transparent;
+    line-height: 1.35;
+  }
+  .app-shell-sidebar[data-area='admin'] .shell-navigation-link[aria-current='page'] {
+    border-inline-start-color: currentColor;
   }
   .auth-form :where(h1) {
     font-size: clamp(1.75rem, 2.5vw, 2.125rem);
@@ -1200,6 +1232,10 @@ body:has([role='dialog'][data-open]) [data-sonner-toaster] {
 
 .barghsa-notification-trigger {
   @apply relative inline-flex size-11 items-center justify-center rounded-lg border border-input bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
+.shell-topbar[data-area='admin'] .barghsa-notification-trigger {
+  @apply border-transparent bg-transparent hover:bg-muted;
 }
 
 .barghsa-notification-count {

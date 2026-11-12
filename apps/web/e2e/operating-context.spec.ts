@@ -140,6 +140,7 @@ test('dual-role user can onboard only in customer context', async ({ page }) => 
 
   await page.goto('/onboarding');
   await expect(page).toHaveURL(/\/app$/);
+  await expect(page.locator('main[data-area=admin]')).toBeVisible();
 
   operatingContext = 'customer';
   await page.goto('/onboarding');

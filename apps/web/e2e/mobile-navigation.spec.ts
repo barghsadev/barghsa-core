@@ -143,6 +143,12 @@ for (const locale of ['en', 'fa'] as const)
       await expect(dialog).toBeHidden();
       await expect(more).toHaveAttribute('aria-current', 'page');
       const breadcrumbs = page.getByRole('navigation', { name: copy('breadcrumbs') });
+      await expect(breadcrumbs).toHaveCount(1);
+      await expect(
+        page.locator('header.shell-topbar').getByRole('navigation', {
+          name: copy('breadcrumbs'),
+        })
+      ).toHaveCount(1);
       await expect(breadcrumbs.locator('[aria-current="page"]:visible')).toHaveCount(1);
       await breadcrumbs.getByLabel(copy('parentPages')).click();
       await expect(

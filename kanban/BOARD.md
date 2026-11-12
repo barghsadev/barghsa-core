@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T17:29:34+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T17:58:59+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.5.1**.
 
@@ -942,13 +942,13 @@ Customer and admin workflows work on desktop/mobile in both languages and themes
 | `07-ui-ux-design.md#T-07.30.02.16` | done | Recorded batch work | TeamAssignmentPage: staff team management — create teams (Support, Finance, Operations, Legal), assign staff to teams, set team lead, configure auto-assignment rules (round-robin, least-loaded, skill-based), team escalation path. |
 | `07-ui-ux-design.md#T-07.30.02.17` | done | Recorded batch work | EscalationRulesPage: configure escalation rules — condition (e.g. SLA breached, ticket priority), from-role/team, to-role/team, notification behavior, auto-escalation timeout. Used for ticket, order review, and verification workflows. |
 
-## v0.5.1: Admin sidebar hotfix
+## v0.5.1: Admin workspace polish
 
-Remove the duplicate desktop settings sidebar and retain the mobile settings picker.
+Give stakeholders one clear admin navigation, a single page path and an uncluttered responsive header.
 
 | Qualified task | State | Build evidence | Required work |
 | --- | --- | --- | --- |
-| `release-readiness#R-04.03` | done | Recorded batch work | Remove the duplicate admin settings sidebar (P2 defect) |
+| `release-readiness#R-04.03` | done | Recorded batch work | Polish the admin shell for stakeholder testing (P2 defect) |
 
 ## v0.6.0: Production readiness
 

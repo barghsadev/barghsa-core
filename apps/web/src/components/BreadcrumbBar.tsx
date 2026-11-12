@@ -59,6 +59,7 @@ export function BreadcrumbBar({
     <Link
       to={crumb.to}
       className="shell-breadcrumb-parent"
+      title={crumb.label}
       aria-label={shellText('backToPage', locale).replace('{page}', crumb.label)}
     >
       {crumb.label}
@@ -72,14 +73,10 @@ export function BreadcrumbBar({
     />
   );
   return (
-    <nav
-      aria-label={shellText('breadcrumbs', locale)}
-      className="shell-breadcrumbs"
-      data-toast-anchor
-    >
-      <ol className="flex min-w-0 flex-wrap items-center gap-2">
+    <nav aria-label={shellText('breadcrumbs', locale)} className="shell-breadcrumbs">
+      <ol className="flex min-w-0 items-center gap-2">
         {parents.map((crumb) => (
-          <li key={crumb.to} className="hidden items-center gap-2 lg:flex">
+          <li key={crumb.to} className="hidden min-w-0 items-center gap-2 lg:flex">
             {parentLink(crumb)}
             {separator}
           </li>
@@ -105,7 +102,7 @@ export function BreadcrumbBar({
           )}
         </li>
         <li className="min-w-0">
-          <span aria-current="page" className="block truncate font-medium">
+          <span aria-current="page" title={last.label} className="block truncate font-semibold">
             {last.label}
           </span>
         </li>

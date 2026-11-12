@@ -1,6 +1,7 @@
 import AxeBuilder from '@axe-core/playwright';
 import { t } from '@barghsa/i18n/admin-ui';
 import { t as appText } from '@barghsa/i18n/app';
+import { shellText } from '@barghsa/i18n/shell';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { electricityLimits } from '../src/test/contract-settings-fixtures';
 import { crmShell } from './crm-shell-fixture';
@@ -59,6 +60,20 @@ for (const width of [390, 1440]) {
           const select = layout.getByRole('combobox');
           const nav = page.locator('#admin-navigation').getByRole('navigation');
           await expect(layout.locator('nav')).toHaveCount(0);
+          const topbar = page.locator('header.shell-topbar');
+          const breadcrumb = page.getByRole('navigation', {
+            name: shellText('breadcrumbs', locale),
+          });
+          await expect(breadcrumb).toHaveCount(1);
+          await expect(
+            topbar.getByRole('navigation', { name: shellText('breadcrumbs', locale) })
+          ).toHaveCount(1);
+          await expect(
+            topbar.getByRole('combobox', { name: shellText('theme', locale) })
+          ).toHaveCount(0);
+          await expect(
+            topbar.getByText(shellText('themeManaged', locale), { exact: true })
+          ).toHaveCount(0);
           if (width < 1024) {
             await expect(select).toBeVisible();
             await expect(select.locator('optgroup')).toHaveCount(12);
