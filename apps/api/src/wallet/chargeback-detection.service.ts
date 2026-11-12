@@ -16,13 +16,17 @@ import { ErrorCodes } from '@barghsa/shared/errors';
 import {
   WALLET_CHARGEBACK_EVENT_CONSTRAINT,
   WALLET_REVERSAL_ERRORS,
+  WALLET_REVERSAL_POSTED_STATE,
+  WALLET_REVERSAL_TYPE,
   chargebackCreditIdempotencyKey,
   chargebackReversalIdempotencyKey,
   matchChargebackToTopUp,
   parseChargebackNotification,
   parseChargebackNotificationJson,
+  reversalAmount,
   type ChargebackMatchMethod,
   type ChargebackTopUpCandidate,
+  type ChargebackTopUpMatch,
   type ParsedChargebackNotification,
   needsFinanceChargebackAlert,
   type WalletChargebackEventStatus,
@@ -59,6 +63,14 @@ export interface HandleChargebackResult {
   matchMethod: ChargebackMatchMethod | null;
   status: WalletChargebackEventStatus;
 }
+
+type ChargebackResult = HandleChargebackResult & { walletId: string | null };
+type ChargebackReversal = Pick<
+  TransactionRow,
+  'id' | 'walletId' | 'type' | 'amount' | 'state' | 'reversesTransactionId'
+>;
+
+class ChargebackReversalEvidenceError extends Error {}
 
 interface ChargebackEventRow {
   eventId: string;
@@ -165,7 +177,7 @@ export class ChargebackDetectionService {
     }
 
     const payloadSha256 = createHash('sha256').update(input.rawBody).digest('hex');
-    const result = await this.processVerifiedNotification(
+    const { walletId, ...result } = await this.processVerifiedNotification(
       eventId,
       parsed.notification,
       payloadSha256
@@ -177,13 +189,7 @@ export class ChargebackDetectionService {
           eventId,
           status: result.status,
           notification: parsed.notification,
-          walletId: result.originalTransactionId
-            ? ((
-                await client.query('SELECT wallet_id FROM wallet_transactions WHERE id=$1', [
-                  result.originalTransactionId,
-                ])
-              ).rows[0]?.wallet_id ?? null)
-            : null,
+          walletId,
           originalTransactionId: result.originalTransactionId,
         });
       } finally {
@@ -197,7 +203,7 @@ export class ChargebackDetectionService {
     eventId: string,
     notification: ParsedChargebackNotification,
     payloadSha256: string
-  ): Promise<HandleChargebackResult> {
+  ): Promise<ChargebackResult> {
     const pool = getDbPool({ session: true });
     const client = await pool.connect();
     const lockKeys = chargebackEventLockKeys(eventId);
@@ -216,12 +222,15 @@ export class ChargebackDetectionService {
           assertClaimedNotificationMatches(existing.raw, notification);
           if (existing.status !== 'processing') {
             observePaymentCallbackAnomaly('chargeback', 'event_replay');
-            return alreadyProcessedResult(existing);
+            return await this.readTerminalResult(client, existing, notification);
           }
         }
 
         const candidates = await this.loadCandidates(client, notification);
-        const match = matchChargebackToTopUp(notification, candidates);
+        const match = matchChargebackToTopUp(
+          notification,
+          candidates.filter((row) => row.amount > 0n)
+        );
         if (!match) {
           await this.finalizeEvent(client, eventId, {
             status: 'unmatched',
@@ -233,126 +242,101 @@ export class ChargebackDetectionService {
           this.logger.warn(
             `Chargeback could not be mapped to an original top-up correlationId=${correlationIdStorage.getStore() ?? 'none'}`
           );
-          return {
-            ok: true,
-            processed: true,
-            mapped: false,
-            reversed: false,
-            originalTransactionId: null,
-            reversalTransactionId: null,
-            matchMethod: null,
-            status: 'unmatched',
-          };
+          return chargebackResult('unmatched', true, null);
         }
 
         const existingReversal = await this.findExistingReversal(client, match.original.id);
-        if (existingReversal) {
-          await this.finalizeEvent(client, eventId, {
-            status: 'reversed',
-            originalTransactionId: match.original.id,
-            reversalTransactionId: existingReversal.id,
-            walletId: match.original.walletId,
-            matchMethod: match.method,
-          });
-          return {
-            ok: true,
-            processed: true,
-            mapped: true,
-            reversed: true,
-            originalTransactionId: match.original.id,
-            reversalTransactionId: existingReversal.id,
-            matchMethod: match.method,
-            status: 'reversed',
-          };
-        }
+        if (existingReversal)
+          return await this.finishMatchedEvent(client, eventId, match, existingReversal);
 
-        let reversal: TransactionRow;
         try {
           // Reverse on the advisory-lock client so this handler never
           // checks out a second pooled connection while the lock is held.
-          reversal = await withLockClientTransaction(client, async () => {
+          return await withLockClientTransaction(client, async () => {
             const posted = await this.walletService.reverseTransaction(
               match.original.id,
               notification.reason,
               chargebackReversalIdempotencyKey(eventId),
               client
             );
-            await this.finalizeEvent(client, eventId, {
-              status: 'reversed',
-              originalTransactionId: match.original.id,
-              reversalTransactionId: posted.id,
-              walletId: match.original.walletId,
-              matchMethod: match.method,
-            });
-            return posted;
+            if (!matchesReversal(posted, match.original))
+              throw new ChargebackReversalEvidenceError();
+            return this.finishMatchedEvent(client, eventId, match, posted);
           });
         } catch (error) {
           if (isAlreadyReversedError(error, match.original.id)) {
             const raced = await this.findExistingReversal(client, match.original.id);
-            if (raced) {
-              await this.finalizeEvent(client, eventId, {
-                status: 'reversed',
-                originalTransactionId: match.original.id,
-                reversalTransactionId: raced.id,
-                walletId: match.original.walletId,
-                matchMethod: match.method,
-              });
-              return {
-                ok: true,
-                processed: true,
-                mapped: true,
-                reversed: true,
-                originalTransactionId: match.original.id,
-                reversalTransactionId: raced.id,
-                matchMethod: match.method,
-                status: 'reversed',
-              };
-            }
+            if (raced) return await this.finishMatchedEvent(client, eventId, match, raced);
           }
-          if (isInsufficientReversalError(error) || error instanceof WalletProfileArchivedError) {
-            await this.finalizeEvent(client, eventId, {
-              status: 'unresolved',
-              originalTransactionId: match.original.id,
-              reversalTransactionId: null,
-              walletId: match.original.walletId,
-              matchMethod: match.method,
-            });
-            this.logger.warn(
-              `Chargeback mapped to ${match.original.id} but reversal could not post correlationId=${correlationIdStorage.getStore() ?? 'none'}`
-            );
-            return {
-              ok: true,
-              processed: true,
-              mapped: true,
-              reversed: false,
-              originalTransactionId: match.original.id,
-              reversalTransactionId: null,
-              matchMethod: match.method,
-              status: 'unresolved',
-            };
-          }
+          if (
+            isInsufficientReversalError(error) ||
+            error instanceof WalletProfileArchivedError ||
+            error instanceof ChargebackReversalEvidenceError
+          )
+            return await this.finishMatchedEvent(client, eventId, match, null);
           throw error;
         }
-
-        this.logger.log(
-          `Chargeback reversed top-up ${match.original.id} as ${reversal.id} correlationId=${correlationIdStorage.getStore() ?? 'none'}`
-        );
-        return {
-          ok: true,
-          processed: true,
-          mapped: true,
-          reversed: true,
-          originalTransactionId: match.original.id,
-          reversalTransactionId: reversal.id,
-          matchMethod: match.method,
-          status: 'reversed',
-        };
       } finally {
         await client.query('SELECT pg_advisory_unlock($1, $2)', lockKeys);
       }
     } finally {
       client.release();
     }
+  }
+
+  private async finishMatchedEvent(
+    client: QueryClient,
+    eventId: string,
+    match: ChargebackTopUpMatch,
+    reversal: ChargebackReversal | null
+  ): Promise<ChargebackResult> {
+    const reversalId = reversal && matchesReversal(reversal, match.original) ? reversal.id : null;
+    const status = reversalId ? 'reversed' : 'unresolved';
+    const result = chargebackResult(status, true, match, reversalId);
+    await this.finalizeEvent(client, eventId, { ...result, status });
+    if (!reversalId)
+      this.logger.warn(
+        `Chargeback reversal requires reconciliation correlationId=${correlationIdStorage.getStore() ?? 'none'}`
+      );
+    return result;
+  }
+
+  private async readTerminalResult(
+    client: QueryClient,
+    existing: ChargebackEventRow,
+    notification: ParsedChargebackNotification
+  ): Promise<ChargebackResult> {
+    const { status, originalTransactionId, reversalTransactionId, walletId, matchMethod } =
+      existing;
+    if (
+      !originalTransactionId &&
+      !reversalTransactionId &&
+      !walletId &&
+      !matchMethod &&
+      (status === 'unmatched' || status === 'duplicate')
+    )
+      return chargebackResult(status, false, null);
+    if (!originalTransactionId || !walletId || status === 'unmatched')
+      return chargebackResult('unresolved', false, null);
+
+    const row = (
+      await client.query(
+        `SELECT * FROM wallet_transactions WHERE id=$1 AND wallet_id=$2 AND amount>0`,
+        [originalTransactionId, walletId]
+      )
+    ).rows[0] as Parameters<typeof mapCandidate>[0] | undefined;
+    const match = row && matchChargebackToTopUp(notification, [mapCandidate(row)]);
+    if (!match || (matchMethod && match.method !== matchMethod))
+      return chargebackResult('unresolved', false, null);
+
+    if (!reversalTransactionId && (status === 'unresolved' || status === 'duplicate'))
+      return chargebackResult(status, false, match);
+    if (reversalTransactionId && (status === 'reversed' || status === 'duplicate')) {
+      const reversal = await this.findExistingReversal(client, match.original.id);
+      if (reversal?.id === reversalTransactionId && matchesReversal(reversal, match.original))
+        return chargebackResult(status, false, match, reversal.id);
+    }
+    return chargebackResult('unresolved', false, match);
   }
 
   private resolveConfig(): PaymentCallbackConfig {
@@ -457,13 +441,14 @@ export class ChargebackDetectionService {
   private async findExistingReversal(
     client: QueryClient,
     originalTransactionId: string
-  ): Promise<TransactionRow | null> {
+  ): Promise<ChargebackReversal | null> {
     const result = await client.query(
-      `SELECT * FROM wallet_transactions WHERE reverses_transaction_id = $1`,
+      `SELECT id,wallet_id,type,state,amount,reverses_transaction_id
+       FROM wallet_transactions WHERE reverses_transaction_id = $1`,
       [originalTransactionId]
     );
     if (result.rows.length === 0) return null;
-    return mapTransaction(result.rows[0] as Parameters<typeof mapTransaction>[0]);
+    return mapReversal(result.rows[0] as Parameters<typeof mapReversal>[0]);
   }
 
   private async finalizeEvent(
@@ -562,17 +547,35 @@ export function chargebackEventLockKeys(eventId: string): [number, number] {
   return [digest.readInt32BE(0), digest.readInt32BE(4)];
 }
 
-function alreadyProcessedResult(existing: ChargebackEventRow): HandleChargebackResult {
-  const terminal = existing.status === 'duplicate' ? 'duplicate' : existing.status;
+function matchesReversal(
+  reversal: ChargebackReversal,
+  original: ChargebackTopUpCandidate
+): boolean {
+  return (
+    reversal.walletId === original.walletId &&
+    reversal.type === WALLET_REVERSAL_TYPE &&
+    reversal.state === WALLET_REVERSAL_POSTED_STATE &&
+    reversal.reversesTransactionId === original.id &&
+    reversal.amount === reversalAmount(original.amount)
+  );
+}
+
+function chargebackResult(
+  status: Exclude<WalletChargebackEventStatus, 'processing'>,
+  processed: boolean,
+  match: ChargebackTopUpMatch | null,
+  reversalTransactionId: string | null = null
+): ChargebackResult {
   return {
     ok: true,
-    processed: false,
-    mapped: existing.originalTransactionId !== null,
-    reversed: terminal === 'reversed',
-    originalTransactionId: existing.originalTransactionId,
-    reversalTransactionId: existing.reversalTransactionId,
-    matchMethod: existing.matchMethod,
-    status: terminal,
+    processed,
+    mapped: match !== null,
+    reversed: status === 'reversed',
+    originalTransactionId: match?.original.id ?? null,
+    reversalTransactionId,
+    walletId: match?.original.walletId ?? null,
+    matchMethod: match?.method ?? null,
+    status,
   };
 }
 
@@ -618,33 +621,21 @@ function mapCandidate(row: {
   };
 }
 
-function mapTransaction(row: {
+function mapReversal(row: {
   id: string;
   wallet_id: string;
   type: string;
   amount: string | number | bigint;
   state: string;
-  idempotency_key: string;
-  ref_id?: string | null;
-  description?: string | null;
-  metadata?: unknown;
-  reverses_transaction_id?: string | null;
-  created_at: Date;
-  updated_at: Date;
-}): TransactionRow {
+  reverses_transaction_id: string;
+}): ChargebackReversal {
   return {
     id: row.id,
     walletId: row.wallet_id,
     type: row.type,
     amount: BigInt(row.amount),
     state: row.state,
-    idempotencyKey: row.idempotency_key,
-    refId: row.ref_id ?? null,
-    description: row.description ?? null,
-    metadata: row.metadata ?? null,
-    reversesTransactionId: row.reverses_transaction_id ?? null,
-    createdAt: row.created_at,
-    updatedAt: row.updated_at,
+    reversesTransactionId: row.reverses_transaction_id,
   };
 }
 

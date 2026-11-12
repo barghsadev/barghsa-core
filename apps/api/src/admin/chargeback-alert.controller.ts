@@ -44,6 +44,6 @@ export class ChargebackAlertController {
   @ApiResponse({ status: 403, description: 'Finance permission required' })
   async unresolvedWarning(@Req() req: AuthenticatedRequest): Promise<UnresolvedChargebackWarning> {
     this.assertViewPermission(req);
-    return this.alerts.getDashboardWarning();
+    return this.alerts.getDashboardWarningForStaff(req.session);
   }
 }

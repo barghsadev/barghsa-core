@@ -209,7 +209,7 @@ describe('ChargebackAlertService (T-04.2.04.03)', () => {
           ],
         };
       }
-      if (sql.includes('ORDER BY created_at DESC')) {
+      if (sql === LIST_UNRESOLVED_CHARGEBACKS_SQL) {
         return {
           rows: [
             {

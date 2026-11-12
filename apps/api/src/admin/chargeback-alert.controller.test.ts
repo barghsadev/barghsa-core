@@ -22,8 +22,8 @@ function rejectionBody(error: unknown): Record<string, unknown> {
 
 describe('ChargebackAlertController (T-04.2.04.03)', () => {
   it('rejects non-admin viewers with AUTHZ_FORBIDDEN', async () => {
-    const getDashboardWarning = vi.fn();
-    const controller = new ChargebackAlertController({ getDashboardWarning } as never);
+    const getDashboardWarningForStaff = vi.fn();
+    const controller = new ChargebackAlertController({ getDashboardWarningForStaff } as never);
     const rejection = await controller.unresolvedWarning(nonAdminReq).catch((e: unknown) => e);
     expect(rejection).toMatchObject({ status: 403 });
     expect(rejectionBody(rejection)).toMatchObject({
@@ -31,7 +31,7 @@ describe('ChargebackAlertController (T-04.2.04.03)', () => {
       error: ErrorCodes.AUTHZ_FORBIDDEN.code,
     });
     expect(String(rejectionBody(rejection).message)).toContain(FINANCE_CHARGEBACK_ALERT_PERMISSION);
-    expect(getDashboardWarning).not.toHaveBeenCalled();
+    expect(getDashboardWarningForStaff).not.toHaveBeenCalled();
   });
 
   it('returns the dashboard warning for an admin session', async () => {
@@ -41,9 +41,9 @@ describe('ChargebackAlertController (T-04.2.04.03)', () => {
       reversalFailedCount: 0,
       items: [],
     };
-    const getDashboardWarning = vi.fn().mockResolvedValue(warning);
-    const controller = new ChargebackAlertController({ getDashboardWarning } as never);
+    const getDashboardWarningForStaff = vi.fn().mockResolvedValue(warning);
+    const controller = new ChargebackAlertController({ getDashboardWarningForStaff } as never);
     await expect(controller.unresolvedWarning(adminReq)).resolves.toEqual(warning);
-    expect(getDashboardWarning).toHaveBeenCalledTimes(1);
+    expect(getDashboardWarningForStaff).toHaveBeenCalledExactlyOnceWith(adminReq.session);
   });
 });

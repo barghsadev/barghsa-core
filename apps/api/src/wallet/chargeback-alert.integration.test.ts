@@ -214,9 +214,9 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
     );
     await ctx.pool.query(`INSERT INTO wallet_chargeback_events(event_id,status,raw)
       VALUES ('evt-http-warning','unmatched','{"amountIrR":"75000"}')`);
-    const read = () =>
+    const read = (id = sessionId) =>
       fetch(`${ctx.base}/api/admin/wallet/chargebacks/unresolved-warning`, {
-        headers: { Cookie: `barghsa_session=${sessionId}` },
+        headers: { Cookie: `barghsa_session=${id}` },
       });
     expect(
       (await fetch(`${ctx.base}/api/admin/wallet/chargebacks/unresolved-warning`)).status
@@ -227,6 +227,46 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
       count: 1,
       items: [{ eventId: 'evt-http-warning' }],
     });
+    const expiringSessionId = randomUUID();
+    const locker = await ctx.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await locker.query(
+        `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline,operating_context)
+         VALUES ($1,$2,$3,$4,clock_timestamp()+INTERVAL '3 seconds',NOW()+INTERVAL '30 minutes','staff')`,
+        [expiringSessionId, FINANCE_USER, randomUUID(), randomUUID()]
+      );
+      await locker.query('BEGIN');
+      await locker.query('LOCK TABLE wallet_chargeback_events IN ACCESS EXCLUSIVE MODE');
+      pending = read(expiringSessionId);
+      const deadline = Date.now() + 2000;
+      let blocked = false;
+      while (Date.now() < deadline && !blocked) {
+        await locker.query('SELECT pg_stat_clear_snapshot()');
+        blocked =
+          (
+            await locker.query(
+              `SELECT pid FROM pg_stat_activity WHERE pid<>pg_backend_pid() AND wait_event_type='Lock'
+           AND query LIKE '%FROM wallet_chargeback_events%'`
+            )
+          ).rows.length > 0;
+        if (!blocked) await new Promise((resolve) => setTimeout(resolve, 25));
+      }
+      expect(blocked).toBe(true);
+      await locker.query(
+        `SELECT pg_sleep(GREATEST(0, EXTRACT(EPOCH FROM expires_at-clock_timestamp())) + 0.05)
+         FROM sessions WHERE session_id=$1`,
+        [expiringSessionId]
+      );
+      await locker.query('COMMIT');
+      const expired = await pending;
+      expect(expired.status, ctx.logs()).toBe(401);
+      expect(await expired.json()).not.toHaveProperty('items');
+    } finally {
+      await locker.query('ROLLBACK').catch(() => {});
+      locker.release();
+      await pending?.catch(() => {});
+    }
     await ctx.pool.query('DELETE FROM user_roles WHERE user_id=$1', [FINANCE_USER]);
     try {
       expect((await read()).status).toBe(403);
@@ -237,7 +277,7 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
     }
     await ctx.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [sessionId]);
     expect((await read()).status).toBe(401);
-  });
+  }, 10000);
 
   it.each([false, true])(
     'alerts Finance after a successful reversal, including a delivery retry=%s',

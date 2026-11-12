@@ -491,6 +491,93 @@ describe('ChargebackDetectionService — real PostgreSQL (T-04.2.04.02)', () => 
     );
   }
 
+  it('holds a chargeback for reconciliation when retained reversal evidence disagrees', async () => {
+    const pending = uuidv7();
+    const original = await seedCompletedTopUp(uuidv7(), pending, 'auth-review', 'psp-review');
+    const unrelated = await seedCompletedTopUp(uuidv7(), uuidv7(), 'auth-other', 'psp-other');
+    const reversalId = uuidv7();
+    await ctx.pool.query(
+      `INSERT INTO wallet_transactions(id,wallet_id,type,state,amount,idempotency_key,reverses_transaction_id)
+       VALUES ($1,$2,'reversal','Completed',$3,$1::uuid::text,$4)`,
+      [reversalId, unrelated.walletId, (-AMOUNT).toString(), original.id]
+    );
+    const body = {
+      type: 'chargeback',
+      merchantId: MERCHANT,
+      merchantOrderId: pending,
+      amountIrR: AMOUNT.toString(),
+    };
+    const balances = async () =>
+      (
+        await ctx.pool.query(
+          'SELECT * FROM wallets WHERE profile_id IN ($1,$2) ORDER BY profile_id',
+          [original.walletId, unrelated.walletId]
+        )
+      ).rows;
+    const before = await balances();
+    const fresh = await service.handle(signed(body, 'evt-cb-review-fresh'));
+    expect(fresh).toMatchObject({
+      processed: true,
+      mapped: true,
+      status: 'unresolved',
+      reversed: false,
+      originalTransactionId: original.id,
+      reversalTransactionId: null,
+    });
+
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events(event_id,status,original_transaction_id,reversal_transaction_id,wallet_id,match_method,raw)
+       VALUES ('evt-cb-review-retained','reversed',$1,$2,$3,'merchant_order_id',$4)`,
+      [original.id, reversalId, original.walletId, body]
+    );
+    const replay = await service.handle(signed(body, 'evt-cb-review-retained'));
+    expect(replay).toMatchObject({
+      processed: false,
+      mapped: true,
+      status: 'unresolved',
+      reversed: false,
+      originalTransactionId: original.id,
+      reversalTransactionId: null,
+    });
+    expect(replay).not.toHaveProperty('walletId');
+    expect(await balances()).toEqual(before);
+    expect(
+      (
+        await ctx.pool.query(
+          'SELECT id FROM wallet_transactions WHERE reverses_transaction_id=$1',
+          [original.id]
+        )
+      ).rows
+    ).toEqual([{ id: reversalId }]);
+    expect(
+      (
+        await ctx.pool.query(
+          `SELECT status,reversal_transaction_id FROM wallet_chargeback_events
+       WHERE event_id IN ('evt-cb-review-fresh','evt-cb-review-retained') ORDER BY event_id`
+        )
+      ).rows
+    ).toEqual([
+      { status: 'unresolved', reversal_transaction_id: null },
+      { status: 'reversed', reversal_transaction_id: reversalId },
+    ]);
+    await ctx.pool.query(
+      `INSERT INTO wallet_chargeback_events(event_id,status,original_transaction_id,wallet_id,match_method,raw)
+       VALUES ('evt-cb-review-inconsistent','unresolved',$1,$2,'merchant_order_id',$3)`,
+      [original.id, unrelated.walletId, body]
+    );
+    const { items } = await new ChargebackAlertService().getDashboardWarning();
+    expect(items.find(({ eventId }) => eventId === 'evt-cb-review-fresh')).toMatchObject({
+      status: 'unresolved',
+      originalTransactionId: original.id,
+      walletId: original.walletId,
+    });
+    expect(items.find(({ eventId }) => eventId === 'evt-cb-review-inconsistent')).toMatchObject({
+      status: 'unresolved',
+      originalTransactionId: null,
+      walletId: null,
+    });
+  });
+
   it.each(['merchantOrderId', 'providerRefId', 'authority'] as const)(
     'keeps a matching bank receipt unmatched through %s without debiting its wallet',
     async (locator) => {

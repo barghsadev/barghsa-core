@@ -169,6 +169,7 @@ function scriptClient(opts: {
                 id: opts.existingReversal.id,
                 type: 'reversal',
                 amount: String(-AMOUNT),
+                reverses_transaction_id: CREDIT_ID,
               }),
             ]
           : [],
@@ -332,6 +333,8 @@ describe('ChargebackDetectionService (T-04.2.04.02)', () => {
     const { service, reverseTransaction } = makeService();
     scriptClient({
       claimInserted: false,
+      credit: makeCreditRow(),
+      existingReversal: { id: REVERSAL_ID },
       existingEvent: claimedEventRow({
         status: 'reversed',
         original_transaction_id: CREDIT_ID,

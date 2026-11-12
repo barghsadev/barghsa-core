@@ -1,8 +1,11 @@
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
-import { Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { classifyNotificationType } from '@barghsa/shared/notifications';
 import { resolveStaffPermissions } from '@barghsa/shared/admin';
+import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import type { ValidatedSession } from '../session/session.service.js';
 import {
   FINANCE_CHARGEBACK_ALERT_CHANNELS,
   FINANCE_CHARGEBACK_ALERT_EVENT_KEY,
@@ -37,11 +40,14 @@ export const COUNT_UNRESOLVED_CHARGEBACKS_SQL = `SELECT status, COUNT(*)::int AS
   WHERE status IN ('unmatched', 'unresolved')
   GROUP BY status`;
 
-export const LIST_UNRESOLVED_CHARGEBACKS_SQL = `SELECT event_id, status, wallet_id, original_transaction_id,
-        raw, created_at
-   FROM wallet_chargeback_events
-  WHERE status IN ('unmatched', 'unresolved')
-  ORDER BY created_at DESC
+export const LIST_UNRESOLVED_CHARGEBACKS_SQL = `SELECT e.event_id,e.status,o.wallet_id,o.id AS original_transaction_id,
+        jsonb_build_object('amountIrR',e.raw->'amountIrR','reason',e.raw->'reason') AS raw,e.created_at
+   FROM wallet_chargeback_events e
+   LEFT JOIN wallet_transactions o ON e.status='unresolved' AND o.id=e.original_transaction_id
+     AND o.wallet_id=e.wallet_id AND o.type='topup' AND o.state='Completed'
+     AND o.metadata->>'channel'='online' AND o.amount>0 AND o.amount::text=e.raw->>'amountIrR'
+  WHERE e.status IN ('unmatched', 'unresolved')
+  ORDER BY e.created_at DESC
   LIMIT $1`;
 
 export interface FinanceAlertRecipient {
@@ -110,12 +116,38 @@ export class ChargebackAlertService {
     return { recipients: recipients.length, inserted };
   }
 
-  async getDashboardWarning(): Promise<UnresolvedChargebackWarning> {
-    const pool = getDbPool();
-    const [counts, list] = await Promise.all([
-      pool.query(COUNT_UNRESOLVED_CHARGEBACKS_SQL),
-      pool.query(LIST_UNRESOLVED_CHARGEBACKS_SQL, [FINANCE_CHARGEBACK_WARNING_LIMIT]),
-    ]);
+  async getDashboardWarningForStaff(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>
+  ): Promise<UnresolvedChargebackWarning> {
+    const client = await getDbPool().connect();
+    try {
+      await client.query('BEGIN');
+      await requireStaffMutationPermission(
+        client,
+        actor.userId,
+        FINANCE_CHARGEBACK_ALERT_PERMISSION
+      );
+      await requireCurrentSession(client, actor);
+      const context = await client.query(
+        "SELECT current_setting('barghsa.actor_context', true) AS context"
+      );
+      if (context.rows[0]?.context !== 'staff') throw new ForbiddenException();
+      const warning = await this.getDashboardWarning(client);
+      await requireCurrentSession(client, actor);
+      await client.query('COMMIT');
+      return warning;
+    } catch (error) {
+      await client.query('ROLLBACK').catch(() => {});
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  async getDashboardWarning(
+    client: QueryClient = getDbPool()
+  ): Promise<UnresolvedChargebackWarning> {
+    const counts = await client.query(COUNT_UNRESOLVED_CHARGEBACKS_SQL);
     const summary = summarizeUnresolvedChargebackCounts(
       (counts.rows as Array<{ status: string; n: string | number }>).map((row) => ({
         status: row.status,
@@ -123,6 +155,9 @@ export class ChargebackAlertService {
       }))
     );
     if (summary.count === 0) return emptyUnresolvedChargebackWarning();
+    const list = await client.query(LIST_UNRESOLVED_CHARGEBACKS_SQL, [
+      FINANCE_CHARGEBACK_WARNING_LIMIT,
+    ]);
     return {
       ...summary,
       items: (list.rows as Parameters<typeof mapWarningItem>[0][]).map(mapWarningItem),

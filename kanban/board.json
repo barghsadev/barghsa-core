@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T15:21:56+00:00",
+  "updated": "2026-11-12T15:31:32+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -192001,15 +192001,15 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
-              "sha256": "9bb4909415662f0924b862d264c768db378ac51b8967b356dbe1e41dff7c1ff6"
+              "sha256": "556935dfc2874ffb36685bd789c23a2f0a49865c39db68a9a6a79ef1d2ce3383"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
-              "sha256": "ebe23ccf3b82c4b728e4c0344f3d0571f1c61b27db63843c166cadeb9bbb3bf0"
+              "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-              "sha256": "242c8aa29c7d189561edb92ac4f8f972e709639b8943a97036ecb94944343911"
+              "sha256": "4138ceea4cec316e3bb2066a563ef33c6ba3597208cd8ccd55d0aece4892a0c0"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
@@ -192137,6 +192137,16 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+                "apps/api/src/wallet/chargeback-detection.service.test.ts",
+                "apps/api/src/wallet/chargeback-detection.service.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         },
@@ -195348,7 +195358,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -196231,6 +196241,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -196461,7 +196479,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -196712,6 +196730,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -196901,7 +196927,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -197151,6 +197177,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -197317,7 +197351,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -197568,6 +197602,14 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -197719,7 +197761,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -197935,6 +197977,14 @@
                 "apps/api/src/wallet/chargeback-alert.integration.test.ts"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -198101,15 +198151,15 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
-              "sha256": "9bb4909415662f0924b862d264c768db378ac51b8967b356dbe1e41dff7c1ff6"
+              "sha256": "556935dfc2874ffb36685bd789c23a2f0a49865c39db68a9a6a79ef1d2ce3383"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
-              "sha256": "ebe23ccf3b82c4b728e4c0344f3d0571f1c61b27db63843c166cadeb9bbb3bf0"
+              "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-              "sha256": "242c8aa29c7d189561edb92ac4f8f972e709639b8943a97036ecb94944343911"
+              "sha256": "4138ceea4cec316e3bb2066a563ef33c6ba3597208cd8ccd55d0aece4892a0c0"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback-recovery.test.ts",
@@ -198237,6 +198287,16 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+                "apps/api/src/wallet/chargeback-detection.service.test.ts",
+                "apps/api/src/wallet/chargeback-detection.service.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         },
@@ -198396,7 +198456,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/chargeback-alert.controller.ts",
-              "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+              "sha256": "074c5d9bcedd21868044170b4cd3617cb5604fbe286ffc2dc6f93437ada85220"
             },
             {
               "path": "apps/api/src/notifications/notification-center.service.ts",
@@ -198404,11 +198464,11 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.service.ts",
-              "sha256": "dc1b52b41f0c60935ce84c5d996a1a858e5c6b46e307983a04c2e7f60950abe0"
+              "sha256": "1fcf0067ed61eee2e0b1949b2ce55861bdc1d9524f50d66c2abc772367b22285"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment.service.ts",
@@ -199134,6 +199194,16 @@
                 "packages/db/src/refund-processing.ts"
               ],
               "scope": "Refund scope, settlement and readback now bind the invoice, profile, destination and persisted authority. Shared invoice receipt allocation and related flows passed current targeted checks. Saving fixtures assert current scoped lock order."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/admin/chargeback-alert.controller.ts",
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+                "apps/api/src/wallet/chargeback-alert.service.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -609026,7 +609096,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -609287,6 +609357,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -609405,7 +609483,7 @@
             },
             {
               "path": "apps/api/src/admin/chargeback-alert.controller.test.ts",
-              "sha256": "ae179062fffa9b2ff99d0cf8999552861ea684fe8f098e28a6d894713f254698"
+              "sha256": "fc16feda8e11fe0844aa774dc0eccb1079dbea958df7fd921a2959a7d5847304"
             },
             {
               "path": "apps/api/src/admin/contract-electricity-limits.controller.test.ts",
@@ -609653,7 +609731,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -609780,6 +609858,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/admin/chargeback-alert.controller.test.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -609854,7 +609941,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -609992,6 +610079,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -610089,7 +610184,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -610249,6 +610344,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -610408,7 +610511,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -610634,6 +610737,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -610684,7 +610795,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -610945,6 +611056,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -611118,7 +611237,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -611388,6 +611507,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -612384,14 +612511,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, and five wallet balance, creation and ledger route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with wallet chargeback and reversal evidence, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, and two chargeback and Finance warning route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with reconciliation item access, linked records and decisions, then the remaining resource loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/admin/chargeback-alert.controller.test.ts",
+          "apps/api/src/admin/chargeback-alert.controller.ts",
           "apps/api/src/admin/dual-approval.service.ts",
           "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
           "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
@@ -612459,6 +612588,12 @@
           "apps/api/src/solar/solar-request.service.ts",
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
           "apps/api/src/wallet/bank-receipt-topup.service.ts",
+          "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+          "apps/api/src/wallet/chargeback-alert.service.test.ts",
+          "apps/api/src/wallet/chargeback-alert.service.ts",
+          "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "apps/api/src/wallet/chargeback-detection.service.test.ts",
+          "apps/api/src/wallet/chargeback-detection.service.ts",
           "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
           "apps/api/src/wallet/customer-wallet-receipt.controller.ts",
           "apps/api/src/wallet/online-topup-callback.integration.test.ts",
@@ -612507,7 +612642,8 @@
           "release-0.6-wallet-payment-scope",
           "release-0.6-invoice-correction-scope",
           "release-0.6-refund-provenance",
-          "release-0.6-wallet-ledger-scope"
+          "release-0.6-wallet-ledger-scope",
+          "release-0.6-chargeback-evidence"
         ],
         "current_acceptance": null
       }
@@ -612583,7 +612719,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -612737,6 +612873,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -612795,7 +612939,7 @@
             },
             {
               "path": "apps/api/src/admin/chargeback-alert.controller.ts",
-              "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+              "sha256": "074c5d9bcedd21868044170b4cd3617cb5604fbe286ffc2dc6f93437ada85220"
             },
             {
               "path": "apps/api/src/admin/config-audit.controller.ts",
@@ -613083,7 +613227,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -613370,6 +613514,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/admin/chargeback-alert.controller.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -613993,7 +614146,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -614223,6 +614376,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -627812,7 +627973,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "db37b55e04e4c57d937b59a3af3e5b7f4289c83574575e158717a82e9b7c10e0"
+              "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
             },
             {
               "path": "docs/threat-model.md",
@@ -627976,6 +628137,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -658158,11 +658327,11 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.ts",
-              "sha256": "242c8aa29c7d189561edb92ac4f8f972e709639b8943a97036ecb94944343911"
+              "sha256": "4138ceea4cec316e3bb2066a563ef33c6ba3597208cd8ccd55d0aece4892a0c0"
             },
             {
               "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
-              "sha256": "ebe23ccf3b82c4b728e4c0344f3d0571f1c61b27db63843c166cadeb9bbb3bf0"
+              "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -658437,6 +658606,15 @@
                 "apps/api/src/wallet/online-topup-callback.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-detection.service.test.ts",
+                "apps/api/src/wallet/chargeback-detection.service.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -662815,7 +662993,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/online-topup-callback.integration.test.ts",
@@ -662971,6 +663149,14 @@
                 "apps/api/src/wallet/online-topup-callback.integration.test.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ]
         }
@@ -964036,7 +964222,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
-              "sha256": "5e5cfff1e0ec3eea9b3029b7be2b4c7b557034bf9af2af097c9bd9218d79c13f"
+              "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts",
@@ -964148,7 +964334,7 @@
             },
             {
               "path": "apps/api/src/admin/chargeback-alert.controller.ts",
-              "sha256": "085c655f53422e9a217da8c1b0986430d357e901aa4ed3c849f73e3dd9a50e97"
+              "sha256": "074c5d9bcedd21868044170b4cd3617cb5604fbe286ffc2dc6f93437ada85220"
             },
             {
               "path": "apps/api/src/notifications/notification-center.service.ts",
@@ -964156,7 +964342,7 @@
             },
             {
               "path": "apps/api/src/wallet/chargeback-alert.service.ts",
-              "sha256": "dc1b52b41f0c60935ce84c5d996a1a858e5c6b46e307983a04c2e7f60950abe0"
+              "sha256": "1fcf0067ed61eee2e0b1949b2ce55861bdc1d9524f50d66c2abc772367b22285"
             },
             {
               "path": "apps/web/e2e/crm-dashboard.spec.ts",
@@ -967593,6 +967779,16 @@
                 "apps/api/src/wallet/wallet.controller.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-chargeback-evidence",
+              "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+              "paths": [
+                "apps/api/src/admin/chargeback-alert.controller.ts",
+                "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+                "apps/api/src/wallet/chargeback-alert.service.ts"
+              ],
+              "scope": "Chargeback callbacks verify retained ledger evidence, preserve completed records, and hold inconsistent results for Finance. Warning readback holds current session and Finance permission and excludes inconsistent ledger links."
             }
           ],
           "presentation_renewals": [
@@ -1142751,6 +1142947,189 @@
         {
           "file": "wallet-ledger-routes.json",
           "sha256": "ff2406a6493dd6230a07706bfab2c507f546fe7074de7f82013a9251e5c00e0c"
+        }
+      ]
+    },
+    "release-0.6-chargeback-evidence": {
+      "batch": "release-0.6-chargeback-evidence",
+      "base_commit": "920f3d17078110969fcce94ea7f48a613fbac802",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.01",
+        "04-invoices-wallet-contracts.md#T-04.2.03.02",
+        "04-invoices-wallet-contracts.md#T-04.2.03.03",
+        "04-invoices-wallet-contracts.md#T-04.2.03.04",
+        "04-invoices-wallet-contracts.md#T-04.2.04.01",
+        "04-invoices-wallet-contracts.md#T-04.2.04.02",
+        "04-invoices-wallet-contracts.md#T-04.2.04.03",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.18.01.04",
+        "release-readiness#R-02.01"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/chargeback-alert.controller.test.ts",
+        "apps/api/src/admin/chargeback-alert.controller.ts",
+        "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+        "apps/api/src/wallet/chargeback-alert.service.test.ts",
+        "apps/api/src/wallet/chargeback-alert.service.ts",
+        "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+        "apps/api/src/wallet/chargeback-detection.service.test.ts",
+        "apps/api/src/wallet/chargeback-detection.service.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/chargeback-alert.controller.test.ts",
+          "sha256": "fc16feda8e11fe0844aa774dc0eccb1079dbea958df7fd921a2959a7d5847304"
+        },
+        {
+          "path": "apps/api/src/admin/chargeback-alert.controller.ts",
+          "sha256": "074c5d9bcedd21868044170b4cd3617cb5604fbe286ffc2dc6f93437ada85220"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.integration.test.ts",
+          "sha256": "0d8765e52414c41a91f66fee6f9fdccb495508fa1aee1badf366cd32891624a8"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.test.ts",
+          "sha256": "d6b1f715ef9c49091dee25c54ac9f7699b58aff72d6a5f4a326e1e4d95c27a29"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-alert.service.ts",
+          "sha256": "1fcf0067ed61eee2e0b1949b2ce55861bdc1d9524f50d66c2abc772367b22285"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.controller.test.ts",
+          "sha256": "7a6e4636fde29146a97e95a068102a1cca7fecbe7b0e20586a09011dd1492d95"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.controller.ts",
+          "sha256": "6f80f5a1c28580efd603bf99769648114f72b3c91900eb0733e28332dcb57684"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.integration.test.ts",
+          "sha256": "556935dfc2874ffb36685bd789c23a2f0a49865c39db68a9a6a79ef1d2ce3383"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.test.ts",
+          "sha256": "b5ff97d535c3962a332dda3bdeebb4d9348527269b911b9552e92abe9031d148"
+        },
+        {
+          "path": "apps/api/src/wallet/chargeback-detection.service.ts",
+          "sha256": "4138ceea4cec316e3bb2066a563ef33c6ba3597208cd8ccd55d0aece4892a0c0"
+        },
+        {
+          "path": "apps/api/src/wallet/payment-callback-verifier.ts",
+          "sha256": "6cdddee3c957fc42103ce61bae48abd4f79c7852f6478649c7ecc0790c177315"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.service.ts",
+          "sha256": "71dc4775b29ce9519c46eea78881d7a4f134a526c0f62d1c0cb7018f68852072"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.integration.test.ts",
+          "sha256": "7a4d4334f4f2eba231e9419a7c08e894a12cf1f43eb63482d961c014e5ed8b2d"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.test.ts",
+          "sha256": "e37b25af0a1aa06ad67fb6f053be92b30d785829c11dcd873539d86dacbd84e2"
+        },
+        {
+          "path": "apps/worker/src/wallet/provider-reconciliation-scanner.ts",
+          "sha256": "1f6c5708cd0e1610246cae57b621f7c83218da917dc7c9ef3d18a782e606414f"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "11db122874978617fd4c7f20f5adc47f29732a352166e8f3e6f5a65ce7374e15"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-chargeback.ts",
+          "sha256": "93ecf76298df81953aae7cd2a5a0c91312d620e08e139c881b7453ac7cc96753"
+        },
+        {
+          "path": "packages/shared/src/finance/wallet-reversal.ts",
+          "sha256": "06f138304ced158ded6b6beea0171dd5b1dc5cf9891dac327c48112b07b13306"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed the signed chargeback callback and Finance dashboard warning. Original credit scope and reversal evidence include the wallet, original transaction, state and amount.",
+        "A native retained-evidence fixture confirms that a conflict remains unresolved, keeps both wallets and history unchanged, and returns no conflicting reversal or wallet links. Signed terminal replay rechecks the original credit and cannot repost the reversal.",
+        "The Finance dashboard holds live grants and session through the read. Native evidence verifies blocked reads are withheld after session expiry, current grant denial, and scoped warning links.",
+        "64 distinct targeted API cases passed across the initial and affected retest runs. The initial failures were the stale warning SQL mock and the fixture observing cached PostgreSQL activity; the final affected suites passed all 32 cases. The 27 worker reconciliation cases also passed.",
+        "API build, typecheck, generated API contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-chargeback-evidence",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "2378b4c904f69fce1488e3ec55514d67c9ad4d3c7bc4fc56d1f2cbc0c2d21600"
+        },
+        {
+          "file": "chargeback-checks.log",
+          "sha256": "4827cf6079d1aa0bc13ad2fc2917b57fbddbf68a0b2bbcb89c65fb6803822dec"
+        },
+        {
+          "file": "chargeback-final-affected.log",
+          "sha256": "213522383a54d1951ae81e2d3065809a8a859122724013aa24bbdaa148abd866"
+        },
+        {
+          "file": "worker-caller.log",
+          "sha256": "0cb1a7c3c9038fd6dc44ce5cc0912382c2be848987a3dc07e144bf731f61e0bc"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "46a825b0d56e22f17d14130c830f7b4331cbcc4c6db78395711193d12b602b56"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "486cf34948f8b74841e43933cbbe87718598e5b9704716e91f93d0275521f66a"
+        },
+        {
+          "file": "chargeback-routes.json",
+          "sha256": "0d5dfbfd7c4e7260db676c24378c58ee5dd64854f95f84466157319391f7ec03"
         }
       ]
     }
