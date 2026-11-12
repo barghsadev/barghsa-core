@@ -951,7 +951,7 @@ it('publishes a validated number style only through the reviewed branding versio
 });
 
 it('keeps theme policy private until exact activation and normalizes legacy fixed themes', async () => {
-  expect(await publicConfig()).toMatchObject({ themeMode: 'system' });
+  expect(await publicConfig()).toMatchObject({ themeMode: 'system', themeDefault: 'system' });
   const legacy = await saved(
     await request('admin/branding/config', 'PUT', {
       expectedVersion: 0,
@@ -971,11 +971,15 @@ it('keeps theme policy private until exact activation and normalizes legacy fixe
   const next = await saved(
     await request('admin/branding/config', 'PUT', {
       expectedVersion: legacy.version,
-      config: { themeMode: 'system', darkMode: true },
+      config: { themeMode: 'system', themeDefault: 'light', darkMode: true },
     })
   );
-  expect(next.config).toMatchObject({ themeMode: 'system', darkMode: false });
-  expect(await publicConfig()).toMatchObject({ themeMode: 'dark' });
+  expect(next.config).toMatchObject({
+    themeMode: 'system',
+    themeDefault: 'light',
+    darkMode: false,
+  });
+  expect(await publicConfig()).toMatchObject({ themeMode: 'dark', themeDefault: 'system' });
   expect(
     (
       await request('admin/branding/activate', 'POST', {
@@ -984,7 +988,11 @@ it('keeps theme policy private until exact activation and normalizes legacy fixe
       })
     ).status
   ).toBe(200);
-  expect(await publicConfig()).toMatchObject({ themeMode: 'system', darkMode: false });
+  expect(await publicConfig()).toMatchObject({
+    themeMode: 'system',
+    themeDefault: 'light',
+    darkMode: false,
+  });
   const count = (await http.pool.query('SELECT count(*)::int AS count FROM brand_config')).rows[0]
     .count;
   expect(
@@ -992,6 +1000,14 @@ it('keeps theme policy private until exact activation and normalizes legacy fixe
       await request('admin/branding/config', 'PUT', {
         expectedVersion: next.version,
         config: { themeMode: 'automatic' },
+      })
+    ).status
+  ).toBe(400);
+  expect(
+    (
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: next.version,
+        config: { themeMode: 'system', themeDefault: 'automatic' },
       })
     ).status
   ).toBe(400);

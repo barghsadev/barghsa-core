@@ -207,6 +207,7 @@ export const UpsertBrandConfigSchema = z.object({
       faviconUrl: assetUrl.nullable().optional().default(null),
       darkMode: z.boolean().optional().default(false),
       themeMode: z.enum(['light', 'dark', 'system']).optional(),
+      themeDefault: z.enum(['light', 'dark', 'system']).optional(),
       numberStyle: z.enum(['locale', 'persian', 'western']).optional().default('locale'),
     })
     .transform((config) => ({
@@ -1062,6 +1063,12 @@ export class AdminController {
               nullable: true,
               description:
                 'Persistent HTTPS or owned sealed branding image; absent uses the light logo',
+            },
+            themeDefault: {
+              type: 'string',
+              enum: ['light', 'dark', 'system'],
+              description:
+                'Fallback when the theme policy permits user choice and no preference is set',
             },
             numberStyle: {
               type: 'string',

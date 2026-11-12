@@ -2,6 +2,7 @@ export type ThemeMode = 'light' | 'dark' | 'system';
 export type ResolvedTheme = Exclude<ThemeMode, 'system'>;
 export const THEME_STORAGE_KEY = 'barghsa.theme.v1';
 export const THEME_POLICY_STORAGE_KEY = 'barghsa.theme-policy.v1';
+export const THEME_DEFAULT_STORAGE_KEY = 'barghsa.theme-default.v1';
 
 export function isThemeMode(value: unknown): value is ThemeMode {
   return value === 'light' || value === 'dark' || value === 'system';
@@ -28,9 +29,11 @@ export function storeTheme(key: string, value: ThemeMode): void {
 export function resolveTheme(
   policy: ThemeMode,
   preference: ThemeMode,
-  systemDark: boolean
+  systemDark: boolean,
+  themeDefault: ThemeMode = 'system'
 ): ResolvedTheme {
   if (policy !== 'system') return policy;
   if (preference !== 'system') return preference;
+  if (themeDefault !== 'system') return themeDefault;
   return systemDark ? 'dark' : 'light';
 }

@@ -23,6 +23,7 @@ import { formatCurrencyIrr } from '@barghsa/i18n/numbers';
 import { uploadBrandingLogo } from '../lib/branding-logo-upload.js';
 import { useState, useEffect, useCallback, useId, useRef } from 'react';
 import { brandingText } from '@barghsa/i18n/branding';
+import { shellText } from '@barghsa/i18n/shell';
 import { confirmationText } from '@barghsa/i18n/confirmation';
 import { formatInTimezone } from '@barghsa/i18n/date-time';
 import { useTimezone } from '../hooks/useTimezone.js';
@@ -42,6 +43,7 @@ import {
   type BrandConfigDto,
 } from '../lib/branding-settings.js';
 import { t } from '@barghsa/i18n/admin-ui';
+import { resolveTheme } from '../lib/theme.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -1038,7 +1040,7 @@ export default function AdminBrandingConfig() {
           </section>
 
           {/* ── Dark Mode ─────────────────────────────────────────────────── */}
-          <section className="bg-background rounded-lg border border-border p-6">
+          <section className="bg-background rounded-lg border border-border p-6 space-y-3">
             <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
               <div>
                 <h2 className="text-lg font-semibold text-foreground">{text('themePolicy')}</h2>
@@ -1057,6 +1059,26 @@ export default function AdminBrandingConfig() {
                 <NativeSelectOption value="system">{text('themeSystem')}</NativeSelectOption>
               </NativeSelect>
             </div>
+            {config.themeMode === 'system' && (
+              <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                <label htmlFor="branding-theme-default" className="text-sm font-medium">
+                  {text('themeDefault')}
+                </label>
+                <NativeSelect
+                  id="branding-theme-default"
+                  value={config.themeDefault ?? 'system'}
+                  onChange={(event) => updateConfig('themeDefault', event.target.value)}
+                >
+                  <NativeSelectOption value="system">{text('themeDevice')}</NativeSelectOption>
+                  <NativeSelectOption value="light">
+                    {shellText('themeLight', locale)}
+                  </NativeSelectOption>
+                  <NativeSelectOption value="dark">
+                    {shellText('themeDark', locale)}
+                  </NativeSelectOption>
+                </NativeSelect>
+              </div>
+            )}
           </section>
 
           <section className="bg-background rounded-lg border border-border p-6 space-y-3">
@@ -1133,9 +1155,12 @@ function BrandingPreview({
   const safe = parseBrandConfig(config) ?? DEFAULT_CONFIG;
   const { systemTheme } = useBrandConfig();
   const previewDark =
-    safe.themeMode === 'system'
-      ? systemTheme === 'dark'
-      : (safe.themeMode ?? (safe.darkMode ? 'dark' : 'light')) === 'dark';
+    resolveTheme(
+      safe.themeMode ?? (safe.darkMode ? 'dark' : 'light'),
+      'system',
+      systemTheme === 'dark',
+      safe.themeDefault
+    ) === 'dark';
   const image =
     (previewDark
       ? (logoDark ??

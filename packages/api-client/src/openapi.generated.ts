@@ -11684,6 +11684,11 @@ export interface operations {
                          * @enum {string}
                          */
                         numberStyle?: "locale" | "persian" | "western";
+                        /**
+                         * @description Fallback when the theme policy permits user choice and no preference is set
+                         * @enum {string}
+                         */
+                        themeDefault?: "light" | "dark" | "system";
                     };
                     /** @description Last observed saved version */
                     expectedVersion: number;
@@ -30298,7 +30303,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Active branding. A fixed theme overrides user preference; system permits user/device choice. Legacy darkMode remains available. */
+            /** @description Active branding. A fixed theme overrides user preference. With system policy, the configured default applies when no user preference is set. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -30310,6 +30315,8 @@ export interface operations {
                         darkPrimaryColor?: string;
                         darkSecondaryColor?: string;
                         logoDarkUrl?: string | null;
+                        /** @enum {string} */
+                        themeDefault: "light" | "dark" | "system";
                         /** @enum {string} */
                         themeMode: "light" | "dark" | "system";
                     } & {

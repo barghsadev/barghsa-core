@@ -24,6 +24,7 @@ export interface BrandConfig {
   faviconUrl: string | null;
   darkMode: boolean;
   themeMode?: ThemeMode;
+  themeDefault?: ThemeMode;
   numberStyle: NumberStyle;
 }
 
@@ -173,6 +174,7 @@ export function parseBrandConfig(value: unknown): BrandConfig | null {
   if (typeof numberStyle !== 'string' || !['locale', 'persian', 'western'].includes(numberStyle))
     return null;
   if (data.themeMode !== undefined && !isThemeMode(data.themeMode)) return null;
+  if (data.themeDefault !== undefined && !isThemeMode(data.themeDefault)) return null;
   return {
     ...data,
     logoDarkUrl: data.logoDarkUrl ?? null,

@@ -130,6 +130,18 @@ for (const locale of ['fa', 'en'] as const)
       await policy.selectOption(darkMode ? 'light' : 'dark');
       await expect(policy).toHaveValue(darkMode ? 'light' : 'dark');
       await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
+      await policy.selectOption('system');
+      const defaultMode = page.getByRole('combobox', {
+        name: brandingText('themeDefault', locale),
+        exact: true,
+      });
+      await defaultMode.selectOption(darkMode ? 'light' : 'dark');
+      await expect(
+        preview
+          .getByRole('group', { name: settingsText('admin.settings.draft', locale), exact: true })
+          .locator(':scope > div')
+      ).toHaveCSS('background-color', darkMode ? 'rgb(244, 247, 242)' : 'rgb(20, 33, 26)');
+      await expect(page.locator('html')).toHaveClass(darkMode ? /dark/ : /^(?!.*\bdark\b)/);
       await scan();
       const accountMenu = page.getByRole('button', {
         name: shellText('accountMenu', locale),
@@ -298,6 +310,22 @@ for (const scenario of [
   { name: 'saved dark', policy: 'system', preference: 'dark', device: 'light', expected: true },
   { name: 'device dark', policy: 'system', preference: 'system', device: 'dark', expected: true },
   {
+    name: 'published default dark',
+    policy: 'system',
+    preference: 'system',
+    themeDefault: 'dark',
+    device: 'light',
+    expected: true,
+  },
+  {
+    name: 'saved light over a dark default',
+    policy: 'system',
+    preference: 'light',
+    themeDefault: 'dark',
+    device: 'dark',
+    expected: false,
+  },
+  {
     name: 'invalid storage',
     policy: 'invalid',
     preference: 'invalid',
@@ -316,7 +344,7 @@ for (const scenario of [
   test(`applies ${scenario.name} before React loads under the existing CSP`, async ({ page }) => {
     await page.emulateMedia({ colorScheme: scenario.device });
     await page.addInitScript(
-      ({ policy, preference, unavailable }) => {
+      ({ policy, preference, themeDefault, unavailable }) => {
         if (unavailable)
           Object.defineProperty(window, 'localStorage', {
             get() {
@@ -326,9 +354,14 @@ for (const scenario of [
         else {
           localStorage.setItem('barghsa.theme-policy.v1', policy);
           localStorage.setItem('barghsa.theme.v1', preference);
+          if (themeDefault) localStorage.setItem('barghsa.theme-default.v1', themeDefault);
         }
       },
-      { ...scenario, unavailable: 'unavailable' in scenario }
+      {
+        ...scenario,
+        themeDefault: 'themeDefault' in scenario ? scenario.themeDefault : null,
+        unavailable: 'unavailable' in scenario,
+      }
     );
     await page.route('**/auth/assets/*.js', (route) => route.abort());
     const response = await page.goto('/login');

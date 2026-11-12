@@ -73,6 +73,7 @@ describe('PublicBrandingController', () => {
         faviconUrl: 'https://cdn.example.com/favicon.ico',
         darkMode: true,
         themeMode: 'dark',
+        themeDefault: 'system',
       });
 
       // Assert internal fields are stripped
@@ -121,6 +122,7 @@ describe('PublicBrandingController', () => {
         faviconUrl: null,
         darkMode: false,
         themeMode: 'system',
+        themeDefault: 'system',
       });
     });
 

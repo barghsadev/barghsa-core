@@ -32,6 +32,7 @@ import {
   readTheme,
   resolveTheme,
   storeTheme,
+  THEME_DEFAULT_STORAGE_KEY,
   THEME_STORAGE_KEY,
   THEME_POLICY_STORAGE_KEY,
   type ThemeMode,
@@ -87,6 +88,9 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
   const [themePolicy, setThemePolicy] = useState<ThemeMode>(() =>
     readTheme(THEME_POLICY_STORAGE_KEY)
   );
+  const [themeDefault, setThemeDefault] = useState<ThemeMode>(() =>
+    readTheme(THEME_DEFAULT_STORAGE_KEY)
+  );
   const [systemDark, setSystemDark] = useState(
     () => window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false
   );
@@ -95,7 +99,7 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
     storeTheme(THEME_STORAGE_KEY, mode);
     setThemeState(mode);
   }, []);
-  const resolvedTheme = resolveTheme(themePolicy, theme, systemDark);
+  const resolvedTheme = resolveTheme(themePolicy, theme, systemDark, themeDefault);
   const systemTheme: ResolvedTheme = systemDark ? 'dark' : 'light';
   useEffect(() => {
     const media = window.matchMedia?.('(prefers-color-scheme: dark)');
@@ -161,6 +165,9 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       const policy = config.themeMode ?? (config.darkMode ? 'dark' : 'light');
       storeTheme(THEME_POLICY_STORAGE_KEY, policy);
       setThemePolicy(policy);
+      const defaultMode = config.themeDefault ?? 'system';
+      storeTheme(THEME_DEFAULT_STORAGE_KEY, defaultMode);
+      setThemeDefault(defaultMode);
       root.style.setProperty('--brand-light-background', config.backgroundColor);
       root.style.setProperty('--brand-dark-background', config.darkBackgroundColor);
       root.style.setProperty(
