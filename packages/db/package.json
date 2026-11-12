@@ -32,7 +32,7 @@
     "db:migrate": "tsx src/migrate.ts",
     "db:migrate:run": "tsx src/migrate.ts",
     "db:migrate:notification-templates": "tsx src/seed/index.ts --notification-templates-only",
-    "db:push": "drizzle-kit push",
+    "db:push": "node ../../scripts/dev-database.mjs push",
     "db:studio": "drizzle-kit studio",
     "db:verify-restore": "./scripts/backup/verify-restore.sh",
     "db:seed": "tsx src/seed/index.ts"
