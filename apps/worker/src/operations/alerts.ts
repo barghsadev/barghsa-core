@@ -8,6 +8,9 @@ const labels: Record<string, string> = {
   EmailProviderDegraded: 'اختلال ارسال ایمیل / Email delivery unavailable',
   SmsProviderDegraded: 'اختلال ارسال پیامک / SMS delivery unavailable',
   SmsProviderLowCredit: 'اعتبار پیامک پایین است / SMS credit is low',
+  SmsProviderCreditReview: 'اعتبار پیامک نیازمند بررسی است / SMS credit needs review',
+  StorageLifecycleNeedsReview:
+    'خطای نگهداری فایل‌ها نیازمند بررسی است / Storage lifecycle failure needs review',
   NotificationDeadLettersPending:
     'اعلان‌های ناموفق نیازمند بررسی هستند / Notification failures need triage',
   NotificationDeadLettersAccumulating:
@@ -92,6 +95,8 @@ type AlertPriority = 'P1' | 'P2' | 'P3';
 
 const alertPriorities = new Map<string, AlertPriority>([
   ['SmsProviderLowCredit', 'P2'],
+  ['SmsProviderCreditReview', 'P3'],
+  ['StorageLifecycleNeedsReview', 'P3'],
   ['NotificationOutboxBacklog', 'P2'],
   ['NotificationOutboxBacklogCritical', 'P1'],
   ['RefundObligationOverdue', 'P2'],

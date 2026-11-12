@@ -9,6 +9,10 @@
 
 Escalate to the provider and Legal if any signed or retained object version is unavailable. Preserve provider receipts and failed operation evidence for the review. [Storage configuration](../operations/storage-configuration.md). [Retention safeguards](../operations/storage-retention.md). [Incident response](../operations/incident-response.md).
 
+## Working-hours lifecycle review
+
+`StorageLifecycleNeedsReview` fires after five minutes with an unresolved storage cleanup, abandoned multipart upload cleanup or document destruction failure. Use the Storage and Uploads dashboard to identify the affected job and open `/admin/failed-jobs` for its durable failure and retry state. Verify the expected provider result and the recorded object operation before closing the review. Use the audited retry flow and retain pending holds, signed originals, and uncertain results. Escalate blocked customer transfers or suspected loss through the incident procedure above.
+
 ## Quarterly recovery checks
 
 The [recovery workflow](../../.github/workflows/storage-recovery-quarterly.yml) runs at 04:17 UTC on January 1, April 1, July 1 and October 1. It reads a specific retained version after logical deletion, checks version-specific hold and expiry behavior, and exercises orphaned and interrupted multipart uploads in disposable MinIO and migrated PostgreSQL. The [quarterly manual exercise](../operations/quarterly-recovery-exercise.md) includes the same storage checks. Retain the two storage reports with their Actions run and commit in the release board.

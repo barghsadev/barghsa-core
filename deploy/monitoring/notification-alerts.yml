@@ -29,6 +29,16 @@ groups:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
           summary: SMS provider credit is low
           description: 'Provider {{ $labels.provider_id }} is below its configured credit threshold. Review the observed balance and replenish credit in /admin/sms-providers.'
+      - alert: SmsProviderCreditReview
+        expr: |
+          max by (environment, database, provider_id) (provider_sms_credit_review) == 1
+          and max by (environment, database, provider_id) (provider_sms_credit_low) == 0
+        labels:
+          severity: warning
+          priority: P3
+        annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md
+          summary: SMS credit is approaching the configured low-credit threshold
       - alert: SmsProviderDegraded
         expr: min without (instance, pod) (provider_sms_health) == 0
         labels:
@@ -131,6 +141,17 @@ groups:
         annotations:
           runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md
           summary: A payment idempotency key was used with conflicting payment data
+  - name: barghsa-storage-lifecycle
+    rules:
+      - alert: StorageLifecycleNeedsReview
+        expr: max by (environment, database) (barghsa_storage_lifecycle_job_needs_review) == 1
+        for: 5m
+        labels:
+          severity: warning
+          priority: P3
+        annotations:
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/storage-outage.md
+          summary: A storage lifecycle job has an unresolved failure
   - name: barghsa-ai-models
     rules:
       - alert: AiModelCircuitOpen

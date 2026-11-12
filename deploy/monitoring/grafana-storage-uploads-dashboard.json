@@ -203,6 +203,23 @@
           "expr": "sum by (job) (rate(barghsa_storage_provider_requests_total{environment=\"$environment\",database=\"$database\",outcome=\"failed\"}[$__rate_interval])) / (sum by (job) (rate(barghsa_storage_provider_requests_total{environment=\"$environment\",database=\"$database\"}[$__rate_interval])) > 0)"
         }
       ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Storage lifecycle job failures",
+      "description": "A value of 1 indicates an unresolved failure in the durable job ledger. Worker replicas are deduplicated. Review the underlying job before retrying or closing the alert.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 0, "y": 29, "w": 12, "h": 8 },
+      "fieldConfig": { "defaults": { "min": 0, "max": 1, "decimals": 0 }, "overrides": [] },
+      "targets": [
+        {
+          "refId": "A",
+          "range": true,
+          "legendFormat": "{{cleanup_job}}",
+          "expr": "max by (cleanup_job) (barghsa_storage_lifecycle_job_needs_review{environment=\"$environment\",database=\"$database\"})"
+        }
+      ]
     }
   ]
 }

@@ -8,3 +8,7 @@
 4. Verify a firing and recovery receipt, an actual accepted delivery for the affected channel and a shrinking eligible backlog. If authentication delivery was affected, verify a fresh OTP on an explicitly authorized test contact through the native flow. Use private in-app notices for eligible business updates while transport recovers. Keep OTP codes on the verified-contact path. Check that accepted occurrence keys were not resent and keep channel-disabled skips separate from provider receipts.
 
 Escalate to the primary and vendor owner if a critical notification path remains unavailable or an outcome cannot be reconciled. Attach the masked occurrence, rule and recovery receipts and record follow-up actions. [Monitoring](../operations/notification-monitoring.md). [Delivery reconciliation](../operations/notification-delivery-recovery.md).
+
+## Working-hours SMS credit review
+
+`SmsProviderCreditReview` uses the active verified provider's most recent successful balance, up to seven hours old. It fires when the balance is at least the configured P2 threshold and below twice that threshold. A zero threshold disables the review. Check the balance and observation time in `/admin/sms-providers` and arrange replenishment during working hours. Below the configured threshold, follow the existing P2 response. A missing or stale observation requires checking the credit monitor before recording replenishment as verified.

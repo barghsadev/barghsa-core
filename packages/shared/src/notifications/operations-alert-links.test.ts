@@ -34,6 +34,8 @@ describe('operations alert budget links', () => {
   it.each([
     ['WalletReconciliationReview', 'barghsa-finance-safety', 'payment-wallet-mismatch'],
     ['PublicTlsCertificateExpiring', 'barghsa-executive-slo', 'journey-availability'],
+    ['StorageLifecycleNeedsReview', 'barghsa-storage-uploads', 'storage-outage'],
+    ['SmsProviderCreditReview', 'barghsa-notifications', 'notification-outage'],
   ])('links the %s review notice to its dashboard and runbook', (name, dashboard, runbook) => {
     expect(
       operationsAlertLinks('admin.operations_alert', {

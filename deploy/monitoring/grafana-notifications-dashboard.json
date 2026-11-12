@@ -335,7 +335,7 @@
       "id": 8,
       "type": "timeseries",
       "title": "Provider health and SMS credit",
-      "description": "Provider health is 0 for a degraded configuration. The SMS credit signal is 1 below its configured threshold.",
+      "description": "Provider health is 0 for a degraded configuration. SMS P2 tracks the configured threshold. The P3 review band is based on a recent balance and clears while P2 is active.",
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
@@ -371,6 +371,11 @@
           "refId": "C",
           "expr": "max without (instance, pod) (provider_sms_credit_low)",
           "legendFormat": "SMS low credit {{provider_id}} · {{environment}}/{{database}}"
+        },
+        {
+          "refId": "D",
+          "expr": "max by (environment, database, provider_id) (provider_sms_credit_review) == 1 and max by (environment, database, provider_id) (provider_sms_credit_low) == 0",
+          "legendFormat": "SMS credit review {{provider_id}} · {{environment}}/{{database}}"
         }
       ]
     }

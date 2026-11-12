@@ -4,6 +4,8 @@ const alertResources = {
   EmailProviderDegraded: ['barghsa-notifications', 'notification-outage'],
   SmsProviderDegraded: ['barghsa-notifications', 'notification-outage'],
   SmsProviderLowCredit: ['barghsa-notifications', 'notification-outage'],
+  SmsProviderCreditReview: ['barghsa-notifications', 'notification-outage'],
+  StorageLifecycleNeedsReview: ['barghsa-storage-uploads', 'storage-outage'],
   NotificationDeadLettersPending: ['barghsa-notifications', 'notification-outage'],
   NotificationDeadLettersAccumulating: ['barghsa-notifications', 'notification-outage'],
   NotificationOutboxBacklog: ['barghsa-notifications', 'notification-outage'],

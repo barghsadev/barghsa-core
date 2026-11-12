@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db.js';
-import { recordJobFailure, recordJobSuccess } from './job-recorder.js';
+import { exportWorkerMetrics } from '../notifications/worker-metrics.js';
+import {
+  collectStorageLifecycleFailures,
+  recordJobFailure,
+  recordJobSuccess,
+} from './job-recorder.js';
 
 let database: Awaited<ReturnType<typeof createMigratedTestDb>>;
 beforeAll(async () => {
@@ -65,4 +70,39 @@ it('preserves the default budget, concurrent increments, recovery history and a 
   expect(history[0]).toMatchObject({ id: first.id, status: 'resolved', attempts: 5 });
   expect(history[1]).toMatchObject({ status: 'failed', attempts: 1, max_attempts: 5 });
   expect(history[1].id).not.toBe(first.id);
+});
+
+it('exports only unresolved storage lifecycle failures and clears each after durable recovery', async () => {
+  const pool = database.pool;
+  const error = 'private-storage-fixture-object';
+  await recordJobFailure({ jobType: 'storage_cleanup', error }, pool);
+  await recordJobFailure({ jobType: 'multipart_orphan_cleanup', error }, pool);
+  await pool.query(
+    "UPDATE background_jobs SET status='retrying' WHERE job_type='multipart_orphan_cleanup'"
+  );
+  await recordJobFailure({ jobType: 'document_destruction', error, maxAttempts: 1 }, pool);
+  await recordJobFailure({ jobType: 'sms_credit_check', error }, pool);
+
+  const prefix = 'barghsa_storage_lifecycle_job_needs_review';
+  const current = async () => {
+    await collectStorageLifecycleFailures(pool);
+    return (await exportWorkerMetrics()).split('\n').filter((line) => line.startsWith(prefix));
+  };
+  expect(await current()).toEqual([
+    `${prefix}{cleanup_job="storage_cleanup"} 1`,
+    `${prefix}{cleanup_job="multipart_orphan_cleanup"} 1`,
+    `${prefix}{cleanup_job="document_destruction"} 1`,
+  ]);
+  await recordJobSuccess('storage_cleanup', pool);
+  await recordJobSuccess('multipart_orphan_cleanup', pool);
+  await recordJobSuccess('document_destruction', pool);
+  expect(await current()).toEqual([
+    `${prefix}{cleanup_job="storage_cleanup"} 0`,
+    `${prefix}{cleanup_job="multipart_orphan_cleanup"} 0`,
+    `${prefix}{cleanup_job="document_destruction"} 0`,
+  ]);
+  expect(await exportWorkerMetrics()).not.toContain(error);
+  expect(
+    (await pool.query("SELECT status FROM background_jobs WHERE job_type='sms_credit_check'")).rows
+  ).toEqual([{ status: 'failed' }]);
 });

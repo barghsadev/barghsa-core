@@ -210,7 +210,7 @@ it('exports low credit only for the current verified active provider and clears 
     ]);
     await collectNotificationGauges(ctx.pool);
     expect(await exportWorkerMetrics()).not.toMatch(
-      /provider_sms_credit_(?:low|balance|observed_timestamp_seconds)\{provider_id=/
+      /provider_sms_credit_(?:low|review|balance|observed_timestamp_seconds)\{provider_id=/
     );
   }
 
@@ -228,6 +228,45 @@ it('exports low credit only for the current verified active provider and clears 
   await ctx.pool.query('DELETE FROM sms_provider_configs');
   await collectNotificationGauges(ctx.pool);
   expect(await exportWorkerMetrics()).not.toMatch(
-    /provider_sms_credit_(?:low|balance|observed_timestamp_seconds)\{provider_id=/
+    /provider_sms_credit_(?:low|review|balance|observed_timestamp_seconds)\{provider_id=/
   );
+});
+
+it('exports a recent review band above P2 and drops unknown, stale or disabled reviews', async () => {
+  const review = `provider_sms_credit_review{provider_id="${providerId}"}`;
+  const p2 = `provider_sms_credit_low{provider_id="${providerId}"}`;
+  const pool = ctx.pool;
+  const metrics = async () => {
+    await collectNotificationGauges(pool);
+    return exportWorkerMetrics();
+  };
+  expect(await metrics()).not.toContain(review);
+  for (const [balance, reviewActive, lowActive] of [
+    [200, 0, 0],
+    [199.99, 1, 0],
+    [100, 1, 0],
+    [99.99, 0, 1],
+    [150, 1, 0],
+  ] as const) {
+    await pool.query('UPDATE sms_provider_configs SET credit_next_check_at=NOW()');
+    expect(await checkSmsCredit(pool, creditResponse(balance))).toBe('checked');
+    const text = await metrics();
+    expect(text).toContain(`${review} ${reviewActive}\n`);
+    expect(text).toContain(`${p2} ${lowActive}\n`);
+  }
+  for (const offset of ['-8 hours', '1 hour']) {
+    await pool.query('UPDATE sms_provider_configs SET credit_checked_at=NOW()+$1::interval', [
+      offset,
+    ]);
+    expect(await metrics()).not.toContain(review);
+  }
+  for (const threshold of [0, null, '100', 1e20]) {
+    await pool.query(
+      `UPDATE sms_provider_configs SET credit_checked_at=NOW(),
+         config=jsonb_set(config,'{low_credit_threshold}',$1::jsonb)`,
+      [JSON.stringify(threshold)]
+    );
+    expect(await metrics()).not.toContain(review);
+  }
+  expect(await metrics()).not.toContain('fixture-key');
 });

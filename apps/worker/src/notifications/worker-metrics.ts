@@ -1,6 +1,7 @@
 import { Registry, Counter, Gauge, Histogram } from 'prom-client';
 import type { NotificationChannel } from '@barghsa/shared/notifications';
 import type { DeliveryExecutor } from '@barghsa/shared/notification-delivery';
+import { SmsirConfigSchema } from '@barghsa/shared/auth-delivery';
 import { storageCircuitMetrics } from '@barghsa/shared/storage';
 
 /**
@@ -155,6 +156,13 @@ export const providerSmsCreditLow = new Gauge({
   registers: [registry],
 });
 
+const providerSmsCreditReview = new Gauge({
+  name: 'provider_sms_credit_review',
+  help: 'Recent SMS credit in the working-hours review band above the configured P2 limit',
+  labelNames: ['provider_id'] as const,
+  registers: [registry],
+});
+
 const providerSmsCredit = new Gauge({
   name: 'provider_sms_credit_balance',
   help: 'Last observed SMS credit balance for the active verified configuration',
@@ -282,10 +290,13 @@ export async function collectNotificationGauges(
   const creditRes = await pool.query(
     `SELECT id, CASE WHEN low_credit_alert_active THEN 1 ELSE 0 END AS low_credit,
             low_credit_balance::double precision AS balance,
-            EXTRACT(EPOCH FROM credit_checked_at)::double precision AS observed_at
+            EXTRACT(EPOCH FROM credit_checked_at)::double precision AS observed_at,
+            config->'low_credit_threshold' AS threshold,
+            credit_checked_at BETWEEN NOW()-INTERVAL '7 hours' AND NOW() AS credit_is_current
        FROM sms_provider_configs WHERE status='active' AND last_test_status='passed'`
   );
   providerSmsCreditLow.reset();
+  providerSmsCreditReview.reset();
   providerSmsCredit.reset();
   providerSmsCreditObservedAt.reset();
   for (const row of creditRes.rows as Array<{
@@ -293,12 +304,19 @@ export async function collectNotificationGauges(
     low_credit: number;
     balance: number | null;
     observed_at: number | null;
+    threshold: unknown;
+    credit_is_current: boolean | null;
   }>) {
     const labels = { provider_id: row.id };
     providerSmsCreditLow.set(labels, Number(row.low_credit));
     if (row.balance != null && row.observed_at != null) {
       providerSmsCredit.set(labels, row.balance);
       providerSmsCreditObservedAt.set(labels, row.observed_at);
+      const threshold = SmsirConfigSchema.shape.low_credit_threshold.safeParse(row.threshold);
+      if (row.credit_is_current && threshold.success && threshold.data > 0) {
+        const inReviewBand = row.balance >= threshold.data && row.balance < 2 * threshold.data;
+        providerSmsCreditReview.set(labels, Number(inReviewBand));
+      }
     }
   }
 }

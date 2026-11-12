@@ -4,6 +4,106 @@
   'tests':
     [
       {
+        'name': 'SMS credit review deduplicates replicas, yields to P2 and requires a scoped low-credit state',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'provider_sms_credit_review{job="worker",environment="staging",database="core",instance="a",provider_id="sms-a"}',
+              'values': '0 1 1 stale 0',
+            },
+            {
+              'series': 'provider_sms_credit_review{job="worker",environment="staging",database="core",instance="b",provider_id="sms-a"}',
+              'values': '0 1 0 stale 0',
+            },
+            {
+              'series': 'provider_sms_credit_low{job="worker",environment="staging",database="core",instance="a",provider_id="sms-a"}',
+              'values': '0 0 0 0 0',
+            },
+            {
+              'series': 'provider_sms_credit_low{job="worker",environment="staging",database="core",instance="b",provider_id="sms-a"}',
+              'values': '0 0 1 0 0',
+            },
+            {
+              'series': 'provider_sms_credit_review{job="worker",environment="other",database="core",instance="a",provider_id="sms-a"}',
+              'values': '1+0x4',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'SmsProviderCreditReview', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'SmsProviderCreditReview',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'environment': 'staging',
+                        'database': 'core',
+                        'provider_id': 'sms-a',
+                        'severity': 'warning',
+                        'priority': 'P3',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'SMS credit is approaching the configured low-credit threshold',
+                        'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '2m', 'alertname': 'SmsProviderCreditReview', 'exp_alerts': [] },
+            { 'eval_time': '3m', 'alertname': 'SmsProviderCreditReview', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'Storage lifecycle failures open one scope review after five minutes and clear when the last job recovers',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'barghsa_storage_lifecycle_job_needs_review{job="worker",environment="staging",database="core",instance="a",cleanup_job="storage_cleanup"}',
+              'values': '0 1+0x4 0 0',
+            },
+            {
+              'series': 'barghsa_storage_lifecycle_job_needs_review{job="worker",environment="staging",database="core",instance="b",cleanup_job="storage_cleanup"}',
+              'values': '0 1+0x4 0 0',
+            },
+            {
+              'series': 'barghsa_storage_lifecycle_job_needs_review{job="worker",environment="staging",database="core",instance="a",cleanup_job="document_destruction"}',
+              'values': '0+0x3 1 1 1 0',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '5m', 'alertname': 'StorageLifecycleNeedsReview', 'exp_alerts': [] },
+            {
+              'eval_time': '6m',
+              'alertname': 'StorageLifecycleNeedsReview',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'environment': 'staging',
+                        'database': 'core',
+                        'severity': 'warning',
+                        'priority': 'P3',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'A storage lifecycle job has an unresolved failure',
+                        'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/storage-outage.md',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '7m', 'alertname': 'StorageLifecycleNeedsReview', 'exp_alerts': [] },
+          ],
+      },
+      {
         'name': 'Payment key mismatches coalesce across payment operations and resolve',
         'interval': '1m',
         'input_series':

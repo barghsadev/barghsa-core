@@ -98,7 +98,11 @@ import {
   ONLINE_TOPUP_EXPIRY_JOB_TYPE,
   expireStaleOnlineTopUps,
 } from './wallet/online-topup-expiry-scanner.js';
-import { recordJobFailure, recordJobSuccess } from './jobs/job-recorder.js';
+import {
+  collectStorageLifecycleFailures,
+  recordJobFailure,
+  recordJobSuccess,
+} from './jobs/job-recorder.js';
 import {
   runSavingInventoryExpiry,
   SAVING_INVENTORY_EXPIRY_INTERVAL_MS,
@@ -158,6 +162,7 @@ async function main(): Promise<void> {
           collectReconciliationMetrics(pool),
           collectFinanceActivityMetrics(pool),
           collectStorageScanBacklog(pool),
+          collectStorageLifecycleFailures(pool),
         ]);
         const body = await exportWorkerMetrics();
         res.writeHead(200, { 'Content-Type': 'text/plain; version=0.0.4; charset=utf-8' });

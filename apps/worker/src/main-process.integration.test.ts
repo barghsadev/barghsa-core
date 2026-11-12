@@ -273,6 +273,10 @@ it('compiled worker serves health/metrics, executes scheduled jobs and drains on
     const metricText = await metrics.text();
     expect(metricText).toContain('# HELP');
     expect(metricText).toContain('# TYPE provider_sms_credit_low gauge');
+    expect(metricText).toContain('# TYPE provider_sms_credit_review gauge');
+    expect(metricText).toContain(
+      'barghsa_storage_lifecycle_job_needs_review{cleanup_job="storage_cleanup"} 0\n'
+    );
     expect(metricText).toContain('notifications_eligible_outbox_age_seconds 0\n');
     expect(metricText).toContain('notifications_outbox_expired_leases 0\n');
     expect(metricText).toContain('notifications_outbox_processing_seconds_count 0\n');

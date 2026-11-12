@@ -1,6 +1,9 @@
 import { getDbPool } from '@barghsa/db';
 import { BACKGROUND_JOB_TYPES, type BackgroundJobType } from '@barghsa/shared/admin';
+import type { Pool } from 'pg';
+import { Gauge } from 'prom-client';
 import { sanitizeError } from '../notifications/error-redact.js';
+import { registry } from '../notifications/worker-metrics.js';
 import { workerLog } from '../operator-log.js';
 
 /**
@@ -22,6 +25,31 @@ const RETRY_BACKOFF_MS = 60_000;
  * recorder SQL and the migration constraint cannot drift.
  */
 const ACTIVE_STATUSES_SQL = "status IN ('failed', 'retrying', 'dead_letter')";
+
+const storageLifecycleJobs = [
+  'storage_cleanup',
+  'multipart_orphan_cleanup',
+  'document_destruction',
+] as const satisfies readonly BackgroundJobType[];
+
+const storageLifecyclePending = new Gauge({
+  name: 'barghsa_storage_lifecycle_job_needs_review',
+  help: 'Whether each storage lifecycle job has an unresolved failure in the background job ledger',
+  labelNames: ['cleanup_job'] as const,
+  registers: [registry],
+});
+
+export async function collectStorageLifecycleFailures(pool: Pick<Pool, 'query'>): Promise<void> {
+  const { rows } = await pool.query<{ job_type: BackgroundJobType }>(
+    `SELECT job_type FROM background_jobs
+     WHERE job_type=ANY($1::text[]) AND ${ACTIVE_STATUSES_SQL}`,
+    [storageLifecycleJobs]
+  );
+  const pending = new Set(rows.map(({ job_type }) => job_type));
+  for (const job of storageLifecycleJobs) {
+    storageLifecyclePending.set({ cleanup_job: job }, Number(pending.has(job)));
+  }
+}
 
 /**
  * Input for {@link recordJobFailure}.
