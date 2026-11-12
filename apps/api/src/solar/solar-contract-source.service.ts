@@ -36,10 +36,11 @@ export class SolarContractSourceService {
             `SELECT d.original_name AS label,NULL::integer AS version_number,d.storage_key,
            d.original_name AS file_name,d.size_bytes AS file_size,d.detected_mime AS content_type,
            d.checksum FROM documents d JOIN storage_records s ON s.storage_key=d.storage_key
+           JOIN solar_construction_documents sd ON sd.document_id=d.id AND sd.request_id=$3
            WHERE d.id=$1 AND d.profile_id=$2 AND d.business_record_type='solar_request'
              AND d.business_record_id=$3 AND d.category='document'
              AND d.state IN ('Available','Approved') AND d.scan_state='Available'
-             AND s.status='immutable' FOR SHARE OF d,s`,
+             AND s.status='immutable' FOR SHARE OF d,s,sd`,
             [
               input.source.kind === 'document' ? input.source.documentId : null,
               input.profileId,

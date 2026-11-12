@@ -10,7 +10,7 @@ import { canTransitionSolarRequest } from './solar-state.js';
 import type { PoolClient } from 'pg';
 import { v7 as uuidv7 } from 'uuid';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
-import { requireSessionStepUp } from '../session/session-step-up.js';
+import { requireCurrentSession, requireSessionStepUp } from '../session/session-step-up.js';
 import { notifySolarStatus } from './solar-status-notifications.js';
 import { ReviewSnapshotService } from '../finance/review-snapshot.service.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
@@ -135,7 +135,9 @@ export class SolarFinalService {
         actor.userId,
         decision === 'close-no-contract' ? 'contracts:write' : 'orders:write'
       );
+      await requireCurrentSession(client, actor);
       const { review } = await this.decisionSnapshot(client, requestId, decision, reason, 'SHARE');
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return review;
     } catch (error) {

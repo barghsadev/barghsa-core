@@ -90,9 +90,14 @@ async function writablePendingAmendment(
   );
 }
 function visible(staff: boolean) {
+  const solarScope = sql`(${documents.businessRecordType}<>'solar_request' OR EXISTS (
+    SELECT 1 FROM solar_construction_requests r
+    JOIN solar_construction_documents sd ON sd.request_id=r.id
+    WHERE r.id=${documents.businessRecordId} AND r.profile_id=${documents.profileId}
+      AND sd.document_id=${documents.id}))`;
   return staff
-    ? sql`true`
-    : sql`(${documents.state}<>'Removed' AND (${documents.businessRecordType}<>'contract'
+    ? solarScope
+    : sql`(${solarScope} AND ${documents.state}<>'Removed' AND (${documents.businessRecordType}<>'contract'
     OR EXISTS (SELECT 1 FROM contract_publications p WHERE p.contract_id=${documents.businessRecordId}
       AND p.version_id=${contractDocuments.contractVersionId})))`;
 }
@@ -507,8 +512,8 @@ export class DocumentService {
       d.businessRecordType === 'solar_request'
         ? (
             await client.query<{ status: string }>(
-              'SELECT status FROM solar_construction_requests WHERE id=$1',
-              [d.businessRecordId]
+              'SELECT status FROM solar_construction_requests WHERE id=$1 AND profile_id=$2',
+              [d.businessRecordId, d.profileId]
             )
           ).rows[0]
         : null;
@@ -907,13 +912,19 @@ export class DocumentService {
     input: DocumentCommand,
     actor: DocumentActor,
     staff: boolean,
-    ip: string
+    ip: string,
+    solarRequestId?: string
   ) {
     if (!staff && !['submit', 'remove'].includes(action))
       throw new BadRequestException('Staff review is required');
     if (['reject', 'request-changes', 'quarantine'].includes(action) && !input.reason)
       throw new BadRequestException('A reason is required');
     const context = await this.context(id);
+    if (
+      solarRequestId &&
+      (context.kind !== 'solar_request' || context.businessRecordId !== solarRequestId)
+    )
+      throw new NotFoundException('Solar document not found');
     return documentAccess(
       actor,
       context.kind,
@@ -936,8 +947,10 @@ export class DocumentService {
         if (solarDocument) {
           const solar = (
             await client.query<{ status: string }>(
-              'SELECT status FROM solar_construction_requests WHERE id=$1 FOR SHARE',
-              [context.businessRecordId]
+              `SELECT r.status FROM solar_construction_requests r
+               JOIN solar_construction_documents sd ON sd.request_id=r.id
+               WHERE r.id=$1 AND r.profile_id=$2 AND sd.document_id=$3 FOR SHARE OF r`,
+              [context.businessRecordId, profileId, id]
             )
           ).rows[0];
           const documentStage =
@@ -1022,17 +1035,22 @@ export class DocumentService {
                 .returning()
             )[0]!;
             await recordEvent(client, changed, row.document.state, actor, ip, input.reason);
-            if (solarDocument && staff && ['approve', 'reject'].includes(action))
-              await client.query(
+            if (solarDocument && staff && ['approve', 'reject'].includes(action)) {
+              const projection = await client.query(
                 `UPDATE solar_construction_documents SET staff_status=$2,staff_reason=$3,
-                 staff_reviewed_by=$4,staff_reviewed_at=NOW() WHERE document_id=$1`,
+                 staff_reviewed_by=$4,staff_reviewed_at=NOW()
+                 WHERE document_id=$1 AND request_id=$5`,
                 [
                   id,
                   action === 'approve' ? 'approved' : 'rejected',
                   action === 'reject' ? input.reason : null,
                   actor.userId,
+                  context.businessRecordId,
                 ]
               );
+              if (projection.rowCount !== 1)
+                throw new ConflictException('Solar document link changed');
+            }
             if (action !== 'remove')
               await notifyDocumentReview(client, changed, action, input.reason);
             return dto({ ...row, document: changed });

@@ -116,6 +116,7 @@ beforeAll(async () => {
   );
   for (const [user, staff] of [
     ['solar-buyer', false],
+    ['solar-unrelated', false],
     ['solar-reviewer', true],
   ] as const) {
     await http.pool.query(
@@ -614,6 +615,23 @@ it('uses the specified staff routes for the same protected per-file and document
   expect((await send('solar-buyer', path)).status).toBe(403);
   const accepted = await documentCreate(undefined, target);
   const declined = await documentCreate(undefined, target);
+  const lockedRequest = await http.pool.connect();
+  try {
+    await lockedRequest.query('BEGIN');
+    await lockedRequest.query('SELECT id FROM solar_construction_requests WHERE id=$1 FOR UPDATE', [
+      target,
+    ]);
+    const denied = await fetch(`${http.base}/api/solar/requests/${target}/documents/complete`, {
+      method: 'POST',
+      headers: headers['solar-unrelated']!,
+      body: JSON.stringify({ allDocumentsUploaded: true }),
+      signal: AbortSignal.timeout(5000),
+    });
+    expect(denied.status, http.logs()).toBe(404);
+  } finally {
+    await lockedRequest.query('ROLLBACK');
+    lockedRequest.release();
+  }
   expect(
     (
       await send('solar-buyer', `solar/requests/${target}/documents/complete`, 'POST', {
@@ -637,6 +655,16 @@ it('uses the specified staff routes for the same protected per-file and document
     expect(
       (await send('solar-buyer', `${path}/${document.id}/${action}`, 'POST', body)).status
     ).toBe(403);
+    expect(
+      (
+        await send(
+          'solar-reviewer',
+          `staff/solar/requests/${requestId}/documents/${document.id}/${action}`,
+          'POST',
+          body
+        )
+      ).status
+    ).toBe(404);
     const result = await send('solar-reviewer', `${path}/${document.id}/${action}`, 'POST', body);
     expect(result.status, http.logs()).toBe(200);
     expect(await result.json()).toMatchObject({

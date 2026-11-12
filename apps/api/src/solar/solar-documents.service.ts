@@ -25,6 +25,9 @@ const defaultGuidance = {
 };
 export type SolarGuidance = typeof defaultGuidance;
 
+const documentAssociation = `d.id=sd.document_id AND d.profile_id=r.profile_id
+  AND d.business_record_type='solar_request' AND d.business_record_id=r.id`;
+
 async function audit(
   client: PoolClient,
   actor: Actor,
@@ -115,8 +118,10 @@ export class SolarDocumentsService {
         throw new NotFoundException('Solar request not found');
       const requests = (
         await client.query(
-          'SELECT id,description,created_at FROM solar_document_requests WHERE request_id=$1 ORDER BY created_at,id',
-          [requestId]
+          `SELECT d.id,d.description,d.created_at FROM solar_document_requests d
+           JOIN solar_construction_requests r ON r.id=d.request_id
+           WHERE r.id=$1 AND r.profile_id=$2 ORDER BY d.created_at,d.id`,
+          [requestId, request.profile_id]
         )
       ).rows;
       const guidance =
@@ -126,6 +131,7 @@ export class SolarDocumentsService {
             [GUIDANCE_KEY]
           )
         ).rows[0]?.value ?? defaultGuidance;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
         status: request.status,
@@ -145,17 +151,22 @@ export class SolarDocumentsService {
     try {
       await client.query('BEGIN');
       await this.orders.lockOrderActor(client, actor);
-      const request = (
-        await client.query<{ profile_id: string; status: string }>(
-          'SELECT profile_id,status FROM solar_construction_requests WHERE id=$1 FOR UPDATE',
+      const owner = (
+        await client.query<{ profile_id: string }>(
+          'SELECT profile_id FROM solar_construction_requests WHERE id=$1',
           [requestId]
         )
       ).rows[0];
-      if (
-        !request ||
-        !(await this.orders.mayManageOrders(client, actor.userId, request.profile_id))
-      )
+      if (!owner || !(await this.orders.mayManageOrders(client, actor.userId, owner.profile_id)))
         throw new NotFoundException('Solar request not found');
+      const scope = [requestId, owner.profile_id];
+      const request = (
+        await client.query<{ status: string }>(
+          'SELECT status FROM solar_construction_requests WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          scope
+        )
+      ).rows[0];
+      if (!request) throw new NotFoundException('Solar request not found');
       const submit = async () => {
         if (
           ![
@@ -168,15 +179,15 @@ export class SolarDocumentsService {
           throw new ConflictException('Solar request is past document review');
         const pending = await client.query<{ id: string }>(
           `SELECT id FROM documents WHERE business_record_type='solar_request' AND business_record_id=$1
-         AND state IN ('Uploading','PendingScan')`,
-          [requestId]
+         AND profile_id=$2 AND state IN ('Uploading','PendingScan')`,
+          scope
         );
         if (pending.rowCount) throw new ConflictException('Wait for pending uploads to finish');
         const available = await client.query<{ id: string; revision: number }>(
           `UPDATE documents SET state='SubmittedForReview'
-         WHERE business_record_type='solar_request' AND business_record_id=$1 AND state='Available'
+         WHERE business_record_type='solar_request' AND business_record_id=$1 AND profile_id=$2 AND state='Available'
          RETURNING id,revision`,
-          [requestId]
+          scope
         );
         for (const document of available.rows)
           await client.query(
@@ -186,8 +197,8 @@ export class SolarDocumentsService {
           );
         if (request.status !== 'documents_under_review') {
           await client.query(
-            "UPDATE solar_construction_requests SET status='documents_under_review',updated_at=NOW() WHERE id=$1",
-            [requestId]
+            "UPDATE solar_construction_requests SET status='documents_under_review',updated_at=NOW() WHERE id=$1 AND profile_id=$2",
+            scope
           );
           await notifySolarStatus(client, requestId, request.status, 'documents_under_review', {
             title: 'Solar documents submitted for review',
@@ -259,7 +270,7 @@ export class SolarDocumentsService {
          JOIN users u ON u.user_id=p.user_id
          LEFT JOIN legal_profiles lp ON lp.id=p.id
          LEFT JOIN solar_construction_documents sd ON sd.request_id=r.id
-         LEFT JOIN documents d ON d.id=sd.document_id
+         LEFT JOIN documents d ON ${documentAssociation}
          WHERE r.status IN ('submitted','uploading_documents','documents_under_review','changes_requested')
            AND ($1::timestamptz IS NULL OR (r.created_at,r.id) < ($1::timestamptz,$2::uuid))
          GROUP BY r.id,p.id,u.user_id,lp.id ORDER BY r.created_at DESC,r.id DESC LIMIT 101`,
@@ -286,7 +297,10 @@ export class SolarDocumentsService {
       const cursor = before
         ? (
             await client.query<{ id: string; uploaded_at: string }>(
-              'SELECT id,uploaded_at::text AS uploaded_at FROM solar_construction_documents WHERE id=$1',
+              `SELECT sd.id,sd.uploaded_at::text AS uploaded_at FROM solar_construction_documents sd
+               JOIN solar_construction_requests r ON r.id=sd.request_id
+               JOIN documents d ON ${documentAssociation}
+               WHERE sd.id=$1`,
               [before]
             )
           ).rows[0]
@@ -299,7 +313,7 @@ export class SolarDocumentsService {
                   sd.uploaded_at,sd.staff_status,r.status AS request_status
            FROM solar_construction_documents sd
            JOIN solar_construction_requests r ON r.id=sd.request_id
-           JOIN documents d ON d.id=sd.document_id
+           JOIN documents d ON ${documentAssociation}
            JOIN users u ON u.user_id=sd.uploaded_by
            WHERE r.status IN ('documents_under_review','changes_requested')
              AND sd.staff_status='pending'
@@ -327,7 +341,7 @@ export class SolarDocumentsService {
       await requireStaffMutationPermission(client, actor.userId, 'orders:read');
       await requireCurrentSession(client, actor);
       const request = (
-        await client.query(
+        await client.query<{ id: string; profile_id: string; status: string }>(
           'SELECT id,profile_id,status FROM solar_construction_requests WHERE id=$1',
           [requestId]
         )
@@ -337,9 +351,11 @@ export class SolarDocumentsService {
         await client.query(
           `SELECT sd.id,sd.document_id,sd.file_name,sd.staff_status,sd.staff_reason,
           sd.uploaded_by,sd.uploaded_at,d.state,d.revision,d.supersedes_document_id
-         FROM solar_construction_documents sd JOIN documents d ON d.id=sd.document_id
-         WHERE sd.request_id=$1 ORDER BY sd.uploaded_at,sd.id`,
-          [requestId]
+         FROM solar_construction_documents sd
+         JOIN solar_construction_requests r ON r.id=sd.request_id
+         JOIN documents d ON ${documentAssociation}
+         WHERE r.id=$1 AND r.profile_id=$2 ORDER BY sd.uploaded_at,sd.id`,
+          [requestId, request.profile_id]
         )
       ).rows;
       const requests = (
@@ -368,13 +384,6 @@ export class SolarDocumentsService {
     reason: string | undefined,
     ip: string
   ) {
-    const belongs = (
-      await getDbPool().query(
-        'SELECT 1 FROM solar_construction_documents WHERE request_id=$1 AND document_id=$2',
-        [requestId, documentId]
-      )
-    ).rowCount;
-    if (!belongs) throw new NotFoundException('Solar document not found');
     if (decision === 'reject' && !reason?.trim())
       throw new BadRequestException('Reason is required');
     return this.documents.act(
@@ -383,7 +392,8 @@ export class SolarDocumentsService {
       { expectedRevision, idempotencyKey: uuidv7(), ...(reason ? { reason } : {}) },
       actor,
       true,
-      ip
+      ip,
+      requestId
     );
   }
 
@@ -418,9 +428,11 @@ export class SolarDocumentsService {
       }>(
         `SELECT sd.document_id,sd.file_name,sd.staff_status,d.state,d.revision,
                 d.supersedes_document_id
-         FROM solar_construction_documents sd JOIN documents d ON d.id=sd.document_id
-         WHERE sd.request_id=$1 ORDER BY sd.document_id FOR ${lock} OF d`,
-        [requestId]
+         FROM solar_construction_documents sd
+         JOIN solar_construction_requests r ON r.id=sd.request_id
+         JOIN documents d ON ${documentAssociation}
+         WHERE r.id=$1 AND r.profile_id=$2 ORDER BY sd.document_id FOR ${lock} OF d`,
+        [requestId, request.profile_id]
       )
     ).rows.map((row) => ({
       documentId: row.document_id,
@@ -469,6 +481,7 @@ export class SolarDocumentsService {
     try {
       await client.query('BEGIN');
       await requireStaffMutationPermission(client, actor.userId, 'orders:write');
+      await requireCurrentSession(client, actor);
       const { review } = await this.documentSetSnapshot(
         client,
         requestId,
@@ -476,6 +489,7 @@ export class SolarDocumentsService {
         description,
         'SHARE'
       );
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return review;
     } catch (error) {

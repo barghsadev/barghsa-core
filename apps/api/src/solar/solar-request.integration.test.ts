@@ -644,63 +644,84 @@ it('keeps an unsigned legacy site address unknown after the saved address change
   ).toEqual([{ submission_review: null, site_address_id: addressId }]);
 }, 60_000);
 
-it('keeps linked foreign contracts and invoices out of customer solar reads', async () => {
-  const foreignProfile = (
-    await http.pool.query<{ id: string }>(
-      "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('solar-other','INDIVIDUAL','ACTIVE',true) RETURNING id"
-    )
-  ).rows[0]!.id;
-  const contractId = randomUUID();
-  const versionId = randomUUID();
-  const requestId = randomUUID();
-  const client = await http.pool.connect();
-  try {
-    await client.query('BEGIN');
-    await client.query(
-      "INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,'solar',$3)",
-      [contractId, foreignProfile, versionId]
-    );
-    await client.query(
-      `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
-       VALUES($1,$2,1,jsonb_build_object('text','Foreign fixture'),'Foreign fixture','solar-other')`,
-      [versionId, contractId]
-    );
-    await client.query(
-      `INSERT INTO invoices(profile_id,contract_id,type,state,total_amount,issued_at,payable_from)
-       VALUES($1,$2,'manual','Unpaid',500,NOW(),NOW())`,
-      [foreignProfile, contractId]
-    );
-    await client.query(
-      `INSERT INTO solar_construction_requests(id,profile_id,submitted_by,submission_key,status,contract_id,
+it.each(['foreign-profile', 'wrong-service', 'scoped-initial-invoice'] as const)(
+  'uses only the scoped contract and activation invoice for customer solar reads (%s)',
+  async (scenario) => {
+    const linkedProfile =
+      scenario === 'foreign-profile'
+        ? (
+            await http.pool.query<{ id: string }>(
+              "INSERT INTO profiles(user_id,profile_type,status,is_default) VALUES('solar-other','INDIVIDUAL','ACTIVE',true) RETURNING id"
+            )
+          ).rows[0]!.id
+        : profileId;
+    const service = scenario === 'wrong-service' ? 'savings' : 'solar';
+    const contractId = randomUUID();
+    const versionId = randomUUID();
+    const requestId = randomUUID();
+    let initialInvoice: string | null = null;
+    const client = await http.pool.connect();
+    try {
+      await client.query('BEGIN');
+      await client.query(
+        'INSERT INTO contracts(id,profile_id,service_type,current_version_id) VALUES($1,$2,$3,$4)',
+        [contractId, linkedProfile, service, versionId]
+      );
+      await client.query(
+        `INSERT INTO contract_versions(id,contract_id,version_number,content,change_description,created_by)
+       VALUES($1,$2,1,jsonb_build_object('text','Solar fixture'),'Solar fixture','solar-other')`,
+        [versionId, contractId]
+      );
+      await client.query(
+        `INSERT INTO invoices(profile_id,contract_id,type,state,total_amount,issued_at,payable_from)
+       VALUES($1,$2,'manual','Unpaid',500,NOW()-INTERVAL '1 day',NOW())`,
+        [linkedProfile, contractId]
+      );
+      if (scenario === 'scoped-initial-invoice') {
+        initialInvoice = (
+          await client.query<{ id: string }>(
+            `INSERT INTO invoices(profile_id,contract_id,type,state,total_amount,issued_at,payable_from)
+         VALUES($1,$2,'manual','Unpaid',1000,NOW(),NOW()) RETURNING id`,
+            [linkedProfile, contractId]
+          )
+        ).rows[0]!.id;
+        await client.query(
+          'UPDATE contract_activation_requirements SET initial_invoice_id=$3 WHERE contract_id=$1 AND version_id=$2',
+          [contractId, versionId, initialInvoice]
+        );
+      }
+      await client.query(
+        `INSERT INTO solar_construction_requests(id,profile_id,submitted_by,submission_key,status,contract_id,
          building_type,grid_type,property_form,structural_frame,building_completion_date,
          agreement_accepted,agreement_version,agreement_snapshot,agreement_accepted_at)
        VALUES($1,$2,'solar-customer',$3,'contract_created',$4,'building_apartment','off_grid','villa',
          'concrete','2020-01-01',true,'solar-construction-request-v1','Accepted terms',NOW())`,
-      [requestId, profileId, randomUUID(), contractId]
-    );
-    await client.query('COMMIT');
-  } catch (error) {
-    await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release();
-  }
+        [requestId, profileId, randomUUID(), contractId]
+      );
+      await client.query('COMMIT');
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
 
-  const scoped = {
-    id: requestId,
-    contract_id: null,
-    initial_invoice_id: null,
-    initial_invoice_state: null,
-    contract_published: false,
-  };
-  const detail = await request(`/api/solar/requests/${requestId}`, 'GET');
-  expect(detail.status, http.logs()).toBe(200);
-  const result = (await detail.json()) as { request: unknown };
-  expect(result.request).toMatchObject(scoped);
-  expect(result.request).not.toHaveProperty('scoped_contract_id');
-  const list = await request(`/api/solar/requests?profileId=${profileId}`, 'GET');
-  expect(list.status, http.logs()).toBe(200);
-  expect(await list.json()).toMatchObject({
-    requests: expect.arrayContaining([expect.objectContaining(scoped)]),
-  });
-});
+    const scoped = {
+      id: requestId,
+      contract_id: initialInvoice ? contractId : null,
+      initial_invoice_id: initialInvoice,
+      initial_invoice_state: initialInvoice ? 'Unpaid' : null,
+      contract_published: false,
+    };
+    const detail = await request(`/api/solar/requests/${requestId}`, 'GET');
+    expect(detail.status, http.logs()).toBe(200);
+    const result = (await detail.json()) as { request: unknown };
+    expect(result.request).toMatchObject(scoped);
+    expect(result.request).not.toHaveProperty('scoped_contract_id');
+    const list = await request(`/api/solar/requests?profileId=${profileId}`, 'GET');
+    expect(list.status, http.logs()).toBe(200);
+    expect(await list.json()).toMatchObject({
+      requests: expect.arrayContaining([expect.objectContaining(scoped)]),
+    });
+  }
+);

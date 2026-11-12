@@ -636,6 +636,7 @@ export class CustomerInvoiceDetailsService {
               WHERE s.order_id=i.order_id AND s.profile_id=i.profile_id
               LIMIT 1) AS saving_order_id,
              (SELECT s.id FROM solar_construction_requests s
+              JOIN contracts c ON c.id=s.contract_id AND c.profile_id=s.profile_id AND c.service_type='solar'
               WHERE s.contract_id::text=i.contract_id AND s.profile_id=i.profile_id
               LIMIT 1) AS solar_request_id
              FROM invoices i

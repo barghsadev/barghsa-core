@@ -31,6 +31,12 @@ export const SOLAR_AGREEMENT_VERSION = 'solar-construction-request-v1';
 export const SOLAR_AGREEMENT_TEXT = 'شرایط ثبت قرارداد را می‌پذیرم.';
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
+const solarContractLinks = `
+  LEFT JOIN contracts c ON c.id=r.contract_id AND c.profile_id=r.profile_id AND c.service_type='solar'
+  LEFT JOIN contract_activation_requirements ar ON ar.contract_id=c.id AND ar.version_id=c.current_version_id
+  LEFT JOIN invoices i ON i.id=ar.initial_invoice_id AND i.contract_id=c.id::text
+    AND i.profile_id=r.profile_id AND i.adjustment_for_invoice_id IS NULL`;
+
 @Injectable()
 export class SolarRequestService {
   constructor(private readonly orders: OrdersService) {}
@@ -383,11 +389,7 @@ export class SolarRequestService {
                    SELECT 1 FROM contract_publications cp WHERE cp.contract_id=c.id
                  ) AS contract_published
                  FROM solar_construction_requests r
-                 LEFT JOIN contracts c ON c.id=r.contract_id AND c.profile_id=r.profile_id
-                 LEFT JOIN LATERAL (
-                   SELECT id,state FROM invoices WHERE contract_id=c.id::text AND profile_id=r.profile_id
-                   ORDER BY issued_at,id LIMIT 1
-                 ) i ON c.id IS NOT NULL
+                 ${solarContractLinks}
                  WHERE r.profile_id=$1
                  AND ($2::timestamptz IS NULL OR (r.submitted_at,r.id) ${comparison} ($2::timestamptz,$3::uuid))
                  AND (cardinality($4::text[])=0 OR r.status=ANY($4::text[]))
@@ -406,6 +408,7 @@ export class SolarRequestService {
           ]
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return {
         requests: rows.slice(0, 100),
@@ -424,6 +427,14 @@ export class SolarRequestService {
     try {
       await client.query('BEGIN');
       await requireCurrentSession(client, actor);
+      const owner = (
+        await client.query<{ profile_id: string }>(
+          'SELECT profile_id FROM solar_construction_requests WHERE id=$1',
+          [id]
+        )
+      ).rows[0];
+      if (!owner || !(await this.orders.mayManageOrders(client, actor.userId, owner.profile_id)))
+        throw new NotFoundException('Solar request not found');
       const request = (
         await client.query<Record<string, unknown>>(
           `SELECT r.*,c.id AS scoped_contract_id,r.submission_review->'data'->>'siteAddress' AS site_address,
@@ -431,20 +442,12 @@ export class SolarRequestService {
                i.state AS initial_invoice_state,
                EXISTS(SELECT 1 FROM contract_publications cp WHERE cp.contract_id=c.id) AS contract_published
            FROM solar_construction_requests r
-           LEFT JOIN contracts c ON c.id=r.contract_id AND c.profile_id=r.profile_id
-           LEFT JOIN LATERAL (
-               SELECT id,state FROM invoices WHERE contract_id=c.id::text AND profile_id=r.profile_id
-             ORDER BY issued_at,id LIMIT 1
-           ) i ON c.id IS NOT NULL
-           WHERE r.id=$1`,
-          [id]
+           ${solarContractLinks}
+           WHERE r.id=$1 AND r.profile_id=$2`,
+          [id, owner.profile_id]
         )
       ).rows[0];
-      if (
-        !request ||
-        !(await this.orders.mayManageOrders(client, actor.userId, request.profile_id as string))
-      )
-        throw new NotFoundException('Solar request not found');
+      if (!request) throw new NotFoundException('Solar request not found');
       const history = (
         await client.query<{ event: string; created_at: Date; actor_context: string }>(
           `SELECT event,created_at,COALESCE(operating_context,'unknown') AS actor_context FROM audit_log

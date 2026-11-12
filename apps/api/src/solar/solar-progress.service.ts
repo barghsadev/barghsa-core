@@ -145,8 +145,9 @@ export class SolarProgressService {
     const contract = initial.contract_id
       ? (
           await client.query(
-            'SELECT id,profile_id,state,current_version_id,service_type FROM contracts WHERE id=$1 FOR SHARE NOWAIT',
-            [initial.contract_id]
+            `SELECT id,profile_id,state,current_version_id,service_type FROM contracts
+             WHERE id=$1 AND profile_id=$2 AND service_type='solar' FOR SHARE NOWAIT`,
+            [initial.contract_id, initial.profile_id]
           )
         ).rows[0]
       : null;
@@ -159,11 +160,13 @@ export class SolarProgressService {
         archived: boolean;
         profile_status: string;
       }>(
-        `SELECT r.profile_id,r.contract_id,r.status,p.user_id,p.archived,p.status AS profile_status FROM solar_construction_requests r JOIN profiles p ON p.id=r.profile_id WHERE r.id=$1 FOR UPDATE OF r NOWAIT`,
-        [id]
+        `SELECT r.profile_id,r.contract_id,r.status,p.user_id,p.archived,p.status AS profile_status
+         FROM solar_construction_requests r JOIN profiles p ON p.id=r.profile_id
+         WHERE r.id=$1 AND r.profile_id=$2 FOR UPDATE OF r NOWAIT`,
+        [id, initial.profile_id]
       )
-    ).rows[0]!;
-    if (request.contract_id !== initial.contract_id || request.profile_id !== initial.profile_id)
+    ).rows[0];
+    if (!request || request.contract_id !== initial.contract_id)
       throw new ConflictException('The linked contract changed');
     const existing = (
       await client.query<{ request_id: string; actor_user_id: string | null; review: SavedReview }>(

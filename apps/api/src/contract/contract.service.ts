@@ -599,6 +599,7 @@ export class ContractService {
         input.profileId,
         actor,
         async (client, archived) => {
+          await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
           await client.query('SELECT pg_advisory_xact_lock(hashtextextended($1,0))', [replayKey]);
           const prior = await readIdempotentMutation<SolarContractReceipt>(
             client,
@@ -607,7 +608,6 @@ export class ContractService {
             actor.userId
           );
           if (prior) return { replay: prior.result };
-          await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
           const { selection } = await this.inspectSolarContract(client, reviewInput, archived);
           return { selection };
         },
@@ -714,9 +714,12 @@ export class ContractService {
                 periodId: string | null;
                 serviceType: string | null;
               } | null;
-            }>("SELECT total_amount,metadata->'due' AS due FROM invoices WHERE id=$1", [
-              invoice.invoiceId,
-            ])
+            }>(
+              `SELECT total_amount,metadata->'due' AS due FROM invoices
+               WHERE id=$1 AND profile_id=$2 AND contract_id=$3
+                 AND adjustment_for_invoice_id IS NULL`,
+              [invoice.invoiceId, input.profileId, id]
+            )
           ).rows[0];
           if (
             !issued ||
@@ -732,11 +735,14 @@ export class ContractService {
             initialInvoiceId: invoice.invoiceId,
             serviceStartsAt: null,
           });
-          await client.query(
+          const linked = await client.query(
             `UPDATE solar_construction_requests
-           SET contract_id=$2,status='contract_created',updated_at=NOW() WHERE id=$1`,
-            [input.requestId, id]
+             SET contract_id=$3,status='contract_created',updated_at=NOW()
+             WHERE id=$1 AND profile_id=$2 AND status='approved' AND contract_id IS NULL`,
+            [input.requestId, input.profileId, id]
           );
+          if (linked.rowCount !== 1)
+            throw new ConflictException('Solar request is not awaiting a contract');
           await notifySolarStatus(
             client,
             input.requestId,
@@ -788,8 +794,8 @@ export class ContractService {
       await requireStaffMutationPermission(client, actor.userId, 'contracts:write');
       await requireCurrentSession(client, actor);
       const request = (
-        await client.query<{ status: string }>(
-          'SELECT status FROM solar_construction_requests WHERE id=$1',
+        await client.query<{ profile_id: string; status: string }>(
+          'SELECT profile_id,status FROM solar_construction_requests WHERE id=$1',
           [requestId]
         )
       ).rows[0];
@@ -800,19 +806,24 @@ export class ContractService {
         await client.query(
           `SELECT DISTINCT ON (t.id) v.id AS version_id,t.name,v.version_number
          FROM contract_templates t JOIN contract_template_versions v ON v.template_id=t.id
+         JOIN storage_records s ON s.storage_key=v.storage_key AND s.status='immutable'
          WHERE t.status='active' ORDER BY t.id,v.version_number DESC LIMIT 100`
         )
       ).rows;
       const documents = (
         await client.query(
           `SELECT d.id,d.original_name FROM solar_construction_requests r
-         JOIN documents d ON d.profile_id=r.profile_id
+         JOIN solar_construction_documents sd ON sd.request_id=r.id
+         JOIN documents d ON d.id=sd.document_id AND d.profile_id=r.profile_id
            AND d.business_record_type='solar_request' AND d.business_record_id=r.id
-         WHERE r.id=$1 AND d.category='document' AND d.state IN ('Available','Approved')
+         JOIN storage_records s ON s.storage_key=d.storage_key AND s.status='immutable'
+         WHERE r.id=$1 AND r.profile_id=$2 AND d.category='document'
+           AND d.state IN ('Available','Approved') AND d.scan_state='Available'
          ORDER BY d.created_at DESC LIMIT 100`,
-          [requestId]
+          [requestId, request.profile_id]
         )
       ).rows;
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       return { templates, documents };
     } catch (error) {

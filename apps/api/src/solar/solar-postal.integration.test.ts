@@ -1137,6 +1137,21 @@ it('creates a linked solar draft and invoice atomically, then replays the same c
       await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', command)
     ).json()
   ).toEqual(result);
+  const beforeDeniedReplay = await solarContractEffects();
+  try {
+    await http.pool.query(
+      `UPDATE staff_roles SET permissions='["orders:read","orders:write","contracts:write","contracts:read"]'
+       WHERE role_id='postal-review-staff'`
+    );
+    const deniedReplay = await send('postal-reviewer', contractBase, 'POST', command);
+    expect(deniedReplay.status, http.logs()).toBe(403);
+    expect(await solarContractEffects()).toEqual(beforeDeniedReplay);
+  } finally {
+    await http.pool.query(
+      "UPDATE staff_roles SET permissions=$1 WHERE role_id='postal-review-staff'",
+      [originalContractPermissions]
+    );
+  }
   expect(
     (
       await send('postal-reviewer', `admin/solar/requests/${id}/create-contract`, 'POST', {
@@ -2268,6 +2283,11 @@ it('copies an owned uploaded source immutably with audit rollback and an exact r
     "UPDATE contract_activation_rules SET payment_required=true,revision=revision+1 WHERE service_type='solar'"
   );
   const base = `staff/solar/requests/${target}/create-contract`;
+  const options = await send('postal-reviewer', `staff/solar/requests/${target}/contract-options`);
+  expect(options.status, http.logs()).toBe(200);
+  expect(await options.json()).toMatchObject({
+    documents: [expect.objectContaining({ id: document.document.id })],
+  });
   const input = {
     profileId,
     idempotencyKey: randomUUID(),
