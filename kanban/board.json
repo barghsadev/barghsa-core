@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T05:13:43+00:00",
+  "updated": "2026-11-12T05:22:45+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17709,7 +17709,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for the exact 170 package and scope rows. The current fc55c82a inventory matches strict f0f9434c run 42902282297. The unsigned packet supplies 159 original Alpine expressions, identifies two generated metadata-only records without expressions, and verifies the updated libxslt checksum. Verify notices, corresponding source and replacement rights where applicable.",
+        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated e6da94c9 review packet. The 170 original entries and 217 staging PostgreSQL entries match hosted run 43157243591. Verify applicable notices, corresponding source and replacement conditions before recording exceptions.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -17760,7 +17760,8 @@
           "release-0.6-license-review-roles",
           "release-0.6-integrity-requires-tests",
           "release-0.6-hosted-signed-ubuntu-archive-fallback",
-          "release-0.6-license-handoff-current"
+          "release-0.6-license-handoff-current",
+          "release-0.6-unified-license-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -38383,7 +38384,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "e91053cceaf7698f81a45a56f2a516153b71c446375b244f371c7ef8d60e645b"
+              "sha256": "d8b0ed56b36423fd3a153cf8a09ce7de5f6d1917830d1595382eaff264dd1d87"
             }
           ],
           "checks": [
@@ -38770,6 +38771,14 @@
                 "docs/security/release-license-review.md"
               ],
               "scope": "The license review document adds the separate exact Ubuntu staging package inventory. Existing notices, prior reviewer obligations and session revocation implementation and evidence are preserved."
+            },
+            {
+              "batch": "release-0.6-unified-license-review",
+              "base_commit": "b6eefba1a9cf37a48e1641f6bafd7d80a3293d94",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Added the consolidated license handoff evidence. Secret handling, approval rules and implementation are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -557687,8 +557696,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for the exact 170 package and scope rows. The current fc55c82a inventory matches strict f0f9434c run 42902282297. The unsigned packet supplies 159 original Alpine expressions, identifies two generated metadata-only records without expressions, and verifies the updated libxslt checksum. Verify notices, corresponding source and replacement rights where applicable.",
-        "Obtain named dispositions for the 217 exact postgres-staging package rows in the 212cb619 supplement. The five-image run 43143811872 matches all 594 original package rows and leaves 387 review-required entries across both packets.",
+        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated e6da94c9 review packet. The 170 original entries and 217 staging PostgreSQL entries match hosted run 43157243591. Verify applicable notices, corresponding source and replacement conditions before recording exceptions.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -557722,7 +557730,8 @@
           "release-0.6-pdf-preflight-and-license-readback",
           "release-0.6-license-handoff-current",
           "release-0.6-postgres-staging-recipe",
-          "release-0.6-packaged-ubuntu-migration"
+          "release-0.6-packaged-ubuntu-migration",
+          "release-0.6-unified-license-review"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -888035,7 +888044,8 @@
           "release-0.6-native-rollout-browser",
           "release-0.6-related-test-selection",
           "release-0.6-runtime-image-binding",
-          "release-0.6-strict-staff-commands"
+          "release-0.6-strict-staff-commands",
+          "release-0.6-unified-license-review"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1022827,6 +1022837,53 @@
         {
           "file": "local-checks.json",
           "sha256": "07dcb6455d46b411adf5e2c4fb25847eac7e9be9f8a21aa6698a52e79555c3fb"
+        }
+      ]
+    },
+    "release-0.6-unified-license-review": {
+      "batch": "release-0.6-unified-license-review",
+      "base_commit": "b6eefba1a9cf37a48e1641f6bafd7d80a3293d94",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-02.02.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "d8b0ed56b36423fd3a153cf8a09ce7de5f6d1917830d1595382eaff264dd1d87"
+        }
+      ],
+      "checks": [
+        "All 835 package rows from the five-image preflight match the earlier inventory. The 387 review-required rows match the two prepared packets by exact scope, package URL and observed licenses.",
+        "The exported workbook contains all 387 unique package and scope rows, empty decision fields, a filterable table and a decision list. The 16-file archive passed integrity and content checks. The five image IDs and SBOM checksums match the hosted image receipts.",
+        "The package review runbook formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The consolidated review packet is unsigned. The release policy contains no new approvals. Match any signed dispositions and verified conditions to the final immutable candidate before the strict check.",
+        "Image IDs are from the named preflight. Staging deployment and Telegram receipts remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-unified-license-review",
+      "execution_receipts": [
+        {
+          "file": "packet-verification.json",
+          "sha256": "01eb0e58ba5d87c1814037a520c36b6f0b4a38066194e9b00f4cd95ddaeedf34"
+        },
+        {
+          "file": "packet/image-evidence.json",
+          "sha256": "b33160251b4e0591fa1786296cf95914029069f2ff8adf0bcc6ef6a96020f48e"
+        },
+        {
+          "file": "packet/package-evidence.json",
+          "sha256": "54141120a34312fcfb46b392937f0f7f4e06ac8cffb93e9784cf22d1757db344"
+        },
+        {
+          "file": "outputs/01a110c8-cbfd-7703-879e-e9b848b14a16/barghsa-v0.6.0-license-review.zip",
+          "sha256": "78c23a45292d7afca1f4b68ab05b48ff2beb3b64bacb5fc44e88eea14b083d90"
         }
       ]
     }

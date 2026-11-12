@@ -12,6 +12,13 @@ adds 241 rows, of which 217 require review. The two packets therefore contain
 package metadata and notice locations. Bind sign-off to the final image and
 the applicable distribution conditions. [Five-image preflight](https://github.com/barghsadev/barghsa-core/actions/runs/43143811872)
 
+The consolidated reviewer workbook matches all 387 entries to the exact
+package URLs, scopes and observed license sets from `e6da94c9`. Its packet
+includes the full scanner inventory, image IDs, per-package evidence and
+available notices. Where the scanner found no license, the package stays in
+the review list and the underlying inventory retains the empty license set.
+[Matching preflight inventory](https://github.com/barghsadev/barghsa-core/actions/runs/43157243591)
+
 ## Reviewer and approval
 
 The release gate accepts named owner or legal-reviewer sign-off on exact package exceptions. The owner can provide the policy approval once the stated obligations have been verified. For GPL/LGPL source and replacement questions, the recommended reviewer is a lawyer experienced in open-source software licensing. An internal compliance lead with access to that expertise can coordinate the review. OpenChain's guidance describes access to internal or external legal expertise and assignment of review and approval responsibilities. [OpenChain resource guidance](https://openchain-project.github.io/OpenChain-KWG/en/guide/iso5230_guide/2-relevant-tasks/2-resourced/).
