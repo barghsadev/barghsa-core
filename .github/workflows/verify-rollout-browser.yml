@@ -1,0 +1,63 @@
+name: Verify real browser sign-in and dashboard
+on:
+  push:
+    branches: ['codex/verify/v06-rollout-browser-*']
+permissions:
+  contents: read
+jobs:
+  rehearsal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact web and native fixture runtime
+        run: pnpm exec turbo run build --filter=@barghsa/web --filter=@barghsa/api --filter=@barghsa/worker
+      - name: Install the production browser runtime
+        run: |
+          bash scripts/configure-ci-ubuntu-mirrors.sh
+          pnpm --filter @barghsa/web exec playwright install --with-deps chromium
+      - name: Exercise customer login and the rendered dashboard
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+          BARGHSA_BROWSER_FIXTURE_LOOPBACK: '1'
+          BARGHSA_NATIVE_ROLLOUT_SMOKE: '1'
+        run: |
+          export PLAYWRIGHT_JSON_OUTPUT_FILE="$RUNNER_TEMP/rollout-browser.json"
+          node scripts/run-production-browser.mjs e2e/rollout-smoke.spec.ts \
+            --project=chromium --workers=1 --reporter=list,json \
+            --output="$RUNNER_TEMP/rollout-browser-results" \
+            2>&1 | tee "$RUNNER_TEMP/rollout-browser.log"
+      - name: Verify existing fixture callers with default and S3 configuration
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+            src/dashboard/dashboard-upcoming-invoices-http.integration.test.ts \
+            src/documents/document-http.integration.test.ts \
+            -t 'returns only the active profile|seals a required RTF' \
+            2>&1 | tee "$RUNNER_TEMP/rollout-native-callers.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rollout-browser
+          path: |
+            ${{ runner.temp }}/rollout-browser.json
+            ${{ runner.temp }}/rollout-browser.log
+            ${{ runner.temp }}/rollout-native-callers.log
+            ${{ runner.temp }}/rollout-browser-results/**/rollout-dashboard-fa.png
+            ${{ runner.temp }}/rollout-browser-results/**/error-context.md
+          retention-days: 14

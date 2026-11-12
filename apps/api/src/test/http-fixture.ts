@@ -9,13 +9,16 @@ import { runMigrations } from '../../../../packages/db/src/migrate';
 /** Each fixture owns its database and a child running the compiled AppModule. */
 export async function startHttpFixture(
   testDatabaseUrl: string,
-  localStorageEndpoint?: string,
+  localService?: string | { publicOrigin: string },
   trustedProxyAddresses = '',
   poolMax = 10,
   aiModelAllowedHosts = '',
   startAiModelWorker = false,
   telemetry?: { endpoint: string; intervalMs: number; timeoutMs: number }
 ) {
+  const localStorageEndpoint = typeof localService === 'string' ? localService : undefined;
+  const publicOrigin =
+    typeof localService === 'object' ? localService.publicOrigin : 'https://app.example.test';
   const database = `test_http_${randomUUID().replaceAll('-', '')}`;
   const management = new Pool({ connectionString: testDatabaseUrl });
   const coverageDirectory = process.env.BARGHSA_HTTP_COVERAGE_DIR;
@@ -121,7 +124,7 @@ export async function startHttpFixture(
         PGDIRECT_URL: url.toString(),
         NODE_ENV: 'test',
         API_TRUSTED_PROXY_IPS: trustedProxyAddresses,
-        APP_PUBLIC_URL: 'https://app.example.test',
+        APP_PUBLIC_URL: publicOrigin,
         AUTH_DELIVERY_ENCRYPTION_KEY: 'http-fixture-delivery-key-only',
         STORAGE_CONFIG_ENCRYPTION_KEY: 'http-fixture-storage-key-only',
         AI_MODEL_ENCRYPTION_KEY: 'http-fixture-ai-key-only',
