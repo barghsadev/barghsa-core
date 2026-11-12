@@ -270,6 +270,29 @@ write for operator review. Reconcile the marker with the Grafana operator
 before authorizing another attempt. An annotation failure needs separate
 monitoring follow-up after the completed rollout. [Grafana annotations API](https://grafana.com/docs/grafana/latest/developer-resources/api-reference/http-api/api-legacy/annotations/).
 
+## Sentry deployment markers
+
+Register the deployed full commit SHA as the Sentry release in each configured project. Associate the exact `barghsadev/barghsa-core` commit through the approved Sentry repository integration. The server and browser events already use that SHA as their release identifier and carry the root version as `release_version`. [Sentry release registration](https://docs.sentry.io/api/releases/create-a-new-release-for-an-organization/) · [Project release commits](https://docs.sentry.io/api/releases/list-a-project-releases-commits/).
+
+Place the release API configuration in a runner-owned file with mode `0600`. Set `origin` to `https://sentry.io` or the organization's regional API origin, `https://us.sentry.io` or `https://de.sentry.io`. Set `organization` to its slug, `projects` to the project slugs for the deployed app, and `token` to the protected release API token with the required project access. Set `scope` to the guarded rollout's `environment` and `database`. The environment for this step is `production`. From the immutable candidate checkout, verify the project associations before requesting production approval. [Sentry API base domains](https://docs.sentry.io/api/#choosing-the-right-api-base-domain).
+
+```sh
+python3 deploy/production/record-sentry-deploy.py \
+  --config /protected/sentry-release.json --verify-release
+```
+
+After the authorized guarded rollout reaches 100% and finishes its readiness observation, run the marker step from that same checkout.
+
+```yaml
+- name: Publish and verify the Sentry deployment marker
+  uses: ./.github/actions/sentry-release-deploy
+  with:
+    config: /protected/sentry-release.json
+    receipt: /protected/release-evidence/rollout-receipt.jsonl
+```
+
+For a rollout run directly by an operator, invoke the same script with `--receipt /protected/release-evidence/rollout-receipt.jsonl` in place of `--verify-release`. Save the verified deployment ID and project readback with the rollout receipt. Keep the private marker state in that same directory when reconciling an uncertain write. A newer Sentry deploy can replace an older marker in the API list, so preserve the original readback with the older receipt. Treat a missing or conflicting marker as an operations follow-up after the completed rollout. [Sentry deployment API](https://docs.sentry.io/api/releases/create-a-deploy/).
+
 ## Initial database seed
 
 After the owner approves initial provisioning, use the pinned app image and separate migration principal to migrate and seed a new database before starting the app services. Put only `ADMIN_BOOTSTRAP_SECRET`, `ADMIN_BOOTSTRAP_KEY`, `ADMIN_BOOTSTRAP_EMAIL` and `ADMIN_BOOTSTRAP_PASSWORD` in a root-owned `0600` bootstrap environment file. Keep the direct connection and CA in the existing migration configuration.

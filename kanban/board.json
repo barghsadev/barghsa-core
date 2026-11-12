@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T00:34:59+00:00",
+  "updated": "2026-11-12T00:47:03+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -10511,7 +10511,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -10672,6 +10672,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -15763,7 +15771,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -15855,6 +15863,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -15926,7 +15942,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -16018,6 +16034,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -24719,7 +24743,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -24953,6 +24977,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -26361,7 +26393,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             }
           ],
           "checks": [
@@ -26457,6 +26489,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -562405,7 +562445,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -562607,6 +562647,14 @@
                 "deploy/production/test_check_promotion.py"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -562724,7 +562772,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -562885,6 +562933,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -567020,7 +567076,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -567150,6 +567206,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -572282,18 +572346,28 @@
         "story": "06-security-testing-observability.md#spec-b598d0822d84"
       },
       "requirement": "| T-06.16.02.04 | Implement release correlation: send release marker to Sentry on each production deploy | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Verify the approved Sentry release integration and read back the exact GitHub commit in every configured project for the immutable candidate. Wire the documented marker step to the approved production rollout runner.",
+        "After explicit production authorization and a completed guarded rollout, verify the actual Sentry deployment marker ID, exact commit, project associations and release version. Preserve the verified receipt and reconcile any uncertain write before retrying."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/production/record-release-annotation.py",
+          "deploy/production/release_evidence.py",
+          "deploy/production/README.md",
+          "deploy/production/record-sentry-deploy.py",
+          "deploy/production/test_sentry_deploy.py",
+          ".github/actions/sentry-release-deploy/action.yml"
+        ],
+        "batches": [
+          "release-0.6-sentry-deploy-marker"
+        ],
         "current_acceptance": null
       }
     },
@@ -573842,7 +573916,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "deploy/production/rollout-observer.py",
@@ -573904,6 +573978,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -574203,7 +574285,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "3dcd27182ae67b95f0638b96822c4c3cbb5c7d25213ef4a8bd6806470a7985da"
+              "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -574339,6 +574421,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added structured receipt validation and its operator instructions. Existing board readiness, protected risk classes, strict quarantine, hosted checks, public health checks, seeding, traffic controls, topology guidance and release notes template retain their prior behavior. Nine focused promotion cases passed."
+            },
+            {
+              "batch": "release-0.6-sentry-deploy-marker",
+              "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
             }
           ]
         }
@@ -574621,7 +574711,8 @@
           "deploy/production/test_release_annotation.py"
         ],
         "batches": [
-          "release-0.6-grafana-release-markers"
+          "release-0.6-grafana-release-markers",
+          "release-0.6-sentry-deploy-marker"
         ],
         "current_acceptance": null
       }
@@ -574642,7 +574733,7 @@
       "launch_required": true,
       "remaining": [
         "On the immutable release, read back a live Sentry event with its exact full commit release ID and matching root package version tag.",
-        "Register or reconcile the exact release and its GitHub repository commit association with the protected Sentry release integration. Read back the associated commit from the project. Prior staging ingestion and a DSN do not establish this release-management receipt."
+        "Register or reconcile the exact release and its GitHub commit association with the protected Sentry integration. Run the read-only project commit check for the actual release and record its receipt. A DSN or fixture response does not establish release registration."
       ],
       "owner": null,
       "depends_on": [],
@@ -574652,11 +574743,18 @@
           "docs/design/notification-recovery.md",
           "packages/shared/scripts/package-exports.check.mjs",
           "packages/shared/src/error-reporting.test.ts",
-          "packages/shared/src/error-reporting.ts"
+          "packages/shared/src/error-reporting.ts",
+          "deploy/production/record-release-annotation.py",
+          "deploy/production/release_evidence.py",
+          "deploy/production/README.md",
+          "deploy/production/record-sentry-deploy.py",
+          "deploy/production/test_sentry_deploy.py",
+          ".github/actions/sentry-release-deploy/action.yml"
         ],
         "batches": [
           "release-0.6-sentry-version-tag",
-          "release-0.6-sentry-version-tag-coverage"
+          "release-0.6-sentry-version-tag-coverage",
+          "release-0.6-sentry-deploy-marker"
         ],
         "current_acceptance": null
       }
@@ -869439,7 +869537,8 @@
           "release-0.6-quarterly-storage-schedule-activation",
           "release-0.6-development-bootstrap",
           "release-0.6-alert-delivery-watchdog",
-          "release-0.6-operational-budget-context"
+          "release-0.6-operational-budget-context",
+          "release-0.6-sentry-deploy-marker"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -869480,7 +869579,12 @@
           "packages/shared/src/notifications/operations-alert-links.ts",
           "packages/shared/src/notifications/operations-alert-links.test.ts",
           "apps/worker/src/operations/alerts.integration.test.ts",
-          "apps/web/src/pages/notification-inbox-navigation.test.tsx"
+          "apps/web/src/pages/notification-inbox-navigation.test.tsx",
+          "deploy/production/record-release-annotation.py",
+          "deploy/production/release_evidence.py",
+          "deploy/production/record-sentry-deploy.py",
+          "deploy/production/test_sentry_deploy.py",
+          ".github/actions/sentry-release-deploy/action.yml"
         ]
       }
     },
@@ -999046,6 +999150,112 @@
         {
           "file": "native-artifacts-43128015429/operations-alert-delivery.log",
           "sha256": "07a35a8353e3297724d0ed9bd448232c8197cecd64f51eb9f9124c192752e1c7"
+        }
+      ]
+    },
+    "release-0.6-sentry-deploy-marker": {
+      "batch": "release-0.6-sentry-deploy-marker",
+      "base_commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.16.02.04",
+        "06-security-testing-observability.md#T-06.18.02.02",
+        "06-security-testing-observability.md#T-06.18.02.01",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01"
+      ],
+      "changed_paths": [
+        "deploy/production/record-release-annotation.py",
+        "deploy/production/release_evidence.py",
+        "deploy/production/README.md",
+        "deploy/production/record-sentry-deploy.py",
+        "deploy/production/test_sentry_deploy.py",
+        ".github/actions/sentry-release-deploy/action.yml"
+      ],
+      "source_evidence": [
+        {
+          "path": ".github/actions/grafana-release-annotation/action.yml",
+          "sha256": "1d6f2fbb15c68cac364f437e32db7da7b4d7a4880d4031933351e3e40bd89af0"
+        },
+        {
+          "path": ".github/actions/sentry-release-deploy/action.yml",
+          "sha256": "b4fd402bdc60ba449410ba117d2aa4594e63e4c3143eafdfabb73b680f743c7d"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "236df139885325a50d1d9fbaf4f605130e88bcc91aedcf343d743258251ab80e"
+        },
+        {
+          "path": "deploy/production/guarded-rollout.py",
+          "sha256": "792048c3612f903532c5ed1d033be96fcfa60c9642f179ed66aa688ac9aff385"
+        },
+        {
+          "path": "deploy/production/record-release-annotation.py",
+          "sha256": "190b7519e3a394339433c19346201bceb70110959274a680e0efe47fda765bc4"
+        },
+        {
+          "path": "deploy/production/record-sentry-deploy.py",
+          "sha256": "5c0d9cd1bc65455268a513a4f968e73ac79e396a3227889db5755a82fdbd51ce"
+        },
+        {
+          "path": "deploy/production/release_evidence.py",
+          "sha256": "abe89afa7be623e4767b0181ecd33906671719a058d245be241c4e8d8f12cb5c"
+        },
+        {
+          "path": "deploy/production/test_release_annotation.py",
+          "sha256": "bb78a5057809115d244cba973612a5d27ce89417f295338a3f8bee3a3acdb7b6"
+        },
+        {
+          "path": "deploy/production/test_sentry_deploy.py",
+          "sha256": "916fd5a24e8b095f49939322a74437247fd9d22977efdd98208a7aa50c0062d1"
+        },
+        {
+          "path": "docs/design/notification-recovery.md",
+          "sha256": "3d7af29ac8caf36838242a4ea5697cf0fd9794e4446475eb8251e71b364d6ebc"
+        },
+        {
+          "path": "packages/shared/src/error-reporting.ts",
+          "sha256": "559dbca196909717532df07e4fcddccf220e36fa05d861e7d4b8f680f129e5f6"
+        }
+      ],
+      "checks": [
+        "Added the production Sentry deployment action and CLI. Read-only verification checks the exact repository and commit in every configured Sentry project. Publication requires the same checked-out commit and a protected completed 100% production rollout with its final ready observation.",
+        "A successful marker reads back the exact provider ID, rollout times, environment and immutable notes link. The protected single-write protocol holds unknown outcomes and refuses an older superseded marker. It never follows pagination URLs or HTTP redirects with the release credential.",
+        "Eight focused Sentry fixture cases and all six existing native Grafana marker regressions passed. These cover completed and incomplete receipts, project identity, an untrusted origin, pagination scope, immutable readback, lost responses, held unknown writes and a subsequent rollout of the same SHA.",
+        "The composite shell parsed and resolved its CLI, and a missing protected config stopped the action. Workflow actionlint, documentation formatting, whitespace and the source comparison passed. Existing event tagging and Grafana markers retain their verified behavior."
+      ],
+      "limitations": [
+        "The new Sentry checks used simulated API responses. No live registration, production release marker or actual production deployment is claimed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-sentry-deploy-marker",
+      "execution_receipts": [
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "b8bfbbf47368d8e59e120c2a2c047a3116c3f4012969f6b31d4991b6d7fc71af"
+        },
+        {
+          "file": "sentry-marker-tests.log",
+          "sha256": "894222b304c648d6a4e4c10be9b17627fe15e2cedf6e75a631dab68de9ab0a3d"
+        },
+        {
+          "file": "grafana-marker-regressions.log",
+          "sha256": "ac71f4081da283e0ae89ff5f5ab8faf5c617e1b6fb89e1cfecd9ec9cca9a3a21"
+        },
+        {
+          "file": "composite-smoke.json",
+          "sha256": "ba67ed9cf0db42587911e4d034a77ec9e2e43204b93a428eb25629762e412e7b"
+        },
+        {
+          "file": "actionlint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ]
     }

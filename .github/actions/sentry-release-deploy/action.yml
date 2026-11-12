@@ -1,0 +1,19 @@
+name: Verify Sentry production deployment marker
+description: Confirm the release commit in Sentry and publish one verified marker after the guarded production rollout.
+inputs:
+  config:
+    description: Absolute path to the protected Sentry release configuration.
+    required: true
+  receipt:
+    description: Absolute path to the completed guarded production rollout receipt.
+    required: true
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        SENTRY_RELEASE_CONFIG: ${{ inputs.config }}
+        ROLLOUT_RECEIPT: ${{ inputs.receipt }}
+      run: |
+        python3 "$GITHUB_ACTION_PATH/../../../deploy/production/record-sentry-deploy.py" \
+          --config "$SENTRY_RELEASE_CONFIG" --receipt "$ROLLOUT_RECEIPT"
