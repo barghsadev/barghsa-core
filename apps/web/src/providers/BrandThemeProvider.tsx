@@ -177,7 +177,11 @@ export function BrandThemeProvider({ children }: { children: ReactNode }) {
       root.style.setProperty('--radius', `${config.borderRadiusRem}rem`);
       root.style.setProperty('--spacing', `${0.25 * config.spacingScale}rem`);
       updateTitle();
-      if (config.faviconUrl) {
+      // The document's image policy permits same-origin branding assets.
+      if (
+        config.faviconUrl &&
+        new URL(config.faviconUrl, location.origin).origin === location.origin
+      ) {
         if (!icon) {
           icon = document.createElement('link');
           icon.rel = 'icon';

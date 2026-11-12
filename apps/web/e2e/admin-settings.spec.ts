@@ -84,10 +84,10 @@ for (const width of [390, 1440]) {
           } else {
             await expect(nav).toBeVisible();
             await expect(select).toBeHidden();
-            await expect(nav.locator('[aria-current="page"]')).toHaveAttribute(
-              'href',
-              '/admin/contract-limits'
-            );
+            const current = nav.locator('[aria-current="page"]');
+            await expect(current).toHaveAttribute('href', '/admin/contract-limits');
+            await expect(current).toBeInViewport({ ratio: 1 });
+            await expect(current).not.toBeFocused();
             const verification = nav.locator('a[href="/admin/verification"]');
             await expect(
               page.getByRole('link').and(page.locator('a[href="/admin/verification"]'))

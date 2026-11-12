@@ -26,7 +26,7 @@ const config = {
   borderRadiusRem: 1,
   spacingScale: 1.125,
   logoUrl: null,
-  faviconUrl: 'https://example.test/brand.ico',
+  faviconUrl: `/api/public/branding/assets/85000000-0000-4000-8000-000000000001/${'a'.repeat(64)}`,
   darkMode: true,
 };
 
@@ -137,7 +137,7 @@ it('connects published colors to component tokens and chooses readable foregroun
   });
   expect(document.title).toBe('Saved brand');
 });
-it('refreshes after publication and restores the default favicon when removed', async () => {
+it('refreshes after publication and restores the default favicon for legacy external URLs', async () => {
   const request = vi
     .fn()
     .mockResolvedValueOnce(new Response(JSON.stringify(config)))
@@ -147,13 +147,14 @@ it('refreshes after publication and restores the default favicon when removed', 
           ...config,
           appTitle: 'New brand',
           appTitleFa: 'نام جدید',
-          faviconUrl: null,
+          faviconUrl: 'https://example.test/brand.ico',
           darkMode: false,
         })
       )
     );
   vi.stubGlobal('fetch', request);
   await mount();
+  expect(document.querySelector('link[rel="icon"]')?.getAttribute('href')).toBe(config.faviconUrl);
   await act(async () => {
     window.dispatchEvent(new Event('barghsa:branding-activated'));
   });

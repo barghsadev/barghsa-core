@@ -51,6 +51,7 @@ export function AppShell({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const sidebar = useRef<HTMLElement>(null);
   const { pathname } = useLocation();
   const router = useRouter();
   const compact = useSyncExternalStore(subscribeCompactNavigation, compactNavigation, () => false);
@@ -83,6 +84,11 @@ export function AppShell({
     return () => document.removeEventListener('keydown', close);
   }, [menuOpen]);
   const current = currentNavigation(groups, pathname);
+  const currentPath = current?.to;
+  useEffect(() => {
+    if (area === 'admin')
+      sidebar.current?.querySelector('[aria-current="page"]')?.scrollIntoView({ block: 'nearest' });
+  }, [area, compact, currentPath, locale, menuOpen]);
   const closeMenu = () => setMenuOpen(false);
   const openMenu = () => {
     setMenuOpen(true);
@@ -113,10 +119,11 @@ export function AppShell({
       />
       <div className="shell-body">
         <aside
+          ref={sidebar}
           id={`${area}-navigation`}
           data-area={area}
           data-expanded={menuOpen}
-          className="group/sidebar app-shell-sidebar"
+          className="group/sidebar app-shell-sidebar scroll-py-1"
         >
           <Link
             to="/app"
@@ -158,7 +165,7 @@ export function AppShell({
                         className="shell-navigation-link"
                         aria-label={label}
                         title={label}
-                        aria-current={current?.to === to ? 'page' : undefined}
+                        aria-current={currentPath === to ? 'page' : undefined}
                         onClick={closeMenu}
                       >
                         <Icon

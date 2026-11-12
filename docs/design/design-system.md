@@ -64,6 +64,8 @@ The blocking script in `apps/web/index.html` uses the cached published policy, t
 
 Account theme updates still use the existing CSRF-protected API and apply only after its canonical acknowledgement. `system` maps to the backend's existing null preference. A forced published policy disables the account control with a localized explanation and preserves the saved preference for later user/device mode.
 
+The login and workspace entry pages have a bundled tab icon. A published same-origin favicon replaces it. Legacy external favicon values stay in branding history. To display a custom icon, upload it through Branding and publish the new version.
+
 ## Typography
 
 | Element              | Size          | Weight  | Guidance                                          |
