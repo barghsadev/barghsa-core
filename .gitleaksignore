@@ -146,3 +146,8 @@ b9abb1fb2ca020992fae572bd0a83a9ba2bc23b8:scripts/check-staging-proxy.mjs:generic
 3182b822e03500066dd23aba38caf7be6b784121:kanban/board.json:generic-api-key:976
 43c6e4af2c315eba6067d4d3e21780b7786cfd09:kanban/board.json:generic-api-key:976
 f00ba1620572f8b1ce0f85ec2dc9d097d891ea8f:kanban/board.json:generic-api-key:976
+
+# Recomputed source SHA-256 values for contract, document and receipt access.
+c8d378cd4a2d71965832e5690e8a7a50e32801da:packages/eslint-config/reviewed-postgres-sql.json:generic-api-key:18
+c8d378cd4a2d71965832e5690e8a7a50e32801da:packages/eslint-config/reviewed-postgres-sql.json:generic-api-key:27
+c8d378cd4a2d71965832e5690e8a7a50e32801da:packages/eslint-config/reviewed-postgres-sql.json:generic-api-key:35

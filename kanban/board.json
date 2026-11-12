@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T20:01:40+00:00",
+  "updated": "2026-11-12T20:17:38+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -15223,7 +15223,8 @@
         "changed_paths": [],
         "batches": [
           "release-0.6-database-clocks-and-recovery-rehearsal",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-postgres-restore-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -15297,7 +15298,8 @@
         },
         "changed_paths": [],
         "batches": [
-          "release-0.6-database-clocks-and-recovery-rehearsal"
+          "release-0.6-database-clocks-and-recovery-rehearsal",
+          "release-0.6-postgres-restore-readback"
         ],
         "current_acceptance": null,
         "latest_isolated_rehearsal": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/database-readiness-receipt.json"
@@ -20418,7 +20420,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated review packet. Report-only image run 43286083146 at 736bcb0c matches all 387 by scope, exact package URL, observed licenses and location. Verify applicable notices, corresponding source and replacement conditions before approving exceptions.",
+        "Record named owner or legal dispositions for all 387 package entries in the current five-image inventory. Hosted report 43296288619 at 9545cd2c has 384 exact matches to the review workbook and three refreshed Ubuntu glibc-family entries: libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Review the refreshed package and source evidence before approval.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -20472,7 +20474,8 @@
           "release-0.6-license-handoff-current",
           "release-0.6-unified-license-review",
           "release-0.6-gate-readback",
-          "release-0.6-postgres-package-alignment"
+          "release-0.6-postgres-package-alignment",
+          "release-0.6-postgres-restore-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -628629,7 +628632,8 @@
         "batches": [
           "release-0.6-sql-field-allowlist-review",
           "release-0.6-raw-sql-lint",
-          "release-0.6-node-postgres-lint"
+          "release-0.6-node-postgres-lint",
+          "release-0.6-postgres-restore-readback"
         ],
         "current_acceptance": {
           "batch": "release-0.6-node-postgres-lint",
@@ -636919,7 +636923,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
+              "sha256": "ed77d24c0ff53ce3e10e30ea001dc062ea8606f0c4ed49a517958667c66187a8"
             },
             {
               "path": "apps/web/build.mjs",
@@ -637196,6 +637200,14 @@
                 "docs/security/supply-chain.md"
               ],
               "scope": "Retains the previous Drizzle, application and supply-chain checks. The additional PostgreSQL source lint and shared rule tests passed."
+            },
+            {
+              "batch": "release-0.6-postgres-restore-readback",
+              "base_commit": "9545cd2c7d21f2028ef3869619a88fd3cafef119",
+              "paths": [
+                ".gitleaksignore"
+              ],
+              "scope": "Recomputed three exact historical source digests. The pinned scanner detected and redacted its synthetic credential and the complete local scan passed."
             }
           ]
         }
@@ -637267,7 +637279,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
+              "sha256": "ed77d24c0ff53ce3e10e30ea001dc062ea8606f0c4ed49a517958667c66187a8"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -637471,6 +637483,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-postgres-restore-readback",
+              "base_commit": "9545cd2c7d21f2028ef3869619a88fd3cafef119",
+              "paths": [
+                ".gitleaksignore"
+              ],
+              "scope": "Recomputed three exact historical source digests. The pinned scanner detected and redacted its synthetic credential and the complete local scan passed."
             }
           ]
         },
@@ -638403,7 +638423,7 @@
             },
             {
               "path": ".gitleaksignore",
-              "sha256": "eb3d342ff8dddd8a311839d8bb991ede93097169299ee930bfcc65c8fdb001f6"
+              "sha256": "ed77d24c0ff53ce3e10e30ea001dc062ea8606f0c4ed49a517958667c66187a8"
             },
             {
               "path": "scripts/check-secrets.py",
@@ -638607,6 +638627,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-postgres-restore-readback",
+              "base_commit": "9545cd2c7d21f2028ef3869619a88fd3cafef119",
+              "paths": [
+                ".gitleaksignore"
+              ],
+              "scope": "Recomputed three exact historical source digests. The pinned scanner detected and redacted its synthetic credential and the complete local scan passed."
             }
           ]
         },
@@ -638902,7 +638930,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record named owner or legal dispositions for the 387 exact package and scope entries in the consolidated review packet. Report-only image run 43286083146 at 736bcb0c matches all 387 by scope, exact package URL, observed licenses and location. Verify applicable notices, corresponding source and replacement conditions before approving exceptions.",
+        "Record named owner or legal dispositions for all 387 package entries in the current five-image inventory. Hosted report 43296288619 at 9545cd2c has 384 exact matches to the review workbook and three refreshed Ubuntu glibc-family entries: libc-bin, libc6 and locales at 2.39-0ubuntu8.12. Review the refreshed package and source evidence before approval.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions.",
         "The single additional Pino fixture from the 40ac6449 scan is absent in the rebuilt application image. Keep the existing package-specific review and verify all exact final runtime and browser receipts."
       ],
@@ -638950,7 +638978,8 @@
           "release-0.6-runtime-log-channel-and-image",
           "release-0.6-weekly-dependency-advisory",
           "release-0.6-reuse-affected-preflight",
-          "release-0.6-gate-readback"
+          "release-0.6-gate-readback",
+          "release-0.6-postgres-restore-readback"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -639206,7 +639235,8 @@
           "release-0.6-postgres-go-license-notices",
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-runtime-image-binding",
-          "release-0.6-weekly-dependency-advisory"
+          "release-0.6-weekly-dependency-advisory",
+          "release-0.6-postgres-restore-readback"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -1010718,7 +1010748,8 @@
           "release-0.6-validated-outbox-trace-constraint",
           "release-0.6-pilot-rollout",
           "release-0.6-node-postgres-lint",
-          "release-0.6-postgres-package-alignment"
+          "release-0.6-postgres-package-alignment",
+          "release-0.6-postgres-restore-readback"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1011004,7 +1011035,8 @@
           "release-0.6-private-jaeger-readback-rehearsal",
           "release-0.6-gate-readback",
           "release-0.6-postgres-package-alignment",
-          "release-0.6-published-staging-favicon"
+          "release-0.6-published-staging-favicon",
+          "release-0.6-postgres-restore-readback"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1171022,6 +1171054,105 @@
         {
           "file": "live-release.json",
           "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        }
+      ]
+    },
+    "release-0.6-postgres-restore-readback": {
+      "batch": "release-0.6-postgres-restore-readback",
+      "base_commit": "9545cd2c7d21f2028ef3869619a88fd3cafef119",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.01.02",
+        "01-platform-infrastructure.md#T-04.01.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.04.02.03",
+        "06-security-testing-observability.md#T-06.07.01.05",
+        "06-security-testing-observability.md#T-06.07.01.06",
+        "06-security-testing-observability.md#T-06.07.02.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        ".gitleaksignore"
+      ],
+      "source_evidence": [
+        {
+          "path": ".gitleaksignore",
+          "sha256": "ed77d24c0ff53ce3e10e30ea001dc062ea8606f0c4ed49a517958667c66187a8"
+        },
+        {
+          "path": "packages/eslint-config/reviewed-postgres-sql.json",
+          "sha256": "fea3646bcb4adadab2b617926716fb52fdc9e25fd1ea3fde8417b63157aa1fad"
+        },
+        {
+          "path": "scripts/check-secrets.py",
+          "sha256": "48f9666ec7e7e97a97d79efd05886d7df1a0e2f8c793dcd998a27eef337ca4aa"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "5316c0ab8fcfac0464598964557549b30674274810a6fb8f1550fa04fe8a488c"
+        },
+        {
+          "path": "packages/db/scripts/backup/run_physical_backup_tests.py",
+          "sha256": "91fa8a2c904018eb58b3a4b7f08ac305936e97c13e957a37859083bd54ea97d3"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_physical_backup.py",
+          "sha256": "9078ec88a5c59780d1a768dcb8e0b2788ebe281c8e1fef78fdef3eded5bc831d"
+        },
+        {
+          "path": "packages/db/scripts/backup/test_verify_restore.py",
+          "sha256": "4272ed02aadbae40859d3b7367512d0546ea31259e6b2f1cabd7d86c6f8bec21"
+        }
+      ],
+      "checks": [
+        "Hosted run 43296288619 passed build integrity and all five image scans. The secret scan reported three source SHA-256 values as generic API keys. All three were recomputed from the historical source. Added only the exact Gitleaks fingerprints and passed the full local scan including its redacted synthetic credential self-test.",
+        "The exact rebuilt AMD64 PostgreSQL image passed 32 backup and restore cases, including actual WAL replay, point-in-time cutoff, corrupt and unauthorized restore denial, fingerprint comparison and workspace cleanup.",
+        "Filtered staging BuildKit cleanup increased available space from 1865188 to 5346568 KiB. Both checks preserved every tagged image, volume and container identity. Staging readiness remained ok.",
+        "The hosted report has 461 allowed and 387 pending entries. Exactly 384 pending entries match the review workbook; libc-bin, libc6 and locales are now 2.39-0ubuntu8.12 in the staging PostgreSQL image."
+      ],
+      "limitations": [
+        "The backup suite used isolated fixtures. The live-copy rehearsal, off-server recovery and measured core-service RTO need separate receipts.",
+        "The hosted scan inventory is report-only. Package reviewer approval and the corrected exact protected preflight remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-restore-readback",
+      "execution_receipts": [
+        {
+          "file": "verified-sql-digests.json",
+          "sha256": "03738493936baf5f258617d25463032af9f387eee4f2b9e48aca4335727d8dc2"
+        },
+        {
+          "file": "local-secret-scan.log",
+          "sha256": "1eeef64038fb3abc6d382a9e32b39234b38ba3927aa54d4445aea45d36d6d489"
+        },
+        {
+          "file": "local-secret-scan.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "file": "superseded-preflight.json",
+          "sha256": "9b27f3e42dc249e16e31042af0fa2c999977ddb18b51a9d8772df16c54f222f9"
+        },
+        {
+          "file": "restore.log",
+          "sha256": "9db22ba4bf8310f9e0d49116bd0cd519409a4d2f0bf2917d0e577cb0af49bef6"
+        },
+        {
+          "file": "image.txt",
+          "sha256": "3322dee6da23afa96e7d947a9da252c8c9044453e8f976379ca7c9d433600f9b"
+        },
+        {
+          "file": "staging-cache-receipt.log",
+          "sha256": "3a0a550a17614c2eae3feac7a60771895073f17d5da64d0421823109f79459ef"
+        },
+        {
+          "file": "staging-cache-followup.log",
+          "sha256": "b103e87c304880a610496d81b37d43172842dd3a03d7aeab754a59fb8fa6e1fe"
+        },
+        {
+          "file": "license-inventory-comparison.json",
+          "sha256": "01f6846b987baee02dc00cad9bbc5b0165f6873603404d663093d2ca1f82dfa8"
         }
       ]
     }
