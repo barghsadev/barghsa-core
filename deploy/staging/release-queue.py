@@ -44,6 +44,22 @@ def verify_images(log, commit, app_id, web_id):
             "image_ids": dict(zip(("app", "web", "postgres", "clamav"), image_ids))}
 
 
+def verify_image_scans(directory, image_ids, includes_stateful):
+    scopes = ("postgres", "clamav", "app", "web") if includes_stateful else ("app", "web")
+    scans = {}
+    for index, scope in enumerate(scopes, 1):
+        receipt = (directory / f"{index}-image.json").read_bytes()
+        scan = json.loads(receipt)
+        if not isinstance(scan, dict) or scan.get("image_id") != image_ids[scope] or scan.get("blocked") is not False:
+            raise ValueError(f"Missing passing scan for the deployed {scope} image")
+        for suffix, field in (("vulnerabilities.json", "report_sha256"), ("sbom.cdx.json", "sbom_sha256")):
+            payload = (directory / f"{index}-{suffix}").read_bytes()
+            if hashlib.sha256(payload).hexdigest() != scan.get(field):
+                raise ValueError(f"Scan artifact checksum differs for the deployed {scope} image")
+        scans[scope] = {"index": index, "receipt_sha256": hashlib.sha256(receipt).hexdigest()}
+    return {"directory": str(directory.resolve()), "images": scans}
+
+
 @contextmanager
 def locked(state, name):
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -235,6 +251,8 @@ def main():
     verify.add_argument("--app-id", required=True)
     verify.add_argument("--web-id", required=True)
     verify.add_argument("--release-log", required=True, type=Path)
+    verify.add_argument("--scan-dir", required=True, type=Path)
+    verify.add_argument("--includes-stateful", action="store_true")
     verify.add_argument("--receipt", type=Path)
     actions.add_parser("work")
     actions.add_parser("status")
@@ -247,6 +265,7 @@ def main():
         return 0
     if args.action == "verify-images":
         receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit, args.app_id, args.web_id)
+        receipt["image_scans"] = verify_image_scans(args.scan_dir, receipt["image_ids"], args.includes_stateful)
         if args.receipt:
             save(args.receipt, receipt)
         return 0

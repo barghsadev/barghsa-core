@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T07:02:01+00:00",
+  "updated": "2026-11-12T07:12:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16417,7 +16417,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -16509,6 +16509,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -19005,7 +19013,8 @@
         "batches": [
           "release-0.6-production-quarantine-guard",
           "release-0.6-immutable-staging-acceptance",
-          "release-0.6-runtime-image-binding"
+          "release-0.6-runtime-image-binding",
+          "release-0.6-staging-image-scans"
         ],
         "current_acceptance": null
       }
@@ -25199,7 +25208,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -25340,6 +25349,14 @@
                 "apps/web/server.js"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -27412,7 +27429,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -27686,6 +27703,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -82652,7 +82677,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -83767,6 +83792,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -136278,7 +136311,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -136290,7 +136323,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -137037,6 +137070,15 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -524580,7 +524622,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -524998,6 +525040,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -542196,7 +542246,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -542546,6 +542596,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -542908,7 +542966,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -543258,6 +543316,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -543618,7 +543684,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -543968,6 +544034,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -544328,7 +544402,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -544702,6 +544776,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -545556,7 +545638,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -545906,6 +545988,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -546450,7 +546540,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -546462,7 +546552,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -547233,6 +547323,15 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -547748,7 +547847,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -548098,6 +548197,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -548457,7 +548564,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -548807,6 +548914,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -549167,7 +549282,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -549517,6 +549632,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -549878,7 +550001,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -550252,6 +550375,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -550611,7 +550742,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -550961,6 +551092,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -551320,7 +551459,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -551670,6 +551809,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -568712,7 +568859,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -568813,6 +568960,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -575542,7 +575697,8 @@
         "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
         "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
         "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
-        "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately."
+        "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately.",
+        "The staging worker now scans and records the exact images it builds, including initial stateful images when present. Verify the actual accepted deployment's scan index, checksums and running image identities, match separately retained PostgreSQL and ClamAV receipts, and record production registry digests."
       ],
       "owner": null,
       "depends_on": [],
@@ -575580,7 +575736,8 @@
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-runtime-image-binding",
-          "release-0.6-runtime-log-channel-and-image"
+          "release-0.6-runtime-log-channel-and-image",
+          "release-0.6-staging-image-scans"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -590870,7 +591027,7 @@
       "launch_required": true,
       "remaining": [
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Run the release worker for an accepted v0.6.0 candidate and verify its protected runtime image receipt, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
+        "Run the release worker for an accepted v0.6.0 candidate. Verify the running image IDs against the worker's exact pre-transfer scan and SBOM receipts plus the retained stateful image receipts. Verify the migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -590904,7 +591061,8 @@
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
           "release-0.6-schema-aware-staging-rollback",
-          "release-0.6-runtime-image-binding"
+          "release-0.6-runtime-image-binding",
+          "release-0.6-staging-image-scans"
         ],
         "current_acceptance": null
       }
@@ -597788,7 +597946,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
+              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -598013,6 +598171,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -603571,7 +603737,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
+              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -603883,6 +604049,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -606243,7 +606417,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
+              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -606413,6 +606587,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         }
@@ -893289,7 +893471,7 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
+              "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
@@ -893297,7 +893479,7 @@
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "9e1d9a8bcb94073ddc7931c87abae1555284417c7091f8d0b82e71d4ba841082"
+              "sha256": "d9ab577257a606750515b8b5ee417136a2b6a5971edde8e68fcb26cd1c2d9f45"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -893327,6 +893509,15 @@
                 "deploy/staging/test_release_queue.py"
               ],
               "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ]
         },
@@ -905278,7 +905469,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -905286,7 +905477,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
+              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -905298,11 +905489,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
+              "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -907549,6 +907740,17 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "presentation_renewals": [
@@ -910110,7 +910312,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+              "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -910118,7 +910320,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
+              "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -910130,11 +910332,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
+              "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+              "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -912281,6 +912483,17 @@
                 "package.json"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-staging-image-scans",
+              "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "The changes add scan and SBOM verification for newly transferred runtime images to the release worker and document its receipts. The existing acceptance checks, application behavior, proxy configuration, schema-aware rollback, and Telegram gates remain intact. Related fixture checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -917525,7 +917738,8 @@
           "release-0.6-weekly-mutation-and-dependencies",
           "release-0.6-runtime-log-channel-and-image",
           "release-0.6-quarterly-manual-exercise",
-          "release-0.6-weekly-dependency-advisory"
+          "release-0.6-weekly-dependency-advisory",
+          "release-0.6-staging-image-scans"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1056917,6 +1057131,121 @@
         {
           "file": "published-preflight-images/release-licenses.json",
           "sha256": "911d63cfe7c4faff36602c29129089b1e85ccef3cf9c9b0b9013f0cdb03ce1ca"
+        }
+      ]
+    },
+    "release-0.6-staging-image-scans": {
+      "batch": "release-0.6-staging-image-scans",
+      "base_commit": "488f3191fa330962250250b9c73ca6b2ba40df57",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "5873cb72baaab8f30b32ca05ad9609122b339b717389e33f2104b5886392f9c7"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "910f0a22fab934c886acb1a47b0b8127b3f705bf2724cb284a4d0fa10be94735"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "678acdf36e546759bec15f05b0d4712b967fee7d3309c72328cacd54d6b63632"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "ef84b06ddc61daddd09ff31eb3bf6aa189d6d4d7e7c2cb5e8f5f4ebabac3214f"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "d9ab577257a606750515b8b5ee417136a2b6a5971edde8e68fcb26cd1c2d9f45"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "c3df310560673b7e3b3cc57f09969a0b21486d6167d6d1b0e235c899daf7b272"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        }
+      ],
+      "checks": [
+        "The detached staging worker uses the existing high and critical vulnerability scanner on the exact image tags before transfer and preserves each attempt privately. It scans two newly built images on an existing host and all four newly built images during bootstrap.",
+        "The destination compares newly transferred image IDs with the candidate manifest before starting services. The release receipt binds actual running image IDs to passing scan provenance, vulnerability report and CycloneDX SBOM checksums before the notifier runs.",
+        "All 18 release queue and four rollback cases passed. The rollback fixtures used the installed Docker Compose client directly for offline config expansion. ShellCheck, Bash syntax, documentation formatting and whitespace checks passed.",
+        "The exact deploy entry point passed three isolated transfer-order fixtures. A failed scan kept its evidence without starting a transfer. Passing fixtures scanned the correct two or four image tags before proceeding.",
+        "The verifier read actual report and SBOM bytes from five-image hosted run 43172436070 with offline runtime markers for both cases. The exact license review list still contains the same 387 entries."
+      ],
+      "limitations": [
+        "The local Docker Desktop API did not respond. Release-host scanning, deployment, stateful cutover and Telegram receipt verification still need the accepted candidate. Offline markers are fixture inputs.",
+        "The running PostgreSQL replacement, retained scanner and database receipts, strict license review, and exact production image registry binding remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staging-image-scans",
+      "execution_receipts": [
+        {
+          "file": "hosted-scan.json",
+          "sha256": "961c803d4f73adb86f0a64c28900575c09406ea01558960a00d741b453697299"
+        },
+        {
+          "file": "hosted-verification.json",
+          "sha256": "776d953c8c3661207551ee7c61e8aec12d11fc0a481e80a81bdf85e9364cf357"
+        },
+        {
+          "file": "hosted-verified-retained-stateful.json",
+          "sha256": "79507470dd5d1d4f4dfb6140dd7ca18894bfc6b1d965a7ee4f0890cb7f6921e9"
+        },
+        {
+          "file": "hosted-verified-new-stateful.json",
+          "sha256": "332be2c0212d0a98cef4e14fd3a0f90337f64c743e6feaedf75b09dc0939c4f6"
+        },
+        {
+          "file": "transfer-order-fixtures.json",
+          "sha256": "7629d322a67033c2340248e05b6dedcc4a60170cec9f6c1e583a6d00ad61bb5c"
+        },
+        {
+          "file": "rollback-tests.log",
+          "sha256": "8088c1a7eb9ce92a384c9ef9d95e8f085f1a0ad9039ec51d67aa6663e9a4bff7"
+        },
+        {
+          "file": "hosted-43172436070/release-licenses.json",
+          "sha256": "97bc50a158a92430d997bd7ad065e7a9ef633806f5b28eabccaa1052cc39f366"
         }
       ]
     }

@@ -108,6 +108,13 @@ BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-fixture
 BARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-fixture
 BARGHSA_APP_IMAGE_ID=sha256:{'a' * 64}
 BARGHSA_WEB_IMAGE_ID=sha256:{'b' * 64}
+if [[ "$1" == bootstrap || "$1" == wrong-bootstrap-image ]]; then
+  BARGHSA_POSTGRES_IMAGE_ID=$(printf 'sha256:%064d' 3)
+  BARGHSA_CLAMAV_IMAGE_ID=$(printf 'sha256:%064d' 4)
+  if [[ "$1" == wrong-bootstrap-image ]]; then
+    BARGHSA_POSTGRES_IMAGE_ID=$(printf 'sha256:%064d' 5)
+  fi
+fi
 dc=(compose)
 compose() {{ printf '%s\\n' "$3"; }}
 docker() {{
@@ -143,6 +150,8 @@ echo accepted
 '''
         for mode, expected in (
             ('match', 'accepted'),
+            ('bootstrap', 'accepted'),
+            ('wrong-bootstrap-image', 'Loaded image ID differs from the candidate manifest: BARGHSA_POSTGRES_IMAGE'),
             ('image:barghsa-app:vps-fixture', 'Loaded image ID differs'),
             ('revision', 'Loaded image revision differs from the candidate commit: BARGHSA_WEB_IMAGE'),
             ('malformed', 'Invalid loaded image ID: BARGHSA_CLAMAV_IMAGE'),
@@ -154,12 +163,12 @@ echo accepted
                 result = subprocess.run(['bash', '-c', script, 'image-fixture', mode],
                                         capture_output=True, text=True, check=False)
                 self.assertIn(expected, result.stdout + result.stderr)
-                self.assertEqual(result.returncode, 0 if mode == 'match' else 1)
+                self.assertEqual(result.returncode, 0 if mode in ('match', 'bootstrap') else 1)
                 self.assertEqual('rollback' in result.stdout, mode.startswith('container:'))
                 self.assertEqual('migrations-admitted' in result.stdout,
-                                 mode in ('match', 'container:ai-inference'))
+                                 mode in ('match', 'bootstrap', 'container:ai-inference'))
                 self.assertEqual('BARGHSA_STAGING_RUNTIME_IMAGES_V1 ' + 'a' * 40 in result.stdout,
-                                 mode == 'match')
+                                 mode in ('match', 'bootstrap'))
 
 
 if __name__ == "__main__":

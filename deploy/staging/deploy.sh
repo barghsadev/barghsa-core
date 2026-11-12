@@ -22,6 +22,8 @@ ssh_args=(-p "$port" -o BatchMode=yes)
 scp_args=(-P "$port" -o BatchMode=yes)
 
 images=()
+postgres_id=
+clamav_id=
 if ssh "${ssh_args[@]}" "$remote" 'test -r /etc/barghsa/staging/active-images.env'; then
   stateful=$(ssh "${ssh_args[@]}" "$remote" \
     "grep -E '^BARGHSA_(POSTGRES|CLAMAV)_IMAGE=' /etc/barghsa/staging/active-images.env")
@@ -39,6 +41,12 @@ else
   bash deploy/staging/build-postgres-image.sh "$postgres_image"
   docker build --platform linux/amd64 -f deploy/clamav/Dockerfile -t "$clamav_image" .
   images+=("$postgres_image" "$clamav_image")
+  postgres_id=$(docker image inspect --format '{{.Id}}' "$postgres_image")
+  clamav_id=$(docker image inspect --format '{{.Id}}' "$clamav_image")
+  [[ "$postgres_id" =~ ^sha256:[0-9a-f]{64}$ && "$clamav_id" =~ ^sha256:[0-9a-f]{64}$ ]] || {
+    echo 'Invalid initial PostgreSQL or ClamAV image ID' >&2
+    exit 1
+  }
 fi
 
 docker build --platform linux/amd64 --build-arg "BARGHSA_RELEASE_SHA=$commit" -f Dockerfile.base --target production -t "barghsa-app:$tag" .
@@ -55,6 +63,17 @@ web_image="barghsa-web:$tag-${web_id#sha256:}"
 docker image tag "$app_id" "$app_image"
 docker image tag "$web_id" "$web_image"
 images+=("$app_image" "$web_image")
+
+# Hosted checks build their own images. Scan the exact images this worker will
+# transfer, and keep each attempt's evidence even when the scan fails.
+scan_root="${HOME}/.local/state/barghsa-staging-queue/image-scans"
+if [[ -n "$receipt" ]]; then
+  scan_root=$(dirname -- "$receipt")
+fi
+mkdir -p -- "$scan_root"
+scan_dir=$(mktemp -d "$scan_root/image-scan.XXXXXXXX")
+echo "Scanning release images; evidence: $scan_dir" >&2
+bash scripts/check-runtime-images.sh "$scan_dir" "${images[@]}"
 
 echo 'Transferring release images over SSH' >&2
 docker save "${images[@]}" \
@@ -84,13 +103,19 @@ BARGHSA_WEB_IMAGE_ID=$web_id
 BARGHSA_POSTGRES_IMAGE=$postgres_image
 BARGHSA_CLAMAV_IMAGE=$clamav_image
 EOF
+if [[ -n "$postgres_id" ]]; then
+  printf 'BARGHSA_POSTGRES_IMAGE_ID=%s\nBARGHSA_CLAMAV_IMAGE_ID=%s\n' "$postgres_id" "$clamav_id" >> "$manifest"
+fi
 candidate="/etc/barghsa/staging/candidate-$tag-${app_id#sha256:}-${web_id#sha256:}.env"
 scp "${scp_args[@]}" "$manifest" "$remote:$candidate"
 # shellcheck disable=SC2029 # The fixed candidate path is intentionally expanded locally.
 ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"
 # shellcheck disable=SC2029 # Pass the same locally constructed path to the VPS.
 ssh "${ssh_args[@]}" "$remote" "/usr/local/sbin/barghsa-staging-release $candidate" | tee "$release_tmp/release.log"
-verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id" --release-log "$release_tmp/release.log")
+verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id" --release-log "$release_tmp/release.log" --scan-dir "$scan_dir")
+if [[ -n "$postgres_id" ]]; then
+  verify+=(--includes-stateful)
+fi
 if [[ -n "$receipt" ]]; then
   verify+=(--receipt "$receipt")
 fi

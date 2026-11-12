@@ -44,10 +44,14 @@ for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CL
     printf 'Invalid loaded image ID: %s\n' "$key" >&2
     exit 1
   }
+  expected_key=${key}_ID
+  if [[ -n "${!expected_key:-}" && "$loaded_id" != "${!expected_key}" ]]; then
+    printf 'Loaded image ID differs from the candidate manifest: %s\n' "$key" >&2
+    exit 1
+  fi
   case "$key" in
     BARGHSA_APP_IMAGE|BARGHSA_WEB_IMAGE)
-      expected_key=${key}_ID
-      [[ "${!expected_key:-}" =~ ^sha256:[0-9a-f]{64}$ && "$loaded_id" == "${!expected_key}" ]] || {
+      [[ -n "${!expected_key:-}" ]] || {
         printf 'Loaded image ID differs from the candidate manifest: %s\n' "$key" >&2
         exit 1
       }

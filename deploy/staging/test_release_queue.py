@@ -1,4 +1,5 @@
 import importlib.util
+import hashlib
 import io
 import json
 import os
@@ -31,6 +32,38 @@ class RuntimeImageReceiptTests(unittest.TestCase):
             with self.subTest(error=error):
                 with self.assertRaisesRegex(ValueError, error):
                     queue.verify_images(log, commit, app, web)
+
+    def test_binds_scan_receipts_and_artifact_checksums_to_running_images(self):
+        image_ids = {scope: "sha256:" + character * 64 for scope, character in
+                     zip(("app", "web", "postgres", "clamav"), "bcde")}
+        for scopes, includes_stateful in (
+            (("app", "web"), False),
+            (("postgres", "clamav", "app", "web"), True),
+        ):
+            with self.subTest(scopes=scopes), tempfile.TemporaryDirectory() as temporary:
+                directory = Path(temporary)
+                receipts = {}
+                for index, scope in enumerate(scopes, 1):
+                    artifact = f"{scope} fixture".encode()
+                    digest = hashlib.sha256(artifact).hexdigest()
+                    scan = {"image_id": image_ids[scope], "blocked": False,
+                            "report_sha256": digest, "sbom_sha256": digest}
+                    receipt = json.dumps(scan).encode()
+                    (directory / f"{index}-image.json").write_bytes(receipt)
+                    (directory / f"{index}-vulnerabilities.json").write_bytes(artifact)
+                    (directory / f"{index}-sbom.cdx.json").write_bytes(artifact)
+                    receipts[scope] = {"index": index, "receipt_sha256": hashlib.sha256(receipt).hexdigest()}
+                self.assertEqual(queue.verify_image_scans(directory, image_ids, includes_stateful),
+                                 {"directory": str(directory.resolve()), "images": receipts})
+
+                with self.assertRaisesRegex(ValueError, "Missing passing scan"):
+                    queue.verify_image_scans(directory, {**image_ids, "web": image_ids["app"]}, includes_stateful)
+                (directory / f"{index}-sbom.cdx.json").write_text("changed")
+                with self.assertRaisesRegex(ValueError, "artifact checksum differs"):
+                    queue.verify_image_scans(directory, image_ids, includes_stateful)
+                (directory / f"{index}-image.json").write_text(json.dumps({**scan, "blocked": True}))
+                with self.assertRaisesRegex(ValueError, "Missing passing scan"):
+                    queue.verify_image_scans(directory, image_ids, includes_stateful)
 
 
 class ReleaseQueueTests(unittest.TestCase):
