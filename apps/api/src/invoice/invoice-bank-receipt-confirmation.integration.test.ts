@@ -354,6 +354,32 @@ describe('InvoiceBankReceiptConfirmationService — real PostgreSQL (T-04.3.01.0
     );
     expect((await invoiceSettlement(invoiceId)).paid).toBe(1_000_000n);
     expect((await walletBalances()).posted).toBe(after.posted);
+
+    const creditId = result.overpayment!.overpaymentCreditTransactionId!;
+    await ctx.pool.query(
+      "UPDATE wallet_transactions SET metadata=jsonb_set(metadata,'{invoiceId}',to_jsonb($2::text)) WHERE id=$1",
+      [creditId, uuidv7()]
+    );
+    try {
+      await expect(service.get(receiptId)).rejects.toMatchObject({ status: 409 });
+      await expect(
+        service.confirm({
+          receiptId,
+          actorUserId: ACTOR_USER_ID,
+          ...receiptDecisionSession(ACTOR_USER_ID),
+          ip: '10.0.0.9',
+          now: NOW,
+        })
+      ).rejects.toMatchObject({ status: 409 });
+      expect(await receiptState(receiptId)).toBe('Confirmed');
+      expect(await invoiceSettlement(invoiceId)).toEqual(settled);
+      expect(await walletBalances()).toEqual(after);
+    } finally {
+      await ctx.pool.query(
+        "UPDATE wallet_transactions SET metadata=jsonb_set(metadata,'{invoiceId}',to_jsonb($2::text)) WHERE id=$1",
+        [creditId, invoiceId]
+      );
+    }
   });
 
   it('confirms the reviewed allocation and rejects a stale invoice balance', async () => {

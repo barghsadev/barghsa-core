@@ -564,7 +564,7 @@ it('aggregates exact payment allocations, receipt states and refunds without pri
     f.invoice,
     amount,
   ]);
-  await http.pool.query('INSERT INTO wallets(profile_id) VALUES ($1),($2)', [
+  await http.pool.query('INSERT INTO wallets(profile_id,posted_balance) VALUES ($1,13),($2,0)', [
     f.profile,
     other.profile,
   ]);
@@ -587,7 +587,7 @@ it('aggregates exact payment allocations, receipt states and refunds without pri
     [receipt, f.owner]
   );
   await http.pool.query(
-    "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id) VALUES ($1,'topup',13,'Pending',$2,$3)",
+    "INSERT INTO wallet_transactions(wallet_id,type,amount,state,idempotency_key,ref_id) VALUES ($1,'topup',13,'Completed',$2,$3)",
     [f.profile, `invoice-bank-receipt-overpayment-credit:${receipt}`, receipt]
   );
   await http.pool.query(
@@ -630,9 +630,18 @@ it('aggregates exact payment allocations, receipt states and refunds without pri
       'metadata',
       'idempotencyKey',
       'bankReference',
+      'creditConflict',
     ])
       expect(row).not.toHaveProperty(key);
   }
+  const mismatchedReceipt = randomUUID();
+  await http.pool.query('UPDATE wallet_transactions SET ref_id=$2 WHERE idempotency_key=$1', [
+    `invoice-bank-receipt-overpayment-credit:${receipt}`,
+    mismatchedReceipt,
+  ]);
+  const conflict = await read(f);
+  expect(conflict.status).toBe(409);
+  expect(await conflict.text()).not.toContain(mismatchedReceipt);
   expect((await read(other, true, f.invoice)).status).toBe(404);
 });
 

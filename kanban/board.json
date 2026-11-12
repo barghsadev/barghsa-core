@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T14:34:28+00:00",
+  "updated": "2026-11-12T14:36:50+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -45179,15 +45179,15 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/notifications/notifications.service.ts",
@@ -46840,6 +46840,16 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -79924,7 +79934,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/profiles/profile-context.ts",
@@ -79956,7 +79966,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/contract/contract-review.service.ts",
@@ -81342,6 +81352,15 @@
                 "apps/api/src/contract/contract-cancellation-request.service.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -135515,7 +135534,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/notifications/order-notifications.ts",
@@ -136550,6 +136569,14 @@
                 "apps/api/src/contract/contract-cancellation.service.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -170933,7 +170960,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -171876,6 +171903,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -172267,7 +172302,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -173210,6 +173245,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -173601,7 +173644,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -174544,6 +174587,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -174935,7 +174986,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -175878,6 +175929,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -176269,7 +176328,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -177212,6 +177271,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -177603,7 +177670,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -178546,6 +178613,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -179024,7 +179099,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -180116,6 +180191,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -180517,7 +180600,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -181460,6 +181543,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -181938,7 +182029,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -183030,6 +183121,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -183431,7 +183530,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -184374,6 +184473,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -184730,7 +184837,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -185436,6 +185543,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -185705,7 +185820,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -186457,6 +186572,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "The additive saving invoice-scope migration preserves the prior journal and table schema. Native saving, wallet, bank-receipt, overdue and migration cases preserve valid stock allocation, hardware settlement, cancellation, financial state and audit behavior. Unchanged parts of accepted paths retain their existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -186705,7 +186828,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.ts",
@@ -187415,6 +187538,14 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -198286,7 +198417,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -198294,19 +198425,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -198733,6 +198864,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -198986,7 +199129,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -198994,7 +199137,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.ts",
@@ -199002,15 +199145,15 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -199463,6 +199606,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -199729,7 +199884,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -199737,19 +199892,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -200203,6 +200358,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -200500,7 +200667,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -200508,19 +200675,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -201169,6 +201336,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -201433,7 +201612,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -201441,19 +201620,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -201907,6 +202086,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -202058,7 +202249,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -202066,19 +202257,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -202501,6 +202692,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -202652,7 +202855,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -202660,19 +202863,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -203095,6 +203298,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -203247,7 +203462,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -203255,19 +203470,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -203690,6 +203905,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -203843,7 +204070,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -203851,19 +204078,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -204286,6 +204513,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -204447,7 +204686,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -204455,19 +204694,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -204890,6 +205129,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -205043,7 +205294,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -205051,19 +205302,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -205486,6 +205737,18 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -605011,7 +605274,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -605224,6 +605487,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -605590,7 +605861,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -605669,6 +605940,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -605743,7 +606022,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -605833,6 +606112,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -605930,7 +606217,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -606042,6 +606329,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -606137,7 +606432,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/orders/order-access-http.integration.test.ts",
@@ -606201,7 +606496,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -606376,6 +606671,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -606426,7 +606730,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -606639,6 +606943,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -606740,7 +607052,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/provider-config/email-provider-config.controller.ts",
@@ -606812,7 +607124,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -607032,6 +607344,15 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -608020,8 +608341,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound coverage includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, and 12 additional shared cancellation route aliases. Two saving cancellation aliases were revisited. Related invoice callers and electricity and saving invoice automation were reviewed. Complete resource-loading and authority review for the remaining 759-route inventory, including route, query, body and server-selected profile identifiers.",
-        "Continue with payments, receipts and remaining invoice and refund resource loaders. Retain owner-approved module and profile authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation and 10 invoice and receipt route aliases. Two saving cancellation aliases were revisited. Linked invoice automation and financial caller checks were included. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with receipt attachments and the remaining wallet payment, invoice correction and refund loaders. Retain owner-approved module and profile authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -608052,7 +608373,13 @@
           "apps/api/src/electricity/electricity-order.integration.test.ts",
           "apps/api/src/electricity/electricity-order.service.ts",
           "apps/api/src/electricity/electricity-price-adjustment.service.ts",
+          "apps/api/src/invoice/customer-invoice-activity.ts",
           "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+          "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "apps/api/src/invoice/invoice-bank-receipt-credit-scope.ts",
           "apps/api/src/saving/saving-address-amendments.ts",
           "apps/api/src/saving/saving-cancellation.controller.ts",
           "apps/api/src/saving/saving-change-authority.test.ts",
@@ -608099,7 +608426,8 @@
           "release-0.6-solar-linked-authority",
           "release-0.6-contract-linked-authority",
           "release-0.6-cancellation-financial-scope",
-          "release-0.6-consultation-lock-order-tests"
+          "release-0.6-consultation-lock-order-tests",
+          "release-0.6-invoice-receipt-credit-scope"
         ],
         "current_acceptance": null
       }
@@ -608175,7 +608503,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -608280,6 +608608,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -608626,7 +608962,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -608863,6 +609199,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -609094,7 +609438,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.ts",
@@ -609337,6 +609681,14 @@
                 "apps/api/src/contract/contract-review.service.ts"
               ],
               "scope": "Shared contract lists, activation detail and financial review bind initial invoices to their contract or order and profile. Document and signing reads verify the linked contract version and profile. Existing native, shared caller and unit checks preserve legitimate state transitions and history."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -609454,7 +609806,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -609636,6 +609988,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -609729,11 +610089,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -609880,6 +610240,15 @@
                 "apps/api/src/admin/dual-approval.controller.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -609973,11 +610342,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -610124,6 +610493,15 @@
                 "apps/api/src/admin/dual-approval.controller.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -610217,11 +610595,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
@@ -610368,6 +610746,15 @@
                 "apps/api/src/admin/dual-approval.controller.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -612283,7 +612670,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -612499,6 +612886,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -612547,7 +612942,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -612763,6 +613158,14 @@
                 "apps/web/vite.config.ts"
               ],
               "scope": "API change adds a fixed response header before existing middleware. Native HTTP metrics and health assertions passed with the same request cases. Static server change adds the header and conditional HTML only. Existing startup, shutdown, entry routing, caching and security header tests passed. Vite plugin applies only when serving, and existing production bundles passed their budgets. Compose and Liara packaging changes set deployment labels and include the new standalone JS file. Related runtime and packaging checks passed. Other criteria retain their existing source-bound evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -617104,11 +617507,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-upload.integration.test.ts",
@@ -617548,6 +617951,15 @@
                 "apps/api/src/invoice/customer-invoice-details.service.ts"
               ],
               "scope": "Solar-linked reads, locks, upload sources and staff contract receipts bind the request, profile and current business authority. Native solar, shared document and invoice callers and unit checks preserved legitimate access, state, financial review and replay. Unchanged parts of accepted paths retain existing evidence."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -622945,7 +623357,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "bb8188e25b15c168bf42a5a8915955134745f94a445669e9ccd750831cf7a995"
+              "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
             },
             {
               "path": "docs/threat-model.md",
@@ -623061,6 +623473,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ]
         }
@@ -876621,7 +877041,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -876633,7 +877053,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
@@ -877346,6 +877766,15 @@
                 "apps/api/src/contract/contract-signature.service.ts"
               ],
               "scope": "Shared contract lists, activation detail and financial review bind initial invoices to their contract or order and profile. Document and signing reads verify the linked contract version and profile. Existing native, shared caller and unit checks preserve legitimate state transitions and history."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -877634,7 +878063,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -877646,7 +878075,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
@@ -878359,6 +878788,15 @@
                 "apps/api/src/contract/contract-signature.service.ts"
               ],
               "scope": "Shared contract lists, activation detail and financial review bind initial invoices to their contract or order and profile. Document and signing reads verify the linked contract version and profile. Existing native, shared caller and unit checks preserve legitimate state transitions and history."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -878655,7 +879093,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -878667,7 +879105,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
@@ -879380,6 +879818,15 @@
                 "apps/api/src/contract/contract-signature.service.ts"
               ],
               "scope": "Shared contract lists, activation detail and financial review bind initial invoices to their contract or order and profile. Document and signing reads verify the linked contract version and profile. Existing native, shared caller and unit checks preserve legitimate state transitions and history."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -879660,7 +880107,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -879672,7 +880119,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
@@ -880385,6 +880832,15 @@
                 "apps/api/src/contract/contract-signature.service.ts"
               ],
               "scope": "Shared contract lists, activation detail and financial review bind initial invoices to their contract or order and profile. Document and signing reads verify the linked contract version and profile. Existing native, shared caller and unit checks preserve legitimate state transitions and history."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -880664,7 +881120,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.test.ts",
@@ -880676,7 +881132,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
@@ -881389,6 +881845,15 @@
                 "apps/api/src/contract/contract-signature.service.ts"
               ],
               "scope": "Shared contract lists, activation detail and financial review bind initial invoices to their contract or order and profile. Document and signing reads verify the linked contract version and profile. Existing native, shared caller and unit checks preserve legitimate state transitions and history."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -957938,7 +958403,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "apps/api/src/invoice/due-at-override-http.integration.test.ts",
@@ -958726,19 +959191,19 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
-              "sha256": "1b1bae740cc203a82ef71d1565f991be58006a544ec1b36c08572feceb298a36"
+              "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
-              "sha256": "ae6aa2c41cc18f1f2a20f50028c4b5732bd573c20e1af25e04d422c6b37394e8"
+              "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
-              "sha256": "020293188435277bb4b839f82f77280460bebae9b249db902fa6e17d8fb20cc0"
+              "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
             },
             {
               "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
@@ -962056,6 +962521,18 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+                "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -962933,7 +963410,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
-              "sha256": "e8f5a27fe1ed876b6566607e7cc089d6159ea4d917310c690256a502523b0ee5"
+              "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -962961,7 +963438,7 @@
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-activity.ts",
-              "sha256": "7a9ce73b92f4e407a8cddb89a1e77843e1298bd69bdf3d9bfac30ce357f8fd69"
+              "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
             },
             {
               "path": "apps/api/src/contract/contract-review.service.ts",
@@ -967395,6 +967872,15 @@
                 "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
               ],
               "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
+            },
+            {
+              "batch": "release-0.6-invoice-receipt-credit-scope",
+              "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+              "paths": [
+                "apps/api/src/invoice/customer-invoice-activity.ts",
+                "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
+              ],
+              "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
             }
           ],
           "presentation_renewals": [
@@ -1135362,6 +1135848,232 @@
         {
           "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-electricity-automation-scope/failed-43229724581.log",
           "sha256": "57bb07d98beec65eebebb8bdfb165c8ecf96c3c4088b58941223ec5162f4b8c4"
+        }
+      ]
+    },
+    "release-0.6-invoice-receipt-credit-scope": {
+      "batch": "release-0.6-invoice-receipt-credit-scope",
+      "base_commit": "068d53312074ce111766ff38ddda08e331e8147b",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-05.04.04",
+        "02-auth-users-admin.md#T-09.09.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.01",
+        "04-invoices-wallet-contracts.md#T-04.1.03.02",
+        "04-invoices-wallet-contracts.md#T-04.1.03.03",
+        "04-invoices-wallet-contracts.md#T-04.1.03.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.01",
+        "04-invoices-wallet-contracts.md#T-04.1.04.02",
+        "04-invoices-wallet-contracts.md#T-04.1.04.03",
+        "04-invoices-wallet-contracts.md#T-04.1.04.04",
+        "04-invoices-wallet-contracts.md#T-04.1.04.05",
+        "04-invoices-wallet-contracts.md#T-04.1.04.06",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.1.05.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.01",
+        "04-invoices-wallet-contracts.md#T-04.3.01.02",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.06",
+        "04-invoices-wallet-contracts.md#T-04.3.01.07",
+        "04-invoices-wallet-contracts.md#T-04.3.02.01",
+        "04-invoices-wallet-contracts.md#T-04.3.02.02",
+        "04-invoices-wallet-contracts.md#T-04.3.02.03",
+        "04-invoices-wallet-contracts.md#T-04.3.02.04",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.02.05",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.04.03.04",
+        "06-security-testing-observability.md#T-06.04.03.05",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "07-ui-ux-design.md#T-07.18.03.01",
+        "07-ui-ux-design.md#T-07.18.03.02",
+        "07-ui-ux-design.md#T-07.18.03.03",
+        "07-ui-ux-design.md#T-07.18.03.04",
+        "07-ui-ux-design.md#T-07.18.03.05",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/invoice/customer-invoice-activity.ts",
+        "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+        "apps/api/src/invoice/invoice-bank-receipt-credit-scope.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-ledger-http.integration.test.ts",
+          "sha256": "343f08de0f9be152c9b7f183bc3361e5e67ad4ce345b6ed4616ab04a2fb461a0"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-ledger.controller.ts",
+          "sha256": "25f316b8f6798f7101688fd9d9fea7bc8a84b613d43d46d61743ce761ff3f65a"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-ledger.service.ts",
+          "sha256": "2d7c2576c34f0a4f627f3384d09b76adaafb2384ad093f6e633df4389c0e1735"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation-http.integration.test.ts",
+          "sha256": "1b740c5533e0d80f7920135b3dd7c78f81a83eeffc688a41474c5287c9c9e96d"
+        },
+        {
+          "path": "apps/api/src/contract/contract-cancellation.service.ts",
+          "sha256": "4447da86d1bc9605ac5e7ffbe69b2b9b54011e8a3bf30deb24f6aa782cd375c7"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-raw-draft.integration.test.ts",
+          "sha256": "fa4f924fbe13a4f18cca6596c4a285676a76e70c791592e56874e0f48ea3e988"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-raw-draft.service.ts",
+          "sha256": "ca1087a57b4ea71d3e1ebd00820bc8085f773fc0ff5eaa219fb6cf45cd757b5d"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-activity.ts",
+          "sha256": "7996732d7753da205a02f9b82ff74d5ab798f7ed6423c29d2a3930083ec96520"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
+          "sha256": "21353c2c7e31d1c69d210c1eb4bdf7359c4f293e126cfba448485c0d060841e4"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "sha256": "7f9d1e2cf6a34d8f27c701696c8d0474bd8b17d4055ee8b5cd511a8b7398d961"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.test.ts",
+          "sha256": "d234b440c4015174a6bb2dd18060137dc0c9bc7a4154b10da99a5e0de07d1fc5"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
+          "sha256": "38ae840168e85a01d29e1c5f8e13647af5f6e177dd78d33ce03c95e9ea225ab2"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "77ad6a87fcc9f3b35e30eb465cbbe79a69895b06d4f13f3472030cc5a4d55f3b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-credit-scope.ts",
+          "sha256": "77753c5fe5267ab4013a9991a3f040ae6acd736b8987663de18a07f4883d1628"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "sha256": "29b3354e6ddee454f216abd100820492ad550f0abdfbcc593c3d00191a23ed51"
+        },
+        {
+          "path": "apps/api/src/refund/refund.service.ts",
+          "sha256": "9b24aef94139786881080b4d02c23c340299e0ae082bb06a6bd45e03c8c60318"
+        },
+        {
+          "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
+          "sha256": "49bab01e7ec065d7ad8e0eba082ad4c5fded764e552bd2d915fe6e631f29ac8f"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "239b20148949bf0bb8a2288d87548237cf6c3053131879cd76ec3033bb27e849"
+        },
+        {
+          "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
+          "sha256": "b7b8e45ae0016345f0189c77b808329d2091b40dd0cc8922253b6781243e746a"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed ten invoice and receipt method/path pairs across the customer and finance staff controllers. Customer reads and writes retain active profile authority. The two finance ledger routes retain module-wide grants and session rechecks.",
+        "Bank receipt allocation verifies the linked invoice profile and matches a completed overpayment credit to the exact receipt reference, wallet, type and bounded amount. Optional credit metadata cannot name another invoice, receipt or purpose. Legacy credits without the allocation snapshot still use matching ledger identity.",
+        "Mismatched credit linkage produces a reconciliation conflict before invoice activity or a confirmation replay can return incorrect amounts. Regression fixtures prove the invoice, wallet and receipt remain unchanged and customer responses omit the mismatched identity and internal flag.",
+        "49 native invoice receipt and dual approval cases, eight targeted financial callers and 68 unit tests passed. API build, typecheck, lint, formatting and generated contract checks passed."
+      ],
+      "limitations": [
+        "Receipt attachment provenance and remaining payment and refund resource routes require their own review. These results are from local native tests. The hosted replacement preflight, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-invoice-receipt-credit-scope",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "de38bb65ef37e13851bffe4a7f42ed32d69a700ae15190730ea11f060e3f7b11"
+        },
+        {
+          "file": "native.log",
+          "sha256": "9fc952c08441e04c9b27e6241701a31589819af02b83f8e198e0e2745340f8d1"
+        },
+        {
+          "file": "native-callers.log",
+          "sha256": "86bb7cfbd10c3e2430b1878356baf4a19632a006d91d09e37ad9c87c9e3bfb5d"
+        },
+        {
+          "file": "native-orphan.log",
+          "sha256": "0aeabd2da824fbc21105de989fc7b6704aceada69ff025899a8c96cd7acec750"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "43194570c51361c7f91cb07acd6d4a55723ab402c745556e1e363febf5f1153c"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "35afb78230e447d961df320f142c1d26a7369d04156692170642de0039e3eb85"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "3a7a5f443a333dbc717b00e4fb0c112f8d45f04d9d3b957459f067253a4a6b6a"
+        },
+        {
+          "file": "invoice-receipt-routes.json",
+          "sha256": "ef7d70915cf2b97321e4c5877db5716ee185c609ae46e1352254c0d61497b1cd"
         }
       ]
     }

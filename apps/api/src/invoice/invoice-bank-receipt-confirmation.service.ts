@@ -2,6 +2,7 @@ import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
+import { invoiceBankReceiptCreditScopeSql } from './invoice-bank-receipt-credit-scope.js';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { literalSearchPattern, type HistorySort } from '@barghsa/shared/validation';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
@@ -67,11 +68,7 @@ import { applyApprovalRequestResolutionOnClient } from '../admin/dual-approval-r
 import { InvoiceAuditRepository } from './invoice-audit.repository.js';
 import { InvoiceStateMachineService } from './invoice-state-machine.service.js';
 import { isInvoiceState, type InvoiceState } from './invoice-state.model.js';
-import {
-  WalletService,
-  type TransactionRow,
-  type WalletQueryClient,
-} from '../wallet/wallet.service.js';
+import { WalletService, type WalletQueryClient } from '../wallet/wallet.service.js';
 
 const ATTACHMENT_URL_TTL_SECONDS = 15 * 60;
 
@@ -529,12 +526,7 @@ export class InvoiceBankReceiptConfirmationService {
         404
       );
     }
-    const invoiceResult = await pool.query(
-      `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount, adjustment_kind
-         FROM invoices WHERE id = $1`,
-      [receipt.invoice_id]
-    );
-    const invoice = (invoiceResult.rows as InvoiceRow[])[0];
+    const invoice = await this.loadInvoice(pool, receipt.invoice_id, receipt.profile_id);
     if (!invoice) {
       httpError(
         ErrorCodes.NOT_FOUND_RESOURCE.code,
@@ -1637,43 +1629,29 @@ export class InvoiceBankReceiptConfirmationService {
     return { outboxId, inserted };
   }
 
-  private async findExistingOverpaymentCredit(
-    client: WalletQueryClient,
-    receiptId: string
-  ): Promise<TransactionRow | null> {
+  private async findExistingOverpaymentCredit(client: WalletQueryClient, receipt: BankReceiptRow) {
     const result = await client.query(
-      `SELECT * FROM wallet_transactions WHERE idempotency_key = $1`,
-      [invoiceBankReceiptOverpaymentCreditIdempotencyKey(receiptId)]
+      `SELECT credit.id, credit.amount, credit.metadata,
+              (${invoiceBankReceiptCreditScopeSql}) IS TRUE AS in_scope
+         FROM bank_receipts r JOIN wallet_transactions credit ON credit.idempotency_key=$2
+        WHERE r.id=$1 AND r.profile_id=$3 AND r.invoice_id=$4`,
+      [
+        receipt.id,
+        invoiceBankReceiptOverpaymentCreditIdempotencyKey(receipt.id),
+        receipt.profile_id,
+        receipt.invoice_id,
+      ]
     );
-    if (result.rows.length === 0) return null;
-    const row = result.rows[0] as {
-      id: string;
-      wallet_id: string;
-      type: string;
-      amount: string | number | bigint;
-      state: string;
-      idempotency_key: string;
-      ref_id?: string | null;
-      description?: string | null;
-      metadata?: unknown;
-      reverses_transaction_id?: string | null;
-      created_at: Date;
-      updated_at: Date;
-    };
-    return {
-      id: row.id,
-      walletId: row.wallet_id,
-      type: row.type,
-      amount: BigInt(row.amount),
-      state: row.state,
-      idempotencyKey: row.idempotency_key,
-      refId: row.ref_id ?? null,
-      description: row.description ?? null,
-      metadata: row.metadata ?? null,
-      reversesTransactionId: row.reverses_transaction_id ?? null,
-      createdAt: row.created_at,
-      updatedAt: row.updated_at,
-    };
+    const row = result.rows[0] as
+      { id: string; amount: string; metadata: unknown; in_scope: boolean } | undefined;
+    if (!row) return null;
+    if (!row.in_scope)
+      httpError(
+        ErrorCodes.CONFLICT_STATE.code,
+        'Bank receipt allocation requires reconciliation',
+        409
+      );
+    return { id: row.id, amount: BigInt(row.amount), metadata: row.metadata };
   }
 
   private async loadConfirmedAllocation(
@@ -1684,21 +1662,31 @@ export class InvoiceBankReceiptConfirmationService {
     invoiceState: string | null;
     remaining: string | null;
   }> {
-    const credit = await this.findExistingOverpaymentCredit(client, receipt.id);
+    const credit = await this.findExistingOverpaymentCredit(client, receipt);
     const fromCredit = readInvoiceBankReceiptOverpaymentFromCreditMetadata(credit?.metadata);
-    if (fromCredit) {
+    const walletCreditAmount = credit?.amount ?? 0n;
+    const invoiceAllocation = receipt.amount - walletCreditAmount;
+    if (credit && fromCredit) {
+      if (
+        fromCredit.walletCreditAmount !== walletCreditAmount.toString() ||
+        fromCredit.invoiceAllocation !== invoiceAllocation.toString() ||
+        fromCredit.remainingBefore !== invoiceAllocation.toString()
+      )
+        httpError(
+          ErrorCodes.CONFLICT_STATE.code,
+          'Bank receipt allocation requires reconciliation',
+          409
+        );
       return {
         overpayment: {
           ...fromCredit,
-          overpaymentCreditTransactionId: credit?.id ?? fromCredit.overpaymentCreditTransactionId,
+          overpaymentCreditTransactionId: credit.id,
         },
         invoiceState: null,
         remaining: null,
       };
     }
-    const invoice = await this.loadInvoice(client, receipt.invoiceId);
-    const walletCreditAmount = credit?.amount ?? 0n;
-    const invoiceAllocation = receipt.amount - walletCreditAmount;
+    const invoice = await this.loadInvoice(client, receipt.invoiceId, receipt.profile_id);
     // Partial settlements have no excess-credit row. Preserve the original
     // remaining amount from the immutable confirmation audit on retries.
     const confirmation = await client.query(
@@ -1706,8 +1694,9 @@ export class InvoiceBankReceiptConfirmationService {
          FROM audit_log WHERE event = $1
           AND metadata::jsonb ->> 'receiptId' = $2
           AND metadata::jsonb ->> 'invoiceId' = $3
+          AND COALESCE(metadata::jsonb ->> 'profileId',$4)=$4
          ORDER BY created_at ASC LIMIT 1`,
-      [INVOICE_BANK_RECEIPT_CONFIRMED_EVENT, receipt.id, receipt.invoiceId]
+      [INVOICE_BANK_RECEIPT_CONFIRMED_EVENT, receipt.id, receipt.invoiceId, receipt.profile_id]
     );
     const recordedRemaining = (confirmation.rows[0] as { remaining_before?: unknown } | undefined)
       ?.remaining_before;
@@ -1750,7 +1739,7 @@ export class InvoiceBankReceiptConfirmationService {
       });
       return extra;
     }
-    const invoice = await this.loadInvoice(queryable, row.invoice_id);
+    const invoice = await this.loadInvoice(queryable, row.invoice_id, row.profile_id);
     if (!invoice) {
       return { overpayment: null, invoiceState: null, remaining: null };
     }
@@ -1784,12 +1773,13 @@ export class InvoiceBankReceiptConfirmationService {
 
   private async loadInvoice(
     queryable: WalletQueryClient,
-    invoiceId: string
+    invoiceId: string,
+    profileId: string
   ): Promise<InvoiceRow | null> {
     const result = await queryable.query(
       `SELECT id, profile_id, state, total_amount, paid_amount, refunded_amount, adjustment_kind
-         FROM invoices WHERE id = $1`,
-      [invoiceId]
+         FROM invoices WHERE id = $1 AND profile_id = $2`,
+      [invoiceId, profileId]
     );
     return (result.rows as InvoiceRow[])[0] ?? null;
   }

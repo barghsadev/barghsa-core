@@ -213,7 +213,7 @@ function script(opts: ScriptOptions = {}) {
       if (opts.wallet === null) return { rows: [] };
       return { rows: [{ profile_id: PROFILE_ID }] };
     }
-    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
+    if (sql.includes('JOIN wallet_transactions credit')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] };
     }
     if (sql.includes("SET state = 'Confirmed'")) {
@@ -303,7 +303,7 @@ function script(opts: ScriptOptions = {}) {
           : [],
       };
     }
-    if (sql.includes('FROM wallet_transactions WHERE idempotency_key')) {
+    if (sql.includes('JOIN wallet_transactions credit')) {
       return { rows: opts.existingCredit ? [opts.existingCredit] : [] };
     }
     if (sql.includes('FROM bank_receipts WHERE id')) {
@@ -527,9 +527,11 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
         state: 'Confirmed',
         confirmed_by: ACTOR_ID,
         confirmed_at: NOW,
+        amount: '1200000',
       }),
       existingCredit: {
         id: CREDIT_ID,
+        in_scope: true,
         wallet_id: PROFILE_ID,
         type: 'topup',
         amount: '800000',
@@ -580,6 +582,7 @@ describe('InvoiceBankReceiptConfirmationService (T-04.3.01.03 / T-04.3.01.04)', 
       getRow: makeReceiptRow({ state: 'Confirmed', confirmed_by: ACTOR_ID, confirmed_at: NOW }),
       existingCredit: {
         id: CREDIT_ID,
+        in_scope: true,
         wallet_id: PROFILE_ID,
         type: 'topup',
         amount: '100000',

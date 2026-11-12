@@ -1,5 +1,7 @@
+import { ConflictException } from '@nestjs/common';
 import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
 import type { Pool, PoolClient } from 'pg';
+import { invoiceBankReceiptCreditScopeSql } from './invoice-bank-receipt-credit-scope.js';
 
 export interface CustomerInvoicePayment {
   id: string;
@@ -46,24 +48,28 @@ export async function loadCustomerInvoiceActivity(
   includeRefunds = true
 ): Promise<CustomerInvoiceActivity> {
   const payments = await client.query<
-    Omit<CustomerInvoicePayment, 'createdAt'> & { createdAt: Date }
+    Omit<CustomerInvoicePayment, 'createdAt'> & { createdAt: Date; creditConflict: boolean }
   >(
-    `SELECT id, source, amount, state, "createdAt" FROM (
+    `SELECT id, source, amount, state, "createdAt", "creditConflict" FROM (
        SELECT id, 'wallet' AS source, (-amount::numeric)::text AS amount, state,
-              created_at AS "createdAt"
+              created_at AS "createdAt", false AS "creditConflict"
        FROM wallet_transactions
        WHERE ref_id=$1 AND wallet_id=$2::uuid AND type='payment' AND amount<0
        UNION ALL
        SELECT r.id, 'bank_receipt' AS source,
-              (r.amount::numeric - COALESCE(c.amount,0))::text AS amount,
-              r.state, r.confirmed_at AS "createdAt"
+              (r.amount::numeric - COALESCE(credit.amount,0))::text AS amount,
+              r.state, r.confirmed_at AS "createdAt",
+              (credit.id IS NOT NULL AND (${invoiceBankReceiptCreditScopeSql}) IS NOT TRUE)
+                AS "creditConflict"
        FROM bank_receipts r
-       LEFT JOIN wallet_transactions c ON c.wallet_id=r.profile_id
-         AND c.idempotency_key='invoice-bank-receipt-overpayment-credit:' || r.id::text
+       LEFT JOIN wallet_transactions credit
+         ON credit.idempotency_key='invoice-bank-receipt-overpayment-credit:' || r.id::text
        WHERE r.invoice_id=$1::uuid AND r.profile_id=$2::uuid AND r.state='Confirmed'
      ) payments ORDER BY "createdAt", id`,
     [invoiceId, profileId]
   );
+  if (payments.rows.some((row) => row.creditConflict))
+    throw new ConflictException('Bank receipt allocation requires reconciliation');
   const bankReceipts = await client.query<
     Omit<CustomerInvoiceBankReceipt, 'createdAt' | 'confirmedAt' | 'statusHistory'> & {
       createdAt: Date;
@@ -97,7 +103,13 @@ export async function loadCustomerInvoiceActivity(
       )
     : { rows: [] };
   return {
-    payments: payments.rows.map((row) => ({ ...row, createdAt: row.createdAt.toISOString() })),
+    payments: payments.rows.map(({ id, source, amount, state, createdAt }) => ({
+      id,
+      source,
+      amount,
+      state,
+      createdAt: createdAt.toISOString(),
+    })),
     bankReceipts: bankReceipts.rows.map((row) => ({
       ...row,
       createdAt: row.createdAt.toISOString(),
