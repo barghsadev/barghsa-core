@@ -15,9 +15,13 @@ Point the `stg.barghsa.com` A record to `89.42.199.13`. Allow inbound TCP 80,
 
 ```sh
 apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io docker-compose-v2 nginx certbot
+DEBIAN_FRONTEND=noninteractive apt-get install -y docker.io docker-buildx docker-compose-v2 nginx certbot
 mkdir -p /var/www/barghsa-acme /etc/nginx/snippets /opt/barghsa/staging /etc/barghsa/staging
 ```
+
+The staging PostgreSQL image uses BuildKit to share a signed Ubuntu package
+index across build stages. Check `docker buildx version` on existing hosts
+before rebuilding that image.
 
 Install `nginx-bootstrap.conf` as `/etc/nginx/conf.d/barghsa-staging.conf`,
 remove `/etc/nginx/sites-enabled/default`, test and reload NGINX. Obtain the

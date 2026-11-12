@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T19:36:25+00:00",
+  "updated": "2026-11-12T20:01:40+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17866,7 +17866,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -17982,6 +17982,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checkout permissions preserve non-root image access and private job storage."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ]
         }
@@ -20463,7 +20471,8 @@
           "release-0.6-hosted-signed-ubuntu-archive-fallback",
           "release-0.6-license-handoff-current",
           "release-0.6-unified-license-review",
-          "release-0.6-gate-readback"
+          "release-0.6-gate-readback",
+          "release-0.6-postgres-package-alignment"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -27692,7 +27701,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -27873,6 +27882,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checkout permissions preserve non-root image access and private job storage."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ]
         }
@@ -30236,7 +30253,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -30559,6 +30576,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checkout permissions preserve non-root image access and private job storage."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ]
         }
@@ -150267,7 +150292,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -151194,6 +151219,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound. Staging worker checkout permissions and private job storage verified."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -602839,7 +602872,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -603790,6 +603823,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound. Staging worker checkout permissions and private job storage verified."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -618757,7 +618798,6 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation.",
         "Collect and review a full week of representative report-only observations for the policy to enforce, then verify the real customer and staff journeys."
       ],
       "owner": null,
@@ -618769,7 +618809,8 @@
           "release-0.6-browser-response-policy",
           "release-0.6-security-header-ci-and-nonce-evidence",
           "release-0.6-browser-and-edge-privacy",
-          "release-0.6-staging-favicon-publication-prep"
+          "release-0.6-staging-favicon-publication-prep",
+          "release-0.6-published-staging-favicon"
         ],
         "current_acceptance": null
       }
@@ -631093,7 +631134,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -631218,6 +631259,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Release checkout permissions preserve non-root image access and private job storage."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ]
         }
@@ -639085,7 +639134,8 @@
           "release-0.6-runtime-image-binding",
           "release-0.6-runtime-log-channel-and-image",
           "release-0.6-staging-image-scans",
-          "release-0.6-portable-staging-images"
+          "release-0.6-portable-staging-images",
+          "release-0.6-postgres-package-alignment"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -642621,7 +642671,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the updated selector in an exact protected push. The installed CLI uses vitest related --run for test-only diffs. The isolated Linux run executed the changed PostgreSQL HTTP and web tests and confirmed a passing case per file. Runtime, shared, migration, fixture and configuration changes retain the package-graph scope. The full release coverage gate remains separate. The successful f8d97479 protected preflight and main runs used the package graph for their cumulative diffs, so neither proves the test-only branch."
+        "GitHub test-only preflight 43293337565 at ec43d7b4 exercised the current related selector and passed four cases in the single selected web test file. Its exact affected-test receipt binds the comparison to 26242fb58. The required aggregate failed at the separate Ubuntu PostgreSQL image build before scanning. Verify the protected successor and preserve the independent full release coverage requirement."
       ],
       "owner": null,
       "depends_on": [],
@@ -642637,7 +642687,8 @@
           "release-0.6-test-fixtures-and-affected-dependents",
           "release-0.6-prebuilt-ci-test-selection",
           "release-0.6-related-test-selection",
-          "release-0.6-gate-readback"
+          "release-0.6-gate-readback",
+          "release-0.6-postgres-package-alignment"
         ],
         "current_acceptance": null
       }
@@ -692897,7 +692948,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -693032,6 +693083,14 @@
                 "apps/web/src/components/AppShell.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -693200,7 +693259,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -693335,6 +693394,14 @@
                 "apps/web/src/components/AppShell.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -724794,7 +724861,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -725222,6 +725289,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -725844,7 +725919,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -726272,6 +726347,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -726893,7 +726976,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -727321,6 +727404,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -857294,7 +857385,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -857722,6 +857813,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -858343,7 +858442,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -858771,6 +858870,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -859392,7 +859499,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -859820,6 +859927,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -860441,7 +860556,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -860869,6 +860984,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -861494,7 +861617,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -861922,6 +862045,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -862543,7 +862674,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -862971,6 +863102,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -863593,7 +863732,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -864021,6 +864160,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -864643,7 +864790,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -865071,6 +865218,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -865693,7 +865848,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -866121,6 +866276,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -866743,7 +866906,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -867171,6 +867334,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -867793,7 +867964,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -868221,6 +868392,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -868843,7 +869022,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -869271,6 +869450,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -869893,7 +870080,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -870321,6 +870508,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -870943,7 +871138,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -871371,6 +871566,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -871993,7 +872196,7 @@
             },
             {
               "path": "apps/web/src/lib/shell-navigation.test.ts",
-              "sha256": "4a15dc685cf459ab9fb6bf0f567843fb63213954ce81db569735094103a6c7a1"
+              "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
             },
             {
               "path": "apps/web/src/lib/shell-navigation.ts",
@@ -872421,6 +872624,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "apps/web/src/lib/shell-navigation.test.ts"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -997064,7 +997275,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -999816,6 +1000027,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "presentation_renewals": [
@@ -1002377,7 +1002596,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "775bd842bd72fbbbbb09f8d53da54130735b756ed25d738f1ede81e4c18da8e7"
+              "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -1005030,6 +1005249,14 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-postgres-package-alignment",
+              "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "A navigation assertion covers unknown home-route descendants. Staging setup documents the BuildKit prerequisite. Hosted selected tests and isolated image checks verified the affected scope."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1010214,7 +1010441,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "GitHub preflight 43202204367 passed the required Verify monorepo integrity and combined source coverage jobs at 05755c71173cd7018c9d4f702dfb3b546fd4ffc3. GitHub readback verified that exact SHA on main. The combined Loki and SQL audit successor at cc1f7086 is in preflight 43207285646. Strict release image-license and acceptance gates remain open."
+        "GitHub preflight 43286083146 passed Verify monorepo integrity at 736bcb0cca45ad85f46e58f70037d5df0b047d68. The exact SHA reached protected main. The successor preflight and strict release image-license, coverage and live acceptance gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1010490,7 +1010717,8 @@
           "release-0.6-reuse-affected-preflight",
           "release-0.6-validated-outbox-trace-constraint",
           "release-0.6-pilot-rollout",
-          "release-0.6-node-postgres-lint"
+          "release-0.6-node-postgres-lint",
+          "release-0.6-postgres-package-alignment"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1010736,7 +1010964,7 @@
         "Execute migration/seed ordering, backup/PITR and restore/rollback rehearsals; measure actual service RPO/RTO.",
         "Verify production-equivalent monitoring and quality schedules. The stage receiver has 16 private inbox delivery receipts including provider, dead-letter and SMS low-credit firing/recovery. All six external email legs were skipped because the channel was disabled. An authorized monitoring email recipient with an enabled verified channel and actual provider delivery receipt are still required.",
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
-        "The live staging CSP reports and public branding response identify the cross-origin favicon. An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation. Complete the full reviewed observation window before enforcing CSP.",
+        "The normal staging branding workflow published the original favicon. Same-origin bytes and fresh Persian login were verified at 2026-11-12T19:59:32Z. Complete the representative report-only review and verify real customer and staff journeys before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
         "The current v0.5.0 staging scanner remains healthy at image sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c with a 100 MiB stream limit and daily 28180 matching the verified EU archive and detached signature. Hosted preflight also proved the sealed document lifecycle against a real ClamAV daemon. Verify signature freshness, sealed application receipts and outage recovery on the final application and operational topology.",
         "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts."
@@ -1010774,7 +1011002,9 @@
           "release-0.6-alert-delivery-watchdog",
           "release-0.6-sealed-clamav-lifecycle",
           "release-0.6-private-jaeger-readback-rehearsal",
-          "release-0.6-gate-readback"
+          "release-0.6-gate-readback",
+          "release-0.6-postgres-package-alignment",
+          "release-0.6-published-staging-favicon"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -1170603,6 +1170833,195 @@
         {
           "file": "format.log",
           "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-postgres-package-alignment": {
+      "batch": "release-0.6-postgres-package-alignment",
+      "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-05.03.04",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.09.01.04",
+        "07-ui-ux-design.md#T-07.01.03.16",
+        "07-ui-ux-design.md#T-07.01.03.17",
+        "07-ui-ux-design.md#T-07.04.02.01",
+        "07-ui-ux-design.md#T-07.04.02.02",
+        "07-ui-ux-design.md#T-07.04.02.03",
+        "07-ui-ux-design.md#T-07.15.01.01",
+        "07-ui-ux-design.md#T-07.15.01.02",
+        "07-ui-ux-design.md#T-07.15.01.03",
+        "07-ui-ux-design.md#T-07.15.01.04",
+        "07-ui-ux-design.md#T-07.15.01.05",
+        "07-ui-ux-design.md#T-07.16.01.01",
+        "07-ui-ux-design.md#T-07.16.01.02",
+        "07-ui-ux-design.md#T-07.16.01.03",
+        "07-ui-ux-design.md#T-07.16.01.04",
+        "07-ui-ux-design.md#T-07.16.01.05",
+        "07-ui-ux-design.md#T-07.16.01.06",
+        "07-ui-ux-design.md#T-07.16.01.07",
+        "07-ui-ux-design.md#T-07.16.02.01",
+        "07-ui-ux-design.md#T-07.16.02.02",
+        "07-ui-ux-design.md#T-07.16.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-05.02",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [
+        "apps/web/src/lib/shell-navigation.test.ts",
+        "deploy/staging/Dockerfile.postgres",
+        "deploy/staging/README.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/web/src/lib/shell-navigation.test.ts",
+          "sha256": "22ec0ce9faec7c93c7149481a6a333077e9112e01dffc8e5dbac76fe9539c059"
+        },
+        {
+          "path": "deploy/staging/Dockerfile.postgres",
+          "sha256": "5316c0ab8fcfac0464598964557549b30674274810a6fb8f1550fa04fe8a488c"
+        },
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "eb20468fe8df61baf9b29fb6e3b742628670a0560e78216d57e1fa60bd3ea1a7"
+        },
+        {
+          "path": "scripts/run-fast-tests.mjs",
+          "sha256": "9e95e6f5a740788ca9ed051f53487604e5e451f8d0855ada80b9f3a69cd045bf"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "scripts/check-runtime-images.sh",
+          "sha256": "2eca8dd26a253b7d487ad99eb5c8b52da7b103f743c8a6f3eb8fdf6957c20bfd"
+        },
+        {
+          "path": "deploy/staging/build-postgres-image.sh",
+          "sha256": "17d6addcf376bf61b4cabcf82755e3cd2b2b872d948cb50acc7571861b30ef92"
+        }
+      ],
+      "checks": [
+        "Test-only hosted preflight 43293337565 passed the selected file and all four cases. Its separate image build mixed libc6 8.12 and libc6-dev 8.9 after two Ubuntu index refreshes and stopped before scanning. Preflight 43286083146 passed and reached main at 736bcb0c.",
+        "The corrected recipe used one signed archive index and serial pgvector compilation. The local AMD64 build succeeded after the first emulated parallel link failed inside the GCC jobserver.",
+        "The resulting image initialized PostgreSQL 16.15 with libc collation and data checksums. PostGIS 3.6.4 and pgvector 0.8.6 executed queries, and the packaged backup helpers imported. Build tools and package indexes were absent from the running image.",
+        "Trivy 0.76.2 returned zero high and critical findings and wrote a matching CycloneDX SBOM for image sha256:5627531321e4d13276e28651d6945ccd9ee443a471539de2c26b9941ecc86b90.",
+        "Installed only Ubuntu docker-buildx 0.30.1 on staging. BuildKit 0.26.2 is running; all current containers and the Docker daemon started before the plugin install. Staging readiness returned ok at v0.5.1.",
+        "Four navigation cases, fifteen release-worker cases, formatting and whitespace checks passed."
+      ],
+      "limitations": [
+        "The image smoke and scan use an isolated image. The live database image, application version and Telegram release remain v0.5.1. The native candidate build, strict package dispositions and final cutover require independent evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-package-alignment",
+      "execution_receipts": [
+        {
+          "file": "related-hosted-status.json",
+          "sha256": "375344e5467ac2ad731202906e5aa7597974665c211cb08012322b6b035a7940"
+        },
+        {
+          "file": "related-hosted-selection.log",
+          "sha256": "49d4fae17168bbfd3e6d2c65702dbfb37f94956db09f6e9bdab3b9a165f596f7"
+        },
+        {
+          "file": "affected-test-receipt.json",
+          "sha256": "8e2fdd7472325f7298ca3c15c87eed48c0fde21f310435bdf95770910aed75ef"
+        },
+        {
+          "file": "serial-build.log",
+          "sha256": "ba66ba2e8e985bf4f3086961040ba59465715728470e46a000b1e43766860164"
+        },
+        {
+          "file": "image-smoke.log",
+          "sha256": "2b33c2d3c381774463f19414ca8d9d727e216f8f37add8da0d3085a0be22d526"
+        },
+        {
+          "file": "runtime-image-scan/1-image.json",
+          "sha256": "5a055b6c1f695052d3ade9603255730a88b31043e2ceffd2e8ff2b02fe7fa839"
+        },
+        {
+          "file": "staging-buildx-package.log",
+          "sha256": "05182c4cdf1508055f7d0a001b2072675978bd8b835b8760ee5470ab024b7f98"
+        },
+        {
+          "file": "staging-buildx-readback.log",
+          "sha256": "b8c6fe538279198ad95491c5dcbb86bfdc0b011084b856cd55c28b85be00a93e"
+        },
+        {
+          "file": "live-health.json",
+          "sha256": "23270ce70d37310a3b7d3e8eef78e79c918172917ce71516b872dbb5222862bc"
+        },
+        {
+          "file": "live-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
+        },
+        {
+          "file": "navigation.log",
+          "sha256": "d9beaeed9dd3b539ec8bf1f09714651e13ccf20a65e9bbf249f43fa1b3f8cde9"
+        },
+        {
+          "file": "release-tests.log",
+          "sha256": "166edfd3020f098f9e8a9825e649562d66a6110113b41e1ed59dc52dec46e43e"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        }
+      ]
+    },
+    "release-0.6-published-staging-favicon": {
+      "batch": "release-0.6-published-staging-favicon",
+      "base_commit": "5d679376019ac42228be5672a6d9311701d80f8f",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.02.02.06",
+        "release-readiness#R-05.03"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/brand-asset.service.ts",
+          "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+        },
+        {
+          "path": "apps/web/src/providers/BrandThemeProvider.tsx",
+          "sha256": "673c19bca9820b439c2d526b4377160d0f2e45c3ce6889f53ae0b26b84faed51"
+        },
+        {
+          "path": "docs/security/content-security-policy.md",
+          "sha256": "c9aceb2ac70f0238101b0fa926bd909f7ab4f7e2dfbe034357ad33ad53f30883"
+        }
+      ],
+      "checks": [
+        "On live v0.5.1 the public branding configuration references a same-origin sealed asset. Its served image/png has no-store caching and exactly matches the previously prepared 150×150 PNG SHA-256.",
+        "A fresh Persian login on desktop Chromium and iPhone WebKit decoded the published asset and produced no external image request or image policy violation."
+      ],
+      "limitations": [
+        "Two fresh login checks verify the favicon publication. The full representative report-only observation and real customer and staff journeys remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-package-alignment",
+      "execution_receipts": [
+        {
+          "file": "published-favicon.json",
+          "sha256": "b1cb45615b4ca645b3ac61c67cdb2a635caa206b6841c43f7a45ac0b5b48bba9"
+        },
+        {
+          "file": "published-favicon-headers.txt",
+          "sha256": "b37edab662642d01a0ae40c100847edc5cc16e2c503eb0eaeddbcb7a39733acb"
+        },
+        {
+          "file": "live-login-published.log",
+          "sha256": "4fde6db83021a6eea0b24050ffc0fa900b409db62910621fad7597e28f843579"
+        },
+        {
+          "file": "live-release.json",
+          "sha256": "b5cc6aabda7d9c81fc78858a9b2f943f53a12b28e87edf0f05b37ff986ccf082"
         }
       ]
     }

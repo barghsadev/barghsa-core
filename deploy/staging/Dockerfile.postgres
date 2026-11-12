@@ -2,28 +2,33 @@ ARG BACKUP_HELPERS_IMAGE=barghsa-postgres-helpers:local
 FROM ${BACKUP_HELPERS_IMAGE} AS helpers
 
 # Retain the glibc collation used by the staging databases.
-FROM ubuntu:24.04@sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5 AS runtime
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --no-install-recommends \
+FROM ubuntu:24.04@sha256:2198e4c65076e9cb0b3d695219df667c0e3b0072da64ca3c2648aca17dcecaf5 AS ubuntu-base
+# Use one verified archive index for the runtime and matching development headers.
+FROM ubuntu-base AS ubuntu-archive
+RUN apt-get -o APT::Update::Error-Mode=any update
+
+FROM ubuntu-base AS runtime
+RUN --mount=from=ubuntu-archive,source=/var/lib/apt/lists,target=/var/lib/apt/lists,rw \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y --no-install-recommends \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends postgresql-common \
     && mkdir -p /etc/postgresql-common/createcluster.d \
     && printf 'create_main_cluster = false\n' > /etc/postgresql-common/createcluster.d/00-barghsa.conf \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
        ca-certificates gnupg locales postgresql-16 postgresql-client-16 python3 \
-    && localedef -i en_US -f UTF-8 en_US.UTF-8 \
-    && rm -rf /var/lib/apt/lists/*
+    && localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV PATH="/opt/backup-venv/bin:/usr/lib/postgresql/16/bin:${PATH}" \
     PGDATA=/var/lib/postgresql/data LANG=en_US.utf8
 
 FROM runtime AS build
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-       curl gcc libc6-dev make postgresql-server-dev-16 python3-venv \
-    && rm -rf /var/lib/apt/lists/*
+RUN --mount=from=ubuntu-archive,source=/var/lib/apt/lists,target=/var/lib/apt/lists,rw \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+       curl gcc libc6-dev make postgresql-server-dev-16 python3-venv
 RUN curl --fail --silent --show-error --location --retry 2 --max-time 90 \
       https://codeload.github.com/pgvector/pgvector/tar.gz/8ee86c96f0fd72390f890aa8a336fda6d3ab4c6c \
       --output /tmp/pgvector.tar.gz \
     && echo 'd076a3098010905fd60256649327809651f6288327db6413f0938305f62ea299  /tmp/pgvector.tar.gz' | sha256sum -c - \
     && mkdir /tmp/pgvector && tar -xzf /tmp/pgvector.tar.gz -C /tmp/pgvector --strip-components=1 \
-    && cd /tmp/pgvector && make -j2 OPTFLAGS= with_llvm=no \
+    && cd /tmp/pgvector && make -j1 OPTFLAGS= with_llvm=no \
     && make install DESTDIR=/out with_llvm=no \
     && install -D -m 0644 LICENSE /out/usr/local/share/licenses/pgvector/LICENSE
 COPY packages/db/scripts/backup/requirements.txt /tmp/requirements.txt
@@ -62,9 +67,9 @@ COPY --from=helpers /usr/local/share/licenses/gosu/ /usr/local/share/licenses/go
 COPY --from=helpers /docker-entrypoint-initdb.d/10_postgis.sh /docker-entrypoint-initdb.d/
 COPY --from=helpers /usr/local/bin/update-postgis.sh /usr/local/bin/
 COPY packages/db/scripts/backup/ /opt/backup/
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends /tmp/postgis/*.deb \
-    && rm -rf /tmp/postgis /var/lib/apt/lists/* \
+RUN --mount=from=ubuntu-archive,source=/var/lib/apt/lists,target=/var/lib/apt/lists,rw \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends /tmp/postgis/*.deb \
+    && rm -rf /tmp/postgis \
     && test "$(dpkg-query -W -f='${Version}' postgresql-16-postgis-3)" = '3.6.4+dfsg-2.pgdg24.04+1' \
     && test -r "$(pg_config --sharedir)/extension/postgis.control" \
     && mkdir -p /var/run/postgresql && chown postgres:postgres /var/run/postgresql \

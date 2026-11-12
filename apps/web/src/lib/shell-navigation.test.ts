@@ -64,5 +64,6 @@ it('matches the longest actual page prefix and respects route boundaries', () =>
   expect(currentNavigation(groups, '/invoices/private-id')?.to).toBe('/invoices');
   expect(currentNavigation(groups, '/invoices-other')).toBeUndefined();
   expect(currentNavigation(groups, '/app-other')).toBeUndefined();
+  expect(currentNavigation(groups, '/app/unlisted-page')).toBeUndefined();
   expect(currentNavigation(groups, '/app')?.to).toBe('/app');
 });
