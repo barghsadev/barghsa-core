@@ -1,0 +1,61 @@
+name: Verify sealed documents against real ClamAV
+on:
+  push:
+    branches: ['codex/verify/v06-sealed-scanner-*']
+permissions:
+  contents: read
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact API and worker runtime
+        run: pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker
+      - name: Scan sealed fixture bytes with the candidate scanner image
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          image=barghsa-ci-clamav:$GITHUB_SHA
+          docker build -f deploy/clamav/Dockerfile -t "$image" --iidfile "$RUNNER_TEMP/clamav-image-id.txt" .
+          name=barghsa-clamd-rehearsal
+          trap 'docker logs "$name" > "$RUNNER_TEMP/clamav-daemon.log" 2>&1; docker rm -fv "$name" >/dev/null' EXIT
+          docker run --rm --entrypoint sh "$image" -ec 'test -s /var/lib/clamav/main.cvd; test -s /var/lib/clamav/daily.cvd; test -s /var/lib/clamav/bytecode.cvd'
+          docker run -d --name "$name" -p 127.0.0.1::3310 -e CLAMAV_NO_FRESHCLAMD=true "$image"
+          ready=false
+          for _attempt in {1..60}; do
+            if docker exec "$name" /usr/local/bin/barghsa-clamav-healthcheck; then ready=true; break; fi
+            if [ "$(docker inspect --format '{{.State.Running}}' "$name")" != true ]; then exit 1; fi
+            sleep 2
+          done
+          test "$ready" = true
+          docker exec "$name" sh -ec "printf 'zVERSION\\0' | nc -w 3 127.0.0.1 3310 | tr -d '\\000'" > "$RUNNER_TEMP/clamav-version.txt"
+          grep -q '^ClamAV [0-9]' "$RUNNER_TEMP/clamav-version.txt"
+          BARGHSA_TEST_CLAMD_PORT=$(docker port "$name" 3310/tcp | cut -d: -f2)
+          export BARGHSA_TEST_CLAMD_PORT
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+            src/documents/document-http.integration.test.ts \
+            -t 'actual ClamAV clean verdict|durable worker job|seals a required RTF' \
+            2>&1 | tee "$RUNNER_TEMP/sealed-clamav.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sealed-clamav
+          path: |
+            ${{ runner.temp }}/sealed-clamav.log
+            ${{ runner.temp }}/clamav-version.txt
+            ${{ runner.temp }}/clamav-image-id.txt
+            ${{ runner.temp }}/clamav-daemon.log
+          retention-days: 14
