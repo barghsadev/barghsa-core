@@ -12,6 +12,7 @@ import { getDbPool } from '@barghsa/db';
 import type { OperatingContext, ValidatedSession } from '../session/session.service.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { traceNotificationOutboxInsert } from '../metrics/domain-tracing.js';
 import type { PoolClient } from 'pg';
 
 export type ContractCustomerEvent =
@@ -502,18 +503,20 @@ export class NotificationsService {
     };
     const channels = ['in_app', 'email'];
     const outboxId = uuidv7();
-    const inserted = await transaction.query(
-      `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
-       VALUES($1,$2,$3,$4,$5,'queued',$6,5,$7) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
-      [
-        outboxId,
-        params.userId,
-        params.eventKey,
-        payload,
-        channels,
-        params.occurrenceKey,
-        correlationIdStorage.getStore() ?? null,
-      ]
+    const inserted = await traceNotificationOutboxInsert(() =>
+      transaction.query(
+        `INSERT INTO notification_outbox(id,user_id,event_key,payload,channels,status,idempotency_key,max_attempts,correlation_id)
+         VALUES($1,$2,$3,$4,$5,'queued',$6,5,$7) ON CONFLICT(idempotency_key) DO NOTHING RETURNING id`,
+        [
+          outboxId,
+          params.userId,
+          params.eventKey,
+          payload,
+          channels,
+          params.occurrenceKey,
+          correlationIdStorage.getStore() ?? null,
+        ]
+      )
     );
     if (!inserted.rows[0]) {
       const existing = await transaction.query(

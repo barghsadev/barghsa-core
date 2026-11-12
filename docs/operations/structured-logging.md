@@ -46,6 +46,12 @@ template, HTTP method and status. URLs, query values, headers, bodies,
 exception text, baggage and `tracestate` are excluded. Request completion logs
 add `traceId` and `spanId` when tracing is enabled and retain `correlationId`.
 
+Forced password changes add an `auth.password.change` span below the HTTP
+span. The account notification insert adds a `notification.outbox.insert`
+client span with the database system, operation and table name. It omits SQL,
+parameters, database addresses and errors. A failed operation records the
+span status and preserves the existing transaction rollback.
+
 Completed API spans with HTTP 5xx, timeout or an interrupted response are
 selected for export, as are requests that run for more than 500 milliseconds.
 `OTEL_TRACE_SUCCESS_SAMPLE_RATE` controls routine spans and defaults to 0.1.
@@ -60,9 +66,10 @@ The transaction pool also sets it for the transactions it opens around
 standalone statements. Existing rows and untraced writers have no parent.
 
 Enable the same protected endpoint in the worker to export
-`notification.outbox.process` spans with the stored parent. Delivery logs
-carry the worker span ID and original trace ID. Message payloads and provider
-requests carry neither identifier.
+`notification.outbox.process` spans with the stored parent. In a forced
+password change, both the insert and worker spans link to the domain span.
+Delivery logs carry the worker span ID and original trace ID. Message
+payloads and provider requests carry neither identifier.
 
 On the configured collector, match an API request and notification worker
 span by trace ID, and check their parent relationship and corresponding

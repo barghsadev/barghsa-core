@@ -36,6 +36,7 @@ import { RateLimitService } from '../rate-limit/rate-limit.service.js';
 import { TosService } from '../tos/tos.service.js';
 import { deviceTrustIp } from './device-trust-ip.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
+import { TraceDomainOperation } from '../metrics/domain-tracing.js';
 
 type ContactActor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
 
@@ -423,6 +424,7 @@ export class AuthService {
    *
    * No session is established — the user must log in again after the change.
    */
+  @TraceDomainOperation('auth.password.change')
   async forceChangePassword(
     input: ForceChangePasswordInput,
     ip: string

@@ -3,6 +3,7 @@ import { operatorLogTrace } from '@barghsa/shared/operator-logging';
 import { createTraceProvider, extractTraceparent } from '@barghsa/shared/telemetry';
 import { SpanKind, SpanStatusCode } from '@opentelemetry/api';
 import type { RequestHandler } from 'express';
+import { apiOperationTracer } from './domain-tracing.js';
 
 const methods = new Set([
   'GET',
@@ -51,7 +52,7 @@ export class ApiRequestTracing implements OnApplicationShutdown {
     };
     response.once('finish', () => finish(false));
     response.once('close', () => finish(!response.writableFinished));
-    operatorLogTrace.run(span.spanContext(), next);
+    apiOperationTracer.run(this.tracer, () => operatorLogTrace.run(span.spanContext(), next));
   };
 
   async onApplicationShutdown(): Promise<void> {

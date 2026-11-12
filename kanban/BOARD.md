@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T09:04:07+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T09:12:40+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1240 | Accepted with unchanged source bindings. |
-| verify | 22 | Existing work may be complete; inspect evidence before building. |
+| done | 1241 | Accepted with unchanged source bindings. |
+| verify | 21 | Existing work may be complete; inspect evidence before building. |
 | partial | 98 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1352,7 +1352,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.12.05.05` | done | Recorded batch work | Flaky test report dashboard: list, trend, owner, days in quarantine |
 | `06-security-testing-observability.md#T-06.13.01.01` | partial | Recorded batch work | Install OpenTelemetry JS SDK + instrumentations (HTTP, NestJS, Express, PostgreSQL, Redis, gRPC) |
 | `06-security-testing-observability.md#T-06.13.01.02` | partial | Recorded batch work | Configure OTel SDK auto-instrumentation for all process types (web, API, worker) |
-| `06-security-testing-observability.md#T-06.13.01.03` | verify | Inventory needed | Implement custom NestJS decorator/interceptor for span creation in domain services |
+| `06-security-testing-observability.md#T-06.13.01.03` | done | Recorded batch work | Implement custom NestJS decorator/interceptor for span creation in domain services |
 | `06-security-testing-observability.md#T-06.13.01.04` | partial | Recorded batch work | Propagate trace context across HTTP headers (W3C TraceContext) |
 | `06-security-testing-observability.md#T-06.13.01.05` | done | Recorded batch work | Propagate trace context through PostgreSQL outbox → worker processing |
 | `06-security-testing-observability.md#T-06.13.01.06` | partial | Recorded batch work | Implement trace sampling: sample rate for successful traces (e.g. 10%), always sample errors and slow traces (>500ms) |
