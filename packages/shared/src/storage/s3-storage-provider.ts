@@ -142,6 +142,11 @@ export class S3StorageProvider implements IFileStorageProvider {
           body.setTimeout(requestTimeout, () => {
             body.destroy(new Error('Storage object response was idle'));
           });
+          // Give streamed files longer than control responses, with a fixed total body deadline.
+          const deadline = setTimeout(() => {
+            body.destroy(new Error('Storage object response timed out'));
+          }, requestTimeout * 4).unref();
+          body.once('close', () => clearTimeout(deadline));
           return result;
         }
 

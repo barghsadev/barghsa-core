@@ -256,6 +256,41 @@ it('caps S3 control responses and continues to stream objects larger than that c
   }
 });
 
+it('ends an active S3 object transfer at the total body deadline', async () => {
+  const server = createServer((_request, response) => {
+    response.writeHead(200, { 'content-type': 'application/octet-stream' });
+    response.write('start');
+    const transfer = setInterval(() => response.write('next'), 25);
+    response.once('close', () => clearInterval(transfer));
+  });
+  server.listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  const address = server.address();
+  if (!address || typeof address === 'string') throw new Error('Storage fixture did not start');
+  const provider = new S3StorageProvider(
+    makeConfig({
+      endpoint: `http://127.0.0.1:${address.port}`,
+      maxRetries: 1,
+      requestTimeoutMs: 250,
+    })
+  );
+  try {
+    const object = await provider.getObject('active');
+    const reader = object.body.getReader();
+    const initial = await reader.read();
+    expect(initial.value?.byteLength).toBeGreaterThan(0);
+    await expect(async () => {
+      while (!(await reader.read()).done) {
+        // Drain the response so backpressure does not trigger the idle timeout.
+      }
+    }).rejects.toThrow('Storage object response timed out');
+  } finally {
+    provider.destroy();
+    server.closeAllConnections();
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
+});
+
 // ---------------------------------------------------------------------------
 // StorageObjectNotFound
 // ---------------------------------------------------------------------------

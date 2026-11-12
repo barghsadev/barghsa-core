@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T12:23:50+00:00",
+  "updated": "2026-11-12T12:35:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -13042,7 +13042,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -13124,6 +13124,14 @@
                 "apps/worker/src/storage/multipart-cleanup.ts"
               ],
               "scope": "The batch validates the saved multipart cleanup age and supports authorized repair through the existing storage form. Storage configuration authority, provider tests, upload state, existing retention and business object protections remain intact. Relevant native and web checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -16095,7 +16103,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -16107,7 +16115,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -16203,6 +16211,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -16394,7 +16411,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -16406,7 +16423,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -16562,6 +16579,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -16814,7 +16840,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -16826,7 +16852,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -16929,6 +16955,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -542243,7 +542278,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -542259,7 +542294,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -542491,6 +542526,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -542572,7 +542616,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -542588,7 +542632,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -542820,6 +542864,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -542930,11 +542983,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -543282,6 +543335,15 @@
                 "apps/api/src/tickets/tickets-http.integration.test.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -543406,11 +543468,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -543729,6 +543791,15 @@
                 "apps/api/src/tickets/tickets-http.integration.test.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -554866,7 +554937,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -555314,6 +555385,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -555504,7 +555583,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -555952,6 +556031,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -556144,7 +556231,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -556613,6 +556700,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -556837,7 +556932,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -557392,6 +557487,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -557594,7 +557697,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -558042,6 +558145,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -595769,18 +595880,22 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP now closes a continuously streaming connection within the configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and an idle timeout for object bodies. Repeat the deployed file-size and byte-verification rehearsal."
+        "Verify the exact accepted candidate against the selected providers and protected OTLP collector. OTLP closes a continuously streaming connection within its configured deadline and retains the upstream 4 MiB response cap. S3 has a terminal header deadline, a 10 MiB control response cap and deadline, and both an idle timeout and a two-minute total body deadline for successful object downloads. Repeat the deployed file-size and byte-verification rehearsal."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/metrics/database-telemetry.test.ts",
+          "apps/api/src/metrics/database-telemetry.ts",
           "apps/api/src/provider-config/resend-connection-tester.service.test.ts",
           "apps/api/src/provider-config/resend-connection-tester.service.ts",
           "apps/api/src/route-errors/route-errors.controller.test.ts",
           "apps/api/src/route-errors/route-errors.controller.ts",
           "apps/api/src/storage/read-capped-bytes.ts",
+          "docs/operations/postgresql-monitoring.md",
+          "docs/operations/storage-configuration.md",
           "docs/security/security-verification.md",
           "packages/shared/src/auth-delivery/smsir-client.test.ts",
           "packages/shared/src/auth-delivery/smsir-client.ts",
@@ -595789,11 +595904,7 @@
           "packages/shared/src/storage/index.ts",
           "packages/shared/src/storage/read-capped-bytes.ts",
           "packages/shared/src/storage/s3-storage-provider.ts",
-          "packages/shared/src/storage/storage.test.ts",
-          "docs/operations/storage-configuration.md",
-          "apps/api/src/metrics/database-telemetry.test.ts",
-          "apps/api/src/metrics/database-telemetry.ts",
-          "docs/operations/postgresql-monitoring.md"
+          "packages/shared/src/storage/storage.test.ts"
         ],
         "batches": [
           "release-0.6-provider-egress-regressions",
@@ -595803,7 +595914,8 @@
           "release-0.6-definition-of-done-and-exception-templates",
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-s3-response-limits",
-          "release-0.6-otlp-connection-deadline"
+          "release-0.6-otlp-connection-deadline",
+          "release-0.6-storage-body-deadline"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -598867,11 +598979,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -599020,6 +599132,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -599083,7 +599204,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -599200,6 +599321,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -599682,7 +599811,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -599690,7 +599819,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -600013,6 +600142,15 @@
                 "apps/api/openapi.json"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -600136,11 +600274,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -600288,6 +600426,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -600435,7 +600582,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
@@ -600771,6 +600918,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -608664,7 +608819,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -608765,6 +608920,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -621699,7 +621862,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/read-capped-bytes.ts",
@@ -621981,6 +622144,14 @@
                 "apps/api/package.json"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -693150,7 +693321,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/ui/package.json",
@@ -693556,6 +693727,14 @@
                 "apps/web/src/pages/AdminBrandingConfig.tsx"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -693878,7 +694057,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/ui/package.json",
@@ -694274,6 +694453,14 @@
                 "apps/web/src/pages/AdminBrandingConfig.tsx"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -695899,7 +696086,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/ui/package.json",
@@ -696295,6 +696482,14 @@
                 "apps/web/src/pages/AdminBrandingConfig.tsx"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -699003,7 +699198,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/ui/package.json",
@@ -699399,6 +699594,14 @@
                 "apps/web/src/pages/AdminBrandingConfig.tsx"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ]
         }
@@ -950497,7 +950700,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -950513,7 +950716,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -952246,6 +952449,15 @@
                 "apps/api/src/admin/config-write-http.integration.test.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "presentation_renewals": [
@@ -955527,7 +955739,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+              "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -955543,7 +955755,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+              "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -957180,6 +957392,15 @@
                 "apps/api/src/admin/config-write-http.integration.test.ts"
               ],
               "scope": "The reviewed diff rejects undeclared fields on seven configuration and approval write boundaries. The OpenAPI changes are confined to those request bodies. Compiled and caller regressions retain valid aliases, version guards, product eligibility, current authority, configuration audits and approved details."
+            },
+            {
+              "batch": "release-0.6-storage-body-deadline",
+              "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1110418,6 +1110639,133 @@
         {
           "file": "source.sha256",
           "sha256": "7baa83eb404db7552508c9ed8ecae7474a678853e8e48d5b2fd18bc9d4355e68"
+        }
+      ]
+    },
+    "release-0.6-storage-body-deadline": {
+      "batch": "release-0.6-storage-body-deadline",
+      "base_commit": "2711a48f8e72119c79dcef009915d7b2ff7cc6ef",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "docs/operations/storage-configuration.md",
+        "packages/shared/src/storage/s3-storage-provider.ts",
+        "packages/shared/src/storage/storage.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "26d55f5ec33501443e2863ac57fab73c76dd44a5540dbc7da35791d6f9b71677"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+        },
+        {
+          "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+          "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+        },
+        {
+          "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
+          "sha256": "a7a26cd9f28ae62b27333764d7f0bb8800b573bf4298b5e33fec9c06595561ce"
+        },
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "6ae58df5731a5963af4e0bdcb0a69488db700faaf446af0e20449a0b1f4fd064"
+        },
+        {
+          "path": "packages/shared/src/storage/read-capped-bytes.ts",
+          "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "9611600ba72ab43666fd88284fa29d1c644b70dae2f173e17e8cc9a1ab80a915"
+        },
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "0762080eec40ce195cb859b9fb9d742fdb8e207ef1c20f49fc2b9c1069d66c35"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-circuit.ts",
+          "sha256": "92237c99423125832f2ba0ce5c033fe423b089d406c0c72be5b14f4d3181b087"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "f6f1c5cb5d812f28d63fe163eccacaba8707d5162896af3b50beccca5e597643"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "The real AWS SDK loopback transport completed the existing byte-for-byte object larger than 10 MiB and rejected oversized control responses. The new active transfer test read bytes and then observed the total body deadline. Existing no-header, metadata and idle object timeouts retain their separate assertions.",
+        "All 104 shared storage tests passed. The compiled API storage configuration, record and access suites passed 61 tests. The worker profile export and multipart cleanup suites passed 19 tests. Shared build and exports, API and worker builds, ESLint, Prettier and git diff checks passed."
+      ],
+      "limitations": [
+        "The two-minute default applies to the server-side successful object response body after headers. Direct browser transfers remain governed by the existing presigned storage policy.",
+        "Provider and protected collector readback on the accepted v0.6.0 deployment remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-body-deadline",
+      "execution_receipts": [
+        {
+          "file": "storage-tests.log",
+          "sha256": "55afd8d8d00d8f1701aa97718282111e325a5546f5b62a1bbd48bc27ed7010b7"
+        },
+        {
+          "file": "api-callers.log",
+          "sha256": "d095a02bc9701dbee74824d19d631dde0060edb752ab70bf6091811990dc51cb"
+        },
+        {
+          "file": "worker-callers.log",
+          "sha256": "3aceaccb4550af2fed38065a3b367ba867ea5ec5099c9e7b1f016bd3662717dd"
+        },
+        {
+          "file": "caller-build.log",
+          "sha256": "410e3c5fe7ef149f83240b346daa0c97af1b1459cd7c1779aa64b6cd48d16474"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "shared-build.log",
+          "sha256": "22cace5a2b8948f92fcbd7b1cf3ff1f9dd6bff2f7c0ad188349f428bdaa26c90"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         }
       ]
     }
