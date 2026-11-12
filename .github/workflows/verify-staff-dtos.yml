@@ -1,0 +1,45 @@
+name: Verify strict staff command DTOs
+on:
+  push:
+    branches: ['codex/verify/v06-staff-dtos-*']
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact fixture runtime
+        run: pnpm exec turbo run build --filter=@barghsa/api --filter=@barghsa/worker
+      - name: Exercise existing customer commands and strict validation
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm check:contract
+          pnpm --filter @barghsa/api exec vitest run --reporter=verbose \
+            src/admin/staff-creation-http.integration.test.ts \
+            src/admin/staff-mutation-http.integration.test.ts \
+            src/admin/verification-mode-http.integration.test.ts \
+            src/admin/dual-approval-http.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/native-staff-dtos.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-staff-dtos
+          path: ${{ runner.temp }}/native-staff-dtos.log
+          retention-days: 14
