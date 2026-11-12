@@ -154,11 +154,21 @@ it('logs the queued request ID without provider credentials or results', async (
     id,
     correlationId,
   ]);
-  const log = vi.spyOn(console, 'info').mockImplementation(() => {});
+  const log = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
   try {
     expect(await runAiModelTest(fixture.pool, tester(), secrets)).toBe('completed');
-    expect(log.mock.calls.map(([value]) => JSON.parse(value))).toEqual([
-      { event: 'ai.model_test', outboxId: id, correlationId, status: 'completed' },
+    expect(log.mock.calls.map(([value]) => JSON.parse(String(value)))).toEqual([
+      {
+        event: 'ai.model_test',
+        outboxId: id,
+        correlationId,
+        status: 'completed',
+        service: 'worker',
+        environment: 'test',
+        level: 'info',
+        message: 'Delivery outcome',
+        timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*Z$/),
+      },
     ]);
   } finally {
     log.mockRestore();

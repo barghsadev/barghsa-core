@@ -10,7 +10,7 @@ it('cancels a running query without breaking its database connection', async () 
   const errors: Error[] = [];
   client.on('error', (error) => errors.push(error));
   await client.connect();
-  const output = vi.spyOn(console, 'log').mockImplementation(() => {});
+  const output = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
   vi.stubEnv('NODE_ENV', 'production');
   try {
     client.query = wrapClientQuery(client, 100);
@@ -24,6 +24,11 @@ it('cancels a running query without breaking its database connection', async () 
       level: 'warn',
       event: 'query_timeout',
       timeoutMs: 100,
+      service: 'database',
+      environment: 'test',
+      message: 'Database diagnostic',
+      timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*Z$/),
+      correlationId: expect.stringMatching(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/),
     });
     expect(JSON.stringify(output.mock.calls)).not.toContain('private-timeout-marker');
     expect((await client.query('SELECT 42 AS answer')).rows[0].answer).toBe(42);
@@ -105,7 +110,7 @@ for (const callback of [false, true]) {
       statement_timeout: 2000,
     });
     await client.connect();
-    const output = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const output = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     vi.stubEnv('NODE_ENV', 'production');
     try {
       client.query = wrapClientQuery(client, 1000);
@@ -120,6 +125,11 @@ for (const callback of [false, true]) {
         level: 'warn',
         event: 'slow_query',
         durationMs: expect.any(Number),
+        service: 'database',
+        environment: 'test',
+        message: 'Database diagnostic',
+        timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T.*Z$/),
+        correlationId: expect.stringMatching(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/),
       });
       expect(JSON.stringify(output.mock.calls)).not.toContain('private-slow-marker');
       expect(warnings.find((value) => value.event === 'slow_query').durationMs).toBeGreaterThan(

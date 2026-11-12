@@ -1,0 +1,68 @@
+name: Verify structured operator logging
+on:
+  push:
+    branches: ['codex/verify/v06-structured-logs-*']
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: api
+            files: src/csp-report/csp-report-http.integration.test.ts src/admin/config-audit-http.integration.test.ts
+          - target: worker
+            files: src/auth-delivery/runner.integration.test.ts src/ai-models/test-runner.test.ts src/main-process.integration.test.ts
+          - target: db
+            files: src/query-cancellation.integration.test.ts src/index.test.ts
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build exact fixture runtime
+        run: pnpm exec turbo run build --filter=@barghsa/${{ matrix.target }}
+      - name: Exercise PostgreSQL-backed log boundaries
+        env:
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+          TARGET: ${{ matrix.target }}
+          TEST_FILES: ${{ matrix.files }}
+        shell: bash
+        run: |
+          read -r -a files <<< "$TEST_FILES"
+          pnpm --filter "@barghsa/$TARGET" exec vitest run --reporter=verbose "${files[@]}" \
+            2>&1 | tee "$RUNNER_TEMP/native-structured-logs.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-structured-logs-${{ matrix.target }}
+          path: ${{ runner.temp }}/native-structured-logs.log
+          retention-days: 14
+
+  proxy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [pilot, staging]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Verify exact proxy configuration and private log output
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: python3 scripts/test-pilot-proxy.py --profile "$PROFILE"

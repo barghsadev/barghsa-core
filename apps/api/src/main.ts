@@ -1,4 +1,5 @@
 import { reportServerError } from '@barghsa/shared/error-reporting';
+import { createOperatorLogger } from '@barghsa/shared/operator-logging';
 import { createApplication } from './app.factory.js';
 
 async function bootstrap(): Promise<void> {
@@ -8,7 +9,7 @@ async function bootstrap(): Promise<void> {
 }
 
 void bootstrap().catch(async () => {
-  console.error('Failed to start API server');
+  createOperatorLogger('api')('error', 'Failed to start API server');
   process.exitCode = 1;
   await reportServerError('API_STARTUP_FAILED');
 });

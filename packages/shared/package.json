@@ -230,6 +230,16 @@
         "default": "./dist/cjs/log-privacy.js"
       }
     },
+    "./operator-logging": {
+      "import": {
+        "types": "./dist/operator-logging.d.ts",
+        "default": "./dist/operator-logging.js"
+      },
+      "require": {
+        "types": "./dist/cjs/operator-logging.d.ts",
+        "default": "./dist/cjs/operator-logging.js"
+      }
+    },
     "./error-reporting": {
       "import": {
         "types": "./dist/error-reporting.d.ts",
@@ -354,6 +364,7 @@
     "@aws-sdk/s3-request-presigner": "^3.700.0",
     "ioredis": "^5.11.1",
     "nodemailer": "10.0.12",
+    "pino": "10.4.0",
     "zod": "4.6.6"
   },
   "devDependencies": {

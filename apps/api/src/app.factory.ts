@@ -1,4 +1,5 @@
 import { CorrelationLogger } from './common/correlation-logger.js';
+import { CorrelationIdMiddleware } from './common/correlation-id.middleware.js';
 import { trustedProxyIps } from './common/proxy-trust.js';
 import { NestFactory } from '@nestjs/core';
 import type { NestExpressApplication } from '@nestjs/platform-express';
@@ -39,6 +40,8 @@ export async function createApplication() {
     response.setHeader('X-Environment', environment);
     next();
   });
+  const correlation = new CorrelationIdMiddleware();
+  app.use(correlation.use.bind(correlation));
   app.use(observeHttpRequest);
   app.enableCors(browserCorsOptions());
 

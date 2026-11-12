@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import type { Pool, QueryResult } from 'pg';
 import { getDbPool } from '@barghsa/db';
@@ -239,10 +240,7 @@ export interface BreachScanOptions {
   batchSize?: number;
 }
 
-const defaultLogger: Pick<Console, 'warn' | 'info'> = {
-  warn: (msg: unknown) => console.warn(`[worker:breach-scan] ${String(msg)}`),
-  info: (msg: unknown) => console.log(`[worker:breach-scan] ${String(msg)}`),
-};
+const defaultLogger = createWorkerLogger('service_breach_scan');
 
 /** Human-readable in-app label per service type (both locales). */
 const SERVICE_TYPE_LABELS: Record<ServiceResponseTargetType, { fa: string; en: string }> = {

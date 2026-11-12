@@ -1,3 +1,6 @@
+import { randomUUID } from 'node:crypto';
+import { operatorLogCorrelation } from '@barghsa/shared/operator-logging';
+
 /** Owns timers and the promises they start, including failure recording. */
 export class PollerGroup {
   private stopping = false;
@@ -13,13 +16,15 @@ export class PollerGroup {
     const timer = setInterval(() => {
       if (this.stopping || active) return;
       active = true;
-      const work = Promise.resolve()
-        .then(job)
-        .catch(this.onError)
-        .finally(() => {
-          active = false;
-          this.running.delete(work);
-        });
+      const work = operatorLogCorrelation.run(randomUUID(), () =>
+        Promise.resolve()
+          .then(job)
+          .catch(this.onError)
+          .finally(() => {
+            active = false;
+            this.running.delete(work);
+          })
+      );
       this.running.add(work);
     }, interval);
     timer.unref();

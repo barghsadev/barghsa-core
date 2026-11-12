@@ -50,7 +50,7 @@ const row: OutboxRow = {
 
 describe('dispatchOutbox', () => {
   it('keeps parallel delivery traces separate and outside customer variables', async () => {
-    const output = vi.spyOn(console, 'info').mockImplementation(() => {});
+    const output = vi.spyOn(process.stdout, 'write').mockImplementation(() => true);
     const email = new FakeTransport('email');
     const rows = [
       '01900000-0000-7000-8000-000000000001',
@@ -75,7 +75,10 @@ describe('dispatchOutbox', () => {
       );
       expect(JSON.stringify(logs)).not.toContain('customer-content');
       await dispatchOutbox({ ...row, channels: ['email'] }, { email });
-      expect(JSON.parse(String(output.mock.lastCall![0])).correlationId).toBeNull();
+      const legacy = JSON.parse(String(output.mock.lastCall![0]));
+      expect(legacy).toMatchObject({ service: 'worker', event: 'notification.attempt' });
+      expect(legacy.correlationId).toMatch(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/);
+      expect(rows.map((item) => item.correlationId)).not.toContain(legacy.correlationId);
     } finally {
       output.mockRestore();
     }

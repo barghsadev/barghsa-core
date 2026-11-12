@@ -1,3 +1,4 @@
+import { createWorkerLogger } from '../operator-log.js';
 import type { Pool, PoolClient } from 'pg';
 import { getDbPool } from '@barghsa/db';
 import { privateLogId } from '@barghsa/shared/log-privacy';
@@ -75,14 +76,7 @@ export interface WalletReconciliationOptions {
   batchSize?: number;
 }
 
-const defaultLogger = {
-  warn: (msg: string): void => {
-    console.warn(`[worker] ${msg}`);
-  },
-  info: (msg: string): void => {
-    console.log(`[worker] ${msg}`);
-  },
-};
+const defaultLogger = createWorkerLogger(WALLET_RECONCILIATION_JOB_TYPE);
 
 /**
  * Set-based mismatch selector. Keep PostgreSQL numeric SUMs unbounded: a

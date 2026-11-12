@@ -4,6 +4,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
 import { X509Certificate } from 'node:crypto';
+import { createOperatorLogger } from '@barghsa/shared/operator-logging';
 import { wrapTransactionPoolClient } from './transaction-pool.js';
 
 let pool: Pool | null = null;
@@ -72,19 +73,16 @@ function poolTimeoutPolicy(config: DbPoolConfig): QueryTimeoutPolicy {
   return policy;
 }
 
-/**
- * Emit a structured (single-line JSON) log entry. Development keeps plain
- * logging; production writes structured JSON only.
- */
+const logDatabase = createOperatorLogger('database');
+
+/** Keep the pool's existing production diagnostic policy. */
 function structuredLog(
   level: 'warn' | 'error',
   event: string,
   details: Record<string, unknown>
 ): void {
   if (process.env.NODE_ENV !== 'production') return;
-  // Structured JSON only in production; single line per entry for log aggregation.
-
-  console.log(JSON.stringify({ level, event, ...details }));
+  logDatabase(level, 'Database diagnostic', { event, ...details });
 }
 
 /**

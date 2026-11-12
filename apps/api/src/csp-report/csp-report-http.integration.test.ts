@@ -42,12 +42,49 @@ function send(body: string, headers: Record<string, string> = {}) {
   });
 }
 it('parses native browser reports and logs only bounded safe diagnostics with correlation', async () => {
-  const response = await send(JSON.stringify(report));
+  const correlationId = randomUUID();
+  const response = await send(JSON.stringify(report), { 'x-correlation-id': correlationId });
   expect(response.status).toBe(204);
+  expect(response.headers.get('x-correlation-id')).toBe(correlationId);
   await expect.poll(() => fixture.logs()).toContain('CSP violation');
   expect(fixture.logs()).toContain('script-src-elem');
   expect(fixture.logs()).toContain(response.headers.get('x-correlation-id'));
   expect(fixture.logs()).not.toContain('private-token');
+  const records = fixture
+    .logs()
+    .split('\n')
+    .filter((line) => line.startsWith('{'))
+    .map((line) => JSON.parse(line));
+  expect(records).toContainEqual(
+    expect.objectContaining({
+      service: 'api',
+      level: 'warn',
+      message: 'CSP violation',
+      correlationId,
+      'effective-directive': 'script-src-elem',
+    })
+  );
+  expect(records).toContainEqual(
+    expect.objectContaining({
+      service: 'api',
+      event: 'http.request',
+      correlationId,
+      route: '/api/csp-report',
+      status: 204,
+      durationMs: expect.any(Number),
+      outcome: 'success',
+    })
+  );
+});
+
+it('assigns a safe correlation ID before JSON parsing rejects an invalid body', async () => {
+  const response = await send('{', { 'x-correlation-id': 'private-correlation-marker' });
+  expect(response.status).toBe(400);
+  const correlationId = response.headers.get('x-correlation-id');
+  expect(correlationId).toMatch(/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/);
+  expect(await response.json()).toMatchObject({ correlationId });
+  await expect.poll(() => fixture.logs()).toContain(correlationId);
+  expect(fixture.logs()).not.toContain('private-correlation-marker');
 });
 it.each([
   '{',

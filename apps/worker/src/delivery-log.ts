@@ -1,3 +1,5 @@
+import { workerLog } from './operator-log.js';
+
 /** Delivery diagnostics contain identifiers and outcomes, never message bodies or provider errors. */
 export function logDelivery(
   event: 'notification.attempt' | 'auth.delivery' | 'ai.model_test',
@@ -6,13 +8,12 @@ export function logDelivery(
   status: string,
   channel?: string
 ): void {
-  console.info(
-    JSON.stringify({
-      event,
-      outboxId,
-      correlationId: correlationId ?? null,
-      status,
-      ...(channel ? { channel } : {}),
-    })
-  );
+  const failed = ['failed', 'dead', 'retry', 'stale'].includes(status);
+  workerLog(failed ? 'warn' : 'info', 'Delivery outcome', {
+    event,
+    outboxId,
+    correlationId,
+    status,
+    ...(channel ? { channel } : {}),
+  });
 }
