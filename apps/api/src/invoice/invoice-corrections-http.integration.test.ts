@@ -211,6 +211,30 @@ it.each(['replacement', 'adjustment'] as const)(
       (await create(id, { ...body, reason: 'Different correction' }, who.headers)).status
     ).toBe(409);
     expect(await linkedCount(id)).toBe(1);
+    const otherProfile = randomUUID();
+    await http.pool.query("INSERT INTO profiles(id,user_id) VALUES($1,'correction-customer')", [
+      otherProfile,
+    ]);
+    await http.pool.query('UPDATE invoices SET profile_id=$2 WHERE id=$1', [
+      first!.invoiceId,
+      otherProfile,
+    ]);
+    try {
+      const correctionBefore = await snapshot(first!.invoiceId);
+      const conflict = await create(id, body, who.headers);
+      expect(conflict.status).toBe(409);
+      expect(await conflict.text()).not.toContain(otherProfile);
+      expect(await snapshot(first!.invoiceId)).toEqual(correctionBefore);
+      expect(await linkedCount(id)).toBe(1);
+    } finally {
+      await http.pool.query('UPDATE invoices SET profile_id=$2 WHERE id=$1', [
+        first!.invoiceId,
+        profileId,
+      ]);
+    }
+    const reconciled = await create(id, body, who.headers);
+    expect(reconciled.status).toBe(201);
+    expect(await reconciled.json()).toEqual(first);
     // Successful keys never bypass fresh authority.
     await http.pool.query('UPDATE sessions SET revoked_at=NOW() WHERE session_id=$1', [
       who.sessionId,
@@ -613,6 +637,25 @@ it.each(['25000', '-25000'])(
       expect((await create(id, { ...body, amount: '1' }, who.headers)).status).toBe(409);
       expect((await decision(pending.approvalRequestId, 'approve', who.headers)).status).toBe(403);
       const reviewer = await actor('correction-reviewer');
+      const otherProfile = randomUUID();
+      await http.pool.query("INSERT INTO profiles(id,user_id) VALUES($1,'correction-customer')", [
+        otherProfile,
+      ]);
+      await http.pool.query('UPDATE invoices SET profile_id=$2 WHERE id=$1', [id, otherProfile]);
+      try {
+        const conflict = await decision(pending.approvalRequestId, 'approve', reviewer.headers);
+        expect(conflict.status).toBe(409);
+        expect(await linkedCount(id)).toBe(0);
+        expect(
+          (
+            await http.pool.query('SELECT status FROM approval_requests WHERE id=$1', [
+              pending.approvalRequestId,
+            ])
+          ).rows
+        ).toEqual([{ status: 'pending' }]);
+      } finally {
+        await http.pool.query('UPDATE invoices SET profile_id=$2 WHERE id=$1', [id, profileId]);
+      }
       const approved = await decision(pending.approvalRequestId, 'approve', reviewer.headers);
       expect(approved.status).toBe(200);
       const approval = (await approved.json()) as Approval;

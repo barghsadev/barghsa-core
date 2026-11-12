@@ -3,6 +3,7 @@ import type { ValidatedSession } from '../session/session.service.js';
 import {
   correctionFingerprint,
   findCorrectionReplay,
+  readCorrectionReviewEvidence,
   correctionTransition,
 } from './invoice-correction-request.js';
 import { lockInvoiceProfile } from './invoice-profile-lock.js';
@@ -284,8 +285,8 @@ export class CancelAndReplaceInvoiceService {
         await client.query<LockedOriginalRow>(
           `SELECT id,profile_id,order_id,contract_id,consultation_id,type,state,
                   total_amount,paid_amount,refunded_amount,metadata,adjustment_for_invoice_id
-           FROM invoices WHERE id=$1 FOR UPDATE`,
-          [input.invoiceId]
+           FROM invoices WHERE id=$1 AND profile_id=$2 FOR UPDATE`,
+          [input.invoiceId, profileId]
         )
       ).rows[0];
       if (!original || original.profile_id !== profileId)
@@ -333,10 +334,24 @@ export class CancelAndReplaceInvoiceService {
     calculation: ManualInvoiceCalculation
   ): Promise<{ versionId: string; contractId: string } | null> {
     if (!original.order_id) return null;
-    const electricityOrder = await client.query('SELECT 1 FROM electricity_orders WHERE id=$1', [
-      original.order_id,
-    ]);
-    if (!electricityOrder.rowCount) return null;
+    const electricityOrder = (
+      await client.query<{
+        profile_id: string;
+        order_profile_id: string | null;
+        order_type: string | null;
+      }>(
+        `SELECT e.profile_id,o.profile_id AS order_profile_id,o.order_type
+          FROM electricity_orders e LEFT JOIN orders o ON o.id=e.id WHERE e.id=$1`,
+        [original.order_id]
+      )
+    ).rows[0];
+    if (!electricityOrder) return null;
+    if (
+      electricityOrder.profile_id !== original.profile_id ||
+      electricityOrder.order_profile_id !== original.profile_id ||
+      electricityOrder.order_type !== 'electricity'
+    )
+      throw new ConflictException('Electricity invoice order linkage requires reconciliation');
     if (original.adjustment_for_invoice_id)
       throw new ConflictException('Electricity adjustment invoices require a contract change');
     if (calculation.totalAmount !== BigInt(original.total_amount))
@@ -380,10 +395,11 @@ export class CancelAndReplaceInvoiceService {
         `SELECT c.id AS contract_id,c.current_version_id AS version_id,
           c.state,r.initial_invoice_id
          FROM electricity_contracts ec JOIN contracts c ON c.id=ec.contract_id
-         JOIN contract_activation_requirements r ON r.version_id=c.current_version_id
-         WHERE ec.order_id=$1 AND c.profile_id=$2
+         JOIN contract_activation_requirements r ON r.contract_id=c.id AND r.version_id=c.current_version_id
+         WHERE ec.order_id=$1 AND c.order_id=ec.order_id AND c.profile_id=$2
+           AND c.service_type='electricity' AND ($3::text IS NULL OR c.id::text=$3)
          FOR UPDATE OF c,r NOWAIT`,
-        [original.order_id, original.profile_id]
+        [original.order_id, original.profile_id, original.contract_id]
       )
     ).rows[0];
     if (
@@ -445,9 +461,9 @@ export class CancelAndReplaceInvoiceService {
                 state, total_amount, paid_amount, refunded_amount, metadata,
                 adjustment_for_invoice_id
            FROM invoices
-          WHERE id = $1
+          WHERE id = $1 AND profile_id = $2
           FOR UPDATE`,
-        [cmd.invoiceId]
+        [cmd.invoiceId, profileId]
       )) as { rows: LockedOriginalRow[] };
       const original = locked.rows[0];
       if (!original) {
@@ -470,17 +486,17 @@ export class CancelAndReplaceInvoiceService {
       );
       if (replay) {
         if (cmd.expectedReviewHash) {
-          const stored = (
-            await client.query<{ metadata: { financialReview?: InvoiceReplacementReview } }>(
-              "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='invoice.replacement_review_confirmed' AND metadata::jsonb->>'replacementInvoiceId'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",
-              [replay.id]
-            )
-          ).rows[0];
+          const stored = await readCorrectionReviewEvidence(
+            client,
+            'replacement',
+            cmd.invoiceId,
+            replay.id
+          );
           // Historical replacements have no review audit. A fingerprint-matched
           // replay returns the existing invoice without another cancellation.
           if (stored)
             new ReviewSnapshotService().assertStored(
-              stored.metadata,
+              stored,
               cmd.expectedReviewHash,
               this.scope(original)
             );
@@ -629,8 +645,8 @@ export class CancelAndReplaceInvoiceService {
       if (electricityVersionId) {
         const relinked = await client.query(
           `UPDATE contract_activation_requirements SET initial_invoice_id=$2
-           WHERE version_id=$3 AND initial_invoice_id=$1`,
-          [cmd.invoiceId, replacementId, electricityVersionId]
+           WHERE version_id=$3 AND contract_id=$4 AND initial_invoice_id=$1`,
+          [cmd.invoiceId, replacementId, electricityVersionId, electricityContractId]
         );
         if (relinked.rowCount !== 1)
           throw new ConflictException('Electricity contract invoice link changed');

@@ -347,8 +347,10 @@ export class DualApprovalService {
           requestId,
         ])
       ).rows[0];
-      if (decision === 'approve')
-        await this.invoiceAdjustments.lockRequestProfile(client, initial?.details ?? null);
+      const adjustmentScope =
+        decision === 'approve'
+          ? await this.invoiceAdjustments.lockRequestProfile(client, initial?.details ?? null)
+          : null;
       await requireStaffMutationPermission(
         client,
         actor.userId,
@@ -402,7 +404,14 @@ export class DualApprovalService {
       );
 
       if (decision === 'approve') {
-        await this.invoiceAdjustments.executeApproved(client, row, actor, ip, correlationId);
+        await this.invoiceAdjustments.executeApproved(
+          client,
+          row,
+          adjustmentScope,
+          actor,
+          ip,
+          correlationId
+        );
       }
 
       await requireSessionStepUp(client, actor);

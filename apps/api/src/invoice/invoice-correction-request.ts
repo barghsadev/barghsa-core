@@ -1,11 +1,10 @@
 import { getDbPool } from '@barghsa/db';
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { lockInvoiceProfile } from './invoice-profile-lock.js';
 import { createHash } from 'node:crypto';
-import { ConflictException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
 import type { InvoiceState } from './invoice-state.model.js';
 import type { TransitionResult } from './invoice-state-machine.service.js';
@@ -32,19 +31,46 @@ export async function findCorrectionReplay(
   const column = kind === 'replacement' ? 'replaces_invoice_id' : 'adjustment_for_invoice_id';
   const result = await client.query<{
     id: string;
+    matches_scope: boolean;
     request: {
       fingerprint: string;
       originalState: InvoiceState;
     };
   }>(
-    `SELECT id, metadata->'correctionRequest' AS request FROM invoices
-    WHERE ${column}=$1 AND metadata->'correctionRequest'->>'key'=$2 LIMIT 2`,
+    `SELECT correction.id, correction.metadata->'correctionRequest' AS request,
+        (correction.profile_id=original.profile_id
+          AND correction.order_id IS NOT DISTINCT FROM original.order_id
+          AND correction.contract_id IS NOT DISTINCT FROM original.contract_id
+          AND correction.consultation_id IS NOT DISTINCT FROM original.consultation_id) AS matches_scope
+      FROM invoices correction JOIN invoices original ON original.id=$1
+      WHERE correction.${column}=original.id
+        AND correction.metadata->'correctionRequest'->>'key'=$2
+      LIMIT 2 FOR SHARE OF correction`,
     [originalId, key]
   );
   if (!result.rows.length) return null;
   if (result.rows.length !== 1 || result.rows[0]!.request?.fingerprint !== fingerprint)
     throw new ConflictException('Correction request key already used with another payload');
+  if (!result.rows[0]!.matches_scope)
+    throw new ConflictException('Invoice correction linkage requires reconciliation');
   return { id: result.rows[0]!.id, originalState: result.rows[0]!.request.originalState };
+}
+
+export async function readCorrectionReviewEvidence(
+  client: PoolClient,
+  kind: 'replacement' | 'adjustment',
+  originalId: string,
+  correctionId: string
+) {
+  const { rows } = await client.query<{ metadata: Record<string, unknown> }>(
+    `SELECT metadata::jsonb AS metadata FROM audit_log
+      WHERE event=$1 AND metadata::jsonb->>($2::text)=$3 LIMIT 2`,
+    [`invoice.${kind}_review_confirmed`, `${kind}InvoiceId`, correctionId]
+  );
+  if (!rows.length) return null; // Earlier corrections may predate review snapshots.
+  if (rows.length !== 1 || rows[0]?.metadata?.originalInvoiceId !== originalId)
+    throw new ConflictException('Invoice correction review requires reconciliation');
+  return rows[0]!.metadata;
 }
 
 export async function correctionTransition(
@@ -79,7 +105,7 @@ export async function invoiceCorrectionContext(
   const client = await getDbPool().connect();
   try {
     await client.query('BEGIN');
-    await lockInvoiceProfile(client, 'invoice', invoiceId);
+    const profileId = await lockInvoiceProfile(client, 'invoice', invoiceId);
     await requireStaffMutationPermission(client, actor.userId, 'invoices:write');
     await requireCurrentSession(client, actor);
     const invoice = (
@@ -90,8 +116,9 @@ export async function invoiceCorrectionContext(
         paid_amount: string;
         total_amount: string;
       }>(
-        `SELECT id, profile_id, state, paid_amount, total_amount FROM invoices WHERE id=$1 FOR SHARE`,
-        [invoiceId]
+        `SELECT id, profile_id, state, paid_amount, total_amount FROM invoices
+          WHERE id=$1 AND profile_id=$2 FOR SHARE`,
+        [invoiceId, profileId]
       )
     ).rows[0];
     if (!invoice) throw new NotFoundException('Invoice not found');

@@ -22,7 +22,11 @@ import {
   ADJUSTABLE_INVOICE_STATES,
   type CreateAdjustmentInvoiceCommand,
 } from './create-adjustment-invoice.service.js';
-import { correctionFingerprint, findCorrectionReplay } from './invoice-correction-request.js';
+import {
+  correctionFingerprint,
+  findCorrectionReplay,
+  readCorrectionReviewEvidence,
+} from './invoice-correction-request.js';
 import { lockInvoiceProfile } from './invoice-profile-lock.js';
 
 type Actor = Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>;
@@ -50,9 +54,14 @@ interface ApprovalPolicy {
   approvalRequired: boolean;
   thresholdIrR: string | null;
 }
+interface LockedAdjustmentSource {
+  originalInvoiceId: string;
+  profileId: string;
+}
 const bindingSchema = z
   .object({
     originalInvoiceId: z.string().uuid(),
+    profileId: z.string().uuid().optional(),
     idempotencyKey: z.string().uuid(),
     amount: z
       .string()
@@ -149,8 +158,8 @@ export class InvoiceAdjustmentApprovalService {
       await requireCurrentSession(client, input.actor);
       const original = (
         await client.query<OriginalRow>(
-          'SELECT id,profile_id,state,total_amount,paid_amount,refunded_amount,metadata FROM invoices WHERE id=$1 FOR UPDATE',
-          [input.originalInvoiceId]
+          'SELECT id,profile_id,state,total_amount,paid_amount,refunded_amount,metadata FROM invoices WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          [input.originalInvoiceId, profileId]
         )
       ).rows[0];
       if (!original || original.profile_id !== profileId)
@@ -187,8 +196,8 @@ export class InvoiceAdjustmentApprovalService {
       await requireSessionStepUp(client, cmd.actorSession);
       const original = (
         await client.query<OriginalRow>(
-          'SELECT id,profile_id,state,total_amount,paid_amount,refunded_amount,metadata FROM invoices WHERE id=$1 FOR UPDATE',
-          [cmd.originalInvoiceId]
+          'SELECT id,profile_id,state,total_amount,paid_amount,refunded_amount,metadata FROM invoices WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+          [cmd.originalInvoiceId, profileId]
         )
       ).rows[0];
       if (!original || original.profile_id !== profileId)
@@ -208,17 +217,17 @@ export class InvoiceAdjustmentApprovalService {
       let result;
       if (replay) {
         if (cmd.expectedReviewHash) {
-          const stored = (
-            await client.query<{ metadata: { financialReview?: InvoiceAdjustmentReview } }>(
-              "SELECT metadata::jsonb AS metadata FROM audit_log WHERE event='invoice.adjustment_review_confirmed' AND metadata::jsonb->>'adjustmentInvoiceId'=$1 ORDER BY created_at DESC,id DESC LIMIT 1",
-              [replay.id]
-            )
-          ).rows[0];
+          const stored = await readCorrectionReviewEvidence(
+            client,
+            'adjustment',
+            cmd.originalInvoiceId,
+            replay.id
+          );
           // Adjustments issued before review snapshots have no review audit;
           // a fingerprint-matched replay cannot issue a second invoice.
           if (stored)
             new ReviewSnapshotService().assertStored(
-              stored.metadata,
+              stored,
               cmd.expectedReviewHash,
               this.scope(original)
             );
@@ -241,9 +250,23 @@ export class InvoiceAdjustmentApprovalService {
               this.scope(original)
             );
           const request = (
-            await client.query('SELECT status FROM approval_requests WHERE id=$1', [
-              prior.requestId,
-            ])
+            await client.query(
+              `SELECT status FROM approval_requests WHERE id=$1 AND action_type='manual_adjustment'
+                AND amount_irr=abs($2::numeric)
+                AND details#>>'{invoiceAdjustment,originalInvoiceId}'=$3
+                AND COALESCE(details#>>'{invoiceAdjustment,profileId}',$4)=$4
+                AND details#>>'{invoiceAdjustment,idempotencyKey}'=$5
+                AND details#>>'{invoiceAdjustment,fingerprint}'=$6
+                AND details#>>'{invoiceAdjustment,amount}'=$2::text`,
+              [
+                prior.requestId,
+                cmd.amount.toString(),
+                original.id,
+                original.profile_id,
+                cmd.idempotencyKey,
+                fingerprint,
+              ]
+            )
           ).rows[0];
           if (request?.status !== 'pending')
             throw new ConflictException('Adjustment approval is rejected or inconsistent');
@@ -278,6 +301,7 @@ export class InvoiceAdjustmentApprovalService {
             const requestId = uuidv7();
             const binding = bindingSchema.parse({
               originalInvoiceId: cmd.originalInvoiceId,
+              profileId: original.profile_id,
               idempotencyKey: cmd.idempotencyKey,
               amount: cmd.amount.toString(),
               fingerprint,
@@ -366,29 +390,44 @@ export class InvoiceAdjustmentApprovalService {
   }
 
   /** Acquire the same profile lock before the resolver locks users/approval rows. */
-  async lockRequestProfile(client: PoolClient, details: Record<string, unknown> | null) {
-    if (!details || !('invoiceAdjustment' in details)) return;
+  async lockRequestProfile(
+    client: PoolClient,
+    details: Record<string, unknown> | null
+  ): Promise<LockedAdjustmentSource | null> {
+    if (!details || !('invoiceAdjustment' in details)) return null;
     const binding = bindingSchema.safeParse(details.invoiceAdjustment);
     if (!binding.success) throw new ConflictException('Invalid invoice adjustment approval');
-    await lockInvoiceProfile(client, 'invoice', binding.data.originalInvoiceId);
+    const { originalInvoiceId } = binding.data;
+    const profileId = await lockInvoiceProfile(client, 'invoice', originalInvoiceId);
+    if (binding.data.profileId && binding.data.profileId !== profileId)
+      throw new ConflictException('Invoice adjustment profile changed');
+    return { originalInvoiceId, profileId };
   }
 
   async executeApproved(
     client: PoolClient,
     row: Record<string, unknown>,
+    scope: LockedAdjustmentSource | null,
     actor: Actor,
     ip: string,
     correlationId: string
   ) {
     const details = row.details as Record<string, unknown> | null;
     if (!details || !('invoiceAdjustment' in details)) return;
-    const binding = bindingSchema.parse(details.invoiceAdjustment);
-    const { originalInvoiceId, idempotencyKey, amount, fingerprint } = binding;
+    const parsed = bindingSchema.safeParse(details.invoiceAdjustment);
+    if (!parsed.success) throw new ConflictException('Invalid invoice adjustment approval');
+    const { originalInvoiceId, idempotencyKey, amount, fingerprint, profileId } = parsed.data;
+    if (
+      scope?.originalInvoiceId !== originalInvoiceId ||
+      (profileId && profileId !== scope.profileId)
+    )
+      throw new ConflictException('Invoice adjustment profile changed');
     await requireStaffMutationPermission(client, String(row.initiator_id), 'invoices:write');
     const original = (
-      await client.query('SELECT profile_id,metadata FROM invoices WHERE id=$1 FOR UPDATE', [
-        originalInvoiceId,
-      ])
+      await client.query(
+        'SELECT profile_id,metadata FROM invoices WHERE id=$1 AND profile_id=$2 FOR UPDATE',
+        [originalInvoiceId, scope.profileId]
+      )
     ).rows[0];
     const saved = original?.metadata?.adjustmentApprovals?.[idempotencyKey];
     const absolute = BigInt(amount) < 0n ? -BigInt(amount) : BigInt(amount);
@@ -422,12 +461,12 @@ export class InvoiceAdjustmentApprovalService {
         profileId: String(original.profile_id),
         resourceId: originalInvoiceId,
       });
-      const recorded = (
-        await client.query(
-          "SELECT id FROM audit_log WHERE event='invoice.adjustment_review_confirmed' AND metadata::jsonb->>'adjustmentInvoiceId'=$1 LIMIT 1",
-          [result.adjustmentInvoiceId]
-        )
-      ).rows[0];
+      const recorded = await readCorrectionReviewEvidence(
+        client,
+        'adjustment',
+        originalInvoiceId,
+        result.adjustmentInvoiceId
+      );
       if (!recorded)
         await client.query(
           `INSERT INTO audit_log(id,user_id,event,metadata,correlation_id,ip)

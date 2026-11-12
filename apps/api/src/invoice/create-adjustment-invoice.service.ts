@@ -293,9 +293,9 @@ export class CreateAdjustmentInvoiceService {
         `SELECT id, profile_id, order_id, contract_id, consultation_id, type,
                 state, total_amount, paid_amount, refunded_amount, metadata
            FROM invoices
-          WHERE id = $1
+          WHERE id = $1 AND profile_id = $2
           FOR UPDATE`,
-        [cmd.originalInvoiceId]
+        [cmd.originalInvoiceId, profileId]
       )) as { rows: LockedOriginalRow[] };
       const original = locked.rows[0];
       if (!original) {

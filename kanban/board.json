@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T14:56:06+00:00",
+  "updated": "2026-11-12T15:04:00+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -128437,7 +128437,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -128461,15 +128461,15 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
-              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+              "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -129846,6 +129846,17 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+                "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -130160,7 +130171,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -130184,15 +130195,15 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
-              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+              "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -131569,6 +131580,17 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+                "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -138893,7 +138915,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -138917,15 +138939,15 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
-              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+              "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -140302,6 +140324,17 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+                "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -168065,11 +168098,11 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-              "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
+              "sha256": "330fee14bfba0bf62bc9647a1535cdd5524975973268491d216a7eb3ae74a89a"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-inputs.test.ts",
@@ -169220,6 +169253,15 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -185016,7 +185058,7 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-              "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
+              "sha256": "330fee14bfba0bf62bc9647a1535cdd5524975973268491d216a7eb3ae74a89a"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
@@ -185056,11 +185098,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-correction-request.ts",
-              "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+              "sha256": "20913f79438fded116cd07a5c2d9da40439475bacb80ce830dd7f9a58b5f6e0b"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -185742,6 +185784,16 @@
                 "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
               ],
               "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+                "apps/api/src/invoice/invoice-correction-request.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -185963,7 +186015,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/due-at-override.controller.test.ts",
@@ -186007,7 +186059,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
@@ -186035,7 +186087,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
-              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+              "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
             },
             {
               "path": "apps/api/src/invoice/invoice-calculation-snapshot.ts",
@@ -186043,11 +186095,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-correction-request.ts",
-              "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+              "sha256": "20913f79438fded116cd07a5c2d9da40439475bacb80ce830dd7f9a58b5f6e0b"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -186771,6 +186823,18 @@
                 "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts"
               ],
               "scope": "Customer invoice activity and staff receipt readback and confirmation replay bind overpayment to the exact completed credit. Native money, dual approval, cancellation and refund cases preserve the accepted behavior."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+                "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+                "apps/api/src/invoice/invoice-correction-request.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -192244,7 +192308,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -192754,6 +192818,14 @@
                 "apps/api/src/wallet/bank-receipt-confirmation.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -192958,7 +193030,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -193229,6 +193301,14 @@
                 "apps/api/src/wallet/bank-receipt-confirmation.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -200182,7 +200262,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -200695,6 +200775,14 @@
                 "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -200976,7 +201064,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -201684,6 +201772,14 @@
                 "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -201932,7 +202028,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
@@ -202445,6 +202541,14 @@
                 "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -248862,7 +248966,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -249594,6 +249698,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -249750,7 +249862,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -250482,6 +250594,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -250638,7 +250758,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -251370,6 +251490,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -251526,7 +251654,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -252258,6 +252386,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -252414,7 +252550,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -253146,6 +253282,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -439453,7 +439597,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/notifications/customer-business-notifications.integration.test.ts",
@@ -439953,6 +440097,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -440680,7 +440832,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -441412,6 +441564,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -441568,7 +441728,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -442300,6 +442460,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -442457,7 +442625,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -443189,6 +443357,14 @@
                 "apps/api/src/contract/contract-cancellation-request-notifications.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -599585,7 +599761,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
@@ -599667,6 +599843,14 @@
                 "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -600348,7 +600532,7 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/refund/wallet-refund-http.integration.test.ts",
@@ -600446,6 +600630,14 @@
                 "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -605947,7 +606139,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -606184,6 +606376,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -606550,7 +606750,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -606653,6 +606853,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -606727,7 +606935,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -606841,6 +607049,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -606938,7 +607154,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -607074,6 +607290,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -607233,7 +607457,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -607435,6 +607659,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -607485,7 +607717,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -607722,6 +607954,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -607895,7 +608135,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -608140,6 +608380,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -609136,14 +609384,15 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, and seven wallet payment and online top-up route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with invoice correction, wallet ledger and remaining refund loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, and four invoice correction and approval route aliases. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with wallet ledger and remaining refund loaders. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/admin/dual-approval.service.ts",
           "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
           "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
           "apps/api/src/consultation/consultation-payment.integration.test.ts",
@@ -609172,14 +609421,19 @@
           "apps/api/src/finance/receipt-attachment-access.ts",
           "apps/api/src/finance/seal-bank-receipt-attachment.test.ts",
           "apps/api/src/finance/seal-bank-receipt-attachment.ts",
+          "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "apps/api/src/invoice/create-adjustment-invoice.service.ts",
           "apps/api/src/invoice/customer-invoice-activity.ts",
           "apps/api/src/invoice/customer-invoice-details.service.ts",
           "apps/api/src/invoice/customer-invoice-read-http.integration.test.ts",
+          "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.test.ts",
           "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
           "apps/api/src/invoice/invoice-bank-receipt-credit-scope.ts",
           "apps/api/src/invoice/invoice-bank-receipt-upload.service.ts",
+          "apps/api/src/invoice/invoice-correction-request.ts",
+          "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
           "apps/api/src/saving/saving-address-amendments.ts",
           "apps/api/src/saving/saving-cancellation.controller.ts",
           "apps/api/src/saving/saving-change-authority.test.ts",
@@ -609238,7 +609492,8 @@
           "release-0.6-consultation-lock-order-tests",
           "release-0.6-invoice-receipt-credit-scope",
           "release-0.6-receipt-attachment-scope",
-          "release-0.6-wallet-payment-scope"
+          "release-0.6-wallet-payment-scope",
+          "release-0.6-invoice-correction-scope"
         ],
         "current_acceptance": null
       }
@@ -609314,7 +609569,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -609444,6 +609699,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -609790,7 +610053,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -610051,6 +610314,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -610666,7 +610937,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -610872,6 +611143,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -610957,7 +611236,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -611134,6 +611413,14 @@
                 "apps/api/src/wallet/bank-receipt-confirmation.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -611219,7 +611506,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -611396,6 +611683,14 @@
                 "apps/api/src/wallet/bank-receipt-confirmation.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -611481,7 +611776,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -611658,6 +611953,14 @@
                 "apps/api/src/wallet/bank-receipt-confirmation.service.ts"
               ],
               "scope": "Customer and staff receipt attachments resolve immutable receipt evidence before reading or signing. Modern submissions bind their receipt and preserve the shared storage claim, retry, approval and finance controls. Native checks retain valid historical receipt copies."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -624368,7 +624671,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c1a149ba74be07991c9c19a42abf717ef5b7c0b37d136eb2a6585743121509d7"
+              "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
             },
             {
               "path": "docs/threat-model.md",
@@ -624508,6 +624811,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ]
         }
@@ -959721,11 +960032,11 @@
             },
             {
               "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
-              "sha256": "fb2b583d384d85adbf88918d474e6a47c869ba15aae96277dddb98b88bf3efe0"
+              "sha256": "330fee14bfba0bf62bc9647a1535cdd5524975973268491d216a7eb3ae74a89a"
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/openapi.json",
@@ -960125,11 +960436,11 @@
             },
             {
               "path": "apps/api/src/invoice/invoice-correction-request.ts",
-              "sha256": "a1aa5cecbffc1bdc16ac86fdfa186b205f9614686215e77d3a2883fd746d9f79"
+              "sha256": "20913f79438fded116cd07a5c2d9da40439475bacb80ce830dd7f9a58b5f6e0b"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
-              "sha256": "387e46584bacea315ed3ebfe249e9b79d76b151145e7ce0acca7ce5a72e56bdb"
+              "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
             },
             {
               "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
@@ -960149,11 +960460,11 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.service.ts",
-              "sha256": "c5a41dcf77e3a189e18368552937ed55e721405e6e0132da3987f81faa907acc"
+              "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
             },
             {
               "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
-              "sha256": "9962b969a94e0c127dbde7c8cc900c83849c14e7dc432ebc1ca4d3d77bb7a65d"
+              "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
             },
             {
               "path": "apps/web/e2e/approval-queue.spec.ts",
@@ -963957,6 +964268,19 @@
                 "apps/api/src/wallet/pay-invoice-with-wallet.service.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/admin/dual-approval.service.ts",
+                "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+                "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+                "apps/api/src/invoice/invoice-correction-request.ts",
+                "apps/api/src/invoice/invoice-corrections-http.integration.test.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -965630,7 +965954,7 @@
             },
             {
               "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
-              "sha256": "f08a0f6139bdcba011eac50cc6c04d44fd9a82c9442ad9f8025776f04aea5c7c"
+              "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
             },
             {
               "path": "apps/api/src/refund/refund.service.ts",
@@ -969322,6 +969646,14 @@
                 "apps/api/src/wallet/customer-wallet-invoice-payment-http.integration.test.ts"
               ],
               "scope": "Wallet debit retries require the current invoice and exact completed ledger row. Provider callbacks canonicalize order identity, scope intent updates, retain gateway authority and verify stored signed evidence. Current native and unit checks preserve retries, approved payment recovery and chargeback matching."
+            },
+            {
+              "batch": "release-0.6-invoice-correction-scope",
+              "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+              "paths": [
+                "apps/api/src/invoice/create-adjustment-invoice.service.ts"
+              ],
+              "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
             }
           ],
           "presentation_renewals": [
@@ -1138134,6 +1138466,211 @@
         {
           "file": "wallet-payment-routes.json",
           "sha256": "7e0c3b06ca7aaff474113ac13ac9c0fb45b5927ad2a32566b4ebef5cd23ff37b"
+        }
+      ]
+    },
+    "release-0.6-invoice-correction-scope": {
+      "batch": "release-0.6-invoice-correction-scope",
+      "base_commit": "494097714d468fa2eb4e81086cf50a66eb1c7df6",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01",
+        "04-invoices-wallet-contracts.md#T-04.1.02.08",
+        "04-invoices-wallet-contracts.md#T-04.1.05.02",
+        "04-invoices-wallet-contracts.md#T-04.1.05.03",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "04-invoices-wallet-contracts.md#T-04.6.02.01",
+        "04-invoices-wallet-contracts.md#T-04.6.02.02",
+        "04-invoices-wallet-contracts.md#T-04.6.02.03",
+        "04-invoices-wallet-contracts.md#T-04.6.02.04",
+        "04-invoices-wallet-contracts.md#T-04.6.02.05",
+        "03-core-business.md#T-03.08.02.01",
+        "03-core-business.md#T-03.08.02.02",
+        "03-core-business.md#T-03.08.02.03",
+        "03-core-business.md#T-03.08.02.04",
+        "06-security-testing-observability.md#T-06.01.03.02",
+        "06-security-testing-observability.md#T-06.01.03.07",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.03.03.02",
+        "06-security-testing-observability.md#T-06.03.03.03",
+        "06-security-testing-observability.md#T-06.03.03.04",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "release-readiness#R-02.01",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/dual-approval.service.ts",
+        "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+        "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+        "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+        "apps/api/src/invoice/invoice-correction-request.ts",
+        "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "d9ed8ee1f5cf91e33081034a03df953ced5b2e62069e6ebe4e92fd07120f52f7"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "cddd9d0e59b3c37c58a4ce13b026a9c0879f8d93e79249bfecee60568b957960"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.test.ts",
+          "sha256": "0f74a1c6772eb245fff82a0bc8459b9cb4dbd2a645bbd08b7fe4320c9c2934a6"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.service.ts",
+          "sha256": "5d93d0f9a14d9fbc171d216d3fa83c490dee894a79ca920d6c5cec05188e0043"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-payment.integration.test.ts",
+          "sha256": "570a6a740f2fe47663f50f929abf75c86f06699887792f992f7ec55ec92e6e98"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.integration.test.ts",
+          "sha256": "ca4a99a78d0a8a57dd435e21f42b06cff8eb81080ba06952aa4dcf5a21314929"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
+          "sha256": "524238d0bc7f9b83faf10de68328872ec87b8510ba8655d59f10bc38b76f2439"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.integration.test.ts",
+          "sha256": "e8428d00469dc7ffeb1b42bf82da2cec764f6f8e2ed2f40560f3e4c41c3d7f6e"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.test.ts",
+          "sha256": "bebf876c2c7719661e4ab8fe7f8fd3a21e2f45c3099c031a97285dca375e2549"
+        },
+        {
+          "path": "apps/api/src/invoice/cancel-and-replace-invoice.service.ts",
+          "sha256": "330fee14bfba0bf62bc9647a1535cdd5524975973268491d216a7eb3ae74a89a"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.integration.test.ts",
+          "sha256": "cebbdd6908fe46d2cb0f736d861cf26953586d309b06ef320b0dcac8378c5ab6"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.test.ts",
+          "sha256": "19762dc963dbb77955c30fd8761328a4dc1996f8bb94dab53fa557d8d4da9737"
+        },
+        {
+          "path": "apps/api/src/invoice/create-adjustment-invoice.service.ts",
+          "sha256": "a5d4738b32aa486756ef8200d52ff63dc812d9f9597bb55772c8863f27b65303"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-adjustment-approval.service.ts",
+          "sha256": "4c286a9c99767f251347c7a8d367da4931d867b45d292328c516a4ac0c4294d8"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-correction-request.ts",
+          "sha256": "20913f79438fded116cd07a5c2d9da40439475bacb80ce830dd7f9a58b5f6e0b"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections-http.integration.test.ts",
+          "sha256": "c9524d4d8d033c564dc397b6c21c5fccbe0374529ce97a4603e35ccfbcbc5574"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-corrections.controller.ts",
+          "sha256": "f0ba02f7b0b1962197fe269bc630024d82b3df387f1efabf407a4dd3bb1ae690"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-profile-lock.ts",
+          "sha256": "663e71f7595cf8d9ae8428e89c36d3e2299a872a5e34f0b2127bdea561dd8615"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "83dc38bd7d0d7a90306f75db29896f5b7598ce1b9657785254e4d3a30c5d8f0f"
+        },
+        {
+          "path": "packages/db/drizzle/production/0142_contract_activation_requirements.sql",
+          "sha256": "b201c235108acf77831e88921aaf4a4b2a71c1ef885c03f51c4964f3f217fc2e"
+        },
+        {
+          "path": "packages/db/drizzle/production/0259_invoice_origin_foreign_keys.sql",
+          "sha256": "7da9064616117595d2f418dd0ed725da20f12a7e8968101c4a44dbf72fceac87"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed four invoice correction and adjustment approval method/path pairs. Staff module grants, session and step-up checks are preserved.",
+        "Correction replay requires the original profile and business links and binds stored financial review evidence to the source and result. Mismatched correction data remains unchanged and yields no result lines.",
+        "New adjustment approvals record the invoice profile. Pending replay verifies the approval action, amount and original request binding. Resolution rechecks the locked original invoice and profile, retaining compatibility for legacy approval details. A mismatched profile leaves the approval pending.",
+        "Electricity replacement verifies the order profile, linked contract and current activation requirement before relinking. Native electricity payment and activation and consultation replacement and adjustment paths passed.",
+        "57 native correction and affected-caller cases and 38 unit cases passed. API build, typecheck, lint, formatting and generated OpenAPI/client checks passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-invoice-correction-scope",
+      "execution_receipts": [
+        {
+          "file": "build.log",
+          "sha256": "8cc2e6d0cdb539db364931e89e3109eaefe8f68e515a3b94919b7393a1d3ebc3"
+        },
+        {
+          "file": "native-corrections.log",
+          "sha256": "47307813c8760d77bb5baeeb111e1f8739ad095eb70b44e337aff2b7ecc75ae3"
+        },
+        {
+          "file": "native-service-callers.log",
+          "sha256": "789cead10b206762d0a9648c21cbcb4b287782bb8f86ff71d03728041e17103c"
+        },
+        {
+          "file": "native-finance-callers.log",
+          "sha256": "f52edda76b90e2af425fa2343a116f71a78f49067a52f71e9d3a4eb55deedb4f"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "3b03e40eefc01748104d828450437f1ab16f22a53574dccb684d83f2be06abb7"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "8e52e60f21b16d371a0442f20d7f3cedfe7a78cd9460a61813e3427087afc72b"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "06a03266548abc47f9ea1ee929f77ab6e2a2196a434bdf33f96caf715d1dd7b5"
+        },
+        {
+          "file": "invoice-correction-routes.json",
+          "sha256": "63279701a7bb52dc1a1692928ff9b1d85bf19440b941e8b11276359771486ce8"
         }
       ]
     }
