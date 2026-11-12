@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T01:04:06+00:00",
+  "updated": "2026-11-12T01:14:36+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17031,7 +17031,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record owner or legal dispositions for the exact 170 package/scope/license rows reproduced by the strict fa7d7416 gate. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Record named owner or legal dispositions for the exact 170 package and scope rows. The current fc55c82a inventory matches strict f0f9434c run 42902282297. The unsigned packet supplies 159 original Alpine expressions, identifies two generated metadata-only records without expressions, and verifies the updated libxslt checksum. Verify notices, corresponding source and replacement rights where applicable.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -17060,7 +17060,8 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "docs/security/release-license-review.md"
         ],
         "batches": [
           "release-0.6-required-source-and-secret-gates",
@@ -17080,7 +17081,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-license-review-roles",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-hosted-signed-ubuntu-archive-fallback"
+          "release-0.6-hosted-signed-ubuntu-archive-fallback",
+          "release-0.6-license-handoff-current"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -17088,7 +17090,7 @@
           "source_evidence": [
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
+              "sha256": "83b55c06ea97891da94e9cb1425e00a5947728a67483f5dac40399c76c4417c7"
             },
             {
               "path": "deploy/licenses/release-approvals.json",
@@ -17140,6 +17142,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-license-handoff-current",
+              "base_commit": "be0e4e9d375184053247364ce5d5d21aad2bd3a4",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Adds current readback and package metadata to the review packet. The allowlist, exceptions, policy conditions and original evidence retain their scope."
             }
           ]
         },
@@ -17159,15 +17169,19 @@
           "status": "prepared"
         },
         "latest_hosted_runtime_inventory": {
-          "run": 42641642526,
-          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
-          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
-          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "run": 43128471381,
+          "commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/release-licenses-43128471381.json",
+          "report_sha256": "f25ed65450e6f89a66c9d7925a9d57d27d2507d5441040219e1800957739c24e",
           "package_scope_entries": 594,
           "review_required": 170,
           "distinct_package_urls": 142,
-          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
-          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/package-review-fc55c82a.json",
+          "review_packet_sha256": "dd9f3afe676957d62deef5440f9cf2e741bbcb2fe25b934b2a392e9173aa2755",
+          "review_csv": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/package-review-fc55c82a.csv",
+          "review_csv_sha256": "24caddd829e37fa54c78ff905e52735a4cda824a898f681b5b2d5bccc23a2129",
+          "mode": "report-only",
+          "strict_inventory_match_run": 42902282297
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -36941,7 +36955,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
+              "sha256": "83b55c06ea97891da94e9cb1425e00a5947728a67483f5dac40399c76c4417c7"
             }
           ],
           "checks": [
@@ -37312,6 +37326,14 @@
                 "apps/api/src/auth/login-device-notifications-http.integration.test.ts"
               ],
               "scope": "The API adds a bounded read-only security audit aggregate alongside existing metrics. The worker adds a private OTP counter after the existing durable sent update. The dashboard overlay adds one read-only provisioning mount. Related PostgreSQL, query and Grafana checks passed, preserving the previously accepted callers and dashboards."
+            },
+            {
+              "batch": "release-0.6-license-handoff-current",
+              "base_commit": "be0e4e9d375184053247364ce5d5d21aad2bd3a4",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Adds current readback and package metadata to the review packet. The allowlist, exceptions, policy conditions and original evidence retain their scope."
             }
           ],
           "presentation_renewals": [
@@ -548995,14 +549017,16 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Record owner or legal dispositions for the exact 170 package/scope/license rows reproduced by strict bf48f69f run 42751525133 job 129616022358. Verify package-specific notices, corresponding source and replacement rights where applicable.",
+        "Record named owner or legal dispositions for the exact 170 package and scope rows. The current fc55c82a inventory matches strict f0f9434c run 42902282297. The unsigned packet supplies 159 original Alpine expressions, identifies two generated metadata-only records without expressions, and verifies the updated libxslt checksum. Verify notices, corresponding source and replacement rights where applicable.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "docs/security/release-license-review.md"
+        ],
         "batches": [
           "release-0.6-font-source-provenance",
           "release-0.6-shipped-component-license-gate",
@@ -549016,7 +549040,8 @@
           "release-0.6-sentry-build-release-envelope",
           "release-0.6-license-review-roles",
           "release-0.6-integrity-requires-tests",
-          "release-0.6-pdf-preflight-and-license-readback"
+          "release-0.6-pdf-preflight-and-license-readback",
+          "release-0.6-license-handoff-current"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -549024,7 +549049,7 @@
           "source_evidence": [
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "df1248432540ed09b411b8c459835d7a7616defc584d635cd3ed3a5158f9536c"
+              "sha256": "83b55c06ea97891da94e9cb1425e00a5947728a67483f5dac40399c76c4417c7"
             },
             {
               "path": "deploy/licenses/release-approvals.json",
@@ -549076,6 +549101,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only added test success to the required integrity job. Existing jobs, test assertions, coverage floors, image/license enforcement and browser sources retain their bytes. Exact scope proof, 16 shell outcome cases and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-license-handoff-current",
+              "base_commit": "be0e4e9d375184053247364ce5d5d21aad2bd3a4",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "Adds current readback and package metadata to the review packet. The allowlist, exceptions, policy conditions and original evidence retain their scope."
             }
           ]
         },
@@ -549095,15 +549128,19 @@
           "status": "prepared"
         },
         "latest_hosted_runtime_inventory": {
-          "run": 42641642526,
-          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
-          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
-          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "run": 43128471381,
+          "commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/release-licenses-43128471381.json",
+          "report_sha256": "f25ed65450e6f89a66c9d7925a9d57d27d2507d5441040219e1800957739c24e",
           "package_scope_entries": 594,
           "review_required": 170,
           "distinct_package_urls": 142,
-          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
-          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/package-review-fc55c82a.json",
+          "review_packet_sha256": "dd9f3afe676957d62deef5440f9cf2e741bbcb2fe25b934b2a392e9173aa2755",
+          "review_csv": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/package-review-fc55c82a.csv",
+          "review_csv_sha256": "24caddd829e37fa54c78ff905e52735a4cda824a898f681b5b2d5bccc23a2129",
+          "mode": "report-only",
+          "strict_inventory_match_run": 42902282297
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -869835,7 +869872,8 @@
           "release-0.6-alert-delivery-watchdog",
           "release-0.6-operational-budget-context",
           "release-0.6-sentry-deploy-marker",
-          "release-0.6-api-pressure-alerts"
+          "release-0.6-api-pressure-alerts",
+          "release-0.6-license-handoff-current"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -869844,15 +869882,19 @@
           "status": "prepared"
         },
         "latest_hosted_runtime_inventory": {
-          "run": 42641642526,
-          "commit": "f0dfc74e270f570d07defc835b4657ad1681bc57",
-          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/license-hosted-42641642526/release-licenses.json",
-          "sha256": "9fc8dfa35ae0ea6990b609c5db07f913804274455877c2ceacd315526c971b77",
+          "run": 43128471381,
+          "commit": "fc55c82a7b7060fb88b179a749edde553853f051",
+          "report": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/release-licenses-43128471381.json",
+          "report_sha256": "f25ed65450e6f89a66c9d7925a9d57d27d2507d5441040219e1800957739c24e",
           "package_scope_entries": 594,
           "review_required": 170,
           "distinct_package_urls": 142,
-          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-f0dfc74e.json",
-          "review_packet_sha256": "87857541506c8cff4add939e0f1e9ffa9897d77c91b08e4552dca7b90c47f696"
+          "review_packet": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/package-review-fc55c82a.json",
+          "review_packet_sha256": "dd9f3afe676957d62deef5440f9cf2e741bbcb2fe25b934b2a392e9173aa2755",
+          "review_csv": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current/package-review-fc55c82a.csv",
+          "review_csv_sha256": "24caddd829e37fa54c78ff905e52735a4cda824a898f681b5b2d5bccc23a2129",
+          "mode": "report-only",
+          "strict_inventory_match_run": 42902282297
         },
         "changed_paths": [
           ".github/workflows/ci.yml",
@@ -869886,7 +869928,8 @@
           "deploy/monitoring/api-pressure-alerts.test.yml",
           "deploy/monitoring/staging-compose.yml",
           "apps/worker/src/operations/alerts.ts",
-          "docs/runbooks/api-pressure.md"
+          "docs/runbooks/api-pressure.md",
+          "docs/security/release-license-review.md"
         ]
       }
     },
@@ -999747,6 +999790,104 @@
         {
           "file": "native-artifacts-43131603120/operations-alert-delivery.log",
           "sha256": "92e95b826fb7aa64f73c1de4bf08dc1136bd7b64a196dec1059d9700f25f0e37"
+        }
+      ]
+    },
+    "release-0.6-license-handoff-current": {
+      "batch": "release-0.6-license-handoff-current",
+      "base_commit": "be0e4e9d375184053247364ce5d5d21aad2bd3a4",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.03.04",
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-02.02.02"
+      ],
+      "changed_paths": [
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "83b55c06ea97891da94e9cb1425e00a5947728a67483f5dac40399c76c4417c7"
+        },
+        {
+          "path": "deploy/licenses/release-approvals.json",
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        },
+        {
+          "path": "scripts/check-release-licenses.py",
+          "sha256": "271754dea01f1e5751d57f59160292723e14b994dea8523f0de172e976b499ea"
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "8a0d46acd3bd44133103a4d7392131d0a8a33acf61d8d9bc38eeaac99ef906a1"
+        },
+        {
+          "path": "Dockerfile.base",
+          "sha256": "6f817f02859ca1821eec11a8913b7c97cbd223db5626c48fafa6a0d25ef845a4"
+        },
+        {
+          "path": "Dockerfile.web",
+          "sha256": "a6eb36019702e4da0e44a78dad80120f245ebd469a97656ad17c325f8b9325ec"
+        },
+        {
+          "path": "deploy/clamav/Dockerfile",
+          "sha256": "5accedbaa9b8dbd596fcc4324150399379017e5b395704ffdc368cd0743b2da2"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        }
+      ],
+      "checks": [
+        "Verified the exact fc55c82a protected preflight result and downloaded artifact digest. All 594 installed or emitted component rows matched strict f0f9434c run 42902282297 by scope, exact package URL, locations, observed licenses and disposition. The four image IDs match the exact scan receipts.",
+        "Produced a current 170-row editable review packet. The 160 retained Alpine metadata records match the current SBOM package checksums. The updated PostgreSQL libxslt 1.1.43-r4 checksum matches its official Alpine index, compressed APK control archive and candidate SBOM. The original X11 expression and exact packaging commit are recorded.",
+        "GeoLite2 remains absent. The current and source-verified release policy, pending approvals and runtime build recipes retain their bytes."
+      ],
+      "limitations": [
+        "The protected run reports licenses without enforcing the release gate. No package exception is approved by this evidence. The final immutable strict gate and reviewer dispositions remain required."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-license-handoff-current",
+      "execution_receipts": [
+        {
+          "file": "artifact-13904196854.json",
+          "sha256": "21f02769444ac4c8a58893f3ef77f8b984ff680e36c39036b5fa4a438a582b10"
+        },
+        {
+          "file": "artifact-13904196854.zip",
+          "sha256": "003f78c4c7c8be34876f94a853274eca446ffbbe1eee7516592fd96041b7f6ae"
+        },
+        {
+          "file": "preflight-43128471381.json",
+          "sha256": "c2e1b680c6ebfdfde4dd2d8ff45abb47a9c125934aacd7419b0e47a101f7b111"
+        },
+        {
+          "file": "release-licenses-43128471381.json",
+          "sha256": "f25ed65450e6f89a66c9d7925a9d57d27d2507d5441040219e1800957739c24e"
+        },
+        {
+          "file": "package-review-fc55c82a.json",
+          "sha256": "dd9f3afe676957d62deef5440f9cf2e741bbcb2fe25b934b2a392e9173aa2755"
+        },
+        {
+          "file": "package-review-fc55c82a.csv",
+          "sha256": "24caddd829e37fa54c78ff905e52735a4cda824a898f681b5b2d5bccc23a2129"
+        },
+        {
+          "file": "prepare-review.py",
+          "sha256": "5e96b71280e7088656ab54664fdd8495431db5437d9f418859fadc3af069464d"
+        },
+        {
+          "file": "alpine-v3.24-main-x86_64-APKINDEX.tar.gz",
+          "sha256": "cbc0609c40cf12f3e9663b02545d6b284e4dc3c6efe1627a15fff4cf3faaeb52"
+        },
+        {
+          "file": "libxslt-1.1.43-r4.apk",
+          "sha256": "40e6cc7d09ce1e69421c2b37e1da4e9afef486843f21c3a79339cd6d93c1c617"
         }
       ]
     }
