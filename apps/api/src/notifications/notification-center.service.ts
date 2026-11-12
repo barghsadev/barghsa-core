@@ -1,8 +1,10 @@
 import { activeProfileSql } from '../profiles/profile-context.js';
-import { Injectable, Logger, HttpException, Optional, Inject } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
-import type { OperatingContext } from '../session/session.service.js';
+import type { OperatingContext, ValidatedSession } from '../session/session.service.js';
+import { requireCurrentSession } from '../session/session-step-up.js';
+import type { PoolClient } from 'pg';
 
 /**
  * Notification-center API service (E-05, T-05.02.02).
@@ -22,6 +24,46 @@ import type { OperatingContext } from '../session/session.service.js';
 
 export type NotificationFilter = 'all' | 'unread';
 export type CursorDirection = 'older' | 'newer';
+export type InboxActor = Pick<
+  ValidatedSession,
+  'userId' | 'sessionId' | 'csrfToken' | 'operatingContext'
+>;
+
+/** Both inbox APIs hold the account and session through the read or acknowledgement. */
+export async function withInboxSession<T>(
+  actor: InboxActor,
+  readOrWrite: (
+    center: NotificationCenterService,
+    profileId: string | null,
+    client: PoolClient
+  ) => Promise<T>
+): Promise<T> {
+  const client = await getDbPool().connect();
+  try {
+    await client.query('BEGIN');
+    const account = await client.query(
+      'SELECT user_id FROM users WHERE user_id=$1 AND disabled_at IS NULL FOR SHARE',
+      [actor.userId]
+    );
+    if (!account.rows[0])
+      throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+    await requireCurrentSession(client, actor);
+    const center = new NotificationCenterService(client);
+    const profileId =
+      actor.operatingContext === 'customer'
+        ? await center.resolveActiveProfileId(actor.userId)
+        : null;
+    const result = await readOrWrite(center, profileId, client);
+    await requireCurrentSession(client, actor);
+    await client.query('COMMIT');
+    return result;
+  } catch (error) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw error;
+  } finally {
+    client.release();
+  }
+}
 
 /** A single notification as surfaced by the center. */
 export interface NotificationCenterItem {
@@ -64,14 +106,6 @@ export interface NotificationCenterQueryPool {
     params?: unknown[]
   ) => Promise<{ rows: unknown[]; rowCount?: number | null }>;
 }
-
-/**
- * Injection token for an optional query-pool override. Not registered in the
- * module, so Nest resolves it to `undefined` (thanks to `@Optional()`) and the
- * service falls back to the shared `getDbPool()` pool. Tests construct the
- * service directly with a mock pool as the first constructor argument.
- */
-export const NOTIFICATION_CENTER_POOL = Symbol('NOTIFICATION_CENTER_POOL');
 
 // Column list used by the list query — snake_case DB columns aliased to the
 // camelCase NotificationCenterItem shape (the `pg` driver does not auto-convert).
@@ -148,20 +182,8 @@ export function decodeCursor(cursor: string): { createdAt: Date; id: string; tim
   return { createdAt, id, timestamp: iso };
 }
 
-@Injectable()
 export class NotificationCenterService {
-  private readonly logger = new Logger(NotificationCenterService.name);
-
-  /**
-   * @param injectedPool Optional query-pool override (tests). Not registered
-   *   in the module, so in production Nest injects `undefined` and the service
-   *   uses the shared `getDbPool()` pool.
-   */
-  constructor(
-    @Optional()
-    @Inject(NOTIFICATION_CENTER_POOL)
-    private readonly injectedPool?: NotificationCenterQueryPool
-  ) {}
+  constructor(private readonly injectedPool?: NotificationCenterQueryPool) {}
 
   private get db(): NotificationCenterQueryPool {
     return this.injectedPool ?? getDbPool();

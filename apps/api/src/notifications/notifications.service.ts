@@ -5,7 +5,8 @@ import {
   notificationLink,
   renderInboxTemplates,
 } from '@barghsa/shared/notifications';
-import { NotificationCenterService, notificationScope } from './notification-center.service.js';
+import { notificationScope, withInboxSession } from './notification-center.service.js';
+import type { InboxActor } from './notification-center.service.js';
 import { Injectable, Logger } from '@nestjs/common';
 import { v7 as uuidv7 } from 'uuid';
 import { getDbPool } from '@barghsa/db';
@@ -803,74 +804,58 @@ export class NotificationsService {
   /**
    * Get notifications for a user, most recent first.
    *
-   * @param userId - The user's UUID.
+   * @param actor - The authenticated inbox session.
    * @param limit - Max notifications to return (default 50).
    * @param offset - Pagination offset (default 0).
    * @returns List of notifications.
    */
   async findByUser(
-    userId: string,
+    actor: InboxActor,
     limit: number = 50,
-    offset: number = 0,
-    context: OperatingContext = 'customer'
+    offset: number = 0
   ): Promise<{ notifications: NotificationResult[]; total: number; unreadCount: number }> {
-    const pool = getDbPool();
-
-    const center = new NotificationCenterService(pool);
-    const profileId = context === 'customer' ? await center.resolveActiveProfileId(userId) : null;
+    const { userId, operatingContext } = actor;
     const safeLimit = Number.isFinite(limit) ? Math.min(Math.max(Math.trunc(limit), 1), 100) : 50;
     const safeOffset = Number.isFinite(offset) ? Math.max(Math.trunc(offset), 0) : 0;
-    const counts = (
-      await pool.query(
-        `SELECT count(*)::int AS total,
+    return withInboxSession(actor, async (_center, profileId, client) => {
+      const counts = (
+        await client.query(
+          `SELECT count(*)::int AS total,
       count(*) FILTER (WHERE NOT is_read)::int AS unread FROM in_app_notifications WHERE ${notificationScope}`,
-        [profileId, userId, context]
-      )
-    ).rows[0];
-    const rows = await pool.query(
-      `SELECT id,profile_id AS "profileId",type,
+          [profileId, userId, operatingContext]
+        )
+      ).rows[0];
+      const rows = await client.query(
+        `SELECT id,profile_id AS "profileId",type,
       COALESCE(localized_content->'original'->>'title',localized_content->'fa'->>'title',title_i18n_key) AS title,
       COALESCE(localized_content->'original'->>'body',localized_content->'fa'->>'body',body_i18n_key) AS body,
       link_route AS link,is_read AS read,read_at AS "readAt",created_at AS "createdAt",created_at AS "updatedAt"
       FROM in_app_notifications WHERE ${notificationScope} ORDER BY created_at DESC,id DESC LIMIT $4 OFFSET $5`,
-      [profileId, userId, context, safeLimit, safeOffset]
-    );
-    return {
-      notifications: rows.rows.map((row) => ({ ...row, userId })),
-      total: counts?.total ?? 0,
-      unreadCount: counts?.unread ?? 0,
-    };
+        [profileId, userId, operatingContext, safeLimit, safeOffset]
+      );
+      return {
+        notifications: rows.rows.map((row) => ({ ...row, userId })),
+        total: counts?.total ?? 0,
+        unreadCount: counts?.unread ?? 0,
+      };
+    });
   }
 
-  async countUnread(userId: string, context: OperatingContext = 'customer'): Promise<number> {
-    const center = new NotificationCenterService(getDbPool());
-    return center.countUnread(
-      context === 'customer' ? await center.resolveActiveProfileId(userId) : null,
-      userId,
-      context
+  async countUnread(actor: InboxActor): Promise<number> {
+    return withInboxSession(actor, (center, profileId) =>
+      center.countUnread(profileId, actor.userId, actor.operatingContext)
     );
   }
 
-  async markAsRead(
-    notificationId: string,
-    userId: string,
-    context: OperatingContext = 'customer'
-  ): Promise<void> {
-    const center = new NotificationCenterService(getDbPool());
-    await center.markRead(
-      context === 'customer' ? await center.resolveActiveProfileId(userId) : null,
-      notificationId,
-      userId,
-      context
+  async markAsRead(notificationId: string, actor: InboxActor): Promise<void> {
+    return withInboxSession(actor, (center, profileId) =>
+      center.markRead(profileId, notificationId, actor.userId, actor.operatingContext)
     );
   }
 
-  async markAllAsRead(userId: string, context: OperatingContext = 'customer'): Promise<void> {
-    const center = new NotificationCenterService(getDbPool());
-    await center.markAllRead(
-      context === 'customer' ? await center.resolveActiveProfileId(userId) : null,
-      userId,
-      context
+  async markAllAsRead(actor: InboxActor): Promise<void> {
+    await withInboxSession(actor, (center, profileId) =>
+      center.markAllRead(profileId, actor.userId, actor.operatingContext)
     );
   }
 

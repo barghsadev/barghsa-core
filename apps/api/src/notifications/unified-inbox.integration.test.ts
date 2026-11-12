@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { randomUUID } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { startHttpFixture } from '../test/http-fixture.js';
 import { encodeCursor, NotificationCenterService } from './notification-center.service.js';
 import type { NotificationCenterPage } from './notification-center.service.js';
@@ -351,6 +352,82 @@ it('rejects malformed cursor UUIDs and read IDs without database errors', async 
     expect((await request('inbox-alone', `${prefix}/not-a-uuid/read`, 'PATCH')).status).toBe(400);
   }
 });
+
+it.each([
+  ['v1/notifications', 'GET'],
+  ['notifications/unread-count', 'GET'],
+  ['v1/notifications/:id/read', 'PATCH'],
+  ['notifications/read-all', 'POST'],
+] as const)(
+  'rejects %s when the session expires during its inbox statement',
+  async (route, method) => {
+    const user = 'inbox-alone';
+    const notice = await service.create({
+      userId: user,
+      operatingContext: 'account',
+      type: 'general',
+      title: 'Private inbox fixture',
+    });
+    const session = randomUUID();
+    const csrf = randomUUID();
+    const blocker = await db.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query('LOCK TABLE in_app_notifications IN ACCESS EXCLUSIVE MODE');
+      const { rows } = await blocker.query('SELECT pg_backend_pid() AS pid');
+      await db.pool.query(
+        `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
+       VALUES ($1,$2,$3,$4,clock_timestamp()+INTERVAL '2 seconds',NOW()+INTERVAL '30 minutes')`,
+        [session, user, csrf, randomUUID()]
+      );
+      pending = fetch(`${fixture.base}/api/${route.replace(':id', notice.id)}`, {
+        method,
+        headers: { Cookie: `barghsa_session=${session}`, 'X-CSRF-Token': csrf },
+      });
+      await expect
+        .poll(async () => {
+          const result = await db.pool.query(
+            `SELECT EXISTS(SELECT 1 FROM pg_stat_activity
+           WHERE $1=ANY(pg_blocking_pids(pid)) AND query LIKE '%in_app_notifications%') AS blocked`,
+            [rows[0].pid]
+          );
+          return result.rows[0].blocked;
+        })
+        .toBe(true);
+      await expect
+        .poll(
+          async () => {
+            const result = await db.pool.query(
+              'SELECT expires_at<=clock_timestamp() AS expired FROM sessions WHERE session_id=$1',
+              [session]
+            );
+            return result.rows[0].expired;
+          },
+          { timeout: 5000 }
+        )
+        .toBe(true);
+      await blocker.query('COMMIT');
+      const response = await pending;
+      expect(response.status).toBe(401);
+      const body = await response.json();
+      expect(body).toMatchObject({ error: { code: ErrorCodes.AUTH_UNAUTHENTICATED.code } });
+      expect(JSON.stringify(body)).not.toContain(notice.id);
+      expect(
+        (
+          await db.pool.query('SELECT is_read,read_at FROM in_app_notifications WHERE id=$1', [
+            notice.id,
+          ])
+        ).rows
+      ).toEqual([{ is_read: false, read_at: null }]);
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+      await pending;
+    }
+  },
+  10000
+);
 
 it('preserves sub-millisecond database timestamps in page cursors', async () => {
   await db.pool.query("DELETE FROM in_app_notifications WHERE recipient_user_id='inbox-alone'");

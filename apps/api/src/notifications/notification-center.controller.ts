@@ -13,7 +13,7 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@ne
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
-import { NotificationCenterService } from './notification-center.service.js';
+import { withInboxSession } from './notification-center.service.js';
 import type {
   NotificationCenterPage,
   CursorDirection,
@@ -44,13 +44,6 @@ import type {
 @UseGuards(SessionAuthGuard)
 @Controller('api/v1/notifications')
 export class NotificationCenterController {
-  constructor(private readonly notificationCenterService: NotificationCenterService) {}
-
-  private async requireActiveProfile(req: AuthenticatedRequest): Promise<string | null> {
-    if (req.session.operatingContext === 'staff') return null;
-    return this.notificationCenterService.resolveActiveProfileId(req.session.userId);
-  }
-
   /**
    * GET /api/v1/notifications?cursor=&limit=&filter=&direction=
    *
@@ -76,7 +69,6 @@ export class NotificationCenterController {
     @Query('filter') filter?: string,
     @Query('direction') direction?: string
   ): Promise<NotificationCenterPage> {
-    const profileId = await this.requireActiveProfile(req);
     const normFilter: NotificationFilter = filter === 'unread' ? 'unread' : 'all';
     const normDirection: CursorDirection = direction === 'newer' ? 'newer' : 'older';
     const parsedLimit = limit !== undefined ? parseInt(limit, 10) : undefined;
@@ -100,11 +92,9 @@ export class NotificationCenterController {
     if (cursor) options.cursor = cursor;
     if (parsedLimit !== undefined) options.limit = parsedLimit;
 
-    return this.notificationCenterService.list(
-      profileId,
-      options,
-      req.session.userId,
-      req.session.operatingContext
+    const actor = req.session;
+    return withInboxSession(actor, (center, profileId) =>
+      center.list(profileId, options, actor.userId, actor.operatingContext)
     );
   }
 
@@ -119,13 +109,10 @@ export class NotificationCenterController {
   @ApiOperation({ summary: 'Fetch the current unread notification count' })
   @ApiResponse({ status: 200, description: '{ unread_count }' })
   async unreadCount(@Req() req: AuthenticatedRequest) {
-    const profileId = await this.requireActiveProfile(req);
-    const unread_count = await this.notificationCenterService.countUnread(
-      profileId,
-      req.session.userId,
-      req.session.operatingContext
-    );
-    return { unread_count };
+    const actor = req.session;
+    return withInboxSession(actor, async (center, profileId) => ({
+      unread_count: await center.countUnread(profileId, actor.userId, actor.operatingContext),
+    }));
   }
 
   /**
@@ -138,20 +125,16 @@ export class NotificationCenterController {
   @ApiOperation({ summary: 'Mark all notifications read' })
   @ApiResponse({ status: 200, description: '{ marked, unread_count }' })
   async markAllRead(@Req() req: AuthenticatedRequest) {
-    const profileId = await this.requireActiveProfile(req);
-    const marked = await this.notificationCenterService.markAllRead(
-      profileId,
-      req.session.userId,
-      req.session.operatingContext
-    );
-    // Re-query after the update so the reported count is accurate even if a
-    // new notification arrives concurrently between the UPDATE and the reply.
-    const unread_count = await this.notificationCenterService.countUnread(
-      profileId,
-      req.session.userId,
-      req.session.operatingContext
-    );
-    return { marked, unread_count };
+    const actor = req.session;
+    return withInboxSession(actor, async (center, profileId) => {
+      const marked = await center.markAllRead(profileId, actor.userId, actor.operatingContext);
+      const unread_count = await center.countUnread(
+        profileId,
+        actor.userId,
+        actor.operatingContext
+      );
+      return { marked, unread_count };
+    });
   }
 
   /**
@@ -166,18 +149,15 @@ export class NotificationCenterController {
   @ApiResponse({ status: 200, description: '{ id, is_read, unread_count }' })
   @ApiResponse({ status: 404, description: 'Notification not found' })
   async markRead(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
-    const profileId = await this.requireActiveProfile(req);
-    await this.notificationCenterService.markRead(
-      profileId,
-      id,
-      req.session.userId,
-      req.session.operatingContext
-    );
-    const unreadCount = await this.notificationCenterService.countUnread(
-      profileId,
-      req.session.userId,
-      req.session.operatingContext
-    );
-    return { id, is_read: true, unread_count: unreadCount };
+    const actor = req.session;
+    return withInboxSession(actor, async (center, profileId) => {
+      await center.markRead(profileId, id, actor.userId, actor.operatingContext);
+      const unread_count = await center.countUnread(
+        profileId,
+        actor.userId,
+        actor.operatingContext
+      );
+      return { id, is_read: true, unread_count };
+    });
   }
 }

@@ -30,6 +30,10 @@ The API's `AuthorizationService` resolves staff and profile capabilities. Staff 
 - Electricity increase and price adjustment endpoints bind the contract, order, profile and invoice lineage before showing terms or quoting a financial basis. Invalid linked invoices stay out of public receipts. The public increase signature receipt identifies the request and includes the signer, time, amendment digest and amount. Stored session and network evidence remains in the restricted signed record.
 - Electricity increase settlement and expiry validate the same relationships before changing a request or its charge invoice. An invalid link leaves the records intact for reconciliation. The worker reports `electricity_increase_scope_requires_reconciliation` in the failed-jobs ledger and continues processing valid requests. An authorized finance operator can locate affected records using a read-only query for pending, awaiting-signature or awaiting-payment requests where `electricity_increase_has_scope(r)` is false. Verify the originating contract, order and signed evidence before any approved correction.
 
+Both notification inbox APIs recheck profile selection and notice ownership in
+their resource queries. The account and session stay locked until the response
+is authorized or the read-state change commits.
+
 ## Staff capabilities
 
 - Staff sessions use the union of current database role capabilities for Customer Support, CRM and Verification, Finance, Legal and Contracts, Operations and Admin. A matching permission, explicit wildcard grant or current administrator authority is required. Staff account status permits staff context. Each protected operation still checks the required capability.
