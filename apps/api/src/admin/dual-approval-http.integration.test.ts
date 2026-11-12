@@ -95,11 +95,13 @@ it('exposes only owned rejection fields after verification and leaves the approv
       error: { code: ErrorCodes.VALIDATION_INPUT_INVALID.code, fields: ['reason'] },
     });
   }
-  const mixed = await reject('reviewer', { reason: '', actorUserId: 'private-actor' });
-  expect(mixed.status).toBe(400);
-  const body = await mixed.json();
-  expect(body).not.toHaveProperty('error.fields');
-  expect(JSON.stringify(body)).not.toContain('private-actor');
+  for (const reason of ['', 'Rejected after review']) {
+    const mixed = await reject('reviewer', { reason, actorUserId: 'private-actor' });
+    expect(mixed.status).toBe(400);
+    const body = await mixed.json();
+    expect(body).not.toHaveProperty('error.fields');
+    expect(JSON.stringify(body)).not.toContain('private-actor');
+  }
   expect(
     (
       await http.pool.query(
