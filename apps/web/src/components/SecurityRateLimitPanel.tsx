@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type FormEvent } from 'react';
+import { lazy, Suspense, useCallback, useRef, useState, type FormEvent } from 'react';
 import { verificationConfigText } from '@barghsa/i18n/verification-config';
 import {
   securityRateLimitPolicies,
@@ -14,6 +14,7 @@ import { SettingsFormSection } from './SettingsFormSection.js';
 import { TeamActionDialog, type TeamAction } from './TeamActionDialog.js';
 
 const path = '/api/admin/config/security-rate-limits';
+const SecurityRateLimitRecovery = lazy(() => import('./SecurityRateLimitRecovery.js'));
 type Emergency = {
   limit: number;
   owner: string;
@@ -136,7 +137,9 @@ export default function SecurityRateLimitPanel({
   const [invalid, setInvalid] = useState(false);
   const [saved, setSaved] = useState(false);
   const [pending, setPending] = useState(false);
+  const [showRecovery, setShowRecovery] = useState(false);
   const save = useRef<HTMLButtonElement>(null);
+  const recoveryToggle = useRef<HTMLButtonElement>(null);
   const captured = useRef<typeof action>(null);
   const withdraw = useCallback(() => {
     captured.current = null;
@@ -147,6 +150,7 @@ export default function SecurityRateLimitPanel({
     setDraft(newDraft());
     setInvalid(false);
     setSaved(false);
+    setShowRecovery(false);
   }, []);
   const state = useSettingsSnapshot(path, validConfig, configBasis, reset, withdraw, onReadDenied);
   const policy = state.current?.policies.find((row) => row.policy === selected);
@@ -161,7 +165,7 @@ export default function SecurityRateLimitPanel({
 
   function submit(event: FormEvent) {
     event.preventDefault();
-    if (blocked || !policy || captured.current) return;
+    if (blocked || showRecovery || !policy || captured.current) return;
     const message = reason.trim();
     if (
       !inRange(nextLimit, 1, policy.ceiling) ||
@@ -211,7 +215,12 @@ export default function SecurityRateLimitPanel({
           <Button
             ref={save}
             type="submit"
-            disabled={blocked || !!action || (nextLimit === policy?.limit && operation === 'keep')}
+            disabled={
+              blocked ||
+              showRecovery ||
+              !!action ||
+              (nextLimit === policy?.limit && operation === 'keep')
+            }
           >
             {text('rateLimitSave')}
           </Button>
@@ -247,7 +256,7 @@ export default function SecurityRateLimitPanel({
       )}
       <CommandFeedback message={saved ? text('rateLimitSaved') : null} />
       {policy && (
-        <fieldset className="space-y-3 min-w-0" disabled={blocked || !!action}>
+        <fieldset className="space-y-3 min-w-0" disabled={blocked || !!action || showRecovery}>
           <legend className="sr-only">{text('rateLimitTitle')}</legend>
           <Label htmlFor="security-rate-action">{text('rateLimitAction')}</Label>
           <select
@@ -372,6 +381,65 @@ export default function SecurityRateLimitPanel({
             </>
           )}
         </fieldset>
+      )}
+      {policy && (
+        <Button
+          ref={recoveryToggle}
+          type="button"
+          variant="outline"
+          className="mt-4"
+          aria-expanded={showRecovery}
+          aria-controls={showRecovery && !blocked ? 'security-rate-limit-recovery' : undefined}
+          disabled={blocked || !!action}
+          onClick={() => setShowRecovery((open) => !open)}
+        >
+          {text('rateRecoveryHistory')}
+        </Button>
+      )}
+      {showRecovery && !blocked && policy && (
+        <div id="security-rate-limit-recovery">
+          <Suspense fallback={<LoadingStatus>{text('loading')}</LoadingStatus>}>
+            <SecurityRateLimitRecovery
+              key={`${selected}:${policy.version}`}
+              policy={selected}
+              version={policy.version}
+              ceiling={policy.ceiling}
+              scope={state.scope}
+              toggle={recoveryToggle}
+              onDenied={state.denyCommand}
+              onUnconfirmed={() => {
+                setShowRecovery(false);
+                state.unconfirmed();
+              }}
+              onActivated={(raw, expected) => {
+                if (
+                  !state.current ||
+                  state.scope.denied ||
+                  !record(raw) ||
+                  raw.draftId !== expected.id ||
+                  !validPolicy(raw.current) ||
+                  raw.current.policy !== selected ||
+                  raw.current.version !== expected.baseVersion + 1 ||
+                  raw.current.limit !== expected.limit ||
+                  !sameEmergency(policy.emergency, raw.current.emergency)
+                )
+                  return false;
+                const current = raw.current;
+                if (
+                  !state.accept({
+                    policies: state.current.policies.map((row) =>
+                      row.policy === selected ? current : row
+                    ),
+                  })
+                )
+                  return false;
+                setSaved(true);
+                state.resource.retry();
+                return true;
+              }}
+            />
+          </Suspense>
+        </div>
       )}
       {action && (
         <TeamActionDialog

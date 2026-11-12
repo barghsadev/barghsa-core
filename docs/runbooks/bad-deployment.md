@@ -36,6 +36,13 @@ the current green product and quantity limits and records a new version linked
 to the draft and source revision. After a timeout, reload history and check the
 active rules before repeating any command.
 
+For a security rate limit, choose the action on the verification settings page
+and open **Rate-limit history**. Prepare a draft from a previously saved regular
+limit. Review the draft and confirm **Activate recovery draft**. Activation
+creates a new version, keeps the current emergency rule and preserves existing
+request counters. Refresh the settings if another operator changes the action
+before activation.
+
 ## Data rollback
 
 1. Treat suspected data loss as P0. The database operator preserves the source and restores to a separate target using the approved backup and, when needed, the PITR target.

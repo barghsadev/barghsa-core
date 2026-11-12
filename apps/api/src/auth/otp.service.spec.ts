@@ -102,7 +102,9 @@ describe('OtpService', () => {
       expect(params[3]).toBeNull(); // password_hash (null when not provided)
       expect(params[4]).toBeNull(); // tos_version_id (null when not provided)
       expect(params[5]).toBe(OtpService.MAX_ATTEMPTS);
-      expect(params[6]).toBeInstanceOf(Date);
+      expect(params[6]).toBe(300);
+      expect(sql).toContain("clock_timestamp() + $7::integer * interval '1 second'");
+      expect(sql).toContain('RETURNING challenge_id,expires_at');
     });
 
     it('throws rate-limited when per-minute limit is hit', async () => {

@@ -134,7 +134,6 @@ export class OtpService {
     const otpHash = this.hashOtp(otp);
     const challengeId = randomUUID();
     const config = await readOtpConfig(transactionClient);
-    const expiresAt = new Date(Date.now() + config.ttlSeconds * 1000);
 
     const deliveryId = randomUUID();
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination });
@@ -142,9 +141,10 @@ export class OtpService {
     await pool.query(
       `WITH challenge AS (
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, password_hash, tos_version_id, attempts_remaining, expires_at, purpose, user_id, auth_version, previous_challenge_id, step_up_session_id)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $12, $13, $15) RETURNING challenge_id
+         VALUES ($1, $2, $3, $4, $5, $6, clock_timestamp() + $7::integer * interval '1 second',
+           $8, $9, $12, $13, $15) RETURNING challenge_id,expires_at
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
-         SELECT $10,challenge_id,$3,$11,$7,$14 FROM challenge`,
+         SELECT $10,challenge_id,$3,$11,expires_at,$14 FROM challenge`,
       [
         challengeId,
         destination,
@@ -152,7 +152,7 @@ export class OtpService {
         passwordHash ?? null,
         tosVersionId ?? null,
         OtpService.MAX_ATTEMPTS,
-        expiresAt,
+        config.ttlSeconds,
         binding?.purpose ?? 'registration',
         binding?.userId ?? null,
         deliveryId,
@@ -231,7 +231,6 @@ export class OtpService {
     const otpHash = this.hashOtp(otp);
     const challengeId = randomUUID();
     const lifetime = config ?? (await readOtpConfig());
-    const expiresAt = new Date(Date.now() + lifetime.ttlSeconds * 1000);
 
     const deliveryId = randomUUID();
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination });
@@ -248,16 +247,17 @@ export class OtpService {
     const inserted = await pool.query(
       `WITH account AS (${accountSql}), challenge AS (
          INSERT INTO otp_challenges (challenge_id, destination, otp_hash, user_id, attempts_remaining, expires_at, purpose, auth_version)
-         SELECT $1,$2,$3,user_id,$5,$6,$7,auth_version FROM account RETURNING challenge_id
+         SELECT $1,$2,$3,user_id,$5,clock_timestamp() + $6::integer * interval '1 second',$7,auth_version
+         FROM account RETURNING challenge_id,expires_at
        ) INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
-         SELECT $8,challenge_id,$3,$9,$6,$11 FROM challenge`,
+         SELECT $8,challenge_id,$3,$9,expires_at,$11 FROM challenge`,
       [
         challengeId,
         destination,
         otpHash,
         userId,
         OtpService.MAX_ATTEMPTS,
-        expiresAt,
+        lifetime.ttlSeconds,
         purpose,
         deliveryId,
         encrypted,
@@ -334,7 +334,6 @@ export class OtpService {
     const otp = this.generateOtp();
     const otpHash = this.hashOtp(otp);
     const config = await readOtpConfig();
-    const newExpiresAt = new Date(Date.now() + config.ttlSeconds * 1000);
 
     // NOTE: Intentionally do NOT reset attempts_remaining on resend —
     // prevents brute-force bypass via resend cycling (new OTP, same attempts budget)
@@ -342,14 +341,15 @@ export class OtpService {
     const encrypted = this.deliveryPayload(deliveryId, { code: otp, destination });
     const updated = await pool.query(
       `WITH challenge AS (UPDATE otp_challenges
-       SET otp_hash = $1, expires_at = $2, resend_count = resend_count + 1, updated_at = NOW()
+       SET otp_hash = $1, expires_at = clock_timestamp() + $2::integer * interval '1 second',
+         resend_count = resend_count + 1, updated_at = NOW()
        WHERE challenge_id = $3 AND otp_hash = $4 AND consumed_at IS NULL
-         AND expires_at > NOW() AND attempts_remaining > 0 RETURNING challenge_id)
+         AND expires_at > clock_timestamp() AND attempts_remaining > 0 RETURNING challenge_id,expires_at)
        INSERT INTO auth_delivery_outbox(id,challenge_id,code_hash,encrypted_payload,expires_at,correlation_id)
-       SELECT $5,challenge_id,$1,$6,$2,$7 FROM challenge`,
+       SELECT $5,challenge_id,$1,$6,expires_at,$7 FROM challenge`,
       [
         otpHash,
-        newExpiresAt,
+        config.ttlSeconds,
         challengeId,
         otp_hash,
         deliveryId,

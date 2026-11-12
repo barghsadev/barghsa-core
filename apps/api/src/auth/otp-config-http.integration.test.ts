@@ -74,6 +74,106 @@ function updateLimit(body: unknown, headers = adminHeaders) {
   return request(limitsPath, 'PUT', body, headers);
 }
 
+it('stages and activates the exact prior regular limit without restoring an old emergency or resetting counters', async () => {
+  const pool = http.pool;
+  const history = (query = 'policy=login', headers = adminHeaders) =>
+    request(`${limitsPath}/rollback-history?${query}`, 'GET', undefined, headers);
+  const recover = (operation: string, body: unknown, headers = adminHeaders) =>
+    request(`${limitsPath}/rollback-${operation}`, 'POST', body, headers);
+  const write = (limit: number, expectedVersion: number, reason: string, emergency: number) =>
+    updateLimit({
+      policy: 'login',
+      limit,
+      expectedVersion,
+      emergency: { operation: 'set', limit: emergency, minutes: 30, reason },
+    });
+  const epoch = async () =>
+    (await pool.query("SELECT version FROM config_version WHERE id='global'")).rows[0].version;
+  expect((await history('policy=login', customerHeaders)).status).toBe(403);
+  expect((await history('policy=login&beforeVersion=1&beforeVersion=2')).status).toBe(400);
+  expect(await (await history()).json()).toEqual({
+    policy: 'login',
+    baseVersion: 0,
+    items: [],
+    nextBeforeVersion: null,
+    draft: null,
+  });
+  expect((await write(12, 0, 'Historical temporary restriction', 4)).status).toBe(200);
+  const active = await write(8, 1, 'Current temporary restriction', 2);
+  expect(active.status).toBe(200);
+  const current = (await active.json()) as { emergency: unknown };
+  const list = (await (await history()).json()) as {
+    items: { id: string; limit: number; version: number }[];
+  };
+  const [source] = list.items;
+  expect(list).toEqual({
+    policy: 'login',
+    baseVersion: 2,
+    items: [{ id: source!.id, version: 1, limit: 12 }],
+    nextBeforeVersion: null,
+    draft: null,
+  });
+  const stage = { policy: 'login', expectedVersion: 2, sourceId: source!.id };
+  expect((await recover('draft', stage, customerHeaders)).status).toBe(403);
+  expect((await recover('draft', stage, { Cookie: adminHeaders.Cookie! })).status).toBe(403);
+  expect((await recover('draft', { ...stage, expectedVersion: 1 })).status).toBe(409);
+  expect((await recover('draft', { ...stage, sourceId: randomUUID() })).status).toBe(404);
+  expect((await recover('draft', { ...stage, limit: 50 })).status).toBe(400);
+  const store = new PostgresRateLimiterStore((sql, params) => pool.query(sql, params));
+  const consume = () => store.incrementSecurity('login:device:recovery', 50, 900_000);
+  expect(await consume()).toMatchObject({ allowed: true, limit: 2, remaining: 1 });
+  const before = await epoch();
+  const staged = await recover('draft', stage);
+  expect(staged.status, await staged.clone().text()).toBe(201);
+  const draft = (await staged.json()) as { id: string };
+  expect(draft).toMatchObject({
+    sourceId: source!.id,
+    sourceVersion: 1,
+    baseVersion: 2,
+    limit: 12,
+  });
+  expect(await (await recover('draft', stage)).json()).toEqual(draft);
+  expect(await (await history()).json()).toMatchObject({ baseVersion: 2, draft });
+  expect(await epoch()).toBe(before);
+  expect(await consume()).toMatchObject({ allowed: true, limit: 2, remaining: 0 });
+  const activation = { policy: 'login', expectedVersion: 2, draftId: draft.id };
+  await pool.query('UPDATE sessions SET step_up_verified_at=NULL WHERE session_id=$1', [sessionId]);
+  expect((await recover('activate', activation)).status).toBe(403);
+  await pool.query('UPDATE sessions SET step_up_verified_at=NOW() WHERE session_id=$1', [
+    sessionId,
+  ]);
+  const decisions = await Promise.all([
+    recover('activate', activation),
+    recover('activate', activation),
+  ]);
+  expect(decisions.map((response) => response.status).sort()).toEqual([200, 409]);
+  expect(await decisions.find((response) => response.ok)!.json()).toMatchObject({
+    draftId: draft.id,
+    current: { policy: 'login', version: 3, limit: 12, emergency: current.emergency },
+  });
+  expect(await consume()).toMatchObject({ allowed: false, limit: 2, remaining: 0 });
+  expect(await epoch()).toBe(before + 1);
+  expect(await (await history()).json()).toMatchObject({ baseVersion: 3, draft: null });
+  const rows = (
+    await pool.query(`SELECT event,metadata::jsonb AS metadata FROM audit_log
+    WHERE metadata::jsonb->>'entity'='security_rate_limit:login' ORDER BY created_at,id`)
+  ).rows;
+  expect(rows).toHaveLength(4);
+  expect(rows[2]).toMatchObject({
+    event: 'security_rate_limit.rollback_draft',
+    metadata: { ...draft },
+  });
+  expect(rows[3]).toMatchObject({
+    event: 'change_recorded',
+    metadata: {
+      rollbackDraftId: draft.id,
+      restoredFromVersion: 1,
+      stepUpVerified: true,
+      current: { version: 3, limit: 12 },
+    },
+  });
+}, 20000);
+
 it('requires CSRF, current staff authority and step-up for bounded rate-limit changes', async () => {
   const body = { policy: 'login', limit: 12, expectedVersion: 0, emergency: keep };
   expect((await request(limitsPath)).status).toBe(401);

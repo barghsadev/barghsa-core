@@ -944,6 +944,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/config/security-rate-limits/rollback-activate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Activate the exact recovery draft and preserve the current emergency rule */
+        post: operations["SecurityRateLimitConfigController_activate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/security-rate-limits/rollback-draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Prepare a recovery draft for a previously active regular limit */
+        post: operations["SecurityRateLimitConfigController_stage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/config/security-rate-limits/rollback-history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read previous regular rate limits and the current recovery draft */
+        get: operations["SecurityRateLimitConfigController_history"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/admin/config/service-response-targets": {
         parameters: {
             query?: never;
@@ -13566,6 +13617,80 @@ export interface operations {
                 };
             };
         };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SecurityRateLimitConfigController_activate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    /** Format: uuid */
+                    draftId: string;
+                    expectedVersion: number;
+                    /** @enum {string} */
+                    policy: "otpDestinationHour" | "otpDestinationDay" | "otpNetwork" | "otpResend" | "otpVerify" | "login" | "passwordReset" | "orderSubmission" | "wallet" | "fileUpload" | "aiQuestion" | "aiTest";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SecurityRateLimitConfigController_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    expectedVersion: number;
+                    /** @enum {string} */
+                    policy: "otpDestinationHour" | "otpDestinationDay" | "otpNetwork" | "otpResend" | "otpVerify" | "login" | "passwordReset" | "orderSubmission" | "wallet" | "fileUpload" | "aiQuestion" | "aiTest";
+                    /** Format: uuid */
+                    sourceId: string;
+                };
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SecurityRateLimitConfigController_history: {
+        parameters: {
+            query: {
+                beforeVersion?: number;
+                policy: "otpDestinationHour" | "otpDestinationDay" | "otpNetwork" | "otpResend" | "otpVerify" | "login" | "passwordReset" | "orderSubmission" | "wallet" | "fileUpload" | "aiQuestion" | "aiTest";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {

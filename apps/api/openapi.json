@@ -4743,6 +4743,172 @@
         ]
       }
     },
+    "/api/admin/config/security-rate-limits/rollback-activate": {
+      "post": {
+        "operationId": "SecurityRateLimitConfigController_activate",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "draftId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  },
+                  "expectedVersion": {
+                    "maximum": 2147483646,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "policy": {
+                    "enum": [
+                      "otpDestinationHour",
+                      "otpDestinationDay",
+                      "otpNetwork",
+                      "otpResend",
+                      "otpVerify",
+                      "login",
+                      "passwordReset",
+                      "orderSubmission",
+                      "wallet",
+                      "fileUpload",
+                      "aiQuestion",
+                      "aiTest"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "policy",
+                  "expectedVersion",
+                  "draftId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Activate the exact recovery draft and preserve the current emergency rule",
+        "tags": [
+          "Admin · Security"
+        ]
+      }
+    },
+    "/api/admin/config/security-rate-limits/rollback-draft": {
+      "post": {
+        "operationId": "SecurityRateLimitConfigController_stage",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "expectedVersion": {
+                    "maximum": 2147483646,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "policy": {
+                    "enum": [
+                      "otpDestinationHour",
+                      "otpDestinationDay",
+                      "otpNetwork",
+                      "otpResend",
+                      "otpVerify",
+                      "login",
+                      "passwordReset",
+                      "orderSubmission",
+                      "wallet",
+                      "fileUpload",
+                      "aiQuestion",
+                      "aiTest"
+                    ],
+                    "type": "string"
+                  },
+                  "sourceId": {
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "policy",
+                  "expectedVersion",
+                  "sourceId"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Prepare a recovery draft for a previously active regular limit",
+        "tags": [
+          "Admin · Security"
+        ]
+      }
+    },
+    "/api/admin/config/security-rate-limits/rollback-history": {
+      "get": {
+        "operationId": "SecurityRateLimitConfigController_history",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "beforeVersion",
+            "required": false,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "policy",
+            "required": true,
+            "schema": {
+              "enum": [
+                "otpDestinationHour",
+                "otpDestinationDay",
+                "otpNetwork",
+                "otpResend",
+                "otpVerify",
+                "login",
+                "passwordReset",
+                "orderSubmission",
+                "wallet",
+                "fileUpload",
+                "aiQuestion",
+                "aiTest"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Read previous regular rate limits and the current recovery draft",
+        "tags": [
+          "Admin · Security"
+        ]
+      }
+    },
     "/api/admin/config/service-response-targets": {
       "get": {
         "operationId": "AdminController_getServiceResponseTargets",
