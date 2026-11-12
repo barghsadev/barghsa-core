@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T01:14:36+00:00",
+  "updated": "2026-11-12T01:22:24+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11534,7 +11534,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -11600,6 +11600,14 @@
                 ".env.example"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -14075,7 +14083,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -14087,7 +14095,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -14126,6 +14134,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -14317,7 +14334,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -14329,7 +14346,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -14420,6 +14437,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -14672,7 +14698,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -14684,7 +14710,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -14726,6 +14752,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -496621,7 +496656,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -496637,7 +496672,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -496811,6 +496846,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -496892,7 +496936,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage-factory.ts",
@@ -496908,7 +496952,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -497082,6 +497126,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -497192,11 +497245,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -497467,6 +497520,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -497591,11 +497653,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -497837,6 +497899,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -507702,7 +507773,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -508057,6 +508128,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -508247,7 +508326,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -508602,6 +508681,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -508794,7 +508881,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -509170,6 +509257,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -509394,7 +509489,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -509845,6 +509940,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -510035,7 +510138,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -510390,6 +510493,14 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -542430,7 +542541,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The private AI worker, external AI, web-source, bill, payment, Telegram, SMS.ir, Resend and Sentry HTTP paths refuse redirects. The pinned S3 SDK defaults to refusing region redirect retries. Verify deployed provider and proxy behavior, including the separate OTLP and S3 transports."
+        "Verify deployed provider and proxy behavior on the accepted runtime, including the protected OTLP transport. Implemented HTTP provider paths refuse redirects and the S3 client explicitly disables SDK region redirect retries. Confirm the existing storage origin controls with the selected endpoints."
       ],
       "owner": null,
       "depends_on": [],
@@ -542448,7 +542559,10 @@
           "packages/shared/src/notification-delivery/email.test.ts",
           "packages/shared/src/notification-delivery/email.ts",
           "packages/shared/src/storage/index.ts",
-          "packages/shared/src/storage/read-capped-bytes.ts"
+          "packages/shared/src/storage/read-capped-bytes.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts",
+          "packages/shared/src/storage/storage.test.ts",
+          "docs/operations/storage-configuration.md"
         ],
         "batches": [
           "release-0.6-provider-egress-regressions",
@@ -542456,7 +542570,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-s3-response-limits"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -542563,7 +542678,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The private AI worker, external AI, web-source, bill, payment, Telegram, SMS.ir, Resend and Sentry paths have per-call deadlines and bounded decoded responses. Verify SDK responses, upload/object-specific limits and operational constraints in the deployed configuration."
+        "Verify the final candidate with the selected providers and protected OTLP or other operational HTTP transports. Implemented application provider paths have deadlines and bounded control responses. Server-side S3 uses a terminal header deadline, a 10 MiB control response cap and deadline, and an idle timeout for streaming object bodies. Repeat the deployed file-size and byte-verification rehearsal."
       ],
       "owner": null,
       "depends_on": [],
@@ -542581,7 +542696,10 @@
           "packages/shared/src/notification-delivery/email.test.ts",
           "packages/shared/src/notification-delivery/email.ts",
           "packages/shared/src/storage/index.ts",
-          "packages/shared/src/storage/read-capped-bytes.ts"
+          "packages/shared/src/storage/read-capped-bytes.ts",
+          "packages/shared/src/storage/s3-storage-provider.ts",
+          "packages/shared/src/storage/storage.test.ts",
+          "docs/operations/storage-configuration.md"
         ],
         "batches": [
           "release-0.6-provider-egress-regressions",
@@ -542589,7 +542707,8 @@
           "release-0.6-ai-and-payment-transport-boundaries",
           "release-0.6-provider-redirects-and-response-caps",
           "release-0.6-definition-of-done-and-exception-templates",
-          "release-0.6-sentry-build-release-envelope"
+          "release-0.6-sentry-build-release-envelope",
+          "release-0.6-s3-response-limits"
         ],
         "current_acceptance": {
           "kind": "verified-scoped-provider-response-boundaries",
@@ -545083,11 +545202,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545179,6 +545298,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -545242,7 +545370,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545311,6 +545439,14 @@
                 "packages/shared/src/storage/s3-storage-provider.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -545726,7 +545862,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage-provider.ts",
@@ -545734,7 +545870,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -545909,6 +546045,15 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -546032,11 +546177,11 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -546127,6 +546272,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -546274,7 +546428,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/db/drizzle/production/0286_upload_scope_quotas.sql",
@@ -546473,6 +546627,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -552782,7 +552944,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -552835,6 +552997,14 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "The storage adapter retains its authorization, object provenance, quarantine, signed URL and cleanup behavior. Transport admission and metrics were verified through real loopback S3 responses, native storage HTTP callers and both compiled exporters. The preexisting process circuit consumers and dashboard panels passed the related checks."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -562340,7 +562510,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/read-capped-bytes.ts",
@@ -562497,6 +562667,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The required job now needs successful source coverage. Coverage waits for its native and browser producers and resolves the first full preflight to the common ancestor on main. The full and fast gates, test selectors, scanners, approval paths and numeric thresholds retain their prior behavior. The YAML job comparison, 60 executable shell and Git cases, and actionlint passed."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -623551,7 +623729,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/ui/package.json",
@@ -623835,6 +624013,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -624157,7 +624343,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/ui/package.json",
@@ -624461,6 +624647,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -625917,7 +626111,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/ui/package.json",
@@ -626221,6 +626415,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -628703,7 +628905,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/ui/package.json",
@@ -629007,6 +629209,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ]
         }
@@ -858935,7 +859145,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -858951,7 +859161,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -860290,6 +860500,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "presentation_renewals": [
@@ -863571,7 +863790,7 @@
             },
             {
               "path": "packages/shared/src/storage/s3-storage-provider.ts",
-              "sha256": "f5c5a7017ccbeb5265d50ecc3ad9e0e93f64979987477a2e07a91b489e8ac5c0"
+              "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
             },
             {
               "path": "packages/shared/src/storage/setup-bucket.ts",
@@ -863587,7 +863806,7 @@
             },
             {
               "path": "packages/shared/src/storage/storage.test.ts",
-              "sha256": "9805e62b458cc077f589575d66c7594045f4ee326f8bc1f9368e2d41a3f45951"
+              "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
             },
             {
               "path": "packages/ui/src/components/ui/job-progress.tsx",
@@ -864828,6 +865047,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-s3-response-limits",
+              "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+              "paths": [
+                "packages/shared/src/storage/s3-storage-provider.ts",
+                "packages/shared/src/storage/storage.test.ts"
+              ],
+              "scope": "Makes the pinned S3 SDK header timeout terminal, bounds metadata/error bytes and reads, and ends idle object streams. Existing provider methods, destination checks, circuit and assertions matched. Local SDK and hosted caller regression tests passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -869873,7 +870101,8 @@
           "release-0.6-operational-budget-context",
           "release-0.6-sentry-deploy-marker",
           "release-0.6-api-pressure-alerts",
-          "release-0.6-license-handoff-current"
+          "release-0.6-license-handoff-current",
+          "release-0.6-s3-response-limits"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -869929,7 +870158,10 @@
           "deploy/monitoring/staging-compose.yml",
           "apps/worker/src/operations/alerts.ts",
           "docs/runbooks/api-pressure.md",
-          "docs/security/release-license-review.md"
+          "docs/security/release-license-review.md",
+          "packages/shared/src/storage/s3-storage-provider.ts",
+          "packages/shared/src/storage/storage.test.ts",
+          "docs/operations/storage-configuration.md"
         ]
       }
     },
@@ -999888,6 +1000120,139 @@
         {
           "file": "libxslt-1.1.43-r4.apk",
           "sha256": "40e6cc7d09ce1e69421c2b37e1da4e9afef486843f21c3a79339cd6d93c1c617"
+        }
+      ]
+    },
+    "release-0.6-s3-response-limits": {
+      "batch": "release-0.6-s3-response-limits",
+      "base_commit": "6209517c1a27410ddc35dd36ea9c4433f00e8bb5",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.04.04",
+        "06-security-testing-observability.md#T-06.04.04.05",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-03.02.01",
+        "01-platform-infrastructure.md#T-04.03.01",
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-04.03.04",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.14.01",
+        "05-notifications-documents-ai.md#T-05.14.02",
+        "05-notifications-documents-ai.md#T-05.14.03",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.15.02",
+        "06-security-testing-observability.md#T-06.06.01.02",
+        "06-security-testing-observability.md#T-06.06.01.03",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.06.01.06",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.09.02.06",
+        "06-security-testing-observability.md#T-06.12.03.04",
+        "07-ui-ux-design.md#T-07.05.01.05",
+        "07-ui-ux-design.md#T-07.05.01.06",
+        "07-ui-ux-design.md#T-07.05.01.10",
+        "07-ui-ux-design.md#T-07.05.02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "packages/shared/src/storage/s3-storage-provider.ts",
+        "packages/shared/src/storage/storage.test.ts",
+        "docs/operations/storage-configuration.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "packages/shared/src/storage/s3-storage-provider.ts",
+          "sha256": "6049c64b7555e2c3c8ae2e354d6cbc866624ea9a36dc708811a04040def2cf3d"
+        },
+        {
+          "path": "packages/shared/src/storage/storage.test.ts",
+          "sha256": "ce043eb8cd50104cafb750d2af0d6c24d119b583564235bded24aa3198efafb9"
+        },
+        {
+          "path": "docs/operations/storage-configuration.md",
+          "sha256": "6fac962fff4dd26a70af8d3fa9e9996b007101daf57255ad72bf2a9a1b43b349"
+        },
+        {
+          "path": "packages/shared/src/storage/storage-circuit.ts",
+          "sha256": "92237c99423125832f2ba0ce5c033fe423b089d406c0c72be5b14f4d3181b087"
+        },
+        {
+          "path": "packages/shared/src/storage/read-capped-bytes.ts",
+          "sha256": "3abc5a0056b44ccfe8c30caf2f1cb530d29a07737c41d308d8301e9dd9a3491d"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.ts",
+          "sha256": "5b589bdc1610d8b248b928c823558a70347ba7c7f7731d3df5ef8fbf69615121"
+        },
+        {
+          "path": "packages/shared/src/storage/runtime-config.test.ts",
+          "sha256": "786b1629afbd321d24f06cff05bcf14bc681a56760ac1d425845e787ef0d324c"
+        },
+        {
+          "path": "packages/shared/src/storage/file-operations.test.ts",
+          "sha256": "941049e73a146a578253ee20e5ead4ea3a69015b06bdb123783a1e1a59ff2725"
+        },
+        {
+          "path": "packages/shared/src/storage/immutable-storage.test.ts",
+          "sha256": "cbba8a79401b5c8056d6910dd3cc9d2402ee411a5646005746b56d83b1fe95d2"
+        },
+        {
+          "path": "packages/shared/src/storage/multipart-upload.test.ts",
+          "sha256": "eabacaaf66b6212b4ebf658cedd6146776d8af8cb866d4d1757ece5990bc137b"
+        },
+        {
+          "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+          "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "4f86ac233cb756fe9c1a50f80c5c7982d0c332bcde7bd932b9c833150f48a1a9"
+        },
+        {
+          "path": "apps/worker/src/documents/destruction-storage.integration.test.ts",
+          "sha256": "c3521b237227da536f202819bce7ea53e8e4ac854cc2fcf97e5029f870630fe0"
+        },
+        {
+          "path": "packages/shared/package.json",
+          "sha256": "ae701160808d8415b26d91967d520997cf55fb04c42fc0cf5ea0e2fbe7d34ceb"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "826fbd7aa892646987f6481cdb511d78a70a0bf979087afedd7555d45b2b79dc"
+        }
+      ],
+      "checks": [
+        "Verified the pinned Smithy handler logs rather than destroys a timed-out HTTP request by default. The app enables terminal request-header deadlines. A real socket test verifies the TimeoutError and ETIMEDOUT cause. Stalled metadata and idle object bodies also fail after the configured timeout.",
+        "The cap rejects oversized S3 control responses and non-success GetObject bodies before SDK parsing. An object larger than the cap streams with byte equality. All 88 targeted shared tests passed on the implementation, and the 33-case transport file passed with the final enhanced assertions. Shared typecheck, lint and formatting passed.",
+        "Exact isolated run 43133852345 exercised the normal API storage config and readiness routes and the real MinIO worker legal-hold and version-removal boundary. Existing provider operations, protected origin checks, circuit behavior and original assertions retained their source."
+      ],
+      "limitations": [
+        "Controlled local and isolated native receipts verify transport and callers. The final immutable candidate and actual provider/operational transport checks remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-s3-response-limits",
+      "execution_receipts": [
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "b4804f1a9d929dc57e079f02cc6f426496d4ea3211b13e5d0b4724b3a3927c93"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "native-run-43133852345.json",
+          "sha256": "4e9251683220efdc2c6585fc1b99a2fdd1b732217e8323a4bb798c239585a9af"
+        },
+        {
+          "file": "native-artifacts-43133852345/s3-api.log",
+          "sha256": "d2e768bf3f24a11461cd2dd2468884c300ff5b5ee3ba789bd3eb23f61b753128"
+        },
+        {
+          "file": "native-artifacts-43133852345/s3-worker.log",
+          "sha256": "212d7c6ecb56620d9173a49eed5844c884b0bd29490e93e5a7f1b601e4e70d81"
         }
       ]
     }
