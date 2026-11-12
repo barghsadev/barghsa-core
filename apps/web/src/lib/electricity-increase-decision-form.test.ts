@@ -152,7 +152,7 @@ it('accepts a later live approval replay only with the same amendment and valid 
       schemaVersion: 1,
       amendmentSha256: row.amendmentSha256,
       signedBy: 'customer-1',
-      sessionId: 'session-1',
+      receiptId: row.requestId,
       signedAt,
       adjustmentIrR: '1000',
     },
@@ -161,6 +161,15 @@ it('accepts a later live approval replay only with the same amendment and valid 
     adjustmentInvoiceId: '77777777-7777-7777-8777-777777777777',
   };
   expect(await confirmedIncreaseDecision(later, review)).toBe(true);
+  expect(
+    await confirmedIncreaseDecision(
+      {
+        ...later,
+        signatureEvidence: { ...later.signatureEvidence, receiptId: later.adjustmentInvoiceId },
+      },
+      review
+    )
+  ).toBe(false);
   expect(
     await confirmedIncreaseDecision(
       {

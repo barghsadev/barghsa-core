@@ -3357,6 +3357,31 @@ it.each([
 
     if (decision === 'reject') {
       const staffPath = `${http.base}/api/staff/electricity/increase-requests/${result.requestId}`;
+      const { id: mismatchedProfile } = (
+        await http.pool.query<{ id: string }>(
+          `INSERT INTO profiles(user_id,status) VALUES('buyer','ACTIVE') RETURNING id`
+        )
+      ).rows[0]!;
+      await http.pool.query(
+        'UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1',
+        [result.requestId, mismatchedProfile]
+      );
+      try {
+        const read = await fetch(path, { headers });
+        expect(read.status, http.logs()).toBe(200);
+        expect(await read.json()).toMatchObject({ request: null, canRequest: false });
+        const review = await fetch(`${staffPath}/reject/review`, {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify({ reason: 'Check request scope' }),
+        });
+        expect(review.status, http.logs()).toBe(404);
+      } finally {
+        await http.pool.query(
+          'UPDATE electricity_quantity_increase_requests SET profile_id=$2 WHERE id=$1',
+          [result.requestId, input.profileId]
+        );
+      }
       const command = { idempotencyKey: randomUUID(), expectedReviewHash: 'a'.repeat(64) };
       await invalidNoWrite(
         `${staffPath}/approve/review`,
@@ -3728,11 +3753,20 @@ it.each([
         status: string;
         adjustmentInvoiceId: string;
         adjustmentAmount: string;
+        signatureEvidence: unknown;
       };
       expect(signedRequest).toMatchObject({
         status: 'awaiting_payment',
         adjustmentAmount: review.quote.adjustmentIrR,
         adjustmentInvoiceId: expect.any(String),
+      });
+      expect(signedRequest.signatureEvidence).toEqual({
+        schemaVersion: 1,
+        amendmentSha256: amendment.amendmentSha256,
+        signedBy: 'buyer',
+        signedAt: expect.any(String),
+        adjustmentIrR: review.quote.adjustmentIrR,
+        receiptId: result.requestId,
       });
       const evidence = (
         await http.pool.query(
@@ -4959,6 +4993,47 @@ it.each(['charge', 'credit'] as const)(
     expect((await increaseQuote.json()) as { quote: { adjustmentIrR: string } }).toMatchObject({
       quote: { adjustmentIrR: kind === 'charge' ? '210000' : '190000' },
     });
+    if (kind === 'charge') {
+      const { id: mismatchedProfile } = (
+        await http.pool.query<{ id: string }>(
+          `INSERT INTO profiles(user_id,status) VALUES('buyer','ACTIVE') RETURNING id`
+        )
+      ).rows[0]!;
+      const { id: mismatchedProposal } = (
+        await http.pool.query<{ id: string }>(
+          `INSERT INTO electricity_price_adjustments
+           (contract_id,version_id,order_id,profile_id,original_invoice_id,proposed_by,reason,
+            contractual_basis,percentage_bps,effective_from,period_end,adjustment_amount,calculation,calculation_sha256)
+           SELECT contract_id,version_id,order_id,$2,original_invoice_id,proposed_by,reason,
+             contractual_basis,percentage_bps,effective_from,period_end,adjustment_amount,calculation,calculation_sha256
+           FROM electricity_price_adjustments WHERE id=$1 RETURNING id`,
+          [secondId, mismatchedProfile]
+        )
+      ).rows[0]!;
+      const history = await fetch(customerPath, { headers });
+      expect(history.status, http.logs()).toBe(200);
+      const { adjustments } = (await history.json()) as { adjustments: { adjustmentId: string }[] };
+      expect(adjustments.map(({ adjustmentId }) => adjustmentId)).toEqual([
+        secondId,
+        proposed.adjustmentId,
+      ]);
+      const cancel = await fetch(
+        `${http.base}/api/staff/electricity/price-adjustments/${mismatchedProposal}/cancel`,
+        {
+          method: 'POST',
+          headers: staffHeaders,
+          body: JSON.stringify({ idempotencyKey: randomUUID() }),
+        }
+      );
+      expect(cancel.status, http.logs()).toBe(404);
+      expect(
+        (
+          await http.pool.query('SELECT status FROM electricity_price_adjustments WHERE id=$1', [
+            mismatchedProposal,
+          ])
+        ).rows
+      ).toEqual([{ status: 'proposed' }]);
+    }
     if (kind === 'credit') {
       const immutableSource = async () =>
         (

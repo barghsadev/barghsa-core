@@ -121,9 +121,8 @@ export function signatureRow(overrides: Partial<ElectricityIncreaseRow> = {}) {
       schemaVersion: 1,
       amendmentSha256: 'a'.repeat(64),
       signedBy: 'customer',
-      sessionId: versionId,
+      receiptId: requestId,
       signedAt: eligibleFrom,
-      ip: '127.0.0.1',
       adjustmentIrR: '200000',
     },
     pricingSnapshot: {

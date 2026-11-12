@@ -180,8 +180,7 @@ export async function confirmedIncreaseDecision(
       evidence.amendmentSha256 !== row.amendmentSha256 ||
       typeof evidence.signedBy !== 'string' ||
       !evidence.signedBy ||
-      typeof evidence.sessionId !== 'string' ||
-      !evidence.sessionId ||
+      evidence.receiptId !== row.requestId ||
       !sameTime(evidence.signedAt, row.signedAt) ||
       evidence.adjustmentIrR !== row.adjustmentAmount ||
       (row.status === 'effective'

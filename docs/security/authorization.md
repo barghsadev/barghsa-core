@@ -13,6 +13,7 @@ The API's `AuthorizationService` resolves staff and profile capabilities. Staff 
 - Consultation customer and staff reads bind invoice links to both the request and its profile. Invoice details apply the same scope to the consultation link. Customer information replies authorize the profile before locking the request. Staff financial reviews, completion, refunds and payment settlement use only invoices in the request scope. A mismatched current invoice blocks financial commands. Older mismatched references remain available for restricted reconciliation without contributing funds or exposing links in consultation responses.
 - Solar list and detail reads scope the related contract, publication and initial invoice to the request's authorized profile.
 - Saving list, detail and change commands use the saving profile to scope the commercial order, invoice and contract. Change review and confirmation apply that scope before locking financial records. Hardware history uses the same profile for linked adjustment invoices.
+- Electricity increase and price adjustment endpoints bind the contract, order, profile and invoice lineage before showing terms or quoting a financial basis. Invalid linked invoices stay out of public receipts. The public increase signature receipt identifies the request and includes the signer, time, amendment digest and amount. Stored session and network evidence remains in the restricted signed record.
 
 ## Staff capabilities
 

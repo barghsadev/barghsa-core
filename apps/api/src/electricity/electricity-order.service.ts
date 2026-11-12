@@ -292,10 +292,13 @@ export class ElectricityOrderService {
             COALESCE((SELECT SUM(r.amount)::text FROM refunds r WHERE r.invoice_id=i.id
               AND r.state NOT IN ('Completed','Rejected','Cancelled')),'0') AS pending_refund_amount
            FROM electricity_orders e
+           JOIN orders o ON o.id=e.id AND o.profile_id=e.profile_id AND o.order_type='electricity'
            JOIN electricity_contracts ec ON ec.order_id=e.id
-           JOIN contracts c ON c.id=ec.contract_id
-           JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
-           JOIN invoices i ON i.id=ar.initial_invoice_id
+           JOIN contracts c ON c.id=ec.contract_id AND c.profile_id=e.profile_id
+             AND c.order_id=e.id AND c.service_type='electricity'
+           JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id AND ar.contract_id=c.id
+           JOIN invoices i ON i.id=ar.initial_invoice_id AND i.profile_id=e.profile_id
+             AND (i.contract_id=c.id::text OR (i.order_id=e.id AND i.contract_id IS NULL))
            WHERE e.profile_id=$1 AND e.submitted_at IS NOT NULL
              AND ($2::timestamptz IS NULL OR (e.submitted_at,e.id) ${comparison} ($2::timestamptz,$3::uuid))
              AND (NOT $4::boolean OR e.status IN ('submitted','awaiting_staff_review','changes_requested','approved'))
@@ -427,17 +430,19 @@ export class ElectricityOrderService {
            ro.status AS refund_status,ro.reason AS refund_reason,ro.refund_id
          FROM orders o JOIN profiles p ON p.id=o.profile_id
          LEFT JOIN legal_profiles lp ON lp.id=p.id
-         JOIN electricity_orders e ON e.id=o.id
+         JOIN electricity_orders e ON e.id=o.id AND e.profile_id=o.profile_id
          JOIN electricity_contracts ec ON ec.order_id=o.id
-         JOIN contracts c ON c.id=ec.contract_id
-         JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id
+         JOIN contracts c ON c.id=ec.contract_id AND c.profile_id=o.profile_id
+           AND c.order_id=o.id AND c.service_type='electricity'
+         JOIN contract_activation_requirements ar ON ar.version_id=c.current_version_id AND ar.contract_id=c.id
          LEFT JOIN electricity_quantity_increase_requests ir
-           ON ir.contract_id=c.id AND ir.status='effective'
-         JOIN invoices i ON i.id=ar.initial_invoice_id
+           ON ir.contract_id=c.id AND ir.profile_id=o.profile_id AND ir.order_id=o.id AND ir.status='effective'
+         JOIN invoices i ON i.id=ar.initial_invoice_id AND i.profile_id=o.profile_id
+           AND (i.contract_id=c.id::text OR (i.order_id=o.id AND i.contract_id IS NULL))
          LEFT JOIN gift_codes gc ON gc.id=o.gift_code_id
-         LEFT JOIN refund_obligations ro ON ro.order_id=o.id
-         WHERE o.id=$1 ORDER BY i.created_at DESC LIMIT 1`,
-          [orderId]
+         LEFT JOIN refund_obligations ro ON ro.order_id=o.id AND ro.profile_id=o.profile_id
+         WHERE o.id=$1 AND o.profile_id=$2 AND o.order_type='electricity' ORDER BY i.created_at DESC LIMIT 1`,
+          [orderId, order.profile_id]
         )
       ).rows[0];
       if (!detail) throw new NotFoundException('Electricity order not found');

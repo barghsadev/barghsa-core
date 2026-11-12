@@ -17,7 +17,6 @@ export const increaseRequestId = '87000000-0000-4000-8000-000000000001';
 export const otherIncreaseRequestId = '87000000-0000-4000-8000-000000000002';
 export const increaseCustomerId = '87000000-0000-4000-8000-000000000003';
 export const increaseStaffId = '87000000-0000-4000-8000-000000000004';
-const sessionId = '87000000-0000-4000-8000-000000000005';
 const adjustmentInvoiceId = '87000000-0000-4000-8000-000000000006';
 const effectiveFrom = '2026-10-09T08:30:00.000Z';
 const createdAt = '2026-10-04T10:00:00.000Z';
@@ -148,9 +147,8 @@ export function signedIncrease(row: IncreaseRow) {
       schemaVersion: 1,
       amendmentSha256: row.amendmentSha256,
       signedBy: row.requestedBy,
-      sessionId,
+      receiptId: row.requestId,
       signedAt,
-      ip: '127.0.0.1',
       adjustmentIrR: review.data.adjustmentIrR,
     },
     pricingSnapshot: {

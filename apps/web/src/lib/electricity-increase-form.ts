@@ -131,7 +131,11 @@ export function increaseRow(value: unknown): value is ElectricityIncreaseRow {
     !(value.adjustmentPaidAmount === null || money(value.adjustmentPaidAmount)) ||
     typeof value.financialFollowUp !== 'boolean' ||
     typeof value.contractState !== 'string' ||
-    !(value.signatureEvidence === null || increaseRecord(value.signatureEvidence)) ||
+    !(
+      value.signatureEvidence === null ||
+      (increaseRecord(value.signatureEvidence) &&
+        value.signatureEvidence.receiptId === value.requestId)
+    ) ||
     !(value.pricingSnapshot === null || increaseRecord(value.pricingSnapshot))
   )
     return false;
@@ -357,7 +361,7 @@ export function confirmedIncreaseSignature(
     typeof evidence.signedBy === 'string' &&
     !!evidence.signedBy &&
     (!actor || evidence.signedBy === actor) &&
-    uuid(evidence.sessionId) &&
+    evidence.receiptId === captured.requestId &&
     evidence.signedAt === value.signedAt &&
     evidence.adjustmentIrR === review.data.adjustmentIrR &&
     pricing.schemaVersion === 1 &&

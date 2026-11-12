@@ -1,4 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { loadElectricityInitialInvoice } from './electricity-contract-invoice.js';
 import { createHash } from 'node:crypto';
 import { getDbPool } from '@barghsa/db';
 import {
@@ -57,6 +58,7 @@ interface ElectricityContract {
   electricity_status: string;
   period_start: Date;
   period_end: Date;
+  has_open_proposal: boolean;
 }
 interface PriceAdjustmentRow {
   id: string;
@@ -80,11 +82,19 @@ const publicSelect = `SELECT a.id AS "adjustmentId",a.contract_id AS "contractId
  a.contractual_basis AS "contractualBasis",a.calculation,
  a.calculation_sha256 AS "calculationSha256",
  a.adjustment_amount::text AS "adjustmentAmountIrR",
- a.adjustment_invoice_id AS "adjustmentInvoiceId",i.state AS "adjustmentInvoiceState",
+ i.id AS "adjustmentInvoiceId",i.state AS "adjustmentInvoiceState",
  a.created_at AS "proposedAt",a.finalized_at AS "finalizedAt",
  a.cancelled_at AS "cancelledAt"
  FROM electricity_price_adjustments a
- LEFT JOIN invoices i ON i.id=a.adjustment_invoice_id`;
+ JOIN contracts c ON c.id=a.contract_id AND c.profile_id=a.profile_id
+   AND c.order_id=a.order_id AND c.service_type='electricity'
+ JOIN electricity_orders e ON e.id=a.order_id AND e.profile_id=a.profile_id
+ JOIN invoices original ON original.id=a.original_invoice_id AND original.profile_id=a.profile_id
+   AND (original.contract_id=c.id::text OR (original.order_id=a.order_id AND original.contract_id IS NULL))
+ LEFT JOIN invoices i ON i.id=a.adjustment_invoice_id AND i.profile_id=a.profile_id
+   AND i.order_id=a.order_id AND (i.contract_id IS NULL OR i.contract_id=c.id::text)
+   AND i.adjustment_for_invoice_id=a.original_invoice_id
+ WHERE (a.adjustment_invoice_id IS NULL OR i.id IS NOT NULL)`;
 
 function hash(value: unknown) {
   return createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -172,9 +182,12 @@ export class ElectricityPriceAdjustmentService {
     const row = (
       await client.query<ElectricityContract>(
         `SELECT c.id,c.profile_id,c.order_id,c.current_version_id AS version_id,c.state,
-       e.status AS electricity_status,e.period_start,e.period_end
-       FROM contracts c JOIN electricity_contracts ec ON ec.contract_id=c.id
-       JOIN electricity_orders e ON e.id=ec.order_id
+       e.status AS electricity_status,e.period_start,e.period_end,
+       EXISTS(SELECT 1 FROM electricity_price_adjustments a
+         WHERE a.contract_id=c.id AND a.status='proposed') AS has_open_proposal
+       FROM contracts c JOIN electricity_contracts ec ON ec.contract_id=c.id AND ec.order_id=c.order_id
+       JOIN electricity_orders e ON e.id=ec.order_id AND e.profile_id=c.profile_id
+       JOIN orders o ON o.id=e.id AND o.profile_id=c.profile_id AND o.order_type='electricity'
        WHERE c.id=$1 AND c.profile_id=$2 AND c.service_type='electricity'
        ${lock ? 'FOR UPDATE OF c NOWAIT' : ''}`,
         [id, profileId]
@@ -196,20 +209,7 @@ export class ElectricityPriceAdjustmentService {
   }
 
   private async currentBasis(client: PoolClient, contract: ElectricityContract) {
-    const original = (
-      await client.query<{
-        id: string;
-        state: string;
-        total_amount: string;
-        paid_amount: string;
-        refunded_amount: string;
-      }>(
-        `SELECT i.id,i.state,i.total_amount::text,i.paid_amount::text,i.refunded_amount::text
-       FROM contract_activation_requirements ar JOIN invoices i ON i.id=ar.initial_invoice_id
-       WHERE ar.version_id=$1 FOR UPDATE OF i NOWAIT`,
-        [contract.version_id]
-      )
-    ).rows[0];
+    const original = await loadElectricityInitialInvoice(client, contract, 'UPDATE');
     if (
       !original ||
       original.state !== 'Paid' ||
@@ -237,12 +237,15 @@ export class ElectricityPriceAdjustmentService {
         total_amount: string | null;
         refunded_amount: string | null;
       }>(
-        `SELECT r.status,r.adjustment_invoice_id,r.adjustment_amount::text,r.pricing_snapshot,
+        `SELECT r.status,i.id AS adjustment_invoice_id,r.adjustment_amount::text,r.pricing_snapshot,
        i.state AS invoice_state,i.paid_amount::text,i.total_amount::text,i.refunded_amount::text
        FROM electricity_quantity_increase_requests r
-       LEFT JOIN invoices i ON i.id=r.adjustment_invoice_id
-       WHERE r.contract_id=$1 FOR UPDATE OF r NOWAIT`,
-        [contract.id]
+       LEFT JOIN contract_activation_requirements ar ON ar.version_id=r.version_id AND ar.contract_id=r.contract_id
+       LEFT JOIN invoices i ON i.id=r.adjustment_invoice_id AND i.profile_id=r.profile_id
+         AND i.contract_id=r.contract_id::text AND i.order_id=r.order_id
+         AND i.adjustment_for_invoice_id=ar.initial_invoice_id AND i.adjustment_kind='charge'
+       WHERE r.contract_id=$1 AND r.profile_id=$2 AND r.order_id=$3 FOR UPDATE OF r NOWAIT`,
+        [contract.id, contract.profile_id, contract.order_id]
       )
     ).rows[0];
     if (increase && !['rejected', 'expired', 'effective'].includes(increase.status))
@@ -269,18 +272,23 @@ export class ElectricityPriceAdjustmentService {
       });
     }
     const previous = await client.query<{
-      adjustment_invoice_id: string;
+      adjustment_invoice_id: string | null;
       adjustment_amount: string;
       effective_from: Date;
-      status: string;
+      status: string | null;
     }>(
-      `SELECT a.adjustment_invoice_id,a.adjustment_amount::text,a.effective_from,i.state
-       FROM electricity_price_adjustments a JOIN invoices i ON i.id=a.adjustment_invoice_id
-       WHERE a.contract_id=$1 AND a.status='finalized'
+      `SELECT i.id AS adjustment_invoice_id,a.adjustment_amount::text,a.effective_from,i.state AS status
+       FROM electricity_price_adjustments a LEFT JOIN invoices i ON i.id=a.adjustment_invoice_id
+         AND i.profile_id=a.profile_id AND i.order_id=a.order_id
+         AND (i.contract_id IS NULL OR i.contract_id=a.contract_id::text)
+         AND i.adjustment_for_invoice_id=a.original_invoice_id
+       WHERE a.contract_id=$1 AND a.profile_id=$2 AND a.order_id=$3 AND a.status='finalized'
        ORDER BY a.created_at,a.id`,
-      [contract.id]
+      [contract.id, contract.profile_id, contract.order_id]
     );
     for (const row of previous.rows) {
+      if (!row.adjustment_invoice_id)
+        throw new ConflictException('A prior price adjustment invoice is unavailable');
       if (row.status === 'Cancelled')
         throw new ConflictException('A prior price adjustment invoice was cancelled');
       components.push({
@@ -297,7 +305,7 @@ export class ElectricityPriceAdjustmentService {
   private async rows(client: PoolClient, contractId: string) {
     return (
       await client.query(
-        `${publicSelect} WHERE a.contract_id=$1 ORDER BY a.created_at DESC,a.id DESC LIMIT 100`,
+        `${publicSelect} AND a.contract_id=$1 ORDER BY a.created_at DESC,a.id DESC LIMIT 100`,
         [contractId]
       )
     ).rows;
@@ -334,7 +342,7 @@ export class ElectricityPriceAdjustmentService {
           contract.electricity_status === 'active' &&
           contract.period_end > new Date() &&
           !openIncrease &&
-          !adjustments.some((adjustment: { status: string }) => adjustment.status === 'proposed'),
+          !contract.has_open_proposal,
         blockedByIncrease: openIncrease,
         adjustments,
       };
@@ -424,7 +432,12 @@ export class ElectricityPriceAdjustmentService {
               return id;
             }
           );
-          return (await client.query(`${publicSelect} WHERE a.id=$1`, [adjustmentId])).rows[0];
+          return (
+            await client.query(`${publicSelect} AND a.id=$1 AND a.contract_id=$2`, [
+              adjustmentId,
+              contractId,
+            ])
+          ).rows[0];
         },
         { financialReview: true }
       );
@@ -465,8 +478,9 @@ export class ElectricityPriceAdjustmentService {
             async () => {
               const proposal = (
                 await client.query<PriceAdjustmentRow>(
-                  'SELECT * FROM electricity_price_adjustments WHERE id=$1 FOR UPDATE NOWAIT',
-                  [adjustmentId]
+                  `SELECT * FROM electricity_price_adjustments
+                   WHERE id=$1 AND contract_id=$2 AND profile_id=$3 AND order_id=$4 FOR UPDATE NOWAIT`,
+                  [adjustmentId, contract.id, contract.profile_id, contract.order_id]
                 )
               ).rows[0];
               if (
@@ -558,7 +572,12 @@ export class ElectricityPriceAdjustmentService {
               return adjustmentId;
             }
           );
-          return (await client.query(`${publicSelect} WHERE a.id=$1`, [id])).rows[0];
+          return (
+            await client.query(`${publicSelect} AND a.id=$1 AND a.contract_id=$2`, [
+              id,
+              contract.id,
+            ])
+          ).rows[0];
         },
         { financialReview: true }
       );
@@ -599,8 +618,9 @@ export class ElectricityPriceAdjustmentService {
             async () => {
               const proposal = (
                 await client.query<PriceAdjustmentRow>(
-                  'SELECT * FROM electricity_price_adjustments WHERE id=$1 FOR UPDATE NOWAIT',
-                  [adjustmentId]
+                  `SELECT * FROM electricity_price_adjustments
+                   WHERE id=$1 AND contract_id=$2 AND profile_id=$3 AND order_id=$4 FOR UPDATE NOWAIT`,
+                  [adjustmentId, contract.id, contract.profile_id, contract.order_id]
                 )
               ).rows[0];
               if (!proposal || proposal.status !== 'proposed')
@@ -631,7 +651,12 @@ export class ElectricityPriceAdjustmentService {
               return adjustmentId;
             }
           );
-          return (await client.query(`${publicSelect} WHERE a.id=$1`, [id])).rows[0];
+          return (
+            await client.query(`${publicSelect} AND a.id=$1 AND a.contract_id=$2`, [
+              id,
+              contract.id,
+            ])
+          ).rows[0];
         },
         { financialReview: true }
       );

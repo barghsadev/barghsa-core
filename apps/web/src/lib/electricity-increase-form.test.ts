@@ -153,6 +153,8 @@ it('accepts paid, effective and expired signature replays with the captured full
   const wrongEvidence = signatureRow();
   wrongEvidence.signatureEvidence = { ...wrongEvidence.signatureEvidence, adjustmentIrR: '200001' };
   expect(confirmedIncreaseSignature(wrongEvidence, captured, review, 'customer')).toBe(false);
+  wrongEvidence.signatureEvidence = { ...signatureRow().signatureEvidence, receiptId: versionId };
+  expect(confirmedIncreaseSignature(wrongEvidence, captured, review, 'customer')).toBe(false);
 });
 it('compares durable JSONB financial components by values rather than key order', () => {
   const review = signingReview();
