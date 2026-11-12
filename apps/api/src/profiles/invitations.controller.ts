@@ -24,6 +24,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { setSessionCookie, setRefreshCookie, setCsrfCookie } from '../session/cookie.helper.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 
 const decisionReceiptSchema: ApiResponseSchemaHost['schema'] = {
   type: 'object',
@@ -55,7 +56,7 @@ export class InvitationsController {
    * GET /api/invitations/pending
    *
    * Returns pending invitations for the currently authenticated user.
-   * Invitations are matched by username against the current user's username.
+   * Invitations are matched against the current account login identifiers.
    */
   @Get('pending')
   @HttpCode(200)
@@ -64,7 +65,9 @@ export class InvitationsController {
   @ApiResponse({ status: 200, description: 'Pending invitations list.' })
   async listPendingInvitations(@Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
-    const result = await this.agentsService.listPendingInvitations(userId);
+    const result = await readWithCurrentAccount(req.session, (client) =>
+      this.agentsService.listPendingInvitations(userId, client)
+    );
     this.logger.debug(
       `User ${privateLogId('actor', userId)} has ${result.invitations.length} pending invitations`
     );

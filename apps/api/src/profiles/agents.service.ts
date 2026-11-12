@@ -2,6 +2,7 @@ import { privateLogId } from '@barghsa/shared/log-privacy';
 import { notifySessionsRevoked } from '../auth/session-notifications.js';
 import { Injectable, Logger, HttpException, Inject } from '@nestjs/common';
 import { getDbPool } from '@barghsa/db';
+import type { PoolClient } from 'pg';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { rateLimitKey } from '@barghsa/shared/rate-limit';
 import { InputFieldException } from '../common/input-field.exception.js';
@@ -487,11 +488,13 @@ export class AgentsService {
   /**
    * Return pending invitations for the currently authenticated user.
    *
-   * Finds the user's username, then returns all pending invitations
-   * matching that username, joined with profile info (legal entity name)
-   * and inviter info.
+   * Return live pending invitations matching the current account identifiers,
+   * with company and inviter display details.
    */
-  async listPendingInvitations(userId: string): Promise<{
+  async listPendingInvitations(
+    userId: string,
+    client?: PoolClient
+  ): Promise<{
     invitations: Array<{
       id: string;
       profileId: string;
@@ -505,7 +508,7 @@ export class AgentsService {
       entity: { nationalIdentifier: string | null; registrationNumber: string | null };
     }>;
   }> {
-    const pool = getDbPool();
+    const pool = client ?? getDbPool();
 
     // Resolve the current recipient and pending rows in one snapshot.
     const result = await pool.query(
@@ -526,7 +529,7 @@ export class AgentsService {
          AND personal.status IN ('ACTIVE','PENDING_VERIFICATION','VERIFIED')
          ORDER BY personal.is_default DESC,personal.created_at,personal.id LIMIT 1
        ) inviter ON true
-       WHERE pi.status = 'Pending' AND pi.role IN ('Manager','Finance','Legal') AND (pi.expires_at IS NULL OR pi.expires_at > NOW()) AND NOT p.archived AND p.profile_type='LEGAL'
+       WHERE pi.status = 'Pending' AND pi.role IN ('Manager','Finance','Legal') AND (pi.expires_at IS NULL OR pi.expires_at > statement_timestamp()) AND NOT p.archived AND p.profile_type='LEGAL'
        ORDER BY pi.created_at DESC`,
       [userId]
     );

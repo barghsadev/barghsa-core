@@ -168,8 +168,8 @@ export class ProfilesService {
     private readonly notificationsService: NotificationsService
   ) {}
 
-  async getProfilesByUserId(userId: string): Promise<ProfilesResponseDto> {
-    const pool = getDbPool();
+  async getProfilesByUserId(userId: string, client?: PoolClient): Promise<ProfilesResponseDto> {
+    const pool = client ?? getDbPool();
 
     const result = await pool.query(
       `SELECT p.id,p.user_id,p.profile_type,(p.user_id=$1 AND p.is_default) AS is_default,
@@ -240,7 +240,12 @@ export class ProfilesService {
    * Persist this user's selected profile without changing the owner's default.
    * Recheck access under locks and audit selection in the same transaction.
    */
-  async setDefaultProfile(userId: string, profileId: string): Promise<void> {
+  async setDefaultProfile(
+    actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
+    profileId: string,
+    ownerOnly = false
+  ): Promise<void> {
+    const userId = actor.userId;
     const pool = getDbPool();
     const client = await pool.connect();
 
@@ -258,13 +263,24 @@ export class ProfilesService {
           { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
           404
         );
-      await client.query('SELECT user_id FROM users WHERE user_id=$1 FOR UPDATE', [userId]);
+      const { rows: accounts } = await client.query(
+        'SELECT disabled_at FROM users WHERE user_id=$1 FOR UPDATE',
+        [userId]
+      );
+      if (!accounts[0] || accounts[0].disabled_at)
+        throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
+      await requireCurrentSession(client, actor);
       if (profile.user_id !== userId) {
+        if (ownerOnly || profile.profile_type !== 'LEGAL')
+          throw new HttpException(
+            { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
+            404
+          );
         const membership = await client.query(
           `SELECT id FROM profile_agents WHERE profile_id=$1 AND user_id=$2 AND role IN ('Manager','Finance','Legal') FOR SHARE`,
           [profileId, userId]
         );
-        if (profile.profile_type !== 'LEGAL' || !membership.rows.length)
+        if (!membership.rows.length)
           throw new HttpException(
             { statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code },
             404
@@ -281,6 +297,7 @@ export class ProfilesService {
         [userId, profileId]
       );
 
+      await requireCurrentSession(client, actor);
       await client.query('COMMIT');
       this.logger.debug(
         `Default profile set to ${privateLogId('profile', profileId)} for user ${privateLogId('actor', userId)}`

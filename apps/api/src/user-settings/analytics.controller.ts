@@ -19,7 +19,7 @@ import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { SessionAuthGuard, type AuthenticatedRequest } from '../session/session.guard.js';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
-import { readAccountSettings } from './account-settings-read.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 
 const consentInput = z.object({ consent: z.boolean() }).strict();
 
@@ -36,7 +36,7 @@ export class AnalyticsController {
     schema: { type: 'object', properties: { consent: { type: 'boolean', nullable: true } } },
   })
   async getConsent(@Req() req: AuthenticatedRequest) {
-    return readAccountSettings(req.session, async (client) => {
+    return readWithCurrentAccount(req.session, async (client) => {
       const result = await client.query('SELECT analytics_consent FROM users WHERE user_id=$1', [
         req.session.userId,
       ]);

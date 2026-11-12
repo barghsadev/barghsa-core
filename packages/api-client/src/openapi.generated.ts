@@ -29646,6 +29646,13 @@ export interface operations {
                     };
                 };
             };
+            /** @description Invalid profile identifier. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
             /** @description Not authenticated */
             401: {
                 headers: {
@@ -29653,7 +29660,7 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description User does not have access to the profile */
+            /** @description Invalid CSRF token */
             403: {
                 headers: {
                     [name: string]: unknown;
@@ -29830,6 +29837,13 @@ export interface operations {
         responses: {
             /** @description Profile set as default. */
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Invalid profile identifier. */
+            400: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -5,6 +5,7 @@ import { startHttpFixture } from '../test/http-fixture.js';
 import { activeProfileSql } from './profile-context.js';
 let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>,
+  session: string,
   owned: string,
   finance: string,
   legal: string,
@@ -18,8 +19,8 @@ beforeEach(async () => {
       `${user}@example.test`,
       'test-only',
     ]);
-  const session = randomUUID(),
-    csrf = randomUUID();
+  session = randomUUID();
+  const csrf = randomUUID();
   await http.pool.query(
     `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,expires_at,idle_deadline)
  VALUES ($1,'viewer',$2,$3,NOW()+INTERVAL '1 day',NOW()+INTERVAL '30 minutes')`,
@@ -181,6 +182,8 @@ it('lists selectable agent profiles and switches without changing another user d
     activeProfileName: 'Mr Ari Buyer',
   });
   expect((await request(`profiles/switch/${unrelated}`, 'POST')).status).toBe(404);
+  expect((await request(`profiles/${finance}/set-default`, 'POST')).status).toBe(404);
+  expect((await request(`profiles/${owned}/set-default`, 'POST')).status).toBe(200);
   expect((await request(`profiles/switch/${finance}`, 'POST')).status).toBe(200);
   expect(await (await request('profiles')).json()).toMatchObject({ activeProfileId: finance });
   expect(
@@ -201,6 +204,78 @@ it('lists selectable agent profiles and switches without changing another user d
     (await http.pool.query('SELECT profile_id FROM in_app_notifications WHERE is_read')).rows
   ).toEqual([{ profile_id: finance }]);
 });
+
+it('rolls back profile selection if the session expires while its audit is persisted', async () => {
+  await http.pool.query(`CREATE SEQUENCE context_audit_calls;
+    CREATE FUNCTION delay_context_audit() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      IF NEW.event='profile_context_changed' THEN
+        PERFORM nextval('context_audit_calls');
+        PERFORM pg_sleep(2.2);
+      END IF;
+      RETURN NEW;
+    END $$;
+    CREATE TRIGGER delay_context_audit BEFORE INSERT ON audit_log
+      FOR EACH ROW EXECUTE FUNCTION delay_context_audit()`);
+  await http.pool.query(
+    "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
+    [session]
+  );
+
+  const response = await request(`profiles/switch/${finance}`, 'POST');
+
+  expect(
+    (await http.pool.query('SELECT is_called FROM context_audit_calls')).rows[0].is_called
+  ).toBe(true);
+  expect(response.status, await response.clone().text()).toBe(401);
+  expect(
+    (await http.pool.query("SELECT profile_id FROM user_profile_contexts WHERE user_id='viewer'"))
+      .rows
+  ).toEqual([]);
+  expect(
+    (await http.pool.query("SELECT id FROM audit_log WHERE event='profile_context_changed'")).rows
+  ).toEqual([]);
+});
+it.each([
+  ['profiles', 'user_profile_contexts', 'profiles'],
+  ['invitations/pending', 'profile_invitations', 'invitations'],
+])(
+  'keeps %s private if the session expires during the resource read',
+  async (path, table, field) => {
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response>;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(`LOCK TABLE ${table} IN ACCESS EXCLUSIVE MODE`);
+      const pid = (await blocker.query('SELECT pg_backend_pid() AS pid')).rows[0].pid;
+      await http.pool.query(
+        "UPDATE sessions SET expires_at=clock_timestamp()+INTERVAL '2 seconds' WHERE session_id=$1",
+        [session]
+      );
+      pending = request(path);
+      await expect
+        .poll(async () => {
+          const { rows } = await http.pool.query(
+            'SELECT count(*)::int AS count FROM pg_stat_activity WHERE datname=current_database() AND $1=ANY(pg_blocking_pids(pid))',
+            [pid]
+          );
+          return rows[0].count;
+        })
+        .toBe(1);
+      await http.pool.query(
+        'SELECT pg_sleep(greatest(0,extract(epoch FROM expires_at-clock_timestamp()))) FROM sessions WHERE session_id=$1',
+        [session]
+      );
+    } finally {
+      await blocker.query('ROLLBACK');
+      blocker.release();
+    }
+    const response = await pending;
+    expect(response.status, await response.clone().text()).toBe(401);
+    expect(await response.json()).not.toHaveProperty(field);
+  }
+);
+
 it('checks wallet capability separately from profile selection', async () => {
   expect((await request(`profiles/switch/${legal}`, 'POST')).status).toBe(200);
   expect((await request('invoices')).status).toBe(404);

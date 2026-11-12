@@ -2,10 +2,10 @@ import { getDbPool } from '@barghsa/db';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { HttpException } from '@nestjs/common';
 import type { PoolClient } from 'pg';
-import type { ValidatedSession } from '../session/session.service.js';
-import { requireCurrentSession } from '../session/session-step-up.js';
+import type { ValidatedSession } from './session.service.js';
+import { requireCurrentSession } from './session-step-up.js';
 
-export async function readAccountSettings<T>(
+export async function readWithCurrentAccount<T>(
   actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
   read: (client: PoolClient) => Promise<T>
 ): Promise<T> {
@@ -16,7 +16,7 @@ export async function readAccountSettings<T>(
       'SELECT disabled_at FROM users WHERE user_id=$1 FOR SHARE',
       [actor.userId]
     );
-    if (rows[0]?.disabled_at)
+    if (!rows[0] || rows[0].disabled_at)
       throw new HttpException({ error: ErrorCodes.AUTH_UNAUTHENTICATED.code }, 401);
     await requireCurrentSession(client, actor);
     const result = await read(client);

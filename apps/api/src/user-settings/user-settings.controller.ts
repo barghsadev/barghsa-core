@@ -22,7 +22,7 @@ import type { PoolClient } from 'pg';
 import { requireCurrentSession } from '../session/session-step-up.js';
 import { correlationIdStorage } from '../common/correlation-id.middleware.js';
 import { ACTIVE_PROFILE_SQL } from '../profiles/profile-context.js';
-import { readAccountSettings } from './account-settings-read.js';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 
 /**
  * Allowed notification channel values.
@@ -60,7 +60,7 @@ export class UserSettingsController {
     },
   })
   async getTheme(@Req() req: AuthenticatedRequest) {
-    return readAccountSettings(req.session, async (client) => {
+    return readWithCurrentAccount(req.session, async (client) => {
       const result = await client.query('SELECT theme_mode FROM users WHERE user_id=$1', [
         req.session.userId,
       ]);
@@ -154,7 +154,7 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getNotificationPreferences(@Req() req: AuthenticatedRequest) {
-    return readAccountSettings(req.session, (client) =>
+    return readWithCurrentAccount(req.session, (client) =>
       this.readNotificationPreferences(client, req.session.userId)
     );
   }
@@ -295,7 +295,7 @@ export class UserSettingsController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getTimezone(@Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
-    return readAccountSettings(req.session, async (client) => {
+    return readWithCurrentAccount(req.session, async (client) => {
       const result = await client.query('SELECT timezone FROM users WHERE user_id = $1', [userId]);
       if (!result.rows[0])
         throw new HttpException(
@@ -418,7 +418,7 @@ export class UserSettingsController {
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async getMarketingConsent(@Req() req: AuthenticatedRequest) {
-    return readAccountSettings(req.session, async (client) => ({
+    return readWithCurrentAccount(req.session, async (client) => ({
       channels: await this.getMarketingConsentInternal(client, req.session.userId, true),
     }));
   }

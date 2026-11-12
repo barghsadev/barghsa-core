@@ -35677,11 +35677,14 @@
             },
             "description": "Active profile switched."
           },
+          "400": {
+            "description": "Invalid profile identifier."
+          },
           "401": {
             "description": "Not authenticated"
           },
           "403": {
-            "description": "User does not have access to the profile"
+            "description": "Invalid CSRF token"
           },
           "404": {
             "description": "Profile not found"
@@ -35922,6 +35925,9 @@
         "responses": {
           "200": {
             "description": "Profile set as default."
+          },
+          "400": {
+            "description": "Invalid profile identifier."
           },
           "401": {
             "description": "Not authenticated"

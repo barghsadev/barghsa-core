@@ -1,4 +1,5 @@
 import { privateLogId } from '@barghsa/shared/log-privacy';
+import { readWithCurrentAccount } from '../session/account-session-read.js';
 import { ApiZodBody } from '../openapi/zod-body.decorator.js';
 import {
   Body,
@@ -129,7 +130,9 @@ export class ProfilesController {
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   async listProfiles(@Req() req: AuthenticatedRequest) {
     const userId = req.session.userId;
-    const result = await this.profilesService.getProfilesByUserId(userId);
+    const result = await readWithCurrentAccount(req.session, (client) =>
+      this.profilesService.getProfilesByUserId(userId, client)
+    );
 
     this.logger.debug(
       `User ${privateLogId('actor', userId)}: ${result.profiles.length} profile(s), default=${result.hasDefault}`
@@ -146,10 +149,7 @@ export class ProfilesController {
    * (T-03.03.01).
    *
    * Enforcement: the user must have access to the target profile — either as
-   * the owner (`userId` matches) or as an active agent. Agent membership is
-   * tracked by a future profile-agents ledger; until that exists only the
-   * owner-access path is active, but the check is centralized here so the
-   * agent path can be added without touching callers or the frontend.
+   * the owner or as an active agent of a legal profile.
    */
   @Post('switch/:profileId')
   @HttpCode(200)
@@ -160,23 +160,17 @@ export class ProfilesController {
     description: 'Active profile switched.',
     schema: { type: 'object', properties: { activeProfileId: { type: 'string', nullable: true } } },
   })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  @ApiResponse({ status: 403, description: 'User does not have access to the profile' })
+  @ApiResponse({ status: 403, description: 'Invalid CSRF token' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async switchProfile(
-    @Param('profileId') profileId: string,
+    @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ): Promise<{ activeProfileId: string | null }> {
     const userId = req.session.userId;
 
-    // Verify this profile belongs to the user (or they are an active agent).
-    const profile = await this.profilesService.getAccessibleProfile(userId, profileId);
-    if (!profile) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    // Clear any existing default for this user, set this one as default.
-    await this.profilesService.setDefaultProfile(userId, profileId);
+    await this.profilesService.setDefaultProfile(req.session, profileId);
 
     this.logger.log(
       `User ${privateLogId('actor', userId)} switched active profile to ${privateLogId('profile', profileId)}`
@@ -205,7 +199,7 @@ export class ProfilesController {
     @Param('profileId', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ): Promise<{ activeProfileId: string }> {
-    await this.profilesService.setDefaultProfile(req.session.userId, profileId);
+    await this.profilesService.setDefaultProfile(req.session, profileId);
     return { activeProfileId: profileId };
   }
 
@@ -215,22 +209,16 @@ export class ProfilesController {
   @RateLimit({ namespace: 'profiles:set-default:user', limit: 20, windowMs: 60_000 })
   @ApiOperation({ summary: 'Set a profile as default' })
   @ApiResponse({ status: 200, description: 'Profile set as default.' })
+  @ApiResponse({ status: 400, description: 'Invalid profile identifier.' })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
   @ApiResponse({ status: 404, description: 'Profile not found' })
   async setDefaultProfile(
-    @Param('id') profileId: string,
+    @Param('id', new ParseUUIDPipe()) profileId: string,
     @Req() req: AuthenticatedRequest
   ): Promise<{ message: string }> {
     const userId = req.session.userId;
 
-    // Verify this profile belongs to the user
-    const profile = await this.profilesService.getProfileById(profileId);
-    if (!profile || profile.userId !== userId) {
-      throw new HttpException({ statusCode: 404, error: ErrorCodes.NOT_FOUND_RESOURCE.code }, 404);
-    }
-
-    // Clear any existing default for this user, set this one as default
-    await this.profilesService.setDefaultProfile(userId, profileId);
+    await this.profilesService.setDefaultProfile(req.session, profileId, true);
 
     this.logger.log(
       `Profile ${privateLogId('profile', profileId)} set as default for user ${privateLogId('actor', userId)}`
