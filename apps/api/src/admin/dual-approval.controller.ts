@@ -95,6 +95,7 @@ export class DualApprovalController {
     schema: {
       type: 'object',
       required: ['action_type', 'amount_irr', 'reason'],
+      additionalProperties: false,
       properties: {
         action_type: {
           type: 'string',

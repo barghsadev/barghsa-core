@@ -87,6 +87,7 @@ export class ReminderOffsetToggleController {
     schema: {
       type: 'object',
       required: ['serviceType', 'offset', 'enabled'],
+      additionalProperties: false,
       properties: {
         serviceType: {
           type: 'string',

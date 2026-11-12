@@ -60,6 +60,8 @@ import {
   STAFF_ASSIGNMENT_WORK_TYPES,
   STAFF_ASSIGNMENT_STRATEGIES,
   STAFF_ASSIGNMENT_MAX_FALLBACKS,
+  MAX_ESCALATION_DELAY_HOURS,
+  ESCALATION_CHANNELS,
 } from '@barghsa/shared/admin';
 
 const STAFF_CONTENT_MAX_LENGTH = 65_536;
@@ -120,6 +122,31 @@ const templateVariablesOpenApi = {
 const assignmentChoiceProperties = {
   teamId: { type: 'string' as const, format: 'uuid' },
   strategy: { type: 'string' as const, enum: [...STAFF_ASSIGNMENT_STRATEGIES] },
+};
+const escalationLevelRequest = {
+  type: 'object' as const,
+  additionalProperties: false,
+  properties: {
+    delayHours: {
+      type: 'integer' as const,
+      nullable: true,
+      minimum: 1,
+      maximum: MAX_ESCALATION_DELAY_HOURS,
+    },
+    channels: {
+      type: 'array' as const,
+      minItems: 1,
+      description: 'When supplied, must include in_app',
+      items: { type: 'string' as const, enum: [...ESCALATION_CHANNELS] },
+    },
+  },
+};
+const escalationPolicyRequest = {
+  type: 'object' as const,
+  nullable: true,
+  additionalProperties: false,
+  required: ['level2', 'level3'],
+  properties: { level2: escalationLevelRequest, level3: escalationLevelRequest },
 };
 const assignmentRulesSchema = {
   type: 'object' as const,
@@ -2093,6 +2120,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['timezone', 'start_hour', 'end_hour'],
+      additionalProperties: false,
       properties: {
         timezone: { type: 'string', example: 'Asia/Tehran' },
         start_hour: { type: 'number', example: 9, minimum: 0, maximum: 1439 / 60 },
@@ -2184,6 +2212,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['threshold_irr'],
+      additionalProperties: false,
       properties: {
         threshold_irr: { type: 'number', example: 500000000, minimum: 0 },
       },
@@ -2256,6 +2285,7 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['limit_irr'],
+      additionalProperties: false,
       properties: {
         limit_irr: { type: 'number', example: 2000000000, minimum: 0 },
         expected_version: { type: 'number', example: 0, minimum: 0 },
@@ -2528,9 +2558,11 @@ export class AdminController {
     schema: {
       type: 'object',
       required: ['simple_order', 'advanced_order'],
+      additionalProperties: false,
       properties: {
         simple_order: {
           type: 'object',
+          additionalProperties: false,
           required: [
             'mandatory_green_enabled',
             'average_power_threshold_kw',
@@ -2544,6 +2576,7 @@ export class AdminController {
         },
         advanced_order: {
           type: 'object',
+          additionalProperties: false,
           required: [
             'mandatory_green_enabled',
             'average_power_threshold_kw',
@@ -2769,37 +2802,11 @@ export class AdminController {
   @ApiBody({
     schema: {
       type: 'object',
+      additionalProperties: false,
       properties: {
-        ticket: {
-          type: 'object',
-          nullable: true,
-          properties: {
-            level2: {
-              type: 'object',
-              properties: {
-                delayHours: { type: 'number', nullable: true, example: 24 },
-                channels: {
-                  type: 'array',
-                  items: { type: 'string', enum: ['in_app', 'email'] },
-                  example: ['in_app', 'email'],
-                },
-              },
-            },
-            level3: {
-              type: 'object',
-              properties: {
-                delayHours: { type: 'number', nullable: true, example: 48 },
-                channels: {
-                  type: 'array',
-                  items: { type: 'string', enum: ['in_app', 'email'] },
-                  example: ['in_app'],
-                },
-              },
-            },
-          },
-        },
-        verification_case: { type: 'object', nullable: true },
-        consultation: { type: 'object', nullable: true },
+        ticket: escalationPolicyRequest,
+        verification_case: escalationPolicyRequest,
+        consultation: escalationPolicyRequest,
       },
     },
   })

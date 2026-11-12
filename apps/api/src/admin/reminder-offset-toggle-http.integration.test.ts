@@ -128,6 +128,20 @@ it('denies staff without the reminder grant and preserves the default matrix', a
   expect(result.every((row) => row.enabled)).toBe(true);
 });
 
+it('rejects undeclared reminder fields before saving a toggle or audit', async () => {
+  const response = await fetch(`${http.base}${basePath}`, {
+    method: 'PUT',
+    headers: headers.operator!,
+    body: JSON.stringify({ ...body, privateField: 'private-value' }),
+  });
+  expect(response.status).toBe(400);
+  expect(await response.text()).not.toContain('private');
+  expect(
+    (await http.pool.query('SELECT * FROM invoice_reminder_offset_toggles')).rows
+  ).toHaveLength(0);
+  expect((await auditWindow.query('SELECT id FROM audit_log')).rows).toHaveLength(0);
+});
+
 it.each(['pair', 'audit', 'read'] as const)(
   'rejects expired sessions after waiting for the %s lock without saving a toggle or audit',
   async (target) => {

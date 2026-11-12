@@ -1,8 +1,11 @@
 import { z } from 'zod';
+import { HttpException } from '@nestjs/common';
+import { ErrorCodes } from '@barghsa/shared/errors';
 import { InputFieldException } from '../common/input-field.exception.js';
 
 const record = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === 'object' && !Array.isArray(value);
+const modeNames = ['simple_order', 'simpleOrder', 'advanced_order', 'advancedOrder'];
 const modeKeys = [
   'mandatory_green_enabled',
   'mandatoryGreenEnabled',
@@ -17,23 +20,21 @@ const modeSchema = z.object({
   Share: z.number().min(0).max(100),
 });
 
-/** Match the existing snake/camel alias precedence; leave unowned errors to the service. */
+/** Check every supplied mode, then preserve snake/camel precedence for field feedback. */
 export function assertGreenSettingsFields(body: unknown) {
   if (
     !record(body) ||
-    Object.keys(body).some(
-      (key) => !['simple_order', 'simpleOrder', 'advanced_order', 'advancedOrder'].includes(key)
+    Object.keys(body).some((key) => !modeNames.includes(key)) ||
+    Object.values(body).some(
+      (mode) =>
+        mode != null && (!record(mode) || Object.keys(mode).some((key) => !modeKeys.includes(key)))
     )
   )
-    return;
+    throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
   const modes = [body.simple_order ?? body.simpleOrder, body.advanced_order ?? body.advancedOrder];
-  if (
-    modes.some((mode) => !record(mode) || Object.keys(mode).some((key) => !modeKeys.includes(key)))
-  )
-    return;
+  if (!modes.every(record)) return;
   const fields: string[] = [];
   for (const [index, mode] of modes.entries()) {
-    if (!record(mode)) return;
     const parsed = modeSchema.safeParse({
       Enabled: mode.mandatory_green_enabled ?? mode.mandatoryGreenEnabled,
       Threshold: mode.average_power_threshold_kw ?? mode.averagePowerThresholdKw,

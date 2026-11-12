@@ -139,11 +139,11 @@ beforeEach(async () => {
   await auditWindow.excludeExisting('', []);
 });
 
-function write(item: (typeof cases)[number], user = 'operator') {
+function write(item: (typeof cases)[number], user = 'operator', body: unknown = item.body) {
   return fetch(`${http.base}/api/admin/config/${item.path}`, {
     method: 'PUT',
     headers: headers[user]!,
-    body: JSON.stringify(item.body),
+    body: JSON.stringify(body),
   });
 }
 
@@ -186,18 +186,19 @@ it('wallet limit keeps mixed and invalid-version errors general without weakenin
     (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [walletLimit.key])).rows
   ).toHaveLength(0);
 });
-it('wallet limit preserves compatible extras and alias precedence with an exact versioned receipt', async () => {
-  const response = await fetch(`${http.base}/api/admin/config/wallet-top-up-limit`, {
-    method: 'PUT',
-    headers: headers.operator!,
-    body: JSON.stringify({
-      limit_irr: 0,
-      limitIrR: -1,
-      expected_version: null,
-      expectedVersion: 0,
-      legacy: 'ignored',
-    }),
-  });
+it('wallet limit rejects extras and preserves alias precedence with an exact versioned receipt', async () => {
+  const command = {
+    limit_irr: 0,
+    limitIrR: -1,
+    expected_version: null,
+    expectedVersion: 0,
+  };
+  const before = await snapshot();
+  const rejected = await write(walletLimit, 'operator', { ...command, legacy: 'ignored' });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.json()).not.toHaveProperty('error.fields');
+  expect(await snapshot()).toEqual(before);
+  const response = await write(walletLimit, 'operator', command);
   expect(response.status).toBe(200);
   expect(await response.json()).toEqual({ limitIrR: 0, version: 1 });
 });
@@ -459,6 +460,39 @@ async function snapshot() {
     ).rows,
   };
 }
+
+for (const [item, alias] of [
+  [cases[0], { timezone: 'UTC', startHour: 8, endHour: 20 }],
+  [cases[1], { thresholdIrR: 500_000_000 }],
+  [cases[2], { limitIrR: 1_000_000_000, expectedVersion: 0 }],
+] as const) {
+  it(`${item.path}: rejects extra fields and retains the legacy input spelling`, async () => {
+    const before = await snapshot();
+    const rejected = await write(item, 'operator', { ...alias, privateField: 'private-value' });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.text()).not.toContain('private');
+    expect(await snapshot()).toEqual(before);
+    const accepted = await write(item, 'operator', alias);
+    expect(accepted.status).toBe(200);
+    expect(await accepted.json()).toEqual(item.response);
+  });
+}
+
+it('rejects extra escalation tiers and level fields without changing settings or audits', async () => {
+  const item = cases.find((entry) => entry.path === 'escalation-policy')!;
+  const before = await snapshot();
+  const policy = item.body.ticket;
+  for (const invalid of [
+    { ...policy, privateTier: 'private-value' },
+    { ...policy, level2: { ...policy.level2, privateField: 'private-value' } },
+  ]) {
+    const rejected = await write(item, 'operator', { consultation: invalid });
+    expect(rejected.status).toBe(400);
+    expect(await rejected.text()).not.toContain('private');
+    expect(await snapshot()).toEqual(before);
+  }
+});
+
 for (const item of cases) {
   it(`${item.path}: denies read-only staff without changing config or audit history`, async () => {
     const before = await snapshot();

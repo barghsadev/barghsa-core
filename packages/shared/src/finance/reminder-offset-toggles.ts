@@ -138,6 +138,10 @@ export function parseReminderOffsetToggleBody(
     return { ok: false, issues: ['body must be an object'] };
   }
   const body = raw as Record<string, unknown>;
+  if (
+    Object.keys(body).some((key) => key !== 'serviceType' && key !== 'offset' && key !== 'enabled')
+  )
+    return { ok: false, issues: ['Unsupported reminder offset fields'] };
   const issues: string[] = [];
 
   if (!isServiceDuePeriodType(body.serviceType)) {

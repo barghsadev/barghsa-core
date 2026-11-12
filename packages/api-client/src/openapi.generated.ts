@@ -12735,31 +12735,42 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": {
-                    consultation?: Record<string, never> | null;
-                    ticket?: {
-                        level2?: {
-                            /**
-                             * @example [
-                             *       "in_app",
-                             *       "email"
-                             *     ]
-                             */
+                    consultation?: {
+                        level2: {
+                            /** @description When supplied, must include in_app */
                             channels?: ("in_app" | "email")[];
-                            /** @example 24 */
                             delayHours?: number | null;
                         };
-                        level3?: {
-                            /**
-                             * @example [
-                             *       "in_app"
-                             *     ]
-                             */
+                        level3: {
+                            /** @description When supplied, must include in_app */
                             channels?: ("in_app" | "email")[];
-                            /** @example 48 */
                             delayHours?: number | null;
                         };
                     } | null;
-                    verification_case?: Record<string, never> | null;
+                    ticket?: {
+                        level2: {
+                            /** @description When supplied, must include in_app */
+                            channels?: ("in_app" | "email")[];
+                            delayHours?: number | null;
+                        };
+                        level3: {
+                            /** @description When supplied, must include in_app */
+                            channels?: ("in_app" | "email")[];
+                            delayHours?: number | null;
+                        };
+                    } | null;
+                    verification_case?: {
+                        level2: {
+                            /** @description When supplied, must include in_app */
+                            channels?: ("in_app" | "email")[];
+                            delayHours?: number | null;
+                        };
+                        level3: {
+                            /** @description When supplied, must include in_app */
+                            channels?: ("in_app" | "email")[];
+                            delayHours?: number | null;
+                        };
+                    } | null;
                 };
             };
         };

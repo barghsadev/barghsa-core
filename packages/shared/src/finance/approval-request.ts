@@ -94,6 +94,13 @@ export function validateApprovalRequestInput(input: unknown): ApprovalRequestVal
   }
 
   const o = input as Record<string, unknown>;
+  if (
+    Object.keys(o).some(
+      (key) =>
+        !['action_type', 'actionType', 'amount_irr', 'amountIrR', 'reason', 'details'].includes(key)
+    )
+  )
+    return { ok: false, issues: ['Unsupported approval request fields'] };
   const actionType = o.action_type ?? o.actionType;
   const rawAmount = o.amount_irr ?? o.amountIrR;
   const reason = o.reason;

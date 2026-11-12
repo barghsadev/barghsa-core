@@ -203,6 +203,39 @@ function save(body: unknown = input, user = 'operator') {
     body: JSON.stringify(body),
   });
 }
+it('rejects extra fields in the green settings envelope and every supplied mode', async () => {
+  const version = (await http.pool.query("SELECT version FROM config_version WHERE id='global'"))
+    .rows[0].version;
+  const mode = {
+    mandatoryGreenEnabled: false,
+    averagePowerThresholdKw: 1000,
+    mandatoryGreenSharePercent: 4,
+  };
+  const command = { simpleOrder: mode, advancedOrder: mode };
+  for (const invalid of [
+    { ...input, compatibleExtra: true },
+    { ...command, privateField: 'private-value' },
+    { ...command, simpleOrder: { ...mode, privateField: 'private-value' } },
+    { ...input, simpleOrder: { ...mode, privateField: 'private-value' } },
+  ]) {
+    const rejected = await save(invalid);
+    expect(rejected.status).toBe(400);
+    expect(await rejected.text()).not.toMatch(/private|compatibleExtra/);
+  }
+  expect(
+    (await http.pool.query('SELECT key FROM app_config WHERE key=$1', [configKey])).rows
+  ).toHaveLength(0);
+  expect(
+    (await auditWindow.query("SELECT id FROM audit_log WHERE event='config_change'")).rows
+  ).toHaveLength(0);
+  expect(
+    (await http.pool.query("SELECT version FROM config_version WHERE id='global'")).rows[0].version
+  ).toBe(version);
+  const accepted = await save(command);
+  expect(accepted.status).toBe(200);
+  expect(await accepted.json()).toEqual(command);
+});
+
 async function incompatibleLimits() {
   await http.pool.query(
     `INSERT INTO electricity_product_limits(product_id,min_kwh,max_kwh)
@@ -330,7 +363,6 @@ it('preserves camel, snake and mixed green-rule aliases and exact successful rec
         average_power_threshold_kw: 2100,
         mandatoryGreenSharePercent: 0,
       },
-      compatibleExtra: true,
     },
   ];
   for (const body of bodies) {

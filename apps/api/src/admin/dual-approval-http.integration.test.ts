@@ -340,6 +340,40 @@ it('requires step-up to initiate and permits queue reads without it', async () =
   });
 });
 
+it('rejects undeclared approval request fields and preserves bounded transaction details', async () => {
+  await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='initiator'");
+  await http.pool.query(
+    `INSERT INTO app_config(key,value) VALUES ('finance.dual_approval_threshold','{"threshold_irr":100000}')
+     ON CONFLICT(key) DO UPDATE SET value=EXCLUDED.value`
+  );
+  const request = {
+    actionType: 'manual_adjustment',
+    amountIrR: 100_000,
+    reason: `Reviewed adjustment ${randomUUID()}`,
+    details: { reference: 'invoice-review' },
+  };
+  const send = (payload: unknown) =>
+    fetch(`${http.base}/api/admin/approval-requests`, {
+      method: 'POST',
+      headers: headers.initiator!,
+      body: JSON.stringify(payload),
+    });
+  const rejected = await send({ ...request, privateField: 'private-value' });
+  expect(rejected.status).toBe(400);
+  expect(await rejected.text()).not.toContain('private');
+  expect(
+    (await http.pool.query('SELECT id FROM approval_requests WHERE reason=$1', [request.reason]))
+      .rows
+  ).toHaveLength(0);
+  const accepted = await send(request);
+  expect(accepted.status, await accepted.clone().text()).toBe(201);
+  expect(await accepted.json()).toMatchObject({
+    initiatorId: 'initiator',
+    status: 'pending',
+    details: request.details,
+  });
+});
+
 const walletReviewHashes = new Map<string, string>();
 async function walletReceipt(amount = 100000n) {
   const profile = (

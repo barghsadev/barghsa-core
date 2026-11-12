@@ -343,6 +343,19 @@ const PG_UNIQUE_VIOLATION = '23505';
  */
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+function assertSettingsWriteFields(
+  input: unknown,
+  allowed: readonly string[]
+): asserts input is Record<string, unknown> {
+  if (
+    !input ||
+    typeof input !== 'object' ||
+    Array.isArray(input) ||
+    Object.keys(input).some((key) => !allowed.includes(key))
+  )
+    throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
+}
+
 /** Shape of the `role_change` metadata written by `updateStaffRoles`. */
 interface RoleChangeMetadata {
   targetUserId: string;
@@ -1090,26 +1103,22 @@ export class AdminService {
     ip: string
   ): Promise<DeliveryWindowConfig> {
     const actorUserId = actor.userId;
+    assertSettingsWriteFields(input, [
+      'timezone',
+      'start_hour',
+      'startHour',
+      'end_hour',
+      'endHour',
+    ]);
     const validation = validateWindowConfig(input);
     if (!validation.ok) {
-      const value = input && typeof input === 'object' ? (input as Record<string, unknown>) : null;
-      if (value) {
-        const fields: string[] = [];
-        if (typeof value.timezone !== 'string' || !isValidTimeZone(value.timezone))
-          fields.push('timezone');
-        if (!isWindowHour(value.start_hour ?? value.startHour)) fields.push('startHour');
-        if (!isWindowHour(value.end_hour ?? value.endHour)) fields.push('endHour');
-        if (!fields.length) fields.push('endHour');
-        throw new InputFieldException(fields);
-      }
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: validation.issues.join('; '),
-        },
-        400
-      );
+      const fields: string[] = [];
+      if (typeof input.timezone !== 'string' || !isValidTimeZone(input.timezone))
+        fields.push('timezone');
+      if (!isWindowHour(input.start_hour ?? input.startHour)) fields.push('startHour');
+      if (!isWindowHour(input.end_hour ?? input.endHour)) fields.push('endHour');
+      if (!fields.length) fields.push('endHour');
+      throw new InputFieldException(fields);
     }
 
     const config = toDeliveryWindowConfig(input);
@@ -1244,25 +1253,8 @@ export class AdminService {
     ip: string
   ): Promise<DualApprovalConfig> {
     const actorUserId = actor.userId;
-    const validation = validateDualApprovalConfig(input);
-    if (!validation.ok) {
-      if (
-        input !== null &&
-        typeof input === 'object' &&
-        !Array.isArray(input) &&
-        Object.keys(input).every((key) => key === 'threshold_irr' || key === 'thresholdIrR')
-      ) {
-        throw new InputFieldException(['thresholdIrR']);
-      }
-      throw new HttpException(
-        {
-          statusCode: 400,
-          error: ErrorCodes.VALIDATION_INPUT_INVALID.code,
-          message: validation.issues.join('; '),
-        },
-        400
-      );
-    }
+    assertSettingsWriteFields(input, ['threshold_irr', 'thresholdIrR']);
+    if (!validateDualApprovalConfig(input).ok) throw new InputFieldException(['thresholdIrR']);
 
     const config = toDualApprovalConfig(input);
     const pool = getDbPool();
@@ -1414,6 +1406,12 @@ export class AdminService {
     ip: string
   ): Promise<{ limitIrR: number; version: number }> {
     const actorUserId = actor.userId;
+    assertSettingsWriteFields(input, [
+      'limit_irr',
+      'limitIrR',
+      'expected_version',
+      'expectedVersion',
+    ]);
     const validation = validateWalletTopUpLimitConfig(input);
     if (!validation.ok) {
       throw new HttpException(

@@ -665,6 +665,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "action_type": {
                     "description": "Financial action subject to dual approval",
@@ -2604,6 +2605,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "end_hour": {
                     "example": 21,
@@ -2705,6 +2707,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "threshold_irr": {
                     "example": 500000000,
@@ -2928,21 +2931,17 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "consultation": {
-                    "nullable": true,
-                    "type": "object"
-                  },
-                  "ticket": {
+                    "additionalProperties": false,
                     "nullable": true,
                     "properties": {
                       "level2": {
+                        "additionalProperties": false,
                         "properties": {
                           "channels": {
-                            "example": [
-                              "in_app",
-                              "email"
-                            ],
+                            "description": "When supplied, must include in_app",
                             "items": {
                               "enum": [
                                 "in_app",
@@ -2950,22 +2949,23 @@
                               ],
                               "type": "string"
                             },
+                            "minItems": 1,
                             "type": "array"
                           },
                           "delayHours": {
-                            "example": 24,
+                            "maximum": 8760,
+                            "minimum": 1,
                             "nullable": true,
-                            "type": "number"
+                            "type": "integer"
                           }
                         },
                         "type": "object"
                       },
                       "level3": {
+                        "additionalProperties": false,
                         "properties": {
                           "channels": {
-                            "example": [
-                              "in_app"
-                            ],
+                            "description": "When supplied, must include in_app",
                             "items": {
                               "enum": [
                                 "in_app",
@@ -2973,21 +2973,141 @@
                               ],
                               "type": "string"
                             },
+                            "minItems": 1,
                             "type": "array"
                           },
                           "delayHours": {
-                            "example": 48,
+                            "maximum": 8760,
+                            "minimum": 1,
                             "nullable": true,
-                            "type": "number"
+                            "type": "integer"
                           }
                         },
                         "type": "object"
                       }
                     },
+                    "required": [
+                      "level2",
+                      "level3"
+                    ],
+                    "type": "object"
+                  },
+                  "ticket": {
+                    "additionalProperties": false,
+                    "nullable": true,
+                    "properties": {
+                      "level2": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "channels": {
+                            "description": "When supplied, must include in_app",
+                            "items": {
+                              "enum": [
+                                "in_app",
+                                "email"
+                              ],
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          },
+                          "delayHours": {
+                            "maximum": 8760,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "level3": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "channels": {
+                            "description": "When supplied, must include in_app",
+                            "items": {
+                              "enum": [
+                                "in_app",
+                                "email"
+                              ],
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          },
+                          "delayHours": {
+                            "maximum": 8760,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "level2",
+                      "level3"
+                    ],
                     "type": "object"
                   },
                   "verification_case": {
+                    "additionalProperties": false,
                     "nullable": true,
+                    "properties": {
+                      "level2": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "channels": {
+                            "description": "When supplied, must include in_app",
+                            "items": {
+                              "enum": [
+                                "in_app",
+                                "email"
+                              ],
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          },
+                          "delayHours": {
+                            "maximum": 8760,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "level3": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "channels": {
+                            "description": "When supplied, must include in_app",
+                            "items": {
+                              "enum": [
+                                "in_app",
+                                "email"
+                              ],
+                              "type": "string"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          },
+                          "delayHours": {
+                            "maximum": 8760,
+                            "minimum": 1,
+                            "nullable": true,
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      }
+                    },
+                    "required": [
+                      "level2",
+                      "level3"
+                    ],
                     "type": "object"
                   }
                 },
@@ -3096,8 +3216,10 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "advanced_order": {
+                    "additionalProperties": false,
                     "properties": {
                       "average_power_threshold_kw": {
                         "example": 1000,
@@ -3123,6 +3245,7 @@
                     "type": "object"
                   },
                   "simple_order": {
+                    "additionalProperties": false,
                     "properties": {
                       "average_power_threshold_kw": {
                         "example": 1000,
@@ -3513,6 +3636,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "enabled": {
                     "type": "boolean"
@@ -12070,6 +12194,7 @@
           "content": {
             "application/json": {
               "schema": {
+                "additionalProperties": false,
                 "properties": {
                   "expected_version": {
                     "example": 0,

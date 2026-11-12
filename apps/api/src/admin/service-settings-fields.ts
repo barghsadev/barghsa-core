@@ -31,10 +31,15 @@ export function assertServiceSettingsFields(body: unknown, kind: 'targets' | 'es
     if (kind === 'targets') {
       if (!isValidServiceResponseTargetHours(value)) fields.push(`${prefix}Hours`);
     } else {
-      if (!record(value)) throw generic();
+      if (!record(value) || Object.keys(value).some((key) => key !== 'level2' && key !== 'level3'))
+        throw generic();
       for (const tier of ['level2', 'level3'] as const) {
         const level = value[tier];
-        if (!record(level)) throw generic();
+        if (
+          !record(level) ||
+          Object.keys(level).some((key) => key !== 'delayHours' && key !== 'channels')
+        )
+          throw generic();
         if (level.channels !== undefined && !isValidEscalationChannels(level.channels))
           throw generic();
         if (
