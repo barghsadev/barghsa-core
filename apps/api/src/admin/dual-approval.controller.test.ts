@@ -129,6 +129,7 @@ describe('DualApprovalController permission gate (S-09.07, admin:financial:edit)
     [],
     'private-root',
     { reason: '', actorUserId: 'private-actor' },
+    { reason: 'Reviewed and rejected', actorUserId: 'private-actor' },
     { reason: 'x'.repeat(2001), expectedVersion: 'private-version' },
   ])('keeps root and mixed rejection errors generic: %j', async (body) => {
     const { controller, service } = makeController();
@@ -137,6 +138,7 @@ describe('DualApprovalController permission gate (S-09.07, admin:financial:edit)
       .catch((error: unknown) => error);
     expect(error).toMatchObject({ status: 400 });
     expect(error).not.toHaveProperty('fields');
+    expect(rejectionBody(error)).toMatchObject({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code });
     expect(JSON.stringify(rejectionBody(error))).not.toMatch(
       /private-root|private-actor|private-version/
     );
@@ -151,14 +153,10 @@ describe('DualApprovalController permission gate (S-09.07, admin:financial:edit)
     expect(error).not.toHaveProperty('fields');
     expect(service.rejectApprovalRequest).not.toHaveBeenCalled();
   });
-  it('preserves trimmed bounded reasons and existing extra-property compatibility', async () => {
+  it('accepts a reason at the limit after trimming', async () => {
     const { controller, service } = makeController();
     const reason = 'x'.repeat(2000);
-    await controller.rejectApprovalRequest(
-      'req-1',
-      { reason: `  ${reason}  `, ignored: true },
-      adminReq
-    );
+    await controller.rejectApprovalRequest('req-1', { reason: `  ${reason}  ` }, adminReq);
     expect(service.rejectApprovalRequest).toHaveBeenCalledWith(
       'req-1',
       adminReq.session,

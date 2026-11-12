@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T06:24:40+00:00",
+  "updated": "2026-11-12T06:30:20+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -117159,7 +117159,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "312ff678e79b16646419ae9fc14b82a42279810341bfd51545c6b63fd878aa2d"
+              "sha256": "4557311bd337cdefb176a429bb7279a558cdcf5c7325528668189bc94048fadf"
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.ts",
@@ -118421,6 +118421,14 @@
                 "apps/worker/src/wallet/online-topup-expiry-scanner.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-dual-approval-strict-fixture",
+              "base_commit": "e8293f050438d4b89c69532fb3b49d402dfd9437",
+              "paths": [
+                "apps/api/src/admin/dual-approval.controller.test.ts"
+              ],
+              "scope": "The valid bounded reason keeps its original delegation assertions. The separate unknown-field case now asserts generic rejection without a service call, in line with the existing strict API and native HTTP test."
             }
           ],
           "presentation_renewals": [
@@ -118723,7 +118731,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "312ff678e79b16646419ae9fc14b82a42279810341bfd51545c6b63fd878aa2d"
+              "sha256": "4557311bd337cdefb176a429bb7279a558cdcf5c7325528668189bc94048fadf"
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.ts",
@@ -119985,6 +119993,14 @@
                 "apps/worker/src/wallet/online-topup-expiry-scanner.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-dual-approval-strict-fixture",
+              "base_commit": "e8293f050438d4b89c69532fb3b49d402dfd9437",
+              "paths": [
+                "apps/api/src/admin/dual-approval.controller.test.ts"
+              ],
+              "scope": "The valid bounded reason keeps its original delegation assertions. The separate unknown-field case now asserts generic rejection without a service call, in line with the existing strict API and native HTTP test."
             }
           ],
           "presentation_renewals": [
@@ -126884,7 +126900,7 @@
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.test.ts",
-              "sha256": "312ff678e79b16646419ae9fc14b82a42279810341bfd51545c6b63fd878aa2d"
+              "sha256": "4557311bd337cdefb176a429bb7279a558cdcf5c7325528668189bc94048fadf"
             },
             {
               "path": "apps/api/src/admin/dual-approval.controller.ts",
@@ -128146,6 +128162,14 @@
                 "apps/worker/src/wallet/online-topup-expiry-scanner.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-dual-approval-strict-fixture",
+              "base_commit": "e8293f050438d4b89c69532fb3b49d402dfd9437",
+              "paths": [
+                "apps/api/src/admin/dual-approval.controller.test.ts"
+              ],
+              "scope": "The valid bounded reason keeps its original delegation assertions. The separate unknown-field case now asserts generic rejection without a service call, in line with the existing strict API and native HTTP test."
             }
           ],
           "presentation_renewals": [
@@ -555959,7 +555983,8 @@
           "apps/api/src/admin/staff-creation-http.integration.test.ts",
           "apps/api/src/admin/staff-mutation-http.integration.test.ts",
           "apps/api/src/admin/verification-mode-http.integration.test.ts",
-          "apps/api/src/profiles/profile-form-input-fields.test.ts"
+          "apps/api/src/profiles/profile-form-input-fields.test.ts",
+          "apps/api/src/admin/dual-approval.controller.test.ts"
         ],
         "batches": [
           "release-0.6-reject-unknown-auth-command-fields",
@@ -555967,7 +555992,8 @@
           "release-0.6-upload-profile-request-admission",
           "release-0.6-strict-customer-commands",
           "release-0.6-strict-staff-commands",
-          "release-0.6-profile-strict-receipt-regression"
+          "release-0.6-profile-strict-receipt-regression",
+          "release-0.6-dual-approval-strict-fixture"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-auth-command-scope",
@@ -901195,7 +901221,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Cumulative preflight 43157243591 failed three profile and address test fixtures that supplied unknown fields with otherwise valid commands. The assertions were aligned with the strict command requirement and focused checks passed. Verify the corrected cumulative tip in the required protected integrity check."
+        "Verify the corrected cumulative tip in the exact protected integrity check. Run 43163146083 passed the earlier profile and address cases and failed one stale dual-approval unit assertion that expected acceptance of an unknown field. The corrected focused controller suite passed all 24 cases."
       ],
       "owner": null,
       "depends_on": [],
@@ -901457,7 +901483,8 @@
           "release-0.6-profile-strict-receipt-regression",
           "release-0.6-quarterly-access-review",
           "release-0.6-critical-review-accessibility",
-          "release-0.6-structured-operator-logs"
+          "release-0.6-structured-operator-logs",
+          "release-0.6-dual-approval-strict-fixture"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -901650,7 +901677,8 @@
           "packages/shared/src/operator-logging.test.ts",
           "packages/shared/src/operator-logging.ts",
           "pnpm-lock.yaml",
-          "scripts/test-pilot-proxy.py"
+          "scripts/test-pilot-proxy.py",
+          "apps/api/src/admin/dual-approval.controller.test.ts"
         ]
       }
     },
@@ -1038521,6 +1038549,57 @@
         {
           "file": "final-caller-typecheck.log",
           "sha256": "61ce9b3e58cee2e42122034d7087f9826ddb67366eea0bc3fcaeb5ad53a658ab"
+        }
+      ]
+    },
+    "release-0.6-dual-approval-strict-fixture": {
+      "batch": "release-0.6-dual-approval-strict-fixture",
+      "base_commit": "e8293f050438d4b89c69532fb3b49d402dfd9437",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.04.01.02",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-09.07.01",
+        "02-auth-users-admin.md#T-09.07.02",
+        "02-auth-users-admin.md#T-09.10.01"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/dual-approval.controller.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.test.ts",
+          "sha256": "4557311bd337cdefb176a429bb7279a558cdcf5c7325528668189bc94048fadf"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval.controller.ts",
+          "sha256": "7130d5db042781958025566b9f637d0ec7454963cd499645a0fac5cb8d5e2451"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "44500d3b9b6c9653ddfab66200af7c281bd735c3f098524eb79ebd91d901ec92"
+        }
+      ],
+      "checks": [
+        "Protected run 43163146083 on 68be0dce passed 5,532 web tests and 7,988 API tests. Its one API failure expected a valid rejection reason plus an unknown field to reach the service, contrary to the strict command contract. One API test remained skipped in that run.",
+        "The valid 2,000-character reason still reaches the service after trimming. A separate valid reason plus unknown actor field receives the generic validation code without the field value, detailed field metadata or a service call.",
+        "All 24 focused controller unit cases, changed-file lint, formatting and whitespace checks passed. The production validator and existing native HTTP assertions were preserved."
+      ],
+      "limitations": [
+        "Exact protected publication and v0.6.0 release acceptance remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-protected-run-diagnosis",
+      "execution_receipts": [
+        {
+          "file": "run.json",
+          "sha256": "d6cc6325255e5faa6b2cf59b89191f193e200d247e307815c9ec9346857c7a04"
+        },
+        {
+          "file": "failed.log",
+          "sha256": "d6127e6fadfe43ed35aff2d1495e24a503012c3f5f2d01b5d7a2cc9e71028eb5"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "b91b60a5e6b26aac35c5092a677bc54db47f620f1a6e0fe6ae756fa2ffb76e2b"
         }
       ]
     }
