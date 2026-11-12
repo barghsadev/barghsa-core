@@ -1,0 +1,18 @@
+diff --git a/dist/index.js b/dist/index.js
+index 394dbc2272f43b84642b0f9d5cc7eb1eacb0ffb3..fd00ea35e37dcf376bf4503c5bb3cba9fa504e68 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -6,3 +6,3 @@ function __insertCSS(code) {
+   style.type = 'text/css'
++  style.textContent = code
+   head.appendChild(style)
+-  ;style.styleSheet ? (style.styleSheet.cssText = code) : style.appendChild(document.createTextNode(code))
+diff --git a/dist/index.mjs b/dist/index.mjs
+index c124f821a68f7070647a5a04441d0caa53689662..dfbd6715a3c222b9bf134f82a1fec4f70a8076b1 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -6,3 +6,3 @@ function __insertCSS(code) {
+   style.type = 'text/css'
++  style.textContent = code
+   head.appendChild(style)
+-  ;style.styleSheet ? (style.styleSheet.cssText = code) : style.appendChild(document.createTextNode(code))

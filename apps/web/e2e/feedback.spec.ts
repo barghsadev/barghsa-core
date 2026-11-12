@@ -308,6 +308,12 @@ for (const locale of ['en', 'fa'] as const) {
         new MutationObserver(() => {
           if (document.documentElement) document.documentElement.lang = value;
         }).observe(document, { childList: true });
+        addEventListener('securitypolicyviolation', ({ blockedURI, effectiveDirective }) => {
+          if (blockedURI === 'inline' && effectiveDirective === 'style-src-elem') {
+            const { dataset } = document.documentElement;
+            dataset.inlineStyleViolations = String(Number(dataset.inlineStyleViolations ?? 0) + 1);
+          }
+        });
       }, locale);
       await feedbackWorkspace(page, locale);
       await page.emulateMedia({ colorScheme: darkMode ? 'dark' : 'light' });
@@ -383,6 +389,7 @@ for (const locale of ['en', 'fa'] as const) {
       await notice.hover();
       await expect(messages).toHaveAttribute('aria-live', 'polite');
       const list = messages.locator('[data-sonner-toaster]');
+      await expect(list).toHaveCSS('position', 'fixed');
       await expect(list).toHaveAttribute('dir', locale === 'fa' ? 'rtl' : 'ltr');
       await expect(list).toHaveAttribute('data-x-position', locale === 'fa' ? 'left' : 'right');
       await expect(list).toHaveAttribute('data-sonner-theme', darkMode ? 'dark' : 'light');
@@ -407,6 +414,7 @@ for (const locale of ['en', 'fa'] as const) {
         .analyze();
       expect(contrast.violations).toEqual([]);
       expect(contrast.incomplete).toEqual([]);
+      expect(await page.locator('html').getAttribute('data-inline-style-violations')).toBeNull();
       const close = messages.getByRole('button', {
         name: locale === 'fa' ? 'بستن پیام' : 'Dismiss message',
         exact: true,

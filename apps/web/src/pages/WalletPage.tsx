@@ -577,6 +577,18 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 : t('wallet.page.loadError', locale);
 
   const receiptErrorMessage = receiptError && receiptErrorText(receiptError, locale);
+  const reviewLoading = <p role="status">{t('wallet.page.reviewLoading', locale)}</p>;
+
+  function receiptFieldError(field: Parameters<typeof receipt.errorId>[0]) {
+    const error = receipt.errors[field];
+    return (
+      error && (
+        <p id={receipt.errorId(field)} role="alert" className="text-sm text-destructive">
+          {error.message}
+        </p>
+      )
+    );
+  }
 
   return (
     <div
@@ -598,7 +610,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
       </header>
 
       {paymentReturn && (
-        <Suspense fallback={<p role="status">{t('wallet.page.reviewLoading', locale)}</p>}>
+        <Suspense fallback={reviewLoading}>
           <OnlinePaymentReturnPanel
             key={`${paymentReturn.orderId}:${paymentReturn.authority}`}
             payment={paymentReturn}
@@ -788,15 +800,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
-                {receipt.errors.amount && (
-                  <p
-                    id={receipt.errorId('amount')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {receipt.errors.amount.message}
-                  </p>
-                )}
+                {receiptFieldError('amount')}
                 {receiptTomanPreview !== null && (
                   <p
                     className="mt-1 text-sm text-muted-foreground"
@@ -829,15 +833,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
-                {receipt.errors.paymentDate && (
-                  <p
-                    id={receipt.errorId('paymentDate')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {receipt.errors.paymentDate.message}
-                  </p>
-                )}
+                {receiptFieldError('paymentDate')}
               </div>
 
               <div>
@@ -863,15 +859,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   }}
                   className="mt-1 h-10 w-full rounded-lg border border-input px-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
-                {receipt.errors.payerReference && (
-                  <p
-                    id={receipt.errorId('payerReference')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {receipt.errors.payerReference.message}
-                  </p>
-                )}
+                {receiptFieldError('payerReference')}
               </div>
 
               <div>
@@ -895,15 +883,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   }}
                   className="mt-2 w-full rounded-lg border border-border bg-background p-3 text-foreground"
                 />
-                {receipt.errors.bankName && (
-                  <p
-                    id={receipt.errorId('bankName')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {receipt.errors.bankName.message}
-                  </p>
-                )}
+                {receiptFieldError('bankName')}
               </div>
               <div>
                 <label htmlFor="receipt-file" className="block text-sm font-medium text-foreground">
@@ -948,11 +928,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                 <p id="receipt-file-hint" className="mt-2 text-sm text-muted-foreground">
                   {t('wallet.page.receiptFileHint', locale)}
                 </p>
-                {receipt.errors.file && (
-                  <p id={receipt.errorId('file')} role="alert" className="text-sm text-destructive">
-                    {receipt.errors.file.message}
-                  </p>
-                )}
+                {receiptFieldError('file')}
               </div>
 
               <div>
@@ -971,15 +947,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
                   onChange={(event) => setReceiptNote(event.target.value)}
                   className="mt-1 w-full rounded-lg border border-input px-3 py-2 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
                 />
-                {receipt.errors.customerNote && (
-                  <p
-                    id={receipt.errorId('customerNote')}
-                    role="alert"
-                    className="text-sm text-destructive"
-                  >
-                    {receipt.errors.customerNote.message}
-                  </p>
-                )}
+                {receiptFieldError('customerNote')}
               </div>
 
               <button
@@ -1012,7 +980,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           )}
 
           {onlineReview ? (
-            <Suspense fallback={<p role="status">{t('wallet.page.reviewLoading', locale)}</p>}>
+            <Suspense fallback={reviewLoading}>
               <OnlineTopUpReviewDialog
                 review={onlineReview}
                 locale={locale}
@@ -1024,7 +992,7 @@ function CustomerWalletPage({ paymentReturn, returnInvoiceId, historyQuery }: Wa
           ) : null}
 
           {receiptReview ? (
-            <Suspense fallback={<p role="status">{t('wallet.page.reviewLoading', locale)}</p>}>
+            <Suspense fallback={reviewLoading}>
               <BankReceiptTopUpReviewDialog
                 review={receiptReview}
                 locale={locale}

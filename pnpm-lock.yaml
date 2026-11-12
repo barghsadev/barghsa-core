@@ -63,6 +63,9 @@ patchedDependencies:
   pstree.remy@1.1.8:
     hash: 9d1e8cc8757a39d435dcc1773db1e89a063539b1f4d4a5e654a35db0697debe0
     path: patches/pstree.remy@1.1.8.patch
+  sonner@2.0.8:
+    hash: e66affd664aebf3e7022a96effc6abc59a8c86b468d88a45bf72f7e49c838824
+    path: patches/sonner@2.0.8.patch
   vite@6.4.4:
     hash: 25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739
     path: patches/vite@6.4.4.patch
@@ -344,7 +347,7 @@ importers:
         version: 19.2.8(react@19.2.8)
       sonner:
         specifier: 2.0.8
-        version: 2.0.8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 2.0.8(patch_hash=e66affd664aebf3e7022a96effc6abc59a8c86b468d88a45bf72f7e49c838824)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       zod:
         specifier: 4.6.6
         version: 4.6.6
@@ -655,7 +658,7 @@ importers:
         version: 7.89.0(@types/react@19.2.18)(react@19.2.8)
       sonner:
         specifier: 2.0.8
-        version: 2.0.8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 2.0.8(patch_hash=e66affd664aebf3e7022a96effc6abc59a8c86b468d88a45bf72f7e49c838824)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       tailwind-merge:
         specifier: 3.6.0
         version: 3.6.0
@@ -16257,7 +16260,7 @@ snapshots:
     dependencies:
       atomic-sleep: 1.0.0
 
-  sonner@2.0.8(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
+  sonner@2.0.8(patch_hash=e66affd664aebf3e7022a96effc6abc59a8c86b468d88a45bf72f7e49c838824)(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
