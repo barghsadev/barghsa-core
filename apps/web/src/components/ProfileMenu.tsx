@@ -94,7 +94,12 @@ export function ProfileMenu({
       >
         <PopoverTrigger
           render={
-            <Button variant="ghost" size="default" aria-label={shellText('accountMenu', locale)} />
+            <Button
+              variant={area === 'admin' ? 'outline' : 'ghost'}
+              size="default"
+              className={area === 'admin' ? 'min-h-11 gap-2 rounded-full px-2.5' : undefined}
+              aria-label={shellText('accountMenu', locale)}
+            />
           }
         >
           <span
@@ -110,7 +115,11 @@ export function ProfileMenu({
             <span
               data-slot="operating-context-indicator"
               dir={locale === 'fa' ? 'rtl' : 'ltr'}
-              className="whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold"
+              className={
+                area === 'admin'
+                  ? 'whitespace-nowrap text-xs font-semibold'
+                  : 'whitespace-nowrap rounded-md border border-current/20 px-2 py-1 text-xs font-semibold'
+              }
             >
               {shellText(area === 'admin' ? 'staffContext' : 'customerContext', locale)}
             </span>

@@ -1,6 +1,6 @@
 import { readWithDeadline, ServerQueryError } from '../lib/server-query-client.js';
 import { Moon, Sun } from 'lucide-react';
-import { useCallback, useEffect, useRef, useState, useId } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, NativeSelect } from '@barghsa/ui';
 import { shellText } from '@barghsa/i18n/shell';
 import { useAccountUser } from '../hooks/useAccountUser.js';
@@ -20,14 +20,14 @@ function readMode(value: unknown): ThemeMode | undefined {
 /** Keep account preference writes authoritative; published administrator policy wins. */
 export function ThemeSwitcher() {
   const actor = useAccountUser();
+  const { themePolicy, loading } = useBrandConfig();
+  if (loading || themePolicy !== 'system') return null;
   return <OwnedThemeSwitcher key={actor} />;
 }
 
 function OwnedThemeSwitcher() {
   const locale = useLocale();
-  const { theme, setTheme, themePolicy, loading, resolvedTheme } = useBrandConfig();
-  const managed = themePolicy !== 'system';
-  const descriptionId = useId();
+  const { theme, setTheme, resolvedTheme } = useBrandConfig();
   const [state, setState] = useState<
     'loading' | 'ready' | 'saving' | 'denied' | 'unconfirmed' | 'checking'
   >('loading');
@@ -80,17 +80,15 @@ function OwnedThemeSwitcher() {
     };
   }, [requestPreference]);
 
-  const shownMode = managed ? themePolicy : theme;
   const Icon = resolvedTheme === 'dark' ? Moon : Sun;
-  const editable = !managed && !loading && (state === 'ready' || state === 'denied');
+  const editable = state === 'ready' || state === 'denied';
   const needsCheck = state === 'unconfirmed' || state === 'checking';
   return (
     <div className="inline-flex max-w-full flex-wrap items-center gap-1.5 text-sm">
       <Icon className="size-4 shrink-0" aria-hidden="true" />
       <NativeSelect
         aria-label={shellText('theme', locale)}
-        value={shownMode === 'system' ? 'default' : shownMode}
-        aria-describedby={managed ? descriptionId : undefined}
+        value={theme === 'system' ? 'default' : theme}
         disabled={!editable}
         onChange={(event) => {
           if (!editable) return;
@@ -103,11 +101,6 @@ function OwnedThemeSwitcher() {
         <option value="light">{shellText('themeLight', locale)}</option>
         <option value="dark">{shellText('themeDark', locale)}</option>
       </NativeSelect>
-      {managed && (
-        <span id={descriptionId} className="basis-full text-xs text-muted-foreground">
-          {shellText('themeManaged', locale)}
-        </span>
-      )}
       {(needsCheck || state === 'denied') && (
         <div className="basis-full space-y-1 text-xs text-destructive">
           <p role="alert">{shellText(needsCheck ? 'changeUnconfirmed' : 'themeError', locale)}</p>
