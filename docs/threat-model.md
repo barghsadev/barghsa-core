@@ -157,4 +157,6 @@ An accepted risk record names the threat ID, accountable owner, scope and candid
 
 The service owner and security reviewer review this model quarterly and whenever a material change touches a trust boundary, sensitive data, provider, permissions or financial flow. Update the affected boundaries, threat IDs and validation evidence during that change. Apply the same review when a batch is pushed directly to `main`. [Change checklist](../.github/PULL_REQUEST_TEMPLATE.md).
 
+Use the quarterly access review to reconcile staff grants, provider credentials and service identities with their owners. Keep the access inventory and signed decisions in restricted operations evidence. [Quarterly access review](operations/quarterly-access-review.md)
+
 The model covers the discovered runtime and release entry points and all seven boundaries. Runtime assumptions follow the approved profile, document and assistant scope. Review production ingress, provider and recovery assumptions with the corresponding candidate evidence before launch.
