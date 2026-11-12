@@ -1,0 +1,11 @@
+# Alert delivery watchdog
+
+Use a heartbeat receiver outside the monitored stack and its network. It must accept Alertmanager webhook POSTs and have an independent P1 on-call route. Configure a check per environment and database. Alertmanager repeats after one minute, subject to its 15-second batching interval. Allow three minutes of grace. The alert from the receiver should identify the environment, link the Executive SLO dashboard, and point to this runbook.
+
+Put the approved HTTPS heartbeat URL in a dedicated protected file. Store only the URL and a terminating newline. Set the file to mode 0400 for Alertmanager's container UID under a root-only directory. Set `BARGHSA_OPERATIONS_WATCHDOG_URL_FILE` to the absolute file path in the protected Compose environment. The heartbeat receiver is separate from the Barghsa operations inbox. It receives only the fixed monitoring heartbeat and its environment labels. Alertmanager sends only firing notifications on this route and refuses redirects.
+
+For staging, add `-f staging-watchdog.yml` after `-f staging-compose.yml` in the existing protected monitoring Compose command. Include any other active overlays. Check the effective configuration, then apply it to Prometheus and Alertmanager. The base stack omits the heartbeat rule until the overlay is enabled.
+
+Read back at least two consecutive receiver timestamps and the Alertmanager route. Rehearse loss in an isolated or approved maintenance window by stopping the heartbeat sender. Observe the independent missing notification and its P1 delivery receipt. Restore the sender and record the receiver's recovery and the normal operations alert delivery receipt. Allow Alertmanager's retained firing alert to expire when testing loss of Prometheus alone. Confirm that a resumed heartbeat clears the missing condition.
+
+On a missing heartbeat, check the independent receiver's incident view, Prometheus rule evaluation, Alertmanager readiness and route, the protected URL mount, and the network path to the receiver. Use the approved secondary on-call path if primary delivery is unavailable. Rotate the protected URL through the receiver if it appears in output. Do not silence the heartbeat to clear a P1.

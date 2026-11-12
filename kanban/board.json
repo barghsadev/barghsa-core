@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T00:14:15+00:00",
+  "updated": "2026-11-12T00:25:47+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -87974,11 +87974,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -87990,7 +87990,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -89678,6 +89678,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -92808,7 +92818,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
@@ -92836,11 +92846,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -93064,6 +93074,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -93213,7 +93233,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             }
           ],
           "checks": [
@@ -93337,6 +93357,14 @@
                 "deploy/monitoring/grafana-notifications-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -102497,7 +102525,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -103025,6 +103053,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -103639,7 +103675,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -104167,6 +104203,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -104781,7 +104825,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -105309,6 +105353,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -105924,7 +105976,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -106452,6 +106504,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -107066,7 +107126,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -107594,6 +107654,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -108158,7 +108226,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -108270,11 +108338,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -108589,6 +108657,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -109165,7 +109243,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -109529,6 +109607,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -110011,7 +110097,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -110539,6 +110625,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Adds the two missing read-only dashboard binds and documents all ten. Compose preserves loopback-only, authenticated access. Isolated Grafana returned the exact panel source for every dashboard to a named Viewer and returned 401 for anonymous requests."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -491599,15 +491693,15 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -492062,6 +492156,16 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -493749,7 +493853,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -494299,6 +494403,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -564917,7 +565029,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             }
           ],
           "checks": [
@@ -565069,6 +565181,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds one read-only backup rules bind. Compose validates the five rules and existing private stack. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -565593,7 +565713,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -565787,6 +565907,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -565916,7 +566044,7 @@
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -566074,6 +566202,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -566728,7 +566864,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -566867,6 +567003,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -566921,7 +567065,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -566989,6 +567133,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds two backed-up age and latest result panels. Prior panels, annotation queries and settings are identical. Promtool verified eight exact query values and gaps. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -567057,11 +567209,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             }
           ],
           "source_renewals": [
@@ -567189,6 +567341,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -567289,7 +567450,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -567366,6 +567527,14 @@
                 "deploy/monitoring/grafana-external-providers-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -567470,7 +567639,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -567556,6 +567725,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -567814,11 +567991,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -567954,6 +568131,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -568041,7 +568227,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -568214,6 +568400,14 @@
                 "deploy/monitoring/grafana-notifications-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -568293,7 +568487,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -568366,6 +568560,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -568552,7 +568754,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             }
           ],
           "checks": [
@@ -568696,6 +568898,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Documents optional long-term metrics retention and full UTC-month coverage after archive activation. Existing operational targets, alert budgets and primary scrape and rule definitions are preserved. Native Prometheus checks verified scope, historical samples and restart recovery."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -568870,7 +569080,7 @@
           "source_evidence": [
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
@@ -568902,7 +569112,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             }
           ],
           "checks": [
@@ -569016,6 +569226,15 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Adds one read-only backup rules bind. Compose validates the five rules and existing private stack."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -569032,18 +569251,27 @@
         "story": "06-security-testing-observability.md#spec-e681e92bce32"
       },
       "requirement": "| T-06.15.01.07 | Set up dead-man check / watchdog for alert delivery pipeline | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Provision the approved independent HTTPS heartbeat receiver and independent P1 on-call route per environment and database. Enable the protected monitoring overlay, verify consecutive actual delivery, and record the receiver’s missing-heartbeat page and resumed recovery. The local native rehearsal measured an alert sender outage and resumed HTTPS delivery."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/monitoring/operations-watchdog.yml",
+          "deploy/monitoring/staging-alertmanager.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-watchdog.yml",
+          "docs/operations/notification-monitoring.md",
+          "docs/runbooks/alert-delivery.md"
+        ],
+        "batches": [
+          "release-0.6-alert-delivery-watchdog"
+        ],
         "current_acceptance": null
       }
     },
@@ -569086,7 +569314,12 @@
           "docs/operations/notification-monitoring.md",
           "packages/i18n/src/workspace.ts",
           "packages/shared/src/notifications/index.ts",
-          "packages/shared/src/notifications/operations-alert-links.ts"
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "deploy/monitoring/operations-watchdog.yml",
+          "deploy/monitoring/staging-alertmanager.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-watchdog.yml",
+          "docs/runbooks/alert-delivery.md"
         ],
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
@@ -569095,7 +569328,8 @@
           "release-0.6-journey-slo-burn",
           "release-0.6-synthetic-alerts",
           "release-0.6-grafana-supported-images-and-provisioning",
-          "release-0.6-postgres-backup-alerts"
+          "release-0.6-postgres-backup-alerts",
+          "release-0.6-alert-delivery-watchdog"
         ],
         "current_acceptance": null
       }
@@ -569504,7 +569738,7 @@
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "packages/db/src/schema/contract-cancellation.ts",
@@ -569667,6 +569901,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -569794,7 +570036,7 @@
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -569952,6 +570194,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -570045,7 +570295,7 @@
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -570201,6 +570451,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -570315,11 +570573,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "packages/db/drizzle/production/0283_operations_outbox_backlog_priority.sql",
@@ -570441,6 +570699,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -570563,11 +570830,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
-              "sha256": "baa720bcbbe818811a58183bb3d096d863e92dbd347f00bb25263b16dc40b0dd"
+              "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
             },
             {
               "path": "packages/db/drizzle/production/0283_operations_outbox_backlog_priority.sql",
@@ -570696,6 +570963,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Adds three native PostgreSQL P1 receipt and idempotency cases. The new native cases await hosted execution. Adds only three validated P1 backup alert names, fixed bilingual descriptions and P1 validation. The receipt transaction and delivery boundaries retain their source. Focused validation and links passed. Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-alertmanager.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -572237,7 +572513,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "479d6174b96e15f4bea4ad5265e848bbb368e279ada11c862ac906ebadd87cfb"
+              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -572349,6 +572625,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Loads the backup rule file. All existing targets, settings and rules remain identical."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ]
         }
@@ -856186,7 +856470,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -858199,6 +858483,14 @@
                 "deploy/monitoring/grafana-notifications-dashboard.json"
               ],
               "scope": "Adds the shared organization release-marker query. Existing panels, metric queries, dashboard settings and annotation queries are identical. Isolated Grafana returned one exact deployment marker in all ten Viewer dashboard queries. Guarded rollout and its readback controls retain their source."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "presentation_renewals": [
@@ -860808,7 +861100,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "be6cf255a8bc888e82f0ff43e62e9809f9fc2f75d02a1c375b59adf517786e9c"
+              "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -862719,6 +863011,14 @@
                 "package.json"
               ],
               "scope": "Added only the local setup entry point and its README instructions. Existing dev startup sequence, package fields and other README sections matched."
+            },
+            {
+              "batch": "release-0.6-alert-delivery-watchdog",
+              "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -867751,7 +868051,8 @@
           "release-0.6-postgres-backup-alerts",
           "release-0.6-promotion-receipt-binding",
           "release-0.6-quarterly-storage-schedule-activation",
-          "release-0.6-development-bootstrap"
+          "release-0.6-development-bootstrap",
+          "release-0.6-alert-delivery-watchdog"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -867778,7 +868079,13 @@
           "deploy/production/test_check_promotion.py",
           "README.md",
           "package.json",
-          "scripts/setup-dev.mjs"
+          "scripts/setup-dev.mjs",
+          "deploy/monitoring/operations-watchdog.yml",
+          "deploy/monitoring/staging-alertmanager.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-watchdog.yml",
+          "docs/operations/notification-monitoring.md",
+          "docs/runbooks/alert-delivery.md"
         ]
       }
     },
@@ -867804,7 +868111,8 @@
         "Provision approved Persian/English profile.verification_status SMS.ir templates or activate direct text, test owned verified destination and record actual provider acceptance/delivery reports before production. Both 11 October direct-line probes rejected with HTTP400/status123; owner deferred this evidence from v0.3.0 staging only.",
         "The live staging CSP reports and public branding response identify the cross-origin favicon. An authorized staging staff operator must upload and activate the prepared original favicon (PNG SHA-256 c07a9231b098af0214279477ce0abbfa9bf29a8188885025dbeb415e24a24fda), completing the normal verification prompt. Verify the same-origin sealed URL and exact bytes after activation. Complete the full reviewed observation window before enforcing CSP.",
         "Enable and verify pg_stat_statements and intended collector permissions in the production-equivalent database. Staging exposes ten positive query timings through its private metrics.",
-        "Staging runs the reviewed 100 MiB scanner sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c with recurring private-mirror checks and signed daily 28180. Live worker clean, standard EICAR and full-size streams passed. Verify signature freshness, sealed-upload receipts and outage recovery on the final operational topology and immutable application candidate."
+        "Staging runs the reviewed 100 MiB scanner sha256:9b03670406718952efd5f5451e327594ad4b30877091ea214e20a2029245ea0c with recurring private-mirror checks and signed daily 28180. Live worker clean, standard EICAR and full-size streams passed. Verify signature freshness, sealed-upload receipts and outage recovery on the final operational topology and immutable application candidate.",
+        "Enable the independent alert delivery watchdog using an approved HTTPS receiver and P1 on-call destination. Verify actual missing-heartbeat paging and recovery. Local native evidence is recorded separately from live channel receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -867835,7 +868143,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-prometheus-metric-retention",
           "release-0.6-postgres-backup-alerts",
-          "release-0.6-promotion-receipt-binding"
+          "release-0.6-promotion-receipt-binding",
+          "release-0.6-alert-delivery-watchdog"
         ],
         "sms_provisioning_deferral": {
           "decision": "release_0_3_sms_provisioning",
@@ -996897,6 +997206,160 @@
         {
           "file": "native-artifacts-43125114487/repeated-setup.log",
           "sha256": "cc92c7f89cb78de6afa4642309f2c5ce00adfa075254d4f513e364ab6a65e863"
+        }
+      ]
+    },
+    "release-0.6-alert-delivery-watchdog": {
+      "batch": "release-0.6-alert-delivery-watchdog",
+      "base_commit": "a4a165ad2543cf1339d872a8a1125fb2f09bf084",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.07",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "release-readiness#R-05.03",
+        "release-readiness#R-05.02",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/operations-watchdog.yml",
+        "deploy/monitoring/staging-alertmanager.yml",
+        "deploy/monitoring/staging-prometheus.yml",
+        "deploy/monitoring/staging-watchdog.yml",
+        "docs/operations/notification-monitoring.md",
+        "docs/runbooks/alert-delivery.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "cdabc10a48ec68947ebbf4b2e74a5b9bb4fdff467e87f9525e622730fb46b60a"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "ccc7c0a741cf02db9f0248a35e9b2b9a8e5a6c10c1745d7fd2524c5665b7aa4c"
+        },
+        {
+          "path": "deploy/monitoring/operations-watchdog.yml",
+          "sha256": "8434cdeb29313a4a47927fab0e11dfd6251f7e0cf114e862b662bcd4b27cda25"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+        },
+        {
+          "path": "deploy/monitoring/staging-watchdog.yml",
+          "sha256": "36a6b9b92960c0c08d296e0e1a24b0a098ce06742b0e583255bcd5853e7b8137"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "1682cdacdca541b62a4fc55b79760f9332ab5ef7662c3972c9728011b0ce3926"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "f6b4f58143a230106c26f712d95b967a937da30366ffc61cfabe1da07d03f8b6"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "4ac2648738df79bc151138f6c691e0bb6f9f554d7cbb6e04dd5b2def39e2a4fe"
+        },
+        {
+          "path": "docs/runbooks/alert-delivery.md",
+          "sha256": "3d410649f47ca8d5880c8740abdbaa55cadf4f442fc868975b1c42465af44844"
+        }
+      ],
+      "checks": [
+        "The isolated native Prometheus 3.15.0 and Alertmanager 0.34.1 rehearsal started with the watchdog rule and URL file absent, and delivered an ordinary authenticated alert to the local operations fixture. Enabling the reviewed rule produced a separate verified TLS heartbeat, with staging/core labels and no ordinary alert fanout.",
+        "Verified three heartbeat deliveries, a 75.037-second repeat interval, independent receiver availability during 65 seconds without the sender, and resumed heartbeat after 69.914 seconds. No external service or pager was contacted.",
+        "The first native rehearsal missed the expected repeat window with equal group and repeat intervals. Alertmanager checks elapsed repeat time at group ticks. The reviewed route keeps a one-minute repeat and uses 15-second batching. Both native tool config checks, explicit route checks, existing notification and synthetic rule tests, normalized Compose, formatting and whitespace passed.",
+        "Compose rejects watchdog activation without its configured protected URL file. Normalization shows only the two read-only mounts added by the optional overlay. The original default alert receiver, grouping and inhibition are retained."
+      ],
+      "limitations": [
+        "No watchdog endpoint or P1 on-call destination has been enabled on a live environment. The local fixture proves sender routing and observable silence, not external missing-heartbeat paging."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-alert-delivery-watchdog",
+      "execution_receipts": [
+        {
+          "file": "verified-local-receipt.json",
+          "sha256": "02e0d7b7ed663d6aa9f5392c2ab52e33115ae13a17df22ea7fb27b2954b725a8"
+        },
+        {
+          "file": "native-heartbeat-rehearsal.log",
+          "sha256": "a25d3f20cfa42eecf0577422ea0b69a350041c157d2a2aa38fed21a4839bb9dc"
+        },
+        {
+          "file": "initial-prometheus-native.log",
+          "sha256": "9f6a47bb8f038125385e14a59e224158854f2149e761d487f51cafe98c90b028"
+        },
+        {
+          "file": "initial-alertmanager-native.log",
+          "sha256": "878ef9d8e3566cee5208b396e0acd50006c70870dddee969231970fb21172bb7"
+        },
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "d0ed6b56f2ad44553c291229ad38006a55017e2d13c87e652cc41282d60d7334"
+        },
+        {
+          "file": "compose-overlay-proof.json",
+          "sha256": "27ede2ce8fdff999c4fd9ce2f609be53cd1c282b0d9e18a53c5bfa490d255a5b"
+        },
+        {
+          "file": "rule-and-route-checks.log",
+          "sha256": "812c1a159c743a1601abd237f2549c5f7aff343b739d9383cef2d2b8688578f5"
+        },
+        {
+          "file": "final-route-checks.log",
+          "sha256": "6f4e3ac42b9cbf05a417d9fbabfd791130d2b455574f611f89e32c704748364f"
+        },
+        {
+          "file": "verify-heartbeat.py",
+          "sha256": "942c20c88cfd6102003d9d63fd926d6702cedda30b548e4233aeea056a58fd7e"
+        },
+        {
+          "file": "verify-compose.py",
+          "sha256": "6474ad36a2037d124299d75ef2cad7e47b494aca76ca68ca11e976e566286ed2"
+        },
+        {
+          "file": "upstream-dedup-stage-v0.34.1.go",
+          "sha256": "42048b6680342c770ff8ca584e82648427bf50d4c01a2c54927160a5b785ea33"
         }
       ]
     }

@@ -1,0 +1,12 @@
+services:
+  prometheus:
+    volumes:
+      - ./operations-watchdog.yml:/etc/prometheus/optional/operations-watchdog.yml:ro
+  alertmanager:
+    volumes:
+      - type: bind
+        source: ${BARGHSA_OPERATIONS_WATCHDOG_URL_FILE:?Set the protected watchdog URL file}
+        target: /run/secrets/operations-watchdog-url
+        read_only: true
+        bind:
+          create_host_path: false

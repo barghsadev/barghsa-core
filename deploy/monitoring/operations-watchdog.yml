@@ -1,0 +1,11 @@
+groups:
+  - name: barghsa-operations-watchdog
+    rules:
+      - alert: OperationsWatchdog
+        expr: vector(1)
+        labels:
+          severity: none
+        annotations:
+          summary: Barghsa alert delivery heartbeat
+          dashboard_uid: barghsa-executive-slo
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/alert-delivery.md

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T00:14:15+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T00:25:47+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1231 | Accepted with unchanged source bindings. |
-| verify | 49 | Existing work may be complete; inspect evidence before building. |
-| partial | 80 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 48 | Existing work may be complete; inspect evidence before building. |
+| partial | 81 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1394,7 +1394,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.01.04` | verify | Inventory needed | Configure P3 alerts: certificate expiry, storage lifecycle warning, reconciliation mismatch, low SMS credit |
 | `06-security-testing-observability.md#T-06.15.01.05` | verify | Inventory needed | Configure alert routing: P1 → on-call pager/phone, P2 → team channel + task, P3 → review board |
 | `06-security-testing-observability.md#T-06.15.01.06` | done | Recorded batch work | Configure deduplication and alert grouping to prevent noise storms |
-| `06-security-testing-observability.md#T-06.15.01.07` | verify | Inventory needed | Set up dead-man check / watchdog for alert delivery pipeline |
+| `06-security-testing-observability.md#T-06.15.01.07` | partial | Recorded batch work | Set up dead-man check / watchdog for alert delivery pipeline |
 | `06-security-testing-observability.md#T-06.15.01.08` | partial | Recorded batch work | Every alert links to its dashboard and runbook |
 | `06-security-testing-observability.md#T-06.15.02.01` | done | Recorded batch work | Define SLOs with SLIs: availability, API latency (p95), core page LCP (p75), job start time (p99), RPO, RTO |
 | `06-security-testing-observability.md#T-06.15.02.02` | partial | Recorded batch work | Implement SLO burn-rate alerting: fast burn (5% budget/hour) → P1, slow burn (2% budget/day) → P2 |

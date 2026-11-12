@@ -60,6 +60,8 @@ A configuration-pause rehearsal may use isolated provider tables in the staging 
 
 Validate configuration with `promtool check config`, the existing `promtool test rules` file and `amtool check-config`. Start the staging monitoring stack only against its accepted image and protected configuration. Binary rollback can retain the additive receipt table; its history remains append-only. Acceptance and actual deployment/notification receipts belong in `kanban/board.json`.
 
+The optional watchdog overlay sends the monitoring heartbeat to an independent receiver. Follow the [alert delivery watchdog runbook](../runbooks/alert-delivery.md) for protected configuration and missing-heartbeat and recovery receipts.
+
 ### Operator dashboards
 
 Add `deploy/monitoring/staging-dashboards.yml` after `staging-compose.yml` when

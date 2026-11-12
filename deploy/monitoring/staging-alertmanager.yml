@@ -4,6 +4,12 @@ route:
   group_wait: 10s
   group_interval: 1m
   repeat_interval: 4h
+  routes:
+    - receiver: barghsa-watchdog
+      matchers: ['alertname="OperationsWatchdog"']
+      group_wait: 5s
+      group_interval: 15s
+      repeat_interval: 1m
 receivers:
   - name: barghsa-operations
     webhook_configs:
@@ -13,6 +19,13 @@ receivers:
           authorization:
             type: Bearer
             credentials_file: /run/secrets/operations-webhook-token
+  - name: barghsa-watchdog
+    webhook_configs:
+      - url_file: /run/secrets/operations-watchdog-url
+        send_resolved: false
+        timeout: 10s
+        http_config:
+          follow_redirects: false
 inhibit_rules:
   - source_matchers: ['alertname="NotificationDeadLettersAccumulating"']
     target_matchers: ['alertname="NotificationDeadLettersPending"']
