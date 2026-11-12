@@ -41,15 +41,15 @@ const operations: Operation[] = [
   },
   { name: 'province deletion', missing: true, run: (c, r) => c.deleteProvince(r, id) },
   { name: 'city list', run: (c, r) => c.listCities(r, id) },
-  { name: 'city detail', missing: true, run: (c, r) => c.getCity(r, id) },
+  { name: 'city detail', missing: true, run: (c, r) => c.getCity(r, id, id) },
   { name: 'city creation', run: (c, r) => c.createCity(r, id, names) },
   { name: 'city import', run: (c, r) => c.importCities(r, id, { cities: [names] }) },
   {
     name: 'city update',
     missing: true,
-    run: (c, r) => c.updateCity(r, id, { status: 'inactive' }),
+    run: (c, r) => c.updateCity(r, id, id, { status: 'inactive' }),
   },
-  { name: 'city deletion', missing: true, run: (c, r) => c.deleteCity(r, id) },
+  { name: 'city deletion', missing: true, run: (c, r) => c.deleteCity(r, id, id) },
 ];
 describe.each(operations)('geography $name access', ({ run }) => {
   it('requires geography capability and respects its removal', async () => {
@@ -90,7 +90,9 @@ it.each(['createProvince', 'updateProvince', 'createCity', 'updateCity'] as cons
     const action =
       method === 'createProvince'
         ? controller.createProvince(req, invalid)
-        : controller[method](req, id, invalid);
+        : method === 'updateCity'
+          ? controller.updateCity(req, id, id, invalid)
+          : controller[method](req, id, invalid);
     await expect(action).rejects.toMatchObject({ status: 400 });
     expect(call).not.toHaveBeenCalled();
   }
@@ -124,7 +126,9 @@ it.each(['createProvince', 'updateProvince', 'createCity', 'updateCity', 'import
     const action =
       method === 'createProvince'
         ? controller.createProvince(req, input)
-        : controller[method](req, id, input);
+        : method === 'updateCity'
+          ? controller.updateCity(req, id, id, input)
+          : controller[method](req, id, input);
     const error = await action.catch((cause: unknown) => cause);
     expect(error).toBeInstanceOf(InputFieldException);
     const expected =

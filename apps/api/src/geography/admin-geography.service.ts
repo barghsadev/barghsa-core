@@ -402,13 +402,17 @@ export class AdminGeographyService {
   }
 
   /**
-   * Get a single city by ID.
+   * Get a single city in the requested province.
    */
-  async getCity(id: string, pool: Pick<Pool, 'query'> = getDbPool()): Promise<CityRow | null> {
+  async getCity(
+    provinceId: string,
+    id: string,
+    pool: Pick<Pool, 'query'> = getDbPool()
+  ): Promise<CityRow | null> {
     const result = await pool.query(
       `SELECT id, province_id, name_fa, name_en, status, created_at, updated_at
-       FROM cities WHERE id = $1`,
-      [id]
+       FROM cities WHERE id = $1 AND province_id = $2`,
+      [id, provinceId]
     );
     if (result.rows.length === 0) return null;
     return mapCityRow(result.rows[0]!);
@@ -498,13 +502,14 @@ export class AdminGeographyService {
    * Update an existing city.
    */
   async updateCity(
+    provinceId: string,
     id: string,
     input: UpdateCityInput,
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<CityRow | null> {
     return this.withMutation(actor, ip, 'cities', id, async (pool) => {
-      const existing = await this.getCity(id, pool);
+      const existing = await this.getCity(provinceId, id, pool);
       if (!existing) return null;
 
       if (input.status === 'inactive' && existing.status !== 'inactive') {
@@ -535,12 +540,12 @@ export class AdminGeographyService {
         return existing;
       }
 
-      params.push(id);
+      params.push(id, provinceId);
 
       try {
         const result = await pool.query(
           `UPDATE cities SET ${setClauses.join(', ')}, updated_at=clock_timestamp()
-         WHERE id = $${paramIdx}
+         WHERE id = $${paramIdx} AND province_id = $${paramIdx + 1}
          RETURNING id, province_id, name_fa, name_en, status, created_at, updated_at`,
           params
         );
@@ -575,20 +580,23 @@ export class AdminGeographyService {
    * by active customer profiles (soft delete).
    */
   async deleteCity(
+    provinceId: string,
     id: string,
     actor: Pick<ValidatedSession, 'userId' | 'sessionId' | 'csrfToken'>,
     ip: string
   ): Promise<boolean> {
     return this.withMutation(actor, ip, 'cities', id, async (pool) => {
-      const existing = await this.getCity(id, pool);
+      const existing = await this.getCity(provinceId, id, pool);
       if (!existing) return false;
 
       await this.requireUnreferencedCity(pool, id);
 
       // Soft-delete by setting inactive
-      await pool.query(`UPDATE cities SET status = 'inactive', updated_at = NOW() WHERE id = $1`, [
-        id,
-      ]);
+      await pool.query(
+        `UPDATE cities SET status = 'inactive', updated_at = NOW()
+         WHERE id = $1 AND province_id = $2`,
+        [id, provinceId]
+      );
       return true;
     });
   }

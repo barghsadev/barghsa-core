@@ -80,6 +80,13 @@ it('returns new reference data after a committed change instead of trusting the 
     expect.objectContaining({ id: province, nameEn: 'Changed' })
   );
 });
+it('rejects a malformed province ID before reading reference data', async () => {
+  const path = 'geography/provinces/bad-id/cities';
+  const invalid = await get(path, '*');
+  expect(invalid.status).toBe(400);
+  expect(invalid.headers.get('etag')).toBeNull();
+  expect((await get(path, '*', false)).status).toBe(401);
+});
 it('never negotiates profile-scoped or financial payloads', async () => {
   for (const path of ['profiles', `wallet/${profile}`]) {
     const response = await get(path, '*');

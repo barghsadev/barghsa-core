@@ -381,7 +381,7 @@ describe('AdminGeographyService', () => {
       it('returns a city by ID', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] });
 
-        const city = await service.getCity('city-001');
+        const city = await service.getCity('province-001', 'city-001');
 
         expect(city).not.toBeNull();
         expect(city!.nameEn).toBe('Tehran');
@@ -390,7 +390,7 @@ describe('AdminGeographyService', () => {
       it('returns null when city not found', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-        const city = await service.getCity('nonexistent');
+        const city = await service.getCity('province-001', 'nonexistent');
 
         expect(city).toBeNull();
       });
@@ -476,6 +476,7 @@ describe('AdminGeographyService', () => {
         }); // update
 
         const city = await service.updateCity(
+          'province-001',
           'city-001',
           { nameEn: 'Tehran Updated' },
           actor,
@@ -490,6 +491,7 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [] });
 
         const city = await service.updateCity(
+          'province-001',
           'nonexistent',
           { nameFa: 'test' },
           actor,
@@ -502,7 +504,7 @@ describe('AdminGeographyService', () => {
       it('returns existing row when no changes provided', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] });
 
-        const city = await service.updateCity('city-001', {}, actor, '127.0.0.1');
+        const city = await service.updateCity('province-001', 'city-001', {}, actor, '127.0.0.1');
 
         expect(city).not.toBeNull();
         expect(city!.nameEn).toBe('Tehran');
@@ -514,7 +516,13 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] }); // existing
         mockPool.query.mockRejectedValueOnce({ code: '23505' }); // unique violation
 
-        const promise = service.updateCity('city-001', { nameEn: 'Duplicate' }, actor, '127.0.0.1');
+        const promise = service.updateCity(
+          'province-001',
+          'city-001',
+          { nameEn: 'Duplicate' },
+          actor,
+          '127.0.0.1'
+        );
         await expect(promise).rejects.toThrow(HttpException);
         try {
           await promise;
@@ -529,19 +537,19 @@ describe('AdminGeographyService', () => {
         mockPool.query.mockResolvedValueOnce({ rows: [makeCityRow()] }); // existing
         mockPool.query.mockResolvedValueOnce({ rows: [] }); // set inactive
 
-        const result = await service.deleteCity('city-001', actor, '127.0.0.1');
+        const result = await service.deleteCity('province-001', 'city-001', actor, '127.0.0.1');
 
         expect(result).toBe(true);
         expect(mockPool.query).toHaveBeenCalledWith(
           expect.stringContaining("SET status = 'inactive'"),
-          ['city-001']
+          ['city-001', 'province-001']
         );
       });
 
       it('returns false when city not found', async () => {
         mockPool.query.mockResolvedValueOnce({ rows: [] });
 
-        const result = await service.deleteCity('nonexistent', actor, '127.0.0.1');
+        const result = await service.deleteCity('province-001', 'nonexistent', actor, '127.0.0.1');
 
         expect(result).toBe(false);
       });

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Logger, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseUUIDPipe, Logger, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Etag } from '../common/etag.interceptor.js';
 import { GeographyService } from './geography.service.js';
@@ -64,7 +64,7 @@ export class GeographyController {
     },
   })
   @ApiResponse({ status: 401, description: 'Not authenticated' })
-  async getCities(@Param('id') provinceId: string) {
+  async getCities(@Param('id', new ParseUUIDPipe()) provinceId: string) {
     return this.geographyService.getCitiesByProvince(provinceId);
   }
 

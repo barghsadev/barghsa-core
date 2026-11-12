@@ -27,6 +27,34 @@ import { InputFieldException } from '../common/input-field.exception.js';
 
 const nameFaRe = /^[\u0600-\u06FF\u200C\s]+$/;
 const nameEnRe = /^[a-zA-Z\s]+$/;
+const geographyId = z.guid();
+const emptyQueryValue = (value: unknown) => (value === '' ? undefined : value);
+const positiveQueryInteger = (max: number) =>
+  z.preprocess(
+    emptyQueryValue,
+    z
+      .string()
+      .regex(/^[0-9]+$/)
+      .transform(Number)
+      .pipe(z.number().int().min(1).max(max))
+      .optional()
+  );
+const geographyListQuery = z.object({
+  search: z.string().max(512).optional(),
+  status: z.preprocess(emptyQueryValue, z.enum(['active', 'inactive']).optional()),
+  page: positiveQueryInteger(100_000),
+  limit: positiveQueryInteger(100),
+});
+
+function parseGeographyListQuery(input: unknown) {
+  const parsed = geographyListQuery.safeParse(input);
+  if (!parsed.success) throw new InputFieldException([]);
+  return parsed.data;
+}
+
+function requireGeographyIds(...ids: string[]) {
+  if (ids.some((id) => !geographyId.safeParse(id).success)) throw new InputFieldException([]);
+}
 
 function rejectInvalidGeography(issues: readonly { path: PropertyKey[] }[]): never {
   const fields = ['nameFa', 'nameEn', 'status', 'cities'];
@@ -133,9 +161,13 @@ export class AdminGeographyController {
    */
   @Get('provinces')
   @ApiOperation({ summary: 'List provinces (admin)' })
-  @ApiQuery({ name: 'search', required: false, description: 'Search in Persian/English name' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search in Persian/English name (max: 512 characters)',
+  })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status (active/inactive)' })
-  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1, max: 100000)' })
   @ApiQuery({
     name: 'limit',
     required: false,
@@ -146,17 +178,14 @@ export class AdminGeographyController {
   async listProvinces(
     @Req() req: AuthenticatedRequest,
     @Query('search') search?: string,
-    @Query('status') status?: 'active' | 'inactive',
+    @Query('status') status?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string
   ) {
     this.requireAdmin(req);
-    return this.adminGeographyService.listProvinces({
-      search,
-      status,
-      page: page ? parseInt(page, 10) : undefined,
-      limit: limit ? parseInt(limit, 10) : undefined,
-    });
+    return this.adminGeographyService.listProvinces(
+      parseGeographyListQuery({ search, status, page, limit })
+    );
   }
 
   /**
@@ -170,6 +199,7 @@ export class AdminGeographyController {
   @ApiResponse({ status: 404, description: 'Province not found.' })
   async getProvince(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     this.requireAdmin(req);
+    requireGeographyIds(id);
     const province = await this.adminGeographyService.getProvince(id);
     if (!province) {
       throw new HttpException(
@@ -214,6 +244,7 @@ export class AdminGeographyController {
     @Body() body: unknown
   ) {
     this.requireAdmin(req);
+    requireGeographyIds(id);
     const parsed = UpdateProvinceSchema.safeParse(body);
     if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     const province = await this.adminGeographyService.updateProvince(
@@ -244,6 +275,7 @@ export class AdminGeographyController {
   @ApiResponse({ status: 409, description: 'Province has cities.' })
   async deleteProvince(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     this.requireAdmin(req);
+    requireGeographyIds(id);
     const deleted = await this.adminGeographyService.deleteProvince(
       id,
       req.session,
@@ -269,9 +301,13 @@ export class AdminGeographyController {
    */
   @Get('provinces/:provinceId/cities')
   @ApiOperation({ summary: 'List cities for a province (admin)' })
-  @ApiQuery({ name: 'search', required: false, description: 'Search in Persian/English name' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Search in Persian/English name (max: 512 characters)',
+  })
   @ApiQuery({ name: 'status', required: false, description: 'Filter by status (active/inactive)' })
-  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1)' })
+  @ApiQuery({ name: 'page', required: false, description: 'Page number (default: 1, max: 100000)' })
   @ApiQuery({
     name: 'limit',
     required: false,
@@ -283,17 +319,16 @@ export class AdminGeographyController {
     @Req() req: AuthenticatedRequest,
     @Param('provinceId') provinceId: string,
     @Query('search') search?: string,
-    @Query('status') status?: 'active' | 'inactive',
+    @Query('status') status?: string,
     @Query('page') page?: string,
     @Query('limit') limit?: string
   ) {
     this.requireAdmin(req);
-    return this.adminGeographyService.listCities(provinceId, {
-      search,
-      status,
-      page: page ? parseInt(page, 10) : undefined,
-      limit: limit ? parseInt(limit, 10) : undefined,
-    });
+    requireGeographyIds(provinceId);
+    return this.adminGeographyService.listCities(
+      provinceId,
+      parseGeographyListQuery({ search, status, page, limit })
+    );
   }
 
   /**
@@ -305,9 +340,14 @@ export class AdminGeographyController {
   @ApiOperation({ summary: 'Get city by ID (admin)' })
   @ApiResponse({ status: 200, description: 'City details.' })
   @ApiResponse({ status: 404, description: 'City not found.' })
-  async getCity(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  async getCity(
+    @Req() req: AuthenticatedRequest,
+    @Param('provinceId') provinceId: string,
+    @Param('id') id: string
+  ) {
     this.requireAdmin(req);
-    const city = await this.adminGeographyService.getCity(id);
+    requireGeographyIds(provinceId, id);
+    const city = await this.adminGeographyService.getCity(provinceId, id);
     if (!city) {
       throw new HttpException(
         { statusCode: 404, error: 'GEOGRAPHY:CITY_NOT_FOUND', message: 'City not found' },
@@ -331,6 +371,7 @@ export class AdminGeographyController {
     @Body() body: unknown
   ) {
     this.requireAdmin(req);
+    requireGeographyIds(provinceId);
     const parsed = z
       .object({ cities: z.array(CreateCitySchema).min(1).max(200) })
       .strict()
@@ -357,6 +398,7 @@ export class AdminGeographyController {
     @Body() body: unknown
   ) {
     this.requireAdmin(req);
+    requireGeographyIds(provinceId);
     const parsed = CreateCitySchema.safeParse(body);
     if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     return this.adminGeographyService.createCity(
@@ -379,13 +421,16 @@ export class AdminGeographyController {
   @ApiResponse({ status: 409, description: 'City name conflict.' })
   async updateCity(
     @Req() req: AuthenticatedRequest,
+    @Param('provinceId') provinceId: string,
     @Param('id') id: string,
     @Body() body: unknown
   ) {
     this.requireAdmin(req);
+    requireGeographyIds(provinceId, id);
     const parsed = UpdateCitySchema.safeParse(body);
     if (!parsed.success) rejectInvalidGeography(parsed.error.issues);
     const city = await this.adminGeographyService.updateCity(
+      provinceId,
       id,
       parsed.data as UpdateCityDto,
       req.session,
@@ -410,9 +455,15 @@ export class AdminGeographyController {
   @ApiOperation({ summary: 'Delete (deactivate) city (admin)' })
   @ApiResponse({ status: 200, description: 'City deactivated.' })
   @ApiResponse({ status: 404, description: 'City not found.' })
-  async deleteCity(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+  async deleteCity(
+    @Req() req: AuthenticatedRequest,
+    @Param('provinceId') provinceId: string,
+    @Param('id') id: string
+  ) {
     this.requireAdmin(req);
+    requireGeographyIds(provinceId, id);
     const deleted = await this.adminGeographyService.deleteCity(
+      provinceId,
       id,
       req.session,
       req.ip ?? 'unknown'

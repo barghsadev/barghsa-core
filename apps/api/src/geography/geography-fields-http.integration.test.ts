@@ -109,6 +109,114 @@ it('keeps authorization ahead of field feedback', async () => {
   expect(((await response.json()) as ErrorResponse).error.fields).toBeUndefined();
   expect(await counts(current.userId)).toEqual(before);
 });
+
+it('bounds both staff geography lists and preserves the browser filters and defaults', async () => {
+  const current = await actor();
+  const denied = await actor(false);
+  const base = `${http.base}/api/admin/geography/provinces`;
+  for (const [path, resultKey] of [
+    ['', 'provinces'],
+    [`/${province}/cities`, 'cities'],
+  ] as const) {
+    for (const query of [
+      'page=2extra',
+      'page=1.5',
+      'page=0',
+      'page=100001',
+      'page=1&page=2',
+      'limit=0',
+      'limit=101',
+      'status=unexpected',
+      `search=${'a'.repeat(513)}`,
+    ]) {
+      const response = await fetch(`${base}${path}?${query}`, { headers: current.headers });
+      expect(response.status, query).toBe(400);
+      expect(((await response.json()) as ErrorResponse).error).toEqual(
+        expect.objectContaining({ code: ErrorCodes.VALIDATION_INPUT_INVALID.code })
+      );
+    }
+    const blank = await fetch(`${base}${path}?search=&status=`, { headers: current.headers });
+    expect(blank.status).toBe(200);
+    expect(await blank.json()).toMatchObject({ page: 1, limit: 20 });
+    const bounded = await fetch(`${base}${path}?page=100000&limit=100&status=active`, {
+      headers: current.headers,
+    });
+    expect(bounded.status).toBe(200);
+    expect(await bounded.json()).toMatchObject({ [resultKey]: [], page: 100000, limit: 100 });
+    expect((await fetch(`${base}${path}?page=invalid`, { headers: denied.headers })).status).toBe(
+      403
+    );
+  }
+});
+
+it('checks geography IDs and scopes city reads and writes to the requested province', async () => {
+  const current = await actor();
+  const parent = (
+    await http.pool.query(
+      "INSERT INTO provinces(name_fa,name_en) VALUES ('استان دیگر','Other Province') RETURNING id"
+    )
+  ).rows[0].id as string;
+  const city = (
+    await http.pool.query(
+      "INSERT INTO cities(province_id,name_fa,name_en) VALUES ($1,'شهر دیگر','Other City') RETURNING id",
+      [parent]
+    )
+  ).rows[0].id as string;
+  const base = `${http.base}/api/admin/geography/provinces`;
+  const before = await counts(current.userId);
+  const config = (await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows;
+  const snapshot = (await http.pool.query('SELECT * FROM cities WHERE id=$1', [city])).rows;
+  for (const [path, method, status] of [
+    ['/bad-id', 'GET', 400],
+    ['/bad-id', 'PATCH', 400],
+    ['/bad-id', 'DELETE', 400],
+    ['/bad-id/cities', 'GET', 400],
+    [`/bad-id/cities/${city}`, 'PATCH', 400],
+    [`/${parent}/cities/bad-id`, 'GET', 400],
+    [`/${province}/cities/${city}`, 'GET', 404],
+    [`/${province}/cities/${city}`, 'PATCH', 404],
+    [`/${province}/cities/${city}`, 'DELETE', 404],
+  ] as const) {
+    const response = await fetch(`${base}${path}`, {
+      method,
+      headers: current.headers,
+      ...(method === 'PATCH' ? { body: JSON.stringify({ nameEn: 'Changed' }) } : {}),
+    });
+    expect(response.status, `${method} ${path}`).toBe(status);
+    expect(await response.text()).not.toContain('Other City');
+  }
+  expect(await counts(current.userId)).toEqual(before);
+  expect((await http.pool.query('SELECT * FROM config_version ORDER BY id')).rows).toEqual(config);
+  expect((await http.pool.query('SELECT * FROM cities WHERE id=$1', [city])).rows).toEqual(
+    snapshot
+  );
+  const cityUrl = `${base}/${parent}/cities/${city}`;
+  const correct = await fetch(cityUrl, { headers: current.headers });
+  expect(correct.status).toBe(200);
+  expect(await correct.json()).toMatchObject({
+    id: city,
+    provinceId: parent,
+    nameEn: 'Other City',
+  });
+  const renamed = await fetch(cityUrl, {
+    method: 'PATCH',
+    headers: current.headers,
+    body: JSON.stringify({ nameEn: 'Renamed City' }),
+  });
+  expect(renamed.status).toBe(200);
+  expect(await renamed.json()).toMatchObject({
+    id: city,
+    provinceId: parent,
+    nameEn: 'Renamed City',
+  });
+  const deactivated = await fetch(cityUrl, { method: 'DELETE', headers: current.headers });
+  expect(deactivated.status).toBe(200);
+  expect(await deactivated.json()).toEqual({ success: true });
+  expect(
+    (await http.pool.query('SELECT name_en,status FROM cities WHERE id=$1', [city])).rows
+  ).toEqual([{ name_en: 'Renamed City', status: 'inactive' }]);
+});
+
 it('rejects extra geography fields before creating, editing or importing rows', async () => {
   const current = await actor();
   const target = (

@@ -16668,7 +16668,7 @@
         "operationId": "AdminGeographyController_listProvinces",
         "parameters": [
           {
-            "description": "Search in Persian/English name",
+            "description": "Search in Persian/English name (max: 512 characters)",
             "in": "query",
             "name": "search",
             "required": false,
@@ -16686,7 +16686,7 @@
             }
           },
           {
-            "description": "Page number (default: 1)",
+            "description": "Page number (default: 1, max: 100000)",
             "in": "query",
             "name": "page",
             "required": false,
@@ -16833,7 +16833,7 @@
             }
           },
           {
-            "description": "Search in Persian/English name",
+            "description": "Search in Persian/English name (max: 512 characters)",
             "in": "query",
             "name": "search",
             "required": false,
@@ -16851,7 +16851,7 @@
             }
           },
           {
-            "description": "Page number (default: 1)",
+            "description": "Page number (default: 1, max: 100000)",
             "in": "query",
             "name": "page",
             "required": false,
@@ -16944,6 +16944,14 @@
         "parameters": [
           {
             "in": "path",
+            "name": "provinceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
             "name": "id",
             "required": true,
             "schema": {
@@ -16969,6 +16977,14 @@
         "parameters": [
           {
             "in": "path",
+            "name": "provinceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
             "name": "id",
             "required": true,
             "schema": {
@@ -16992,6 +17008,14 @@
       "patch": {
         "operationId": "AdminGeographyController_updateCity",
         "parameters": [
+          {
+            "in": "path",
+            "name": "provinceId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "in": "path",
             "name": "id",

@@ -17966,11 +17966,11 @@ export interface operations {
     AdminGeographyController_listProvinces: {
         parameters: {
             query?: {
-                /** @description Search in Persian/English name */
+                /** @description Search in Persian/English name (max: 512 characters) */
                 search?: string;
                 /** @description Filter by status (active/inactive) */
                 status?: string;
-                /** @description Page number (default: 1) */
+                /** @description Page number (default: 1, max: 100000) */
                 page?: string;
                 /** @description Items per page (default: 20, max: 100) */
                 limit?: string;
@@ -18127,11 +18127,11 @@ export interface operations {
     AdminGeographyController_listCities: {
         parameters: {
             query?: {
-                /** @description Search in Persian/English name */
+                /** @description Search in Persian/English name (max: 512 characters) */
                 search?: string;
                 /** @description Filter by status (active/inactive) */
                 status?: string;
-                /** @description Page number (default: 1) */
+                /** @description Page number (default: 1, max: 100000) */
                 page?: string;
                 /** @description Items per page (default: 20, max: 100) */
                 limit?: string;
@@ -18225,6 +18225,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                provinceId: string;
                 id: string;
             };
             cookie?: never;
@@ -18252,6 +18253,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                provinceId: string;
                 id: string;
             };
             cookie?: never;
@@ -18279,6 +18281,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
+                provinceId: string;
                 id: string;
             };
             cookie?: never;
