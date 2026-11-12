@@ -74,6 +74,10 @@ import {
 import type { StorageProvider } from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { streamReceiptPreview } from '../documents/document-preview.js';
+import {
+  loadReceiptAttachments,
+  type ReceiptAttachmentEvidence,
+} from '../finance/receipt-attachment-access.js';
 import { InvoiceAuditRepository } from '../invoice/invoice-audit.repository.js';
 import { InvoiceStateMachineService } from '../invoice/invoice-state-machine.service.js';
 import { isInvoiceState, type InvoiceState } from '../invoice/invoice-state.model.js';
@@ -254,8 +258,15 @@ export class BankReceiptConfirmationService {
     );
     const items: BankReceiptReviewDto[] = [];
     const page = result.rows.slice(0, 25) as Array<LedgerRow & { cursor_at: string }>;
+    const attachments = this.storage
+      ? await loadReceiptAttachments(
+          pool,
+          'wallet',
+          page.map((row) => row.id)
+        )
+      : new Map<string, ReceiptAttachmentEvidence>();
     for (const row of page) {
-      items.push(await this.toDto(row));
+      items.push(await this.toDto(row, { attachment: attachments.get(row.id) ?? null }));
     }
     const last = page.at(-1);
     return {
@@ -282,23 +293,12 @@ export class BankReceiptConfirmationService {
   }
 
   async previewAttachment(transactionId: string) {
-    const receipt = (
-      await getDbPool().query<{ key: string | null; mime: string | null }>(
-        `SELECT s.storage_key AS key, s.content_type AS mime
-         FROM wallet_transactions t
-         LEFT JOIN storage_records s ON s.storage_key=COALESCE(t.receipt_attachment_key,t.metadata#>>'{receipt,attachmentKey}')
-           AND s.status='immutable'
-         WHERE t.id=$1::uuid AND t.type='topup' AND t.metadata->>'channel'='bank_receipt'
-           AND NOT (t.metadata ? 'pendingTransactionId')`,
-        [transactionId]
-      )
-    ).rows[0];
-    if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
-    return streamReceiptPreview(
-      this.storage,
-      `wallet-receipt-${transactionId.toLowerCase()}`,
-      receipt
+    transactionId = transactionId.toLowerCase();
+    const receipt = (await loadReceiptAttachments(getDbPool(), 'wallet', [transactionId])).get(
+      transactionId
     );
+    if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
+    return streamReceiptPreview(this.storage, `wallet-receipt-${transactionId}`, receipt);
   }
 
   async previewAllocation(
@@ -449,10 +449,14 @@ export class BankReceiptConfirmationService {
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           return {
-            ...(await this.toDto(pending, {
-              creditTransactionId: existing?.id ?? existingOverpayment?.id ?? null,
-              overpayment,
-            })),
+            ...(await this.toDto(
+              pending,
+              {
+                creditTransactionId: existing?.id ?? existingOverpayment?.id ?? null,
+                overpayment,
+              },
+              client
+            )),
             ...(input.expectedReviewHash !== undefined
               ? { reviewHash: input.expectedReviewHash }
               : {}),
@@ -527,7 +531,7 @@ export class BankReceiptConfirmationService {
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
           return {
-            ...(await this.toDto(pending, { dualApproval: approval })),
+            ...(await this.toDto(pending, { dualApproval: approval }, client)),
             ...(financialReview ? { reviewHash: financialReview.hash } : {}),
           };
         }
@@ -634,12 +638,16 @@ export class BankReceiptConfirmationService {
             : `Bank receipt top-up ${pending.id} credited as ${creditId} for wallet ${privateLogId('profile', pending.walletId)}`
         );
         return {
-          ...(await this.toDto(updated, {
-            creditTransactionId: creditId,
-            overpayment,
-            auditId,
-            ...(notificationOutboxId ? { notificationOutboxId } : {}),
-          })),
+          ...(await this.toDto(
+            updated,
+            {
+              creditTransactionId: creditId,
+              overpayment,
+              auditId,
+              ...(notificationOutboxId ? { notificationOutboxId } : {}),
+            },
+            client
+          )),
           ...(financialReview ? { reviewHash: financialReview.hash } : {}),
         };
       } catch (error) {
@@ -685,7 +693,7 @@ export class BankReceiptConfirmationService {
           if (existing?.reason === parsed.reason) {
             await requireSessionStepUp(client, actor);
             await client.query('COMMIT');
-            return this.toDto(pending);
+            return await this.toDto(pending, {}, client);
           }
           await client.query('ROLLBACK');
           httpError(
@@ -775,10 +783,14 @@ export class BankReceiptConfirmationService {
         this.logger.log(
           `Bank receipt top-up ${pending.id} rejected for wallet ${privateLogId('profile', pending.walletId)}`
         );
-        return this.toDto(updated, {
-          auditId,
-          ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
-        });
+        return await this.toDto(
+          updated,
+          {
+            auditId,
+            ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
+          },
+          client
+        );
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined);
         throw error;
@@ -1255,12 +1267,14 @@ export class BankReceiptConfirmationService {
   private async toDto(
     row: LedgerRow,
     extra: {
+      attachment?: ReceiptAttachmentEvidence | null;
       dualApproval?: WalletReceiptApproval | null;
       creditTransactionId?: string | null;
       overpayment?: BankReceiptOverpaymentSnapshot | null;
       auditId?: string;
       notificationOutboxId?: string;
-    } = {}
+    } = {},
+    client: WalletQueryClient = getDbPool()
   ): Promise<BankReceiptReviewDto> {
     const receipt = readReceiptDetails(row.metadata);
     const attachmentKey = row.receipt_attachment_key ?? receipt?.attachmentKey ?? null;
@@ -1281,7 +1295,7 @@ export class BankReceiptConfirmationService {
       paymentDate: receipt?.paymentDate ?? null,
       payerReference: receipt?.payerReference ?? null,
       attachmentKey,
-      attachmentUrl: await this.signAttachmentUrl(row.id, attachmentKey),
+      attachmentUrl: await this.signAttachmentUrl(row.id, client, extra.attachment),
       customerNote: receipt?.customerNote ?? null,
       bankName: receipt?.bankName ?? null,
       submittedAt: toIso(row.created_at),
@@ -1304,12 +1318,18 @@ export class BankReceiptConfirmationService {
 
   private async signAttachmentUrl(
     receiptId: string,
-    attachmentKey: string | null
+    client: WalletQueryClient,
+    attachment: ReceiptAttachmentEvidence | null | undefined
   ): Promise<string | null> {
-    if (!attachmentKey || !this.storage) return null;
+    if (!this.storage) return null;
     try {
+      const evidence =
+        attachment === undefined
+          ? (await loadReceiptAttachments(client, 'wallet', [receiptId])).get(receiptId)
+          : attachment;
+      if (!evidence?.key) return null;
       return await this.storage.presignedGetUrl(
-        attachmentKey,
+        evidence.key,
         ATTACHMENT_URL_TTL_SECONDS,
         'attachment'
       );

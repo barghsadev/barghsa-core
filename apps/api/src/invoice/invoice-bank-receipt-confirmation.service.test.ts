@@ -281,6 +281,8 @@ function script(opts: ScriptOptions = {}) {
   });
 
   mockPool.query.mockImplementation(async (sql: string) => {
+    if (sql.startsWith('WITH receipts AS'))
+      return { rows: [{ id: RECEIPT_ID, key: ATTACHMENT, mime: 'application/pdf' }] };
     if (sql.includes("->> 'remainingBefore' AS remaining_before")) {
       return { rows: [{ remaining_before: opts.recordedRemaining }] };
     }

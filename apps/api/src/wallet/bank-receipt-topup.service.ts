@@ -1,4 +1,5 @@
 import type { PoolClient } from 'pg';
+import { v7 as uuidv7 } from 'uuid';
 import { withCopyTransaction } from '../storage/storage-copy-transaction.js';
 import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
@@ -445,19 +446,21 @@ export class BankReceiptTopUpService {
           throw new ConflictException('Bank receipt upload changed; review it again');
         this.reviews.assertConfirmed(review, initial.review.hash);
         await enforceProfileFinancialRateLimit(client, 'top-up', canonicalWalletId);
+        const receiptId = uuidv7();
         await persistSealedBankReceipt(
           client,
           actor.userId,
           receipt.attachmentKey,
           storageRow,
-          sealed
+          sealed,
+          { receiptId, profileId: canonicalWalletId, flow: 'wallet' }
         );
         const sealedReceipt = { ...receipt, attachmentKey: sealed.sealedKey };
 
         const txResult = await client.query(
           `INSERT INTO wallet_transactions
-             (wallet_id, type, amount, state, idempotency_key, description, metadata, receipt_attachment_key)
-           VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb, $6)
+             (wallet_id, type, amount, state, idempotency_key, description, metadata, receipt_attachment_key, id)
+           VALUES ($1, 'topup', $2::bigint, 'Pending', $3, $4, $5::jsonb, $6, $7::uuid)
            RETURNING *`,
           [
             canonicalWalletId,
@@ -469,6 +472,7 @@ export class BankReceiptTopUpService {
               ...(expectedReviewHash ? { financialReview: review } : {}),
             }),
             sealed.sealedKey,
+            receiptId,
           ]
         );
 

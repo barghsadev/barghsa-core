@@ -2984,6 +2984,30 @@ it('keeps staff receipt previews private and downloads both originals as attachm
     expect(download.headers.get('content-disposition')).toBe('attachment');
     expect(Buffer.from(await download.arrayBuffer())).toEqual(bytes);
   }
+  const invoicePath = `invoices/${invoiceId}/bank-receipts/${receiptId}`;
+  const walletPath = `wallet/${f.profile}/bank-receipt-top-ups/${transactionId}`;
+  const binding = { receiptId, profileId: f.profile, flow: 'invoice' };
+  await http.pool.query('UPDATE storage_records SET metadata=$2::jsonb WHERE storage_key=$1', [
+    key,
+    JSON.stringify({ receiptBinding: binding }),
+  ]);
+  const authorized = await fetch(`${http.base}/api/${invoicePath}/attachment`, {
+    headers: headers[f.user]!,
+    redirect: 'manual',
+  });
+  expect(authorized.status, await authorized.clone().text()).toBe(302);
+  expect(
+    Buffer.from(await (await fetch(authorized.headers.get('location')!)).arrayBuffer())
+  ).toEqual(bytes);
+  expect((await send(`${paths[0]}/attachment-preview`, finance)).status).toBe(200);
+  expect((await send(`${paths[1]}/attachment-preview`, finance)).status).toBe(503);
+  expect(await (await send(paths[1]!, finance)).json()).toMatchObject({ attachmentUrl: null });
+  expect((await send(`${walletPath}/preview`, f.user)).status).toBe(503);
+  expect((await send(`${walletPath}/attachment`, f.user)).status).toBe(503);
+  await http.pool.query("UPDATE storage_records SET status='active' WHERE storage_key=$1", [key]);
+  expect((await send(`${invoicePath}/preview`, f.user)).status).toBe(503);
+  expect((await send(`${invoicePath}/attachment`, f.user)).status).toBe(503);
+  expect(await (await send(paths[0]!, finance)).json()).toMatchObject({ attachmentUrl: null });
   await http.pool.query('DELETE FROM user_roles WHERE user_id=$1 AND role_id=$2', [
     finance,
     'role-finance',

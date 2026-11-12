@@ -20,6 +20,7 @@ import {
 } from '../upload/content-type-sniffer.js';
 import { requireCleanUpload } from '../upload/require-clean-upload.js';
 import type { WalletQueryClient } from '../wallet/wallet.service.js';
+import type { ReceiptAttachmentBinding } from './receipt-attachment-access.js';
 export interface StorageLockRow {
   status: string;
   metadata: unknown;
@@ -129,7 +130,8 @@ export async function persistSealedBankReceipt(
   actorId: string,
   originalKey: string,
   original: StorageLockRow,
-  sealed: SealedAttachment
+  sealed: SealedAttachment,
+  binding: ReceiptAttachmentBinding
 ): Promise<void> {
   const originalMetadata = metadataRecord(original.metadata);
   originalMetadata.sealedAttachmentKey = sealed.sealedKey;
@@ -172,6 +174,7 @@ export async function persistSealedBankReceipt(
         ...originalMetadata,
         sourceAttachmentKey: originalKey,
         sealedAttachmentKey: sealed.sealedKey,
+        receiptBinding: binding,
       }),
       sealed.bytes.byteLength,
       sealed.detectedContentType,

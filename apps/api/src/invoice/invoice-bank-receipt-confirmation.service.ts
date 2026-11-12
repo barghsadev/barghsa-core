@@ -2,6 +2,10 @@ import { privateLogId } from '@barghsa/shared/log-privacy';
 import { InputFieldException } from '../common/input-field.exception.js';
 import { receiptActivityActor } from '../finance/receipt-activity-actor.js';
 import { receiptStatusHistory, type ReceiptStatusHistoryEntry } from './receipt-status-history.js';
+import {
+  loadReceiptAttachments,
+  type ReceiptAttachmentEvidence,
+} from '../finance/receipt-attachment-access.js';
 import { invoiceBankReceiptCreditScopeSql } from './invoice-bank-receipt-credit-scope.js';
 import type { ReceiptQueueQuery, ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { literalSearchPattern, type HistorySort } from '@barghsa/shared/validation';
@@ -288,12 +292,20 @@ export class InvoiceBankReceiptConfirmationService {
       pool,
       page.map((row) => row.id)
     );
+    const attachments = this.storage
+      ? await loadReceiptAttachments(
+          pool,
+          'invoice',
+          page.map((row) => row.id)
+        )
+      : new Map<string, ReceiptAttachmentEvidence>();
     const thresholdRead = await this.loadDualApprovalThreshold(pool);
     for (const row of page) {
       const pending = dualByReceipt.get(row.id);
       items.push(
         await this.toDto(row, {
           ...dualApprovalExtrasFromRead(thresholdRead, BigInt(row.amount), pending),
+          attachment: attachments.get(row.id) ?? null,
         })
       );
     }
@@ -397,17 +409,12 @@ export class InvoiceBankReceiptConfirmationService {
   }
 
   async previewAttachment(receiptId: string) {
-    const receipt = (
-      await getDbPool().query<{ key: string | null; mime: string | null }>(
-        `SELECT s.storage_key AS key, s.content_type AS mime
-         FROM bank_receipts r
-         LEFT JOIN storage_records s ON s.storage_key=r.attachment_key AND s.status='immutable'
-         WHERE r.id=$1::uuid`,
-        [receiptId]
-      )
-    ).rows[0];
+    receiptId = receiptId.toLowerCase();
+    const receipt = (await loadReceiptAttachments(getDbPool(), 'invoice', [receiptId])).get(
+      receiptId
+    );
     if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
-    return streamReceiptPreview(this.storage, `receipt-${receiptId.toLowerCase()}`, receipt);
+    return streamReceiptPreview(this.storage, `receipt-${receiptId}`, receipt);
   }
 
   private async financialReview(
@@ -585,7 +592,7 @@ export class InvoiceBankReceiptConfirmationService {
           const extra = await this.loadConfirmedAllocation(client, receipt);
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
-          return this.toDto(receipt, extra);
+          return await this.toDto(receipt, extra, client);
         }
 
         if (receipt.state === 'Rejected') {
@@ -654,9 +661,13 @@ export class InvoiceBankReceiptConfirmationService {
           const parked = await this.ensureUnderReview(client, receipt.id, input.actorUserId);
           await requireSessionStepUp(client, actor);
           await client.query('COMMIT');
-          return this.toDto(parked, {
-            ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
-          });
+          return await this.toDto(
+            parked,
+            {
+              ...dualApprovalExtrasFromRead(thresholdRead, receipt.amount, latestRequest),
+            },
+            client
+          );
         }
         const financialReview = input.expectedReviewHash
           ? await this.financialReview(
@@ -851,14 +862,18 @@ export class InvoiceBankReceiptConfirmationService {
           `Invoice bank receipt ${receipt.id} confirmed against invoice ${invoice.id}`
         );
         const destination = invoiceStateAfterConfirm(invoice, allocation.invoiceAllocation);
-        return this.toDto(updated, {
-          overpayment,
-          auditId,
-          invoiceState: destination,
-          remaining: remainingAfter(remaining, allocation.invoiceAllocation),
-          ...dualSettled,
-          dualApprovalPending: false,
-        });
+        return await this.toDto(
+          updated,
+          {
+            overpayment,
+            auditId,
+            invoiceState: destination,
+            remaining: remainingAfter(remaining, allocation.invoiceAllocation),
+            ...dualSettled,
+            dualApprovalPending: false,
+          },
+          client
+        );
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined);
         throw error;
@@ -901,7 +916,7 @@ export class InvoiceBankReceiptConfirmationService {
           if (receipt.rejection_reason === parsed.reason) {
             await requireSessionStepUp(client, actor);
             await client.query('COMMIT');
-            return this.toDto(receipt);
+            return await this.toDto(receipt, {}, client);
           }
           await client.query('ROLLBACK');
           httpError(
@@ -991,10 +1006,14 @@ export class InvoiceBankReceiptConfirmationService {
         this.logger.log(
           `Invoice bank receipt ${receipt.id} rejected against invoice ${receipt.invoiceId}`
         );
-        return this.toDto(updated, {
-          auditId,
-          ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
-        });
+        return await this.toDto(
+          updated,
+          {
+            auditId,
+            ...(notify.outboxId ? { notificationOutboxId: notify.outboxId } : {}),
+          },
+          client
+        );
       } catch (error) {
         await client.query('ROLLBACK').catch(() => undefined);
         throw error;
@@ -1072,9 +1091,13 @@ export class InvoiceBankReceiptConfirmationService {
       initiatorId: input.actorUserId,
       status: 'pending',
     };
-    return this.toDto(parked, {
-      ...dualApprovalExtrasFromRead(input.thresholdRead, input.receipt.amount, pending),
-    });
+    return this.toDto(
+      parked,
+      {
+        ...dualApprovalExtrasFromRead(input.thresholdRead, input.receipt.amount, pending),
+      },
+      client
+    );
   }
 
   private async assertApprovalBinding(
@@ -1815,6 +1838,7 @@ export class InvoiceBankReceiptConfirmationService {
   private async toDto(
     row: BankReceiptRow,
     extra: {
+      attachment?: ReceiptAttachmentEvidence | null;
       overpayment?: BankReceiptOverpaymentSnapshot | null;
       auditId?: string;
       invoiceState?: string | null;
@@ -1825,7 +1849,8 @@ export class InvoiceBankReceiptConfirmationService {
       dualApprovalRequestId?: string | null;
       dualApprovalInitiatedBy?: string | null;
       dualApprovalThresholdIrR?: string | null;
-    } = {}
+    } = {},
+    client: WalletQueryClient = getDbPool()
   ): Promise<InvoiceBankReceiptConfirmDto> {
     const overpayment = extra.overpayment ?? null;
     return {
@@ -1839,7 +1864,7 @@ export class InvoiceBankReceiptConfirmationService {
       payerReference: row.payer_reference,
       bankName: row.bank_name ?? null,
       attachmentKey: row.attachment_key,
-      attachmentUrl: await this.signAttachmentUrl(row.id, row.attachment_key),
+      attachmentUrl: await this.signAttachmentUrl(row.id, client, extra.attachment),
       customerNote: row.customer_note,
       submittedAt: toIso(row.created_at),
       canConfirm: isInvoiceBankReceiptConfirmableState(row.state),
@@ -1864,12 +1889,18 @@ export class InvoiceBankReceiptConfirmationService {
 
   private async signAttachmentUrl(
     receiptId: string,
-    attachmentKey: string | null
+    client: WalletQueryClient,
+    attachment: ReceiptAttachmentEvidence | null | undefined
   ): Promise<string | null> {
-    if (!attachmentKey || !this.storage) return null;
+    if (!this.storage) return null;
     try {
+      const evidence =
+        attachment === undefined
+          ? (await loadReceiptAttachments(client, 'invoice', [receiptId])).get(receiptId)
+          : attachment;
+      if (!evidence?.key) return null;
       return await this.storage.presignedGetUrl(
-        attachmentKey,
+        evidence.key,
         ATTACHMENT_URL_TTL_SECONDS,
         'attachment'
       );

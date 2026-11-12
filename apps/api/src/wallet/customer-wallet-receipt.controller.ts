@@ -1,3 +1,4 @@
+import { loadReceiptAttachments } from '../finance/receipt-attachment-access.js';
 import {
   Controller,
   Get,
@@ -136,16 +137,11 @@ export class CustomerWalletReceiptController {
       const active = await client.query(activeProfileSql('wallet:view'), [req.session.userId]);
       if (active.rows[0]?.id !== profileId) throw new NotFoundException('No active profile');
       const receipt = (
-        await client.query<{ key: string | null; mime: string | null }>(
-          `SELECT s.storage_key AS key, s.content_type AS mime
-         FROM wallet_transactions t
-         LEFT JOIN storage_records s ON s.storage_key=COALESCE(t.receipt_attachment_key,t.metadata#>>'{receipt,attachmentKey}') AND s.status='immutable'
-         WHERE t.id=$1::uuid AND t.wallet_id=$2::uuid AND t.type='topup'
-           AND t.state<>'Completed' AND t.metadata->>'channel'='bank_receipt'
-           AND NOT (t.metadata ? 'pendingTransactionId')`,
-          [receiptId, profileId]
-        )
-      ).rows[0];
+        await loadReceiptAttachments(client, 'wallet', [receiptId], {
+          profileId,
+          customerWallet: true,
+        })
+      ).get(receiptId);
       if (!receipt) throw new NotFoundException('Bank receipt not found');
       const storage = this.storage;
       if (!storage || !receipt.key)

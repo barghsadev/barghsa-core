@@ -29,6 +29,11 @@ const sealed = {
   detectedContentType: 'application/pdf',
   category: 'document' as const,
 };
+const binding = {
+  receiptId: '11111111-1111-7111-8111-111111111111',
+  profileId: '22222222-2222-7222-8222-222222222222',
+  flow: 'invoice',
+} as const;
 function fixture() {
   const client = {
     query: vi.fn(
@@ -107,10 +112,16 @@ it.each([
   'sealing preserves valid metadata and discards invalid metadata %j',
   async (metadata, expected) => {
     const { client } = fixture();
-    await persistSealedBankReceipt(client, 'actor', key, { ...row, metadata }, sealed);
+    await persistSealedBankReceipt(client, 'actor', key, { ...row, metadata }, sealed, binding);
     const saved = JSON.parse(String(client.query.mock.calls[0]![1]?.[4]));
     expect(saved).toEqual({ ...(expected as object), sealedAttachmentKey: 'sealed-copy' });
     expect(client.query).toHaveBeenCalledTimes(2);
+    expect(JSON.parse(String(client.query.mock.calls[1]![1]?.[1]))).toEqual({
+      ...(expected as object),
+      sealedAttachmentKey: 'sealed-copy',
+      sourceAttachmentKey: key,
+      receiptBinding: binding,
+    });
   }
 );
 it.each([0, null])(
@@ -118,9 +129,9 @@ it.each([0, null])(
   async (rowCount) => {
     const { client } = fixture();
     client.query.mockResolvedValue({ rows: [], rowCount });
-    await expect(persistSealedBankReceipt(client, 'actor', key, row, sealed)).rejects.toMatchObject(
-      { status: 400 }
-    );
+    await expect(
+      persistSealedBankReceipt(client, 'actor', key, row, sealed, binding)
+    ).rejects.toMatchObject({ status: 400 });
     expect(client.query).toHaveBeenCalledTimes(1);
   }
 );

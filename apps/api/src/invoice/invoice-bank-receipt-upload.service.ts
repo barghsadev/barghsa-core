@@ -363,15 +363,16 @@ export class InvoiceBankReceiptUploadService {
           throw new ConflictException('Bank receipt upload changed; review it again');
         this.reviews.assertConfirmed(review, initial.review.hash);
         await enforceProfileFinancialRateLimit(client, 'payment', invoice.profile_id);
+        const receiptId = uuidv7();
         await persistSealedBankReceipt(
           client,
           actor.userId,
           receipt.attachmentKey,
           storageRow,
-          sealed
+          sealed,
+          { receiptId, profileId: invoice.profile_id, flow: 'invoice' }
         );
 
-        const receiptId = uuidv7();
         await receiptActivityActor(client, receiptId, actor.userId, 'customer');
         const inserted = await client.query(
           `INSERT INTO bank_receipts

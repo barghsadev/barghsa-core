@@ -1,3 +1,4 @@
+import { loadReceiptAttachments } from '../finance/receipt-attachment-access.js';
 import {
   loadCustomerInvoiceActivity,
   type CustomerInvoiceActivity,
@@ -682,22 +683,18 @@ export class CustomerInvoiceDetailsService {
     return this.authorizedRead(userId, actor, async (profileId, client) => {
       if (!(await this.loadInvoice(invoiceId, profileId, client)))
         httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Invoice not found', 404);
+      receiptId = receiptId.toLowerCase();
       const receipt = (
-        await client.query<{ attachmentKey: string; mime: string | null }>(
-          `SELECT r.attachment_key AS "attachmentKey", s.content_type AS mime
-           FROM bank_receipts r LEFT JOIN storage_records s ON s.storage_key=r.attachment_key AND s.status='immutable'
-          WHERE r.id=$1::uuid AND r.invoice_id=$2::uuid AND r.profile_id=$3::uuid`,
-          [receiptId, invoiceId, profileId]
-        )
-      ).rows[0];
+        await loadReceiptAttachments(client, 'invoice', [receiptId], { invoiceId, profileId })
+      ).get(receiptId);
       if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
-      if (!this.storage || !receipt.mime)
+      if (!this.storage || !receipt.key || !receipt.mime)
         throw new ServiceUnavailableException('Receipt preview is unavailable');
       try {
         const key = await ensureDocumentPreview(
           this.storage,
-          `receipt-${receiptId.toLowerCase()}`,
-          receipt.attachmentKey,
+          `receipt-${receiptId}`,
+          receipt.key,
           receipt.mime
         );
         return await readPreviewObject(this.storage, key, 5 * 1024 * 1024);
@@ -717,17 +714,15 @@ export class CustomerInvoiceDetailsService {
     return this.authorizedRead(userId, actor, async (profileId, client) => {
       if (!(await this.loadInvoice(invoiceId, profileId, client)))
         httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Invoice not found', 404);
+      receiptId = receiptId.toLowerCase();
       const receipt = (
-        await client.query<{ attachment_key: string }>(
-          `SELECT attachment_key FROM bank_receipts
-           WHERE id=$1::uuid AND invoice_id=$2::uuid AND profile_id=$3::uuid`,
-          [receiptId, invoiceId, profileId]
-        )
-      ).rows[0];
+        await loadReceiptAttachments(client, 'invoice', [receiptId], { invoiceId, profileId })
+      ).get(receiptId);
       if (!receipt) httpError(ErrorCodes.NOT_FOUND_RESOURCE.code, 'Bank receipt not found', 404);
-      if (!this.storage) throw new ServiceUnavailableException('Receipt storage is unavailable');
+      if (!this.storage || !receipt.key)
+        throw new ServiceUnavailableException('Receipt attachment is unavailable');
       try {
-        return await this.storage.presignedGetUrl(receipt.attachment_key, 300, 'attachment');
+        return await this.storage.presignedGetUrl(receipt.key, 300, 'attachment');
       } catch {
         throw new ServiceUnavailableException('Receipt attachment is unavailable');
       }
