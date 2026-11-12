@@ -115,6 +115,13 @@ and notification receipt counts when all requests complete, including when
 the latency gate fails. An isolated run establishes a regression
 baseline. Production-topology load and recovery require separate evidence.
 
+The same weekly workflow runs mutation tests for invoice adjustments, bank
+receipt allocation and wallet reconciliation. The maintenance artifact records
+which mutations the existing tests detected and which survived. Review the
+surviving mutations alongside the dependency update candidates for the same
+source SHA. Dependency updates follow the protected direct-to-main review and
+checks. The workflow generates a report for that review.
+
 For a local smoke run, install k6 v2.3.0 and run the dedicated Vitest
 configuration with `BARGHSA_PERFORMANCE_SMOKE=1`,
 `BARGHSA_PERFORMANCE_SHA=$(git rev-parse HEAD)` and a local disposable Docker
