@@ -1,0 +1,39 @@
+name: Verify quarterly access inventory
+on:
+  push:
+    branches: ['codex/verify/v06-quarterly-access-*']
+
+permissions:
+  contents: read
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the exact fixture runtime
+        run: pnpm exec turbo run build --filter=@barghsa/db
+      - name: Exercise the access inventory against production migrations
+        shell: bash
+        env:
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/db exec vitest run --reporter=verbose src/quarterly-access-review.migrated.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/native-quarterly-access.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-quarterly-access
+          path: ${{ runner.temp }}/native-quarterly-access.log
+          retention-days: 14
