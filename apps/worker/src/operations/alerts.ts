@@ -22,6 +22,9 @@ const labels: Record<string, string> = {
   PaymentIdempotencyConflict: 'مغایرت در تلاش دوباره پرداخت / Payment retry data mismatch',
   AiModelCircuitOpen: 'مدل هوش مصنوعی در دسترس نیست / AI model unavailable',
   WorkerUnavailable: 'پردازشگر پس‌زمینه در دسترس نیست / Background worker unavailable',
+  ApplicationDatabasePoolSaturated:
+    'اشباع ظرفیت اتصال پایگاه داده / Application database pool saturated',
+  CriticalApiRouteErrors: 'افزایش خطا در مسیر حیاتی / Elevated critical API route errors',
   JourneyErrorBudgetFastBurn: 'افت سریع دسترس‌پذیری خدمت / Rapid loss of service availability',
   JourneyErrorBudgetSlowBurn:
     'افت پایدار دسترس‌پذیری خدمت / Sustained loss of service availability',
@@ -46,6 +49,27 @@ const syntheticCheckNames: Record<string, string> = {
   account: 'حساب آزمایشی / Test account',
   logout: 'خروج / Sign-out',
 };
+const criticalApiRoutes = new Set([
+  'GET /api/electricity/orders',
+  'GET /api/electricity/orders/:orderId',
+  'GET /api/saving/orders',
+  'GET /api/saving/orders/:id',
+  'GET /api/solar/requests',
+  'GET /api/solar/requests/:id',
+  'GET /api/consultations/requests',
+  'GET /api/consultations/requests/:id',
+  'GET /api/invoices',
+  'GET /api/wallet/:profileId',
+  'POST /api/electricity/orders/simple',
+  'POST /api/electricity/orders/advanced',
+  'POST /api/saving/orders',
+  'POST /api/solar/requests',
+  'POST /api/consultations/requests',
+  'POST /api/consultations/requests/:id/accept',
+  'POST /api/invoices/:invoiceId/wallet-payment',
+  'POST /api/wallet/:profileId/top-ups',
+  'POST /api/wallet/top-ups/callback',
+]);
 const criticalAlerts = new Set([
   'NotificationDeadLettersAccumulating',
   'NotificationOutboxBacklogCritical',
@@ -68,6 +92,8 @@ const alertPriorities = new Map<string, 'P1' | 'P2'>([
   ['WalletReconciliationCritical', 'P1'],
   ['PaymentCallbackAnomaly', 'P1'],
   ['PaymentIdempotencyConflict', 'P1'],
+  ['ApplicationDatabasePoolSaturated', 'P2'],
+  ['CriticalApiRouteErrors', 'P2'],
   ['JourneyErrorBudgetFastBurn', 'P1'],
   ['JourneyErrorBudgetSlowBurn', 'P2'],
   ['SyntheticProbeFailed', 'P1'],
@@ -87,6 +113,7 @@ type Alert = {
   priority: 'P1' | 'P2' | null;
   service?: string;
   syntheticCheck?: string;
+  criticalApiRoute?: string;
 };
 
 export function parseOperationsAlerts(
@@ -113,6 +140,12 @@ export function parseOperationsAlerts(
       name === 'JourneyErrorBudgetFastBurn' || name === 'JourneyErrorBudgetSlowBurn';
     const service = journeyBurn ? source?.service : undefined;
     const syntheticCheck = name === 'SyntheticProbeFailed' ? source?.check : undefined;
+    const criticalApiRoute =
+      name === 'CriticalApiRouteErrors' &&
+      typeof source?.method === 'string' &&
+      typeof source.route === 'string'
+        ? `${source.method} ${source.route}`
+        : undefined;
     if (
       !source ||
       typeof name !== 'string' ||
@@ -129,6 +162,10 @@ export function parseOperationsAlerts(
       (name === 'SyntheticProbeFailed' &&
         (typeof syntheticCheck !== 'string' ||
           !Object.hasOwn(syntheticCheckNames, syntheticCheck))) ||
+      (name === 'CriticalApiRouteErrors' &&
+        (!criticalApiRoute ||
+          !criticalApiRoutes.has(criticalApiRoute) ||
+          (source.availability_tier !== 'pilot' && source.availability_tier !== 'commercial'))) ||
       (item.status !== 'firing' && item.status !== 'resolved') ||
       typeof item.fingerprint !== 'string' ||
       !/^[a-f0-9]{16,128}$/.test(item.fingerprint) ||
@@ -149,6 +186,7 @@ export function parseOperationsAlerts(
       priority,
       ...(typeof service === 'string' ? { service } : {}),
       ...(typeof syntheticCheck === 'string' ? { syntheticCheck } : {}),
+      ...(criticalApiRoute ? { criticalApiRoute } : {}),
     };
   });
 }
@@ -213,9 +251,11 @@ export async function publishOperationsAlerts(pool: Pool, alerts: Alert[]) {
         user_id: string;
       }>('SELECT user_id FROM public.lock_operations_alert_admins()');
       if (!admins.rowCount) throw new Error('Operations alert requires an active administrator');
-      const subject = alert.service
-        ? journeyNames[alert.service]
-        : alert.syntheticCheck && syntheticCheckNames[alert.syntheticCheck];
+      const subject =
+        alert.criticalApiRoute ??
+        (alert.service
+          ? journeyNames[alert.service]
+          : alert.syntheticCheck && syntheticCheckNames[alert.syntheticCheck]);
       const data = {
         alertReceiptId: id,
         alertStatus: alert.status,

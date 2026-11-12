@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T00:47:03+00:00",
+  "updated": "2026-11-12T01:04:06+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -25068,7 +25068,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             },
             {
               "path": "docs/runbooks/payment-wallet-mismatch.md",
@@ -25220,6 +25220,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -88018,7 +88026,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -88042,11 +88050,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -89769,6 +89777,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ],
           "presentation_renewals": [
@@ -92903,7 +92921,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -92923,11 +92941,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -93174,6 +93192,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ],
           "presentation_renewals": [
@@ -108481,7 +108509,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -108501,11 +108529,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -108843,6 +108871,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ],
           "presentation_renewals": [
@@ -491944,7 +491982,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -491960,11 +491998,11 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -492446,6 +492484,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ],
           "presentation_renewals": [
@@ -494210,7 +494258,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -494708,6 +494756,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ],
           "presentation_renewals": [
@@ -558721,7 +558777,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             },
             {
               "path": "packages/db/src/index.ts",
@@ -558808,6 +558864,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -558905,11 +558969,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             }
           ],
           "checks": [
@@ -559033,6 +559097,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -560461,11 +560534,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -560577,6 +560650,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -562780,7 +562862,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             },
             {
               "path": "docs/runbooks/bad-deployment.md",
@@ -562941,6 +563023,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -565400,7 +565490,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -565412,7 +565502,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             }
           ],
           "checks": [
@@ -565572,6 +565662,15 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -565838,7 +565937,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -566009,6 +566108,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -566116,7 +566223,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -566314,6 +566421,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -566395,11 +566510,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -566619,6 +566734,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -566689,7 +566813,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -566860,6 +566984,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -567084,7 +567216,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             }
           ],
           "checks": [
@@ -567214,6 +567346,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Added a protected Sentry deploy marker and moved the rollout receipt and single-write checks into a shared module. Original Grafana request/readback and marker logic matched in the scoped comparison. Six Grafana regressions passed and existing production runbook sections matched."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -567297,7 +567437,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -567309,7 +567449,7 @@
             },
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             }
           ],
           "checks": [
@@ -567452,6 +567592,15 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -567506,7 +567655,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -567582,6 +567731,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -567650,7 +567807,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -567799,6 +567956,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -568088,7 +568253,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -568182,6 +568347,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -568448,7 +568621,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
@@ -568597,6 +568770,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -568944,7 +569125,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -569025,6 +569206,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "Added only an opt-in heartbeat rule and separate route. The ordinary receiver, token mount, alert thresholds, grouping, inhibition, scrapes and prior runbook behavior matched. Native tests observed the original authenticated operations route and separate HTTPS heartbeat."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -569199,7 +569388,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -569372,6 +569561,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -569431,18 +569628,31 @@
         "story": "06-security-testing-observability.md#spec-e681e92bce32"
       },
       "requirement": "| T-06.15.01.03 | Configure P2 alerts: provider circuit-breaker open, queue age > target, database connection pool saturation, elevated error rate on critical routes | M |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "On the exact immutable candidate, verify collector ingestion and controlled firing and resolved receipts for application pool saturation and critical registered route errors. Confirm dashboard and runbook readback and approved operations recipient, response deadline and escalation.",
+        "Confirm P2 routing and firing and recovery evidence for the existing circuit-breaker and queue-age rules. Classify existing provider alerts by their stable names when required to preserve already persisted alert and dedup identities."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "apps/worker/src/operations/alerts.ts",
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "docs/operations/service-objectives.md",
+          "docs/runbooks/api-pressure.md"
+        ],
+        "batches": [
+          "release-0.6-api-pressure-alerts"
+        ],
         "current_acceptance": null
       }
     },
@@ -569550,7 +569760,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -569558,11 +569768,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -569709,6 +569919,16 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -569797,7 +570017,11 @@
           "deploy/monitoring/notification-alerts.yml",
           "deploy/monitoring/notification-alerts.test.yml",
           "docs/operations/service-objectives.md",
-          "packages/shared/src/notifications/operations-alert-links.test.ts"
+          "packages/shared/src/notifications/operations-alert-links.test.ts",
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "docs/runbooks/api-pressure.md"
         ],
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
@@ -569808,7 +570032,8 @@
           "release-0.6-grafana-supported-images-and-provisioning",
           "release-0.6-postgres-backup-alerts",
           "release-0.6-alert-delivery-watchdog",
-          "release-0.6-operational-budget-context"
+          "release-0.6-operational-budget-context",
+          "release-0.6-api-pressure-alerts"
         ],
         "current_acceptance": null
       }
@@ -569852,7 +570077,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/service-objectives.md",
-              "sha256": "dd495b95991a4e1ced5bc00682dc7fe8033d1cf923bac0b96a871194f05b434c"
+              "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
             },
             {
               "path": "architecture.md",
@@ -569963,6 +570188,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "docs/operations/service-objectives.md"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -570209,11 +570442,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -570418,6 +570651,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -570497,11 +570739,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -570721,6 +570963,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -570798,11 +571049,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -570988,6 +571239,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -571066,11 +571326,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -571102,7 +571362,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -571247,6 +571507,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -571321,11 +571591,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "063fdc8fa35c6593cdd56d90ca51e8bd73f55f7fe7acfb0e532bab7c052006d9"
+              "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "84a61b6539dc7dedce8ca3a2cee1f9f6d0ee4fb85b85085891bbcb09cc5bb4be"
+              "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -571369,7 +571639,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -571521,6 +571791,16 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -573072,7 +573352,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "6e0ac20b9f1511ed0e552f7d795fb71f34cd873582f233f87390415671a18a38"
+              "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -573201,6 +573481,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Seven existing operations alerts gained scoped availability budget context and a fixed dashboard link. Existing trigger expressions, priorities, recipient boundaries and other locale entries were verified. Targeted native delivery and bilingual rendering passed."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -574819,7 +575107,7 @@
             },
             {
               "path": "deploy/monitoring/staging-compose.yml",
-              "sha256": "1de502a23cd5e12860e4f543b4714cfe353e9231628dec7105bac1fac7f621a6"
+              "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -574936,6 +575224,14 @@
                 "deploy/monitoring/staging-compose.yml"
               ],
               "scope": "Adds one read-only backup rules bind. Compose validates the five rules and existing private stack."
+            },
+            {
+              "batch": "release-0.6-api-pressure-alerts",
+              "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+              "paths": [
+                "deploy/monitoring/staging-compose.yml"
+              ],
+              "scope": "Adds two P2 alert types with their own rules and fixed links. Original rules, routing, inbox resources, receipt persistence and native assertions matched their predecessor. All 34 native operations tests and three Prometheus rule suites passed."
             }
           ]
         }
@@ -869538,7 +869834,8 @@
           "release-0.6-development-bootstrap",
           "release-0.6-alert-delivery-watchdog",
           "release-0.6-operational-budget-context",
-          "release-0.6-sentry-deploy-marker"
+          "release-0.6-sentry-deploy-marker",
+          "release-0.6-api-pressure-alerts"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -869584,7 +869881,12 @@
           "deploy/production/release_evidence.py",
           "deploy/production/record-sentry-deploy.py",
           "deploy/production/test_sentry_deploy.py",
-          ".github/actions/sentry-release-deploy/action.yml"
+          ".github/actions/sentry-release-deploy/action.yml",
+          "deploy/monitoring/api-pressure-alerts.yml",
+          "deploy/monitoring/api-pressure-alerts.test.yml",
+          "deploy/monitoring/staging-compose.yml",
+          "apps/worker/src/operations/alerts.ts",
+          "docs/runbooks/api-pressure.md"
         ]
       }
     },
@@ -999256,6 +999558,195 @@
         {
           "file": "actionlint.log",
           "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "release-0.6-api-pressure-alerts": {
+      "batch": "release-0.6-api-pressure-alerts",
+      "base_commit": "30196264198b194f4fafa780356623e6450bc7a0",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.03",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-07.04.04",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.02.01",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.18.02.03"
+      ],
+      "changed_paths": [
+        "deploy/monitoring/api-pressure-alerts.yml",
+        "deploy/monitoring/api-pressure-alerts.test.yml",
+        "deploy/monitoring/staging-prometheus.yml",
+        "deploy/monitoring/staging-compose.yml",
+        "apps/worker/src/operations/alerts.ts",
+        "apps/worker/src/operations/alerts.integration.test.ts",
+        "packages/shared/src/notifications/operations-alert-links.ts",
+        "docs/operations/service-objectives.md",
+        "docs/runbooks/api-pressure.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.yml",
+          "sha256": "2e02037881694a083cc6242aeeb6212b820c9fccf1c93debbd5a09d016feee07"
+        },
+        {
+          "path": "deploy/monitoring/api-pressure-alerts.test.yml",
+          "sha256": "90f9ca9af48310a5489a2f254ee1d9af26cf954a60a6e5b036eee11f7a041c3d"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "9233a2a71cf33e030ae5c11395b1685acd93527bbfae995eda182510baf4944c"
+        },
+        {
+          "path": "deploy/monitoring/staging-compose.yml",
+          "sha256": "5af1cd7a8308e5bbabce35b7d7b4038479c566fadd82936c639c4e24611bf9ce"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "327093668463caece57e6414c8f636d28546f8574ce0f6a0f324c98cbed493a3"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "d9e4eb7bf3cbc652d01bb9b5ef4bc89faa516706c484a66af0368211b9ce9bbe"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "fa2251d51935922d3172cb95664ee16d4966521a292ddab9e3b597014100932f"
+        },
+        {
+          "path": "docs/operations/service-objectives.md",
+          "sha256": "ea1d95b2125adaa634730153e06a5c8c3323400fe7e5b77399eaab0f7c9619eb"
+        },
+        {
+          "path": "docs/runbooks/api-pressure.md",
+          "sha256": "ad715a7884bf5bd4ae966a12f081c2d7e9ba7047ed0f7d18f76d4fbcfe332c33"
+        },
+        {
+          "path": "apps/api/src/metrics/http-request-metrics.ts",
+          "sha256": "9d1fcf39bd4b57eebe681e562c4f2e6ca4271c689aa74b94a191f0e5cf8dfdbd"
+        },
+        {
+          "path": "apps/api/src/metrics/metrics.service.ts",
+          "sha256": "451b4ab667043865020eae7966080f9122192fd7ac82229e3debc9348b377094"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.yml",
+          "sha256": "b022eb0c924589465ad0a1bb8da1cb4abea6d03a60a726f86f7f598f6b26ef8f"
+        },
+        {
+          "path": "deploy/monitoring/notification-alerts.test.yml",
+          "sha256": "7928c0e5ff47a27b534bfda10bca545eb8e88d668416072777dc91209e6db64e"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.yml",
+          "sha256": "5c40106ee5dbe1a7a8ea401e8858632c59c40aee0af9c4a10a081f8364efd8c2"
+        },
+        {
+          "path": "deploy/monitoring/journey-slo-alerts.test.yml",
+          "sha256": "9289579d0f066af97bc4f4f1cb539f1c14019e088ab58a1dbd4f4b5c5c52f40e"
+        },
+        {
+          "path": "deploy/monitoring/staging-alertmanager.yml",
+          "sha256": "600f8087fbec33977feba6f3e6ff883e3b999c10faef3f9e46f56f02f7985e33"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-request.controller.ts",
+          "sha256": "b322a7fc20fd929aed9b0872082b6981661fbe8a5abfa991b0acca5b2e6a3ce7"
+        },
+        {
+          "path": "apps/api/src/electricity/electricity-order.controller.ts",
+          "sha256": "a7f582533dae3b31d38cedd1a44e819176dcb00ff93e5973d3d699941d8041af"
+        },
+        {
+          "path": "apps/api/src/invoice/customer-invoice.controller.ts",
+          "sha256": "d4d075d1cad4cab0145e0ea60f51236cc68a00c7a92607a9993e18cd55cdfd39"
+        },
+        {
+          "path": "apps/api/src/saving/saving-order.controller.ts",
+          "sha256": "5a98d104cb95c3c8c0fc03654950cdc53815daa02b1335adf4919205210262a0"
+        },
+        {
+          "path": "apps/api/src/solar/solar-request.controller.ts",
+          "sha256": "bfedfd7b8ab6e6a436d9b463f59bc6a7181e4abfaa2422f54ad759e3f671a69d"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "8f7252582bcb75077e44d060bf8c50790828328ffe793a0e34c166d8afa3d8a2"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.controller.ts",
+          "sha256": "c3167cf318433f340d4b2c973d4b21d84cfad48899848277870c340bf15ef51d"
+        },
+        {
+          "path": "apps/api/src/wallet/customer-wallet-invoice-payment.controller.ts",
+          "sha256": "e541d12f2dce38aa194c697c4b7690a8e348650b46de2669245c0d971d569d93"
+        },
+        {
+          "path": "apps/api/src/wallet/online-topup-callback.controller.ts",
+          "sha256": "86bcd985f89f752ac881e69f93e9c359233cf93e8ad8cad2e385b5ac7da5245f"
+        }
+      ],
+      "checks": [
+        "Prometheus 3.15.0 passed the API pressure, journey SLO and notification rule suites. Pool saturation requires two minutes with both full capacity and waiters on the same replica. Critical-route alerts require five minutes at the tier fast-burn boundary and at least 20 eligible responses in the five-minute window. Synthetic checks cover gaps outside completed API response observations.",
+        "Verified 19 method and route pairs against Nest controllers and the protected receiver allowlist. Prometheus syntax and normalized Compose passed. Only a read-only rule mount and its load were added. The existing provider and outbox rules, routes, receiver persistence and assertions were verified against the predecessor.",
+        "Exact isolated run 43131603120 at 54a7cf3e9fd7f17f260a420291833bc575a3857d built the worker and passed 34 tests on migrated PostgreSQL. The receiver recorded both new private admin firing and recovery receipts and linked their runbooks and dashboards. Unregistered and unscoped labels were rejected. Eight shared link cases, lint, formatting and whitespace also passed."
+      ],
+      "limitations": [
+        "Native tests establish firing and recovery logic and authenticated receipt behavior. Deployed collector, dashboards and routing to the approved operations recipient require live evidence."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-api-pressure-alerts",
+      "execution_receipts": [
+        {
+          "file": "source-scope-proof.json",
+          "sha256": "8d28050af26d4df8e680860c2f26810eb5a1df2dd984eaaf489caccc3d7b18c9"
+        },
+        {
+          "file": "prometheus-config.log",
+          "sha256": "add9cea2b127ccddb9bbc707f917c3eb6ee20f6198eafef6feaf8354f0fae2d2"
+        },
+        {
+          "file": "promtool.log",
+          "sha256": "b8c6586d3bf602031192e2429252d7f19941a4d7d8b6da31a9f5c166d0982b8e"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "native-run-43131603120.json",
+          "sha256": "a05220b4f9a81ee175d35a1a3d4f05688ca1443cb5f4064cd4a739a60ec7b123"
+        },
+        {
+          "file": "native-artifacts-43131603120/operations-alert-delivery.log",
+          "sha256": "92e95b826fb7aa64f73c1de4bf08dc1136bd7b64a196dec1059d9700f25f0e37"
         }
       ]
     }

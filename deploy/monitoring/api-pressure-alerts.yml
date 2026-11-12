@@ -1,0 +1,41 @@
+groups:
+  - name: barghsa-api-pressure
+    rules:
+      - alert: ApplicationDatabasePoolSaturated
+        expr: |
+          max by (environment, database) (
+            (pg_pool_waiting_requests{job="barghsa-api",environment!="",database!=""} > 0)
+            and ignoring (state)
+            (pg_pool_connections{job="barghsa-api",state="active"} >= ignoring (state)
+              (pg_pool_capacity{job="barghsa-api"} > 0))
+          )
+        for: 2m
+        labels:
+          severity: warning
+          priority: P2
+        annotations:
+          summary: API database connections are at capacity with requests waiting
+          dashboard_uid: barghsa-postgresql
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md
+      - record: barghsa:critical_api_responses:increase5m
+        expr: |
+          sum by (environment, database, availability_tier, method, route, status) (
+            increase(barghsa_http_request_duration_seconds_count{job="barghsa-api",environment!="",database!="",availability_tier=~"pilot|commercial",status=~"2..|304|408|5..",method="GET",route=~"/api/(electricity/orders(/:orderId)?|saving/orders(/:id)?|solar/requests(/:id)?|consultations/requests(/:id)?|invoices|wallet/:profileId)"}[5m])
+            or
+            increase(barghsa_http_request_duration_seconds_count{job="barghsa-api",environment!="",database!="",availability_tier=~"pilot|commercial",status=~"2..|304|408|5..",method="POST",route=~"/api/(electricity/orders/(simple|advanced)|saving/orders|solar/requests|consultations/requests(/:id/accept)?|invoices/:invoiceId/wallet-payment|wallet/(:profileId/top-ups|top-ups/callback))"}[5m])
+          )
+      - alert: CriticalApiRouteErrors
+        expr: |
+          (
+            sum without (status) (barghsa:critical_api_responses:increase5m{status=~"408|5.."})
+            / (sum without (status) (barghsa:critical_api_responses:increase5m) >= 20)
+          ) / on (availability_tier) group_left barghsa:journey_budget:error_ratio
+          >= (0.05 * scalar(days_in_month()) * 24)
+        for: 5m
+        labels:
+          severity: warning
+          priority: P2
+        annotations:
+          summary: '{{ $labels.method }} {{ $labels.route }} has sustained server errors or request timeouts'
+          dashboard_uid: barghsa-api-health
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/api-pressure.md

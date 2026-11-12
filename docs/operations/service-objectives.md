@@ -47,6 +47,8 @@ The P1 rule requires 5% of the current UTC month's budget per hour over both the
 
 The notification outbox, overdue refund, wallet reconciliation and open provider circuit alerts include the observed one-hour and 24-hour journey burn rates for their environment and database. The rates identify each measured service and tier. A rate of 0 records observed traffic with no failures, and an unavailable annotation means there are no matching measurements. The existing operation threshold and priority govern the response even when measured journey burn is low or unavailable. The private operations notice links to the availability budget dashboard alongside the operation dashboard and runbook. The alert data gives operators a place to check customer impact. Provider or queue events alone do not establish which journey failed. [Operational alert rules](../../deploy/monitoring/notification-alerts.yml).
 
+Application pool saturation and critical route errors have separate P2 rules. A single replica with all pool connections in use and at least one waiting request for two minutes triggers the pool alert. A registered critical route with at least 20 eligible completed responses in its five-minute window triggers the route alert after five minutes at or above the tier's fast burn threshold. Synthetic probes cover low-traffic and connection failures. [API pressure rules](../../deploy/monitoring/api-pressure-alerts.yml) · [Runbook](../runbooks/api-pressure.md).
+
 ## API health dashboard
 
 Import the API Health dashboard into private Grafana and select the Prometheus
