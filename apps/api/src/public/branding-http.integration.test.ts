@@ -10,6 +10,7 @@ let http: Awaited<ReturnType<typeof startHttpFixture>>;
 let headers: Record<string, string>;
 let customerHeaders: Record<string, string>;
 let storage: Server;
+let beforeObjectRead: ((key: string) => Promise<void>) | undefined;
 const objects = new Map<string, Buffer>();
 const png = Buffer.from(
   'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aT0kAAAAASUVORK5CYII=',
@@ -29,6 +30,7 @@ beforeAll(async () => {
       res.end();
       return;
     }
+    await beforeObjectRead?.(key);
     const bytes = objects.get(key);
     if (!bytes) {
       res.statusCode = 404;
@@ -660,6 +662,70 @@ it('seals both images in one version, rolls back an invalid second asset and pre
   expect(next.config.logoUrl).toBe(faviconUrl);
   expect(next.config.faviconUrl).toBe(logoUrl);
 });
+
+it.each(['staff preview', 'public image'] as const)(
+  'withholds a %s when its authority changes during the storage read',
+  async (surface) => {
+    const draft = await saved(
+      await request('admin/branding/config', 'PUT', {
+        expectedVersion: 0,
+        logoUploadKey: await logoUpload(),
+        config: {},
+      })
+    );
+    const url = z.string().parse(draft.config.logoUrl);
+    const key = url.replace('/api/public/branding/assets/', 'branding-assets/');
+    const activate = (version: typeof draft) =>
+      request('admin/branding/activate', 'POST', {
+        draftId: version.id,
+        expectedVersion: version.version,
+      });
+    if (surface === 'public image') expect((await activate(draft)).status).toBe(200);
+
+    let enter!: () => void, release!: () => void;
+    const started = new Promise<void>((resolve) => {
+      enter = resolve;
+    });
+    const paused = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    beforeObjectRead = async (objectKey) => {
+      if (objectKey !== key) return;
+      enter();
+      await paused;
+    };
+    const pending =
+      surface === 'staff preview'
+        ? fetch(`${http.base}${url.replace('/public/', '/admin/')}`, { headers })
+        : fetch(`${http.base}${url}`);
+    try {
+      await Promise.race([
+        started,
+        pending.then((response) => {
+          throw new Error(`Expected storage read, got ${response.status}`);
+        }),
+      ]);
+      if (surface === 'staff preview') {
+        await http.pool.query("UPDATE users SET is_admin=false WHERE user_id='branding-review'");
+      } else {
+        const replacement = await saved(
+          await request('admin/branding/config', 'PUT', {
+            expectedVersion: draft.version,
+            config: { appTitle: 'Replacement without the old image' },
+          })
+        );
+        expect((await activate(replacement)).status).toBe(200);
+      }
+    } finally {
+      beforeObjectRead = undefined;
+      release();
+      await pending.catch(() => {});
+    }
+    const response = await pending;
+    expect(response.status, http.logs()).toBe(surface === 'staff preview' ? 403 : 404);
+    expect(response.headers.get('content-type')).not.toContain('image/png');
+  }
+);
 
 it('returns 429 before reserving a twenty-first upload for the fixture account', async () => {
   const key = 'upload:user:branding-review';

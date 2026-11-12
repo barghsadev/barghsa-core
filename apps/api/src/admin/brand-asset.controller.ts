@@ -15,7 +15,7 @@ export class AdminBrandAssetController {
   @ApiOperation({ summary: 'Preview a saved branding image' })
   read(@Param('id') id: string, @Param('digest') digest: string, @Req() req: AuthenticatedRequest) {
     if (!hasStaffPermission(req, 'admin:branding:read')) throw new ForbiddenException();
-    return this.assets.read(id, digest, true);
+    return this.assets.read(id, digest, req.session);
   }
 }
 

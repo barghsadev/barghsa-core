@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T20:51:33+00:00",
+  "updated": "2026-11-12T20:58:22+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -16794,7 +16794,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/multipart-http.integration.test.ts",
@@ -17032,6 +17032,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -24243,7 +24251,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/web/e2e/direction-component.spec.ts",
@@ -24359,6 +24367,14 @@
                 "apps/api/src/public/branding-http.integration.test.ts"
               ],
               "scope": "Runtime changes are confined to strict branding and customer ticket status commands and branding browser save/restore projection. The generated API diff changes only three request schemas. Compiled tests cover unchanged valid actor, draft, asset, status and durable replay behavior plus rejection before mutation."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -26636,7 +26652,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -26940,6 +26956,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -31277,7 +31301,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
-              "sha256": "fddd2847522f0ae9c8a0af470d9382b68793698586cf87594cecdc460d99bbfc"
+              "sha256": "944d26c28d224265516b68e2f0b26d3956814fca28e0115741edbb922b493811"
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
@@ -31293,7 +31317,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/admin/admin.controller.ts",
@@ -31430,6 +31454,10 @@
             {
               "path": "packages/db/drizzle/production/meta/0289_snapshot.json",
               "sha256": "623856cad90f0b05867409a56cba66f1ee37a6fbc294873277b53bb3ca8277fd"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "source_renewals": [
@@ -32006,6 +32034,16 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-admin.service.ts",
+                "apps/api/src/storage/storage-record-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -46271,15 +46309,15 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
-              "sha256": "fddd2847522f0ae9c8a0af470d9382b68793698586cf87594cecdc460d99bbfc"
+              "sha256": "944d26c28d224265516b68e2f0b26d3956814fca28e0115741edbb922b493811"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/storage/storage-records.controller.ts",
-              "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+              "sha256": "594a574726ae97072e435208fcae1a617a55f8b1baa570f2859967ebc1410f79"
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
@@ -46660,6 +46698,10 @@
             {
               "path": "apps/api/src/common/browser-origin.ts",
               "sha256": "1f9708398f08392481c6eb18e9e9117eba4f54ca14e3f70668ec21cf020d08cd"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -47890,6 +47932,17 @@
                 "apps/web/e2e/form-accessibility.spec.ts"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-admin.service.ts",
+                "apps/api/src/storage/storage-record-http.integration.test.ts",
+                "apps/api/src/storage/storage-records.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -90709,15 +90762,15 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-admin.service.ts",
-              "sha256": "fddd2847522f0ae9c8a0af470d9382b68793698586cf87594cecdc460d99bbfc"
+              "sha256": "944d26c28d224265516b68e2f0b26d3956814fca28e0115741edbb922b493811"
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/storage/storage-records.controller.ts",
-              "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+              "sha256": "594a574726ae97072e435208fcae1a617a55f8b1baa570f2859967ebc1410f79"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -91010,6 +91063,10 @@
             {
               "path": "docs/operations/smsir-verification-templates.md",
               "sha256": "8694fd4c4c9f73656d6a1753e87feaf1ee4c5c37bb9612f57b0218f88f35f3ca"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -92070,6 +92127,17 @@
                 "apps/api/src/profiles/profiles.service.ts"
               ],
               "scope": "Onboarding journeys, legacy profile writes and owned legal document reads keep current session authority. Existing draft version, owner, staff permission, verification, audit and private sealed-copy conditions passed in affected callers."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-admin.service.ts",
+                "apps/api/src/storage/storage-record-http.integration.test.ts",
+                "apps/api/src/storage/storage-records.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -93687,11 +93755,11 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-asset.controller.ts",
-              "sha256": "2276a62acc61c1af28cf8a38b50117ad2a1ff900649c724def87878b5eed7bfc"
+              "sha256": "f141cbaf706ebb476acf32631ad4d0c36291b1342f06b56b4d6d672bf5d4519b"
             },
             {
               "path": "apps/api/src/admin/branding-boundaries.test.ts",
@@ -93699,7 +93767,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
@@ -93784,6 +93852,10 @@
             {
               "path": "apps/web/src/lib/theme.ts",
               "sha256": "78b161929e99452c9119d67ab911295f9fa68e82058ea7a0aa88db47cf180292"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -94261,6 +94333,17 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/admin/brand-asset.controller.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -151768,7 +151851,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -152336,6 +152419,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -152689,7 +152780,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -153256,6 +153347,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -156120,7 +156219,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/session/business-history-context-http.integration.test.ts",
@@ -156687,6 +156786,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -260871,7 +260978,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -261782,6 +261889,14 @@
                 "apps/web/src/components/ProfileMenu.tsx"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -262078,7 +262193,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -262989,6 +263104,14 @@
                 "apps/web/src/components/ProfileMenu.tsx"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -263199,7 +263322,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
@@ -264332,6 +264455,14 @@
                 "apps/web/src/components/ProfileMenu.tsx"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -264627,7 +264758,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
@@ -266681,6 +266812,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -267021,7 +267160,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
@@ -269075,6 +269214,14 @@
                 "package.json"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -269415,7 +269562,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -270326,6 +270473,14 @@
                 "apps/web/src/components/ProfileMenu.tsx"
               ],
               "scope": "Responsive shell and settings navigation changes. Affected browser flows, theme authority, workspace switching, contrast, build and budgets verified. Unchanged acceptance remains source-bound."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -571929,7 +572084,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
@@ -572163,6 +572318,14 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -572276,7 +572439,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
@@ -572510,6 +572673,14 @@
                 "packages/shared/src/storage/index.ts"
               ],
               "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -572608,7 +572779,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
@@ -573023,6 +573194,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -573135,7 +573314,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
@@ -573521,6 +573700,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -576517,7 +576704,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -577103,6 +577290,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -577245,7 +577440,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -577826,6 +578021,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -578387,7 +578590,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -578968,6 +579171,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -579135,7 +579346,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -579779,6 +579990,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -580338,7 +580557,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -580919,6 +581138,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -581060,7 +581287,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -581665,6 +581892,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -581806,7 +582041,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -582411,6 +582646,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -582552,7 +582795,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -583157,6 +583400,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -583298,7 +583549,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -583903,6 +584154,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -584043,7 +584302,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -584624,6 +584883,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -620272,7 +620539,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -620629,6 +620896,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -620995,7 +621270,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -621241,6 +621516,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -621315,7 +621598,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -621552,6 +621835,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -621649,7 +621940,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -621905,6 +622196,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -622064,7 +622363,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -622404,6 +622703,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -622454,7 +622761,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -622811,6 +623118,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -622984,7 +623299,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -623358,6 +623673,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -624386,8 +624709,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, 12 onboarding, and 10 upload policy, preview, reservation, verification, record and multipart method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with branding asset, storage record and remaining receipt authority routes, then the remaining domains. Reuse source-bound checks for intact routes and verify demonstrated authority gaps defensively."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, 12 onboarding, 10 upload policy, preview, reservation, verification, record and multipart, and five branding asset and storage record method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with remaining receipt authority routes and other domains. Reuse intact source-bound checks and reconcile changed confirmation and wallet sources before carrying forward receipt evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -624610,7 +624933,8 @@
           "release-0.6-profile-read-authority",
           "release-0.6-team-authority",
           "release-0.6-onboarding-authority",
-          "release-0.6-upload-reservation-authority"
+          "release-0.6-upload-reservation-authority",
+          "release-0.6-storage-asset-authority"
         ],
         "current_acceptance": null
       }
@@ -624686,7 +625010,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -624936,6 +625260,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -624986,7 +625318,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.controller.ts",
-              "sha256": "2276a62acc61c1af28cf8a38b50117ad2a1ff900649c724def87878b5eed7bfc"
+              "sha256": "f141cbaf706ebb476acf32631ad4d0c36291b1342f06b56b4d6d672bf5d4519b"
             },
             {
               "path": "apps/api/src/admin/business-work-counts.controller.ts",
@@ -625262,7 +625594,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-records.controller.ts",
-              "sha256": "d5b28152952ba20474c5e475cb0ff5674df23d45ee0293fe492821c30dd57e86"
+              "sha256": "594a574726ae97072e435208fcae1a617a55f8b1baa570f2859967ebc1410f79"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -625282,11 +625614,15 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
               "sha256": "eaf0cdd96e188d4ef81bbda958270f4d195a4409e187cbb1799b8d15d24058a1"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -625676,6 +626012,17 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.controller.ts",
+                "apps/api/src/storage/storage-records.controller.ts",
+                "docs/security/authorization.md",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -626299,7 +626646,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -626642,6 +626989,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -635481,7 +635836,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
@@ -635942,6 +636297,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -640622,7 +640985,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "9bc3ec5b63947b04b8b938d88485195c0ffbdeb73b97d3fe67b4f884e860cf38"
+              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
             },
             {
               "path": "docs/threat-model.md",
@@ -640882,6 +641245,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -646743,7 +647114,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
@@ -646957,6 +647328,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -649085,7 +649464,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/wallet/payment-gateway-http-boundaries.test.ts",
@@ -649300,6 +649679,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -667599,7 +667986,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/upload/upload-reservations.ts",
@@ -667851,6 +668238,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The protected billing scrape and its allowlisted P3 alert are additive. Existing alert authority, deduplication, resource links, service fixtures, database behavior and default monitoring scopes were reviewed and verified with the affected native and configuration checks."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -703611,7 +704006,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -704397,6 +704792,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -704555,7 +704958,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -705341,6 +705744,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -705499,7 +705910,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -706285,6 +706696,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -706443,7 +706862,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -707229,6 +707648,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -707387,7 +707814,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -708173,6 +708600,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -708331,7 +708766,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -709117,6 +709552,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -709275,7 +709718,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -710061,6 +710504,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -710219,7 +710670,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -711005,6 +711456,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -711163,7 +711622,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -711949,6 +712408,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -712107,7 +712574,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -712893,6 +713360,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -713051,7 +713526,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -713837,6 +714312,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -713995,7 +714478,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -714781,6 +715264,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -714939,7 +715430,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -715725,6 +716216,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -715883,7 +716382,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -716669,6 +717168,14 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/public/branding-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         }
@@ -740185,7 +740692,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -740197,7 +740704,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -740798,6 +741305,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -741395,6 +741906,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -741514,7 +742035,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -741526,7 +742047,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -742127,6 +742648,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -742724,6 +743249,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -742843,7 +743378,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -742855,7 +743390,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -743456,6 +743991,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -744053,6 +744592,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -744172,7 +744721,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -744184,7 +744733,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -744785,6 +745334,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -745382,6 +745935,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -745501,7 +746064,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -745513,7 +746076,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -746114,6 +746677,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -746711,6 +747278,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -746830,7 +747407,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -746842,7 +747419,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -747443,6 +748020,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -748040,6 +748621,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -748160,7 +748751,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -748172,7 +748763,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -748777,6 +749368,10 @@
             {
               "path": "apps/web/public/favicon.svg",
               "sha256": "72bc62bed4e68ee9faa680719fd04ac79695dcb08ebb10ec386ce6c047b7837a"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -749374,6 +749969,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -749493,7 +750098,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -749505,7 +750110,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -750106,6 +750711,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -750703,6 +751312,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -750822,7 +751441,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -750834,7 +751453,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -751435,6 +752054,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -752032,6 +752655,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -752151,7 +752784,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -752163,7 +752796,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -752764,6 +753397,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -753361,6 +753998,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -753480,7 +754127,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -753492,7 +754139,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -754093,6 +754740,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -754690,6 +755341,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -754809,7 +755470,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -754821,7 +755482,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -755422,6 +756083,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -756019,6 +756684,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -756138,7 +756813,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -756150,7 +756825,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -756751,6 +757426,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -757348,6 +758027,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -757467,7 +758156,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -757479,7 +758168,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -758080,6 +758769,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -758677,6 +759370,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -758796,7 +759499,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -758808,7 +759511,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -759409,6 +760112,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -760006,6 +760713,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -760125,7 +760842,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -760137,7 +760854,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -760738,6 +761455,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -761335,6 +762056,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -761454,7 +762185,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -761466,7 +762197,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -762067,6 +762798,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -762664,6 +763399,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -762783,7 +763528,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -762795,7 +763540,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -763396,6 +764141,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -763993,6 +764742,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -764112,7 +764871,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -764124,7 +764883,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -764725,6 +765484,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -765322,6 +766085,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -765441,7 +766214,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -765453,7 +766226,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/public/branding.controller.test.ts",
@@ -766054,6 +766827,10 @@
             {
               "path": "scripts/run-production-browser.mjs",
               "sha256": "c86c8cc6812af9034f3b82333b6a5f6186138f4e4bc96cf83ab3306bf35a85a7"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -766651,6 +767428,16 @@
                 "docs/design/design-system.md"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -974788,11 +975575,11 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-asset.controller.ts",
-              "sha256": "2276a62acc61c1af28cf8a38b50117ad2a1ff900649c724def87878b5eed7bfc"
+              "sha256": "f141cbaf706ebb476acf32631ad4d0c36291b1342f06b56b4d6d672bf5d4519b"
             },
             {
               "path": "apps/api/src/admin/branding-boundaries.test.ts",
@@ -974800,7 +975587,7 @@
             },
             {
               "path": "apps/api/src/public/branding-http.integration.test.ts",
-              "sha256": "fbfba9294c244fb3719af1863f527f009de4a832dc0487070b8f7ef0ebd42bf7"
+              "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
             },
             {
               "path": "apps/api/src/storage/verified-attachments.service.ts",
@@ -974885,6 +975672,10 @@
             {
               "path": "apps/web/src/lib/theme.ts",
               "sha256": "78b161929e99452c9119d67ab911295f9fa68e82058ea7a0aa88db47cf180292"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -975361,6 +976152,17 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/admin/brand-asset.controller.ts",
+                "apps/api/src/public/branding-http.integration.test.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -996455,7 +997257,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -1000440,6 +1001242,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "presentation_renewals": [
@@ -1001805,7 +1002615,7 @@
             },
             {
               "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
-              "sha256": "a6543e401206b5404e7182eaf352f60658f4df44a51bfb49149f05c232676abc"
+              "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
             },
             {
               "path": "apps/api/src/test/build-http-app.ts",
@@ -1005671,6 +1006481,14 @@
                 "apps/api/src/upload/upload.service.ts"
               ],
               "scope": "Added current persisted upload-scope checks at direct verification and multipart response boundaries. Related storage and document HTTP cases passed, including existing expiry, idempotent completion and abort behavior."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/storage/storage-record-http.integration.test.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1008013,7 +1008831,7 @@
             },
             {
               "path": "apps/api/src/admin/brand-asset.service.ts",
-              "sha256": "8c8dee0b3ca6f042cf1764aa57142c21a77508893d622aff74832bbe12712ae2"
+              "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
             },
             {
               "path": "apps/api/src/admin/brand-config.service.ts",
@@ -1009794,6 +1010612,10 @@
             {
               "path": "apps/web/src/routes/onboarding/complete.css",
               "sha256": "173bc7ecfce5c3d09f34cceb6180a9bfbe4fc9b6df1c7494b291032339627ee4"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
             }
           ],
           "checks": [
@@ -1010531,6 +1011353,15 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-storage-asset-authority",
+              "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+              "paths": [
+                "apps/api/src/admin/brand-asset.service.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
             }
           ]
         },
@@ -1171850,6 +1172681,196 @@
         {
           "file": "routes.json",
           "sha256": "57dce7c2eed653760a6e0fcb3d67e32b6b6f61049145e54713998ba86a568d01"
+        }
+      ]
+    },
+    "release-0.6-storage-asset-authority": {
+      "batch": "release-0.6-storage-asset-authority",
+      "base_commit": "c4be3ad80778d4f88a0b0de953e5cb1e2f76b2e3",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-04.03.02",
+        "01-platform-infrastructure.md#T-06.02.05",
+        "01-platform-infrastructure.md#T-06.03.05",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.01.01",
+        "02-auth-users-admin.md#T-09.12.01",
+        "02-auth-users-admin.md#T-09.12.02",
+        "02-auth-users-admin.md#T-09.12.05",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.09.03",
+        "05-notifications-documents-ai.md#T-05.09.04",
+        "05-notifications-documents-ai.md#T-05.11.02",
+        "05-notifications-documents-ai.md#T-05.11.03",
+        "05-notifications-documents-ai.md#T-05.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.12.01",
+        "05-notifications-documents-ai.md#T-05.12.02",
+        "05-notifications-documents-ai.md#T-05.12.03",
+        "05-notifications-documents-ai.md#T-05.13.01",
+        "05-notifications-documents-ai.md#T-05.13.02",
+        "05-notifications-documents-ai.md#T-05.13.03",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.06.01.07",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.10.01.04",
+        "06-security-testing-observability.md#T-06.10.02.10",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "07-ui-ux-design.md#T-07.02.01.01",
+        "07-ui-ux-design.md#T-07.02.01.02",
+        "07-ui-ux-design.md#T-07.02.01.03",
+        "07-ui-ux-design.md#T-07.02.01.04",
+        "07-ui-ux-design.md#T-07.02.01.05",
+        "07-ui-ux-design.md#T-07.02.01.06",
+        "07-ui-ux-design.md#T-07.02.01.07",
+        "07-ui-ux-design.md#T-07.02.02.01",
+        "07-ui-ux-design.md#T-07.02.02.02",
+        "07-ui-ux-design.md#T-07.02.02.03",
+        "07-ui-ux-design.md#T-07.02.02.04",
+        "07-ui-ux-design.md#T-07.03.01.01",
+        "07-ui-ux-design.md#T-07.03.01.02",
+        "07-ui-ux-design.md#T-07.03.01.03",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03",
+        "07-ui-ux-design.md#T-07.30.02.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/brand-asset.controller.ts",
+        "apps/api/src/admin/brand-asset.service.ts",
+        "apps/api/src/admin/staff-read-authority.ts",
+        "apps/api/src/public/branding-http.integration.test.ts",
+        "apps/api/src/storage/storage-record-admin.service.ts",
+        "apps/api/src/storage/storage-record-http.integration.test.ts",
+        "apps/api/src/storage/storage-records.controller.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/brand-asset.controller.ts",
+          "sha256": "f141cbaf706ebb476acf32631ad4d0c36291b1342f06b56b4d6d672bf5d4519b"
+        },
+        {
+          "path": "apps/api/src/admin/brand-asset.service.ts",
+          "sha256": "306d245ea4659abaf6855a645a515b9cbb137083679af9da26ed4be1481c5278"
+        },
+        {
+          "path": "apps/api/src/admin/branding-boundaries.test.ts",
+          "sha256": "db9a57d2b53eb8bb15eec7fc805d9a4a966f1811b21bc459af692359fab03b9d"
+        },
+        {
+          "path": "apps/api/src/admin/staff-mutation-permission.ts",
+          "sha256": "c8078aeead90ca4ed13a298a356fc8dd88311ed1f5134e79b2535f5ccb747dba"
+        },
+        {
+          "path": "apps/api/src/admin/staff-read-authority.ts",
+          "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+        },
+        {
+          "path": "apps/api/src/public/branding-http.integration.test.ts",
+          "sha256": "5c38dc54777ed04cf8680301cfd1db68a54ef8eb1e8aa182f979e29b1134d24c"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/storage/storage-access-http.integration.test.ts",
+          "sha256": "d76ca1f9e100eeb3e2c8d68568c41ac0bc4ff20a3fa8f92dd0e93aa5e6817f6f"
+        },
+        {
+          "path": "apps/api/src/storage/storage-admin.guard.ts",
+          "sha256": "36bb3e7681fb0d53b8f98180ce692971aac6864818b2af1986a53b3732e2d00e"
+        },
+        {
+          "path": "apps/api/src/storage/storage-config-http.integration.test.ts",
+          "sha256": "26d55f5ec33501443e2863ac57fab73c76dd44a5540dbc7da35791d6f9b71677"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-admin.service.ts",
+          "sha256": "944d26c28d224265516b68e2f0b26d3956814fca28e0115741edbb922b493811"
+        },
+        {
+          "path": "apps/api/src/storage/storage-record-http.integration.test.ts",
+          "sha256": "2c7f08423b51516f49926dc5fca4b26b8f86293c0153e9869b805becb95fb78b"
+        },
+        {
+          "path": "apps/api/src/storage/storage-records.controller.ts",
+          "sha256": "594a574726ae97072e435208fcae1a617a55f8b1baa570f2859967ebc1410f79"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+        }
+      ],
+      "checks": [
+        "Reviewed five methods for admin storage record read, signing and removal, private branding previews and public asset reads.",
+        "A blocked metadata read withholds the record if its staff session expires. The storage grant remains required. The sign and remove paths retain step-up, revision, audit, idempotency and immutable retention checks.",
+        "A private preview withholds the image after staff authority is revoked during the storage read. A public request withholds a superseded image when the active config stops referencing it. Draft publication and byte integrity assertions passed.",
+        "Five affected suites passed all 150 tests. API typecheck, lint, formatting, generated OpenAPI and API-client contract checks passed."
+      ],
+      "limitations": [
+        "The remaining route inventory and exact deployed-candidate acceptance are open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-storage-asset-authority",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "73b7268d48eda6a718671b6172bd64aa727fd5c104614c754787d0e36cee4831"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "openapi.log",
+          "sha256": "e1b81d164ea090647fd635e0d4d0f01c0f70dae7c16ce8c8e2f894adc51b2c91"
+        },
+        {
+          "file": "lint-format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "routes.json",
+          "sha256": "0e531f0a22cf14019a3edabd78e41fcc9181807deec7b5ec674028ac4db9bb23"
         }
       ]
     }

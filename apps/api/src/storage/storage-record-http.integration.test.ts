@@ -190,6 +190,50 @@ it('reads real metadata and binds an idempotent signature to the authenticated a
     ).rows
   ).toHaveLength(1);
 });
+
+it('withholds storage metadata if the staff session expires during the record read', async () => {
+  const key = await seed();
+  const session = randomUUID();
+  await http.pool.query(
+    `INSERT INTO sessions(session_id,user_id,csrf_token,family_id,operating_context,expires_at,idle_deadline)
+     VALUES ($1,'storage-actor',$2,$3,'staff',clock_timestamp()+INTERVAL '3 seconds',NOW()+INTERVAL '30 minutes')`,
+    [session, randomUUID(), randomUUID()]
+  );
+  const blocker = await http.pool.connect();
+  let pending: Promise<Response> | undefined;
+  try {
+    await blocker.query('BEGIN');
+    await blocker.query('LOCK TABLE storage_records IN ACCESS EXCLUSIVE MODE');
+    pending = fetch(`${http.base}/api/admin/storage/records/${encodeURIComponent(key)}`, {
+      headers: { Cookie: `barghsa_session=${session}` },
+    });
+    await expect
+      .poll(
+        async () => {
+          const result = await http.pool.query(
+            `SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE datname=current_database()
+         AND wait_event_type='Lock' AND query LIKE 'SELECT * FROM storage_records WHERE storage_key=%') AS blocked`
+          );
+          return result.rows[0].blocked;
+        },
+        { timeout: 2000 }
+      )
+      .toBe(true);
+    await blocker.query(
+      'SELECT pg_sleep(GREATEST(0,EXTRACT(EPOCH FROM expires_at-clock_timestamp()))+0.05) FROM sessions WHERE session_id=$1',
+      [session]
+    );
+    await blocker.query('COMMIT');
+    const response = await pending;
+    expect(response.status, http.logs()).toBe(401);
+    expect(await response.text()).not.toContain(key);
+  } finally {
+    await blocker.query('ROLLBACK').catch(() => {});
+    blocker.release();
+    await pending?.catch(() => {});
+  }
+}, 10000);
+
 for (const change of ['removal', 'record revision', 'permission', 'step-up', 'session'] as const) {
   it(`rejects signing if ${change} changes during the storage read`, async () => {
     const key = await seed();

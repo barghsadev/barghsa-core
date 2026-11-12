@@ -17,6 +17,7 @@ import { STORAGE_PROVIDER } from './storage.constants.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import type { ValidatedSession } from '../session/session.service.js';
 import { requireStaffMutationPermission } from '../admin/staff-mutation-permission.js';
+import { withStaffReadAuthority } from '../admin/staff-read-authority.js';
 
 interface RecordRow {
   storage_key: string;
@@ -60,15 +61,15 @@ export class StorageRecordAdminService {
     )
       throw new BadRequestException('Invalid storage key');
   }
-  async get(key: string) {
+  async get(key: string, session: StorageActor) {
     this.validateKey(key);
-    const row = (
-      await getDbPool().query<RecordRow>('SELECT * FROM storage_records WHERE storage_key=$1', [
-        key,
-      ])
-    ).rows[0];
-    if (!row) throw new NotFoundException('Storage record not found');
-    return response(row);
+    return withStaffReadAuthority(session, 'admin:storage:edit', async (client) => {
+      const row = (
+        await client.query<RecordRow>('SELECT * FROM storage_records WHERE storage_key=$1', [key])
+      ).rows[0];
+      if (!row) throw new NotFoundException('Storage record not found');
+      return response(row);
+    });
   }
   private async withAuthorizedRecord<T>(
     key: string,

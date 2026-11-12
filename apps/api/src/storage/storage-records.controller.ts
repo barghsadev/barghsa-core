@@ -22,8 +22,8 @@ import { StorageRecordAdminService } from './storage-record-admin.service.js';
 export class StorageRecordsController {
   constructor(private readonly records: StorageRecordAdminService) {}
   @Get(':key')
-  getRecord(@Param('key') key: string) {
-    return this.records.get(key);
+  getRecord(@Param('key') key: string, @Req() req: AuthenticatedRequest) {
+    return this.records.get(key, req.session);
   }
 
   @Post(':key/sign')
