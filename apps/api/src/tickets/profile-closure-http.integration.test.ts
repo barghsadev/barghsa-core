@@ -309,18 +309,70 @@ it('retains profile identity and a zero-balance wallet as linked financial histo
     "UPDATE async_jobs SET status='completed',progress_pct=100,result_url=$2,completed_at=now() WHERE id=$1",
     [jobId, `/api/tickets/lifecycle-requests/${exportTicketId}/export`]
   );
+  const archive = `tmp/profile-exports/${exportTicketId.toUpperCase()}/${randomUUID()}.zip`;
   await http.pool.query(
     "UPDATE tickets SET privacy_export_storage_key=$2,privacy_export_expires_at=clock_timestamp()+interval '24 hours' WHERE id=$1",
-    [exportTicketId, `tmp/profile-exports/${exportTicketId}/owned.zip`]
+    [exportTicketId, archive]
   );
-  const downloaded = await fetch(
-    `${http.base}/api/tickets/lifecycle-requests/${exportTicketId}/export`,
-    { headers: ownerHeaders, redirect: 'manual' }
+  const download = () =>
+    fetch(`${http.base}/api/tickets/lifecycle-requests/${exportTicketId.toUpperCase()}/export`, {
+      headers: ownerHeaders,
+      redirect: 'manual',
+    });
+  const verifyUnavailable = async () => {
+    const denied = await download();
+    expect(denied.status).toBe(404);
+    expect(denied.headers.get('location')).toBeNull();
+    const review = await fetch(`${http.base}/api/staff/tickets/${id}/closure-preview`, {
+      headers: staffHeaders,
+    });
+    expect(review.status).toBe(200);
+    expect(await review.json()).toMatchObject({
+      eligible: false,
+      blockers: expect.arrayContaining([
+        expect.objectContaining({ code: 'pendingExport', count: 1 }),
+      ]),
+    });
+  };
+  await http.pool.query(
+    "UPDATE async_jobs SET payload=jsonb_set(payload,'{profileId}',to_jsonb($2::text)) WHERE id=$1",
+    [jobId, profileId]
   );
+  await verifyUnavailable();
+  expect(
+    (
+      await fetch(`${http.base}/api/tickets/lifecycle-requests/${exportTicketId}/export`, {
+        method: 'POST',
+        headers: ownerHeaders,
+      })
+    ).status
+  ).toBe(409);
+  await http.pool.query(
+    "UPDATE async_jobs SET payload=jsonb_set(payload,'{profileId}',to_jsonb($2::text)) WHERE id=$1",
+    [jobId, retainedProfileId]
+  );
+  await http.pool.query('UPDATE tickets SET privacy_export_storage_key=$2 WHERE id=$1', [
+    exportTicketId,
+    `tmp/profile-exports/${randomUUID()}/${randomUUID()}.zip`,
+  ]);
+  await verifyUnavailable();
+  expect(
+    (
+      await http.pool.query(
+        "SELECT id FROM audit_log WHERE event='profile_export_downloaded' AND metadata::jsonb->>'ticketId'=$1",
+        [exportTicketId]
+      )
+    ).rowCount
+  ).toBe(0);
+  await http.pool.query('UPDATE tickets SET privacy_export_storage_key=$2 WHERE id=$1', [
+    exportTicketId,
+    archive,
+  ]);
+  const downloaded = await download();
   expect(downloaded.status, await downloaded.clone().text()).toBe(302);
   expect(downloaded.headers.get('cache-control')).toBe('private, no-store');
   const privateUrl = new URL(downloaded.headers.get('location')!);
-  expect(privateUrl.pathname).toContain(`tmp/profile-exports/${exportTicketId}/owned.zip`);
+  expect(privateUrl.pathname).toContain(archive);
   expect(Number(privateUrl.searchParams.get('X-Amz-Expires'))).toBeLessThanOrEqual(300);
   expect(Number(privateUrl.searchParams.get('X-Amz-Expires'))).toBeGreaterThan(0);
 

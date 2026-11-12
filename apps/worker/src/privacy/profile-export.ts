@@ -1,7 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { Readable } from 'node:stream';
 import { getDbPool, loadStoredStorageConfiguration } from '@barghsa/db';
-import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import {
+  isProfileExportArchive,
+  PROFILE_EXPORT_ARCHIVE_PATTERN,
+  runtimeStorageProvider,
+  type StorageProvider,
+} from '@barghsa/shared/storage';
 import type { Pool } from 'pg';
 import yazl from 'yazl';
 import type { JobContext } from '../jobs/async-runner.js';
@@ -11,6 +16,9 @@ const MAX_DOCUMENTS = 500;
 const MAX_DOCUMENT_BYTES = 1024 * 1024 * 1024;
 const storage = runtimeStorageProvider(loadStoredStorageConfiguration);
 const idPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const EXPORT_JOB_LINK = `j.type='profile-export' AND j.created_by=t.user_id
+  AND j.operating_context='customer' AND lower(j.payload->>'ticketId')=t.id::text
+  AND lower(j.payload->>'profileId')=t.profile_id::text AND j.payload->>'userId'=t.user_id`;
 
 interface ExportPayload {
   ticketId: string;
@@ -40,7 +48,11 @@ function parsePayload(value: unknown): ExportPayload {
     !row.userId
   )
     throw new Error('Invalid export payload');
-  return row as unknown as ExportPayload;
+  return {
+    ticketId: row.ticketId.toLowerCase(),
+    profileId: row.profileId.toLowerCase(),
+    userId: row.userId,
+  };
 }
 
 async function boundedRows(pool: Pool, sql: string, values: unknown[], limit = MAX_ROWS) {
@@ -302,13 +314,15 @@ export async function generateProfileExport(
      WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3 AND t.privacy_request_type='export'
        AND t.privacy_export_job_id=$4 AND j.status='processing' AND j.lease_token=$5
        AND j.lease_until>clock_timestamp()
-       AND j.operating_context='customer' AND p.user_id=$2 AND NOT p.archived
+       AND ${EXPORT_JOB_LINK} AND p.user_id=$2 AND NOT p.archived
        AND ((c.user_id IS NULL AND p.is_default) OR c.profile_id=p.id)`,
     [ticketId, userId, profileId, context.jobId, context.leaseToken]
   );
   if (owned.rowCount !== 1) throw new Error('Profile export no longer authorized');
   const priorKey = owned.rows[0]?.privacy_export_storage_key;
   if (priorKey) {
+    if (!isProfileExportArchive(ticketId, priorKey))
+      throw new Error('Profile export archive requires reconciliation');
     await provider.deleteObject(priorKey);
     await pool.query(
       `UPDATE tickets SET privacy_export_storage_key=NULL,privacy_export_expires_at=NULL
@@ -377,7 +391,7 @@ export async function generateProfileExport(
          AND t.privacy_request_type='export' AND t.privacy_export_job_id=$4
          AND j.id=$4 AND j.status='processing' AND j.lease_token=$6
          AND j.lease_until>clock_timestamp()
-         AND j.operating_context='customer'
+         AND ${EXPORT_JOB_LINK}
          AND p.id=t.profile_id AND p.user_id=$2 AND NOT p.archived
          AND u.user_id=$2 AND u.disabled_at IS NULL
          AND ((c.user_id IS NULL AND p.is_default) OR c.profile_id=p.id)
@@ -421,8 +435,11 @@ export async function cleanupExpiredProfileExports(
   const expired = (
     await pool.query<{ id: string; privacy_export_storage_key: string }>(
       `SELECT id,privacy_export_storage_key FROM tickets
-       WHERE privacy_export_storage_key IS NOT NULL AND privacy_export_expires_at<=now()
-       ORDER BY privacy_export_expires_at,id LIMIT 25`
+       WHERE privacy_request_type='export' AND privacy_export_expires_at<=now()
+         AND lower(split_part(privacy_export_storage_key,'/',3))=id::text
+         AND privacy_export_storage_key~$1
+       ORDER BY privacy_export_expires_at,id LIMIT 25`,
+      [PROFILE_EXPORT_ARCHIVE_PATTERN]
     )
   ).rows;
   for (const row of expired) {

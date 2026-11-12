@@ -37,6 +37,10 @@ export { scanUploadWithClamAv, scanWithClamAv } from './clamav.js';
 export type { ScannerEndpoint, ScanVerdict } from './clamav.js';
 export { readCappedBytes, readCappedJson } from './read-capped-bytes.js';
 export {
+  isProfileExportArchive,
+  PROFILE_EXPORT_ARCHIVE_PATTERN,
+} from './profile-export-archive.js';
+export {
   MULTIPART_PART_SIZE,
   validMultipartParts,
   finishMultipartUpload,

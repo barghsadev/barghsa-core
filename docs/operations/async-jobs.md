@@ -13,3 +13,9 @@ Unknown types stay queued until their handler is deployed. Interrupted leases ca
 Mount `JobProgress` with the returned ID. It polls every two seconds while queued or processing, stops on terminal state, cancels stale reads when the ID changes, and offers loading recovery, failed-job retry and the completed result link. Supply an estimated duration only when the operation can provide one; otherwise the component states that an estimate is unavailable. Persian and English labels and accessible progress/status announcements are shared with the UI package.
 
 The current worker registers the profile-export handler, and the profile lifecycle screen uses this component. Document scanning, knowledge processing and model tests have their own durable queues and status flows. Document generation and media-processing integrations must use their approved workflow when those product operations are added; their presence is not inferred from the generic framework.
+
+Profile export publication and download require the job to match the request,
+profile, owner and customer context. The archive key belongs to that exact
+request. A mismatched job or archive leaves the download unavailable and the
+closure export blocker active. Retry and expiry cleanup leave mismatched archive
+references in place for reconciliation without deleting the referenced object.

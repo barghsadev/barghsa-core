@@ -317,10 +317,62 @@ it('refuses to publish a customer export from a staff-context job', async () => 
   await pool.query(`UPDATE async_jobs SET operating_context='customer' WHERE id=$1`, [jobId]);
 });
 
+it('requires the job and prior archive to belong to this ticket before any storage operation', async () => {
+  const context = { jobId, leaseToken, setProgress: async () => undefined };
+  const payload = { ticketId, profileId, userId };
+  const otherKey = `tmp/profile-exports/${randomUUID()}/${randomUUID()}.zip`;
+  objects.set(otherKey, Buffer.from('Unrelated fixture archive'));
+  try {
+    await pool.query(
+      "UPDATE async_jobs SET payload=jsonb_set(payload,'{ticketId}',to_jsonb($2::text)) WHERE id=$1",
+      [jobId, randomUUID()]
+    );
+    await expect(generateProfileExport(payload, context, pool, provider)).rejects.toThrow(
+      'Profile export no longer authorized'
+    );
+    await pool.query('UPDATE async_jobs SET payload=$2::jsonb WHERE id=$1', [
+      jobId,
+      JSON.stringify(payload),
+    ]);
+    await pool.query(
+      `UPDATE tickets SET privacy_export_storage_key=$2,privacy_export_expires_at=clock_timestamp()-interval '1 second' WHERE id=$1`,
+      [ticketId, otherKey]
+    );
+    await expect(generateProfileExport(payload, context, pool, provider)).rejects.toThrow(
+      'Profile export archive requires reconciliation'
+    );
+    expect(await cleanupExpiredProfileExports(pool, provider)).toBe(0);
+    expect([...objects.keys()]).toEqual([otherKey]);
+    expect(
+      (await pool.query('SELECT privacy_export_storage_key FROM tickets WHERE id=$1', [ticketId]))
+        .rows
+    ).toEqual([{ privacy_export_storage_key: otherKey }]);
+  } finally {
+    objects.delete(otherKey);
+    await pool.query('UPDATE async_jobs SET payload=$2::jsonb WHERE id=$1', [
+      jobId,
+      JSON.stringify(payload),
+    ]);
+    await pool.query(
+      'UPDATE tickets SET privacy_export_storage_key=NULL,privacy_export_expires_at=NULL WHERE id=$1',
+      [ticketId]
+    );
+  }
+});
+
 it('creates a private archive with customer fields and eligible document bytes, then expires it', async () => {
+  const legacyPayload = {
+    ticketId: ticketId.toUpperCase(),
+    profileId: profileId.toUpperCase(),
+    userId,
+  };
+  await pool.query('UPDATE async_jobs SET payload=$2::jsonb WHERE id=$1', [
+    jobId,
+    JSON.stringify(legacyPayload),
+  ]);
   const progress: number[] = [];
   const result = await generateProfileExport(
-    { ticketId, profileId, userId },
+    legacyPayload,
     {
       jobId,
       leaseToken,

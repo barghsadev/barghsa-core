@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T16:21:40+00:00",
+  "updated": "2026-11-12T16:30:37+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -30646,7 +30646,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+              "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
             },
             {
               "path": "packages/shared/src/storage/multipart-upload.test.ts",
@@ -30778,7 +30778,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/crm/account-recovery-http.integration.test.ts",
@@ -31411,6 +31411,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -45557,7 +45566,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/wallet/customer-wallet-access-http.integration.test.ts",
@@ -47148,6 +47157,14 @@
                 "apps/api/src/notifications/notifications.service.ts"
               ],
               "scope": "Current and legacy inbox routes hold the account and session through list, count and acknowledgement, with scope checks still in the resource query. The live PostgreSQL regressions, API contract, web callers and existing page-performance assertion passed."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -84678,7 +84695,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -84730,7 +84747,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -85597,6 +85614,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -85984,7 +86010,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -86036,7 +86062,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -86903,6 +86929,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -87290,7 +87325,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -87342,7 +87377,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -88209,6 +88244,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -101268,7 +101312,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/worker/src/notifications/email-transport.ts",
@@ -101416,7 +101460,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/auth/login-device-notifications-http.integration.test.ts",
@@ -103750,6 +103794,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -133524,7 +133577,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -133576,7 +133629,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -134443,6 +134496,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -134762,7 +134824,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -134814,7 +134876,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -135681,6 +135743,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -136006,7 +136077,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -136058,7 +136129,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -136925,6 +136996,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -258202,7 +258282,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -258222,7 +258302,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -258294,11 +258374,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.ts",
@@ -259149,6 +259229,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -259365,7 +259456,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -259385,7 +259476,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -259457,11 +259548,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.ts",
@@ -260312,6 +260403,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -260530,7 +260632,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -260546,7 +260648,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -260638,11 +260740,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "packages/db/src/schema/consultation-requests.ts",
@@ -261611,6 +261713,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -261914,7 +262027,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -261930,7 +262043,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -262094,11 +262207,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "package.json",
@@ -263915,6 +264028,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -264263,7 +264387,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -264279,7 +264403,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/upload/upload-access.test.ts",
@@ -264443,11 +264567,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "package.json",
@@ -266264,6 +266388,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -266524,7 +266659,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/tickets/tickets.controller.ts",
@@ -266544,7 +266679,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/session/session-step-up.ts",
@@ -266616,11 +266751,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.ts",
@@ -267471,6 +267606,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -567056,7 +567202,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+              "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -567116,7 +567262,7 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -567321,6 +567467,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -567394,7 +567549,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+              "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.ts",
@@ -567454,7 +567609,7 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -567659,6 +567814,15 @@
                 "packages/shared/src/storage/storage.test.ts"
               ],
               "scope": "Bound successful server-side S3 body transfers in time. The stream API, idle timeout, control response cap, presigned URLs, object authority and byte checks retain their existing contracts. Passing storage, HTTP access, export and cleanup cases support this scoped renewal."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -582495,7 +582659,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+              "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
             },
             {
               "path": "packages/shared/src/storage/multipart-upload.test.ts",
@@ -582974,6 +583138,14 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -603855,7 +604027,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/build.mjs",
@@ -603911,15 +604083,15 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "73e71d441dbde777dd7053033c420997520a25edc058e18b4ba5931e56e3d566"
+              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -604222,6 +604394,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -604376,7 +604559,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604432,15 +604615,15 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "73e71d441dbde777dd7053033c420997520a25edc058e18b4ba5931e56e3d566"
+              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -604767,6 +604950,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -604921,7 +605115,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/build.mjs",
@@ -604977,15 +605171,15 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "73e71d441dbde777dd7053033c420997520a25edc058e18b4ba5931e56e3d566"
+              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -605288,6 +605482,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -605443,7 +605648,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/build.mjs",
@@ -605499,15 +605704,15 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "73e71d441dbde777dd7053033c420997520a25edc058e18b4ba5931e56e3d566"
+              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
             },
             {
               "path": "packages/db/drizzle/production/0221_async_jobs.sql",
@@ -605834,6 +606039,17 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts",
+                "docs/operations/async-jobs.md"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -616537,7 +616753,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/worker/src/ai-models/test-runner.test.ts",
@@ -616557,11 +616773,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "docs/security/authorization.md",
@@ -616847,6 +617063,16 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ]
         }
@@ -618709,8 +618935,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, and 19 customer and staff support-ticket method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with ticket privacy requests, export and closure, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, and six profile privacy request, export and closure method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with account-owned job reads, result redirects and retry, then the remaining domains. Reuse existing source-bound tests and shared authorization evidence for intact handlers. Retain owner-approved authority and verify demonstrated gaps with defensive evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -618813,6 +619039,7 @@
           "apps/api/src/solar/solar-request.integration.test.ts",
           "apps/api/src/solar/solar-request.service.ts",
           "apps/api/src/storage/verified-attachments.service.ts",
+          "apps/api/src/tickets/profile-closure-http.integration.test.ts",
           "apps/api/src/tickets/tickets-http.integration.test.ts",
           "apps/api/src/tickets/tickets.service.ts",
           "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
@@ -618843,6 +619070,9 @@
           "apps/web/src/pages/electricity-increase-fixtures.ts",
           "apps/worker/src/contracts/electricity-increase-runner.test.ts",
           "apps/worker/src/contracts/electricity-increase-runner.ts",
+          "apps/worker/src/privacy/profile-export.integration.test.ts",
+          "apps/worker/src/privacy/profile-export.ts",
+          "docs/operations/async-jobs.md",
           "docs/operations/notification-delivery-recovery.md",
           "docs/operations/storage-retention.md",
           "docs/security/authorization.md",
@@ -618856,7 +619086,9 @@
           "packages/db/src/electricity-system-audit.migrated.test.ts",
           "packages/db/src/refund-processing.migrated.test.ts",
           "packages/db/src/refund-processing.ts",
-          "packages/db/src/saving-system-audit.migrated.test.ts"
+          "packages/db/src/saving-system-audit.migrated.test.ts",
+          "packages/shared/src/storage/index.ts",
+          "packages/shared/src/storage/profile-export-archive.ts"
         ],
         "batches": [
           "release-0.6-consultation-invoice-authority",
@@ -618882,7 +619114,8 @@
           "release-0.6-failed-notification-authority",
           "release-0.6-notification-history-corrections",
           "release-0.6-inbox-session-authority",
-          "release-0.6-ticket-attachment-authority"
+          "release-0.6-ticket-attachment-authority",
+          "release-0.6-profile-export-authority"
         ],
         "current_acceptance": null
       }
@@ -622671,11 +622904,11 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "apps/worker/src/notifications/outbox-runner.ts",
@@ -622726,6 +622959,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ]
         }
@@ -622832,7 +623074,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/wallet/wallet-history.test.ts",
@@ -623000,6 +623242,14 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ]
         }
@@ -647475,7 +647725,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
@@ -647499,11 +647749,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "deploy/pilot/nginx.conf",
@@ -647778,6 +648028,16 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ]
         }
@@ -925872,7 +926132,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -925924,7 +926184,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -926390,6 +926650,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -926573,7 +926842,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -926625,7 +926894,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -927091,6 +927360,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -927278,7 +927556,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -927330,7 +927608,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -927796,6 +928074,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -927980,7 +928267,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -928032,7 +928319,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -928498,6 +928785,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -928681,7 +928977,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -928733,7 +929029,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -929199,6 +929495,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -929384,7 +929689,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -929436,7 +929741,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/vitest.config.ts",
@@ -929902,6 +930207,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -975572,7 +975886,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/staff-tickets.controller.ts",
@@ -975624,7 +975938,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/web/e2e/admin-settings-live.spec.ts",
@@ -980585,6 +980899,15 @@
                 "apps/api/src/tickets/tickets.service.ts"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -982068,7 +982391,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
@@ -982076,7 +982399,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -983160,11 +983483,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
@@ -983252,7 +983575,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "73e71d441dbde777dd7053033c420997520a25edc058e18b4ba5931e56e3d566"
+              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -983924,7 +984247,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+              "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -985886,6 +986209,19 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts",
+                "docs/operations/async-jobs.md",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "presentation_renewals": [
@@ -987323,7 +987659,7 @@
             },
             {
               "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
-              "sha256": "e99be701b6f410a91ae9c1fe4b0a21f5e34301a98a976037e57949ebea04441b"
+              "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
             },
             {
               "path": "apps/api/src/tickets/tickets-http.integration.test.ts",
@@ -987331,7 +987667,7 @@
             },
             {
               "path": "apps/api/src/tickets/tickets.service.ts",
-              "sha256": "eae552f63b96ad27ce997d82bb0d25c2e7689a437b29acc106774f64f9ddaea2"
+              "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
             },
             {
               "path": "apps/api/src/upload/content-type-sniffer.test.ts",
@@ -988395,11 +988731,11 @@
             },
             {
               "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
-              "sha256": "e72ab1f731d30dec647b646375990538856aee9c6f1a6402eecd93d217252f67"
+              "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
             },
             {
               "path": "apps/worker/src/privacy/profile-export.ts",
-              "sha256": "24ea824af7a576a68bcbfec02d7c8767200b1ef952bb41fb622c58f7df0fd280"
+              "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
             },
             {
               "path": "apps/worker/src/storage/multipart-cleanup.integration.test.ts",
@@ -988487,7 +988823,7 @@
             },
             {
               "path": "docs/operations/async-jobs.md",
-              "sha256": "73e71d441dbde777dd7053033c420997520a25edc058e18b4ba5931e56e3d566"
+              "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
             },
             {
               "path": "docs/operations/notification-delivery-recovery.md",
@@ -989155,7 +989491,7 @@
             },
             {
               "path": "packages/shared/src/storage/index.ts",
-              "sha256": "3f61052d5c9dfad8e4ace59dc384680d0139f50a54eae61838e23ab0ed802e80"
+              "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
             },
             {
               "path": "packages/shared/src/storage/runtime-config.test.ts",
@@ -991021,6 +991357,19 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Ticket and comment attachment reads require matching sealed file provenance. Ticket ownership, assignment, internal-note visibility, authorized publication, idempotent retries and legacy single-owner references passed the related checks."
+            },
+            {
+              "batch": "release-0.6-profile-export-authority",
+              "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+              "paths": [
+                "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+                "apps/api/src/tickets/tickets.service.ts",
+                "apps/worker/src/privacy/profile-export.integration.test.ts",
+                "apps/worker/src/privacy/profile-export.ts",
+                "docs/operations/async-jobs.md",
+                "packages/shared/src/storage/index.ts"
+              ],
+              "scope": "Profile export request, worker publication, download and closure readiness require the same ticket, owner, profile and customer job. Archive cleanup is bound to the ticket namespace. Existing lifecycle, closure retention and export checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1152703,6 +1153052,211 @@
         {
           "file": "support-ticket-routes.json",
           "sha256": "604e43047192d868a4a02c67def7941b21999f982e82694eb895fbb754458f1a"
+        }
+      ]
+    },
+    "release-0.6-profile-export-authority": {
+      "batch": "release-0.6-profile-export-authority",
+      "base_commit": "5c4930b345391ee03ce49ac1255c49eeb4b0fee2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-06.01.01",
+        "02-auth-users-admin.md#T-06.01.02",
+        "02-auth-users-admin.md#T-06.01.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "02-auth-users-admin.md#T-09.08.01",
+        "02-auth-users-admin.md#T-09.08.02",
+        "02-auth-users-admin.md#T-09.08.03",
+        "02-auth-users-admin.md#T-11.01.01",
+        "02-auth-users-admin.md#T-11.01.02",
+        "02-auth-users-admin.md#T-11.01.03",
+        "02-auth-users-admin.md#T-11.02.01",
+        "02-auth-users-admin.md#T-11.02.02",
+        "02-auth-users-admin.md#T-11.03.01",
+        "05-notifications-documents-ai.md#T-05.09.01",
+        "05-notifications-documents-ai.md#T-05.09.02",
+        "05-notifications-documents-ai.md#T-05.15.01",
+        "05-notifications-documents-ai.md#T-05.24.01",
+        "05-notifications-documents-ai.md#T-05.24.02",
+        "05-notifications-documents-ai.md#T-05.24.03",
+        "05-notifications-documents-ai.md#T-05.24.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.04.02.02",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "07-ui-ux-design.md#T-07.23.01.01",
+        "07-ui-ux-design.md#T-07.23.01.02",
+        "07-ui-ux-design.md#T-07.23.01.03",
+        "07-ui-ux-design.md#T-07.23.01.04",
+        "07-ui-ux-design.md#T-07.23.01.05",
+        "07-ui-ux-design.md#T-07.23.01.06",
+        "release-readiness#R-02.02",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+        "apps/api/src/tickets/tickets.service.ts",
+        "apps/worker/src/privacy/profile-export.integration.test.ts",
+        "apps/worker/src/privacy/profile-export.ts",
+        "docs/operations/async-jobs.md",
+        "packages/shared/src/storage/index.ts",
+        "packages/shared/src/storage/profile-export-archive.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/openapi.json",
+          "sha256": "e9029dd0ce4797234f8e99fecb393a447419d5266d363c8eb379f5ffcd769a49"
+        },
+        {
+          "path": "apps/api/src/jobs/jobs-http.integration.test.ts",
+          "sha256": "ea4a94d284a9fe43edbb8dd744a4ea54ab71a29b851c7819d47730f3fe482bfe"
+        },
+        {
+          "path": "apps/api/src/jobs/jobs.service.ts",
+          "sha256": "66fbb1b9a8e3449abe9d5a8a4da16fef5b117f4880781b7c6a98eb2a0f1bf068"
+        },
+        {
+          "path": "apps/api/src/session/session-step-up.ts",
+          "sha256": "f9fe2cdc534e7d23c00ebe811a2ce7f4e6e7f38f58eca911a529968ed6da5999"
+        },
+        {
+          "path": "apps/api/src/session/session.guard.ts",
+          "sha256": "a90a6f0363c3c5af0beb3fbbf5c1485b6e716696889844348ebceb9707850e47"
+        },
+        {
+          "path": "apps/api/src/tickets/lifecycle-http.integration.test.ts",
+          "sha256": "ddb937defc6cf0c3b1a673ba7b77f1647d7186df91d32c28b53034e8c1406f96"
+        },
+        {
+          "path": "apps/api/src/tickets/profile-closure-http.integration.test.ts",
+          "sha256": "692c0979cb9c342565f36acee5bb6befa6b7da55e8b62dd21d0007af8b947254"
+        },
+        {
+          "path": "apps/api/src/tickets/staff-tickets.controller.ts",
+          "sha256": "82296305481d8de8997cae0122504768d6cdca5855f17fc8d7fa562fe387cfd6"
+        },
+        {
+          "path": "apps/api/src/tickets/ticket-actor.ts",
+          "sha256": "05088c397cafee2bbda83e6115b7c30c41df5813d53c115e846f8e9900a32ce9"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.controller.ts",
+          "sha256": "a4d723c79c8a761555001e209d0bbe2dd296fa38702ae855b8d97cea59f3e6a6"
+        },
+        {
+          "path": "apps/api/src/tickets/tickets.service.ts",
+          "sha256": "179281bdb4eb3a76ac06fc627d9367d18fef034ad000b9ed388404633016e382"
+        },
+        {
+          "path": "apps/web/src/components/ProfileClosureReview.test.tsx",
+          "sha256": "c701bff73764ef6bf4795856cff93042f0fd198ce4af33fa0c358fb670c35467"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.test.tsx",
+          "sha256": "4cbe2f639a2438bcc2b54c9c404e299c259607ff6e99827bfd051fdbcc379cf1"
+        },
+        {
+          "path": "apps/web/src/components/ProfileLifecyclePanel.tsx",
+          "sha256": "cc53b8e6eacede2177a6d61c1d845cf74449dd19c8fde3aedce624fbc50e8a0f"
+        },
+        {
+          "path": "apps/web/src/components/profile-lifecycle-query.test.tsx",
+          "sha256": "f4032c72ebbab454ae051e2b0e75012e7b24818f5c44e1639d1d5a874184726b"
+        },
+        {
+          "path": "apps/worker/src/jobs/async-runner.integration.test.ts",
+          "sha256": "5480d93ab9ee237b7da998f2637d33db3a150bdf7815476a82dfd5078977fcc4"
+        },
+        {
+          "path": "apps/worker/src/jobs/async-runner.ts",
+          "sha256": "d4e647598a777f06de85aa513aacc755b0000966a944ad705a6cdbec3aa662b7"
+        },
+        {
+          "path": "apps/worker/src/privacy/profile-export.integration.test.ts",
+          "sha256": "9e3620f458ef31e58b790238100df3dbfc484fde1ec8e3974ca477ee745bfa90"
+        },
+        {
+          "path": "apps/worker/src/privacy/profile-export.ts",
+          "sha256": "d10cdf6e94d50ad028029ecca46082d6d3d1bd369fff23f0d3ff5d5b514cb84e"
+        },
+        {
+          "path": "docs/operations/async-jobs.md",
+          "sha256": "fc96143777aac2d26702c3dff62e5ddf30390eb03dfcd42b56efed624ccbb7ea"
+        },
+        {
+          "path": "packages/shared/src/storage/index.ts",
+          "sha256": "5acfdfe2bfc42495943ffd17ac8858db2be0f8df20119b2398a724aca9ad1d26"
+        },
+        {
+          "path": "packages/shared/src/storage/profile-export-archive.ts",
+          "sha256": "a258d7f2957ce465d33f968ec09cc101fd2c67e4df714f7fa5408113cc6f4507"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "Reviewed six customer and staff profile lifecycle preview, request, export queue, export download, closure preview and closure execution routes. Current owned-profile selection, staff grants, separate approval, step-up, audit, retention and rollback remain enforced.",
+        "Queue reuse, publication and download bind job type, customer context, creator and ticket, profile and owner payload. Download and closure readiness also require the exact completed result and an unexpired archive in the ticket namespace.",
+        "Native checks withhold a signed URL and block closure on a mismatched job or archive. A valid archive retains the private no-store redirect and bounded expiry. Worker retry and expiry cleanup preserve a mismatched stored reference and its unrelated object. Historical uppercase UUID paths and payloads retain their authorized scope.",
+        "14 API, 17 worker, 38 shared build-contract and 26 web caller checks passed. Shared, API and worker builds, typechecks, generated API contract, lint and formatting passed."
+      ],
+      "limitations": [
+        "These checks prove the compiled local candidate. The remaining endpoint audit, v0.6.0 staging and Telegram receipts are pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-profile-export-authority",
+      "execution_receipts": [
+        {
+          "file": "api-final.log",
+          "sha256": "4c9cf29553b637d4f71a62392eaa356f55593d3c181ddc3a62b7545c30e25fec"
+        },
+        {
+          "file": "api.log",
+          "sha256": "b2095d4cc464105bbac59244bf090a33267f123febf0de94778c35657c2b5733"
+        },
+        {
+          "file": "worker-final.log",
+          "sha256": "f4b1cdeea3bbe4be5a1ff7f3eaa1b9b3fd915c7892efe4cb3eb99b9bc0ec7c8d"
+        },
+        {
+          "file": "worker.log",
+          "sha256": "7e48b3c6a586298c8ac6cd6157e3ae024186867e262702da072d168283c5a45e"
+        },
+        {
+          "file": "shared-final.log",
+          "sha256": "4fb9d784ffd9af4bc869820b74ff72753339deef2bbaad047864b3560ce24fca"
+        },
+        {
+          "file": "web.log",
+          "sha256": "c6da28bc5553db31ec02e0625f20dbd25485d57e9e59800feb675d03582a839d"
+        },
+        {
+          "file": "types-final.log",
+          "sha256": "3cb38548e46163c5cfbfbb1afc12afe8af5dc93221a597d35143ac50e6f4c34d"
+        },
+        {
+          "file": "contract.log",
+          "sha256": "1dfea419506d85f6e421fb02f4039331ce88266beb1424d358e868887c268634"
+        },
+        {
+          "file": "format-final.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint-final.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "route-inventory.json",
+          "sha256": "ead28fae125006a7e69ff2df239d666b7eec027a7d89a9dfc055bed120ced68f"
+        },
+        {
+          "file": "profile-privacy-routes.json",
+          "sha256": "6ab1d9895c8e19d1433562f588be370e472491c0eee29e175256539848b798c3"
         }
       ]
     }

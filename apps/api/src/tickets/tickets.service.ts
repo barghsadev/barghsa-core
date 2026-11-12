@@ -41,9 +41,21 @@ import {
 } from '@nestjs/common';
 import { ensureDocumentPreview, readPreviewObject } from '../documents/document-preview.js';
 import { getDbPool, loadStoredStorageConfiguration } from '@barghsa/db';
-import { runtimeStorageProvider, type StorageProvider } from '@barghsa/shared/storage';
+import {
+  isProfileExportArchive,
+  runtimeStorageProvider,
+  type StorageProvider,
+} from '@barghsa/shared/storage';
 import { STORAGE_PROVIDER } from '../storage/storage.constants.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
+
+const PROFILE_EXPORT_JOB_LINK = `j.id=t.privacy_export_job_id AND j.type='profile-export'
+  AND j.created_by=t.user_id AND j.operating_context='customer'
+  AND lower(j.payload->>'ticketId')=t.id::text AND lower(j.payload->>'profileId')=t.profile_id::text
+  AND j.payload->>'userId'=t.user_id`;
+const PROFILE_EXPORT_JOB_READY = `j.status='completed'
+  AND lower(j.result_url)='/api/tickets/lifecycle-requests/' || t.id::text || '/export'
+  AND t.privacy_export_expires_at>clock_timestamp()`;
 
 export interface TicketRow {
   id: string;
@@ -559,9 +571,11 @@ export class TicketsService {
           privacy_export_job_id: string | null;
           privacy_export_expires_at: Date | null;
         }>(
-          `SELECT id,privacy_request_type,status,created_at,privacy_export_job_id,privacy_export_expires_at FROM tickets
-           WHERE profile_id=$1 AND user_id=$2 AND privacy_request_type IS NOT NULL
-           ORDER BY created_at DESC,id DESC LIMIT 10`,
+          `SELECT t.id,t.privacy_request_type,t.status,t.created_at,j.id AS privacy_export_job_id,
+             CASE WHEN j.id IS NOT NULL THEN t.privacy_export_expires_at END AS privacy_export_expires_at
+           FROM tickets t LEFT JOIN async_jobs j ON ${PROFILE_EXPORT_JOB_LINK}
+           WHERE t.profile_id=$1 AND t.user_id=$2 AND t.privacy_request_type IS NOT NULL
+           ORDER BY t.created_at DESC,t.id DESC LIMIT 10`,
           [profileId, actor.userId]
         )
       ).rows.map((row) => ({
@@ -746,9 +760,8 @@ export class TicketsService {
         ready: boolean;
       }>(
         `SELECT t.id,t.privacy_export_expires_at,t.privacy_export_job_id,t.privacy_export_storage_key,
-           (j.status='completed' AND t.privacy_export_storage_key IS NOT NULL
-             AND t.privacy_export_expires_at>clock_timestamp()) IS TRUE AS ready
-         FROM tickets t LEFT JOIN async_jobs j ON j.id=t.privacy_export_job_id
+           (${PROFILE_EXPORT_JOB_READY}) IS TRUE AS ready
+         FROM tickets t LEFT JOIN async_jobs j ON ${PROFILE_EXPORT_JOB_LINK}
          WHERE t.profile_id=$1 AND t.user_id=$2 AND t.privacy_request_type='export'
          ORDER BY t.created_at DESC,t.id DESC LIMIT 1 FOR SHARE OF t`,
         [request.profile_id, request.user_id]
@@ -758,7 +771,12 @@ export class TicketsService {
       {
         code: 'pendingExport',
         count:
-          !request.privacy_closure_completed_at && exportRequest && !exportRequest.ready ? 1 : 0,
+          !request.privacy_closure_completed_at &&
+          exportRequest &&
+          (!exportRequest.ready ||
+            !isProfileExportArchive(exportRequest.id, exportRequest.privacy_export_storage_key))
+            ? 1
+            : 0,
         owner: 'customer',
         nextStep: 'prepareExport',
       },
@@ -923,15 +941,19 @@ export class TicketsService {
       // Recheck the clock after all writes/lock waits; an expired export must not
       // be stranded by a newly committed closure. The export request row is held.
       if (preview.exportTicketId) {
-        const ready = await client.query(
-          `SELECT t.id FROM tickets t JOIN async_jobs j ON j.id=t.privacy_export_job_id
+        const ready = await client.query<{ privacy_export_storage_key: string | null }>(
+          `SELECT t.privacy_export_storage_key FROM tickets t JOIN async_jobs j ON ${PROFILE_EXPORT_JOB_LINK}
            WHERE t.id=$1 AND t.profile_id=$2 AND t.user_id=$3 AND t.privacy_request_type='export'
-             AND j.status='completed' AND t.privacy_export_storage_key IS NOT NULL
-             AND t.privacy_export_expires_at>clock_timestamp()`,
+             AND ${PROFILE_EXPORT_JOB_READY}`,
           [preview.exportTicketId, preview.profileId, preview.ownerUserId]
         );
-        if (ready.rowCount !== 1)
-          throw new HttpException('Export expired; refresh the closure preview', 409);
+        if (
+          !isProfileExportArchive(
+            preview.exportTicketId,
+            ready.rows[0]?.privacy_export_storage_key ?? null
+          )
+        )
+          throw new HttpException('Export no longer available; refresh the closure preview', 409);
       }
       await requireSessionStepUp(client, actor);
       await client.query('COMMIT');
@@ -953,20 +975,31 @@ export class TicketsService {
       await authorizeTicketMutation(client, actor, actor.userId, false);
       const profileId = await this.activeOwnedProfile(client, actor.userId);
       const request = (
-        await client.query<{ privacy_export_job_id: string | null }>(
-          `SELECT privacy_export_job_id FROM tickets
-           WHERE id=$1 AND user_id=$2 AND profile_id=$3 AND privacy_request_type='export'
-           FOR UPDATE`,
+        await client.query<{
+          id: string;
+          privacy_export_job_id: string | null;
+          matching_job_id: string | null;
+        }>(
+          `SELECT t.id,t.privacy_export_job_id,j.id AS matching_job_id
+           FROM tickets t LEFT JOIN async_jobs j ON ${PROFILE_EXPORT_JOB_LINK}
+           WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3 AND t.privacy_request_type='export'
+           FOR UPDATE OF t`,
           [ticketId, actor.userId, profileId]
         )
       ).rows[0];
       if (!request) throw new HttpException('Export request not found', 404);
+      if (request.privacy_export_job_id && !request.matching_job_id)
+        throw new HttpException('Export job requires reconciliation', 409);
       const jobId = request.privacy_export_job_id ?? uuidv7();
       if (!request.privacy_export_job_id) {
         await client.query(
           `INSERT INTO async_jobs(id,type,payload,created_by,operating_context)
            VALUES($1,'profile-export',$2::jsonb,$3,'customer')`,
-          [jobId, JSON.stringify({ ticketId, profileId, userId: actor.userId }), actor.userId]
+          [
+            jobId,
+            JSON.stringify({ ticketId: request.id, profileId, userId: actor.userId }),
+            actor.userId,
+          ]
         );
         await client.query(`UPDATE tickets SET privacy_export_job_id=$2 WHERE id=$1`, [
           ticketId,
@@ -1002,14 +1035,15 @@ export class TicketsService {
       const request = (
         await client.query<{ privacy_export_storage_key: string; privacy_export_expires_at: Date }>(
           `SELECT t.privacy_export_storage_key,t.privacy_export_expires_at FROM tickets t
-           JOIN async_jobs j ON j.id=t.privacy_export_job_id AND j.status='completed'
+           JOIN async_jobs j ON ${PROFILE_EXPORT_JOB_LINK}
            WHERE t.id=$1 AND t.user_id=$2 AND t.profile_id=$3
-             AND t.privacy_request_type='export' AND t.privacy_export_storage_key IS NOT NULL
-             AND t.privacy_export_expires_at>now() FOR UPDATE OF t`,
+             AND t.privacy_request_type='export' AND ${PROFILE_EXPORT_JOB_READY}
+             FOR UPDATE OF t FOR SHARE OF j`,
           [ticketId, actor.userId, profileId]
         )
       ).rows[0];
-      if (!request) throw new HttpException('Export unavailable or expired', 404);
+      if (!request || !isProfileExportArchive(ticketId, request.privacy_export_storage_key))
+        throw new HttpException('Export unavailable or expired', 404);
       const seconds = Math.min(
         300,
         Math.floor((request.privacy_export_expires_at.getTime() - Date.now()) / 1000)
