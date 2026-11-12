@@ -134,7 +134,7 @@ function fixture(paid = false, credit = false) {
     invoiceProofs = 1,
     missingProof = false;
   const client = {
-    query: vi.fn(async (sql: string) => ({
+    query: vi.fn(async (sql: string, _params?: readonly unknown[]) => ({
       rows: sql.startsWith('SELECT profile_id,invoice_id')
         ? source
           ? [{ profile_id: profileId, invoice_id: invoiceId }]
@@ -241,12 +241,20 @@ it.each(contexts)(
     if (context.paid) expect(h.policy).toHaveBeenCalledWith(f.client, 'read');
     else expect(h.policy).not.toHaveBeenCalled();
     const queries = f.client.query.mock.calls.map((call) => call[0]);
+    const invoiceLock = queries.findIndex(
+      (sql) =>
+        sql.replace(/\s+/g, ' ') ===
+        'SELECT id FROM invoices WHERE consultation_id=$1 AND profile_id=$2 AND ($3::uuid IS NULL OR id=$3) ORDER BY id FOR UPDATE'
+    );
     expect(queries.indexOf('SELECT id FROM profiles WHERE id=$1 FOR SHARE')).toBeLessThan(
-      queries.indexOf('SELECT id FROM invoices WHERE id=$1 FOR UPDATE')
+      invoiceLock
     );
-    expect(queries.indexOf('SELECT id FROM invoices WHERE id=$1 FOR UPDATE')).toBeLessThan(
-      queries.findIndex((sql) => sql.includes('FOR UPDATE OF r'))
-    );
+    expect(f.client.query.mock.calls[invoiceLock]?.[1]).toEqual([
+      id,
+      profileId,
+      context.paid ? null : invoiceId,
+    ]);
+    expect(invoiceLock).toBeLessThan(queries.findIndex((sql) => sql.includes('FOR UPDATE OF r')));
     expect(queries.at(-1)).toBe('COMMIT');
     expect(f.client.release).toHaveBeenCalledOnce();
     noFinancialEffects(f);

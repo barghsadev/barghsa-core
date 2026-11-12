@@ -41,28 +41,28 @@ function fixture() {
     present = true,
     moved = false;
   const client = {
-    query: vi.fn<(sql: string) => Promise<{ rows: Record<string, unknown>[] }>>(
-      async (sql: string) => ({
-        rows: sql.startsWith('SELECT profile_id,invoice_id')
-          ? source
-            ? [{ profile_id: profileId, invoice_id: invoiceId }]
+    query: vi.fn<
+      (sql: string, params?: readonly unknown[]) => Promise<{ rows: Record<string, unknown>[] }>
+    >(async (sql: string) => ({
+      rows: sql.startsWith('SELECT profile_id,invoice_id')
+        ? source
+          ? [{ profile_id: profileId, invoice_id: invoiceId }]
+          : []
+        : sql.includes('FROM consultation_requests r JOIN profiles')
+          ? present
+            ? [
+                {
+                  id,
+                  profile_id: moved ? id : profileId,
+                  invoice_id: invoiceId,
+                  status: 'completed',
+                },
+              ]
             : []
-          : sql.includes('FROM consultation_requests r JOIN profiles')
-            ? present
-              ? [
-                  {
-                    id,
-                    profile_id: moved ? id : profileId,
-                    invoice_id: invoiceId,
-                    status: 'completed',
-                  },
-                ]
-              : []
-            : sql.startsWith('SELECT id FROM invoices WHERE consultation_id')
-              ? [{ id: invoiceId }]
-              : [],
-      })
-    ),
+          : sql.startsWith('SELECT id FROM invoices WHERE consultation_id')
+            ? [{ id: invoiceId }]
+            : [],
+    })),
     release: vi.fn(),
   };
   h.connect.mockResolvedValue(client);
@@ -117,11 +117,15 @@ it.each(contexts)(
     expect(context.write ? h.current : h.stepUp).not.toHaveBeenCalled();
     expect(h.policy).toHaveBeenCalledWith(f.client, 'read');
     const sql = f.client.query.mock.calls.map((call) => call[0]);
-    expect(sql.indexOf('SELECT id FROM profiles WHERE id=$1 FOR SHARE')).toBeLessThan(
-      sql.indexOf('SELECT id FROM invoices WHERE id=$1 FOR UPDATE')
+    const invoiceLock = sql.findIndex(
+      (value) =>
+        value.replace(/\s+/g, ' ') ===
+        'SELECT id FROM invoices WHERE consultation_id=$1 AND profile_id=$2 AND ($3::uuid IS NULL OR id=$3) ORDER BY id FOR UPDATE'
     );
+    expect(sql.indexOf('SELECT id FROM profiles WHERE id=$1 FOR SHARE')).toBeLessThan(invoiceLock);
+    expect(f.client.query.mock.calls[invoiceLock]?.[1]).toEqual([id, profileId, null]);
     expect(sql.findIndex((value) => value.includes('FOR UPDATE OF r'))).toBeGreaterThan(
-      sql.indexOf('SELECT id FROM invoices WHERE id=$1 FOR UPDATE')
+      invoiceLock
     );
     expect(sql.at(-1)).toBe('COMMIT');
     expect(f.client.release).toHaveBeenCalledOnce();

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T14:26:52+00:00",
+  "updated": "2026-11-12T14:34:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -324418,7 +324418,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -324438,7 +324438,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -325517,6 +325517,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -325796,7 +325805,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -325816,7 +325825,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -326895,6 +326904,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -327170,7 +327188,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -327190,7 +327208,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -328269,6 +328287,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -328543,7 +328570,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -328563,7 +328590,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -329642,6 +329669,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -329917,7 +329953,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -329937,7 +329973,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -331016,6 +331052,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -331291,7 +331336,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -331311,7 +331356,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -332390,6 +332435,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -332670,7 +332724,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -332690,7 +332744,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -333769,6 +333823,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -334047,7 +334110,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -334067,7 +334130,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -335146,6 +335209,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -335422,7 +335494,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -335442,7 +335514,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -336521,6 +336593,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -336800,7 +336881,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -336820,7 +336901,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -337899,6 +337980,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -338180,7 +338270,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -338200,7 +338290,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -339279,6 +339369,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -339555,7 +339654,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -339575,7 +339674,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -340654,6 +340753,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -340929,7 +341037,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -340949,7 +341057,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -342028,6 +342136,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -342304,7 +342421,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -342324,7 +342441,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -343403,6 +343520,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -343679,7 +343805,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -343699,7 +343825,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -344778,6 +344904,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -345055,7 +345190,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -345075,7 +345210,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -346154,6 +346289,15 @@
                 "apps/api/src/consultation/consultation-workflow.service.ts"
               ],
               "scope": "Consultation and invoice callers enforce profile and consultation scope for linked records. Verified authorized funding, review, settlement, receipt, notification, refund and cancellation behavior with the relevant compiled and unit suites."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -607884,6 +608028,8 @@
       "evidence": {
         "historical_acceptance": null,
         "changed_paths": [
+          "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+          "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
           "apps/api/src/consultation/consultation-payment.integration.test.ts",
           "apps/api/src/consultation/consultation-payment.ts",
           "apps/api/src/consultation/consultation-request.integration.test.ts",
@@ -607952,7 +608098,8 @@
           "release-0.6-saving-invoice-automation",
           "release-0.6-solar-linked-authority",
           "release-0.6-contract-linked-authority",
-          "release-0.6-cancellation-financial-scope"
+          "release-0.6-cancellation-financial-scope",
+          "release-0.6-consultation-lock-order-tests"
         ],
         "current_acceptance": null
       }
@@ -962894,7 +963041,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
-              "sha256": "4991f4732c99e9eaf6042b15e1bdaaa8f8f062c7a2a63bb143ba5d294a2e1224"
+              "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
             },
             {
               "path": "apps/api/src/consultation/consultation-fee-forms.controller.test.ts",
@@ -962914,7 +963061,7 @@
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
-              "sha256": "8f49ed36505bcadcdbef26e97a9208a0124310551c0b0b6bca9fd50404d851d4"
+              "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
             },
             {
               "path": "apps/api/src/consultation/consultation-paid-resolution.controller.test.ts",
@@ -967239,6 +967386,15 @@
                 "apps/api/src/saving/saving-order.integration.test.ts"
               ],
               "scope": "Cancellation decisions, refund receipts and notices verify their linked financial and service resources. Native lifecycle checks preserve accepted saving, electricity, contract and refund outcomes. Regression proves a mismatched saving credit is excluded from review and blocks mutation until reconciled."
+            },
+            {
+              "batch": "release-0.6-consultation-lock-order-tests",
+              "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+              "paths": [
+                "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+                "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+              ],
+              "scope": "The consultation authority suites verify exact scoped invoice lock arguments and preserve the profile-to-invoice-to-request lock order, permissions and effect-free checks."
             }
           ],
           "presentation_renewals": [
@@ -1135129,6 +1135285,83 @@
         {
           "file": "staging-release.json",
           "sha256": "2663514dfd04983e9b915adbe8e0d80a854cb8dd32a4d6389dd522dae4477a82"
+        }
+      ]
+    },
+    "release-0.6-consultation-lock-order-tests": {
+      "batch": "release-0.6-consultation-lock-order-tests",
+      "base_commit": "feba0512c9c0baaffe8335140d6f06a43687debb",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "03-core-business.md#T-03.03.01.01",
+        "03-core-business.md#T-03.03.01.02",
+        "03-core-business.md#T-03.03.01.03",
+        "03-core-business.md#T-03.03.01.04",
+        "03-core-business.md#T-03.03.02.01",
+        "03-core-business.md#T-03.03.02.02",
+        "03-core-business.md#T-03.03.02.03",
+        "03-core-business.md#T-03.03.02.04",
+        "03-core-business.md#T-03.03.02.05",
+        "03-core-business.md#T-03.03.03.01",
+        "03-core-business.md#T-03.03.03.02",
+        "03-core-business.md#T-03.03.03.03",
+        "03-core-business.md#T-03.03.03.04",
+        "03-core-business.md#T-03.03.03.05",
+        "03-core-business.md#T-03.03.03.06",
+        "03-core-business.md#T-03.03.03.07",
+        "release-readiness#R-02.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+        "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/consultation/consultation-fee-authority-replay.test.ts",
+          "sha256": "183db9c4ea79f74a17567e6e7f71305938ac79647843bb0b5dcb166e0b95076b"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-paid-resolution.authority.test.ts",
+          "sha256": "c51a4d61205b32f445369b7bb21b982c5db0be3fac3e86f4135c1430b3b5c363"
+        },
+        {
+          "path": "apps/api/src/consultation/consultation-workflow.service.ts",
+          "sha256": "8479b4de9b65f1fa378c938cf12190a41638680d1aaf816cdc856399b281c1f0"
+        },
+        {
+          "path": "pnpm-lock.yaml",
+          "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+        }
+      ],
+      "checks": [
+        "GitHub run 43229724581 on 8c4895f1 failed eight consultation assertions looking for the retired ID-only invoice lock. Current code locks by request and profile and retains the profile, invoice, request order.",
+        "Updated both suites to require the exact scoped statement, its request and profile parameters and its lock position. Ordinary fee review locks the current invoice. Paid review and recovery lock the scoped invoice set. Existing permission, session, rollback and no-effect checks remain.",
+        "All 33 affected authority cases passed. API typecheck, lint and formatting passed."
+      ],
+      "limitations": [
+        "The failed SHA remains rejected. Local evidence covers the corrected test source. The replacement exact hosted preflight must pass before publication."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-consultation-lock-order-tests",
+      "execution_receipts": [
+        {
+          "file": "authority-tests.log",
+          "sha256": "6b9a61b429c835fb88d2dce8cc7bd4ee563d693112c541b5e675b472d9e470f6"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "lint.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "file": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-electricity-automation-scope/failed-43229724581.log",
+          "sha256": "57bb07d98beec65eebebb8bdfb165c8ecf96c3c4088b58941223ec5162f4b8c4"
         }
       ]
     }
