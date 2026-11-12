@@ -17,12 +17,18 @@ export async function notifyCancellationRequest(
       solar_id: string | null;
     }>(
       `SELECT c.profile_id,p.user_id,c.contract_number::text,
-        e.order_id AS electricity_id,s.id AS saving_id,solar.id AS solar_id
+        e.id AS electricity_id,s.id AS saving_id,solar.id AS solar_id
       FROM contract_cancellation_requests r JOIN contracts c ON c.id=r.contract_id
       JOIN profiles p ON p.id=c.profile_id
-      LEFT JOIN electricity_contracts e ON e.contract_id=c.id AND c.service_type='electricity'
-      LEFT JOIN saving_orders s ON s.order_id=c.order_id AND c.service_type='savings'
-      LEFT JOIN solar_construction_requests solar ON solar.contract_id=c.id AND c.service_type='solar'
+      LEFT JOIN orders root ON root.id=c.order_id AND root.profile_id=c.profile_id
+        AND root.order_type=c.service_type::text
+      LEFT JOIN electricity_orders e ON e.id=root.id AND e.profile_id=c.profile_id
+        AND c.service_type='electricity'
+        AND EXISTS(SELECT 1 FROM electricity_contracts link WHERE link.order_id=e.id AND link.contract_id=c.id)
+      LEFT JOIN saving_orders s ON s.order_id=root.id AND s.profile_id=c.profile_id
+        AND c.service_type='savings'
+      LEFT JOIN solar_construction_requests solar ON solar.contract_id=c.id
+        AND solar.profile_id=c.profile_id AND c.service_type='solar'
       WHERE r.id=$2 AND r.contract_id=$1 AND r.status='Pending' AND NOT p.archived
       FOR SHARE OF p`,
       [contractId, requestId]

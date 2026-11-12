@@ -19,7 +19,10 @@ import { lockDualApprovalThreshold } from '../admin/dual-approval-threshold-lock
 import { notifyApprovalRequested } from '../admin/approval-notifications.js';
 import { requireSessionStepUp } from '../session/session-step-up.js';
 import { auditContract, contractIdempotency, type ContractActor } from './contract-transactions.js';
-import { readCancellationSnapshot } from './contract-cancellation-snapshot.js';
+import {
+  cancellationHardwareCreditScope,
+  readCancellationSnapshot,
+} from './contract-cancellation-snapshot.js';
 import type {
   ExecuteCancellationInput,
   PrepareCancellationInput,
@@ -191,15 +194,32 @@ export class ContractCancellationService {
           approval_status: string | null;
           customer_request_status: string | null;
           executed: boolean;
+          association_conflict: boolean;
         }
       >(
-        `SELECT i.*,a.status AS approval_status,r.status AS customer_request_status,EXISTS(SELECT 1 FROM contract_cancellations c WHERE c.intent_id=i.id) AS executed
-      FROM contract_cancellation_intents i LEFT JOIN approval_requests a ON a.id=i.approval_request_id
-      LEFT JOIN contract_cancellation_requests r ON r.id=i.customer_request_id WHERE i.contract_id=$1 AND i.id=$2`,
+        `SELECT i.*,approval.status AS approval_status,r.status AS customer_request_status,
+          EXISTS(SELECT 1 FROM contract_cancellations x WHERE x.contract_id=c.id AND x.intent_id=i.id) AS executed,
+          (i.financial_snapshot->>'profileId' IS DISTINCT FROM c.profile_id::text
+            OR EXISTS(SELECT 1 FROM jsonb_array_elements(i.financial_snapshot->'invoices') line
+              WHERE NOT EXISTS(SELECT 1 FROM invoices invoice
+                WHERE invoice.id::text=line->>'id' AND invoice.profile_id=c.profile_id
+                  AND (invoice.contract_id=c.id::text OR (invoice.order_id=c.order_id AND invoice.contract_id IS NULL))))
+            OR EXISTS(SELECT 1 FROM jsonb_array_elements(i.financial_snapshot->'hardwareCredits') line
+              WHERE NOT EXISTS(SELECT 1 FROM saving_hardware_amendments a
+                JOIN invoices credit ON credit.id=a.adjustment_invoice_id
+                WHERE a.contract_id=c.id AND a.price_delta_irr<0 AND credit.id::text=line->>'id'
+                  AND ${cancellationHardwareCreditScope}))) AS association_conflict
+        FROM contract_cancellation_intents i JOIN contracts c ON c.id=i.contract_id
+        LEFT JOIN approval_requests approval ON approval.id=i.approval_request_id
+          AND approval.action_type='contract_cancellation' AND approval.details->>'intentId'=i.id::text
+        LEFT JOIN contract_cancellation_requests r ON r.id=i.customer_request_id AND r.contract_id=c.id
+        WHERE i.contract_id=$1 AND i.id=$2`,
         [id, intentId]
       )
     ).rows[0];
     if (!row) throw new NotFoundException();
+    if (row.association_conflict)
+      throw new ConflictException('Cancellation invoice associations require reconciliation');
     return {
       id: row.id,
       contractId: row.contract_id,
@@ -307,10 +327,21 @@ export class ContractCancellationService {
           );
           const giftOrder = (
             await client.query<{ order_id: string; order_paid: boolean }>(
-              `SELECT c.order_id,
+              `SELECT o.id AS order_id,
                       EXISTS (SELECT 1 FROM invoices i
-                               WHERE i.order_id=c.order_id AND i.paid_amount>0) AS order_paid
-                 FROM contracts c WHERE c.id=$1 AND c.order_id IS NOT NULL
+                               WHERE i.order_id=o.id AND i.profile_id=o.profile_id
+                                 AND i.paid_amount>0) AS order_paid
+                 FROM contracts c JOIN orders o ON o.id=c.order_id
+                   AND o.profile_id=c.profile_id AND o.order_type=c.service_type::text
+                 WHERE c.id=$1
+                 AND NOT EXISTS (
+                   SELECT 1 FROM invoices i WHERE i.order_id=o.id AND i.profile_id<>o.profile_id
+                     AND i.paid_amount>0
+                 )
+                 AND NOT EXISTS (
+                   SELECT 1 FROM gift_code_redemptions redemption WHERE redemption.order_id=o.id
+                     AND redemption.profile_id<>o.profile_id AND redemption.status='consumed'
+                 )
                  AND NOT EXISTS (
                    SELECT 1 FROM contracts other WHERE other.order_id=c.order_id
                      AND other.id<>c.id AND other.state NOT IN ('Cancelled','Rejected')

@@ -4604,7 +4604,14 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
     staffHeaders
   );
   expect(previewResponse.status, http.logs()).toBe(200);
-  const preview = (await previewResponse.json()) as { fingerprint: string };
+  const preview = (await previewResponse.json()) as {
+    fingerprint: string;
+    state: string;
+    hardwareCredits: Array<{ id: string }>;
+  };
+  expect(preview.hardwareCredits).toEqual([
+    expect.objectContaining({ id: result.adjustmentInvoiceId, state: 'Unpaid' }),
+  ]);
   const prepared = await request(
     `/api/admin/contracts/${order.contractId}/cancellations`,
     'POST',
@@ -4619,6 +4626,66 @@ it('credits a cheaper paid hardware swap and preserves the revised price basis f
   );
   expect(prepared.status, http.logs()).toBe(201);
   const intentId = ((await prepared.json()) as { id: string }).id;
+  const creditOrigin = (
+    await http.pool.query<{ contract_id: string | null }>(
+      'SELECT contract_id FROM invoices WHERE id=$1',
+      [result.adjustmentInvoiceId]
+    )
+  ).rows[0]!.contract_id;
+  const cancellationPath = `/api/admin/contracts/${order.contractId}`;
+  await http.pool.query('UPDATE invoices SET contract_id=$2 WHERE id=$1', [
+    result.adjustmentInvoiceId,
+    creditOrigin === null ? order.contractId : null,
+  ]);
+  try {
+    const mismatched = await request(
+      cancellationPath + '/cancellation-preview',
+      'GET',
+      undefined,
+      staffHeaders
+    );
+    expect(mismatched.status, http.logs()).toBe(200);
+    expect(await mismatched.json()).toMatchObject({
+      associationConflict: true,
+      blockers: expect.arrayContaining(['invoice_identity_conflict']),
+      hardwareCredits: [],
+    });
+    expect(
+      (
+        await request(
+          cancellationPath + `/cancellations/${intentId}`,
+          'GET',
+          undefined,
+          staffHeaders
+        )
+      ).status
+    ).toBe(409);
+    expect(
+      (
+        await request(
+          cancellationPath + '/cancellations/execute',
+          'POST',
+          { intentId, idempotencyKey: randomUUID() },
+          staffHeaders
+        )
+      ).status
+    ).toBe(409);
+    expect(
+      (
+        await http.pool.query(
+          `SELECT i.state AS credit_state,c.state AS contract_state,
+            EXISTS(SELECT 1 FROM contract_cancellations x WHERE x.contract_id=c.id) AS recorded
+          FROM invoices i CROSS JOIN contracts c WHERE i.id=$1 AND c.id=$2`,
+          [result.adjustmentInvoiceId, order.contractId]
+        )
+      ).rows[0]
+    ).toMatchObject({ credit_state: 'Unpaid', contract_state: preview.state, recorded: false });
+  } finally {
+    await http.pool.query('UPDATE invoices SET contract_id=$2 WHERE id=$1', [
+      result.adjustmentInvoiceId,
+      creditOrigin,
+    ]);
+  }
   const cancelled = await request(
     `/api/admin/contracts/${order.contractId}/cancellations/execute`,
     'POST',

@@ -2,6 +2,12 @@ import { createHash } from 'node:crypto';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import type { Pool, PoolClient } from 'pg';
 
+export const cancellationHardwareCreditScope = `
+  credit.adjustment_kind='credit' AND credit.accounting_amount=a.price_delta_irr
+  AND saving_hardware_invoice_has_scope(
+    a.order_id,a.contract_id,a.contract_version_id,a.original_invoice_id,credit
+  )`;
+
 export interface CancellationInvoice {
   id: string;
   state: string;
@@ -53,9 +59,11 @@ export async function readCancellationSnapshot(
     SELECT c.id,c.profile_id,c.current_version_id,c.service_type,c.state,p.archived,
       CASE WHEN $2::boolean THEN electricity_rejection_order_snapshot(c.id) ELSE NULL END AS rejection_order,
       contract_has_pending_payments(c.id) AS pending_payments,
-      EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
+      EXISTS(SELECT 1 FROM saving_orders s WHERE c.service_type='savings'
+        AND s.order_id=c.order_id AND s.profile_id=c.profile_id
         AND s.status IN ('completed','rejected','cancelled')) AS saving_terminal,
-      EXISTS(SELECT 1 FROM invoices i WHERE i.contract_id=c.id::text AND i.profile_id<>c.profile_id) AS association_conflict,
+      (credits.has_conflict OR EXISTS(SELECT 1 FROM invoices i
+        WHERE i.contract_id=c.id::text AND i.profile_id<>c.profile_id)) AS association_conflict,
       (c.order_id IS NOT NULL
         AND EXISTS(SELECT 1 FROM contracts other WHERE other.order_id=c.order_id AND other.id<>c.id AND other.state NOT IN ('Completed','Cancelled','Rejected'))
         AND EXISTS(SELECT 1 FROM invoices i WHERE i.order_id=c.order_id AND i.profile_id=c.profile_id AND i.contract_id IS NULL
@@ -65,16 +73,27 @@ export async function readCancellationSnapshot(
         'paidAmount',i.paid_amount::text,'refundedAmount',i.refunded_amount::text,
         'pendingRefunds',COALESCE((SELECT jsonb_agg(jsonb_build_object(
           'id',r.id,'amount',r.amount::text,'state',r.state,'destination',r.destination) ORDER BY r.id)
-          FROM refunds r WHERE r.invoice_id=i.id AND r.state NOT IN ('Completed','Rejected','Cancelled')),'[]'::jsonb)
+          FROM refunds r WHERE r.invoice_id=i.id AND r.profile_id=c.profile_id
+            AND r.state NOT IN ('Completed','Rejected','Cancelled')),'[]'::jsonb)
       ) ORDER BY i.id) FROM invoices i WHERE i.profile_id=c.profile_id
         AND i.adjustment_kind IS DISTINCT FROM 'credit'
         AND (i.contract_id=c.id::text OR (c.order_id IS NOT NULL AND i.order_id=c.order_id AND i.contract_id IS NULL))), '[]'::jsonb) AS invoices,
-      COALESCE((SELECT jsonb_agg(jsonb_build_object(
-        'id',i.id,'state',i.state,'totalAmount',i.total_amount::text,
-        'paidAmount',i.paid_amount::text) ORDER BY i.id)
-        FROM saving_hardware_amendments a JOIN invoices i ON i.id=a.adjustment_invoice_id
-        WHERE a.contract_id=c.id AND a.price_delta_irr<0), '[]'::jsonb) AS hardware_credits
-    FROM contracts c JOIN profiles p ON p.id=c.profile_id WHERE c.id=$1`,
+      credits.scoped AS hardware_credits
+    FROM contracts c JOIN profiles p ON p.id=c.profile_id
+    CROSS JOIN LATERAL (
+      SELECT COALESCE(jsonb_agg(credit_facts ORDER BY credit_id)
+        FILTER (WHERE in_scope), '[]'::jsonb) AS scoped,
+        COALESCE(bool_or(in_scope IS NOT TRUE), false) AS has_conflict
+      FROM (
+        SELECT credit.id AS credit_id, jsonb_build_object(
+          'id',credit.id,'state',credit.state,'totalAmount',credit.total_amount::text,
+          'paidAmount',credit.paid_amount::text) AS credit_facts,
+          (${cancellationHardwareCreditScope}) AS in_scope
+        FROM saving_hardware_amendments a LEFT JOIN invoices credit ON credit.id=a.adjustment_invoice_id
+        WHERE a.contract_id=c.id AND a.price_delta_irr<0
+      ) hardware_credits
+    ) credits
+    WHERE c.id=$1`,
       [id, terminalAction === 'reject']
     )
   ).rows[0];

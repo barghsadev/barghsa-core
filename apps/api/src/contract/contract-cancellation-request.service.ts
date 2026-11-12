@@ -28,6 +28,9 @@ export const rejectCancellationRequestSchema = z
     idempotencyKey: contractUuid,
   })
   .strict();
+const savingOrderJoin = `LEFT JOIN orders saving_root ON saving_root.id=c.order_id
+   AND saving_root.profile_id=c.profile_id AND saving_root.order_type='savings' AND c.service_type='savings'
+ LEFT JOIN saving_orders s ON s.order_id=saving_root.id AND s.profile_id=c.profile_id`;
 const selection = `SELECT r.id,r.contract_id AS "contractId",r.version_id AS "versionId",r.reason,
  r.preferred_destination AS "preferredDestination",
  CASE WHEN r.status='Pending' AND (c.state IN ('Cancelled','Completed','Rejected')
@@ -37,7 +40,7 @@ const selection = `SELECT r.id,r.contract_id AS "contractId",r.version_id AS "ve
  s.id AS "savingOrderId",s.bill_identifier AS "billIdentifier",p.title AS "planTitle",
  u.username AS "customerName"
  FROM contract_cancellation_requests r JOIN contracts c ON c.id=r.contract_id
- LEFT JOIN saving_orders s ON s.order_id=c.order_id AND c.service_type='savings'
+ ${savingOrderJoin}
  LEFT JOIN products p ON p.id=s.saving_plan_id
  JOIN profiles profile ON profile.id=c.profile_id JOIN users u ON u.user_id=profile.user_id`;
 function conflict(error: unknown): never {
@@ -58,13 +61,11 @@ export class ContractCancellationRequestService {
       }>(
         `SELECT c.current_version_id,c.state,
          (EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id AND p.version_id=c.current_version_id)
-           OR (c.service_type='savings' AND c.state='AwaitingStaffReview'
-             AND EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id)))
-           AND NOT EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id
-             AND s.status IN ('completed','rejected','cancelled')) AS current_requestable
-       FROM contracts c WHERE c.id=$1 AND c.profile_id=$2 AND (
-         EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id)
-         OR (c.service_type='savings' AND EXISTS(SELECT 1 FROM saving_orders s WHERE s.order_id=c.order_id)))
+           OR (s.id IS NOT NULL AND c.state='AwaitingStaffReview'))
+           AND (s.status IS NULL OR s.status NOT IN ('completed','rejected','cancelled')) AS current_requestable
+       FROM contracts c ${savingOrderJoin}
+       WHERE c.id=$1 AND c.profile_id=$2 AND (
+         s.id IS NOT NULL OR EXISTS(SELECT 1 FROM contract_publications p WHERE p.contract_id=c.id))
        ${lock ? 'FOR UPDATE OF c NOWAIT' : ''}`,
         [id, profile]
       )
@@ -72,12 +73,13 @@ export class ContractCancellationRequestService {
     if (!row) throw new NotFoundException();
     return row;
   }
-  private async latest(client: Pool | PoolClient, id: string) {
+  private async latest(client: Pool | PoolClient, id: string, profileId?: string) {
     return (
       (
         await client.query(
-          selection + ' WHERE r.contract_id=$1 ORDER BY r.created_at DESC,r.id DESC LIMIT 1',
-          [id]
+          selection +
+            ' WHERE r.contract_id=$1 AND ($2::uuid IS NULL OR c.profile_id=$2) ORDER BY r.created_at DESC,r.id DESC LIMIT 1',
+          [id, profileId ?? null]
         )
       ).rows[0] ?? null
     );
@@ -85,7 +87,7 @@ export class ContractCancellationRequestService {
   customer(id: string, actor: ContractActor) {
     return customerContractAccess(actor, false, async (client, profile) => {
       const contract = await this.requestable(client, id, profile);
-      const request = await this.latest(client, id);
+      const request = await this.latest(client, id, profile);
       const authorized =
         (
           await client.query<{ id: string }>(activeProfileSql('cancellation:request'), [
@@ -176,7 +178,12 @@ export class ContractCancellationRequestService {
               return requestId;
             }
           );
-          return (await client.query(selection + ' WHERE r.id=$1', [requestId])).rows[0];
+          return (
+            await client.query(
+              selection + ' WHERE r.id=$1 AND r.contract_id=$2 AND c.profile_id=$3',
+              [requestId, id, profile]
+            )
+          ).rows[0];
         },
         { permission: 'cancellation:request' }
       );
@@ -218,7 +225,11 @@ export class ContractCancellationRequestService {
     try {
       return await staffContractMutation(owner.profile_id, actor, async (client, archived) => {
         if (archived) throw new ConflictException('Profile is archived');
-        await client.query('SELECT id FROM contracts WHERE id=$1 FOR UPDATE NOWAIT', [owner.id]);
+        const contract = await client.query(
+          'SELECT id FROM contracts WHERE id=$1 AND profile_id=$2 FOR UPDATE NOWAIT',
+          [owner.id, owner.profile_id]
+        );
+        if (!contract.rowCount) throw new ConflictException('Contract profile changed');
         await contractIdempotency(
           client,
           'contract_cancellation_request_reject',
@@ -227,8 +238,8 @@ export class ContractCancellationRequestService {
           async () => {
             const request = (
               await client.query(
-                'SELECT * FROM contract_cancellation_requests WHERE id=$1 FOR UPDATE NOWAIT',
-                [requestId]
+                'SELECT * FROM contract_cancellation_requests WHERE id=$1 AND contract_id=$2 FOR UPDATE NOWAIT',
+                [requestId, owner.id]
               )
             ).rows[0];
             if (!request || request.status !== 'Pending')
