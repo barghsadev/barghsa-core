@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T05:41:29+00:00",
+  "updated": "2026-11-12T05:50:48+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -18682,11 +18682,12 @@
         "story": "01-platform-infrastructure.md#spec-e250c6a91715"
       },
       "requirement": "- **T-05.05.04:** Create quarterly access review and threat-model update\n  - **Notes:** Automate: export all staff role assignments, API key metadata (masked keys, creation date, last used), service account list. Manual review required to validate access appropriateness. Update threat model: walk through auth, active-profile isolation, wallet/payment/refund, contracts/signatures, file upload, admin configuration, external providers, AI tool execution. Update for material flow changes since last review.\n  - **Dependencies:** T-05.05.03\n  - **Complexity:** M\n  - **UI/UX:** N/A\n\n---",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Run the approved quarterly review for the production-equivalent environment. The read-only staging report and migrated PostgreSQL checks verify the automated staff, masked credential and database login inventory.",
+        "Reconcile exact credential issuance and last use with protected provider and runtime inventories, identify external service account owners, and record the signed access and threat-model review with follow-up owners."
       ],
       "owner": null,
       "depends_on": [],
@@ -18714,9 +18715,15 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "docs/operations/preflight/quarterly-access-review.sql",
+          "docs/operations/quarterly-access-review.md",
+          "docs/threat-model.md",
+          "packages/db/src/quarterly-access-review.migrated.test.ts"
         ],
-        "batches": [],
+        "batches": [
+          "release-0.6-quarterly-access-review"
+        ],
         "current_acceptance": null
       }
     },
@@ -559728,7 +559735,7 @@
             },
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
@@ -559760,6 +559767,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
             }
           ]
         }
@@ -559816,7 +559831,7 @@
             },
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
@@ -559848,6 +559863,14 @@
                 "deploy/staging/compose.yml"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
             }
           ]
         }
@@ -559885,12 +559908,22 @@
           "source_evidence": [
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
             "All six STRIDE categories map to nine stable threat IDs spanning auth, isolation, wallet, contract and document integrity, configuration, providers, AI, availability and supply chain.",
             "Each threat records prerequisites, impact, controls, gaps, detection, likelihood, severity and priority. The manual review paths tie back to those IDs."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
+            }
           ]
         }
       },
@@ -559962,7 +559995,7 @@
             },
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
@@ -560012,6 +560045,14 @@
                 "docs/security/security-verification.md"
               ],
               "scope": "Identity verification provider writes seal settings and advance the config version atomically. Admin reads expose status only. The OpenAPI and generated client changes are limited to those endpoints. Verification permissions, step-up, registration and policy checks passed."
+            },
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
             }
           ]
         }
@@ -560049,11 +560090,21 @@
           "source_evidence": [
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
             "The model requires a full quarterly review and review at each material change to boundaries, sensitive data, providers, permissions or financial flows. The same review applies to direct pushes."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
+            }
           ]
         }
       },
@@ -560097,7 +560148,7 @@
             },
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
@@ -560119,6 +560170,14 @@
                 ".github/PULL_REQUEST_TEMPLATE.md"
               ],
               "scope": "The source-bound board checks, original task inventory and release gates are preserved. The same push and manual integrity jobs execute. The PR path additionally checks its checklist, and the empty current exception registry leaves all existing approval decisions intact. Twenty board and checklist cases passed."
+            },
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
             }
           ]
         }
@@ -561120,11 +561179,21 @@
             },
             {
               "path": "docs/threat-model.md",
-              "sha256": "09686e4478da069317f6773dd4cc5fc4fd97087b24603dfabe53164dd8c8bcb5"
+              "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
             }
           ],
           "checks": [
             "The post-incident process requires a UTC timeline, confirmed impact, root cause and contributing controls, corrective action owners and dates, closure evidence and a review of affected runbooks, threat model and tests within the established five-working-day review window."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-quarterly-access-review",
+              "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+              "paths": [
+                "docs/threat-model.md"
+              ],
+              "scope": "The threat model links the quarterly access inventory and its restricted evidence handling. Existing control and trust-boundary findings remain applicable."
+            }
           ]
         }
       },
@@ -889834,7 +889903,8 @@
           "release-0.6-strict-staff-commands",
           "release-0.6-unified-license-review",
           "release-0.6-verification-secret-boundary",
-          "release-0.6-profile-strict-receipt-regression"
+          "release-0.6-profile-strict-receipt-regression",
+          "release-0.6-quarterly-access-review"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -889980,7 +890050,11 @@
           "apps/api/src/verification/verification-provider.service.ts",
           "docs/operations/preflight/provider-secret-review.sql",
           "docs/security/security-verification.md",
-          "apps/api/src/profiles/profile-form-input-fields.test.ts"
+          "apps/api/src/profiles/profile-form-input-fields.test.ts",
+          "docs/operations/preflight/quarterly-access-review.sql",
+          "docs/operations/quarterly-access-review.md",
+          "docs/threat-model.md",
+          "packages/db/src/quarterly-access-review.migrated.test.ts"
         ]
       }
     },
@@ -1025062,6 +1025136,77 @@
         {
           "file": "verify-profile-receipts.yml",
           "sha256": "8c19ad098aa05aff56cc2e00cc3de88d405b14172e8b483aec88c79a4da24ecc"
+        }
+      ]
+    },
+    "release-0.6-quarterly-access-review": {
+      "batch": "release-0.6-quarterly-access-review",
+      "base_commit": "68be0dcebadd2a90f6111f29e3a8a2b7a2da3f25",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.05.04",
+        "release-readiness#R-05.02",
+        "06-security-testing-observability.md#T-06.08.01.01",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "06-security-testing-observability.md#T-06.08.01.03",
+        "06-security-testing-observability.md#T-06.08.01.04",
+        "06-security-testing-observability.md#T-06.08.01.05",
+        "06-security-testing-observability.md#T-06.08.01.06",
+        "06-security-testing-observability.md#T-06.08.03.05"
+      ],
+      "changed_paths": [
+        "docs/operations/preflight/quarterly-access-review.sql",
+        "docs/operations/quarterly-access-review.md",
+        "docs/threat-model.md",
+        "packages/db/src/quarterly-access-review.migrated.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/preflight/quarterly-access-review.sql",
+          "sha256": "4bc21af118f62c4a43b4a1c6d43acdd50cca4ba7dd236386b9d9eed027501d59"
+        },
+        {
+          "path": "docs/operations/quarterly-access-review.md",
+          "sha256": "4a648f0525e8af576cb82b18b2418e91117b67174cb93d668b1a1750b72ada7d"
+        },
+        {
+          "path": "docs/threat-model.md",
+          "sha256": "e99989f5c0139f774fcb4e2a43794266d20ea070a36d90f62d181b89fd8bf68f"
+        },
+        {
+          "path": "packages/db/src/quarterly-access-review.migrated.test.ts",
+          "sha256": "28b266059f152d3f4d787b51e0486a89c1eb9ac7a9c3052106939572f3a61052"
+        }
+      ],
+      "checks": [
+        "Hosted PostgreSQL run 43163741413 passed both exact production-migrated database cases. They verify read-only mode, active and inactive staff grants, database login roles, all masked credential families and exclusion of synthetic secret material.",
+        "The exact SQL ran through the deployed staging API database connection and returned 22 staff principals, 20 grants, 8 masked credential entries and 2 database logins. The private inventory was saved with mode 0600. The release metadata was stable before and after the read.",
+        "Database package typecheck, changed-file ESLint, formatting, diagnostic actionlint and whitespace checks passed."
+      ],
+      "limitations": [
+        "Staging was v0.5.0. The quarterly review still requires named reviewer decisions and production-equivalent provider and service-account evidence. Issuance and usage dates absent from the application remain unset.",
+        "Exact protected publication, v0.6.0 deployment and Telegram confirmation remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-quarterly-access-review",
+      "execution_receipts": [
+        {
+          "file": "diagnostic.json",
+          "sha256": "6e8276a00c106d7ea0a0623818d291b537937254c6fa10b3b5db8a17bdfbac99"
+        },
+        {
+          "file": "native-run.json",
+          "sha256": "cd83cecd63bf5482d290ac4b0973564785130a380fc5861a562c9beb63977e52"
+        },
+        {
+          "file": "native-quarterly-access.log",
+          "sha256": "fc58ff2f2e15b482bf201ba6b7d2078f1f31a82c4df762014a9187415b28ce2a"
+        },
+        {
+          "file": "verify-quarterly-access.yml",
+          "sha256": "625667f4f394b35b986ec0701b7e778fe0dcbeddf7cbd34aa49cdae55a2404a8"
+        },
+        {
+          "file": "staging-counts.json",
+          "sha256": "055e36570e2fd8236089faf1cab19ae3c146fedac6616f4704099c4f34cbff47"
         }
       ]
     }

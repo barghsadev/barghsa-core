@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T05:41:29+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T05:50:48+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -11,8 +11,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 | State | Tasks | Meaning |
 | --- | ---: | --- |
 | done | 1233 | Accepted with unchanged source bindings. |
-| verify | 43 | Existing work may be complete; inspect evidence before building. |
-| partial | 84 | An earlier review found unmet criteria; reconcile later fixes. |
+| verify | 42 | Existing work may be complete; inspect evidence before building. |
+| partial | 85 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1047,7 +1047,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-05.05.01` | partial | Earlier deferred | Create nightly CI schedule |
 | `01-platform-infrastructure.md#T-05.05.02` | partial | Earlier deferred | Create weekly load/performance regression test |
 | `01-platform-infrastructure.md#T-05.05.03` | partial | Earlier deferred | Create quarterly disaster-recovery and restore exercise |
-| `01-platform-infrastructure.md#T-05.05.04` | verify | Earlier deferred | Create quarterly access review and threat-model update |
+| `01-platform-infrastructure.md#T-05.05.04` | partial | Earlier deferred | Create quarterly access review and threat-model update |
 | `01-platform-infrastructure.md#T-06.01.01` | done | Earlier deferred | Initialize `packages/shared` with tsconfig and dependencies |
 | `01-platform-infrastructure.md#T-06.01.02` | done | Earlier deferred | Create username validation and normalization helpers |
 | `01-platform-infrastructure.md#T-06.01.03` | done | Earlier deferred | Create password validation with strength meter logic |
