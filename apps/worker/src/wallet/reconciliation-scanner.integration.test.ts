@@ -8,7 +8,7 @@
  * `reconcileWalletBalances` pass against Testcontainers PostgreSQL 17.
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { WALLET_MISMATCH_EXCEPTION_TYPE } from '@barghsa/shared/finance';
 import { reconcileWalletBalances } from './reconciliation-scanner.js';
@@ -21,7 +21,7 @@ const WALLET_PENDING_ONLY = '44444444-4444-7444-8444-444444444444';
 describe('wallet reconciliation — real PostgreSQL (T-04.2.01.08)', () => {
   let ctx: Awaited<ReturnType<typeof createMigratedTestDb>>;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     ctx = await createMigratedTestDb();
     await ctx.pool.query(
       "INSERT INTO users(user_id,username,password_hash) VALUES ('reconciliation-owner','reconciliation@example.test','fixture')"
@@ -30,16 +30,6 @@ describe('wallet reconciliation — real PostgreSQL (T-04.2.01.08)', () => {
       `INSERT INTO profiles (id,user_id) VALUES ($1,'reconciliation-owner'), ($2,'reconciliation-owner'), ($3,'reconciliation-owner'), ($4,'reconciliation-owner')`,
       [WALLET_OK, WALLET_POSTED_DRIFT, WALLET_RESERVED_DRIFT, WALLET_PENDING_ONLY]
     );
-  }, 60_000);
-
-  afterAll(async () => {
-    await ctx.close();
-  });
-
-  beforeEach(async () => {
-    await ctx.pool.query('DELETE FROM reconciliation_exceptions');
-    await ctx.pool.query('DELETE FROM wallet_transactions');
-    await ctx.pool.query('DELETE FROM wallets');
     await ctx.pool.query(
       `INSERT INTO wallets (profile_id, posted_balance, reserved_balance, version)
        VALUES
@@ -61,6 +51,10 @@ describe('wallet reconciliation — real PostgreSQL (T-04.2.01.08)', () => {
          ($4, 'topup', 75000, 'Pending', 'pending-only')`,
       [WALLET_OK, WALLET_POSTED_DRIFT, WALLET_RESERVED_DRIFT, WALLET_PENDING_ONLY]
     );
+  }, 60_000);
+
+  afterEach(async () => {
+    await ctx?.close();
   });
 
   async function exceptions() {

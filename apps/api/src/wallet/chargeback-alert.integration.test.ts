@@ -11,7 +11,7 @@
  *      hides reversed events.
  */
 
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { startHttpFixture } from '../test/http-fixture';
 import { WALLET_CHARGEBACK_REASON } from '@barghsa/shared/finance';
 import { randomUUID } from 'node:crypto';
@@ -53,7 +53,7 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
   let ctx: Awaited<ReturnType<typeof startHttpFixture>>;
   const service = new ChargebackAlertService();
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     ctx = await startHttpFixture(process.env.TEST_DATABASE_URL!, undefined, '', 2);
     poolHolder.pool = ctx.pool;
 
@@ -73,16 +73,9 @@ describe('ChargebackAlertService — real PostgreSQL (T-04.2.04.03)', () => {
     ]);
   }, 60_000);
 
-  afterAll(async () => {
+  afterEach(async () => {
     poolHolder.pool = null;
-    await ctx.close();
-  });
-
-  beforeEach(async () => {
-    await ctx.pool.query('DELETE FROM in_app_notifications');
-    await ctx.pool.query('DELETE FROM notification_job');
-    await ctx.pool.query('DELETE FROM notification_outbox');
-    await ctx.pool.query('DELETE FROM wallet_chargeback_events');
+    await ctx?.close();
   });
 
   function notification() {

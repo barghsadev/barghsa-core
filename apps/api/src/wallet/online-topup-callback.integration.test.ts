@@ -172,7 +172,6 @@ describe('OnlineTopUpCallbackService — real PostgreSQL (T-04.2.02.02)', () => 
         )
       ).rows
     ).toEqual([]);
-    await ctx.pool.query('DELETE FROM wallet_transactions WHERE id=$1', [row.id]);
   });
 
   for (const collision of [

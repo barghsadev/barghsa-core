@@ -1,27 +1,20 @@
 import { randomUUID } from 'node:crypto';
-import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
+import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { reconcileInvoicePayments } from './reconciliation-scanner.js';
 
 let db: Awaited<ReturnType<typeof createMigratedTestDb>>;
 const owner = 'invoice-reconciliation-owner';
 const actor = 'invoice-reconciliation-staff';
-beforeAll(async () => {
+beforeEach(async () => {
   db = await createMigratedTestDb();
   await db.pool.query(
     "INSERT INTO users(user_id,username,password_hash) VALUES($1,$1,'fixture'),($2,$2,'fixture')",
     [owner, actor]
   );
 }, 60000);
-afterAll(async () => {
+afterEach(async () => {
   await db?.close();
-});
-beforeEach(async () => {
-  // Truncating profiles would cascade into the append-only document access log.
-  await db.pool.query(
-    'TRUNCATE reconciliation_exceptions, invoices, wallets, wallet_transactions, bank_receipts CASCADE'
-  );
-  await db.pool.query('DELETE FROM profiles WHERE user_id=$1', [owner]);
 });
 
 async function profile() {

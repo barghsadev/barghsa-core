@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { afterAll, beforeAll, beforeEach, expect, it } from 'vitest';
+import { afterEach, beforeEach, expect, it } from 'vitest';
 import { createMigratedTestDb } from '../../../../packages/db/src/test/migrated-db';
 import { ONLINE_TOPUP_EXPIRY_REASON } from '@barghsa/shared/finance';
 import { reconcileProviderTransactions } from './provider-reconciliation-scanner';
@@ -11,21 +11,14 @@ import type { Pool } from 'pg';
 let db: Awaited<ReturnType<typeof createMigratedTestDb>>;
 const now = new Date('2026-10-07T10:00:00Z');
 const old = new Date('2026-10-07T08:00:00Z');
-beforeAll(async () => {
+beforeEach(async () => {
   db = await createMigratedTestDb();
   await db.pool.query(
     "INSERT INTO users(user_id,username,password_hash) VALUES('provider-fixture','provider-fixture','fixture')"
   );
 }, 60000);
-afterAll(async () => {
+afterEach(async () => {
   await db?.close();
-});
-beforeEach(async () => {
-  // Truncating profiles would cascade into the append-only document access log.
-  await db.pool.query(
-    'TRUNCATE reconciliation_exceptions,wallet_topup_callback_events,wallet_chargeback_events,wallet_transactions,wallets CASCADE'
-  );
-  await db.pool.query("DELETE FROM profiles WHERE user_id='provider-fixture'");
 });
 async function profile() {
   const id = randomUUID();

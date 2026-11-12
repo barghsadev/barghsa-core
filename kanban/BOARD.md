@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T09:34:05+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T09:45:52+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1241 | Accepted with unchanged source bindings. |
-| verify | 19 | Existing work may be complete; inspect evidence before building. |
+| done | 1242 | Accepted with unchanged source bindings. |
+| verify | 18 | Existing work may be complete; inspect evidence before building. |
 | partial | 100 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1439,7 +1439,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.18.01.01` | verify | Inventory needed | Configure Loki log retention: 30 days searchable, longer-term archive to cold storage |
 | `06-security-testing-observability.md#T-06.18.01.02` | partial | Recorded batch work | Configure Prometheus metric retention: 13 months at downsampled resolution |
 | `06-security-testing-observability.md#T-06.18.01.03` | partial | Recorded batch work | Configure Tempo trace retention: 7 days ordinary, 30 days error/slow |
-| `06-security-testing-observability.md#T-06.18.01.04` | verify | Inventory needed | Ensure audit/security/financial evidence follows legal retention (10 years default) and cannot be shortened via operational settings |
+| `06-security-testing-observability.md#T-06.18.01.04` | done | Recorded batch work | Ensure audit/security/financial evidence follows legal retention (10 years default) and cannot be shortened via operational settings |
 | `06-security-testing-observability.md#T-06.18.01.05` | verify | Inventory needed | Admin UI: view and change operational retention (with warning about audit retention) |
 | `06-security-testing-observability.md#T-06.18.02.01` | partial | Recorded batch work | Implement CI step: send release annotation to Grafana (deploy time, version, change summary, owner) |
 | `06-security-testing-observability.md#T-06.18.02.02` | partial | Recorded batch work | Configure Sentry release tracking: associate commits, tag errors with release version |

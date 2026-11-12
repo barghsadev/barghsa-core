@@ -254,6 +254,21 @@ including after removal and parent closure. Migration0272 enforces this policy
 in eligibility, destruction and byte-clearing guards. Retention deadlines and
 legal approval authorize destruction only for other eligible document types.
 
+The release policy defaults to ten years for canonical audit, security and
+financial evidence. The application has no automatic expiry for these
+records. Log, metric and trace retention settings apply to operational data.
+Document destruction uses its own eligibility and approval workflow.
+
+Migration `0292_financial_evidence_retention` protects wallet ledger entries,
+issued invoices, bank receipts and provider callbacks from hard deletion.
+It keeps receipt status events append-only and rejects bulk truncation of
+the protected finance tables, including refund history. Unissued drafts
+with no payment or refund remain eligible for removal. Current application
+writers can append receipts, advance states and post compensating entries.
+Apply the migration before traffic and retain it during binary rollback.
+The production backup and recovery gate verifies the separate durability
+of retained evidence.
+
 The worker plans up to 25 eligible removed documents during its nightly 02:00
 UTC window. It records an audit manifest and leaves every object untouched
 until legal staff approve that specific manifest, with step-up verification and
