@@ -62,6 +62,9 @@
       "@parcel/watcher"
     ],
     "overrides": {
+      "@stryker-mutator/core@9.3.0>minimatch": "10.2.6",
+      "@stryker-mutator/core@9.3.0>mutation-server-protocol": "0.4.1",
+      "mutation-server-protocol@0.4.1>zod": "4.6.6",
       "@grpc/grpc-js@>=1.14.0 <1.14.5": "1.14.5",
       "brace-expansion@1": "1.1.21",
       "brace-expansion@2": "2.1.7",

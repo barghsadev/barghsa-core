@@ -60,3 +60,109 @@ jobs:
             ${{ runner.temp }}/storage-orphan-recovery.log
           if-no-files-found: error
           retention-days: 90
+
+  database-recovery:
+    name: Rehearse PostgreSQL and configuration recovery
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Build the backup and restore image
+        run: docker build -f packages/db/scripts/backup/Dockerfile -t barghsa-backup-audit:local .
+      - name: Restore and verify synthetic database and configuration snapshots
+        shell: bash
+        run: |
+          python3 packages/db/scripts/backup/run_physical_backup_tests.py \
+            2>&1 | tee "$RUNNER_TEMP/quarterly-database-recovery.log"
+      - name: Preserve database recovery evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarterly-database-recovery
+          path: ${{ runner.temp }}/quarterly-database-recovery.log
+          if-no-files-found: warn
+          retention-days: 90
+
+  access-and-incident:
+    name: Verify access inventory and incident recovery controls
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter=@barghsa/db
+      - name: Verify the restricted access inventory against migrated fixtures
+        shell: bash
+        env:
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          pnpm --filter @barghsa/db exec vitest run --reporter=verbose src/quarterly-access-review.migrated.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/quarterly-access-inventory.log"
+      - name: Exercise rollout halt and recovery against fixture incident signals
+        if: ${{ !cancelled() }}
+        shell: bash
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          python3 -m unittest discover -s deploy/production -p 'test_guarded_rollout.py' -v \
+            2>&1 | tee "$RUNNER_TEMP/quarterly-incident-recovery.log"
+      - name: Preserve access and incident check results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: quarterly-access-and-incident
+          path: |
+            ${{ runner.temp }}/quarterly-access-inventory.log
+            ${{ runner.temp }}/quarterly-incident-recovery.log
+          if-no-files-found: warn
+          retention-days: 90
+
+  review-packet:
+    name: Bind the exercise results and operator procedures to the revision
+    if: ${{ !cancelled() && github.event_name == 'workflow_dispatch' }}
+    needs: [recover, database-recovery, access-and-incident]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record outcomes and review source hashes
+        env:
+          OBJECT_RECOVERY: ${{ needs.recover.result }}
+          DATABASE_RECOVERY: ${{ needs.database-recovery.result }}
+          ACCESS_AND_INCIDENT: ${{ needs.access-and-incident.result }}
+        run: |
+          packet="$RUNNER_TEMP/quarterly-review"
+          mkdir -p "$packet"
+          jq -n --arg sha "$GITHUB_SHA" --arg run "$GITHUB_RUN_ID" \
+            --arg storage "$OBJECT_RECOVERY" --arg database "$DATABASE_RECOVERY" \
+            --arg access_incident "$ACCESS_AND_INCIDENT" \
+            '{source_sha: $sha, run_id: $run, scope: "isolated-fixtures", jobs: {object_recovery: $storage, database_recovery: $database, access_and_incident: $access_incident}}' \
+            > "$packet/outcomes.json"
+          sha256sum docs/operations/quarterly-recovery-exercise.md \
+            docs/operations/backup/postgresql-restore-runbook.md \
+            docs/operations/backup/config-restore-runbook.md \
+            docs/operations/quarterly-access-review.md \
+            docs/operations/preflight/quarterly-access-review.sql docs/threat-model.md \
+            docs/operations/incident-response.md docs/runbooks/bad-deployment.md \
+            docs/runbooks/storage-outage.md > "$packet/review-sources.sha256"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quarterly-operator-review
+          path: ${{ runner.temp }}/quarterly-review
+          if-no-files-found: error
+          retention-days: 90

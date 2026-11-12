@@ -1,6 +1,7 @@
 """Isolated Docker runner. Build barghsa-backup-audit:local first."""
 import subprocess, uuid, time, sys
 from pathlib import Path
+MINIO_IMAGE = 'pgsty/minio@sha256:b6bfe7239bfc83fb90d31612d9704d86039dd714f7904b3f1ad68f211e602372'
 prefix = 'barghsa-backup-audit-' + uuid.uuid4().hex[:10]
 network, minio, runner = prefix+'-net', prefix+'-s3', prefix+'-runner'
 def cmd(*args):
@@ -9,7 +10,11 @@ def cmd(*args):
  return r.stdout.strip()
 try:
  cmd('network','create',network)
- cmd('run','-d','--name',minio,'--network',network,'--network-alias','storage','-e','MINIO_ROOT_USER=audit-access','-e','MINIO_ROOT_PASSWORD=audit-secret-local-only','minio/minio','server','/data')
+ cmd(
+  'run', '-d', '--name', minio, '--network', network, '--network-alias', 'storage',
+  '-e', 'MINIO_ROOT_USER=audit-access', '-e', 'MINIO_ROOT_PASSWORD=audit-secret-local-only',
+  MINIO_IMAGE, 'server', '/data',
+ )
  time.sleep(2)
  result=subprocess.run(['docker','run','--rm','--name',runner,'--network',network,'--user','postgres','-e','BACKUP_S3_ENDPOINT=http://storage:9000','-e','BACKUP_ALLOW_HTTP=true','-e','BACKUP_S3_BUCKET=audit-backups','-e','BACKUP_S3_ACCESS_KEY=audit-access','-e','BACKUP_S3_SECRET_KEY=audit-secret-local-only','-v',str(Path(__file__).resolve().parent)+':/opt/backup:ro','-v',str(Path(__file__).resolve().parents[2]/'drizzle/production')+':/schema:ro','-w','/opt/backup','barghsa-backup-audit:local','python3','-B','-m','unittest','-v',*(sys.argv[1:] or ['test_physical_backup', 'test_verify_restore', 'test_config_backup'])], timeout=600)
  raise SystemExit(result.returncode)

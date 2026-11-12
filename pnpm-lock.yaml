@@ -6,6 +6,9 @@ settings:
   injectWorkspacePackages: true
 
 overrides:
+  '@stryker-mutator/core@9.3.0>minimatch': 10.2.6
+  '@stryker-mutator/core@9.3.0>mutation-server-protocol': 0.4.1
+  mutation-server-protocol@0.4.1>zod: 4.6.6
   '@grpc/grpc-js@>=1.14.0 <1.14.5': 1.14.5
   brace-expansion@1: 1.1.21
   brace-expansion@2: 2.1.7
@@ -2023,14 +2026,6 @@ packages:
 
   '@ioredis/commands@1.10.0':
     resolution: {integrity: sha512-UmeW7z4LfctwoQ5wkhVzgq8tXkreED2xZGpX+Bg+zA+WJFZCT6c062AfCK/Dfk81xZnnwdhJCUMkitihRaoC2Q==}
-
-  '@isaacs/balanced-match@4.0.1':
-    resolution: {integrity: sha512-yzMTt9lEb8Gv7zRioUilSglI0c0smZ9k5D65677DLWLtWJaXIS3CqcGyUFByYKlnUj6TkjLVs54fBl6+TiGQDQ==}
-    engines: {node: 20 || >=22}
-
-  '@isaacs/brace-expansion@5.0.1':
-    resolution: {integrity: sha512-WMz71T1JS624nWj2n2fnYAuPovhv7EUhk69R6i9dsVyzxt5eM3bjwvgk9L+APE1TRscGysAVMANkB0jh0LQZrQ==}
-    engines: {node: 20 || >=22}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -6540,10 +6535,6 @@ packages:
   minimalistic-assert@1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
 
-  minimatch@10.0.3:
-    resolution: {integrity: sha512-IPZ167aShDZZUMdRk66cyQAW3qr0WzbHkPdMYa8bzZhlHhO3jALbKdxcaak7W9FfT2rZNpQuUu4Od7ILEpXSaw==}
-    engines: {node: 20 || >=22}
-
   minimatch@10.2.6:
     resolution: {integrity: sha512-vpLQEs+VLCr1nU0BXS07maYoFwlDAH0gngQuuttxIwutDFEMHq2blX+8vpgxDdK3J1PwjCJiep77OitTZ4Ll1A==}
     engines: {node: 18 || 20 || >=22}
@@ -6594,8 +6585,8 @@ packages:
     resolution: {integrity: sha512-BsqOzYGVq49JcW2IzoSAxeKYRevb+dGGPPWleOR8Lrlk4igwxu1/9pwSXlByhCb7MVZDrNJFC0IBP5/O5nLYRw==}
     engines: {node: '>= 10.16.0'}
 
-  mutation-server-protocol@0.3.0:
-    resolution: {integrity: sha512-pQY+lb80vuD33P1NwhDyCWUgwP2w6JAP5+9Hz3CWM2HpIoYxDkT7OXYKabaunKnoSCgutP3MuruzPCXxLX/lnQ==}
+  mutation-server-protocol@0.4.1:
+    resolution: {integrity: sha512-SBGK0j8hLDne7bktgThKI8kGvGTx3rY3LAeQTmOKZ5bVnL/7TorLMvcVF7dIPJCu5RNUWhkkuF53kurygYVt3g==}
     engines: {node: '>=18'}
 
   mutation-testing-elements@3.5.3:
@@ -8560,9 +8551,6 @@ packages:
     peerDependencies:
       zod: ^3.25.0 || ^4.0.0
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
   zod@4.6.6:
     resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
 
@@ -8861,7 +8849,7 @@ snapshots:
       '@babel/types': 7.29.8
       '@jridgewell/remapping': 2.3.5
       convert-source-map: 2.0.0
-      debug: 4.4.3(supports-color@10.2.2)
+      debug: 4.4.3(supports-color@5.5.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -8881,7 +8869,7 @@ snapshots:
       '@babel/types': 7.29.8
       '@jridgewell/remapping': 2.3.5
       convert-source-map: 2.0.0
-      debug: 4.4.3(supports-color@5.5.0)
+      debug: 4.4.3(supports-color@10.2.2)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -9895,12 +9883,6 @@ snapshots:
 
   '@ioredis/commands@1.10.0': {}
 
-  '@isaacs/balanced-match@4.0.1': {}
-
-  '@isaacs/brace-expansion@5.0.1':
-    dependencies:
-      '@isaacs/balanced-match': 4.0.1
-
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
@@ -10824,8 +10806,8 @@ snapshots:
       execa: 9.6.1
       json-rpc-2.0: 1.8.1
       lodash.groupby: 4.6.0
-      minimatch: 10.0.3
-      mutation-server-protocol: 0.3.0
+      minimatch: 10.2.6
+      mutation-server-protocol: 0.4.1
       mutation-testing-elements: 3.5.3
       mutation-testing-metrics: 3.5.1
       mutation-testing-report-schema: 3.5.1
@@ -11865,7 +11847,6 @@ snapshots:
     optionalDependencies:
       msw: 2.15.0(@types/node@26.2.0)(typescript@5.9.3)
       vite: 6.4.4(patch_hash=25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739)(@types/node@26.2.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0)
-    optional: true
 
   '@vitest/mocker@4.1.11(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(vite@6.4.4(patch_hash=25dd7c8ef2797db46bbfbe8078f3e7428fa59f2e8ecc9ef57fe9acb664526739)(@types/node@26.2.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0))':
     dependencies:
@@ -14964,10 +14945,6 @@ snapshots:
 
   minimalistic-assert@1.0.1: {}
 
-  minimatch@10.0.3:
-    dependencies:
-      '@isaacs/brace-expansion': 5.0.1
-
   minimatch@10.2.6:
     dependencies:
       brace-expansion: 5.0.12
@@ -15058,9 +15035,9 @@ snapshots:
       busboy: 1.6.0
       type-is: 1.6.18
 
-  mutation-server-protocol@0.3.0:
+  mutation-server-protocol@0.4.1:
     dependencies:
-      zod: 3.25.76
+      zod: 4.6.6
 
   mutation-testing-elements@3.5.3: {}
 
@@ -17048,7 +17025,6 @@ snapshots:
       - terser
       - tsx
       - yaml
-    optional: true
 
   vitest@4.1.11(@opentelemetry/api@1.9.1)(@types/node@26.2.0)(@vitest/coverage-v8@4.1.11)(jiti@2.7.0)(jsdom@28.1.0(@noble/hashes@1.8.0))(lightningcss@1.32.0)(msw@2.15.0(@types/node@26.2.0)(typescript@7.0.2))(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0):
     dependencies:
@@ -17349,8 +17325,6 @@ snapshots:
   zod-validation-error@4.0.2(zod@4.6.6):
     dependencies:
       zod: 4.6.6
-
-  zod@3.25.76: {}
 
   zod@4.6.6: {}
 
