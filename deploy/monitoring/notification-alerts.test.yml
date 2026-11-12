@@ -147,6 +147,8 @@
                     'exp_annotations':
                       {
                         'summary': 'Current wallet balance differs from its ledger at or above the critical threshold',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md',
                       },
                   },
@@ -193,6 +195,8 @@
                     'exp_annotations':
                       {
                         'summary': 'At least one mandatory refund has remained outstanding for more than one hour',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/refund-backlog.md',
                       },
                   },
@@ -218,6 +222,26 @@
               'series': 'notifications_outbox_age_seconds{job="worker",environment="staging",database="core",instance="a",pod="a"}',
               'values': '172800+0x4',
             },
+            {
+              'series': 'barghsa:journey:burn_rate{environment="production",database="core",availability_tier="commercial",service="consultation",window="24h"}',
+              'values': '87+0x4',
+            },
+            {
+              'series': 'barghsa:journey:burn_rate{environment="staging",database="other",availability_tier="pilot",service="electricity",window="1h"}',
+              'values': '93+0x4',
+            },
+            {
+              'series': 'barghsa:journey:burn_rate{environment="staging",database="core",availability_tier="pilot",service="solar",window="5m"}',
+              'values': '81+0x4',
+            },
+            {
+              'series': 'barghsa:journey:burn_rate{environment="staging",database="core",availability_tier="pilot",service="saving",window="24h"}',
+              'values': '0+0x4',
+            },
+            {
+              'series': 'barghsa:journey:burn_rate{environment="staging",database="core",availability_tier="pilot",service="saving",window="1h"}',
+              'values': '2+0x4',
+            },
           ],
         'alert_rule_test':
           [
@@ -239,6 +263,8 @@
                     'exp_annotations':
                       {
                         'summary': 'Eligible notification outbox backlog exceeds five minutes',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'saving/pilot/1h=2.00x, saving/pilot/24h=0.00x',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
                       },
                   },
@@ -266,6 +292,8 @@
                     'exp_annotations':
                       {
                         'summary': 'Eligible notification outbox backlog exceeds fifteen minutes',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'saving/pilot/1h=2.00x, saving/pilot/24h=0.00x',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
                       },
                   },
@@ -504,6 +532,8 @@
                     'exp_annotations':
                       {
                         'summary': 'Email provider circuit is open',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
                         'description': 'Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after the configured cooldown.',
                       },
@@ -521,6 +551,8 @@
                     'exp_annotations':
                       {
                         'summary': 'Email provider circuit is open',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
                         'description': 'Provider provider-a stopped sending after repeated transient failures. Inspect provider health and delivery history; recovery permits one probe after the configured cooldown.',
                       },
@@ -553,6 +585,8 @@
                     'exp_annotations':
                       {
                         'summary': 'AI model circuit is open',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/ai-provider-outage.md',
                         'description': 'Model model-a is temporarily unavailable after repeated provider failures. Review the model in admin; a short recovery probe is allowed after cooldown.',
                       },
@@ -669,6 +703,8 @@
                     'exp_annotations':
                       {
                         'summary': 'SMS provider circuit is open',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
                         'description': 'Provider sms-a stopped sending after provider failures. Inspect its configuration, health and delivery history; a configuration pause requires a tested replacement.',
                       },
@@ -692,6 +728,8 @@
                     'exp_annotations':
                       {
                         'summary': 'SMS provider circuit is open',
+                        'slo_dashboard_uid': 'barghsa-executive-slo',
+                        'journey_burn': 'unavailable',
                         'runbook_url': 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/notification-outage.md',
                         'description': 'Provider sms-a stopped sending after provider failures. Inspect its configuration, health and delivery history; a configuration pause requires a tested replacement.',
                       },

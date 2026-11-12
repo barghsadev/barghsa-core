@@ -23,6 +23,16 @@ const alertResources = {
   PostgresBackupMonitoringUnavailable: ['barghsa-postgresql', 'postgresql-backup'],
 } as const;
 
+const availabilityBudgetAlerts = new Set([
+  'EmailProviderDegraded',
+  'SmsProviderDegraded',
+  'AiModelCircuitOpen',
+  'NotificationOutboxBacklog',
+  'NotificationOutboxBacklogCritical',
+  'RefundObligationOverdue',
+  'WalletReconciliationCritical',
+]);
+
 export function operationsDashboardOrigin(value: unknown): string | null {
   if (typeof value !== 'string' || !value || value.length > 256 || /[\s\\]/.test(value))
     return null;
@@ -37,7 +47,10 @@ export function operationsDashboardOrigin(value: unknown): string | null {
 }
 
 type OperationsLink = {
-  label: 'notifications.operations.dashboard' | 'notifications.operations.runbook';
+  label:
+    | 'notifications.operations.dashboard'
+    | 'notifications.operations.runbook'
+    | 'notifications.operations.availabilityBudget';
   href: string;
 };
 
@@ -54,6 +67,12 @@ export function operationsAlertLinks(
     { label: 'notifications.operations.runbook', href: `${repositoryRunbooks}/${runbook}.md` },
   ];
   if (origin) {
+    if (availabilityBudgetAlerts.has(name)) {
+      links.unshift({
+        label: 'notifications.operations.availabilityBudget',
+        href: `${origin}/d/barghsa-executive-slo`,
+      });
+    }
     links.unshift({
       label: 'notifications.operations.dashboard',
       href: `${origin}/d/${dashboard}`,
