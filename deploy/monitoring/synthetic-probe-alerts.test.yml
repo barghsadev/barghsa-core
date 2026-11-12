@@ -1,6 +1,70 @@
 rule_files: [synthetic-probe-alerts.yml]
 evaluation_interval: 1m
 tests:
+  - name: A verified certificate crosses the threshold once per scope and clears on loss of evidence or renewal
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner-a",environment="staging",database="core"}'
+        values: '1+0x14'
+      - series: 'up{job="barghsa-synthetic",instance="runner-b",environment="staging",database="core"}'
+        values: '1+0x12 0 0'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner-a",environment="staging",database="core"}'
+        values: '0+0x13 840'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner-b",environment="staging",database="core"}'
+        values: '0+0x14'
+      - series: 'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds{job="barghsa-synthetic",instance="runner-a",environment="staging",database="core"}'
+        values: '1209660+0x11 3500000+0x2'
+      - series: 'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds{job="barghsa-synthetic",instance="runner-b",environment="staging",database="core"}'
+        values: '1209660+0x14'
+      - series: 'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds{job="barghsa-synthetic",instance="runner-a",environment="production",database="core"}'
+        values: '240+0x14'
+      - series: 'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds{job="barghsa-synthetic",instance="runner-a",environment="staging",database="other"}'
+        values: '0+0x14'
+      - series: 'up{job="barghsa-synthetic",instance="runner-a",environment="staging",database="other"}'
+        values: '1+0x14'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner-a",environment="staging",database="other"}'
+        values: '0+0x14'
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: []
+      - eval_time: 1m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: &certificate_warning
+          - exp_labels:
+              environment: staging
+              database: core
+              severity: warning
+              priority: P3
+            exp_annotations:
+              summary: The public HTTPS certificate expires within 14 days
+              dashboard_uid: barghsa-executive-slo
+              runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
+      - eval_time: 12m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: *certificate_warning
+      - eval_time: 13m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: []
+      - eval_time: 14m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: []
+  - name: A renewed public certificate clears the warning while the runner stays fresh
+    interval: 1m
+    input_series:
+      - series: 'up{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1 1'
+      - series: 'barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '0 60'
+      - series: 'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds{job="barghsa-synthetic",instance="runner",environment="staging",database="core"}'
+        values: '1209600 3500000'
+    alert_rule_test:
+      - eval_time: 0m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: *certificate_warning
+      - eval_time: 1m
+        alertname: PublicTlsCertificateExpiring
+        exp_alerts: []
   - name: An executed failure pages after six minutes and clears on recovery
     interval: 1m
     input_series:

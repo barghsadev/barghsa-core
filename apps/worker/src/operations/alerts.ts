@@ -32,6 +32,8 @@ const labels: Record<string, string> = {
     'افت پایدار دسترس‌پذیری خدمت / Sustained loss of service availability',
   SyntheticProbeFailed: 'بررسی آزمایشی ناموفق است / Synthetic check failed',
   SyntheticProbeUnavailable: 'گزارش بررسی آزمایشی در دسترس نیست / Synthetic reporting unavailable',
+  PublicTlsCertificateExpiring:
+    'گواهی HTTPS رو به انقضا است / Public HTTPS certificate is expiring',
   PostgresBackupFailed: 'پشتیبان‌گیری پایگاه داده ناموفق است / Database backup failed',
   PostgresBackupStale: 'پشتیبان تأییدشده اخیر در دسترس نیست / No recent verified database backup',
   PostgresBackupMonitoringUnavailable:
@@ -103,6 +105,7 @@ const alertPriorities = new Map<string, AlertPriority>([
   ['JourneyErrorBudgetSlowBurn', 'P2'],
   ['SyntheticProbeFailed', 'P1'],
   ['SyntheticProbeUnavailable', 'P1'],
+  ['PublicTlsCertificateExpiring', 'P3'],
   ['PostgresBackupFailed', 'P1'],
   ['PostgresBackupStale', 'P1'],
   ['PostgresBackupMonitoringUnavailable', 'P1'],

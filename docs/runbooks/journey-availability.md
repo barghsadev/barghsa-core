@@ -10,4 +10,6 @@ For a P1 synthetic failure, inspect the reported check and its validated correla
 
 For a P1 synthetic reporting outage, check the configured scrape target, timer, recent unit status and protected fixture configuration. Restore the approved runner and verify a fresh result before resolving the incident. The failure and unavailable rules feed the private operations receiver. Verify the approved P1 pager route with a firing and resolved receipt before relying on it for on-call delivery.
 
+For `PublicTlsCertificateExpiring`, platform operations checks the public certificate in the Executive SLO dashboard during working hours. The alert fires when a fresh runner sees a trusted public certificate with 14 days or less remaining. Verify the configured public origin and the certificate served to an external client, review the renewal timer and recent renewal-hook results, and verify that the public listener serves the renewed certificate before closing the review. Treat a certificate trust failure as a synthetic availability failure. An absent certificate metric requires checking the runner and public TLS reachability before recording renewal as verified.
+
 [Service objectives](../operations/service-objectives.md) · [Incident response](../operations/incident-response.md) · [Bad deployment and rollback](bad-deployment.md)

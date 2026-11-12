@@ -42,5 +42,5 @@ scrape_configs:
         replacement: core
     metric_relabel_configs:
       - source_labels: [__name__]
-        regex: barghsa_synthetic_probe_(completed_timestamp_seconds|success)
+        regex: barghsa_synthetic_probe_(completed_timestamp_seconds|success|tls_certificate_expiry_timestamp_seconds)
         action: keep

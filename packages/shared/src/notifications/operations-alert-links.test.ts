@@ -31,17 +31,20 @@ describe('operations alert budget links', () => {
     expect(links[2]?.label).toBe('notifications.operations.runbook');
   });
 
-  it('links the reconciliation review notice to Finance and its runbook', () => {
+  it.each([
+    ['WalletReconciliationReview', 'barghsa-finance-safety', 'payment-wallet-mismatch'],
+    ['PublicTlsCertificateExpiring', 'barghsa-executive-slo', 'journey-availability'],
+  ])('links the %s review notice to its dashboard and runbook', (name, dashboard, runbook) => {
     expect(
       operationsAlertLinks('admin.operations_alert', {
-        operationsAlertName: 'WalletReconciliationReview',
+        operationsAlertName: name,
         operationsDashboardOrigin: origin,
       })
     ).toEqual([
-      { label: 'notifications.operations.dashboard', href: `${origin}/d/barghsa-finance-safety` },
+      { label: 'notifications.operations.dashboard', href: `${origin}/d/${dashboard}` },
       {
         label: 'notifications.operations.runbook',
-        href: 'https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/payment-wallet-mismatch.md',
+        href: `https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/${runbook}.md`,
       },
     ]);
   });

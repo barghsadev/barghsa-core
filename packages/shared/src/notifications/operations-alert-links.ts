@@ -21,6 +21,7 @@ const alertResources = {
   JourneyErrorBudgetSlowBurn: ['barghsa-executive-slo', 'journey-availability'],
   SyntheticProbeFailed: ['barghsa-executive-slo', 'journey-availability'],
   SyntheticProbeUnavailable: ['barghsa-executive-slo', 'journey-availability'],
+  PublicTlsCertificateExpiring: ['barghsa-executive-slo', 'journey-availability'],
   PostgresBackupFailed: ['barghsa-postgresql', 'postgresql-backup'],
   PostgresBackupStale: ['barghsa-postgresql', 'postgresql-backup'],
   PostgresBackupMonitoringUnavailable: ['barghsa-postgresql', 'postgresql-backup'],

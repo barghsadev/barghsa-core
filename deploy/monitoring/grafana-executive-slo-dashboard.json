@@ -444,6 +444,27 @@
           "range": true
         }
       ]
+    },
+    {
+      "id": 9,
+      "type": "stat",
+      "title": "Public HTTPS certificate remaining",
+      "description": "Shortest verified leaf certificate lifetime reported by current independent probes for this scope. The P3 warning starts at 14 days.",
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "gridPos": { "x": 0, "y": 31, "w": 8, "h": 5 },
+      "fieldConfig": {
+        "defaults": { "unit": "s", "noValue": "No verified certificate", "decimals": 0 },
+        "overrides": []
+      },
+      "options": { "colorMode": "none", "graphMode": "none" },
+      "targets": [
+        {
+          "expr": "barghsa:synthetic_probe:certificate_seconds_remaining{environment=\"$environment\",database=\"$database\"}",
+          "refId": "A",
+          "instant": true,
+          "range": false
+        }
+      ]
     }
   ]
 }

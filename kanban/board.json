@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T08:03:45+00:00",
+  "updated": "2026-11-12T08:14:26+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -11494,7 +11494,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "packages/db/src/seed/index.ts",
@@ -11687,6 +11687,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -17344,7 +17352,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -17452,6 +17460,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -17523,7 +17539,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "docs/adr/003-hybrid-deployment.md",
@@ -17631,6 +17647,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -27782,7 +27806,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "deploy/production/compose.yml",
@@ -28080,6 +28104,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -29762,7 +29794,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             }
           ],
           "checks": [
@@ -29874,6 +29906,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -94546,7 +94586,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -94574,7 +94614,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -94590,7 +94630,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -96413,6 +96453,16 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -99659,11 +99709,11 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -99687,7 +99737,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -99987,6 +100037,16 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -100136,7 +100196,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             }
           ],
           "checks": [
@@ -100276,6 +100336,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -110017,7 +110085,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -110613,6 +110681,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -111227,7 +111303,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -111823,6 +111899,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -112437,7 +112521,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -113033,6 +113117,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -113648,7 +113740,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -114244,6 +114336,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -114858,7 +114958,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -115454,6 +115554,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -116018,7 +116126,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -116106,7 +116214,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -116130,7 +116238,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -116531,6 +116639,16 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -117107,7 +117225,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -117522,6 +117640,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -118004,7 +118130,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0126_provider_delivery_proof.sql",
@@ -118600,6 +118726,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -516133,7 +516267,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/server.ts",
@@ -516153,7 +516287,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -516161,7 +516295,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "docs/operations/ai-model-tests.md",
@@ -516689,6 +516823,16 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -518534,7 +518678,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -518602,7 +518746,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -519200,6 +519344,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -585164,7 +585317,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "packages/db/src/storage-multipart.migrated.test.ts",
@@ -585260,6 +585413,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -591320,7 +591481,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -591482,6 +591643,14 @@
                 "apps/worker/src/operations/alerts.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -593118,11 +593287,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/refunds/reconciliation-scanner.integration.test.ts",
@@ -593262,6 +593431,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -595738,7 +595916,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "deploy/production/check-promotion.py",
@@ -596013,6 +596191,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -596135,7 +596321,7 @@
           "source_evidence": [
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "docs/operations/incident-response.md",
@@ -596336,6 +596522,14 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -599926,7 +600120,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             }
           ],
           "checks": [
@@ -600120,6 +600314,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -600419,7 +600621,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -600615,6 +600817,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -600710,7 +600920,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "apps/worker/src/notifications/worker-metrics.ts",
@@ -600722,7 +600932,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/api/src/metrics/ai-inference-metrics.ts",
@@ -600976,6 +601186,15 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md",
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -601057,11 +601276,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -601327,6 +601546,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -601397,7 +601625,7 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/main-process.integration.test.ts",
@@ -601593,6 +601821,14 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -601793,7 +602029,7 @@
           "source_evidence": [
             {
               "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
-              "sha256": "007bc7bcbd23f6e2382fa41631b38aa18d1ad6252bb0321482f20e5a7bdab06a"
+              "sha256": "3bc02c487af889ad7fac17e9d4e0bfb029fa641f8a22f489bc5af656d85fbef1"
             },
             {
               "path": "deploy/monitoring/grafana-provisioning/dashboards.yml",
@@ -601809,11 +602045,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "fbe9d087d17a8434cb4b458d76aa91c5382acad96539d6f6772fbfc3223c379c"
+              "sha256": "f75a11b01b95d6556796dec8a71a5b8c1784fef4e6323f0dab816dd05792fae4"
             },
             {
               "path": "docs/operations/service-objectives.md",
@@ -601971,6 +602207,16 @@
                 "docs/operations/service-objectives.md"
               ],
               "scope": "Weekly maintenance adds development-only mutation tools and dependency reporting. Existing runtime lock entries and load budgets are preserved. Wallet parsing gains three assertions; source-bound hosted tests and load evidence passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/grafana-executive-slo-dashboard.json",
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -602054,7 +602300,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/staging/deploy.sh",
@@ -602299,6 +602545,14 @@
                 "deploy/staging/deploy.sh"
               ],
               "scope": "Only the opt-in artifact export, verified bundle transfer and its release fixtures change. Required CI checks, strict license enforcement, existing local build and scan behavior, rollback, live verification and Telegram no-repeat protections remain in force. The queue, notifier and native disposable Docker checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -602353,7 +602607,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "docs/operations/postgresql-monitoring.md",
@@ -602453,6 +602707,14 @@
                 "docs/operations/postgresql-monitoring.md"
               ],
               "scope": "Only the private database metrics exporter connection deadline, endpoint validation, and its fixtures and procedure change. The native compiled API, socket and certificate checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -602521,11 +602783,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             }
           ],
           "source_renewals": [
@@ -602695,6 +602957,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -602795,7 +603066,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/shared/src/notification-delivery/execution.ts",
@@ -602888,6 +603159,14 @@
                 "docs/operations/notification-monitoring.md"
               ],
               "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -602992,7 +603271,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "docs/operations/security-rate-limits.md",
@@ -603111,6 +603390,14 @@
                 "apps/worker/src/auth-delivery/runner.integration.test.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -603395,11 +603682,11 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/0205_document_scanning.sql",
@@ -603569,6 +603856,15 @@
                 "apps/worker/src/main.ts"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -603656,7 +603952,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -603878,6 +604174,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -603957,7 +604261,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "docs/operations/ai-inference.md",
@@ -604054,6 +604358,14 @@
                 "deploy/monitoring/staging-prometheus.yml"
               ],
               "scope": "The staging configuration appends an optional private synthetic scrape. Existing API and worker scrapes, labels, alert rules and routing are preserved. The operations guide adds the synthetic overlay setup."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -604240,7 +604552,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             }
           ],
           "checks": [
@@ -604433,6 +604745,14 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -604535,8 +604855,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the live WalletReconciliationReview firing and resolution in the deployed Finance dashboard and private operations review path. Prometheus and private inbox fixtures passed.",
-        "Configure and verify early certificate expiry and storage lifecycle warning signals with their deployed data sources.",
+        "Verify live firing and resolution for WalletReconciliationReview and PublicTlsCertificateExpiring in the deployed dashboards and private operations review path. The rules, protected transport and private inbox passed their isolated checks. The public staging certificate observation is not a deployed alert receipt.",
+        "Configure and verify the storage lifecycle warning using the deployed storage cleanup source.",
         "Reconcile the specified P3 low-credit warning with the configured and previously verified P2 SmsProviderLowCredit threshold. Preserve the P2 response while evaluating the earlier warning."
       ],
       "owner": null,
@@ -604555,10 +604875,20 @@
           "packages/db/drizzle/production/meta/_journal.json",
           "packages/db/src/schema/operations-alert-receipts.ts",
           "packages/shared/src/notifications/operations-alert-links.test.ts",
-          "packages/shared/src/notifications/operations-alert-links.ts"
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "deploy/monitoring/synthetic-probe-alerts.yml",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_synthetic_probe.py",
+          "docs/operations/notification-monitoring.md",
+          "docs/runbooks/journey-availability.md"
         ],
         "batches": [
-          "release-0.6-reconciliation-review"
+          "release-0.6-reconciliation-review",
+          "release-0.6-tls-expiry-warning"
         ],
         "current_acceptance": null
       }
@@ -604579,7 +604909,7 @@
       "launch_required": true,
       "remaining": [
         "Verify the P1 pager or phone and P2 team channel and task with controlled delivery receipts on the authorized deployed receivers.",
-        "Verify the P3 working-hours review board and operator access. The protected worker has fixture evidence for deduplicated P3 wallet mismatch delivery to the active admin inbox with Finance dashboard and runbook links."
+        "Verify the P3 working-hours review board and operator access. The protected worker delivered deduplicated P3 wallet mismatch and certificate expiry notices to the active admin inbox with scoped dashboards and runbooks in the PostgreSQL fixture."
       ],
       "owner": null,
       "depends_on": [],
@@ -604597,10 +604927,20 @@
           "packages/db/drizzle/production/meta/_journal.json",
           "packages/db/src/schema/operations-alert-receipts.ts",
           "packages/shared/src/notifications/operations-alert-links.test.ts",
-          "packages/shared/src/notifications/operations-alert-links.ts"
+          "packages/shared/src/notifications/operations-alert-links.ts",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/staging-prometheus.yml",
+          "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "deploy/monitoring/synthetic-probe-alerts.yml",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_synthetic_probe.py",
+          "docs/operations/notification-monitoring.md",
+          "docs/runbooks/journey-availability.md"
         ],
         "batches": [
-          "release-0.6-reconciliation-review"
+          "release-0.6-reconciliation-review",
+          "release-0.6-tls-expiry-warning"
         ],
         "current_acceptance": null
       }
@@ -604665,11 +605005,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/notifications/in-app-transport.ts",
@@ -604685,7 +605025,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             }
           ],
           "checks": [
@@ -604843,6 +605183,16 @@
                 "apps/worker/src/operations/alerts.integration.test.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -604940,7 +605290,14 @@
           "packages/db/drizzle/production/0290_operations_alert_p3_priority.sql",
           "packages/db/drizzle/production/meta/0290_snapshot.json",
           "packages/db/drizzle/production/meta/_journal.json",
-          "packages/db/src/schema/operations-alert-receipts.ts"
+          "packages/db/src/schema/operations-alert-receipts.ts",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "deploy/monitoring/synthetic-probe-alerts.yml",
+          "deploy/production/README.md",
+          "deploy/production/rollout-observer.py",
+          "deploy/production/test_synthetic_probe.py",
+          "docs/runbooks/journey-availability.md"
         ],
         "batches": [
           "release-0.6-alert-runbook-references-and-review",
@@ -604953,7 +605310,8 @@
           "release-0.6-alert-delivery-watchdog",
           "release-0.6-operational-budget-context",
           "release-0.6-api-pressure-alerts",
-          "release-0.6-reconciliation-review"
+          "release-0.6-reconciliation-review",
+          "release-0.6-tls-expiry-warning"
         ],
         "current_acceptance": null
       }
@@ -605370,11 +605728,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -605624,6 +605982,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -605703,11 +606070,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/refunds/refund-metrics.ts",
@@ -605973,6 +606340,15 @@
                 "deploy/monitoring/notification-alerts.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -606050,11 +606426,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "deploy/monitoring/notification-alerts.test.yml",
@@ -606286,6 +606662,15 @@
                 "packages/db/src/schema/operations-alert-receipts.ts"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "apps/worker/src/operations/alerts.ts"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -606364,11 +606749,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "deploy/monitoring/notification-alerts.yml",
@@ -606400,7 +606785,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -606574,6 +606959,16 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -606648,11 +607043,11 @@
             },
             {
               "path": "apps/worker/src/operations/alerts.ts",
-              "sha256": "c29cadafdbcd7b5a787326f0a9ae4b5b2390d2ba4d8d541dac89126b64eecedd"
+              "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
             },
             {
               "path": "apps/worker/src/operations/alerts.integration.test.ts",
-              "sha256": "1f93ee4397985be8f22864a135cbbf0171dabd22211e0e623b9e834d7d874c17"
+              "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
             },
             {
               "path": "apps/worker/src/notifications/sms-credit-monitor.integration.test.ts",
@@ -606696,7 +607091,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-alertmanager.yml",
@@ -606877,6 +607272,16 @@
                 "deploy/monitoring/notification-alerts.test.yml"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "apps/worker/src/operations/alerts.ts",
+                "apps/worker/src/operations/alerts.integration.test.ts",
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -608787,7 +609192,7 @@
             },
             {
               "path": "deploy/monitoring/staging-prometheus.yml",
-              "sha256": "b7ee901a689e2031a80cc2fb7c2586fa3d54bef1da10032c884add17ecb3fc90"
+              "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
             },
             {
               "path": "deploy/monitoring/staging-worker-alerts.yml",
@@ -608958,6 +609363,14 @@
                 "docs/runbooks/payment-wallet-mismatch.md"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/monitoring/staging-prometheus.yml"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -609712,11 +610125,11 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "deploy/production/rollout-observer.py",
-              "sha256": "fbe9d087d17a8434cb4b458d76aa91c5382acad96539d6f6772fbfc3223c379c"
+              "sha256": "f75a11b01b95d6556796dec8a71a5b8c1784fef4e6323f0dab816dd05792fae4"
             },
             {
               "path": "deploy/production/test_rollout_observer.py",
@@ -609823,6 +610236,15 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "The advisory fixes are scoped to the development mutation runner. The lockfile also records Babel debug peer resolutions and Vitest optional metadata. Frozen installation, the unchanged high/critical audit and the full mutation suite passed. The exact protected build and test check remains pending."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md",
+                "deploy/production/rollout-observer.py"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -610135,7 +610557,7 @@
             },
             {
               "path": "deploy/production/README.md",
-              "sha256": "69588ce2967bb3a91e9baffe1aab5fee5fa0a60aca28e4593b858d147dd98ff5"
+              "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
             },
             {
               "path": "deploy/staging/nginx-api-proxy.conf",
@@ -610303,6 +610725,14 @@
                 "deploy/staging/nginx.conf"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "deploy/production/README.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ]
         }
@@ -610323,7 +610753,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated TLS scrape verified canonical labels and metric filtering.",
+        "Install the probe and timer on the approved independent monitoring host. Configure its private HTTPS exporter in the staging-synthetic overlay, then verify the live public and authenticated runs, exact scraped target and schedule. The isolated scrape verified canonical labels and filtering for the result, completion timestamp and verified certificate expiry.",
         "Use the approved dedicated account and trusted device or verified-contact reader. Record the current live authentication and logout receipt."
       ],
       "owner": null,
@@ -610338,12 +610768,21 @@
           "deploy/production/test_synthetic_probe.py",
           "deploy/monitoring/staging-prometheus.yml",
           "deploy/monitoring/staging-synthetic.yml",
-          "docs/operations/notification-monitoring.md"
+          "docs/operations/notification-monitoring.md",
+          "apps/worker/src/operations/alerts.integration.test.ts",
+          "apps/worker/src/operations/alerts.ts",
+          "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "deploy/monitoring/synthetic-probe-alerts.yml",
+          "docs/runbooks/journey-availability.md",
+          "packages/shared/src/notifications/operations-alert-links.test.ts",
+          "packages/shared/src/notifications/operations-alert-links.ts"
         ],
         "batches": [
           "release-0.6-synthetic-probe",
           "release-0.6-synthetic-alerts",
-          "release-0.6-synthetic-staging-scrape"
+          "release-0.6-synthetic-staging-scrape",
+          "release-0.6-tls-expiry-warning"
         ],
         "current_acceptance": null
       }
@@ -910416,7 +910855,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -912694,6 +913133,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "presentation_renewals": [
@@ -915303,7 +915750,7 @@
             },
             {
               "path": "docs/operations/notification-monitoring.md",
-              "sha256": "42a8b3b2d9ae14c86453d8b1bc001f8156fadf7783995b7e14f6b3deab197c1d"
+              "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
             },
             {
               "path": "docs/operations/notification-template-seeding.md",
@@ -917481,6 +917928,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Journal extension 0290 adds the P3 operations receipt priority and preserves every preceding journal entry and existing schema behavior. The added rule, receiver entry, Finance links and tests cover working-hours reconciliation review. Existing P1 and P2 rules and assertions are preserved. The exact prior-head upgrade, clean baseline, Prometheus and operations inbox checks passed."
+            },
+            {
+              "batch": "release-0.6-tls-expiry-warning",
+              "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+              "paths": [
+                "docs/operations/notification-monitoring.md"
+              ],
+              "scope": "Added an optional verified public certificate expiry observation and a P3 private operations review signal. Existing synthetic HTTP, authority, release guard, P1 rules, and outbox assertions still apply. Exact synthetic, rollout observer, Prometheus and PostgreSQL operations checks passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -1063321,6 +1063776,174 @@
         {
           "file": "upgrade.cjs",
           "sha256": "0bc17e97ee64bdeb736e9aa3fe00d7a58989efab50b03648e182005913396e60"
+        }
+      ]
+    },
+    "release-0.6-tls-expiry-warning": {
+      "batch": "release-0.6-tls-expiry-warning",
+      "base_commit": "57af12be1fb46a1787275fed78b4e95d065cbbfa",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.15.01.04",
+        "06-security-testing-observability.md#T-06.15.01.05",
+        "06-security-testing-observability.md#T-06.15.01.08",
+        "06-security-testing-observability.md#T-06.17.03.02",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.01.06",
+        "05-notifications-documents-ai.md#T-05.01.07",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "05-notifications-documents-ai.md#T-05.07.04",
+        "05-notifications-documents-ai.md#T-05.08.02",
+        "06-security-testing-observability.md#T-06.10.01.01",
+        "06-security-testing-observability.md#T-06.11.03.02",
+        "06-security-testing-observability.md#T-06.11.04.06",
+        "06-security-testing-observability.md#T-06.12.04.01",
+        "06-security-testing-observability.md#T-06.12.04.04",
+        "06-security-testing-observability.md#T-06.14.01.01",
+        "06-security-testing-observability.md#T-06.14.01.04",
+        "06-security-testing-observability.md#T-06.14.01.05",
+        "06-security-testing-observability.md#T-06.14.01.06",
+        "06-security-testing-observability.md#T-06.14.01.07",
+        "06-security-testing-observability.md#T-06.14.02.01",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.14.02.03",
+        "06-security-testing-observability.md#T-06.14.02.04",
+        "06-security-testing-observability.md#T-06.14.02.05",
+        "06-security-testing-observability.md#T-06.14.02.06",
+        "06-security-testing-observability.md#T-06.14.02.08",
+        "06-security-testing-observability.md#T-06.14.02.09",
+        "06-security-testing-observability.md#T-06.14.02.10",
+        "06-security-testing-observability.md#T-06.15.01.01",
+        "06-security-testing-observability.md#T-06.15.01.06",
+        "06-security-testing-observability.md#T-06.15.03.01",
+        "06-security-testing-observability.md#T-06.15.03.02",
+        "06-security-testing-observability.md#T-06.15.03.03",
+        "06-security-testing-observability.md#T-06.15.03.04",
+        "06-security-testing-observability.md#T-06.15.03.05",
+        "06-security-testing-observability.md#T-06.17.01.08",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "apps/worker/src/operations/alerts.integration.test.ts",
+        "apps/worker/src/operations/alerts.ts",
+        "deploy/monitoring/grafana-executive-slo-dashboard.json",
+        "deploy/monitoring/staging-prometheus.yml",
+        "deploy/monitoring/synthetic-probe-alerts.test.yml",
+        "deploy/monitoring/synthetic-probe-alerts.yml",
+        "deploy/production/README.md",
+        "deploy/production/rollout-observer.py",
+        "deploy/production/test_synthetic_probe.py",
+        "docs/operations/notification-monitoring.md",
+        "docs/runbooks/journey-availability.md",
+        "packages/shared/src/notifications/operations-alert-links.test.ts",
+        "packages/shared/src/notifications/operations-alert-links.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/worker/src/operations/alerts.integration.test.ts",
+          "sha256": "1e473766828b32257851409a78b51d4170d09efbf5dfc09b82fe476d21f5c08e"
+        },
+        {
+          "path": "apps/worker/src/operations/alerts.ts",
+          "sha256": "44b306b2e7decdb00be89217c80882f704c2dedf0a6ba4ba28bdcea4c97b066d"
+        },
+        {
+          "path": "deploy/monitoring/grafana-executive-slo-dashboard.json",
+          "sha256": "3bc02c487af889ad7fac17e9d4e0bfb029fa641f8a22f489bc5af656d85fbef1"
+        },
+        {
+          "path": "deploy/monitoring/staging-prometheus.yml",
+          "sha256": "43b2f71258b72e766d53267ec7bcad00e8d8c59fe3aaed4e3b0f2ea2515c3c16"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.test.yml",
+          "sha256": "5f9c9339b746befd046bd056e966f7a2c7d65a366cf3c2747db130be19dc1e1a"
+        },
+        {
+          "path": "deploy/monitoring/synthetic-probe-alerts.yml",
+          "sha256": "dde63634b770768f96f5d3d028011b0bfecc1e6829db356cb1e13fdebe7980d2"
+        },
+        {
+          "path": "deploy/production/README.md",
+          "sha256": "63c166452bda68c6b8e657daaea69e0689427af27db53bdc609ec9af7fb7df6c"
+        },
+        {
+          "path": "deploy/production/rollout-observer.py",
+          "sha256": "f75a11b01b95d6556796dec8a71a5b8c1784fef4e6323f0dab816dd05792fae4"
+        },
+        {
+          "path": "deploy/production/test_synthetic_probe.py",
+          "sha256": "1b6c9d9174ec296a46441aa549891d6ad4473c83392eed9db621918866c38be7"
+        },
+        {
+          "path": "docs/operations/notification-monitoring.md",
+          "sha256": "b9d6ccf150824bac50882f010be65f5cc50f4d55365b01477f1789c9251a4f02"
+        },
+        {
+          "path": "docs/runbooks/journey-availability.md",
+          "sha256": "9afaa1798636526a1e9eca3a7d3dffbae2b42aaedc9ca54754f7972c61211247"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.test.ts",
+          "sha256": "8d52356c804405e6c6ef97d8bee3d596f901ce7b758ecf7af178d4517eee45d2"
+        },
+        {
+          "path": "packages/shared/src/notifications/operations-alert-links.ts",
+          "sha256": "47146885f34d64c4d28979cc616bdde7f8925243c81956cac1e6498d16ad718e"
+        }
+      ],
+      "checks": [
+        "Seven synthetic CLI cases and eleven rollout observer cases passed. The TLS fixture emitted the exact certificate expiry even while the application health endpoint returned 503. An untrusted or mismatched certificate cleared the optional metric. The change uses the existing trusted TLS context and exports only the timestamp.",
+        "Prometheus rule fixtures verified the 14-day threshold, one alert per environment and database, stale and foreign-scope rejection and recovery after renewal. A private HTTPS scrape and Alertmanager rehearsal accepted the new metric and emitted one authenticated firing and one resolved P3 webhook. Dashboard query and configuration checks passed.",
+        "The compiled worker build, 36 operations cases on disposable PostgreSQL 17.9, ten shared alert-link cases and changed-file lint passed. PostgreSQL fixtures verify exact protected receipt, replay handling and delivery to the active admin inbox for both P3 alert types.",
+        "Public staging certificate observed on 2026-11-12. The verified leaf expires 2026-12-28T06:40:26Z and was above the 14-day warning threshold."
+      ],
+      "limitations": [
+        "This proof uses disposable local services for rule firing, resolution and inbox delivery. The approved independent runner and a live operations receipt still need deployment verification. The public TLS read did not change staging state."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-tls-expiry-warning",
+      "execution_receipts": [
+        {
+          "file": "source.sha256",
+          "sha256": "9044958f0d3607819c257b16586c13959f7bc98c78dcc68e07e1a95ffacfba09"
+        },
+        {
+          "file": "worker-postgres.log",
+          "sha256": "63fd9980c7340810b26c6ef8b07ad93a768110143e6351ef8662a6b60be23d82"
+        },
+        {
+          "file": "run-native.sh",
+          "sha256": "274127637c06961b11b77569618386fbd455c3f29c4b533560b5c53db6095585"
+        },
+        {
+          "file": "native.config.mjs",
+          "sha256": "4d0ea27446ae16382734c449c51b6abce23f6d3db643c766050ab965c75fa548"
+        },
+        {
+          "file": "scrape.log",
+          "sha256": "66fe2408d8ae2cf274036e804294e360128dd6873dd4c1882c0ee501f7dd9564"
+        },
+        {
+          "file": "rehearse-scrape.py",
+          "sha256": "d6af00b8f3cb9a8b2d9907287e9bad91f6fd417911d9ae8133a870387f48a579"
+        },
+        {
+          "file": "staging-certificate.json",
+          "sha256": "57cfee76cf0d1d8f229962f7851dceea94584bd94742a86089cf2a049689c70c"
         }
       ]
     }

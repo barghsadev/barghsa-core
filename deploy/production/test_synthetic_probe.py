@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+import ssl
 import subprocess
 import sys
 import tempfile
@@ -128,10 +129,8 @@ class SyntheticProbeTests(unittest.TestCase):
 
         self.server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
         self.origin = f'http://127.0.0.1:{self.server.server_port}'
-        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
-        self.thread.start()
+        self.thread = None
         self.addCleanup(self.server.server_close)
-        self.addCleanup(self.server.shutdown)
         self.config = {
             'origin': self.origin,
             'user_id': USER, 'profile_id': PROFILE,
@@ -139,13 +138,50 @@ class SyntheticProbeTests(unittest.TestCase):
             'username': 'probe@example.test', 'password': PASSWORD, 'device_token': DEVICE,
         }
 
-    def probe(self, mode=0o600):
+    def serve_tls(self):
+        cert = self.directory / 'fixture.pem'
+        key = self.directory / 'key.pem'
+        settings = self.directory / 'openssl.cnf'
+        settings.write_text('[req]\nprompt = no\ndistinguished_name = subject\nx509_extensions = extensions\n'
+                            '[subject]\nCN = Barghsa TLS fixture\n[extensions]\n'
+                            'subjectAltName = IP:127.0.0.1\nbasicConstraints = critical,CA:TRUE\n')
+        subprocess.run(['openssl', 'req', '-new', '-x509', '-newkey', 'rsa:2048', '-nodes',
+                        '-days', '7', '-config', str(settings), '-keyout', str(key), '-out', str(cert)],
+                       check=True, capture_output=True, timeout=8)
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain(cert, key)
+        self.server.socket = context.wrap_socket(self.server.socket, server_side=True)
+        self.origin = f'https://127.0.0.1:{self.server.server_port}'
+        self.config['origin'] = self.origin
+        return cert
+
+    def probe(self, mode=0o600, *, trust=None):
+        if self.thread is None:
+            self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+            self.thread.start()
+            self.addCleanup(self.server.shutdown)
         config = self.directory / 'probe.json'
         config.write_text(json.dumps(self.config))
         config.chmod(mode)
         self.metrics = self.directory / 'probe.prom'
+        command = [sys.executable]
+        if trust:
+            # Use the fixture CA on platforms whose default trust loader ignores SSL_CERT_FILE.
+            command.extend(['-c', '''
+import runpy, ssl, sys
+
+fixture_ca = sys.argv.pop(1)
+load_default_certs = ssl.SSLContext.load_default_certs
+
+def load_fixture_ca(context, purpose=ssl.Purpose.SERVER_AUTH):
+    load_default_certs(context, purpose)
+    context.load_verify_locations(cafile=fixture_ca)
+
+ssl.SSLContext.load_default_certs = load_fixture_ca
+runpy.run_path(sys.argv.pop(1), run_name='__main__')
+''', str(trust)])
         return subprocess.run(
-            [sys.executable, str(OBSERVER), '--synthetic', '--config', str(config),
+            [*command, str(OBSERVER), '--synthetic', '--config', str(config),
              '--metrics-file', str(self.metrics)],
             text=True, capture_output=True, timeout=12,
         )
@@ -171,6 +207,28 @@ class SyntheticProbeTests(unittest.TestCase):
             ('POST', '/api/auth/logout'),
         ])
         self.assertIn('barghsa_synthetic_probe_success{check="solar"} 1', self.metrics.read_text())
+        self.assertNotIn('certificate_expiry', self.metrics.read_text())
+
+    def test_reports_only_a_verified_public_certificate_and_replaces_stale_results(self):
+        cert = self.serve_tls()
+        self.fault = 'health'
+        trusted = self.probe(trust=cert)
+        self.assertEqual(trusted.returncode, 1)
+        self.assertEqual(self.check_report(trusted)['liveness']['http_status'], 503)
+        report = json.loads(trusted.stdout)
+        expiry = report['tls_certificate_expiry_timestamp_seconds']
+        self.assertAlmostEqual(expiry - report['observed_at'], 7 * 86400, delta=15)
+        metric = 'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds'
+        self.assertIn(f'{metric} {expiry}\n', self.metrics.read_text())
+
+        for base, trust in [(self.origin, None), (self.origin.replace('127.0.0.1', 'localhost'), cert)]:
+            with self.subTest(base=base):
+                self.config['origin'] = base
+                rejected = self.probe(trust=trust)
+                self.assertEqual(rejected.returncode, 1)
+                self.assertEqual(self.check_report(rejected)['liveness']['reason'], 'probe_unavailable')
+                self.assertNotIn('tls_certificate_expiry_timestamp_seconds', rejected.stdout)
+                self.assertNotIn(metric, self.metrics.read_text())
 
     def test_otp_uses_a_fresh_csrf_proof_and_does_not_trust_a_new_device(self):
         self.issue_otp = True

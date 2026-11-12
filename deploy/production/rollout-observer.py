@@ -10,6 +10,8 @@ import math
 import os
 from pathlib import Path
 import re
+import socket
+import ssl
 import stat
 import subprocess
 import sys
@@ -75,6 +77,20 @@ def origin(value):
         require(parsed.scheme == 'http' and ipaddress.ip_address(parsed.hostname).is_loopback,
                 'origin_requires_https')
     return value
+
+
+def certificate_expiry(base):
+    target = urlsplit(base)
+    if target.scheme != 'https':
+        return None
+    try:
+        context = ssl.create_default_context()
+        port = 443 if target.port is None else target.port
+        with socket.create_connection((target.hostname, port), timeout=5) as connection:
+            with context.wrap_socket(connection, server_hostname=target.hostname) as peer:
+                return int(ssl.cert_time_to_seconds(peer.getpeercert()['notAfter']))
+    except (OSError, KeyError, ValueError):
+        return None
 
 
 class JsonReader:
@@ -309,7 +325,11 @@ def synthetic(config):
         finally:
             if browser.has_session():
                 check('logout', browser, browser.logout)
-    return {'observed_at': int(time.time()), 'checks': results}
+    expiry = certificate_expiry(config['origin'])
+    report = {'observed_at': int(time.time()), 'checks': results}
+    if expiry is not None:
+        report['tls_certificate_expiry_timestamp_seconds'] = expiry
+    return report
 
 
 def synthetic_metrics(path, report):
@@ -323,6 +343,13 @@ def synthetic_metrics(path, report):
     for name, result in report['checks'].items():
         if result['status'] != 'skipped':
             lines.append(f'barghsa_synthetic_probe_success{{check="{name}"}} {int(result["status"] == "passed")}')
+    expiry = report.get('tls_certificate_expiry_timestamp_seconds')
+    if expiry is not None:
+        lines.extend([
+            '# HELP barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds Expiry of the verified public HTTPS leaf certificate.',
+            '# TYPE barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds gauge',
+            f'barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds {expiry}',
+        ])
     with tempfile.NamedTemporaryFile(mode='w', dir=path.parent, prefix='.synthetic-', delete=False) as out:
         staged = Path(out.name)
         try:

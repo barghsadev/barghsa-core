@@ -6,6 +6,24 @@ groups:
           (time() - barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",environment!="",database!=""} >= 0)
           and
           (time() - barghsa_synthetic_probe_completed_timestamp_seconds{job="barghsa-synthetic",environment!="",database!=""} <= 720)
+      - record: barghsa:synthetic_probe:certificate_seconds_remaining
+        expr: |
+          min by (environment, database) (
+            (barghsa_synthetic_probe_tls_certificate_expiry_timestamp_seconds{job="barghsa-synthetic",environment!="",database!=""} - time())
+            and on (job, instance, environment, database) barghsa:synthetic_probe:fresh
+            and on (job, instance, environment, database) (up{job="barghsa-synthetic"} == 1)
+          )
+      - alert: PublicTlsCertificateExpiring
+        expr: |
+          (barghsa:synthetic_probe:certificate_seconds_remaining > 0)
+          and (barghsa:synthetic_probe:certificate_seconds_remaining <= 14 * 24 * 60 * 60)
+        labels:
+          severity: warning
+          priority: P3
+        annotations:
+          summary: The public HTTPS certificate expires within 14 days
+          dashboard_uid: barghsa-executive-slo
+          runbook_url: https://github.com/barghsadev/barghsa-core/blob/main/docs/runbooks/journey-availability.md
       - alert: SyntheticProbeFailed
         expr: |
           (barghsa_synthetic_probe_success{job="barghsa-synthetic",environment!="",database!="",check=~"liveness|readiness|login|account|electricity|saving|solar|consultation|logout"} == 0)

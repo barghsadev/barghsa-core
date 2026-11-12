@@ -76,8 +76,8 @@ Prometheus file discovery target.
 
 Allow connections only from the approved monitoring network. The hostname
 must match a certificate trusted by the Prometheus image. Prometheus assigns
-the staging and core labels and ingests only the probe result and completion
-timestamp from the exporter. Check that the `barghsa-synthetic` target is up
+the staging and core labels and ingests only the probe result, completion
+timestamp and verified public certificate expiry from the exporter. Check that the `barghsa-synthetic` target is up
 and publishing fresh results before relying on its alerts. Verify a controlled
 failure, a reporting outage, both recoveries and the authorized pager receipt.
 [Synthetic runner setup](../../deploy/production/README.md#synthetic-health-probes)
