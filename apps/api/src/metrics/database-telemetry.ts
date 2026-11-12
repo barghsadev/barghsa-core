@@ -7,7 +7,7 @@ import {
 } from '@opentelemetry/sdk-metrics';
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http';
 import { resourceFromAttributes } from '@opentelemetry/resources';
-import { collectorAgent } from './otlp-http-agent.js';
+import { collectorAgent } from '@barghsa/shared/telemetry';
 
 export interface DatabaseTelemetrySnapshot {
   metrics: DatabaseMetrics | null;

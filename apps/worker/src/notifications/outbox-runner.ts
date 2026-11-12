@@ -6,6 +6,9 @@ import { decideDeliverySchedule } from './delivery-window.js';
 import type { QueryPool } from './channel-scheduling.js';
 import type { QueryResultRow } from 'pg';
 import { getDbPool } from '@barghsa/db';
+import { operatorLogTrace } from '@barghsa/shared/operator-logging';
+import { extractTraceparent } from '@barghsa/shared/telemetry';
+import { SpanKind, SpanStatusCode, type Tracer } from '@opentelemetry/api';
 import type { INotificationTransport, NotificationChannel } from '@barghsa/shared/notifications';
 import {
   leaseOutbox,
@@ -85,6 +88,7 @@ export async function runOutboxPoll(
     /** Override the pool for tests. */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     pool?: any;
+    tracer?: Tracer;
     /** Override the delivery-window config for tests. */
     deliveryWindow?: DeliveryWindowConfig;
     /**
@@ -108,150 +112,172 @@ export async function runOutboxPoll(
   if (rows.length === 0) return result;
 
   const settled = await Promise.allSettled(
-    rows.map(async (row) => {
-      const startedAt = performance.now();
-      let lease: Awaited<ReturnType<typeof startOutboxLease>> | undefined;
-      let externalOutcomes: DispatchOutcome[] = [];
-      try {
-        lease = await startOutboxLease(
-          pool,
-          row,
-          normalizeLeaseDurationMs(options?.leaseDurationMs)
-        );
-        const channelJobs: ChannelJob[] = (
-          await pool.query(
-            'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
-            [row.id]
-          )
-        ).rows;
-        const pendingChannels = channelJobs
-          .filter(
-            (job) => !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date())
-          )
-          .map((job) => job.channel);
-        // Recover committed acceptance, or hold an ambiguous send, before
-        // current recipient/channel policy can hide the previous attempt.
-        const recovered: DispatchOutcome[] = [];
-        for (const channel of pendingChannels) {
-          if (channel === 'in_app') continue;
-          try {
-            const receipt = await readDeliveryReceipt(pool, row.id, channel);
-            if (receipt) recovered.push({ channel, result: receipt, latencyMs: null });
-          } catch (error) {
-            if (!(error instanceof DeliveryOutcomeUnknown)) throw error;
-            recovered.push({
-              channel,
-              result: { status: 'failed', providerRef: '' },
-              latencyMs: null,
-              error: error.message,
-              requiresReconciliation: true,
-            });
-          }
-        }
-        externalOutcomes = recovered.slice();
-        const remainingChannels = pendingChannels.filter(
-          (channel) => !recovered.some((outcome) => outcome.channel === channel)
-        );
-        const activeLease = lease;
-        const finish = async (policy: ReminderDeliveryPolicy) => {
-          const deferred: { channel: NotificationChannel; until: Date }[] = [];
-          const policySkipped: { channel: NotificationChannel; reason: string }[] = [];
-          const eligible = remainingChannels.filter((channel) => {
-            if (policy.skipReason) {
-              policySkipped.push({ channel, reason: policy.skipReason });
-              return false;
-            }
-            let until = policy.deferUntil;
-            if (!until && policy.window) {
-              const window = decideDeliverySchedule(
-                row.eventKey,
-                [channel],
-                new Date(),
-                policy.window
-              );
-              if (window.kind === 'schedule') until = window.scheduledFor;
-            }
-            if (until) {
-              deferred.push({ channel, until });
-              return false;
-            }
-            return true;
-          });
-          const availability =
-            eligible.length === 0
-              ? EMPTY_AVAILABILITY_CONTEXT
-              : (options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id));
-          const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
-          const decision = resolveChannelAvailability(row.eventKey, eligible, ctx);
-          const outcomes = [
-            ...recovered,
-            ...(await dispatchOutbox(
-              { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
-              options?.transports ?? {},
-              activeLease
-            )),
-          ];
-          // A rollback cannot undo an external send. Retain its actual receipt
-          // if recording the combined inbox/outcome transaction needs another try.
-          externalOutcomes = outcomes.slice();
-          if (activeLease.signal.aborted) throw new OutboxLeaseLost();
-          const aggregate = await persistOutcomes(
+    rows.map((row) => {
+      const span = options?.tracer?.startSpan(
+        'notification.outbox.process',
+        {
+          kind: SpanKind.CONSUMER,
+        },
+        extractTraceparent(row.traceParent)
+      );
+      const process = async () => {
+        const startedAt = performance.now();
+        let lease: Awaited<ReturnType<typeof startOutboxLease>> | undefined;
+        let externalOutcomes: DispatchOutcome[] = [];
+        try {
+          lease = await startOutboxLease(
             pool,
             row,
-            outcomes,
-            channelJobs,
-            [...decision.skipped, ...policySkipped],
-            decision.allowed.includes('in_app') ? (options?.transports ?? {}) : undefined,
-            deferred
+            normalizeLeaseDurationMs(options?.leaseDurationMs)
           );
-          if (
-            outcomes.some((outcome) => outcome.result.status === 'failed') ||
-            aggregate === 'failed'
-          )
-            result.failed++;
-          else if (aggregate === 'delivered') result.delivered++;
-        };
-        if (remainingChannels.length)
-          await withReminderDeliveryPolicy(pool, row, finish, options?.deliveryWindow);
-        else await finish({});
-      } catch (error) {
-        if (!(error instanceof OutboxLeaseLost)) {
-          const message = sanitizeLastError(error instanceof Error ? error.message : String(error));
-          try {
-            const jobs: ChannelJob[] = (
-              await pool.query(
-                'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
-                [row.id]
-              )
-            ).rows;
-            const due = jobs.filter(
+          const channelJobs: ChannelJob[] = (
+            await pool.query(
+              'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
+              [row.id]
+            )
+          ).rows;
+          const pendingChannels = channelJobs
+            .filter(
               (job) =>
                 !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date())
-            );
-            await persistOutcomes(
+            )
+            .map((job) => job.channel);
+          // Recover committed acceptance, or hold an ambiguous send, before
+          // current recipient/channel policy can hide the previous attempt.
+          const recovered: DispatchOutcome[] = [];
+          for (const channel of pendingChannels) {
+            if (channel === 'in_app') continue;
+            try {
+              const receipt = await readDeliveryReceipt(pool, row.id, channel);
+              if (receipt) recovered.push({ channel, result: receipt, latencyMs: null });
+            } catch (error) {
+              if (!(error instanceof DeliveryOutcomeUnknown)) throw error;
+              recovered.push({
+                channel,
+                result: { status: 'failed', providerRef: '' },
+                latencyMs: null,
+                error: error.message,
+                requiresReconciliation: true,
+              });
+            }
+          }
+          externalOutcomes = recovered.slice();
+          const remainingChannels = pendingChannels.filter(
+            (channel) => !recovered.some((outcome) => outcome.channel === channel)
+          );
+          const activeLease = lease;
+          const finish = async (policy: ReminderDeliveryPolicy) => {
+            const deferred: { channel: NotificationChannel; until: Date }[] = [];
+            const policySkipped: { channel: NotificationChannel; reason: string }[] = [];
+            const eligible = remainingChannels.filter((channel) => {
+              if (policy.skipReason) {
+                policySkipped.push({ channel, reason: policy.skipReason });
+                return false;
+              }
+              let until = policy.deferUntil;
+              if (!until && policy.window) {
+                const window = decideDeliverySchedule(
+                  row.eventKey,
+                  [channel],
+                  new Date(),
+                  policy.window
+                );
+                if (window.kind === 'schedule') until = window.scheduledFor;
+              }
+              if (until) {
+                deferred.push({ channel, until });
+                return false;
+              }
+              return true;
+            });
+            const availability =
+              eligible.length === 0
+                ? EMPTY_AVAILABILITY_CONTEXT
+                : (options?.availability?.(row) ?? loadChannelAvailabilityContext(pool, row.id));
+            const ctx = (await availability) ?? EMPTY_AVAILABILITY_CONTEXT;
+            const decision = resolveChannelAvailability(row.eventKey, eligible, ctx);
+            const outcomes = [
+              ...recovered,
+              ...(await dispatchOutbox(
+                { ...row, channels: decision.allowed.filter((channel) => channel !== 'in_app') },
+                options?.transports ?? {},
+                activeLease
+              )),
+            ];
+            // A rollback cannot undo an external send. Retain its actual receipt
+            // if recording the combined inbox/outcome transaction needs another try.
+            externalOutcomes = outcomes.slice();
+            if (activeLease.signal.aborted) throw new OutboxLeaseLost();
+            const aggregate = await persistOutcomes(
               pool,
               row,
-              due.map(
-                (job) =>
-                  externalOutcomes.find((outcome) => outcome.channel === job.channel) ?? {
-                    channel: job.channel,
-                    result: { status: 'failed', providerRef: '' },
-                    latencyMs: null,
-                    error: message,
-                  }
-              ),
-              jobs
+              outcomes,
+              channelJobs,
+              [...decision.skipped, ...policySkipped],
+              decision.allowed.includes('in_app') ? (options?.transports ?? {}) : undefined,
+              deferred
             );
-          } catch (recordingError) {
-            if (!(recordingError instanceof OutboxLeaseLost)) throw recordingError;
+            if (
+              outcomes.some((outcome) => outcome.result.status === 'failed') ||
+              aggregate === 'failed'
+            ) {
+              span?.setStatus({ code: SpanStatusCode.ERROR });
+              result.failed++;
+            } else if (aggregate === 'delivered') result.delivered++;
+          };
+          if (remainingChannels.length)
+            await withReminderDeliveryPolicy(pool, row, finish, options?.deliveryWindow);
+          else await finish({});
+        } catch (error) {
+          span?.setStatus({ code: SpanStatusCode.ERROR });
+          if (!(error instanceof OutboxLeaseLost)) {
+            const message = sanitizeLastError(
+              error instanceof Error ? error.message : String(error)
+            );
+            try {
+              const jobs: ChannelJob[] = (
+                await pool.query(
+                  'SELECT channel,status,attempts,max_attempts,run_after,last_error FROM notification_job WHERE outbox_id=$1',
+                  [row.id]
+                )
+              ).rows;
+              const due = jobs.filter(
+                (job) =>
+                  !terminalJob(job) && (!job.run_after || new Date(job.run_after) <= new Date())
+              );
+              await persistOutcomes(
+                pool,
+                row,
+                due.map(
+                  (job) =>
+                    externalOutcomes.find((outcome) => outcome.channel === job.channel) ?? {
+                      channel: job.channel,
+                      result: { status: 'failed', providerRef: '' },
+                      latencyMs: null,
+                      error: message,
+                    }
+                ),
+                jobs
+              );
+            } catch (recordingError) {
+              if (!(recordingError instanceof OutboxLeaseLost)) throw recordingError;
+            }
           }
+          // A stale claimant never changes current jobs, logs, or aggregate state.
+          result.failed++;
+        } finally {
+          notificationsOutboxProcessing.observe((performance.now() - startedAt) / 1000);
+          await lease?.stop();
         }
-        // A stale claimant never changes current jobs, logs, or aggregate state.
-        result.failed++;
-      } finally {
-        notificationsOutboxProcessing.observe((performance.now() - startedAt) / 1000);
-        await lease?.stop();
-      }
+      };
+      if (!span) return process();
+      return operatorLogTrace
+        .run(span.spanContext(), process)
+        .catch((error: unknown) => {
+          span.setStatus({ code: SpanStatusCode.ERROR });
+          throw error;
+        })
+        .finally(() => span.end());
     })
   );
   const failures = settled.filter(

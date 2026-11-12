@@ -33,6 +33,11 @@ export const notificationOutbox = pgTable(
     /** Originating request/job trace. NULL for historical or uncorrelated writers. */
     correlationId: text('correlation_id'),
 
+    /** Server span captured from the originating transaction. No notification payload data. */
+    traceParent: text('trace_parent').default(
+      sql`nullif(current_setting('barghsa.traceparent', true), '')`
+    ),
+
     /** FK to the recipient profile (owner of the notification). */
     profileId: uuid('profile_id').references(() => profiles.id, { onDelete: 'cascade' }),
 
@@ -92,6 +97,13 @@ export const notificationOutbox = pgTable(
   },
   (table) => [
     ...domainChecks('notification_outbox'),
+    check(
+      'notification_outbox_trace_parent_valid',
+      sql`
+      ${table.traceParent} ~ '^00-[0-9a-f]{32}-[0-9a-f]{16}-0[01]$'
+      AND substring(${table.traceParent}, 4, 32) <> repeat('0', 32)
+      AND substring(${table.traceParent}, 37, 16) <> repeat('0', 16)`
+    ),
     check(
       'notification_outbox_recipient_check',
       sql`${table.profileId} IS NOT NULL OR ${table.userId} IS NOT NULL`

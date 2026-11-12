@@ -1,4 +1,5 @@
 import type { Client } from 'pg';
+import { currentTraceparent } from '@barghsa/shared/operator-logging';
 
 type TransactionClient = Client & { _txStatus?: string };
 
@@ -41,9 +42,17 @@ export function wrapTransactionPoolClient(
     }
   }
   async function configure() {
+    const traceparent = currentTraceparent();
+    const timeouts =
+      "SELECT set_config('statement_timeout', $1, true), set_config('lock_timeout', $2, true), set_config('idle_in_transaction_session_timeout', $3, true)";
     await control(original, [
-      "SELECT set_config('statement_timeout', $1, true), set_config('lock_timeout', $2, true), set_config('idle_in_transaction_session_timeout', $3, true)",
-      [settings.statementTimeout, settings.lockTimeout, settings.idleTransactionTimeout],
+      traceparent ? `${timeouts}, set_config('barghsa.traceparent', $4, true)` : timeouts,
+      [
+        settings.statementTimeout,
+        settings.lockTimeout,
+        settings.idleTransactionTimeout,
+        ...(traceparent ? [traceparent] : []),
+      ],
     ]);
   }
   async function execute(args: unknown[]) {

@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T08:45:00+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T09:04:07+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,9 +10,9 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1238 | Accepted with unchanged source bindings. |
-| verify | 26 | Existing work may be complete; inspect evidence before building. |
-| partial | 96 | An earlier review found unmet criteria; reconcile later fixes. |
+| done | 1240 | Accepted with unchanged source bindings. |
+| verify | 22 | Existing work may be complete; inspect evidence before building. |
+| partial | 98 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
 | blocked | 5 | Named owner or external prerequisite. |
@@ -1354,11 +1354,11 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.13.01.02` | partial | Recorded batch work | Configure OTel SDK auto-instrumentation for all process types (web, API, worker) |
 | `06-security-testing-observability.md#T-06.13.01.03` | verify | Inventory needed | Implement custom NestJS decorator/interceptor for span creation in domain services |
 | `06-security-testing-observability.md#T-06.13.01.04` | partial | Recorded batch work | Propagate trace context across HTTP headers (W3C TraceContext) |
-| `06-security-testing-observability.md#T-06.13.01.05` | verify | Inventory needed | Propagate trace context through PostgreSQL outbox → worker processing |
+| `06-security-testing-observability.md#T-06.13.01.05` | done | Recorded batch work | Propagate trace context through PostgreSQL outbox → worker processing |
 | `06-security-testing-observability.md#T-06.13.01.06` | partial | Recorded batch work | Implement trace sampling: sample rate for successful traces (e.g. 10%), always sample errors and slow traces (>500ms) |
 | `06-security-testing-observability.md#T-06.13.01.07` | partial | Recorded batch work | Configure OTel exporter: OTLP to Grafana Tempo / Jaeger-compatible backend |
 | `06-security-testing-observability.md#T-06.13.01.08` | partial | Recorded batch work | Ensure trace context logged in all structured log entries |
-| `06-security-testing-observability.md#T-06.13.01.09` | verify | Inventory needed | Write integration test: verify trace context propagation across HTTP → service → DB → outbox → worker |
+| `06-security-testing-observability.md#T-06.13.01.09` | done | Recorded batch work | Write integration test: verify trace context propagation across HTTP → service → DB → outbox → worker |
 | `06-security-testing-observability.md#T-06.13.02.01` | done | Recorded batch work | Implement structured JSON logger (pino or winston) with consistent schema across all processes |
 | `06-security-testing-observability.md#T-06.13.02.02` | done | Recorded batch work | Add correlation ID to every log entry (from request header or generate) |
 | `06-security-testing-observability.md#T-06.13.02.03` | partial | Recorded batch work | Add pseudonymous actor/profile IDs to logs (never raw national IDs, secrets, tokens) |
@@ -1409,10 +1409,10 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `06-security-testing-observability.md#T-06.15.03.06` | done | Recorded batch work | Implement safe outbox replay endpoint/CLI: re-queue unprocessed outbox rows within a configurable date range with idempotency protection and operator confirmation |
 | `06-security-testing-observability.md#T-06.15.03.07` | done | Recorded batch work | Write integration test: outbox replay produces no duplicate deliveries, respects idempotency keys |
 | `06-security-testing-observability.md#T-06.16.01.01` | partial | Recorded batch work | Configure OTel trace exporter to Tempo/Jaeger via OTLP |
-| `06-security-testing-observability.md#T-06.16.01.02` | verify | Inventory needed | Ensure trace context propagation across async boundaries: outbox → worker, queue → handler |
+| `06-security-testing-observability.md#T-06.16.01.02` | partial | Recorded batch work | Ensure trace context propagation across async boundaries: outbox → worker, queue → handler |
 | `06-security-testing-observability.md#T-06.16.01.03` | verify | Inventory needed | Configure retention: sampled traces 7 days, error/slow 30 days |
 | `06-security-testing-observability.md#T-06.16.01.04` | verify | Inventory needed | Create Grafana Explore / Tempo search UI integration for trace discovery |
-| `06-security-testing-observability.md#T-06.16.01.05` | verify | Inventory needed | Write trace verification test: single request produces complete trace across service → DB → outbox → worker |
+| `06-security-testing-observability.md#T-06.16.01.05` | partial | Recorded batch work | Write trace verification test: single request produces complete trace across service → DB → outbox → worker |
 | `06-security-testing-observability.md#T-06.16.02.01` | partial | Recorded batch work | Integrate Sentry SDK (or open-source alternative) into API, worker, and web processes |
 | `06-security-testing-observability.md#T-06.16.02.02` | done | Recorded batch work | Configure PII scrubbing: strip secrets, national IDs, financial details, tokens from error reports |
 | `06-security-testing-observability.md#T-06.16.02.03` | done | Recorded batch work | Configure environment-specific sampling: 100% in dev/staging, sample rate in production |

@@ -26,6 +26,7 @@ import {
 } from './documents/scan-runner.js';
 import { scanStoredUpload } from './documents/upload-scan-job.js';
 import { collectStorageScanBacklog } from './documents/storage-scan-metrics.js';
+import { createTraceProvider } from '@barghsa/shared/telemetry';
 import { STORAGE_UPLOAD_SCAN_JOB_TYPE } from '@barghsa/shared/storage';
 import { reportServerError } from '@barghsa/shared/error-reporting';
 import { workerLogger as logger } from './operator-log.js';
@@ -141,6 +142,8 @@ const GRACE_PERIOD_MS = (() => {
  */
 async function main(): Promise<void> {
   logger.info('Worker starting');
+  const traceProvider = createTraceProvider('barghsa-worker');
+  const outboxTracer = traceProvider?.getTracer('barghsa.worker.notifications');
 
   // Initialise the database connection pool.
   createDbPool();
@@ -281,6 +284,11 @@ async function main(): Promise<void> {
         const p = getDbPool();
         return p.end();
       })
+      .then(() =>
+        traceProvider?.shutdown().catch(() => {
+          logger.warn('OpenTelemetry traces shutdown did not complete');
+        })
+      )
       .then(() => {
         cleanupProvider?.destroy?.();
         clearTimeout(forceExitTimer);
@@ -510,7 +518,10 @@ async function main(): Promise<void> {
     if (draining) return;
     try {
       const walletAlerts = await evaluateWalletLowBalanceSignals();
-      const r = await runOutboxPoll({ transports });
+      const r = await runOutboxPoll({
+        transports,
+        ...(outboxTracer ? { tracer: outboxTracer } : {}),
+      });
       if (r.leased > 0) {
         logger.info(`Outbox poll: leased=${r.leased} delivered=${r.delivered} failed=${r.failed}`);
       }

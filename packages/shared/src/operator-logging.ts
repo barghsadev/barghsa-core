@@ -3,8 +3,26 @@ import { randomUUID } from 'node:crypto';
 import { pino, type DestinationStream } from 'pino';
 
 export const operatorLogCorrelation = new AsyncLocalStorage<string>();
+export const operatorLogTrace = new AsyncLocalStorage<{
+  traceId: string;
+  spanId: string;
+  traceFlags: number;
+}>();
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+export function currentTraceparent(): string | null {
+  const trace = operatorLogTrace.getStore();
+  if (
+    !trace ||
+    !/^[0-9a-f]{32}$/.test(trace.traceId) ||
+    !/^[0-9a-f]{16}$/.test(trace.spanId) ||
+    /^0+$/.test(trace.traceId) ||
+    /^0+$/.test(trace.spanId)
+  )
+    return null;
+  return `00-${trace.traceId}-${trace.spanId}-${trace.traceFlags & 1 ? '01' : '00'}`;
+}
 
 export function isCorrelationId(value: unknown): value is string {
   return typeof value === 'string' && value.length === 36 && UUID.test(value);
@@ -48,9 +66,11 @@ export function createOperatorLogger(
   return (level: Level, message: string, attributes: Attributes = {}) => {
     if (!logger.isLevelEnabled(level)) return;
     const { correlationId, ...fields } = attributes;
+    const trace = operatorLogTrace.getStore();
     logger[level](
       {
         ...fields,
+        ...(trace ? { traceId: trace.traceId, spanId: trace.spanId } : {}),
         correlationId: isCorrelationId(correlationId)
           ? correlationId
           : (operatorLogCorrelation.getStore() ?? randomUUID()),

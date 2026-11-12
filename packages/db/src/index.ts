@@ -4,7 +4,7 @@ import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool, Client, type PoolConfig } from 'pg';
 import * as fs from 'node:fs';
 import { X509Certificate } from 'node:crypto';
-import { createOperatorLogger } from '@barghsa/shared/operator-logging';
+import { createOperatorLogger, currentTraceparent } from '@barghsa/shared/operator-logging';
 import { wrapTransactionPoolClient } from './transaction-pool.js';
 
 let pool: Pool | null = null;
@@ -189,6 +189,12 @@ export function wrapClientQuery(
     const startedAt = Date.now();
     const first = args[0];
     const text = typeof first === 'string' ? first : first?.text;
+    const traceparent =
+      !transactionLocal &&
+      typeof text === 'string' &&
+      /^\s*(?:BEGIN|START\s+TRANSACTION)\b[^;]*;?\s*$/i.test(text)
+        ? currentTraceparent()
+        : null;
     const queryTimeoutMs =
       typeof timeoutPolicy === 'number'
         ? timeoutPolicy
@@ -242,6 +248,16 @@ export function wrapClientQuery(
         timeoutId = null;
       }
     };
+    const queueTraceparent = () => {
+      if (traceparent) {
+        // Queue immediately after BEGIN so neither promise nor callback callers can overtake it.
+        originalQuery(
+          "SELECT set_config('barghsa.traceparent', $1, true)",
+          [traceparent],
+          () => {}
+        );
+      }
+    };
 
     if (
       typeof timeoutPolicy !== 'number' &&
@@ -282,6 +298,7 @@ export function wrapClientQuery(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       captureQuery(client as any);
       scheduleTimeout();
+      queueTraceparent();
       return result;
     }
 
@@ -290,6 +307,7 @@ export function wrapClientQuery(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     captureQuery(client as any);
     scheduleTimeout();
+    queueTraceparent();
     if (result && typeof result.then === 'function') {
       return result.finally(() => {
         cleanup();

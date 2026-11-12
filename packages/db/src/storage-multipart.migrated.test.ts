@@ -3,7 +3,6 @@ import { Pool } from 'pg';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { createMigratedTestDb } from './test/migrated-db';
 import { runMigrationPrefix } from './test/migration-prefix';
-import { runMigrations } from './migrate';
 import { finishMultipartReservation, withMultipartUploadLock } from './storage-multipart';
 
 let db: Awaited<ReturnType<typeof createMigratedTestDb>>;
@@ -124,6 +123,7 @@ it('finalizes only the matching durable direction and retains historical cleanup
 
 describe('historical multipart cleanup upgrade', () => {
   const name = `test_multipart_upgrade_${randomUUID().replaceAll('-', '')}`;
+  const target = '0289_solar_document_destruction_guard';
   let pool: Pool;
   let connection: { pgdirectUrl: string };
   let history: object[];
@@ -156,7 +156,7 @@ describe('historical multipart cleanup upgrade', () => {
     await db.pool.query(`DROP DATABASE IF EXISTS "${name}"`);
   });
   it('preserves old receipts and the journal while allowing durable pending intent', async () => {
-    expect(await runMigrations({ connection })).toEqual({
+    expect(await runMigrationPrefix(target, { connection })).toEqual({
       ok: true,
       applied: [
         '0287_multipart_operation_recovery',
@@ -201,6 +201,6 @@ describe('historical multipart cleanup upgrade', () => {
     await expect(
       pool.query(`UPDATE upload_cleanup_log SET status='unexpected' WHERE storage_key='pending'`)
     ).rejects.toMatchObject({ code: '23514' });
-    expect(await runMigrations({ connection })).toEqual({ ok: true, applied: [] });
+    expect(await runMigrationPrefix(target, { connection })).toEqual({ ok: true, applied: [] });
   }, 30_000);
 });

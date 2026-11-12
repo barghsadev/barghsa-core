@@ -31,7 +31,7 @@ its API and edge records and a queued delivery to its worker record. Confirm
 the configured external log sink receives those same structured records and
 apply the approved retention policy there.
 
-## API request traces
+## API and notification worker traces
 
 Set `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` to the protected OTLP HTTP traces
 endpoint. Use HTTPS for a collector outside the private network and supply
@@ -49,11 +49,24 @@ add `traceId` and `spanId` when tracing is enabled and retain `correlationId`.
 Completed API spans with HTTP 5xx, timeout or an interrupted response are
 selected for export, as are requests that run for more than 500 milliseconds.
 `OTEL_TRACE_SUCCESS_SAMPLE_RATE` controls routine spans and defaults to 0.1.
-The API chooses locally without using the caller's sampled flag. Export uses
-a bounded queue and a failed collector can lose spans. This policy applies to
-the API server span. The web server, outbox and worker require their own
-instrumentation and cross-process verification.
+The API and worker choose independently without using the caller's sampled
+flag. Export uses a bounded queue and a failed collector can lose spans.
+Whole-trace retention depends on collector configuration.
 
-On the configured collector, verify a request span and its corresponding
-API log by trace ID and check that the route is the registered template.
+PostgreSQL sets trace context locally for each traced transaction. The
+notification outbox captures that context at insertion for application and
+trigger writers. The direct pool captures it on explicit transaction start.
+The transaction pool also sets it for the transactions it opens around
+standalone statements. Existing rows and untraced writers have no parent.
+
+Enable the same protected endpoint in the worker to export
+`notification.outbox.process` spans with the stored parent. Delivery logs
+carry the worker span ID and original trace ID. Message payloads and provider
+requests carry neither identifier.
+
+On the configured collector, match an API request and notification worker
+span by trace ID, and check their parent relationship and corresponding
+logs. The API span uses the registered route template. The worker starts a
+new trace when a row has no parent. Web instrumentation and other worker
+queues require separate verification.
 [W3C Trace Context](https://www.w3.org/TR/trace-context/) · [OpenTelemetry JavaScript instrumentation](https://opentelemetry.io/docs/languages/js/instrumentation/)

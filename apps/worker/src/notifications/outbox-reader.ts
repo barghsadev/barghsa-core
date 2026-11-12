@@ -51,6 +51,7 @@ export function normalizeLeaseDurationMs(value?: number): number {
 
 export interface OutboxRow {
   correlationId?: string | null;
+  traceParent?: string;
   id: string;
   profileId: string | null;
   userId: string | null;
@@ -121,13 +122,14 @@ export async function leaseOutbox(options?: OutboxReaderOptions): Promise<Outbox
           LIMIT $3
           FOR UPDATE SKIP LOCKED
         )
-        RETURNING id, correlation_id, profile_id, user_id, event_key, payload, channels,
+        RETURNING id, correlation_id, trace_parent, profile_id, user_id, event_key, payload, channels,
                   idempotency_key, idempotency_version, lease_token, attempts, max_attempts, scheduled_for, last_error`,
     [leaseMs, now, limit]
   );
   return result.rows.map((row: Record<string, unknown>): OutboxRow => ({
     id: row.id as string,
     correlationId: (row.correlation_id as string | null) ?? null,
+    ...(typeof row.trace_parent === 'string' ? { traceParent: row.trace_parent } : {}),
     profileId: (row.profile_id as string | null) ?? null,
     userId: (row.user_id as string) ?? null,
     eventKey: row.event_key as string,

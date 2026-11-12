@@ -11,6 +11,7 @@
     "start:prod": "node dist/main.js"
   },
   "dependencies": {
+    "@opentelemetry/api": "1.9.1",
     "@barghsa/db": "workspace:*",
     "@barghsa/shared": "workspace:*",
     "nodemailer": "10.0.12",
