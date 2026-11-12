@@ -122,7 +122,7 @@ export class AgentsController {
     @Req() req: AuthenticatedRequest
   ) {
     const parsed = z
-      .object({
+      .strictObject({
         username: z.string().min(1).max(254),
         role: z.enum(['Manager', 'Finance', 'Legal']),
         message: z
@@ -134,12 +134,14 @@ export class AgentsController {
       .safeParse(body);
     if (!parsed.success)
       throw new InputFieldException(
-        parsed.error.issues.flatMap((issue) =>
-          typeof issue.path[0] === 'string' &&
-          ['username', 'role', 'message'].includes(issue.path[0])
-            ? [issue.path[0]]
-            : []
-        )
+        parsed.error.issues.some((issue) => issue.code === 'unrecognized_keys')
+          ? []
+          : parsed.error.issues.flatMap((issue) =>
+              typeof issue.path[0] === 'string' &&
+              ['username', 'role', 'message'].includes(issue.path[0])
+                ? [issue.path[0]]
+                : []
+            )
       );
     if (!z.uuid().safeParse(profileId).success)
       throw new HttpException({ error: ErrorCodes.VALIDATION_INPUT_INVALID.code }, 400);
@@ -199,7 +201,7 @@ export class AgentsController {
     @Req() req: AuthenticatedRequest
   ) {
     const parsed = z
-      .object({
+      .strictObject({
         roles: z
           .array(z.enum(['Manager', 'Finance', 'Legal']))
           .min(1)
@@ -208,7 +210,9 @@ export class AgentsController {
       .safeParse(body);
     if (!parsed.success)
       throw new InputFieldException(
-        parsed.error.issues.flatMap((issue) => (issue.path[0] === 'roles' ? ['roles'] : []))
+        parsed.error.issues.some((issue) => issue.code === 'unrecognized_keys')
+          ? []
+          : parsed.error.issues.flatMap((issue) => (issue.path[0] === 'roles' ? ['roles'] : []))
       );
     if (!z.uuid().safeParse(profileId).success)
       throw new HttpException(

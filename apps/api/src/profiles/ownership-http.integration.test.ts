@@ -66,6 +66,11 @@ it('requires step-up and keeps the old owner until exact-transfer acceptance', a
     403
   );
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='owner'");
+  expect(
+    (await post('transfer-ownership', 'owner', { newOwnerUserId: 'target', status: 'Completed' }))
+      .status
+  ).toBe(400);
+  expect((await http.pool.query('SELECT id FROM profile_ownership_transfers')).rows).toEqual([]);
   const ownerTeam = await fetch(`${http.base}/api/profiles/${profileId}/agents`, {
     headers: headers.owner!,
   });
@@ -93,6 +98,21 @@ it('requires step-up and keeps the old owner until exact-transfer acceptance', a
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NULL WHERE user_id='target'");
   expect((await post('ownership-accept', 'target', { transferId: id })).status).toBe(403);
   await http.pool.query("UPDATE sessions SET step_up_verified_at=NOW() WHERE user_id='target'");
+  for (const [action, actor] of [
+    ['ownership-accept', 'target'],
+    ['ownership-decline', 'target'],
+    ['ownership-cancel', 'owner'],
+  ] as const) {
+    expect((await post(action, actor, { transferId: id, newOwnerUserId: 'stranger' })).status).toBe(
+      400
+    );
+  }
+  expect(
+    (await http.pool.query('SELECT status FROM profile_ownership_transfers WHERE id=$1', [id])).rows
+  ).toEqual([{ status: 'Pending' }]);
+  expect(
+    (await http.pool.query('SELECT user_id FROM profiles WHERE id=$1', [profileId])).rows
+  ).toEqual([{ user_id: 'owner' }]);
   const accepted = await post('ownership-accept', 'target', { transferId: id });
   expect(accepted.status, (await accepted.clone().text()) + http.logs()).toBe(200);
   expect(await accepted.json()).toEqual({ profileId, transferId: id, status: 'Completed' });

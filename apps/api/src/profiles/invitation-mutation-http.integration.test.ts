@@ -322,6 +322,17 @@ it('validates bodies and IDs before database writes', async () => {
     { username: 'user@example.test', role: 'Owner' },
   ])
     expect((await request(c, 'create', { body })).status).toBe(400);
+  for (const role of ['Finance', 'Owner']) {
+    const response = await request(c, 'create', {
+      body: { username: 'new@example.test', role, status: 'private-extra-value' },
+    });
+    expect(response.status).toBe(400);
+    const text = await response.text();
+    expect(text).not.toContain('private-extra-value');
+    const error = JSON.parse(text) as unknown;
+    expect(error).toHaveProperty('error.code', 'VALIDATION:INPUT:INVALID');
+    expect(error).not.toHaveProperty('error.fields');
+  }
   expect((await request(c, 'create', { profileId: 'invalid' })).status).toBe(400);
   expect((await request(c, 'withdraw', { inviteId: 'invalid' })).status).toBe(400);
   expect(await state(c)).toEqual(before);

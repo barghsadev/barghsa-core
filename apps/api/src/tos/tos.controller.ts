@@ -22,7 +22,7 @@ import { SessionAuthGuard } from '../session/session.guard.js';
 import type { AuthenticatedRequest } from '../session/session.guard.js';
 
 /** Zod schema for TOS acceptance request body. */
-const AcceptTosSchema = z.object({
+const AcceptTosSchema = z.strictObject({
   versionId: z.string().min(1),
 });
 
@@ -161,6 +161,7 @@ export class TosController {
         versionId: { type: 'string', description: 'The UUID of the TOS version being accepted' },
       },
       required: ['versionId'],
+      additionalProperties: false,
     },
   })
   @ApiResponse({

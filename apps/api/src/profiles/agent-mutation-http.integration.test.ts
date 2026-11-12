@@ -51,7 +51,12 @@ async function setup(self = false) {
 }
 type Context = Awaited<ReturnType<typeof setup>>;
 type Operation = 'roles' | 'remove';
-function mutate(c: Context, operation: Operation, roles = ['Finance']) {
+function mutate(
+  c: Context,
+  operation: Operation,
+  roles = ['Finance'],
+  additionalFields: Record<string, unknown> = {}
+) {
   return fetch(
     `${http.base}/api/profiles/${c.profileId}/agents/${c.target}${operation === 'roles' ? '/roles' : ''}`,
     {
@@ -62,7 +67,7 @@ function mutate(c: Context, operation: Operation, roles = ['Finance']) {
         'Content-Type': 'application/json',
         'X-Correlation-ID': c.correlationId,
       },
-      ...(operation === 'roles' ? { body: JSON.stringify({ roles }) } : {}),
+      ...(operation === 'roles' ? { body: JSON.stringify({ roles, ...additionalFields }) } : {}),
     }
   );
 }
@@ -296,6 +301,21 @@ it('step-up still precedes role validation and exposes no field metadata', async
   const result = await response.json();
   expect(result).toHaveProperty('error.code', 'AUTHZ:STEP_UP_REQUIRED');
   expect(result).not.toHaveProperty('error.fields');
+  expect(await snapshot(c)).toEqual(before);
+});
+
+it('rejects unknown role command fields without disclosing them or changing access', async () => {
+  const c = await setup();
+  const before = await snapshot(c);
+  for (const roles of [['Finance'], []]) {
+    const response = await mutate(c, 'roles', roles, { profileId: 'private-extra-value' });
+    expect(response.status).toBe(400);
+    const text = await response.text();
+    expect(text).not.toContain('private-extra-value');
+    const error = JSON.parse(text) as unknown;
+    expect(error).toHaveProperty('error.code', 'VALIDATION:INPUT:INVALID');
+    expect(error).not.toHaveProperty('error.fields');
+  }
   expect(await snapshot(c)).toEqual(before);
 });
 

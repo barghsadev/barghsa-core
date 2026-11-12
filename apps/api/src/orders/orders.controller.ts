@@ -22,11 +22,11 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { RateLimit } from '../rate-limit/rate-limit.decorator.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 
-const createOrderInput = z.object({
+const createOrderInput = z.strictObject({
   profileId: z.string().uuid(),
   productId: z.string().uuid(),
   orderType: z.enum(['electricity', 'savings', 'solar']),
-  address: z.object({
+  address: z.strictObject({
     provinceId: z.string().trim().uuid(),
     cityId: z.string().trim().uuid(),
     fullAddress: z.string().trim().min(1).max(500),
