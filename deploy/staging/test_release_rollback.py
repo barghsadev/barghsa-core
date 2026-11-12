@@ -92,14 +92,16 @@ fi
 
     def test_image_identity_is_checked_before_start_and_after_rollout(self):
         text = RELEASE.read_text()
-        loaded = text[text.index("for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE"):
+        loaded = text[text.index('commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}'):
                       text.index('\nif [[ -r "$active" ]]')]
         verify = text[text.index("verify_running_image() {"):text.index("\nrollback() {")]
         stateful = text[text.index('verify_running_image postgres "$postgres_id"'):
                         text.index("\n# Host NGINX enters")]
         running = text[text.index("for service in api worker ai-inference web"):
                        text.index("\nfor health in live ready")]
+        receipt = text[text.rindex('if [[ -n "$commit" ]]; then'):]
         script = f'''set -euo pipefail
+BARGHSA_STAGING_RELEASE_COMMIT={'a' * 40}
 BARGHSA_APP_IMAGE=barghsa-app:vps-fixture
 BARGHSA_WEB_IMAGE=barghsa-web:vps-fixture
 BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-fixture
@@ -109,7 +111,13 @@ BARGHSA_WEB_IMAGE_ID=sha256:{'b' * 64}
 dc=(compose)
 compose() {{ printf '%s\\n' "$3"; }}
 docker() {{
-  if [[ "$1:$5" == "$mode" ]]; then
+  if [[ "$4" == *org.opencontainers.image.revision* ]]; then
+    if [[ "$mode" == revision && "$5" == "$BARGHSA_WEB_IMAGE_ID" ]]; then
+      printf '%s\\n' {'b' * 40}
+    else
+      printf '%s\\n' "$BARGHSA_STAGING_RELEASE_COMMIT"
+    fi
+  elif [[ "$1:$5" == "$mode" ]]; then
     printf 'sha256:%064d\\n' 0
   elif [[ "$1:$5" == "image:barghsa-clamav:vps-fixture" && "$mode" == malformed ]]; then
     printf '%s\\n' not-an-image
@@ -130,11 +138,13 @@ trap 'echo rollback' ERR
 {stateful}
 echo migrations-admitted
 {running}
+{receipt}
 echo accepted
 '''
         for mode, expected in (
             ('match', 'accepted'),
             ('image:barghsa-app:vps-fixture', 'Loaded image ID differs'),
+            ('revision', 'Loaded image revision differs from the candidate commit: BARGHSA_WEB_IMAGE'),
             ('malformed', 'Invalid loaded image ID: BARGHSA_CLAMAV_IMAGE'),
             ('container:postgres', 'Running image ID differs from the candidate manifest: postgres'),
             ('container:clamav', 'Running image ID differs from the candidate manifest: clamav'),
@@ -148,6 +158,8 @@ echo accepted
                 self.assertEqual('rollback' in result.stdout, mode.startswith('container:'))
                 self.assertEqual('migrations-admitted' in result.stdout,
                                  mode in ('match', 'container:ai-inference'))
+                self.assertEqual('BARGHSA_STAGING_RUNTIME_IMAGES_V1 ' + 'a' * 40 in result.stdout,
+                                 mode == 'match')
 
 
 if __name__ == "__main__":

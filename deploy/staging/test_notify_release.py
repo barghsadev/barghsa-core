@@ -215,7 +215,7 @@ class ReleaseNotificationTests(unittest.TestCase):
         # Execute the real deployment script against subprocess stubs, with no network or Docker writes.
         staging = self.root / "deploy/staging"
         staging.mkdir(parents=True)
-        for script in ("deploy.sh", "build-postgres-image.sh"):
+        for script in ("deploy.sh", "build-postgres-image.sh", "release-queue.py"):
             shutil.copy(Path(__file__).with_name(script), staging / script)
         bins = self.root / "bin"
         bins.mkdir()
@@ -228,21 +228,30 @@ with pathlib.Path(os.environ['CALL_LOG']).open('a') as log: log.write(name+' '+ 
 if name=='git' and args==['rev-parse','HEAD']: print('a'*40)
 elif name=='git' and args==['rev-parse','--short=12','HEAD']: print('a'*12)
 elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','check-release']: sys.exit(int(os.environ.get('FAIL_ACCEPTANCE','0')))
+elif name=='python3' and args[:2]==['deploy/staging/release-queue.py','verify-images']: os.execv(sys.executable,[sys.executable,*args])
 elif name=='python3' and '--check' in args: sys.exit(int(os.environ.get('FAIL_PREFLIGHT','0')))
 elif name=='docker' and args[:2]==['image','inspect']: print('sha256:'+('b'*64 if args[-1].startswith('barghsa-app:') else 'c'*64))
 elif name=='ssh' and args[-1]=='gzip -d | docker load': sys.stdin.buffer.read()
 elif name=='ssh' and args[-1]=='test -r /etc/barghsa/staging/active-images.env': sys.exit(int(os.environ['FRESH_STAGING']))
 elif name=='ssh' and 'grep -E' in args[-1]: print('BARGHSA_POSTGRES_IMAGE=barghsa-postgres:vps-existing\\nBARGHSA_CLAMAV_IMAGE=barghsa-clamav:vps-existing')
-elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '): sys.exit(int(os.environ.get('FAIL_RELEASE','0')))
+elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-release '):
+    if not os.environ.get('MISSING_IMAGES'):
+        app='f' if os.environ.get('WRONG_IMAGES') else 'b'
+        print('BARGHSA_STAGING_RUNTIME_IMAGES_V1','a'*40,*('sha256:'+c*64 for c in (app,'c','d','e')))
+    sys.exit(int(os.environ.get('FAIL_RELEASE','0')))
 """
         for name in ["git", "python3", "ssh", "scp", "docker"]:
             file = bins / name
             file.write_text(stub.replace("#!/usr/bin/env python3", f"#!{sys.executable}"))
             file.chmod(0o700)
-        scenarios = [(failure, False) for failure in ("FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_RELEASE", None)]
+        scenarios = [(failure, False) for failure in (
+            "FAIL_ACCEPTANCE", "FAIL_PREFLIGHT", "FAIL_RELEASE", "MISSING_IMAGES", "WRONG_IMAGES", None,
+        )]
         for failure, fresh in [*scenarios, (None, True)]:
             with self.subTest(failure=failure, fresh=fresh):
                 log.unlink(missing_ok=True)
+                receipt = self.root / "runtime-images.json"
+                receipt.unlink(missing_ok=True)
                 env = {
                     **os.environ,
                     "PATH": str(bins) + os.pathsep + os.environ["PATH"],
@@ -251,7 +260,10 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 }
                 if failure:
                     env[failure] = "1"
-                result = subprocess.run(["bash", str(staging / "deploy.sh")], env=env, capture_output=True, text=True)
+                command = ["bash", str(staging / "deploy.sh")]
+                if not fresh:
+                    command.append(str(receipt))
+                result = subprocess.run(command, env=env, capture_output=True, text=True)
                 calls = log.read_text().splitlines()
                 sends = [line for line in calls if line.startswith('python3 deploy/staging/notify-release.py') and '--check' not in line]
                 acceptance = 'python3 deploy/staging/release-queue.py check-release --commit ' + 'a'*40
@@ -259,6 +271,17 @@ elif name=='ssh' and args[-1].startswith('/usr/local/sbin/barghsa-staging-releas
                 self.assertIn(acceptance, calls)
                 self.assertEqual(len(sends), 0 if failure else 1)
                 self.assertEqual(result.returncode, 1 if failure else 0, result.stderr)
+                self.assertEqual(receipt.exists(), not failure and not fresh)
+                if not failure:
+                    verification = next(line for line in calls if 'release-queue.py verify-images' in line)
+                    self.assertLess(calls.index(verification), calls.index(sends[0]))
+                    if not fresh:
+                        self.assertEqual(json.loads(receipt.read_text()), {
+                            "schema_version": 1, "commit": "a" * 40,
+                            "image_ids": dict(zip(("app", "web", "postgres", "clamav"),
+                                                  ("sha256:" + c * 64 for c in "bcde"))),
+                        })
+                        self.assertEqual(receipt.stat().st_mode & 0o777, 0o600)
                 if failure == "FAIL_ACCEPTANCE":
                     self.assertNotIn(preflight, calls)
                 else:

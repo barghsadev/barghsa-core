@@ -190,10 +190,15 @@ S3 write and public signed read. App and web transfer tags include the full
 source revision and image ID, so a rebuild cannot replace a rollback tag. The
 release checks the loaded app and web image IDs against the candidate manifest before
 startup and reads back the running API, worker, AI inference and web image IDs
-before saving the active manifest and announcing the release. It also verifies
-the running PostgreSQL and ClamAV image IDs against the retained image tags
-before migrations. The queue log records the four verified image IDs for
-matching with image scan and SBOM receipts. Subsequent releases preserve
+before saving the active manifest and announcing the release. It also checks
+the OCI revision labels on the app and web images against the release commit,
+and verifies the running PostgreSQL and ClamAV image IDs before migrations
+and at the end of the rollout. The worker saves the commit and four verified
+Docker image IDs in its protected `runtime-images.json` before sending the
+Telegram note. A completed job includes the same receipt under `runtime_images`
+in `job.json`. Match these IDs to the exact scan and SBOM receipts. Record
+registry manifest digests separately when publishing to a registry.
+Subsequent releases preserve
 `/etc/barghsa/staging/runtime.env` and Docker volumes.
 For SBOMs generated from a saved image, verify the running Docker image ID
 against the archive descriptor, then verify the selected platform manifest,

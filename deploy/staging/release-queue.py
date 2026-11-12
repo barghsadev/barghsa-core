@@ -28,6 +28,22 @@ def save(path, value):
     temporary.replace(path)
 
 
+def verify_images(log, commit, app_id, web_id):
+    marker = "BARGHSA_STAGING_RUNTIME_IMAGES_V1 "
+    records = [line.removeprefix(marker).split() for line in log.splitlines() if line.startswith(marker)]
+    if len(records) != 1 or len(records[0]) != 5:
+        raise ValueError("Expected exactly one complete staging runtime image receipt")
+    revision, *image_ids = records[0]
+    if not re.fullmatch(r"[0-9a-f]{40}", revision) or revision != commit:
+        raise ValueError("Staging runtime image receipt does not match the queued commit")
+    if not all(re.fullmatch(r"sha256:[0-9a-f]{64}", image_id) for image_id in image_ids):
+        raise ValueError("Staging runtime image receipt contains an invalid image ID")
+    if image_ids[:2] != [app_id, web_id]:
+        raise ValueError("Staging runtime app or web image ID differs from the transferred image")
+    return {"schema_version": 1, "commit": revision,
+            "image_ids": dict(zip(("app", "web", "postgres", "clamav"), image_ids))}
+
+
 @contextmanager
 def locked(state, name):
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -126,7 +142,11 @@ def deploy(job, state):
         secret.symlink_to(repo / ".env")
     if command(checkout, "git", "status", "--porcelain", capture=True):
         raise ValueError("Release checkout has uncommitted files")
-    command(checkout, "./deploy/staging/deploy.sh")
+    receipt = directory / "runtime-images.json"
+    command(checkout, "./deploy/staging/deploy.sh", str(receipt))
+    # Older immutable releases predate the receipt argument.
+    if receipt.exists():
+        job["runtime_images"] = json.loads(receipt.read_text())
     if job["screenshots"]:
         args = ["python3", "deploy/staging/notify-release.py", "--commit", job["commit"]]
         for name in job["screenshots"]:
@@ -210,6 +230,12 @@ def main():
     check = actions.add_parser("check-release")
     check.add_argument("--repo", type=Path, default=Path.cwd())
     check.add_argument("--commit", required=True)
+    verify = actions.add_parser("verify-images")
+    verify.add_argument("--commit", required=True)
+    verify.add_argument("--app-id", required=True)
+    verify.add_argument("--web-id", required=True)
+    verify.add_argument("--release-log", required=True, type=Path)
+    verify.add_argument("--receipt", type=Path)
     actions.add_parser("work")
     actions.add_parser("status")
     retry = actions.add_parser("retry")
@@ -218,6 +244,11 @@ def main():
     state = args.state_dir.expanduser().resolve()
     if args.action == "check-release":
         check_release(args.repo, args.commit)
+        return 0
+    if args.action == "verify-images":
+        receipt = verify_images(args.release_log.read_text(errors="replace"), args.commit, args.app_id, args.web_id)
+        if args.receipt:
+            save(args.receipt, receipt)
         return 0
     if args.action == "work":
         return work(state)

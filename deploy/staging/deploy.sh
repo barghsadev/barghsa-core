@@ -2,6 +2,7 @@
 set -euo pipefail
 umask 077
 
+receipt=${1:-}
 root="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$root"
 if [[ -n $(git status --porcelain) ]]; then
@@ -71,9 +72,11 @@ ssh "${ssh_args[@]}" "$remote" 'chmod 750 /usr/local/sbin/barghsa-staging-releas
 ssh "${ssh_args[@]}" "$remote" 'nginx -t && systemctl reload nginx'
 ssh "${ssh_args[@]}" "$remote" '/usr/local/sbin/barghsa-staging-init-runtime'
 
-manifest="$(mktemp)"
-trap 'rm -f "$manifest"' EXIT
+release_tmp="$(mktemp -d)"
+trap 'rm -rf "$release_tmp"' EXIT
+manifest="$release_tmp/candidate.env"
 cat > "$manifest" <<EOF
+BARGHSA_STAGING_RELEASE_COMMIT=$commit
 BARGHSA_APP_IMAGE=$app_image
 BARGHSA_APP_IMAGE_ID=$app_id
 BARGHSA_WEB_IMAGE=$web_image
@@ -86,5 +89,10 @@ scp "${scp_args[@]}" "$manifest" "$remote:$candidate"
 # shellcheck disable=SC2029 # The fixed candidate path is intentionally expanded locally.
 ssh "${ssh_args[@]}" "$remote" "chmod 600 $candidate"
 # shellcheck disable=SC2029 # Pass the same locally constructed path to the VPS.
-ssh "${ssh_args[@]}" "$remote" "/usr/local/sbin/barghsa-staging-release $candidate"
+ssh "${ssh_args[@]}" "$remote" "/usr/local/sbin/barghsa-staging-release $candidate" | tee "$release_tmp/release.log"
+verify=(verify-images --commit "$commit" --app-id "$app_id" --web-id "$web_id" --release-log "$release_tmp/release.log")
+if [[ -n "$receipt" ]]; then
+  verify+=(--receipt "$receipt")
+fi
+python3 deploy/staging/release-queue.py "${verify[@]}"
 python3 deploy/staging/notify-release.py --commit "$commit"

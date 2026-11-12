@@ -15,6 +15,24 @@ queue = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(queue)
 
 
+class RuntimeImageReceiptTests(unittest.TestCase):
+    def test_rejects_invalid_or_ambiguous_image_receipts(self):
+        commit = "a" * 40
+        app, web, postgres, clamav = ["sha256:" + c * 64 for c in "bcde"]
+        receipt = f"BARGHSA_STAGING_RUNTIME_IMAGES_V1 {commit} {app} {web} {postgres} {clamav}"
+        for log, error in (
+            ("No marker", "exactly one complete"),
+            (f"{receipt}\n{receipt}", "exactly one complete"),
+            (receipt.removesuffix(f" {clamav}"), "exactly one complete"),
+            (receipt.replace(commit, "f" * 40), "does not match the queued commit"),
+            (receipt.replace(postgres, "postgres:latest"), "invalid image ID"),
+            (receipt.replace(web, app), "differs from the transferred image"),
+        ):
+            with self.subTest(error=error):
+                with self.assertRaisesRegex(ValueError, error):
+                    queue.verify_images(log, commit, app, web)
+
+
 class ReleaseQueueTests(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory()
@@ -38,6 +56,9 @@ class ReleaseQueueTests(unittest.TestCase):
 set -eu
 git rev-parse HEAD > "$QUEUE_CAPTURE/deployed-head"
 test -z "$(git status --porcelain)"
+if [ "${QUEUE_TEST_WRITE_IMAGES:-}" = 1 ]; then
+    printf '%s\\n' "$QUEUE_TEST_IMAGES" > "$1"
+fi
 python3 deploy/staging/notify-release.py --commit "$(git rev-parse HEAD)"
 ''')
         deploy.chmod(0o755)
@@ -137,11 +158,26 @@ with (pathlib.Path(os.environ['QUEUE_CAPTURE'])/'notifications').open('a') as lo
         job = queue.jobs(self.state)[0]
         self.assertEqual(job["phase"], "completed")
         self.assertFalse(job["ci_required"])
+        self.assertNotIn("runtime_images", job)
         notifications = [json.loads(line) for line in (self.capture / "notifications").read_text().splitlines()]
         self.assertEqual(notifications[0], ["--commit", self.commit])
         self.assertEqual(notifications[1][:3], ["--commit", self.commit, "--screenshot"])
         self.assertEqual(Path(notifications[1][3]).read_bytes(), self.image.read_bytes())
         self.assertFalse((self.state / "jobs" / self.commit / "checkout").exists())
+
+    def test_completed_job_retains_deployment_image_receipt(self):
+        receipt = {"schema_version": 1, "commit": self.commit, "image_ids": {
+            name: "sha256:" + character * 64 for name, character in
+            zip(("app", "web", "postgres", "clamav"), "bcde")
+        }}
+        queue.enqueue(self.repo, self.state, self.commit, [])
+        with self.live(), patch.dict(os.environ, {
+            "QUEUE_TEST_WRITE_IMAGES": "1", "QUEUE_TEST_IMAGES": json.dumps(receipt),
+        }):
+            self.assertEqual(queue.work(self.state), 0)
+        self.assertEqual(queue.jobs(self.state)[0]["runtime_images"], receipt)
+        receipt_path = self.state / "jobs" / self.commit / "runtime-images.json"
+        self.assertEqual(json.loads(receipt_path.read_text()), receipt)
 
     def test_optional_screenshot_failure_keeps_required_confirmation_and_advances_queue(self):
         queue.enqueue(self.repo, self.state, self.commit, [self.image])

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T04:53:04+00:00",
+  "updated": "2026-11-12T05:04:23+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -15632,7 +15632,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -15706,6 +15706,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -18091,11 +18099,19 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "audit/skipped-work-handoff.md",
+          "deploy/staging/README.md",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py"
         ],
         "batches": [
           "release-0.6-production-quarantine-guard",
-          "release-0.6-immutable-staging-acceptance"
+          "release-0.6-immutable-staging-acceptance",
+          "release-0.6-runtime-image-binding"
         ],
         "current_acceptance": null
       }
@@ -23838,7 +23854,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -23962,6 +23978,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -25899,7 +25923,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -26165,6 +26189,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -79432,7 +79464,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -80514,6 +80546,14 @@
                 "apps/api/src/profiles/profiles.controller.ts"
               ],
               "scope": "The modified customer command schemas reject unknown fields before business mutations. Accepted fields, type and ownership checks, existing transactions and successful receipts are unchanged. The OpenAPI delta only adds additionalProperties=false to the nine documented request bodies and the nested order address, and the generated client is unchanged."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -131349,7 +131389,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -131361,7 +131401,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -132045,6 +132085,15 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -508384,7 +508433,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "kanban/epics/05-notifications-documents-ai.md",
@@ -508761,6 +508810,14 @@
                 "apps/api/src/documents/document-http.integration.test.ts"
               ],
               "scope": "The opt-in test adds a real scanner rehearsal. The upload helper retains the PDF bytes and MIME defaults. Original test assertions and application and worker code are unchanged."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -525188,7 +525245,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -525496,6 +525553,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -525858,7 +525923,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -526166,6 +526231,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -526526,7 +526599,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -526834,6 +526907,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -527194,7 +527275,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -527526,6 +527607,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -528380,7 +528469,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -528688,6 +528777,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -529232,7 +529329,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -529244,7 +529341,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -529952,6 +530049,15 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -530467,7 +530573,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -530775,6 +530881,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -531134,7 +531248,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -531442,6 +531556,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -531802,7 +531924,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -532110,6 +532232,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -532471,7 +532601,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -532803,6 +532933,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -533162,7 +533300,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -533470,6 +533608,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -533829,7 +533975,7 @@
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -534137,6 +534283,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -550076,7 +550230,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -550159,6 +550313,14 @@
                 "deploy/staging/README.md"
               ],
               "scope": "The staging rollback verifies the previous packaged database schema before restoring app images. Forward deploy, candidate image identity, service definitions, runtime config and the existing acceptance checks are unchanged."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -556367,7 +556529,7 @@
         "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
         "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
         "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
-        "Hosted run 43143811872 verified all five image IDs, CycloneDX receipts and vulnerability reports with zero high or critical findings. Match the final candidate runtime and registry digests to the corresponding receipts."
+        "Hosted runs 43143811872 and 43157243591 produced five image-ID-bound CycloneDX SBOMs and matched vulnerability reports with zero high or critical findings. The worker now verifies source labels and records its checked runtime IDs before the announcement. Match the final staged IDs to fresh corresponding receipts and record the production registry digests separately."
       ],
       "owner": null,
       "depends_on": [],
@@ -556385,7 +556547,9 @@
           "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
           "scripts/test_check_release_licenses.py",
-          "docs/security/release-license-review.md"
+          "docs/security/release-license-review.md",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/test_release_queue.py"
         ],
         "batches": [
           "release-0.6-private-api-monitoring",
@@ -556395,7 +556559,8 @@
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
-          "release-0.6-packaged-ubuntu-migration"
+          "release-0.6-packaged-ubuntu-migration",
+          "release-0.6-runtime-image-binding"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -556435,13 +556600,22 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed."
+        "The exact f0dfc74e preflight passed all four runtime image scans with no high or critical findings. Verify the accepted release source and actual staged image selection, including a current scanner signature feed.",
+        "The five exact e6da94c9 preflight images passed. Verify the final deployed app, web, PostgreSQL and ClamAV against the worker runtime receipt, exact scans and a current signature feed."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
+        "changed_paths": [
+          "deploy/staging/README.md",
+          "deploy/staging/deploy.sh",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/release.sh",
+          "deploy/staging/test_notify_release.py",
+          "deploy/staging/test_release_queue.py",
+          "deploy/staging/test_release_rollback.py"
+        ],
         "batches": [
           "release-0.6-required-source-and-secret-gates",
           "release-0.6-runtime-image-scan-gate",
@@ -556453,7 +556627,8 @@
           "release-0.6-preflight-recovery-and-staging-smoke",
           "release-0.6-private-api-monitoring",
           "release-0.6-postgres-go-license-notices",
-          "release-0.6-staging-postgres-monitoring-readback"
+          "release-0.6-staging-postgres-monitoring-readback",
+          "release-0.6-runtime-image-binding"
         ],
         "current_acceptance": null,
         "current_dependency_checkpoint": {
@@ -570373,7 +570548,7 @@
       "launch_required": true,
       "remaining": [
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
+        "Run the release worker for an accepted v0.6.0 candidate and verify its protected runtime image receipt, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -570391,7 +570566,9 @@
           "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
           "scripts/test_check_release_licenses.py",
-          "docs/security/release-license-review.md"
+          "docs/security/release-license-review.md",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/test_release_queue.py"
         ],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
@@ -570404,7 +570581,8 @@
           "release-0.6-postgres-compatible-runtime",
           "release-0.6-postgres-staging-recipe",
           "release-0.6-packaged-ubuntu-migration",
-          "release-0.6-schema-aware-staging-rollback"
+          "release-0.6-schema-aware-staging-rollback",
+          "release-0.6-runtime-image-binding"
         ],
         "current_acceptance": null
       }
@@ -576135,7 +576313,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
+              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
             },
             {
               "path": "deploy/staging/nginx.conf",
@@ -576327,6 +576505,14 @@
                 "apps/api/src/test/http-fixture.ts"
               ],
               "scope": "The test fixture accepts a named same-origin browser option. Existing default origin, storage argument and runtime application behavior are preserved. Hosted checks exercise both existing caller forms."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -581640,11 +581826,11 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
+              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "8dd863acc32842722027dfdb79896f4ec9672521d416b32626b641d4d9aef6f4"
+              "sha256": "c455b6f4d4bf7baf45894766b6cfe64041280e6d850b4d34b80ad20232e0ed01"
             },
             {
               "path": "apps/api/src/route-errors/route-errors.controller.ts",
@@ -581899,6 +582085,15 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/deploy.sh",
+                "deploy/staging/test_notify_release.py"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -584211,7 +584406,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
+              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
             },
             {
               "path": "docker-compose.prod.yml",
@@ -584357,6 +584552,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/deploy.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         }
@@ -861712,15 +861915,15 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
+              "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
             },
             {
               "path": "deploy/staging/test_notify_release.py",
-              "sha256": "8dd863acc32842722027dfdb79896f4ec9672521d416b32626b641d4d9aef6f4"
+              "sha256": "c455b6f4d4bf7baf45894766b6cfe64041280e6d850b4d34b80ad20232e0ed01"
             },
             {
               "path": "deploy/staging/test_release_queue.py",
-              "sha256": "fd6b1c97cc5b548ab1c4bed61686d74e36a227822ddf3d7048e4cc811a821cc7"
+              "sha256": "9e1d9a8bcb94073ddc7931c87abae1555284417c7091f8d0b82e71d4ba841082"
             }
           ],
           "limitation": "No real message sent by this planning task. Actual deployment/delivery remains a release receipt, not a mock-test claim.",
@@ -861740,6 +861943,16 @@
                 "deploy/staging/test_notify_release.py"
               ],
               "scope": "CI adds the Ubuntu staging PostgreSQL image to the existing image build and scan steps. The other workflow bytes match their predecessor. The staging deploy source changes only the builder in the first-install branch. Existing release acceptance, notification, image identity and previously provisioned staging tests passed with an additional first-install case. The license tests preserve the original scope and approval rules."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/release-queue.py",
+                "deploy/staging/test_notify_release.py",
+                "deploy/staging/test_release_queue.py"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ]
         },
@@ -873577,7 +873790,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -873585,7 +873798,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
+              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -873597,11 +873810,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
+              "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -875771,6 +875984,17 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "presentation_renewals": [
@@ -878332,7 +878556,7 @@
             },
             {
               "path": "deploy/staging/README.md",
-              "sha256": "7b0c0ffbf73d60cdadfd1a787ac31654e0fb9fcdd72208ec552e8bc3ebb49622"
+              "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -878340,7 +878564,7 @@
             },
             {
               "path": "deploy/staging/deploy.sh",
-              "sha256": "352db2fac2abd63a21bcb7d9b99a549f3b37ae624cab8da1aaf5e4c11e60434c"
+              "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
             },
             {
               "path": "deploy/staging/init-runtime.sh",
@@ -878352,11 +878576,11 @@
             },
             {
               "path": "deploy/staging/release-queue.py",
-              "sha256": "0faf9e68f6e51e54eabd7965cf5fb60aca76476f3750215149a071c9ca23ddd3"
+              "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
             },
             {
               "path": "deploy/staging/release.sh",
-              "sha256": "c37041fa010028f29b0cfca41400184159f663a1a7ad2aadf8b205946fab46e8"
+              "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
             },
             {
               "path": "deploy/staging/test_ai_runtime.py",
@@ -880424,6 +880648,17 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "The CI test job selects changed Vitest cases for application test-only diffs. Workspace fallbacks, full release coverage, browser checks, scans and required integrity aggregation keep their prior scope."
+            },
+            {
+              "batch": "release-0.6-runtime-image-binding",
+              "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+              "paths": [
+                "deploy/staging/README.md",
+                "deploy/staging/deploy.sh",
+                "deploy/staging/release-queue.py",
+                "deploy/staging/release.sh"
+              ],
+              "scope": "Staging records and verifies running image IDs and app/web source labels before the existing Telegram announcement. Rollback, service health, storage checks, accepted milestone checks and Telegram retry guards were preserved and the staging worker suite passed."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -885577,7 +885812,8 @@
           "release-0.6-critical-intake-accessibility",
           "release-0.6-sealed-clamav-lifecycle",
           "release-0.6-native-rollout-browser",
-          "release-0.6-related-test-selection"
+          "release-0.6-related-test-selection",
+          "release-0.6-runtime-image-binding"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -885708,7 +885944,9 @@
           "apps/api/src/test/http-fixture.ts",
           "apps/web/e2e/rollout-smoke.spec.ts",
           "scripts/run-fast-tests.mjs",
-          "scripts/run-fast-tests.test.mjs"
+          "scripts/run-fast-tests.test.mjs",
+          "deploy/staging/release-queue.py",
+          "deploy/staging/test_release_queue.py"
         ]
       }
     },
@@ -1019862,6 +1020100,157 @@
         {
           "file": "nightly-integrity.json",
           "sha256": "f6adf8d244b065d5831dee16da0689eb3141e8804a0b5818362b5fc6c7edff8e"
+        }
+      ]
+    },
+    "release-0.6-runtime-image-binding": {
+      "batch": "release-0.6-runtime-image-binding",
+      "base_commit": "f1d432fc9c8949734191f1bb09a575339a8ed236",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.07.02.08",
+        "01-platform-infrastructure.md#T-05.04.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-04.04.03",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.05.01.05",
+        "06-security-testing-observability.md#T-06.14.02.02",
+        "06-security-testing-observability.md#T-06.16.02.06",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-01.05",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/staging/README.md",
+        "deploy/staging/deploy.sh",
+        "deploy/staging/release-queue.py",
+        "deploy/staging/release.sh",
+        "deploy/staging/test_notify_release.py",
+        "deploy/staging/test_release_queue.py",
+        "deploy/staging/test_release_rollback.py"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/staging/README.md",
+          "sha256": "d26224ebcab444077ce65abb58dbc2645698c6c94f61ffdf1cc4afac5243cf66"
+        },
+        {
+          "path": "deploy/staging/deploy.sh",
+          "sha256": "817e26ad043bce9e2947192b0cb84eb24414843421cc6b7bf5acc72f4a5086f0"
+        },
+        {
+          "path": "deploy/staging/release-queue.py",
+          "sha256": "5973ba46f4237a5304df331167d0d2e70575e55fa518da213e2ee53e4a9b6f49"
+        },
+        {
+          "path": "deploy/staging/release.sh",
+          "sha256": "733bfe38c2b73c19354e446353423c991718eaca610b29a7fced5121505d4757"
+        },
+        {
+          "path": "deploy/staging/test_notify_release.py",
+          "sha256": "c455b6f4d4bf7baf45894766b6cfe64041280e6d850b4d34b80ad20232e0ed01"
+        },
+        {
+          "path": "deploy/staging/test_release_queue.py",
+          "sha256": "9e1d9a8bcb94073ddc7931c87abae1555284417c7091f8d0b82e71d4ba841082"
+        },
+        {
+          "path": "deploy/staging/test_release_rollback.py",
+          "sha256": "214250763cbfdfcc2535819cf05a43a7b669fe7c67e238c97b386cd73549f16d"
+        }
+      ],
+      "checks": [
+        "All 49 staging Python tests passed, including shell fixtures for a mismatched source label, malformed or missing receipt, rollout failure, and receipt verification before Telegram.",
+        "Bash syntax, ShellCheck for both changed scripts, staging runbook formatting, and whitespace checks passed.",
+        "The completed five-image scan job in hosted run 43157243591 verified every scanned image ID against its CycloneDX SBOM and vulnerability report. Local readback matched all ten hashes and found zero high or critical findings in the reports."
+      ],
+      "limitations": [
+        "Staging receipt handling was exercised in isolated fixtures. The final v0.6.0 candidate, staging database cutover, exact deployed scan matches, registry digests and actual Telegram receipts are pending.",
+        "The hosted evidence is for e6da94c9 preflight images. Its license report was informational, with package-specific sign-off still pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-runtime-image-binding",
+      "execution_receipts": [
+        {
+          "file": "hosted-image-job.json",
+          "sha256": "36fb95eb36b0d1040df8427d2a262257669a39b749f0403de233054e7433422c"
+        },
+        {
+          "file": "hosted/1-image.json",
+          "sha256": "b2da5c8721b6f4bf369ef862697aafa639d6db4cea8ddca3a3d77728ac19f894"
+        },
+        {
+          "file": "hosted/1-vulnerabilities.json",
+          "sha256": "3bf1900874b9d701547840e418579429d8a8346a178587111afee869516756f3"
+        },
+        {
+          "file": "hosted/1-sbom.cdx.json",
+          "sha256": "aca91d65100c8ec263c2b3741362ecf8dc303a8431368a4cb4cb241f4404500d"
+        },
+        {
+          "file": "hosted/2-image.json",
+          "sha256": "1069121eb922865dd8f0bcbfc33fc6ac3645b497aca7af79c6096d718d2f49b2"
+        },
+        {
+          "file": "hosted/2-vulnerabilities.json",
+          "sha256": "9b56d3e3ee29a9edae607465563f931aff459ed50bcf607a7b1192fd325f9ff9"
+        },
+        {
+          "file": "hosted/2-sbom.cdx.json",
+          "sha256": "fbfe81d19dd90ae28134a645d5611b63ee4ca632307c9c35525d79be57c63931"
+        },
+        {
+          "file": "hosted/3-image.json",
+          "sha256": "a783de9a649a63bce206b32d606cb795d0dd9db677721e23b952a0406efc8534"
+        },
+        {
+          "file": "hosted/3-vulnerabilities.json",
+          "sha256": "709ec76502ecff6a23565248311d27f4a23aac3dce025b91fd132e1b50622a9c"
+        },
+        {
+          "file": "hosted/3-sbom.cdx.json",
+          "sha256": "52a2367a9beaed6024f30cf48154741447a16c4e1360fc1c6c15c7563b38b860"
+        },
+        {
+          "file": "hosted/4-image.json",
+          "sha256": "0078097960cc762dacf5c1e33756da7fe98c7e2f2c0f927518ea610f22dd6f3c"
+        },
+        {
+          "file": "hosted/4-vulnerabilities.json",
+          "sha256": "4a46e83d40d54da32a32e72af260b79b71d006514e758a5b2d40d221c9811eda"
+        },
+        {
+          "file": "hosted/4-sbom.cdx.json",
+          "sha256": "3f2ac2906d733bed25dd40be81d170a35077f175f44e06f6bbcad22e947fd0bd"
+        },
+        {
+          "file": "hosted/5-image.json",
+          "sha256": "d59d4fd3fbe413d0113dd9100310a40b05b49fac6e10bc1093f7c1fd434e2f6e"
+        },
+        {
+          "file": "hosted/5-vulnerabilities.json",
+          "sha256": "aa05a289bb0c01d6cee8e3b8a2a150ff143624d6351da6053da56753ffc42c32"
+        },
+        {
+          "file": "hosted/5-sbom.cdx.json",
+          "sha256": "7939b9f7e5dfc375fb1b0e1e89c44173cb5312ca560626a3e82e67ffb939f4b1"
         }
       ]
     }

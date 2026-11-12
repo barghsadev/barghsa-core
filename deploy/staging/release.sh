@@ -31,6 +31,10 @@ done
 [[ "$S3_PUBLIC_ENDPOINT" == "$APP_PUBLIC_URL" && "$S3_ENDPOINT" == http://objectstore:8333 && "$S3_PRIVATE_ENDPOINT" == "$S3_ENDPOINT" && "$S3_FORCE_PATH_STYLE" == true ]] || {
   echo 'S3 settings must match the single-domain path-style gateway' >&2; exit 1;
 }
+commit=${BARGHSA_STAGING_RELEASE_COMMIT:-}
+[[ -z "$commit" || "$commit" =~ ^[0-9a-f]{40}$ ]] || {
+  echo 'Invalid release commit in the candidate manifest' >&2; exit 1;
+}
 for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CLAMAV_IMAGE; do
   [[ "${!key:-}" =~ ^barghsa-(app|web|postgres|clamav):vps-[a-z0-9._-]+$ ]] || {
     printf 'Invalid local image tag: %s\n' "$key" >&2; exit 1;
@@ -47,6 +51,13 @@ for key in BARGHSA_APP_IMAGE BARGHSA_WEB_IMAGE BARGHSA_POSTGRES_IMAGE BARGHSA_CL
         printf 'Loaded image ID differs from the candidate manifest: %s\n' "$key" >&2
         exit 1
       }
+      if [[ -n "$commit" ]]; then
+        revision=$(docker image inspect --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}' "$loaded_id")
+        [[ "$revision" == "$commit" ]] || {
+          printf 'Loaded image revision differs from the candidate commit: %s\n' "$key" >&2
+          exit 1
+        }
+      fi
       ;;
     BARGHSA_POSTGRES_IMAGE) postgres_id=$loaded_id ;;
     BARGHSA_CLAMAV_IMAGE) clamav_id=$loaded_id ;;
@@ -170,8 +181,14 @@ docker run --rm --env-file "$runtime" --network barghsa-staging-private \
   -v /opt/barghsa/staging/check-s3.py:/tmp/barghsa-check-s3.py:ro \
   "$BARGHSA_POSTGRES_IMAGE" python /tmp/barghsa-check-s3.py
 
+verify_running_image postgres "$postgres_id"
+verify_running_image clamav "$clamav_id"
 install -m 0600 "$candidate" "$active"
 trap - ERR
 printf 'Staging release healthy: %s\n' "$BARGHSA_APP_IMAGE"
 printf 'Staging app and web image IDs: %s %s\n' "$BARGHSA_APP_IMAGE_ID" "$BARGHSA_WEB_IMAGE_ID"
 printf 'Staging PostgreSQL and ClamAV image IDs: %s %s\n' "$postgres_id" "$clamav_id"
+if [[ -n "$commit" ]]; then
+  printf 'BARGHSA_STAGING_RUNTIME_IMAGES_V1 %s %s %s %s %s\n' \
+    "$commit" "$BARGHSA_APP_IMAGE_ID" "$BARGHSA_WEB_IMAGE_ID" "$postgres_id" "$clamav_id"
+fi
