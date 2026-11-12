@@ -82,7 +82,7 @@ it.each(routes)(
   '%s valid normalized commands keep actual receipts and bypass feedback preflight',
   async (route) => {
     const f = fixture(route);
-    const result = await f.invoke({ ...f.body, ignoredLegacyExtra: 'not accepted' });
+    const result = await f.invoke(f.body);
     expect(f.authorize).not.toHaveBeenCalled();
     const data = { ...f.body, [f.field]: 'Captured' };
     expect(f.work).toHaveBeenCalledExactlyOnceWith(
@@ -105,6 +105,16 @@ it.each(routes)(
     } else expect(result).toBe(f.saved);
   }
 );
+
+it.each(routes)('%s rejects an unknown field on an otherwise valid command', async (route) => {
+  const f = fixture(route);
+  const error = await rejection(f.invoke({ ...f.body, ignoredLegacyExtra: 'PRIVATE' }));
+  expect(error.getStatus()).toBe(400);
+  expect(error).not.toBeInstanceOf(InputFieldException);
+  expect(error.getResponse()).toEqual({ statusCode: 400, error: 'VALIDATION:INPUT:INVALID' });
+  expect(f.authorize).not.toHaveBeenCalled();
+  expect(f.work).not.toHaveBeenCalled();
+});
 
 it.each(routes)(
   '%s string-only owned feedback follows current authority without values or work',
