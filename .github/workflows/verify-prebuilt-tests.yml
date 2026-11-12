@@ -1,0 +1,50 @@
+name: Verify prebuilt workspace test selection
+on:
+  push:
+    branches: ['codex/verify/v06-prebuilt-tests-*']
+
+permissions:
+  contents: read
+
+jobs:
+  reuse:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build the workspace once
+        run: pnpm build
+      - name: Execute the shared and translation tests against the prebuilt workspace
+        shell: bash
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+          BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+        run: |
+          sha256sum packages/shared/dist/index.js packages/i18n/dist/index.js > "$RUNNER_TEMP/prebuilt.sha256"
+          pnpm turbo run test --only --force --concurrency=2 \
+            --filter=@barghsa/shared --filter=@barghsa/i18n --summarize \
+            2>&1 | tee "$RUNNER_TEMP/prebuilt-test.log"
+          sha256sum --check "$RUNNER_TEMP/prebuilt.sha256"
+          summary=$(find .turbo/runs -name '*.json' -print)
+          test "$(printf '%s\n' "$summary" | wc -l)" -eq 1
+          jq -e '[.tasks[].taskId] | sort == ["@barghsa/i18n#test", "@barghsa/shared#test"]' "$summary"
+          cp "$summary" "$RUNNER_TEMP/prebuilt-tasks.json"
+      - name: Preserve test task evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: prebuilt-test-tasks
+          path: |
+            ${{ runner.temp }}/prebuilt-test.log
+            ${{ runner.temp }}/prebuilt-tasks.json
+          retention-days: 14
