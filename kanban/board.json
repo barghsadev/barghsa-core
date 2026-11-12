@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T02:11:29+00:00",
+  "updated": "2026-11-12T02:33:51+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9689,7 +9689,8 @@
           "release-0.6-database-migration-baseline-and-upgrade",
           "release-0.6-multipart-upgrade-preflight-fix",
           "release-0.6-staging-stateful-image-proof",
-          "release-0.6-staging-postgres-logical-rehearsal"
+          "release-0.6-staging-postgres-logical-rehearsal",
+          "release-0.6-postgres-compatible-runtime"
         ],
         "current_acceptance": null
       }
@@ -549933,7 +549934,8 @@
       "remaining": [
         "CI run 42647680762 produced four verified image-ID-bound CycloneDX SBOMs and matching vulnerability and license reports. Match retained receipts to the exact deployment image IDs and production registry digests.",
         "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
-        "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts."
+        "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
+        "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions."
       ],
       "owner": null,
       "depends_on": [],
@@ -549950,7 +549952,8 @@
           "release-0.6-staging-postgres-monitoring-readback",
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-staging-stateful-image-proof",
-          "release-0.6-staging-postgres-logical-rehearsal"
+          "release-0.6-staging-postgres-logical-rehearsal",
+          "release-0.6-postgres-compatible-runtime"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -563087,7 +563090,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Select a scanned PostgreSQL 16 runtime that preserves staging text ordering and search, then complete a separately verified backup, isolated restore and packaged migration before switching the active volume. The Alpine image passed its scan and restored all 186 tables, roles, grants, sequences and extensions without invalid indexes, but changed Persian and English sort order. The official 16.15 Bookworm base alone had 131 high and 4 critical findings. Record the exact replacement scan, affected API ordering/search, application readiness, running ID and rollback evidence.",
+        "Reproduce the scanned Ubuntu 24.04 PostgreSQL 16.15/PostGIS 3.6.4 staging candidate from the repository. The exact trial passed the security scan and matched the application and retained QA databases, including 1,312 text columns and the Unicode fixture. Complete the backup and PITR checks, review its distribution inventory, verify the packaged migrator and readiness against a restored candidate, then retain an independently verified cutover backup and rollback proof.",
         "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
@@ -563107,7 +563110,8 @@
           "release-0.6-production-image-recipes-and-distribution",
           "release-0.6-immutable-staging-acceptance",
           "release-0.6-staging-stateful-image-proof",
-          "release-0.6-staging-postgres-logical-rehearsal"
+          "release-0.6-staging-postgres-logical-rehearsal",
+          "release-0.6-postgres-compatible-runtime"
         ],
         "current_acceptance": null
       }
@@ -871011,7 +871015,7 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Select a scanned PostgreSQL 16 runtime that preserves staging text ordering and search, then complete a separately verified backup, isolated restore and packaged migration before switching the active volume. The Alpine image passed its scan and restored all 186 tables, roles, grants, sequences and extensions without invalid indexes, but changed Persian and English sort order. The official 16.15 Bookworm base alone had 131 high and 4 critical findings. Record the exact replacement scan, affected API ordering/search, application readiness, running ID and rollback evidence."
+        "Reproduce the scanned Ubuntu 24.04 PostgreSQL 16.15/PostGIS 3.6.4 staging candidate from the repository. The exact trial passed the security scan and matched the application and retained QA databases, including 1,312 text columns and the Unicode fixture. Complete the backup and PITR checks, review its distribution inventory, verify the packaged migrator and readiness against a restored candidate, then retain an independently verified cutover backup and rollback proof."
       ],
       "owner": null,
       "depends_on": [],
@@ -871252,7 +871256,8 @@
           "release-0.6-compose-postgres17-acceptance",
           "release-0.6-single-edge-security-headers",
           "release-0.6-staging-stateful-image-proof",
-          "release-0.6-staging-postgres-logical-rehearsal"
+          "release-0.6-staging-postgres-logical-rehearsal",
+          "release-0.6-postgres-compatible-runtime"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1002077,6 +1002082,162 @@
         {
           "file": "post-rehearsal.txt",
           "sha256": "4e9dd27376d06d6c58194948aecbb8e5871dd86e56a48920286f483d4d12f327"
+        }
+      ]
+    },
+    "release-0.6-postgres-compatible-runtime": {
+      "batch": "release-0.6-postgres-compatible-runtime",
+      "base_commit": "af18f47711d1a4569ce30f21b620edc783fe867e",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-image-upgrade.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "e458bf7584d83dab59748e2840ba035023d38b2fe1e3359aeb758f8d3b7a10c6"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        }
+      ],
+      "checks": [
+        "Built Ubuntu PostgreSQL 16.15 with the pinned pgvector 0.8.6 and backup dependencies from the existing image recipe. The exact PostGIS 3.6.4 package checksums match the PostgreSQL repository signed index and the completed image installs and boots PostGIS, topology and the legacy geocoder. A synthetic point returned the expected geometry.",
+        "Verified both exact Linux AMD64 candidate image IDs through the OCI manifest, config and layers. Trivy 0.76.2 and CycloneDX receipts have zero high or critical findings for both the core and full PostGIS candidate. The full image has two unknown findings.",
+        "The full candidate restored identical snapshots of the 186-table application and 187-table QA databases into isolated Debian and Ubuntu clusters. Schema, owners, grants, roles, sequence values and extension versions matched and each database had zero invalid indexes. Actual text ordering and case-conversion fingerprints matched across 652 and 660 columns, as did the expanded synthetic collation and ILIKE probes.",
+        "Staging liveness and PostgreSQL readiness remained ok after the isolated runs. All logical scratch resources were removed. A bounded cleanup removed only four untagged, unused intermediate compiler images from this trial and verified the active container and retained candidate IDs.",
+        "The first native backup attempt ran under the postgres account and stopped before any test ran because the prototype archive set the Python modules to 0600 and the shell wrappers to 0700. The mode-only correction was isolated for a second run with the same test bodies."
+      ],
+      "limitations": [
+        "The Ubuntu runtime is a source-recorded trial with repository build integration and exact final receipts pending. Backup and PITR execution, packaged migrations, the cutover backup and live candidate operation remain separate gates. The current staging PostgreSQL still uses the retained Debian image."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-postgres-compatible-runtime",
+      "execution_receipts": [
+        {
+          "file": "ubuntu-base-vulnerabilities.json",
+          "sha256": "8f1f9c70bbfc42c626f153302dfb751fc8b4c1c03ac29bb5b154425ddf228413"
+        },
+        {
+          "file": "ubuntu-locale-probe.txt",
+          "sha256": "94766d60cea343791d561ee1a13cc31cb71a7eb4466b2753f68391b3af1b4110"
+        },
+        {
+          "file": "entrypoint-source.tsv",
+          "sha256": "50fda2c4bd6ae0f872fa432e404222ce8459b35f80ec9fa19a8858a0e22e49cd"
+        },
+        {
+          "file": "ubuntu-context.sha256",
+          "sha256": "d1dc81a3ee6b07ab579ae36dafc1439d0b3124b3e7fd9018625268bafac92acb"
+        },
+        {
+          "file": "ubuntu-build/Dockerfile",
+          "sha256": "3bf7abd39627818b0f6a5a4928d2e60fb87c50980219debdb2861393647cb6b5"
+        },
+        {
+          "file": "build-source.sha256",
+          "sha256": "899b79bc3bb6865d23fec0d9107aea16c96e59b951440d68eca9041858575f16"
+        },
+        {
+          "file": "ubuntu-build.log",
+          "sha256": "d0a365e78f6a6ea2013f8bd08b3a4d005696e1d47f1c7140843ff84e46036b03"
+        },
+        {
+          "file": "ubuntu-postgis-context.sha256",
+          "sha256": "815d94f1200e0ac79a3a0076e7090947c89f1ffe2357e3dabce436a852fe08af"
+        },
+        {
+          "file": "ubuntu-postgis-build/Dockerfile",
+          "sha256": "008a2294c3bae10e55239a34703f8a5a09e09d0c7d50da9d5547150a5a2026af"
+        },
+        {
+          "file": "ubuntu-postgis-build.log",
+          "sha256": "657ed7752079251d31ccc2df40024b6f4c6c27ebbde42b6b0fd7e2233683fedf"
+        },
+        {
+          "file": "postgis-packages/InRelease",
+          "sha256": "0f9c52ac30dbc86406756fc6d4838316c5e4d948941bcffb286151fbdd4f8066"
+        },
+        {
+          "file": "postgis-packages/selected.tsv",
+          "sha256": "4dbbc5dcf41caee67a80cd23f8e389d49f80a3e6b2e5d7dc859905bb5be861e6"
+        },
+        {
+          "file": "postgis-packages/signature-receipt.txt",
+          "sha256": "e7d7d74f3e42cf934bf9673afbd1c2ef67df7eb4fa3435c35879b7b6d2faf6a1"
+        },
+        {
+          "file": "rehearse-ubuntu-postgis-restore.sh",
+          "sha256": "3b616ccb36c2a2ebe4606080e02f5b5c8203b36582e8b0cd95cbaeb0af5c810d"
+        },
+        {
+          "file": "ubuntu-postgis-rehearsal.log",
+          "sha256": "98ca6ab00d181ab3c052bbb1e7ea98e02c55395edf4c06cb7d66b6908a1ce380"
+        },
+        {
+          "file": "live-database-scope.txt",
+          "sha256": "c8dad2e00edab2eb7b8e9b2a90945ae4a6925e69bb0112d395278faa6a212261"
+        },
+        {
+          "file": "live-database-extra-inventory.tsv",
+          "sha256": "39d3eb0e0d443f75b81f19e7ac6046046e65a117658918accbe99efe08931d8a"
+        },
+        {
+          "file": "post-rehearsal.txt",
+          "sha256": "cd86eeccf54b6762b40db887a91969c972b2ebae7c0b4473c7efd37190c97d6e"
+        },
+        {
+          "file": "builder-cleanup.txt",
+          "sha256": "3e27e52dcc3c2dc466ca43ba1df70ef0bd95fc95076a15eb66a2bdd5c33b2713"
+        },
+        {
+          "file": "ubuntu-archive-proof.json",
+          "sha256": "304e47588970949fe87e4eb3bc3aede1fc15d285fead331a9d5725a0cfd0f861"
+        },
+        {
+          "file": "ubuntu-image.json",
+          "sha256": "11582862cf207653fcfa024f2824e2d787e9f1e134fcb03b3b85ec7eb88a1f01"
+        },
+        {
+          "file": "ubuntu-sbom.cdx.json",
+          "sha256": "2a394d7aaa035334a98288ed5aab78c629b2bf91bbd78bf816a9430f73cfa985"
+        },
+        {
+          "file": "ubuntu-vulnerabilities.json",
+          "sha256": "aadc9469aee3194767f9b1dc450f9fcc9d24731feb7bd67e6380f6cfdb7a3c17"
+        },
+        {
+          "file": "ubuntu-postgis-archive-proof.json",
+          "sha256": "e910d75d5a5c9af2cd531512fbdb898d84be5a7ba301c5c4ef3d6715f609d0e6"
+        },
+        {
+          "file": "ubuntu-postgis-image.json",
+          "sha256": "83f3d17f7b340e739222215c4c18634571390c61011fd59eaf53700feb51fffe"
+        },
+        {
+          "file": "ubuntu-postgis-sbom.cdx.json",
+          "sha256": "5c78684c0ec98cd8099ecbccfceef15a762c7d6a12565766e71859e0eecac4b1"
+        },
+        {
+          "file": "ubuntu-postgis-vulnerabilities.json",
+          "sha256": "86c22ddcff7f7d530e2604673ef43fd254c7d9d1533ed7ea813d610df254f93c"
+        },
+        {
+          "file": "ubuntu-postgis-backup-tests.log",
+          "sha256": "ceb1f83c3ff3152c03a87610402044e4b7cd16cefd3194108178965f12042c2c"
+        },
+        {
+          "file": "ubuntu-postgis-backup-modes.txt",
+          "sha256": "f22fe2bdb12b39d107c4b632131edcfb3ab82e875e9c0a5eaeb13487a8862148"
+        },
+        {
+          "file": "backup-permission.Dockerfile",
+          "sha256": "c8a00e310c05129a899a5bd91ad02ed7acbc00d3bdc5a861838a40fc58390777"
         }
       ]
     }

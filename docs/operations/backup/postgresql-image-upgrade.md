@@ -18,6 +18,17 @@ passed the vulnerability scan. The ordering mismatch kept it from replacing
 the running staging database. A scan of the upstream PostgreSQL 16.15 Bookworm
 image also failed the high and critical vulnerability gate.
 
+The Ubuntu 24.04 trial used PostgreSQL 16.15, PostGIS 3.6.4, and pgvector
+0.8.6. Its exact image had zero high or critical findings. The isolated
+restore matched the Debian reference on all 186 application tables, schema,
+grants, and extension versions. It also matched ordering and case conversion
+in 652 text columns and the expanded Persian and English sample. The same
+rehearsal restored the retained QA database and matched its 187 tables and
+660 text columns. Include both databases in the verified cutover backup.
+Run the packaged backup tools as `postgres` during image verification. The
+first trial build inherited owner-only file modes from its private archive,
+which prevented that user from loading the backup modules.
+
 Keep the original cluster stopped and protected until the recovery window closes. The previous volume can serve as a rollback while no new writes have been accepted. After new writes, switching back could lose data; stop traffic and use the approved recovery or roll-forward procedure. Rehearse backup and WAL recovery independently on the new operating system. See the [PostgreSQL restore runbook](postgresql-restore-runbook.md) and [PostgreSQL collation guidance](https://www.postgresql.org/docs/16/sql-altercollation.html).
 
 The normal application release retains the active database image. The production application uses a separate PostgreSQL service; this staging image rehearsal does not authorize a production database change.
