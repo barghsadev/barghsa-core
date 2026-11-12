@@ -6,6 +6,9 @@ import * as fs from 'node:fs';
 import { X509Certificate } from 'node:crypto';
 import { createOperatorLogger, currentTraceparent } from '@barghsa/shared/operator-logging';
 import { wrapTransactionPoolClient } from './transaction-pool.js';
+import { permitsPilotSchemaTransition } from './pilot-schema-transition.js';
+
+export { PILOT_SCHEMA_TRANSITION_VERSION } from './pilot-schema-transition.js';
 
 let pool: Pool | null = null;
 let directPool: Pool | null = null;
@@ -612,13 +615,32 @@ export async function dbHealth(
         const applied = await query(
           'SELECT hash, created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC, id DESC LIMIT 1'
         );
-        const latest = applied.rows[0];
-        if (
-          !latest ||
-          latest.hash !== expectedSchema.hash ||
-          String(latest.created_at) !== String(expectedSchema.folderMillis)
-        )
-          throw new Error('Database schema does not match packaged migrations');
+        const row = applied.rows[0];
+        if (!row) throw new Error('No database schema version');
+        const latest = { hash: row.hash as string, created_at: String(row.created_at) };
+        const expected = {
+          hash: expectedSchema.hash,
+          created_at: String(expectedSchema.folderMillis),
+        };
+        if (latest.hash !== expected.hash || latest.created_at !== expected.created_at) {
+          if (expired || !(await permitsPilotSchemaTransition(expected, latest)) || expired)
+            throw new Error('Database schema does not match packaged migrations');
+          const proof = await query(
+            `SELECT hash,created_at,(
+               SELECT count(*)=1 AND bool_and(hash=$2)
+               FROM drizzle.__drizzle_migrations WHERE created_at=$1
+             ) AS has_predecessor
+             FROM drizzle.__drizzle_migrations ORDER BY created_at DESC,id DESC LIMIT 1`,
+            [expected.created_at, expected.hash]
+          );
+          const current = proof.rows[0];
+          if (
+            !current?.has_predecessor ||
+            current.hash !== latest.hash ||
+            String(current.created_at) !== latest.created_at
+          )
+            throw new Error('Database schema does not match the approved pilot transition');
+        }
       } else {
         await query('SELECT 1');
       }

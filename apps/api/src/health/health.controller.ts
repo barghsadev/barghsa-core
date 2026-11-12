@@ -31,7 +31,9 @@ export class HealthController {
    * Excluded from authentication, rate limiting, and audit logging.
    */
   @Get('ready')
-  async readiness(@Res({ passthrough: true }) res: Response): Promise<ReadinessResult> {
+  async readiness(
+    @Res({ passthrough: true }) res: Response
+  ): Promise<ReadinessResult & { commit?: string }> {
     const result = await this.healthService.readiness();
     if (result.warnings && result.warnings.length > 0) {
       res.setHeader('X-Health-Warning', result.warnings.join(', '));
@@ -39,6 +41,7 @@ export class HealthController {
     if (result.status === 'down') {
       throw new HttpException(result, HttpStatus.SERVICE_UNAVAILABLE);
     }
-    return result;
+    const commit = process.env['BARGHSA_RELEASE_SHA'];
+    return commit && /^[a-f0-9]{40}$/.test(commit) ? { ...result, commit } : result;
   }
 }

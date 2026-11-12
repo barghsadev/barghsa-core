@@ -87,7 +87,7 @@ services:
       AI_INFERENCE_URL: http://ai-inference:9091
       DOCUMENT_CLAMAV_HOST: clamav
       DOCUMENT_CLAMAV_PORT: '3310'
-    ports: ['127.0.0.1:4000:4000']
+    ports: ['127.0.0.1:${BARGHSA_API_HOST_PORT:-4000}:4000']
     depends_on:
       migrate: { condition: service_completed_successfully }
       clamav: { condition: service_healthy }
@@ -115,7 +115,7 @@ services:
       BARGHSA_DEPLOYMENT_ENV: production
       PORT: '3000'
       WEB_CSP_MODE: ${BARGHSA_WEB_CSP_MODE:-report-only}
-    ports: ['127.0.0.1:3000:3000']
+    ports: ['127.0.0.1:${BARGHSA_WEB_HOST_PORT:-3000}:3000']
     depends_on:
       api: { condition: service_healthy }
     healthcheck:

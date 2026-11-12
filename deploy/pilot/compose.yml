@@ -1,0 +1,10 @@
+services:
+  api:
+    environment:
+      BARGHSA_PILOT_SCHEMA_TRANSITION_FILE: /run/barghsa-pilot-schema/active.json
+    volumes:
+      - type: bind
+        source: ${BARGHSA_PILOT_TRANSITION_DIR:?Set the protected pilot schema transition directory}
+        target: /run/barghsa-pilot-schema
+        read_only: true
+        bind: { create_host_path: false }

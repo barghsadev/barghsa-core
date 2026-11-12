@@ -2,7 +2,7 @@
 
 <!-- Generated from board.json. Edit the JSON, then run board.py render. -->
 
-Snapshot: 2026-11-12T11:03:13+00:00. First production launch: electricity, saving, solar and consultation.
+Snapshot: 2026-11-12T11:27:28+00:00. First production launch: electricity, saving, solar and consultation.
 
 Last confirmed staging release: **v0.5.0**. Next milestone: **v0.6.0**.
 
@@ -10,8 +10,8 @@ Counts describe evidence and task acceptance, not the percentage of product buil
 
 | State | Tasks | Meaning |
 | --- | ---: | --- |
-| done | 1247 | Accepted with unchanged source bindings. |
-| verify | 11 | Existing work may be complete; inspect evidence before building. |
+| done | 1248 | Accepted with unchanged source bindings. |
+| verify | 10 | Existing work may be complete; inspect evidence before building. |
 | partial | 102 | An earlier review found unmet criteria; reconcile later fixes. |
 | todo | 3 | New, concrete work or release checks. |
 | in_progress | 1 | Existing work to finish. |
@@ -1028,7 +1028,7 @@ Infrastructure, security, migration, provider configuration, backups, monitoring
 | `01-platform-infrastructure.md#T-04.04.03` | done | Earlier acceptance_verified | Configure edge rate limiting for auth, upload, and AI endpoints |
 | `01-platform-infrastructure.md#T-04.04.04` | done | Earlier acceptance_verified | Configure static asset caching and CDN readiness |
 | `01-platform-infrastructure.md#T-04.04.05` | done | Earlier acceptance_verified | Implement ETag support for safe metadata endpoints |
-| `01-platform-infrastructure.md#T-05.01.01` | verify | Earlier deferred | Create Ansible playbook or deploy script for pilot topology |
+| `01-platform-infrastructure.md#T-05.01.01` | done | Earlier deferred | Create Ansible playbook or deploy script for pilot topology |
 | `01-platform-infrastructure.md#T-05.01.02` | done | Earlier deferred | Create `docker-compose.prod.yml` for pilot single-VM deployment (P1 defect) |
 | `01-platform-infrastructure.md#T-05.01.03` | done | Earlier deferred | Document explicitly that single-server deployment has lower availability |
 | `01-platform-infrastructure.md#T-05.02.01` | done | Earlier deferred | Design and document commercial HA topology |

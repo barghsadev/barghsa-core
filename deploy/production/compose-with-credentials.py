@@ -14,6 +14,7 @@ import sys
 
 
 COMPOSE_FILE = Path(__file__).resolve().with_name('compose.yml')
+PILOT_OVERLAY = COMPOSE_FILE.parents[1] / 'pilot' / 'compose.yml'
 # CRED_AES256_GCM_BY_HOST in systemd's creds-util.h. Reject keyless envelopes.
 HOST_KEY_FORMAT = bytes.fromhex('5a1c6a86df9d4096b1d5a65e0862f19a')
 
@@ -78,6 +79,8 @@ def run_compose(options, command):
         environment['BARGHSA_RUNTIME_ENV_FILE'] = resolve_credential(stack, runtime, 'runtime')
         environment['BARGHSA_MIGRATION_ENV_FILE'] = resolve_credential(stack, migration, 'migration')
         compose = ['docker', 'compose', '--env-file', options.env_file, '-f', str(COMPOSE_FILE)]
+        if getattr(options, 'pilot', False):
+            compose += ['-f', str(PILOT_OVERLAY)]
         try:
             subprocess.run(
                 [*compose, 'config', '--quiet'], env=environment,
@@ -95,6 +98,7 @@ def main():
     parser.add_argument('--env-file', required=True, help='Compose image and deployment settings')
     parser.add_argument('--runtime', required=True, help='encrypted barghsa-runtime credential')
     parser.add_argument('--migration', required=True, help='encrypted barghsa-migration credential')
+    parser.add_argument('--pilot', action='store_true', help='mount the pilot schema transition directory')
     parser.add_argument('command', nargs=argparse.REMAINDER)
     options = parser.parse_args()
     try:

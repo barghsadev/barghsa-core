@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T11:03:13+00:00",
+  "updated": "2026-11-12T11:27:28+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -8558,7 +8558,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "pnpm-lock.yaml",
@@ -8635,6 +8635,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -8716,7 +8724,7 @@
           "source_evidence": [
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -8765,6 +8773,14 @@
                 "packages/db/src/transaction-pool.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -8832,7 +8848,7 @@
           "source_evidence": [
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -8889,6 +8905,14 @@
                 "packages/db/src/transaction-pool.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -8970,7 +8994,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.spec.ts",
@@ -8986,7 +9010,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -9064,6 +9088,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/health.controller.ts",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged. Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -10078,7 +10111,7 @@
             },
             {
               "path": "packages/db/src/database-foundations.integration.test.ts",
-              "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+              "sha256": "f8e30557cf98c6643b8fb723e3cdcc413cbda7707163e6bdeda9d34af3651bd9"
             },
             {
               "path": "docs/adr/001-data-types-and-conventions.md",
@@ -10087,6 +10120,16 @@
           ],
           "checks": [
             "The production baseline installs the UUIDv7 function with a 48-bit wall-clock timestamp and random payload. The exact native foundation test verified uniqueness, version, variant and valid timestamp bits for 1,000 values across four concurrent database queries."
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/database-foundations.integration.test.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
+            }
           ]
         }
       }
@@ -11006,7 +11049,7 @@
             },
             {
               "path": "packages/db/src/database-foundations.integration.test.ts",
-              "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+              "sha256": "f8e30557cf98c6643b8fb723e3cdcc413cbda7707163e6bdeda9d34af3651bd9"
             },
             {
               "path": "packages/db/src/migrate.baseline.test.ts",
@@ -11086,6 +11129,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/database-foundations.integration.test.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -11832,7 +11883,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "packages/db/drizzle/production/meta/_journal.json",
@@ -12033,6 +12084,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -12780,7 +12839,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "scripts/test-container-packaging.py",
@@ -12844,6 +12903,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -13743,7 +13810,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.spec.ts",
@@ -13759,7 +13826,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "scripts/healthcheck-runtime.cjs",
@@ -13837,6 +13904,15 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/health.controller.ts",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged. Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -13987,7 +14063,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.ts",
@@ -14203,6 +14279,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -14420,7 +14504,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/health/storage-health-http.integration.test.ts",
-              "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+              "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
             },
             {
               "path": "apps/api/src/electricity/electricity-order.integration.test.ts",
@@ -14436,7 +14520,7 @@
             },
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.ts",
@@ -14452,7 +14536,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             }
           ],
           "checks": [
@@ -14511,6 +14595,16 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/storage-health-http.integration.test.ts",
+                "apps/api/src/health/health.controller.ts",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged. Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -16959,7 +17053,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
             },
             {
               "path": "scripts/test-pilot-proxy.py",
@@ -17007,6 +17101,14 @@
                 "scripts/proxy-fixture.mjs"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -17454,7 +17556,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
             },
             {
               "path": "scripts/check-pilot-proxy.mjs",
@@ -17527,6 +17629,14 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -17639,7 +17749,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
             }
           ],
           "checks": [
@@ -17679,6 +17789,14 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -17695,12 +17813,10 @@
         "story": "01-platform-infrastructure.md#spec-ff2c0bec0e87"
       },
       "requirement": "- **T-05.01.01:** Create Ansible playbook or deploy script for pilot topology\n  - **Notes:** Script: `deploy-pilot.sh`. Steps: pull latest Docker images, run migration (`docker run --rm ... pnpm db:migrate`), start new containers with `docker-compose.prod.yml` (single VM). Health check each container. If readiness passes, update proxy config to point at new instances. Stop old containers. Handle rollback: if health fails, keep old containers running and log failure.\n  - **Dependencies:** E-03, E-04\n  - **Complexity:** L",
-      "status": "verify",
+      "status": "done",
       "release": "0.6.0",
       "launch_required": true,
-      "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
-      ],
+      "remaining": [],
       "owner": null,
       "depends_on": [],
       "evidence": {
@@ -17727,10 +17843,89 @@
           "historically_skipped": true
         },
         "changed_paths": [
-          "audit/skipped-work-handoff.md"
+          "deploy/pilot/deploy-pilot.sh",
+          "deploy/pilot/deploy-pilot.py",
+          "deploy/pilot/test_deploy_pilot.py",
+          "deploy/pilot/compose.yml",
+          "deploy/pilot/README.md",
+          "deploy/production/compose.yml",
+          "deploy/production/compose-with-credentials.py",
+          "packages/db/src/pilot-schema-transition.ts",
+          "packages/db/src/index.ts",
+          "packages/db/src/database-foundations.integration.test.ts",
+          "apps/api/src/health/health.controller.ts",
+          "apps/api/src/health/storage-health-http.integration.test.ts"
         ],
-        "batches": [],
-        "current_acceptance": null
+        "batches": [
+          "release-0.6-pilot-rollout"
+        ],
+        "current_acceptance": {
+          "batch": "release-0.6-pilot-rollout",
+          "checks": [
+            "The pilot deployment command verifies the prior route and immutable image identities, runs the isolated packaged migration, starts and verifies all candidate services, checks exact API and web source revisions, reloads NGINX, waits for the previous workers to drain and retires the old slot. Before retirement a failed candidate restores the verified previous route. Uncertain rollback preserves both slots.",
+            "Native Docker Compose verified unchanged default production config, both loopback slot projects, role separation and the read-only pilot API mount. A disposable native Compose lifecycle ran the one-shot migration, inspected five healthy image IDs and retired the fixture. Native NGINX verified both exact routed revisions over TLS, an in-flight response completing on the old worker before retirement and both routes restoring on rollback.",
+            "The existing exact packaged migration-head check remains the default. The reviewed pilot mode requires the complete candidate journal to extend the previous image, exact image capability and revision, a protected read-only mount and the exact predecessor and successor heads. Native PostgreSQL verified the protected receipt and rejected absent, different-revision, writable, altered predecessor and altered successor cases. The legacy immutable app journal reported no transition capability. The current compiled package reports capability version 1.",
+            "Nine focused pilot tests, 19 database health and foundations tests, and three API health tests passed. The compiled HTTP readiness test verified the configured source revision and actual object-storage health behavior. Targeted TypeScript, formatting, lint and whitespace checks passed."
+          ],
+          "source_evidence": [
+            {
+              "path": "deploy/pilot/deploy-pilot.sh",
+              "sha256": "0b755d6bb8c9c9f29d3dbc1285e0b64d72dfa38a0fffbb45ad60709643d2aa3d"
+            },
+            {
+              "path": "deploy/pilot/deploy-pilot.py",
+              "sha256": "6fd17ed743c2940accb88f569b8b065ad8c8169a0c14f63ef6f9162ec03f15f2"
+            },
+            {
+              "path": "deploy/pilot/test_deploy_pilot.py",
+              "sha256": "4fbd373551876d76901ba2202b876e2e700a11ab19c95f65bb58b5cec4997498"
+            },
+            {
+              "path": "deploy/pilot/compose.yml",
+              "sha256": "7fec2ec62e1a9e7f7adc9e65a7e9eb0e279115b7ca88e7407659ab4a9bfa8df0"
+            },
+            {
+              "path": "deploy/pilot/README.md",
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+            },
+            {
+              "path": "deploy/production/compose.yml",
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
+            },
+            {
+              "path": "deploy/production/compose-with-credentials.py",
+              "sha256": "8a6487bd4e8bca73f0c093bc85b6af955a9d4d671157a1b58add78e10d05ab67"
+            },
+            {
+              "path": "packages/db/src/pilot-schema-transition.ts",
+              "sha256": "b6c449110ec30acfbcdefbc9c312f86c383b01c9d4c3b79dee71e7421f377b7a"
+            },
+            {
+              "path": "packages/db/src/index.ts",
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
+            },
+            {
+              "path": "packages/db/src/database-foundations.integration.test.ts",
+              "sha256": "f8e30557cf98c6643b8fb723e3cdcc413cbda7707163e6bdeda9d34af3651bd9"
+            },
+            {
+              "path": "apps/api/src/health/health.controller.ts",
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
+            },
+            {
+              "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+              "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
+            },
+            {
+              "path": "deploy/pilot/nginx.conf",
+              "sha256": "d95372a08a1f01f591fe02fe6894246d1cbbe973194a6ec601fd00b8f1a5f62f"
+            },
+            {
+              "path": "scripts/run-packaged-migrations.cjs",
+              "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+            }
+          ]
+        }
       }
     },
     {
@@ -17954,7 +18149,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
             },
             {
               "path": "deploy/production/README.md",
@@ -18082,6 +18277,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -18149,7 +18352,7 @@
           "source_evidence": [
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
             },
             {
               "path": "deploy/production/README.md",
@@ -18277,6 +18480,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/pilot/README.md"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -18981,7 +19192,7 @@
             },
             {
               "path": "packages/db/src/database-foundations.integration.test.ts",
-              "sha256": "707f3f776b7065815471ea6dc0c853a4eef99a5b7803edf24d15aa62c9317b77"
+              "sha256": "f8e30557cf98c6643b8fb723e3cdcc413cbda7707163e6bdeda9d34af3651bd9"
             },
             {
               "path": "packages/db/src/migrate.snapshot.test.ts",
@@ -19186,6 +19397,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/database-foundations.integration.test.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -26445,7 +26664,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/single/Dockerfile",
@@ -26622,6 +26841,14 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -28827,7 +29054,7 @@
             },
             {
               "path": "deploy/pilot/README.md",
-              "sha256": "16bab33bf709f7b356035de83c9d015359a35803b76abca2c20ec53b9dabc1a8"
+              "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
             },
             {
               "path": "deploy/production/README.md",
@@ -28835,7 +29062,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/README.md",
@@ -29145,6 +29372,15 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/pilot/README.md",
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -30884,7 +31120,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.ts",
@@ -31040,6 +31276,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/health.controller.ts"
+              ],
+              "scope": "Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -43033,7 +43277,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -43450,6 +43694,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -48270,7 +48522,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -48687,6 +48939,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -97275,7 +97535,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "apps/api/src/notifications/native-customer-templates.integration.test.ts",
@@ -99265,6 +99525,14 @@
                 "apps/api/src/wallet/online-topup-callback.integration.test.ts"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -113289,7 +113557,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -113900,6 +114168,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -114550,7 +114826,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -115161,6 +115437,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -115811,7 +116095,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -116422,6 +116706,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -117073,7 +117365,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -117684,6 +117976,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -118334,7 +118634,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -118945,6 +119245,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -119545,7 +119853,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -120077,6 +120385,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -120689,7 +121005,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -121110,6 +121426,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -121628,7 +121952,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.email-corrections.test.ts",
@@ -122239,6 +122563,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -141168,7 +141500,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -141944,6 +142276,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -356511,7 +356851,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -356928,6 +357268,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -365738,7 +366086,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -366155,6 +366503,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -390703,7 +391059,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -391120,6 +391476,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -425925,7 +426289,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/account-recovery.ts",
@@ -426342,6 +426706,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -539539,7 +539911,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -540041,6 +540413,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -540211,7 +540591,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -540708,6 +541088,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -541273,7 +541661,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -541770,6 +542158,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -542109,7 +542505,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/migrate.snapshot.test.ts",
@@ -542525,6 +542921,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -543088,7 +543492,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -543585,6 +543989,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -543754,7 +544166,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -544275,6 +544687,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -544444,7 +544864,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -544965,6 +545385,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -545134,7 +545562,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -545655,6 +546083,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -545824,7 +546260,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -546345,6 +546781,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -546513,7 +546957,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/schema/document-access-log.ts",
@@ -547010,6 +547454,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -560626,7 +561078,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -560990,6 +561442,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -561364,7 +561824,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -561728,6 +562188,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -562100,7 +562568,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -562464,6 +562932,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -562836,7 +563312,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -563224,6 +563700,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -564090,7 +564574,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -564454,6 +564938,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -565038,7 +565530,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -565834,6 +566326,14 @@
                 "packages/db/drizzle/production/meta/_journal.json"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -566361,7 +566861,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -566725,6 +567225,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -567096,7 +567604,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -567460,6 +567968,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -567832,7 +568348,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -568196,6 +568712,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -568569,7 +569093,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -568957,6 +569481,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -569328,7 +569860,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -569692,6 +570224,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -570063,7 +570603,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/pgbouncer.integration.test.ts",
@@ -570427,6 +570967,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ],
           "presentation_renewals": [
@@ -579077,7 +579625,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -579282,6 +579830,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -579331,7 +579887,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -579391,6 +579947,14 @@
                 "apps/web/server.js"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -579862,7 +580426,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -580067,6 +580631,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -580311,7 +580883,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -580410,6 +580982,14 @@
                 "scripts/test-pilot-proxy.py"
               ],
               "scope": "Application and proxy diagnostics now use correlated JSON. The middleware preserves request IDs and adds early parser coverage. Reviewed caller tests retain privacy, delivery, request, database, worker shutdown and web response checks. The lockfile adds only the Pino runtime tree."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -585890,7 +586470,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/transaction-pool.ts",
@@ -585963,6 +586543,16 @@
             {
               "path": "packages/db/drizzle/production/0173_new_domain_updated_at.sql",
               "sha256": "e0e9ff7794802a451fe79547068b2669c75f6e5be1520d069b028c40ca78c262"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -591164,7 +591754,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -591344,6 +591934,14 @@
                 "pnpm-lock.yaml"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -593272,7 +593870,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -593375,6 +593973,14 @@
                 "apps/api/src/wallet/online-topup-callback.integration.test.ts"
               ],
               "scope": "Adds trigger-only retention guards. Existing finance, audit and reconciliation assertions passed with isolated fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -593451,7 +594057,7 @@
             },
             {
               "path": "deploy/production/compose-with-credentials.py",
-              "sha256": "89e06b96812560bc4ef8183d7ac9d74de2c9b13461e38709894a9a180b42383b"
+              "sha256": "8a6487bd4e8bca73f0c093bc85b6af955a9d4d671157a1b58add78e10d05ab67"
             },
             {
               "path": "deploy/production/test_compose_with_credentials.py",
@@ -593459,7 +594065,18 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose-with-credentials.py",
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -596211,7 +596828,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -596305,6 +596922,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -596370,7 +596995,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             }
           ],
           "checks": [
@@ -596440,6 +597065,14 @@
                 "apps/api/src/app.factory.ts"
               ],
               "scope": "The API adds an optional protected request trace exporter and reuses the existing bounded collector socket behavior. Generated contracts, health behavior, existing metrics and correlation IDs retain their verified behavior. The lockfile adds the matching OpenTelemetry exporter with no unrelated dependency changes."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -596889,7 +597522,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "Dockerfile.base",
@@ -596962,6 +597595,14 @@
                 "Dockerfile.base"
               ],
               "scope": "Application errors retain stderr and structured correlation. Database diagnostics keep their prior stream. Production packaging removes only a Pino test fixture. Runtime logging and exact image checks passed."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -608682,7 +609323,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             }
           ],
           "source_renewals": [
@@ -608813,6 +609454,14 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -609401,7 +610050,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/query-timeout-policy.integration.test.ts",
@@ -609588,6 +610237,14 @@
                 "packages/db/src/transaction-pool.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -610581,7 +611238,7 @@
           "source_evidence": [
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.ts",
@@ -610597,7 +611254,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             }
           ],
           "source_renewals": [
@@ -610632,6 +611289,15 @@
                 "packages/db/src/index.ts"
               ],
               "scope": "Adds optional tracing metadata to outbox storage and processing. Existing transaction, audit, recipient, dispatch and receipt paths retain their assertions. The historical multipart test continues to verify its own exact upgrade and replay. Dependency changes move the existing OpenTelemetry versions into the shared server package."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/health.controller.ts",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged. Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -615549,7 +616215,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/notification-outbox-trace.migrated.test.ts",
@@ -615650,6 +616316,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -615935,7 +616609,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/notification-outbox-trace.migrated.test.ts",
@@ -616036,6 +616710,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -616249,7 +616931,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -616394,6 +617076,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -616607,7 +617297,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -616752,6 +617442,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -617440,7 +618138,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/query-cancellation.integration.test.ts",
@@ -617585,6 +618283,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged."
             }
           ]
         }
@@ -629571,7 +630277,7 @@
             },
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.ts",
@@ -629747,6 +630453,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/health.controller.ts"
+              ],
+              "scope": "Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -630027,7 +630741,7 @@
             },
             {
               "path": "apps/api/src/health/health.controller.ts",
-              "sha256": "e9f6a4494b73b18d25972007845fddb97dd99f80028058a6462111e7156f0b60"
+              "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
             },
             {
               "path": "apps/api/src/health/health.service.ts",
@@ -630251,6 +630965,14 @@
                 "deploy/production/README.md"
               ],
               "scope": "Adds a separate encrypted-input procedure to the deployment runbook. Existing procedures and the Compose manifest were preserved, and both input paths resolved the same service roles."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/health.controller.ts"
+              ],
+              "scope": "Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ]
         }
@@ -630822,7 +631544,7 @@
             },
             {
               "path": "deploy/production/compose.yml",
-              "sha256": "2c482580acb9a809db8610f162d64acd8d52a15760950a5100f4ab3c6b278963"
+              "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
             },
             {
               "path": "deploy/staging/compose.yml",
@@ -631025,6 +631747,14 @@
                 ".github/workflows/ci.yml"
               ],
               "scope": "Main pushes may reuse only a matching affected-test receipt from an exact successful protected preflight. The normal test path remains for missing evidence, full runs and pull requests. The integrity job, dependency and image scans, and strict license and coverage paths are preserved."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "deploy/production/compose.yml"
+              ],
+              "scope": "Pilot slots are opt-in and default Compose output matched the prior config exactly. The runbook adds verified rollout instructions."
             }
           ]
         }
@@ -934277,7 +935007,7 @@
             },
             {
               "path": "apps/api/src/health/storage-health-http.integration.test.ts",
-              "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+              "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -936173,7 +936903,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
@@ -938300,6 +939030,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/storage-health-http.integration.test.ts",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged. Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ],
           "presentation_renewals": [
@@ -939269,7 +940008,7 @@
             },
             {
               "path": "apps/api/src/health/storage-health-http.integration.test.ts",
-              "sha256": "df72d92ba7ac46a4016af1896f7428998b265664e48013716c41e7590b1b701a"
+              "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
             },
             {
               "path": "apps/api/src/invoice/customer-invoice-details.service.ts",
@@ -941141,7 +941880,7 @@
             },
             {
               "path": "packages/db/src/index.ts",
-              "sha256": "c7600fe35a37bb65f3d82abe2f6f8208f58d4c861a6e0e124c2d2659713d4bda"
+              "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
             },
             {
               "path": "packages/db/src/invoice-outcome-notifications-upgrade.migrated.test.ts",
@@ -943168,6 +943907,15 @@
                 "docs/operations/storage-retention.md"
               ],
               "scope": "Preserves financial deletion guards and the existing FK unlink, verifies all retained row values, and isolates scanner fixtures."
+            },
+            {
+              "batch": "release-0.6-pilot-rollout",
+              "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+              "paths": [
+                "apps/api/src/health/storage-health-http.integration.test.ts",
+                "packages/db/src/index.ts"
+              ],
+              "scope": "The default exact migration-head test still passes. The pilot exception is confined to a protected exact transition and a parameterized predecessor query. Existing pool, trace and transaction implementations are unchanged. Healthy readiness adds the configured public commit. Existing dependency status and storage checks passed with the compiled API."
             }
           ],
           "kind": "accepted-live-provider-and-five-knowledge-slot-boundaries",
@@ -948212,7 +948960,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. The isolated rollback rehearsal restored HTTP readiness with the previous app and untouched 0288 database. Preserve the original database volume and previous images together before accepting writes.",
-        "Protected run 43176139660 passed on f8d97479 and the GitHub main ref was read back at that exact commit. Continue with the consolidated 8f8bd360 preflight 43182814816 and successor integrity results. The branch-protection result uses report-only image licenses. Final strict release evidence remains open."
+        "GitHub preflight 43202204367 passed the required Verify monorepo integrity and combined source coverage jobs at 05755c71173cd7018c9d4f702dfb3b546fd4ffc3. GitHub readback verified that exact SHA on main. The combined Loki and SQL audit successor at cc1f7086 is in preflight 43207285646. Strict release image-license and acceptance gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -948486,7 +949234,8 @@
           "release-0.6-portable-staging-images",
           "release-0.6-otlp-connection-deadline",
           "release-0.6-reuse-affected-preflight",
-          "release-0.6-validated-outbox-trace-constraint"
+          "release-0.6-validated-outbox-trace-constraint",
+          "release-0.6-pilot-rollout"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1093981,6 +1094730,217 @@
         {
           "file": "drizzle-lint.log",
           "sha256": "21d3cffa513842efbe725413d878f705a90ec57f737911cf9d1b20d413d9de35"
+        }
+      ]
+    },
+    "release-0.6-pilot-rollout": {
+      "batch": "release-0.6-pilot-rollout",
+      "base_commit": "cc1f70866730e5bec8d5fe236ca1de9865ba22d5",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-05.01.01",
+        "release-readiness#R-05.02",
+        "01-platform-infrastructure.md#T-02.01.01",
+        "01-platform-infrastructure.md#T-02.01.02",
+        "01-platform-infrastructure.md#T-02.01.03",
+        "01-platform-infrastructure.md#T-02.01.04",
+        "01-platform-infrastructure.md#T-02.02.03",
+        "01-platform-infrastructure.md#T-02.03.03",
+        "01-platform-infrastructure.md#T-02.04.04",
+        "01-platform-infrastructure.md#T-03.01.05",
+        "01-platform-infrastructure.md#T-03.03.01",
+        "01-platform-infrastructure.md#T-03.03.02",
+        "01-platform-infrastructure.md#T-03.03.04",
+        "01-platform-infrastructure.md#T-04.04.01",
+        "01-platform-infrastructure.md#T-04.04.04",
+        "01-platform-infrastructure.md#T-04.04.05",
+        "01-platform-infrastructure.md#T-05.01.03",
+        "01-platform-infrastructure.md#T-05.02.01",
+        "01-platform-infrastructure.md#T-05.03.02",
+        "01-platform-infrastructure.md#T-07.01.04",
+        "01-platform-infrastructure.md#T-07.04.03",
+        "01-platform-infrastructure.md#T-07.05.03",
+        "02-auth-users-admin.md#T-02.02.03",
+        "02-auth-users-admin.md#T-02.03.03",
+        "05-notifications-documents-ai.md#T-05.01.02",
+        "05-notifications-documents-ai.md#T-05.06.01",
+        "05-notifications-documents-ai.md#T-05.06.02",
+        "05-notifications-documents-ai.md#T-05.06.03",
+        "05-notifications-documents-ai.md#T-05.06.04",
+        "05-notifications-documents-ai.md#T-05.06.05",
+        "05-notifications-documents-ai.md#T-05.06.06",
+        "05-notifications-documents-ai.md#T-05.06.07",
+        "02-auth-users-admin.md#T-09.06.01",
+        "02-auth-users-admin.md#T-09.11.05",
+        "03-core-business.md#T-03.05.01.04",
+        "03-core-business.md#T-03.05.03.02",
+        "03-core-business.md#T-03.07.01.01",
+        "03-core-business.md#T-03.09.01.01",
+        "05-notifications-documents-ai.md#T-05.11.02",
+        "05-notifications-documents-ai.md#T-05.11.03",
+        "05-notifications-documents-ai.md#T-05.11.05",
+        "05-notifications-documents-ai.md#T-05.11.06",
+        "05-notifications-documents-ai.md#T-05.12.01",
+        "05-notifications-documents-ai.md#T-05.12.02",
+        "05-notifications-documents-ai.md#T-05.12.03",
+        "05-notifications-documents-ai.md#T-05.13.01",
+        "05-notifications-documents-ai.md#T-05.13.02",
+        "05-notifications-documents-ai.md#T-05.13.03",
+        "05-notifications-documents-ai.md#T-05.21.01",
+        "05-notifications-documents-ai.md#T-05.21.02",
+        "05-notifications-documents-ai.md#T-05.21.03",
+        "05-notifications-documents-ai.md#T-05.22.01",
+        "05-notifications-documents-ai.md#T-05.22.03",
+        "05-notifications-documents-ai.md#T-05.22.04",
+        "05-notifications-documents-ai.md#T-05.22.05",
+        "05-notifications-documents-ai.md#T-05.22.06",
+        "05-notifications-documents-ai.md#T-05.23.01",
+        "05-notifications-documents-ai.md#T-05.23.02",
+        "05-notifications-documents-ai.md#T-05.23.03",
+        "05-notifications-documents-ai.md#T-05.23.04",
+        "06-security-testing-observability.md#T-06.02.02.01",
+        "06-security-testing-observability.md#T-06.02.02.02",
+        "06-security-testing-observability.md#T-06.02.02.05",
+        "06-security-testing-observability.md#T-06.02.03.01",
+        "06-security-testing-observability.md#T-06.04.02.01",
+        "06-security-testing-observability.md#T-06.06.01.04",
+        "06-security-testing-observability.md#T-06.06.02.06",
+        "06-security-testing-observability.md#T-06.07.01.01",
+        "06-security-testing-observability.md#T-06.07.03.01",
+        "06-security-testing-observability.md#T-06.07.03.02",
+        "06-security-testing-observability.md#T-06.07.03.06",
+        "06-security-testing-observability.md#T-06.11.03.01",
+        "06-security-testing-observability.md#T-06.11.03.04",
+        "06-security-testing-observability.md#T-06.11.04.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.17.02.04",
+        "06-security-testing-observability.md#T-06.17.03.01",
+        "06-security-testing-observability.md#T-06.18.02.03",
+        "release-readiness#R-03.01",
+        "release-readiness#R-03.02"
+      ],
+      "changed_paths": [
+        "deploy/pilot/deploy-pilot.sh",
+        "deploy/pilot/deploy-pilot.py",
+        "deploy/pilot/test_deploy_pilot.py",
+        "deploy/pilot/compose.yml",
+        "deploy/pilot/README.md",
+        "deploy/production/compose.yml",
+        "deploy/production/compose-with-credentials.py",
+        "packages/db/src/pilot-schema-transition.ts",
+        "packages/db/src/index.ts",
+        "packages/db/src/database-foundations.integration.test.ts",
+        "apps/api/src/health/health.controller.ts",
+        "apps/api/src/health/storage-health-http.integration.test.ts"
+      ],
+      "source_evidence": [
+        {
+          "path": "deploy/pilot/deploy-pilot.sh",
+          "sha256": "0b755d6bb8c9c9f29d3dbc1285e0b64d72dfa38a0fffbb45ad60709643d2aa3d"
+        },
+        {
+          "path": "deploy/pilot/deploy-pilot.py",
+          "sha256": "6fd17ed743c2940accb88f569b8b065ad8c8169a0c14f63ef6f9162ec03f15f2"
+        },
+        {
+          "path": "deploy/pilot/test_deploy_pilot.py",
+          "sha256": "4fbd373551876d76901ba2202b876e2e700a11ab19c95f65bb58b5cec4997498"
+        },
+        {
+          "path": "deploy/pilot/compose.yml",
+          "sha256": "7fec2ec62e1a9e7f7adc9e65a7e9eb0e279115b7ca88e7407659ab4a9bfa8df0"
+        },
+        {
+          "path": "deploy/pilot/README.md",
+          "sha256": "e7847e7e769bef018e92637a9726399833ba2e88734e28aa32b41d6439c6ff02"
+        },
+        {
+          "path": "deploy/production/compose.yml",
+          "sha256": "ea4a02f180eb49654ef646f3ae6a0dd9c6d6c58d074e2f6ca67c45486bef14d4"
+        },
+        {
+          "path": "deploy/production/compose-with-credentials.py",
+          "sha256": "8a6487bd4e8bca73f0c093bc85b6af955a9d4d671157a1b58add78e10d05ab67"
+        },
+        {
+          "path": "packages/db/src/pilot-schema-transition.ts",
+          "sha256": "b6c449110ec30acfbcdefbc9c312f86c383b01c9d4c3b79dee71e7421f377b7a"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "523e44720b0cbfc00061293a7814998652f53ce40f519bf3ac5977f17a551512"
+        },
+        {
+          "path": "packages/db/src/database-foundations.integration.test.ts",
+          "sha256": "f8e30557cf98c6643b8fb723e3cdcc413cbda7707163e6bdeda9d34af3651bd9"
+        },
+        {
+          "path": "apps/api/src/health/health.controller.ts",
+          "sha256": "ba9421e3baf514e3dbaa48ceb2304ef796cb6104c8e68155e9ffc41194f71b58"
+        },
+        {
+          "path": "apps/api/src/health/storage-health-http.integration.test.ts",
+          "sha256": "45f98d6ed847ff498c2a25648c2ac5cdce2ed61c1940f06eae6b5aa4fc9b09de"
+        },
+        {
+          "path": "deploy/pilot/nginx.conf",
+          "sha256": "d95372a08a1f01f591fe02fe6894246d1cbbe973194a6ec601fd00b8f1a5f62f"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        }
+      ],
+      "checks": [
+        "The pilot deployment command verifies the prior route and immutable image identities, runs the isolated packaged migration, starts and verifies all candidate services, checks exact API and web source revisions, reloads NGINX, waits for the previous workers to drain and retires the old slot. Before retirement a failed candidate restores the verified previous route. Uncertain rollback preserves both slots.",
+        "Native Docker Compose verified unchanged default production config, both loopback slot projects, role separation and the read-only pilot API mount. A disposable native Compose lifecycle ran the one-shot migration, inspected five healthy image IDs and retired the fixture. Native NGINX verified both exact routed revisions over TLS, an in-flight response completing on the old worker before retirement and both routes restoring on rollback.",
+        "The existing exact packaged migration-head check remains the default. The reviewed pilot mode requires the complete candidate journal to extend the previous image, exact image capability and revision, a protected read-only mount and the exact predecessor and successor heads. Native PostgreSQL verified the protected receipt and rejected absent, different-revision, writable, altered predecessor and altered successor cases. The legacy immutable app journal reported no transition capability. The current compiled package reports capability version 1.",
+        "Nine focused pilot tests, 19 database health and foundations tests, and three API health tests passed. The compiled HTTP readiness test verified the configured source revision and actual object-storage health behavior. Targeted TypeScript, formatting, lint and whitespace checks passed.",
+        "GitHub preflight 43202204367 passed the required Verify monorepo integrity and combined source coverage jobs at 05755c71173cd7018c9d4f702dfb3b546fd4ffc3. GitHub readback verified that exact SHA on main. The combined Loki and SQL audit successor at cc1f7086 is in preflight 43207285646. Strict release image-license and acceptance gates remain open."
+      ],
+      "limitations": [
+        "The pilot script was exercised with disposable Compose and native NGINX fixtures, real PostgreSQL and a compiled API. A deployed pilot target, live cross-version rehearsal for the actual approved images and commercial multi-host rollout remain separate promotion criteria. No staging or production deployment was performed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-pilot-rollout",
+      "execution_receipts": [
+        {
+          "file": "rehearse.py",
+          "sha256": "17e21bdf42604fc76ed2df02d5e6b201c4f2981fef9e1f28c978375eae74df30"
+        },
+        {
+          "file": "native.log",
+          "sha256": "8def1c704568a1898b56ab56e3b83cb0dbe71a2429e9475755e9cbcfe268cafe"
+        },
+        {
+          "file": "unit.log",
+          "sha256": "0ff8b017eab6dad80539c62e121c6a5bf312feea29cd5cd3f37a294b000206f9"
+        },
+        {
+          "file": "db-health.log",
+          "sha256": "cf6cc3643a0e94a80fd25f5870d26f578c32314a2c1d3094b0caf054c56ee38d"
+        },
+        {
+          "file": "api-readiness.log",
+          "sha256": "a1b700960ebc1883bf05372f9038ea1675bb98f6608a4f14243da90665abb5e9"
+        },
+        {
+          "file": "compiled-journal.log",
+          "sha256": "dc09400c3a0bf5e03c19168673508d858b369683348499a12babdf5b6b76a370"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "c13dac00cd4d1ae3b67a2dd161ecbf3e93ba863a2a783811756c795ccc9a23f2"
+        },
+        {
+          "file": "published-05755-run.json",
+          "sha256": "d2fc2379cd26a305b7d003d7965f30095248dd1d3d5bbec65025789ea63789da"
+        },
+        {
+          "file": "current-main.txt",
+          "sha256": "919d7076bf7532f522f4556612ae96a36f14e34394e80afb45b2161292557112"
         }
       ]
     }

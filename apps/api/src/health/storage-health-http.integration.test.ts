@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, expect, it } from 'vitest';
+import { afterAll, beforeAll, expect, it, vi } from 'vitest';
 import { createServer, type Server } from 'node:http';
 import { startHttpFixture } from '../test/http-fixture.js';
 import type { ReadinessResult } from './health.service.js';
@@ -12,6 +12,7 @@ let fixture: Awaited<ReturnType<typeof startHttpFixture>>;
 let storage: Server;
 let mode: 'ok' | 'denied' | 'stalled' = 'ok';
 const observed: Array<{ method: string | undefined; url: string | undefined }> = [];
+const releaseCommit = 'a'.repeat(40);
 beforeAll(async () => {
   storage = createServer((request, response) => {
     observed.push({ method: request.method, url: request.url });
@@ -21,10 +22,15 @@ beforeAll(async () => {
   await new Promise<void>((resolve) => storage.listen(0, '127.0.0.1', resolve));
   const address = storage.address();
   if (!address || typeof address === 'string') throw new Error('Missing storage address');
-  fixture = await startHttpFixture(
-    process.env.TEST_DATABASE_URL!,
-    `http://127.0.0.1:${address.port}`
-  );
+  vi.stubEnv('BARGHSA_RELEASE_SHA', releaseCommit);
+  try {
+    fixture = await startHttpFixture(
+      process.env.TEST_DATABASE_URL!,
+      `http://127.0.0.1:${address.port}`
+    );
+  } finally {
+    vi.unstubAllEnvs();
+  }
 }, 60_000);
 afterAll(async () => {
   await fixture?.close();
@@ -36,6 +42,7 @@ it('probes actual bucket access, degrades on denial/timeout, and recovers withou
   const check = () => fetch(`${fixture.base}/api/health/ready`);
   const healthy = await check();
   expect(healthy.status).toBe(200);
+  expect(await healthy.clone().json()).toMatchObject({ commit: releaseCommit });
   expect(await storageStatus(healthy)).toBe('ok');
   expect(observed).toContainEqual({ method: 'HEAD', url: '/test-evidence/' });
   mode = 'denied';

@@ -1,5 +1,8 @@
 import { afterAll, beforeAll, expect, it, vi } from 'vitest';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
+import { chmod, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { Pool } from 'pg';
 import { createDbPool, dbHealth } from './index.js';
 import { runMigrations } from './migrate.js';
@@ -55,6 +58,84 @@ it('checks the packaged schema head and rejects changed, older, newer or absent 
     );
   }
   expect((await dbHealth({ verifySchema: true })).ok).toBe(true);
+});
+
+it('accepts only the protected pilot transition with the exact packaged predecessor and new head', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'barghsa-pilot-transition-'));
+  const file = join(directory, 'active.json');
+  const commit = 'c'.repeat(40);
+  const previous = (
+    await pool.query(
+      'SELECT id,hash,created_at FROM drizzle.__drizzle_migrations ORDER BY created_at DESC LIMIT 1'
+    )
+  ).rows[0];
+  const statement = 'CREATE TABLE pilot_transition_fixture (id integer PRIMARY KEY)';
+  const candidate = {
+    hash: createHash('sha256').update(statement).digest('hex'),
+    created_at: String(Number(previous.created_at) + 1000),
+  };
+  const writeReceipt = async (previousCommit = commit) => {
+    await writeFile(
+      file,
+      JSON.stringify({
+        version: 1,
+        previous_commit: previousCommit,
+        previous: { hash: previous.hash, created_at: previous.created_at },
+        candidate,
+      }),
+      { mode: 0o600 }
+    );
+  };
+  const ready = async () => (await dbHealth({ verifySchema: true })).ok;
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    await client.query(statement);
+    await client.query('INSERT INTO drizzle.__drizzle_migrations(hash,created_at) VALUES($1,$2)', [
+      candidate.hash,
+      candidate.created_at,
+    ]);
+    await client.query('COMMIT');
+    expect(await ready()).toBe(false);
+    vi.stubEnv('BARGHSA_RELEASE_SHA', commit);
+    vi.stubEnv('BARGHSA_PILOT_SCHEMA_TRANSITION_FILE', file);
+    expect(await ready()).toBe(false);
+    await writeReceipt('d'.repeat(40));
+    expect(await ready()).toBe(false);
+    await writeReceipt();
+    expect(await ready()).toBe(true);
+    await chmod(file, 0o666);
+    expect(await ready()).toBe(false);
+    await chmod(file, 0o600);
+    await pool.query('UPDATE drizzle.__drizzle_migrations SET hash=$1 WHERE id=$2', [
+      'e'.repeat(64),
+      previous.id,
+    ]);
+    expect(await ready()).toBe(false);
+    await pool.query('UPDATE drizzle.__drizzle_migrations SET hash=$1 WHERE id=$2', [
+      previous.hash,
+      previous.id,
+    ]);
+    await pool.query('UPDATE drizzle.__drizzle_migrations SET hash=$1 WHERE created_at=$2', [
+      'f'.repeat(64),
+      candidate.created_at,
+    ]);
+    expect(await ready()).toBe(false);
+  } finally {
+    await client.query('ROLLBACK');
+    client.release();
+    vi.unstubAllEnvs();
+    await pool.query('UPDATE drizzle.__drizzle_migrations SET hash=$1 WHERE id=$2', [
+      previous.hash,
+      previous.id,
+    ]);
+    await pool.query('DELETE FROM drizzle.__drizzle_migrations WHERE created_at=$1', [
+      candidate.created_at,
+    ]);
+    await pool.query('DROP TABLE IF EXISTS pilot_transition_fixture');
+    await rm(directory, { recursive: true, force: true });
+  }
+  expect(await ready()).toBe(true);
 });
 
 it('shares schema probes without treating a connectivity probe as schema validation', async () => {
