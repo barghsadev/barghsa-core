@@ -5,6 +5,14 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance';
 
+vi.mock('./staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (
+    _actor: unknown,
+    _permission: string,
+    read: () => Promise<unknown>
+  ) => read(),
+}));
+
 const TX_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
 const REVIEW_HASH = 'a'.repeat(64);
 

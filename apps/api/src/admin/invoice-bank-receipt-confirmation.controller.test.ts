@@ -5,6 +5,14 @@ import type { AuthenticatedRequest } from '../session/session.guard.js';
 import { ErrorCodes } from '@barghsa/shared/errors';
 import { INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION } from '@barghsa/shared/finance';
 
+vi.mock('./staff-read-authority.js', () => ({
+  recheckStaffAuthorityAfter: (
+    _actor: unknown,
+    _permission: string,
+    read: () => Promise<unknown>
+  ) => read(),
+}));
+
 const RECEIPT_ID = 'cccccccc-cccc-7ccc-8ccc-cccccccccccc';
 const INVOICE_ID = '11111111-1111-7111-8111-111111111111';
 const REVIEW_HASH = 'a'.repeat(64);

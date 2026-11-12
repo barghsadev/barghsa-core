@@ -4,6 +4,7 @@ import {
   RECEIPT_EMERGENCY_OVERRIDE_PERMISSION,
 } from './receipt-emergency-override.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { recheckStaffAuthorityAfter } from './staff-read-authority.js';
 import {
   Body,
   Controller,
@@ -92,13 +93,17 @@ export class BankReceiptConfirmationController {
   ) {}
 
   private assertConfirmPermission(req: AuthenticatedRequest): void {
-    if (!hasStaffPermission(req, 'admin:finance:wallet:bank-receipt-confirm')) {
+    if (!hasStaffPermission(req, BANK_RECEIPT_CONFIRM_PERMISSION)) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${BANK_RECEIPT_CONFIRM_PERMISSION})`,
         HttpStatus.FORBIDDEN
       );
     }
+  }
+
+  private readForStaff<T>(req: AuthenticatedRequest, read: () => Promise<T>): Promise<T> {
+    return recheckStaffAuthorityAfter(req.session, BANK_RECEIPT_CONFIRM_PERMISSION, read);
   }
 
   @Get()
@@ -131,7 +136,7 @@ export class BankReceiptConfirmationController {
     const parsed = ReceiptQueueQuerySchema.safeParse(raw);
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt queue query');
-    return this.service.listPendingPage(parsed.data);
+    return this.readForStaff(req, () => this.service.listPendingPage(parsed.data));
   }
 
   @Get(':transactionId/allocation')
@@ -156,7 +161,10 @@ export class BankReceiptConfirmationController {
     if (!parsed.ok || !parsed.invoiceId) {
       throw new InputFieldException(['invoiceId']);
     }
-    return this.service.previewAllocation(transactionId, parsed.invoiceId);
+    const authorizedInvoiceId = parsed.invoiceId;
+    return this.readForStaff(req, () =>
+      this.service.previewAllocation(transactionId, authorizedInvoiceId)
+    );
   }
 
   @Get(':transactionId')
@@ -174,10 +182,10 @@ export class BankReceiptConfirmationController {
   ): Promise<BankReceiptReviewDto> {
     this.assertConfirmPermission(req);
     assertUuid(transactionId);
-    return {
+    return this.readForStaff(req, async () => ({
       ...(await this.service.get(transactionId)),
       canEmergencyOverride: hasStaffPermission(req, RECEIPT_EMERGENCY_OVERRIDE_PERMISSION),
-    };
+    }));
   }
 
   @Get(':transactionId/attachment-preview')
@@ -206,7 +214,7 @@ export class BankReceiptConfirmationController {
   ) {
     this.assertConfirmPermission(req);
     assertUuid(transactionId);
-    return this.service.previewAttachment(transactionId);
+    return this.readForStaff(req, () => this.service.previewAttachment(transactionId));
   }
 
   @Get(':transactionId/review')
@@ -227,11 +235,13 @@ export class BankReceiptConfirmationController {
     assertUuid(transactionId);
     const parsed = parseOptionalInvoiceId({ invoiceId });
     if (!parsed.ok) throw new InputFieldException(['invoiceId']);
-    return this.service.review({
-      transactionId,
-      invoiceId: parsed.invoiceId,
-      actorUserId: req.session.userId,
-    });
+    return this.readForStaff(req, () =>
+      this.service.review({
+        transactionId,
+        invoiceId: parsed.invoiceId,
+        actorUserId: req.session.userId,
+      })
+    );
   }
 
   @Post(':transactionId/confirm')

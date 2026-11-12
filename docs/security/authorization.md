@@ -49,6 +49,7 @@ session and saved photo reference again after signing a private avatar link.
 - Apply resource and assignment scope when the domain requires it. Explicit module-wide document read grants retain their approved scope. Distinguish read, write, approval and override capabilities, and require fresh step-up for designated high-risk actions. [Verification authority](../decisions/verification-policy.md).
 - Recheck current session, capability and scope inside the protected decision when concurrent role removal, ownership changes or expiry could invalidate it. Preserve required CSRF proof, audit and idempotency across retries. Keep protected audit records separate from general diagnostics.
 - Storage record metadata requires the current storage grant and staff session through the read. Private branding previews recheck the branding grant after reading the sealed image. Public image responses recheck the active branding reference before returning those bytes.
+- Staff invoice and wallet receipt reads recheck the specific Finance grant and session after preparing the response. Storage work for a preview or signed link runs outside the authority transaction.
 
 Staff role replacement requires the dedicated role capability and recent OTP
 proof on the live session. Financial confirmations, refunds, contract decisions

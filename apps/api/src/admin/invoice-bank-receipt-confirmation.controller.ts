@@ -1,6 +1,7 @@
 import { ReceiptQueueQuerySchema, type ReceiptQueuePage } from '../common/receipt-queue-query.js';
 import { readReceiptEmergencyOverrideReason } from './receipt-emergency-override.js';
 import { hasStaffPermission } from '../session/staff-permissions.js';
+import { recheckStaffAuthorityAfter } from './staff-read-authority.js';
 import {
   Body,
   Controller,
@@ -125,13 +126,17 @@ export class InvoiceBankReceiptConfirmationController {
   ) {}
 
   private assertConfirmPermission(req: AuthenticatedRequest): void {
-    if (!hasStaffPermission(req, 'admin:finance:invoices:bank-receipt-confirm')) {
+    if (!hasStaffPermission(req, INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION)) {
       httpError(
         ErrorCodes.AUTHZ_FORBIDDEN.code,
         `Admin role required (${INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION})`,
         HttpStatus.FORBIDDEN
       );
     }
+  }
+
+  private readForStaff<T>(req: AuthenticatedRequest, read: () => Promise<T>): Promise<T> {
+    return recheckStaffAuthorityAfter(req.session, INVOICE_BANK_RECEIPT_CONFIRM_PERMISSION, read);
   }
 
   @Get()
@@ -164,7 +169,7 @@ export class InvoiceBankReceiptConfirmationController {
     const parsed = ReceiptQueueQuerySchema.safeParse(raw);
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt queue query');
-    return this.service.listPendingPage(parsed.data);
+    return this.readForStaff(req, () => this.service.listPendingPage(parsed.data));
   }
 
   @Get('history')
@@ -228,7 +233,9 @@ export class InvoiceBankReceiptConfirmationController {
     const query = parseHistoryQuery(parsed.data.q, parsed.data.sort)!;
     const dates = parseDateRangeFilter(parsed.data.from, parsed.data.to)!;
     const amounts = parseNumberRange(parsed.data.min, parsed.data.max)!;
-    return this.service.listHistory({ ...parsed.data, ...query, ...dates, ...amounts });
+    return this.readForStaff(req, () =>
+      this.service.listHistory({ ...parsed.data, ...query, ...dates, ...amounts })
+    );
   }
 
   @Get(':receiptId/allocation')
@@ -248,7 +255,7 @@ export class InvoiceBankReceiptConfirmationController {
   ): Promise<InvoiceBankReceiptAllocationPreviewDto> {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
-    return this.service.previewAllocation(receiptId);
+    return this.readForStaff(req, () => this.service.previewAllocation(receiptId));
   }
 
   @Get(':receiptId')
@@ -266,7 +273,7 @@ export class InvoiceBankReceiptConfirmationController {
   ): Promise<InvoiceBankReceiptConfirmDto> {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
-    return this.service.get(receiptId);
+    return this.readForStaff(req, () => this.service.get(receiptId));
   }
 
   @Get(':receiptId/attachment-preview')
@@ -292,7 +299,7 @@ export class InvoiceBankReceiptConfirmationController {
   async previewAttachment(@Req() req: AuthenticatedRequest, @Param('receiptId') receiptId: string) {
     this.assertConfirmPermission(req);
     assertUuid(receiptId);
-    return this.service.previewAttachment(receiptId);
+    return this.readForStaff(req, () => this.service.previewAttachment(receiptId));
   }
 
   @Post(':receiptId/confirm/review')
@@ -324,13 +331,15 @@ export class InvoiceBankReceiptConfirmationController {
     if (!parsed.success)
       httpError(ErrorCodes.VALIDATION_INPUT_INVALID.code, 'Invalid receipt review');
     const emergencyOverrideReason = readReceiptEmergencyOverrideReason(parsed.data);
-    return this.service.review({
-      receiptId,
-      actorUserId: req.session.userId,
-      sessionId: req.session.sessionId,
-      csrfToken: req.session.csrfToken,
-      ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
-    });
+    return this.readForStaff(req, () =>
+      this.service.review({
+        receiptId,
+        actorUserId: req.session.userId,
+        sessionId: req.session.sessionId,
+        csrfToken: req.session.csrfToken,
+        ...(emergencyOverrideReason !== undefined ? { emergencyOverrideReason } : {}),
+      })
+    );
   }
 
   @Post(':receiptId/confirm')

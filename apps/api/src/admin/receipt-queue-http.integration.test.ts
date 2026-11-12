@@ -217,6 +217,50 @@ it.each(kinds)(
   }
 );
 
+it.each(kinds)(
+  'withholds the %s queue if Finance authority changes during the read',
+  async (kind) => {
+    const who = await actor([permission(kind)]);
+    const id = await seed(kind, await owner(), { bank: randomUUID() });
+    expect((await page(await read(kind, who, { q: id }))).items.map(idOf)).toEqual([id]);
+
+    const table = kind === 'wallet' ? 'wallet_transactions' : 'bank_receipts';
+    const blocker = await http.pool.connect();
+    let pending: Promise<Response> | undefined;
+    try {
+      await blocker.query('BEGIN');
+      await blocker.query(
+        kind === 'wallet'
+          ? 'LOCK TABLE wallet_transactions IN ACCESS EXCLUSIVE MODE'
+          : 'LOCK TABLE bank_receipts IN ACCESS EXCLUSIVE MODE'
+      );
+      pending = read(kind, who, { q: id });
+      await expect
+        .poll(async () => {
+          const result = await http.pool.query(
+            `SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE datname=current_database()
+         AND wait_event_type='Lock' AND query LIKE $1) AS blocked`,
+            [`%FROM ${table}%`]
+          );
+          return result.rows[0].blocked;
+        })
+        .toBe(true);
+      await http.pool.query('DELETE FROM user_roles WHERE user_id=$1 AND role_id=$2', [
+        who.user,
+        who.role,
+      ]);
+      await blocker.query('COMMIT');
+      const response = await pending;
+      expect(response.status, http.logs()).toBe(403);
+      expect(await response.text()).not.toContain(id);
+    } finally {
+      await blocker.query('ROLLBACK').catch(() => {});
+      blocker.release();
+      await pending?.catch(() => {});
+    }
+  }
+);
+
 const historyPath = `${path('invoice')}/history`;
 async function readHistory(
   who: Awaited<ReturnType<typeof actor>>,

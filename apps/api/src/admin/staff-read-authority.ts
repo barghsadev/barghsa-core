@@ -33,3 +33,16 @@ export async function withStaffReadAuthority<T>(
     client.release();
   }
 }
+
+/** Recheck a guarded read without keeping a database transaction open during storage work. */
+export async function recheckStaffAuthorityAfter<T>(
+  actor: StaffReadActor,
+  permission: string,
+  read: () => Promise<T>
+): Promise<T> {
+  try {
+    return await read();
+  } finally {
+    await withStaffReadAuthority(actor, permission, async () => {});
+  }
+}

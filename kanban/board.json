@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T20:58:22+00:00",
+  "updated": "2026-11-12T21:07:56+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -31457,7 +31457,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "source_renewals": [
@@ -32044,6 +32044,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "base_commit": "b9667d1a08ef6096e1c8602f6a8828ad87e74154",
@@ -46701,7 +46709,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -47943,6 +47951,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -91066,7 +91082,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -92138,6 +92154,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -93855,7 +93879,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -94344,6 +94368,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -197700,7 +197732,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
-              "sha256": "3a5db113abd23853bcd62ae8a61ad8ed6c70db7fba1dff0c7c5dc368d4fffcc9"
+              "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
             },
             {
               "path": "apps/api/src/admin/dual-approval-resolution.ts",
@@ -197873,6 +197905,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -198254,6 +198290,15 @@
                 "docs/operations/notification-delivery-recovery.md"
               ],
               "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -198446,7 +198491,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
-              "sha256": "3a5db113abd23853bcd62ae8a61ad8ed6c70db7fba1dff0c7c5dc368d4fffcc9"
+              "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
             },
             {
               "path": "apps/api/src/admin/dual-approval-resolution.ts",
@@ -198543,6 +198588,10 @@
             {
               "path": "apps/web/src/pages/wallet-preview-query.test.tsx",
               "sha256": "bb217dd08adde363c0496fe4f92efafcfb87f99c5bedb9bbf3850c192de9575f"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -198737,6 +198786,15 @@
                 "apps/api/src/admin/dual-approval.service.ts"
               ],
               "scope": "Invoice correction source locks, result replay and approval resolution recheck profile scope and related business references. Current native and unit checks preserve financial decisions, rollback and service workflows."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -205936,7 +205994,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -206193,6 +206251,10 @@
             {
               "path": "packages/shared/src/finance/bank-receipt-fields.ts",
               "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -206471,6 +206533,15 @@
                 "apps/api/src/wallet/wallet-history.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -206756,7 +206827,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -207077,6 +207148,10 @@
             {
               "path": "packages/db/src/wallet-low-balance-signals-upgrade.migrated.test.ts",
               "sha256": "732e2a4a5bd1626d7908ff6f150f039429becc2bdc2ffc6c72aed53821780b78"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -207503,6 +207578,15 @@
                 "docs/operations/notification-delivery-recovery.md"
               ],
               "scope": "Failed-notification queue, detail and replay previews hold live staff authority. Retries require an exact job, outbox and channel link before receipt and write checks. Existing step-up, audit and provider receipt assertions passed alongside the new regressions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -207755,7 +207839,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "apps/api/src/admin/receipt-emergency-override.ts",
@@ -208012,6 +208096,10 @@
             {
               "path": "packages/shared/src/finance/bank-receipt-fields.ts",
               "sha256": "f3b03c9055df92505eb7faeaa4a96f675ba5f4ff903062c7f95730a2873c2af2"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -208290,6 +208378,15 @@
                 "apps/api/src/wallet/wallet-history.ts"
               ],
               "scope": "Staff wallet ledger search and response read only visible fields. Customer receipt search and projection, profile and session checks, cursor behavior and financial read-only guarantees passed the related tests."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -620539,7 +620636,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -620904,6 +621001,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -621014,7 +621119,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
-              "sha256": "9c9a5934949398fe8c25eafb47a8641480fcef609a0a869af9b446d51d76bc83"
+              "sha256": "3e9d4c52c8f3ac393263c92203ef72d7c518753644e488f7d5ea392b711cfe83"
             },
             {
               "path": "apps/api/src/admin/branding-boundaries.test.ts",
@@ -621074,7 +621179,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
-              "sha256": "7e76b9e5e52e9b59883a97dc0a07ac88b530bec3b7f3ea13010e0c6337f40874"
+              "sha256": "040797eb7042efe10af4cf9b4720073c0254f29e52dde8809fde2b259714a7dd"
             },
             {
               "path": "apps/api/src/admin/invoice-ledger.controller.test.ts",
@@ -621270,7 +621375,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -621524,6 +621629,16 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -621598,7 +621713,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -621843,6 +621958,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -621940,7 +622063,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/db/drizzle/production/0161_saving_orders.sql",
@@ -622204,6 +622327,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -622363,7 +622494,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -622711,6 +622842,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -622761,7 +622900,7 @@
           "source_evidence": [
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "apps/api/src/session/session.guard.ts",
@@ -623126,6 +623265,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -623183,7 +623330,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
-              "sha256": "3a5db113abd23853bcd62ae8a61ad8ed6c70db7fba1dff0c7c5dc368d4fffcc9"
+              "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
             },
             {
               "path": "apps/api/src/admin/config-write-http.integration.test.ts",
@@ -623191,7 +623338,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "apps/api/src/admin/staff-effective-permissions-http.integration.test.ts",
@@ -623299,7 +623446,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -623308,6 +623455,10 @@
             {
               "path": "packages/shared/src/agent-permissions/agent-permissions.test.ts",
               "sha256": "6ca347adaa12a486d4e4c450dfb78f1a1ac2713dfda1b608fce05e318519336f"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "source_renewals": [
@@ -623681,6 +623832,17 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "docs/security/authorization.md",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -624709,8 +624871,8 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, 12 onboarding, 10 upload policy, preview, reservation, verification, record and multipart, and five branding asset and storage record method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
-        "Continue with remaining receipt authority routes and other domains. Reuse intact source-bound checks and reconcile changed confirmation and wallet sources before carrying forward receipt evidence."
+        "Source-bound review includes 42 consultation, 16 electricity, 23 saving, 45 solar, 37 shared contract and document, 12 additional cancellation, 10 invoice and receipt, 14 additional receipt attachment and submission, seven wallet payment and online top-up, four invoice correction and approval, 11 refund, five wallet balance, creation and ledger, two chargeback and Finance warning, six reconciliation access, read and decision, five manual invoice and due date, six failed-job access, read and decision, 16 failed-notification access, read, replay and decision, three delivery history and contact correction, eight current and legacy notification inbox, 19 customer and staff support-ticket, six profile privacy request, export and closure, four account-owned background-job, and 13 authenticated account settings, analytics and conversation identity, seven authenticated profile selection and invitation, nine profile detail, verification and address, 11 company team and ownership-transfer, 12 onboarding, 10 upload policy, preview, reservation, verification, record and multipart, five branding asset and storage record, and four additional staff receipt review, allocation and history method/path pairs. Related caller aliases were rechecked. Complete resource loading and authority review for the remainder of the 759-route inventory.",
+        "Continue with the remaining domains. The receipt attachment and ledger predicate review has been renewed on current source. Reuse intact source-bound checks and verify demonstrated authority gaps defensively."
       ],
       "owner": null,
       "depends_on": [],
@@ -624934,7 +625096,8 @@
           "release-0.6-team-authority",
           "release-0.6-onboarding-authority",
           "release-0.6-upload-reservation-authority",
-          "release-0.6-storage-asset-authority"
+          "release-0.6-storage-asset-authority",
+          "release-0.6-staff-receipt-authority"
         ],
         "current_acceptance": null
       }
@@ -625010,7 +625173,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/shared/src/agent-permissions/index.ts",
@@ -625268,6 +625431,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -625314,7 +625485,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
-              "sha256": "3a5db113abd23853bcd62ae8a61ad8ed6c70db7fba1dff0c7c5dc368d4fffcc9"
+              "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
             },
             {
               "path": "apps/api/src/admin/brand-asset.controller.ts",
@@ -625366,7 +625537,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "apps/api/src/admin/invoice-ledger.controller.ts",
@@ -625614,7 +625785,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/shared/src/admin/staff-permissions.ts",
@@ -625622,7 +625793,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -626023,6 +626194,17 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "docs/security/authorization.md",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -626646,7 +626828,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "packages/db/drizzle/production/0249_audit_log_immutability.sql",
@@ -626997,6 +627179,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -634878,11 +635068,11 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
-              "sha256": "3a5db113abd23853bcd62ae8a61ad8ed6c70db7fba1dff0c7c5dc368d4fffcc9"
+              "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "apps/api/src/crm/verification-case-http.integration.test.ts",
@@ -635011,6 +635201,10 @@
             {
               "path": "pnpm-lock.yaml",
               "sha256": "e7edf518d961929486ef519ffaf7ea959957626df6a3bff32921ba372b800d07"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -635432,6 +635626,16 @@
                 "apps/api/openapi.json"
               ],
               "scope": "Roster, ownership offers and member activity recheck live account/session authority within their current resource boundary. Existing step-up decisions, ownership, invitation recipient privacy and sanitized history remain enforced. Contract changes document read errors."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -640985,7 +641189,7 @@
             },
             {
               "path": "docs/security/authorization.md",
-              "sha256": "c5b99c555607bebad4ea912aa1d6d87e265d514c65e1ecc7f6e758d1e4ea05ba"
+              "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
             },
             {
               "path": "docs/threat-model.md",
@@ -641253,6 +641457,14 @@
                 "docs/security/authorization.md"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "docs/security/authorization.md"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         }
@@ -657019,7 +657231,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Read back exact final strict license, coverage and production browser receipts and the required domain review. Ordinary branch protection still requires the original set of successful jobs. Hosted diagnostic 43183685348 proves the optional receipt transport. Verify one actual direct push that reuses the exact affected tests and reruns the other checks."
+        "Read back the final required result after the verified c0487559 direct push and the exact strict release license, coverage, browser and domain review gates."
       ],
       "owner": null,
       "depends_on": [],
@@ -657033,7 +657245,8 @@
         ],
         "batches": [
           "release-0.6-coverage-required-check",
-          "release-0.6-reuse-affected-preflight"
+          "release-0.6-reuse-affected-preflight",
+          "release-0.6-protected-main-test-reuse"
         ],
         "current_acceptance": null
       }
@@ -741308,7 +741521,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -741916,6 +742129,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -742651,7 +742872,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -743259,6 +743480,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -743994,7 +744223,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -744602,6 +744831,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -745337,7 +745574,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -745945,6 +746182,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -746680,7 +746925,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -747288,6 +747533,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -748023,7 +748276,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -748631,6 +748884,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -749371,7 +749632,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -749979,6 +750240,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -750714,7 +750983,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -751322,6 +751591,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -752057,7 +752334,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -752665,6 +752942,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -753400,7 +753685,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -754008,6 +754293,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -754743,7 +755036,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -755351,6 +755644,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -756086,7 +756387,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -756694,6 +756995,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -757429,7 +757738,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -758037,6 +758346,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -758772,7 +759089,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -759380,6 +759697,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -760115,7 +760440,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -760723,6 +761048,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -761458,7 +761791,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -762066,6 +762399,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -762801,7 +763142,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -763409,6 +763750,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -764144,7 +764493,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -764752,6 +765101,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -765487,7 +765844,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -766095,6 +766452,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -766830,7 +767195,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -767438,6 +767803,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -975675,7 +976048,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -976163,6 +976536,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -986595,7 +986976,7 @@
             },
             {
               "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
-              "sha256": "3a5db113abd23853bcd62ae8a61ad8ed6c70db7fba1dff0c7c5dc368d4fffcc9"
+              "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
             },
             {
               "path": "apps/api/src/admin/dual-approval-resolution.ts",
@@ -987047,7 +987428,7 @@
             },
             {
               "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
-              "sha256": "22c4456b008cd1f9595c45ce4461c42018282dd8c9813c586582e6041a2211f5"
+              "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
             },
             {
               "path": "packages/shared/src/finance/invoice-bank-receipt-confirmation.ts",
@@ -988392,6 +988773,10 @@
             {
               "path": "apps/web/src/lib/contract-detail-records.ts",
               "sha256": "1f4ba85b087eba00c384f9622d6e2618c076db91210afd26307396ac26019070"
+            },
+            {
+              "path": "apps/api/src/admin/staff-read-authority.ts",
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -990336,6 +990721,16 @@
                 "apps/web/src/providers/BrandThemeProvider.tsx"
               ],
               "scope": "Reviewed the narrow changes to admin active-link visibility and favicon fallback. Navigation, branding publication, keyboard focus, theme and entry behavior retain their tested boundaries."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ],
           "presentation_renewals": [
@@ -1010615,7 +1011010,7 @@
             },
             {
               "path": "apps/api/src/admin/staff-read-authority.ts",
-              "sha256": "0232eb401c33ea208ebff8826c3e2152dc7315696a3eb1eb5886376ccd035e18"
+              "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
             }
           ],
           "checks": [
@@ -1011362,6 +1011757,14 @@
                 "apps/api/src/admin/staff-read-authority.ts"
               ],
               "scope": "The asset and storage read changes renew live authorization before responding. The affected API suites retain the existing publication, byte integrity, storage policy, mutation and audit assertions."
+            },
+            {
+              "batch": "release-0.6-staff-receipt-authority",
+              "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+              "paths": [
+                "apps/api/src/admin/staff-read-authority.ts"
+              ],
+              "scope": "Renewed staff receipt read authority after the query or storage operation. Existing financial commands, attachment provenance and short database-only staff reads retain their prior boundaries."
             }
           ]
         },
@@ -1011686,7 +1012089,7 @@
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
         "Verify the planned staging database image cutover and its backup, full candidate HTTP readiness and exact deployed image identities. On staging, the isolated 9545cd2c candidate pair applied 0289–0294 and passed HTTP/database readiness. The previous app rejected 0294 and passed with the preserved 0288 copy. The live v0.5.1 database and app were unchanged. Preserve the original database volume and previous images together before accepting writes.",
-        "GitHub preflight 43286083146 passed Verify monorepo integrity at 736bcb0cca45ad85f46e58f70037d5df0b047d68. The exact SHA reached protected main. The successor preflight and strict release image-license, coverage and live acceptance gates remain open."
+        "Preflight 43299081923 passed Verify monorepo integrity and c0487559 reached protected main. Main run 43305943300 reused its exact affected-test receipt and launched fresh security and integrity jobs. Successor preflight 43306013887 and the strict release coverage, image-license and live gates remain open."
       ],
       "owner": null,
       "depends_on": [],
@@ -1011966,7 +1012369,8 @@
           "release-0.6-postgres-package-alignment",
           "release-0.6-postgres-restore-readback",
           "release-0.6-refreshed-license-review",
-          "release-0.6-staging-paired-restore-rehearsal"
+          "release-0.6-staging-paired-restore-rehearsal",
+          "release-0.6-protected-main-test-reuse"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1172871,6 +1173275,236 @@
         {
           "file": "routes.json",
           "sha256": "0e531f0a22cf14019a3edabd78e41fcc9181807deec7b5ec674028ac4db9bb23"
+        }
+      ]
+    },
+    "release-0.6-staff-receipt-authority": {
+      "batch": "release-0.6-staff-receipt-authority",
+      "base_commit": "5aa2db96c92c7cd6cdb80d54eba55885f7326d37",
+      "task_keys": [
+        "01-platform-infrastructure.md#T-07.05.01",
+        "02-auth-users-admin.md#T-02.02.04",
+        "02-auth-users-admin.md#T-07.01.03",
+        "02-auth-users-admin.md#T-09.01.01",
+        "04-invoices-wallet-contracts.md#T-04.2.02.04",
+        "04-invoices-wallet-contracts.md#T-04.2.02.05",
+        "04-invoices-wallet-contracts.md#T-04.3.01.03",
+        "04-invoices-wallet-contracts.md#T-04.3.01.04",
+        "04-invoices-wallet-contracts.md#T-04.3.01.05",
+        "06-security-testing-observability.md#T-06.03.01.01",
+        "06-security-testing-observability.md#T-06.03.01.02",
+        "06-security-testing-observability.md#T-06.03.01.03",
+        "06-security-testing-observability.md#T-06.03.01.04",
+        "06-security-testing-observability.md#T-06.03.01.05",
+        "06-security-testing-observability.md#T-06.03.01.06",
+        "06-security-testing-observability.md#T-06.03.01.07",
+        "06-security-testing-observability.md#T-06.03.02.01",
+        "06-security-testing-observability.md#T-06.03.02.02",
+        "06-security-testing-observability.md#T-06.03.02.03",
+        "06-security-testing-observability.md#T-06.03.03.01",
+        "06-security-testing-observability.md#T-06.06.01.05",
+        "06-security-testing-observability.md#T-06.08.01.02",
+        "07-ui-ux-design.md#T-07.06.01.01",
+        "07-ui-ux-design.md#T-07.06.01.02",
+        "07-ui-ux-design.md#T-07.06.01.03",
+        "07-ui-ux-design.md#T-07.06.01.04",
+        "07-ui-ux-design.md#T-07.06.01.05",
+        "07-ui-ux-design.md#T-07.07.01.01",
+        "07-ui-ux-design.md#T-07.07.01.02",
+        "07-ui-ux-design.md#T-07.07.01.03",
+        "07-ui-ux-design.md#T-07.07.01.04",
+        "07-ui-ux-design.md#T-07.07.01.05",
+        "07-ui-ux-design.md#T-07.07.01.06",
+        "07-ui-ux-design.md#T-07.08.01.01",
+        "07-ui-ux-design.md#T-07.08.01.02",
+        "07-ui-ux-design.md#T-07.08.01.03",
+        "07-ui-ux-design.md#T-07.08.01.04",
+        "07-ui-ux-design.md#T-07.08.01.05",
+        "07-ui-ux-design.md#T-07.08.01.06",
+        "07-ui-ux-design.md#T-07.08.02.01",
+        "07-ui-ux-design.md#T-07.08.02.02",
+        "07-ui-ux-design.md#T-07.08.02.03",
+        "07-ui-ux-design.md#T-07.30.02.01",
+        "release-readiness#R-02.01",
+        "release-readiness#R-04.02"
+      ],
+      "changed_paths": [
+        "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
+        "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+        "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
+        "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+        "apps/api/src/admin/receipt-queue-http.integration.test.ts",
+        "apps/api/src/admin/staff-read-authority.ts",
+        "docs/security/authorization.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.test.ts",
+          "sha256": "3e9d4c52c8f3ac393263c92203ef72d7c518753644e488f7d5ea392b711cfe83"
+        },
+        {
+          "path": "apps/api/src/admin/bank-receipt-confirmation.controller.ts",
+          "sha256": "7e980fa855d5cd1f73c275dcce08be290b69b1fad3056d112d73c6ad5d1cd293"
+        },
+        {
+          "path": "apps/api/src/admin/dual-approval-http.integration.test.ts",
+          "sha256": "d9ed8ee1f5cf91e33081034a03df953ced5b2e62069e6ebe4e92fd07120f52f7"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.test.ts",
+          "sha256": "040797eb7042efe10af4cf9b4720073c0254f29e52dde8809fde2b259714a7dd"
+        },
+        {
+          "path": "apps/api/src/admin/invoice-bank-receipt-confirmation.controller.ts",
+          "sha256": "ed9afe66519abca734bd8d0b29f7de7adaa80b73b187eda1def82ae2ef19a5c2"
+        },
+        {
+          "path": "apps/api/src/admin/receipt-queue-http.integration.test.ts",
+          "sha256": "6d73bcd8c5fda18b687719e22e467ac53d44106d8e3c3d1272059a6242cc193b"
+        },
+        {
+          "path": "apps/api/src/admin/staff-read-authority.ts",
+          "sha256": "0586ae4837d8a0d21a7bfe96aaab81785b7e06b180716486ef55b9e7198b774b"
+        },
+        {
+          "path": "apps/api/src/documents/document-http.integration.test.ts",
+          "sha256": "39315428e51aaedb52d760c9e49f987bcce8312daf81cf4496ddceca85eb4c08"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-attachment-access.ts",
+          "sha256": "06051f6939113c093f9934a8be240ebc4d02b2d19165c20c7d9499f228bbbc66"
+        },
+        {
+          "path": "apps/api/src/finance/receipt-submission-authority.integration.test.ts",
+          "sha256": "8f900f0fd7f3aadd0283b3ba472ba797968e7725f5d85ee291692c041025fdd1"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.integration.test.ts",
+          "sha256": "fd3166e760d4b3dc08c1e4eb58184b4a2ce49784ea2a3a6f04008eecdef517f7"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-confirmation.service.ts",
+          "sha256": "d65a56db9fd92be879a4254a6cd785d0878e6bdc810bc07858a216bcc24a3a80"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-cross-flow.integration.test.ts",
+          "sha256": "15b4898e3fe693fb5ef728521cb149ede47d566a332666dcde48fb2f0ac848d6"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-dual-approval.integration.test.ts",
+          "sha256": "d47405664266cb202008066414cfbdac99157e2473c6aadd93b4cb46240c80ab"
+        },
+        {
+          "path": "apps/api/src/invoice/invoice-bank-receipt-rejection.integration.test.ts",
+          "sha256": "a795552a082f714ea627d4ea6a647f8d2fe31e5d51fbbfd86c66d627396fbcaa"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.integration.test.ts",
+          "sha256": "224514f9f8c174ddc1320facc6d77ac99b1b9ac4cc1d4a48e4c9f4d69bc46756"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-confirmation.service.ts",
+          "sha256": "de3aa7f914a7d9ca8e8715cffc8e4ca7be6ddec33d96f9698c782b2f8aedde62"
+        },
+        {
+          "path": "apps/api/src/wallet/bank-receipt-topup-http.integration.test.ts",
+          "sha256": "41233d18477d0f6a96a786423315f10529e112edf168bb125df0fae31acb7a87"
+        },
+        {
+          "path": "apps/api/src/wallet/wallet.controller.ts",
+          "sha256": "b1b97d7bfc8445e30f03df913a54442eb6816128348b80de2006177ddef856e7"
+        },
+        {
+          "path": "docs/security/authorization.md",
+          "sha256": "24d5b60209fae55ecbe6ccc4ca03c5490daa13bf0420ad63bdcab754c90cf390"
+        },
+        {
+          "path": "packages/db/src/refund-processing.ts",
+          "sha256": "c77b465293f0d770cf53b020dc8d28def15e11360f34923dc7b250cc20d5d596"
+        }
+      ],
+      "checks": [
+        "Reviewed eleven Finance receipt read and preview method/path pairs. Four are new to the inventory review and seven renew earlier scope evidence.",
+        "The invoice and wallet queue tests remove the corresponding grant during a blocked PostgreSQL read and verify 403 without receipt data.",
+        "The existing sealed preview and original download rehearsal passed for invoice and wallet receipts. Staff authority is rechecked after provider work, outside its transaction.",
+        "The invoice credit predicate is byte-identical after moving to the shared database package. The later wallet-controller change is limited to the separate ledger history handler.",
+        "Eleven affected suites passed 285 tests, plus one selected storage and receipt case. Typecheck, lint, formatting and the generated API contract passed."
+      ],
+      "limitations": [
+        "The selected storage run excludes 46 unrelated cases. The remaining inventory and exact deployed release remain open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staff-receipt-authority",
+      "execution_receipts": [
+        {
+          "file": "api.log",
+          "sha256": "6b2451077b8bb23372af7d64d9ac81b91dbfe275973aea3080625be234a2d07c"
+        },
+        {
+          "file": "receipt-storage.log",
+          "sha256": "c74a893dd0d74c46ea2721d7fed3e4253e423b146bca20438f40aba570eb658f"
+        },
+        {
+          "file": "typecheck.log",
+          "sha256": "c6498650e1e8792586f13ac29e7095d0f3511ad1d3953ab7ce677ba302c60353"
+        },
+        {
+          "file": "openapi.log",
+          "sha256": "2f0ee0642be97c25cffd5822a8d4cfaea3e1b44e89f66634c28f683633eab57b"
+        },
+        {
+          "file": "lint-format.log",
+          "sha256": "17aa973d3f004560237d9a95171210b0671deff23d61628eecf7322ff5938f20"
+        },
+        {
+          "file": "routes.json",
+          "sha256": "cf33dfc62fdd0c980a010f4dd436c56bc62fbe029eb91cde3729a29e1e7b5708"
+        }
+      ]
+    },
+    "release-0.6-protected-main-test-reuse": {
+      "batch": "release-0.6-protected-main-test-reuse",
+      "base_commit": "c04875597fa14d6b500187276e9337762b6b14ac",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.12.02.01",
+        "release-readiness#R-05.02"
+      ],
+      "changed_paths": [],
+      "source_evidence": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha256": "b2196102e6a488dd87fc068964b35d956481c564fb6d472ac22795f261bbadaa"
+        },
+        {
+          "path": "scripts/ci_preflight_receipt.py",
+          "sha256": "7c980c777ce1dc0c0ec4a90b6771e18f7e23a5c7f90f2ce7d8bedb95d451d12f"
+        }
+      ],
+      "checks": [
+        "Preflight 43299081923 passed Verify monorepo integrity and GitHub read back its exact SHA on protected main.",
+        "Main run 43305943300 completed the exact affected-test reuse step successfully and skipped the redundant test execution.",
+        "The main run started separate build integrity, Git-history secret, static-security and runtime image jobs."
+      ],
+      "limitations": [
+        "The main aggregate had not completed at the reuse readback.",
+        "Preflight fast mode exempted combined source coverage and the strict final license gate remains open."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-staff-receipt-authority",
+      "execution_receipts": [
+        {
+          "file": "protected-main-reuse/preflight-run.json",
+          "sha256": "88dbc99c04be335d54bd92c3d5c362eb3e381b0762e0eb60e7c1acac3d0f909e"
+        },
+        {
+          "file": "protected-main-reuse/main-run.json",
+          "sha256": "52d7a90b916fab7724eca2f374a47fc0196d0b86162712c46bb873a44d13a599"
+        },
+        {
+          "file": "protected-main-reuse/affected-test-receipt.json",
+          "sha256": "c8046915c972e8222a166028528dc2d4999fb63d4105b3b4ad4a317ff6fecd62"
+        },
+        {
+          "file": "protected-main-reuse/remote-main.sha",
+          "sha256": "d936e6f82857f182da0203d89d37914275cb748e2a55cf96214c525bc1d71e8d"
         }
       ]
     }
