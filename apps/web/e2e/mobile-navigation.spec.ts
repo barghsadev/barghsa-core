@@ -242,9 +242,8 @@ for (const locale of ['en', 'fa'] as const) {
       await page.goto('/admin/maintenance');
       await expect(page.locator('html')).toHaveCSS('--brand-light-background', '#999999');
       await expect(page.locator('html')).toHaveClass(theme === 'dark' ? /dark/ : /^(?!.*dark)/);
-      const settings = page.getByTestId('admin-settings-layout').getByRole('navigation');
+      await expect(page.getByTestId('admin-settings-layout').locator('nav')).toHaveCount(0);
       const sidebar = page.locator('#admin-navigation').getByRole('navigation');
-      await expect(settings).toBeVisible();
       await expect(sidebar).toBeVisible();
       const rows = [];
       for (const high of [false, true]) {
@@ -253,32 +252,27 @@ for (const locale of ['en', 'fa'] as const) {
           else delete node.dataset.contrast;
         }, high);
         await page.mouse.move(640, 1);
-        for (const [surface, nav] of [
-          ['settings', settings],
-          ['workspace', sidebar],
-        ] as const) {
-          const entries = await nav
-            .locator('a.shell-navigation-link, p.text-muted-foreground')
-            .all();
-          expect(entries.length).toBeGreaterThan(10);
-          for (const entry of entries) {
-            await entry.scrollIntoViewIfNeeded();
-            const label = (await entry.textContent())?.trim();
-            const ratio = await measureControlContrast(entry, 'text');
-            rows.push({ surface, high, label, ratio });
-            expect
-              .soft(ratio, `${surface} ${label} with high contrast=${high}`)
-              .toBeGreaterThanOrEqual(4.5);
-          }
-          const link = nav.locator('a.shell-navigation-link:not([aria-current])').first();
-          await link.hover();
-          const ratio = await measureControlContrast(link, 'text');
-          rows.push({ surface, high, hovered: true, ratio });
+        const entries = await sidebar
+          .locator('a.shell-navigation-link, p.text-muted-foreground')
+          .all();
+        expect(entries.length).toBeGreaterThan(10);
+        for (const entry of entries) {
+          await entry.scrollIntoViewIfNeeded();
+          const label = (await entry.textContent())?.trim();
+          const ratio = await measureControlContrast(entry, 'text');
+          rows.push({ surface: 'workspace', high, label, ratio });
           expect
-            .soft(ratio, `${surface} hover with high contrast=${high}`)
+            .soft(ratio, `workspace ${label} with high contrast=${high}`)
             .toBeGreaterThanOrEqual(4.5);
-          await page.mouse.move(640, 1);
         }
+        const link = sidebar.locator('a.shell-navigation-link:not([aria-current])').first();
+        await link.hover();
+        const ratio = await measureControlContrast(link, 'text');
+        rows.push({ surface: 'workspace', high, hovered: true, ratio });
+        expect
+          .soft(ratio, `workspace hover with high contrast=${high}`)
+          .toBeGreaterThanOrEqual(4.5);
+        await page.mouse.move(640, 1);
       }
       await info.attach('scrollable-navigation-contrast', {
         body: JSON.stringify({ locale, theme, rows }),
