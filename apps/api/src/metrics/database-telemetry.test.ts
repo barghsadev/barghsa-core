@@ -15,10 +15,64 @@ afterEach(() => {
 it('creates no exporter without an explicit metrics endpoint', () => {
   expect(createDatabaseTelemetry(() => ({ metrics: null, replicationLag: null }))).toBeNull();
 });
-it.each(['not a URL', 'file:///tmp/metrics'])('rejects invalid endpoint %s', (endpoint) => {
+it.each([
+  'not a URL',
+  'file:///tmp/metrics',
+  'https://collector-user:fixture-only@collector.example.test/v1/metrics',
+  'https://collector.example.test/v1/metrics#fragment',
+])('rejects invalid endpoint %s', (endpoint) => {
   expect(() =>
     createDatabaseTelemetry(() => ({ metrics: null, replicationLag: null }), { endpoint })
   ).toThrow(/Invalid OTLP/);
+});
+
+it('closes a streaming collector response at the connection deadline and resumes export', async () => {
+  let streaming = true;
+  let closed = false;
+  let accepted = 0;
+  const headers: (string | undefined)[] = [];
+  vi.stubEnv('OTEL_EXPORTER_OTLP_METRICS_HEADERS', 'x-collector-auth=fixture-only');
+  const receiver = createServer((request, response) => {
+    request.resume();
+    headers.push(request.headers['x-collector-auth'] as string | undefined);
+    response.writeHead(200, { 'content-type': 'application/json' });
+    if (!streaming) {
+      accepted++;
+      response.end('{}');
+      return;
+    }
+    response.flushHeaders();
+    const timer = setInterval(() => response.write(' '), 20);
+    response.once('close', () => {
+      closed = true;
+      clearInterval(timer);
+    });
+  });
+  await new Promise<void>((done) => receiver.listen(0, '127.0.0.1', done));
+  const address = receiver.address();
+  if (!address || typeof address === 'string') throw new Error('Missing collector address');
+  const provider = createDatabaseTelemetry(() => ({ metrics: null, replicationLag: null }), {
+    endpoint: `http://127.0.0.1:${address.port}/v1/metrics`,
+    intervalMs: 60_000,
+    timeoutMs: 250,
+  })!;
+  try {
+    await provider.forceFlush();
+    await expect.poll(() => closed, { timeout: 2_000 }).toBe(true);
+    expect(headers).toEqual(['fixture-only']);
+    streaming = false;
+    await provider.forceFlush();
+    expect(accepted).toBe(1);
+    expect(headers).toEqual(['fixture-only', 'fixture-only']);
+  } finally {
+    streaming = false;
+    receiver.closeAllConnections();
+    try {
+      await provider.shutdown({ timeoutMillis: 2000 });
+    } finally {
+      await new Promise<void>((done) => receiver.close(() => done()));
+    }
+  }
 });
 it.each([
   { intervalMs: 0 },

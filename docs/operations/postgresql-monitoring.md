@@ -29,7 +29,7 @@ OTEL_METRIC_EXPORT_TIMEOUT=5000
 OTEL_SERVICE_NAME=barghsa-api
 ```
 
-The metrics endpoint must be a complete HTTP(S) URL. Without it, no OTLP exporter is created. Export intervals accept 1,000 to 300,000 ms; timeouts accept 100 to 15,000 ms and cannot exceed the interval. Invalid enabled configuration fails startup. The standard OTLP metrics/generic header environment settings are handled by the exporter. Keep credentials in the external runtime file.
+The metrics endpoint must be a complete HTTP(S) URL without user information or a fragment. Without it, no OTLP exporter is created. Export intervals accept 1,000 to 300,000 ms. Timeouts accept 100 to 15,000 ms and cannot exceed the interval. The connection closes at the configured timeout even when the collector is still sending data. The exporter refuses redirects and caps responses at 4 MiB. Invalid enabled configuration fails startup. Use the standard OTLP metrics or generic header settings for credentials in the protected external runtime file.
 
 The private MeterProvider uses scope `barghsa.postgresql`, a service name and a generated instance ID. It does not replace a global SDK. It exports aggregate numbers only, including active/idle/waiting connections, saturation, query calls, cache hits/reads and ratio, replica lag, deadlocks, transactions, tuples and sequential/index scans. It does not export SQL text, query IDs or customer identifiers. Counters retain their PostgreSQL meaning; derive query throughput from `postgresql.query.calls` in the collector/backend. Missing samples are filtered before export because the SDK may retain prior cumulative observations. Shutdown waits for the active poll and closes the exporter with a bounded deadline.
 

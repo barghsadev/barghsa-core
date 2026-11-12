@@ -113,6 +113,24 @@ const descriptors: Descriptor[] = [
   },
 ];
 
+async function collectorAgent(protocol: string, timeoutMs: number) {
+  const { Agent } = protocol === 'https:' ? await import('node:https') : await import('node:http');
+  const agent = new Agent({ keepAlive: false });
+  const connect = agent.createConnection.bind(agent);
+  agent.createConnection = (options, callback) => {
+    const socket = connect(options, callback);
+    if (socket) {
+      // The SDK's request timeout measures inactivity. Bound the socket's
+      // lifetime too, including DNS, TLS and a continuously streamed reply.
+      const deadline = setTimeout(() => socket.destroy(), timeoutMs);
+      deadline.unref();
+      socket.once('close', () => clearTimeout(deadline));
+    }
+    return socket;
+  };
+  return agent;
+}
+
 /** A private provider avoids replacing any application-wide OpenTelemetry SDK. */
 export function createDatabaseTelemetry(
   getSnapshot: () => DatabaseTelemetrySnapshot,
@@ -127,6 +145,7 @@ export function createDatabaseTelemetry(
     throw new Error('Invalid OTLP metrics endpoint');
   }
   if (!['http:', 'https:'].includes(url.protocol)) throw new Error('Invalid OTLP metrics protocol');
+  if (url.username || url.password || url.hash) throw new Error('Invalid OTLP metrics endpoint');
   const intervalMs =
     options.intervalMs ?? Number(process.env.OTEL_METRIC_EXPORT_INTERVAL || '15000');
   const timeoutMs = options.timeoutMs ?? Number(process.env.OTEL_METRIC_EXPORT_TIMEOUT || '5000');
@@ -146,6 +165,7 @@ export function createDatabaseTelemetry(
     url: url.toString(),
     timeoutMillis: timeoutMs,
     concurrencyLimit: 1,
+    httpAgentOptions: (protocol) => collectorAgent(protocol, timeoutMs),
   });
   // The SDK retains cumulative observations. Only export instruments observed in
   // this collection, so unknown data cannot become a fresh copy of an old value.

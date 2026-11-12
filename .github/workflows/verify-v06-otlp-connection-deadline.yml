@@ -1,0 +1,40 @@
+name: Verify v0.6 OTLP connection deadline
+on:
+  push:
+    branches: ['codex/verify/v06-otlp-connection-deadline-*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec turbo run build --filter=@barghsa/api
+      - name: Exercise OTLP transport and live API metrics fixture
+        env:
+          BARGHSA_TEST_PREBUILT: '1'
+        shell: bash
+        run: |
+          pnpm --filter @barghsa/api exec vitest run src/metrics/database-telemetry.test.ts src/metrics/telemetry-http.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/otlp-connection-deadline.log"
+      - name: Preserve fixture evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: otlp-connection-deadline-results
+          path: ${{ runner.temp }}/otlp-connection-deadline.log
+          if-no-files-found: warn
+          retention-days: 14
