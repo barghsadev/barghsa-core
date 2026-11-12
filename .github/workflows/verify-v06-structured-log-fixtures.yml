@@ -1,0 +1,37 @@
+name: Verify v0.6 structured log fixtures
+on:
+  push:
+    branches: ['codex/verify/v06-structured-log-fixtures-*']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      BARGHSA_TEST_POSTGRES_COMPOSE: '1'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: '10.11.1'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Exercise proxy privacy and verification correlation
+        shell: bash
+        run: |
+          pnpm --filter @barghsa/api exec vitest run src/auth/proxy-rate-http.integration.test.ts src/crm/crm-verification.integration.test.ts \
+            2>&1 | tee "$RUNNER_TEMP/structured-log-fixtures.log"
+      - name: Preserve fixture evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: structured-log-fixtures-results
+          path: ${{ runner.temp }}/structured-log-fixtures.log
+          if-no-files-found: warn
+          retention-days: 14
