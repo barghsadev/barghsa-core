@@ -1,0 +1,21 @@
+name: barghsa-operator-log-retention
+services:
+  loki:
+    image: ${BARGHSA_LOKI_IMAGE:?Set a verified immutable Grafana Loki image}
+    pull_policy: never
+    command: [-config.file=/etc/loki/operator-loki.yml]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    networks: [logs]
+    volumes:
+      - lokidata:/loki
+      - ./operator-loki.yml:/etc/loki/operator-loki.yml:ro
+
+networks:
+  logs:
+    external: true
+    name: ${BARGHSA_LOKI_NETWORK:?Set the dedicated internal Loki network}
+volumes:
+  lokidata:

@@ -1,0 +1,11 @@
+[Unit]
+Description=Barghsa verified encrypted Loki log archive
+Wants=network-online.target
+After=network-online.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/usr/bin/docker compose --env-file /etc/barghsa/operator-log-archive.compose.env -f /opt/barghsa/monitoring/operator-log-archive.yml run --rm -T --no-deps archive archive
+TimeoutStartSec=1h

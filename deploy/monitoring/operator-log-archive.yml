@@ -1,0 +1,31 @@
+name: barghsa-operator-log-archive
+services:
+  archive:
+    image: ${BARGHSA_LOG_ARCHIVE_IMAGE:?Set the verified immutable backup helper image}
+    pull_policy: never
+    entrypoint: [python3, /opt/log-archive/operator-log-archive.py]
+    user: '10001:10001'
+    environment:
+      BACKUP_GPG_PASSPHRASE_FILE: /run/barghsa/archive.passphrase
+      BARGHSA_LOG_ARCHIVE_STORAGE_CLASS: ${BARGHSA_LOG_ARCHIVE_STORAGE_CLASS:?Set the approved destination storage class}
+      PYTHONDONTWRITEBYTECODE: '1'
+      PYTHONPATH: /opt/backup
+    env_file: ${BARGHSA_LOG_ARCHIVE_ENV_FILE:?Set the protected dedicated archive environment file}
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ['/tmp:size=256m,mode=1777,nosuid,nodev,noexec']
+    networks: [logs, archive-egress]
+    volumes:
+      - ./operator-log-archive.py:/opt/log-archive/operator-log-archive.py:ro
+      - type: bind
+        source: ${BARGHSA_LOG_ARCHIVE_GPG_FILE:?Set the dedicated archive passphrase file}
+        target: /run/barghsa/archive.passphrase
+        read_only: true
+        bind: { create_host_path: false }
+
+networks:
+  logs:
+    external: true
+    name: ${BARGHSA_LOKI_NETWORK:?Set the dedicated internal Loki network}
+  archive-egress:

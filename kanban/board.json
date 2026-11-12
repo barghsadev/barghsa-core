@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T10:37:47+00:00",
+  "updated": "2026-11-12T10:53:00+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -17820,7 +17820,7 @@
             },
             {
               "path": "packages/db/scripts/backup/physical_backup.py",
-              "sha256": "8b320a8c80071becbc69172114dec585ccc2bfdf3fe5c2da7e3e0a9e90612479"
+              "sha256": "13550d93fd1c6ccb051da8a75697c9a09f3ab505538e78a34ef7cec6ecdbf9de"
             },
             {
               "path": "packages/db/scripts/backup/restore-pg.sh",
@@ -17878,6 +17878,14 @@
                 "docs/deployment.md"
               ],
               "scope": "The new shared subpath is additive. OpenAPI adds only the explicit sampled-out route diagnostic response. The API filter sends privacy-minimized telemetry after its existing response. Worker reporting preserves job, startup exit and shutdown behavior. Staging environment labels and the deployment instructions were verified with related native and contract checks."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "packages/db/scripts/backup/physical_backup.py"
+              ],
+              "scope": "Adds a dedicated S3 namespace for operator logs. Existing backup callers keep the exact postgres prefix. Native MinIO read/write and eight existing backup safety checks passed."
             }
           ]
         }
@@ -615198,7 +615206,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             }
           ],
           "source_renewals": [
@@ -615233,6 +615241,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -615370,7 +615386,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -615479,6 +615495,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -615748,7 +615772,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "packages/db/drizzle/production/0291_notification_outbox_trace_parent.sql",
@@ -615857,6 +615881,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -616062,7 +616094,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -616207,6 +616239,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -616412,7 +616452,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -616557,6 +616597,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -617237,7 +617285,7 @@
             },
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "packages/db/src/index.test.ts",
@@ -617382,6 +617430,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -617424,7 +617480,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "deploy/monitoring/operator-logs.alloy",
@@ -617453,6 +617509,16 @@
             {
               "path": "apps/api/src/metrics/http-request-metrics.ts",
               "sha256": "80b31daa81378924d16a40ed12b70032ceb1fa8b404076589c6bdf0842104aa5"
+            }
+          ],
+          "source_renewals": [
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -626877,7 +626943,7 @@
           "source_evidence": [
             {
               "path": "docs/operations/structured-logging.md",
-              "sha256": "9f8e8b747746d9af8115534c382bcbbe01815b34a87f2a830442ed08db7095f6"
+              "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
             },
             {
               "path": "deploy/monitoring/staging-trace-query.yml",
@@ -626916,6 +626982,14 @@
                 "docs/operations/structured-logging.md"
               ],
               "scope": "Adds verified private log shipping guidance. Existing operator event, trace and Explore guidance is unchanged."
+            },
+            {
+              "batch": "release-0.6-loki-retention",
+              "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+              "paths": [
+                "docs/operations/structured-logging.md"
+              ],
+              "scope": "Adds a tested operator retention and archive section. Existing shipper, API, worker, database and trace instructions retain their verified behavior."
             }
           ]
         }
@@ -630174,18 +630248,29 @@
         "story": "06-security-testing-observability.md#spec-00143cf280c7"
       },
       "requirement": "| T-06.18.01.01 | Configure Loki log retention: 30 days searchable, longer-term archive to cold storage | S |",
-      "status": "verify",
+      "status": "partial",
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Check existing code and batch evidence against this exact specification. Build only a demonstrated missing criterion."
+        "Apply the verified configuration to the approved persistent Loki instance. Verify the live compactor and 30-day setting, then record the scheduled encrypted archive write and independent restore from the approved off-host cold storage tier."
       ],
       "owner": null,
       "depends_on": [],
       "evidence": {
         "historical_acceptance": null,
-        "changed_paths": [],
-        "batches": [],
+        "changed_paths": [
+          "docs/operations/structured-logging.md",
+          "packages/db/scripts/backup/physical_backup.py",
+          "deploy/monitoring/operator-log-archive.py",
+          "deploy/monitoring/operator-log-archive.yml",
+          "deploy/monitoring/operator-log-retention.yml",
+          "deploy/monitoring/operator-loki.yml",
+          "deploy/monitoring/systemd/barghsa-operator-log-archive.service",
+          "deploy/monitoring/systemd/barghsa-operator-log-archive.timer"
+        ],
+        "batches": [
+          "release-0.6-loki-retention"
+        ],
         "current_acceptance": null
       }
     },
@@ -1093526,6 +1093611,97 @@
         {
           "file": "source.sha256",
           "sha256": "2776e1d55c13baae28b4f0ce98315a3134f6ab8c996c646bd8f54147ed6ae472"
+        }
+      ]
+    },
+    "release-0.6-loki-retention": {
+      "batch": "release-0.6-loki-retention",
+      "base_commit": "05755c71173cd7018c9d4f702dfb3b546fd4ffc3",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.18.01.01",
+        "01-platform-infrastructure.md#T-05.01.02",
+        "06-security-testing-observability.md#T-06.13.01.03",
+        "06-security-testing-observability.md#T-06.13.01.05",
+        "06-security-testing-observability.md#T-06.13.01.09",
+        "06-security-testing-observability.md#T-06.13.02.01",
+        "06-security-testing-observability.md#T-06.13.02.02",
+        "06-security-testing-observability.md#T-06.13.02.04",
+        "06-security-testing-observability.md#T-06.13.02.05",
+        "06-security-testing-observability.md#T-06.16.01.04"
+      ],
+      "changed_paths": [
+        "docs/operations/structured-logging.md",
+        "packages/db/scripts/backup/physical_backup.py",
+        "deploy/monitoring/operator-log-archive.py",
+        "deploy/monitoring/operator-log-archive.yml",
+        "deploy/monitoring/operator-log-retention.yml",
+        "deploy/monitoring/operator-loki.yml",
+        "deploy/monitoring/systemd/barghsa-operator-log-archive.service",
+        "deploy/monitoring/systemd/barghsa-operator-log-archive.timer"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/structured-logging.md",
+          "sha256": "3cebf1d271f8f1977560970c74df05696b8de1baeb55f997cfae6b9ec89b734d"
+        },
+        {
+          "path": "packages/db/scripts/backup/physical_backup.py",
+          "sha256": "13550d93fd1c6ccb051da8a75697c9a09f3ab505538e78a34ef7cec6ecdbf9de"
+        },
+        {
+          "path": "deploy/monitoring/operator-log-archive.py",
+          "sha256": "d83d725bbcbfce476df0b098f27f667019e91b44d06542180faae862edc00bbb"
+        },
+        {
+          "path": "deploy/monitoring/operator-log-archive.yml",
+          "sha256": "2749c23cfe615d34dc564f9f33b05bc9aa1f1ba81decd5633d99ce2f0505e3af"
+        },
+        {
+          "path": "deploy/monitoring/operator-log-retention.yml",
+          "sha256": "d739a4e06f92819b0822cd179f5dee4750562ab9aa2765d29b569dd40bc65eb0"
+        },
+        {
+          "path": "deploy/monitoring/operator-loki.yml",
+          "sha256": "d643db8b0597cb204a0a186e7e824a75a9fa30a60d48a6ae1ed2d4249c6c2fd0"
+        },
+        {
+          "path": "deploy/monitoring/systemd/barghsa-operator-log-archive.service",
+          "sha256": "c29eef879a3bb0b83bcb9e5748e95b8480700ad9182dee6b380ec4cc8aa337b9"
+        },
+        {
+          "path": "deploy/monitoring/systemd/barghsa-operator-log-archive.timer",
+          "sha256": "0260a0562b5b6d0712f66e3da61695f7af093fddd60ec60cb9b97ad63bd801f8"
+        },
+        {
+          "path": "deploy/monitoring/operator-logs.alloy",
+          "sha256": "77511592e1305f5a5512f2196b54294623b35f9c0df103c974f72a97220a92cb"
+        },
+        {
+          "path": "packages/db/scripts/backup/Dockerfile",
+          "sha256": "0c5fae6c77ef31a6ab5e191e16d9e0b78acc6b7bc3cd7430ed1178b1f41486cf"
+        }
+      ],
+      "checks": [
+        "Loki 3.7.9 verified the exact TSDB v13 configuration with a singleton retention compactor, daily indices, 720h searchable retention, a persistent marker directory and 2h delete delay. The new service has a private volume, no published ports and only its dedicated Loki network. Compose validation passed for both services.",
+        "A disposable native Loki instance flushed 2,501 synthetic operator records into its TSDB store. The archive paginated the complete closed UTC day across two streams and excluded the next day's boundary. It refused an open day, expired day and a saturated timestamp where completeness could not be proven.",
+        "The job encrypted, conditionally wrote and decrypted the archive against disposable S3-compatible MinIO. An identical repeat retained the first ciphertext. Actual CLI restore with Loki stopped recovered all 2,501 records with matching labels, lines, timestamps and count. A wrong key emitted no payload or key. Eight existing physical archive safety checks and a native MinIO read/write under the unchanged default PostgreSQL namespace passed."
+      ],
+      "limitations": [
+        "MinIO STANDARD in the disposable fixture exercised encrypted transport and restoration. The provider's actual cold tier, live Loki compactor, timer receipt and persistent archive policy have not been verified. No staging service or bucket changed."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-loki-retention",
+      "execution_receipts": [
+        {
+          "file": "rehearse.py",
+          "sha256": "1985d735e3a7788c6599ff632f7c93c41c9b1d9d2ccee631eb638cc9ac993a27"
+        },
+        {
+          "file": "rehearsal.log",
+          "sha256": "0c31c93d89241c7c4040899bb02b110049cba067b60bfd38552d9bc62561746c"
+        },
+        {
+          "file": "source.sha256",
+          "sha256": "b0d3e3b3163a579726927ff4cff40f02b1b198a8c76fdeab16c2055a023e5be6"
         }
       ]
     }

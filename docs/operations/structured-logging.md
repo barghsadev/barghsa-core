@@ -54,6 +54,75 @@ from the JSON record after selecting the stream. Verify one API request and
 one worker delivery in Loki and check `loki_write_sent_entries_total` and
 `loki_write_dropped_entries_total` on Alloy. [Alloy Loki write metrics](https://grafana.com/docs/alloy/latest/reference/components/loki/loki.write/#debug-metrics).
 
+### Search and archive retention
+
+Use `deploy/monitoring/operator-log-retention.yml` for a new dedicated Loki
+instance with an approved immutable `BARGHSA_LOKI_IMAGE`. Its private data
+volume holds the TSDB index, chunks and compactor state. The singleton
+compactor retains 30 days of searchable records and waits two hours before
+deleting marked chunks. Check the internal network and restrict its members
+to approved shippers, archive jobs and query clients. Keep the volume across
+container replacement. The configuration preserves the four shipped labels
+and disables Loki's generated service and level fields. For an existing Loki
+instance, preserve its schema history and rehearse the retention change and
+archive compatibility with any previously generated labels before applying it.
+[Loki retention](https://grafana.com/docs/loki/latest/operations/storage/retention/).
+
+Use `deploy/monitoring/operator-log-archive.yml` with the verified immutable
+backup helper image and a dedicated S3 bucket outside the Loki host. Configure
+the image, private Loki network, storage class, archive environment file and
+passphrase file in `/etc/barghsa/operator-log-archive.compose.env`. Use
+`BARGHSA_LOG_ARCHIVE_IMAGE`, `BARGHSA_LOKI_NETWORK`,
+`BARGHSA_LOG_ARCHIVE_STORAGE_CLASS`, `BARGHSA_LOG_ARCHIVE_ENV_FILE` and
+`BARGHSA_LOG_ARCHIVE_GPG_FILE` for those settings. Give UID 10001 read access
+to the passphrase file. Keep that key and the protected environment file
+separate from database and configuration backup credentials.
+
+Set `BACKUP_CLUSTER_ID` to `staging` or `production` in the archive environment
+file. Supply the dedicated bucket, HTTPS endpoint and least-privilege S3
+credentials as `BACKUP_S3_BUCKET`, `BACKUP_S3_ENDPOINT`, `BACKUP_S3_ACCESS_KEY`
+and `BACKUP_S3_SECRET_KEY`. Limit write and read access to the environment's
+`operator-logs/<environment>/daily/` prefix. Require conditional writes and
+deny deletes to the archive job. Apply the approved archive expiration and
+key retention policy to this bucket. Select a tier that supports immediate
+readback, such as `GLACIER_IR` where supported. The archive job needs no
+access to the canonical security, finance or audit ledgers.
+[S3 storage classes](https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html).
+
+Install the checked-in `barghsa-operator-log-archive` service and timer after
+placing the monitoring files at `/opt/barghsa/monitoring`. At 02:15 UTC the
+timer archives the day eight calendar days earlier. Loki refuses arrivals
+older than seven days, so that UTC day has closed to late arrivals. The job
+checks the complete range, seals a gzip JSONL file with the dedicated key,
+writes it conditionally and verifies its decrypted bytes from the bucket.
+Replaying a day succeeds only if the stored archive matches. The success
+receipt includes the UTC day, record count and SHA-256. A file may contain
+zero records for a quiet day. Investigate gaps and zero counts against Loki
+and shipper health before relying on the archive.
+
+Check the timer receipt and expected object after each scheduled run. After
+an outage, pass each missing UTC date explicitly to `archive` while the full
+day is still searchable. Resolve any failed or conflicting receipt before
+the 30-day cutoff. The default daily archive size bound is 64 MiB compressed.
+Check observed volume before activation and investigate a bound failure
+while the affected range is still searchable.
+
+Restore into a private operator directory with the approved credential and
+key. The restore command reads from the bucket while Loki is offline.
+
+```sh
+umask 077
+docker compose --env-file /etc/barghsa/operator-log-archive.compose.env \
+  -f /opt/barghsa/monitoring/operator-log-archive.yml \
+  run --rm -T --no-deps archive restore 2026-11-01 > operator-logs.jsonl.gz
+gzip -t operator-logs.jsonl.gz
+```
+
+Confirm the JSONL header identifies the correct day and environment, the
+record count matches the trailer and the gzip SHA-256 matches the archived
+receipt. Verify the selected destination tier, restricted access, off-host
+restore and timer receipt before accepting persistent staging activation.
+
 ## API and notification worker traces
 
 Set `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` to the protected OTLP HTTP traces

@@ -114,7 +114,7 @@ def crypt(source, destination, decrypt=False):
 
 
 class Store:
-    def __init__(self):
+    def __init__(self, namespace="postgres"):
         endpoint = required("BACKUP_S3_ENDPOINT")
         parsed = urlparse(endpoint)
         if parsed.scheme not in ("http", "https") or not parsed.hostname or parsed.username:
@@ -122,7 +122,7 @@ class Store:
         if parsed.scheme != "https" and os.environ.get("BACKUP_ALLOW_HTTP") != "true":
             raise BackupError("S3 requires HTTPS; local tests may explicitly allow HTTP")
         self.bucket = os.environ.get("BACKUP_S3_BUCKET", "barghsa-backups")
-        self.prefix = "postgres/" + identifier(required("BACKUP_CLUSTER_ID")) + "/"
+        self.prefix = identifier(namespace) + "/" + identifier(required("BACKUP_CLUSTER_ID")) + "/"
         self.client = boto3.client(
             "s3", endpoint_url=endpoint,
             aws_access_key_id=required("BACKUP_S3_ACCESS_KEY"),

@@ -1,0 +1,9 @@
+[Unit]
+Description=Archive closed UTC days of Barghsa operator logs
+
+[Timer]
+OnCalendar=*-*-* 02:15:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
