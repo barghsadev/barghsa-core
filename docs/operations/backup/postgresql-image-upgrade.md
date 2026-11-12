@@ -20,11 +20,14 @@ image also failed the high and critical vulnerability gate.
 
 The Ubuntu 24.04 trial used PostgreSQL 16.15, PostGIS 3.6.4, and pgvector
 0.8.6. Its exact image had zero high or critical findings. The isolated
-restore matched the Debian reference on all 186 application tables, schema,
-grants, and extension versions. It also matched ordering and case conversion
-in 652 text columns and the expanded Persian and English sample. The same
-rehearsal restored the retained QA database and matched its 187 tables and
-660 text columns. Include both databases in the verified cutover backup.
+restore matched the Debian reference on all 187 tables and 660 text columns
+in the QA-named database that serves the staging preview. The retained
+`barghsa_staging` baseline matched across 186 tables and 652 text columns.
+Schema, grants, extension versions and the expanded Persian and English
+ordering sample matched. Include both databases in the verified cutover
+backup. Verify the API and worker's direct and pooled database names before
+rehearsing migrations. The PostgreSQL bootstrap database name can differ
+from the one the app serves.
 Run the packaged backup tools as `postgres` during image verification. The
 first trial build inherited owner-only file modes from its private archive,
 which prevented that user from loading the backup modules.
@@ -38,6 +41,14 @@ both database images under separate scopes.
 bash deploy/staging/build-postgres-image.sh barghsa-postgres:vps-ubuntu-rehearsal
 bash scripts/check-runtime-images.sh /secure/pg-image-scan barghsa-postgres:vps-ubuntu-rehearsal
 ```
+
+The packaged migrator applied `0289_solar_document_destruction_guard` once
+on each restored copy of the staging preview database. A repeat invocation
+reported zero pending migrations, and all 186 application-table fingerprints
+matched the pre-migration snapshots. The previous app's schema readiness
+passed at `0288` and rejected the database after `0289`. Rehearse rollback
+with the original application images and original database volume together,
+while writes are paused through cutover verification.
 
 Keep the original cluster stopped and protected until the recovery window closes. The previous volume can serve as a rollback while no new writes have been accepted. After new writes, switching back could lose data; stop traffic and use the approved recovery or roll-forward procedure. Rehearse backup and WAL recovery independently on the new operating system. See the [PostgreSQL restore runbook](postgresql-restore-runbook.md) and [PostgreSQL collation guidance](https://www.postgresql.org/docs/16/sql-altercollation.html).
 

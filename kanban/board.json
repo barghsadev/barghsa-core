@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated": "2026-11-12T02:44:22+00:00",
+  "updated": "2026-11-12T02:58:58+00:00",
   "source_commit": "5b62f15a9a8a8c7a1f4c6fd372408849603fc387",
   "authority": "The only editable task, release and launch-status ledger. Generated Markdown is a view, epic files are specifications, and imported evidence is provenance.",
   "launch_scope": [
@@ -9590,7 +9590,8 @@
       "launch_required": true,
       "remaining": [
         "Repeat migration-before-start, compatible rollout and rollback, and backup/restore verification on the designated production-equivalent topology. The isolated production Compose migration service has verified the canonical journal and rejects a mismatched expected version.",
-        "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence."
+        "Full per-migration down and roll-forward acceptance from the parent story still requires its own evidence.",
+        "The isolated 0288-to-0289 upgrade and idempotent repeat pass on both the retained Debian and scanned Ubuntu trial runtime. Verify recovery with the original application and database together. Current exact-head readiness rejects the previous app against the newer schema."
       ],
       "owner": null,
       "depends_on": [],
@@ -9760,7 +9761,8 @@
           "deploy/staging/deploy.sh",
           "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py"
+          "scripts/test_check_release_licenses.py",
+          "docs/security/release-license-review.md"
         ],
         "batches": [
           "release-0.6-packaged-production-seed",
@@ -9769,7 +9771,8 @@
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
-          "release-0.6-postgres-staging-recipe"
+          "release-0.6-postgres-staging-recipe",
+          "release-0.6-packaged-ubuntu-migration"
         ],
         "current_acceptance": null
       }
@@ -37392,7 +37395,7 @@
             },
             {
               "path": "docs/security/release-license-review.md",
-              "sha256": "83b55c06ea97891da94e9cb1425e00a5947728a67483f5dac40399c76c4417c7"
+              "sha256": "e91053cceaf7698f81a45a56f2a516153b71c446375b244f371c7ef8d60e645b"
             }
           ],
           "checks": [
@@ -37771,6 +37774,14 @@
                 "docs/security/release-license-review.md"
               ],
               "scope": "Adds current readback and package metadata to the review packet. The allowlist, exceptions, policy conditions and original evidence retain their scope."
+            },
+            {
+              "batch": "release-0.6-packaged-ubuntu-migration",
+              "base_commit": "212cb619497735f58b99ec1bd081eafeeb6210e2",
+              "paths": [
+                "docs/security/release-license-review.md"
+              ],
+              "scope": "The license review document adds the separate exact Ubuntu staging package inventory. Existing notices, prior reviewer obligations and session revocation implementation and evidence are preserved."
             }
           ],
           "presentation_renewals": [
@@ -550101,7 +550112,7 @@
       "launch_required": true,
       "remaining": [
         "Record named owner or legal dispositions for the exact 170 package and scope rows. The current fc55c82a inventory matches strict f0f9434c run 42902282297. The unsigned packet supplies 159 original Alpine expressions, identifies two generated metadata-only records without expressions, and verifies the updated libxslt checksum. Verify notices, corresponding source and replacement rights where applicable.",
-        "Review the separate postgres-staging scope from the exact five-image protected preflight. Retain the existing unsigned review packet for its matching four scopes and browser evidence. The new scope requires separate exact package dispositions.",
+        "Obtain named dispositions for the 217 exact postgres-staging package rows in the 212cb619 supplement. The five-image run 43143811872 matches all 594 original package rows and leaves 387 review-required entries across both packets.",
         "Run the strict gate for the final immutable candidate with only recorded approvals. Match final distribution identities and verify the applicable conditions."
       ],
       "owner": null,
@@ -550134,7 +550145,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-pdf-preflight-and-license-readback",
           "release-0.6-license-handoff-current",
-          "release-0.6-postgres-staging-recipe"
+          "release-0.6-postgres-staging-recipe",
+          "release-0.6-packaged-ubuntu-migration"
         ],
         "current_acceptance": {
           "kind": "source-bound-strict-gate-failed-pending-approval",
@@ -550234,6 +550246,26 @@
           "review_csv_sha256": "24caddd829e37fa54c78ff905e52735a4cda824a898f681b5b2d5bccc23a2129",
           "mode": "report-only",
           "strict_inventory_match_run": 42902282297
+        },
+        "staging_postgres_review_supplement": {
+          "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-packaged-ubuntu-migration/package-review-postgres-staging-212cb619.csv",
+          "source_commit": "212cb619497735f58b99ec1bd081eafeeb6210e2",
+          "hosted_run": 43143811872,
+          "staging_postgres_image_id": "sha256:2099e5553ef8d2b44ad479e6b78549709d150b9b2b1e4aebd6730fd0e4f76286",
+          "vulnerability_report_sha256": "4d874c4dd0c76218a136a8b524d8ca4f6216bc9320aa4ec10667f2f5c98f8d78",
+          "sbom_sha256": "5a0dfe0945dc0f37d676bc13c74799c3ab8c912e60503096dec75e2d86c1ae79",
+          "license_report_sha256": "c74a2cb23ac5a0dd1e40a26b9a329f1ae4414d47b6410938cdda07dbb4b6de82",
+          "all_entries": 835,
+          "unchanged_original_rows": 594,
+          "pending_by_scope": {
+            "app": 38,
+            "browser": 2,
+            "clamav": 27,
+            "postgres": 89,
+            "postgres-staging": 217,
+            "web": 14
+          },
+          "postgres_staging_review_sha256": "df2086fa0f305d8a550a6c999a711c2d9dd3bbd692965016b097cd9b6d82eb6b"
         }
       },
       "blocker": "The strict gate is implemented. The exact shipped component exceptions still require owner or legal approval and proof of the applicable conditions before release acceptance."
@@ -550257,7 +550289,7 @@
         "The running staging PostgreSQL image has 261 high and 18 critical findings. The running ClamAV image has none. Both scans bind the archive platform, config and layers to the Docker ID. Replace PostgreSQL and match the final deployment to fresh receipts.",
         "The locally built Alpine PostgreSQL 16.15 candidate has a verified OCI digest chain and zero high or critical findings. It was exercised only in an isolated restore. Bind the compatible replacement image and final registry artifacts to separate receipts.",
         "The exact Ubuntu PostgreSQL 16.15/PostGIS 3.6.4 trial has a verified CycloneDX receipt with zero high or critical findings. Bind the final reproducible staging image, deployed image IDs, production registry digests and reviewed package dispositions.",
-        "Verify the new fifth scan receipt for the repository Ubuntu image. Match the exact candidate Docker ID and production registry artifacts before acceptance."
+        "Hosted run 43143811872 verified all five image IDs, CycloneDX receipts and vulnerability reports with zero high or critical findings. Match the final candidate runtime and registry digests to the corresponding receipts."
       ],
       "owner": null,
       "depends_on": [],
@@ -550274,7 +550306,8 @@
           "deploy/staging/deploy.sh",
           "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py"
+          "scripts/test_check_release_licenses.py",
+          "docs/security/release-license-review.md"
         ],
         "batches": [
           "release-0.6-private-api-monitoring",
@@ -550283,7 +550316,8 @@
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
-          "release-0.6-postgres-staging-recipe"
+          "release-0.6-postgres-staging-recipe",
+          "release-0.6-packaged-ubuntu-migration"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -563514,7 +563548,7 @@
       "launch_required": true,
       "remaining": [
         "Verify full unit, migrated PostgreSQL, browser accessibility and combined coverage on the exact release candidate. The previous full workflow failed the image license gate; its branding setup and Persian storage receipt fixtures now have focused passing checks.",
-        "Verify the exact source run of the additional Ubuntu staging image build, scan and license inventory with the existing four image gates."
+        "Run 43143811872 passed protected monorepo integrity and the five-image build, scan and report-only inventory. The final strict license and full release coverage gates still require their own exact candidate evidence."
       ],
       "owner": null,
       "depends_on": [],
@@ -563528,7 +563562,8 @@
           "deploy/staging/test_notify_release.py",
           "docs/operations/backup/postgresql-image-upgrade.md",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py"
+          "scripts/test_check_release_licenses.py",
+          "docs/security/release-license-review.md"
         ],
         "batches": [
           "release-0.6-runtime-sbom-provenance",
@@ -563539,7 +563574,8 @@
           "release-0.6-integrity-requires-tests",
           "release-0.6-durable-multipart-operations",
           "release-0.6-exact-storage-receipt-locator",
-          "release-0.6-postgres-staging-recipe"
+          "release-0.6-postgres-staging-recipe",
+          "release-0.6-packaged-ubuntu-migration"
         ],
         "current_acceptance": null,
         "exact_hosted_checkpoint": {
@@ -563577,7 +563613,7 @@
       "release": "0.6.0",
       "launch_required": true,
       "remaining": [
-        "Verify the protected CI receipt for the repository Ubuntu staging image and refresh the exact package review. The Ubuntu trial matched both staging databases and passed 32 isolated physical backup, WAL and PITR tests as postgres after correcting file modes. Verify the packaged migrator and readiness against the restored candidate, then retain an independently verified cutover backup and rollback proof.",
+        "Rehearse the verified staging database and app pair through cutover and rollback before accepting writes. The active preview database is at 0288 and the retained baseline is at 0281. The packaged rehearsal applies 0289 once and preserves all 186 application-table fingerprints. The previous app schema readiness rejects 0289, so app-only rollback cannot recover readiness after migration. Keep the original database volume and previous images available as a pair. Verify full application readiness, the cutover backup and the exact deployed image identities.",
         "Run the release worker for an accepted v0.6.0 candidate and retain its loaded and running image IDs, migration result, live release metadata, readiness/liveness, S3 smoke and Telegram receipts."
       ],
       "owner": null,
@@ -563595,7 +563631,8 @@
           "deploy/staging/deploy.sh",
           "deploy/staging/test_notify_release.py",
           "scripts/check-release-licenses.py",
-          "scripts/test_check_release_licenses.py"
+          "scripts/test_check_release_licenses.py",
+          "docs/security/release-license-review.md"
         ],
         "batches": [
           "release-0.6-preflight-recovery-and-staging-smoke",
@@ -563606,7 +563643,8 @@
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
-          "release-0.6-postgres-staging-recipe"
+          "release-0.6-postgres-staging-recipe",
+          "release-0.6-packaged-ubuntu-migration"
         ],
         "current_acceptance": null
       }
@@ -871667,7 +871705,7 @@
         "Reconcile every epic-01 and epic-06 launch criterion with current source and operational evidence.",
         "Reconcile full hosted native and combined coverage for the final immutable candidate. Focused passing checks cover the old branding setup and Persian storage receipt failures; the license gate still requires exact dispositions.",
         "Run authenticated ZAP against the exact v0.6.0 staging candidate and disposition findings. Existing v0.5.0 receipts cover the deployed integration.",
-        "Verify the protected CI receipt for the repository Ubuntu staging image and refresh the exact package review. The Ubuntu trial matched both staging databases and passed 32 isolated physical backup, WAL and PITR tests as postgres after correcting file modes. Verify the packaged migrator and readiness against the restored candidate, then retain an independently verified cutover backup and rollback proof."
+        "Rehearse the verified staging database and app pair through cutover and rollback before accepting writes. The active preview database is at 0288 and the retained baseline is at 0281. The packaged rehearsal applies 0289 once and preserves all 186 application-table fingerprints. The previous app schema readiness rejects 0289, so app-only rollback cannot recover readiness after migration. Keep the original database volume and previous images available as a pair. Verify full application readiness, the cutover backup and the exact deployed image identities."
       ],
       "owner": null,
       "depends_on": [],
@@ -871910,7 +871948,8 @@
           "release-0.6-staging-stateful-image-proof",
           "release-0.6-staging-postgres-logical-rehearsal",
           "release-0.6-postgres-compatible-runtime",
-          "release-0.6-postgres-staging-recipe"
+          "release-0.6-postgres-staging-recipe",
+          "release-0.6-packaged-ubuntu-migration"
         ],
         "package_review_packet": {
           "path": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-acceptance-reconciliation/release-license-review-candidate-3732c1ad.json",
@@ -1003060,6 +1003099,122 @@
         {
           "file": "pgvector.LICENSE",
           "sha256": "6bba9ebeb73e27477463b05e5ef1bf303bccbddb3db9bbc95905d351604d6a87"
+        }
+      ]
+    },
+    "release-0.6-packaged-ubuntu-migration": {
+      "batch": "release-0.6-packaged-ubuntu-migration",
+      "base_commit": "212cb619497735f58b99ec1bd081eafeeb6210e2",
+      "task_keys": [
+        "06-security-testing-observability.md#T-06.07.02.06",
+        "06-security-testing-observability.md#T-06.07.02.07",
+        "06-security-testing-observability.md#T-06.12.03.01",
+        "06-security-testing-observability.md#T-06.12.03.02",
+        "01-platform-infrastructure.md#T-02.03.02",
+        "release-readiness#R-05.02",
+        "02-auth-users-admin.md#T-02.02.02"
+      ],
+      "changed_paths": [
+        "docs/operations/backup/postgresql-image-upgrade.md",
+        "docs/security/release-license-review.md"
+      ],
+      "source_evidence": [
+        {
+          "path": "docs/operations/backup/postgresql-image-upgrade.md",
+          "sha256": "236435d929f0e3a8b26ef04706b09ab1f171af5238a269c0f9c4fa6692f1e7ef"
+        },
+        {
+          "path": "docs/security/release-license-review.md",
+          "sha256": "e91053cceaf7698f81a45a56f2a516153b71c446375b244f371c7ef8d60e645b"
+        },
+        {
+          "path": "scripts/run-packaged-migrations.cjs",
+          "sha256": "692b4a45a4a4a560a2372d7c2d2cbd128b44ea0c9a120ec929e7e3ff61238a8c"
+        },
+        {
+          "path": "packages/db/src/migrate.ts",
+          "sha256": "ee35ac3d9e1350e828edc37e6a972a4ed04f91d3c079ed53b219ecc1adb09fb8"
+        },
+        {
+          "path": "packages/db/src/index.ts",
+          "sha256": "b3f5d1610e70400a1bc2b267e871f177e992ce70ecdab2bab5c526440ce0178f"
+        },
+        {
+          "path": "packages/db/drizzle/production/meta/_journal.json",
+          "sha256": "e77736adca0f04150f616d38b9133834450e2e42296539eb3827756a07c5d001"
+        },
+        {
+          "path": "packages/db/drizzle/production/0289_solar_document_destruction_guard.sql",
+          "sha256": "4e207a567b4a1a704dc77cebb2fd42f08511fe35ce2c313bdc1fa27de2855e84"
+        }
+      ],
+      "checks": [
+        "Read-only routing verified that both API and worker use the QA-named preview database. The retained bootstrap database at 0281 is a separate baseline. The serving preview contains all 209 canonical checksums through 0288.",
+        "The prior packaged migration wrapper and compiled migrator and database readiness modules match the current workspace build by SHA-256. All 209 installed SQL files match current source. Read-only mounts provide the exact current journal and new 0289 SQL to the nonroot runtime over private Unix sockets.",
+        "On isolated copies of the serving preview in Debian and Ubuntu, the current packaged readiness failed before migration, 0289 applied exactly once, the guard trigger was enabled, readiness passed afterward and retry was a no-op. Each engine preserved all 186 application-table fingerprints. The old packaged readiness passed before and failed after migration on both engines.",
+        "Protected GitHub Actions run 43143811872 passed and exact main SHA 212cb619 was verified. All five image IDs, SBOMs and scan report digests matched. The original 594 package rows match the earlier packet. The separate Ubuntu scope adds 241 entries and 217 pending dispositions for 387 total. The supplemental CSV leaves reviewer fields empty.",
+        "The active preview kept its original journal and PostgreSQL image. Rehearsal containers, volumes and private files were removed. Staging liveness and database readiness returned ok. Docs formatting, source-bound board validation and whitespace checks passed."
+      ],
+      "limitations": [
+        "The rehearsal uses the compatible Ubuntu trial and matching packaged database runtime code. It does not verify full application HTTP readiness with the final CI image. The database and application cutover, rollback pair, strict license approval and v0.6 staging and Telegram receipts remain pending."
+      ],
+      "external_evidence": "/Users/majid/.local/state/barghsa-manual-batches/release-0.6-packaged-ubuntu-migration",
+      "execution_receipts": [
+        {
+          "file": "db-build.log",
+          "sha256": "52158d72edbce0b35e866528f7eec1e8f1be168522433bb69a2f68b7e2a9ea9f"
+        },
+        {
+          "file": "staged-package.json",
+          "sha256": "aeb176f8591681fb6752939fab382cbbce637cfccb2e0573b4401ef270f7d566"
+        },
+        {
+          "file": "packaged-input-proof.json",
+          "sha256": "e0dfc728ebdca4372676979a2cb452f6e77395e194a74b7b20c41fe6b3876215"
+        },
+        {
+          "file": "live-journal-reconciliation.json",
+          "sha256": "afdad8d02b1a642ab494a0754dfa64647a75bcbd43be1ad210bf5bddef263544"
+        },
+        {
+          "file": "live-active-journal.tsv",
+          "sha256": "47dd52d9b7b380762d8fb10811cab01fee4a38399650e6d684b6608f4f8e4b18"
+        },
+        {
+          "file": "staging-database-routing.tsv",
+          "sha256": "d60ff1610515b131ca198ad0edd9194b134485884aa2057e5ff4413e648733b2"
+        },
+        {
+          "file": "rehearse-migration.sh",
+          "sha256": "2f0473fc0d17dd31f0bf97a3896e3c36ae4635877a4d430d7e1d9b6e0c1a6038"
+        },
+        {
+          "file": "migration-rehearsal.log",
+          "sha256": "c10a365ecf5492b04f026aa5959a1014d2e59b4bf906fc4b88b2f478969ad5fb"
+        },
+        {
+          "file": "migration-baseline-precondition.log",
+          "sha256": "b349812245551624bd49d4de8d60b0de30c8fc9aedc309139cf460c4e185a537"
+        },
+        {
+          "file": "post-migration-readback.txt",
+          "sha256": "98bed00773a9d4562235723e03ca167d16a9c335728410bc6f7271427821aee4"
+        },
+        {
+          "file": "hosted-native-run.json",
+          "sha256": "c4d5207e97b8735b173332aa7593718877277cb5f5482ba8918c7025b2153bfe"
+        },
+        {
+          "file": "remote-main.txt",
+          "sha256": "d87dc69de713bd663b4d8419a20feed930e5683e8ff97c72ee884c1473ac4bb8"
+        },
+        {
+          "file": "license-supplement-proof.json",
+          "sha256": "39f11b5ca38dd472b00c69b16c807487b6cac2794a64d01004e35af03315cc05"
+        },
+        {
+          "file": "package-review-postgres-staging-212cb619.csv",
+          "sha256": "df2086fa0f305d8a550a6c999a711c2d9dd3bbd692965016b097cd9b6d82eb6b"
         }
       ]
     }
